@@ -1,0 +1,85 @@
+Version: 7.8.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.8.12/kilo-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.8.12
+    Minor Changes
+    - #15030 d749650 - Route Kilo Gateway traffic (chat, models, embeddings, autocomplete, transcription) through https://ai-gateway.kilo.ai/api/v1 by default, and support a KILO_AI_GATEWAY_URL environment variable to override it. Setting only KILO_API_URL keeps routing gateway traffic through that server.
+    7.8.10
+    Minor Changes
+    - #14988 9a55ea4 Thanks @WebReflection! - Add an experimental Search Ignored Paths setting that lists ignored folders or files, such as build output, that the agent's glob tool should still search
+    Patch Changes
+    - #15017 e48c978 Thanks @WebReflection! - Keep .gitignored files and folders, such as node_modules, out of glob results and grep include searches, even when the pattern matches folder names, like **/*
+    - #15056 0e6da31 - Fix grep failing with "Invalid ripgrep match output" when matched lines aren't valid UTF-8, such as in ISO-8859-1 / Windows-1252 encoded files
+    7.8.9
+    Minor Changes
+    - #14928 6522b4a - Reorder projects in the Agent Manager sidebar with drag and drop. The order is kept after a restart.
+    - #14919 69ec588 - Open chat links in the system browser with Shift-click when the Integrated Browser handles link clicks
+    - #14900 9b8a58f - Support opening the current Integrated Browser page in the external default browser
+    - #14927 a023122 - Show the agent, model, and reasoning selectors as one split control in the prompt toolbar and the Agent Manager New Worktree dialog. While one picker is open, move the pointer to another part to switch to it, or use the Left and Right arrow keys. The reasoning level shows only when it is set and there is room. Otherwise it collapses into the trailing arrow, and a changed level shows for a moment. On narrow sidebars, less used actions move into a "More actions" menu one at a time, while voice input and send stay visible. The toolbar always stays one row, so a long model name truncates and does not hide actions.
+    Patch Changes
+    - #14896 064bb13 - Align the loading spinner with the subagent identicon. The spinner now uses the same 5x5 dot grid as subagent avatars, so loading and subagent indicators share one cell layout. The four corner cells stay empty and the same twinkle animation is kept.
+    - #14899 7cf9fdc - Move the agent board button next to the background agents above the prompt. It shows the latest posts and marks new ones, and stays available after agents are cleared or the window reloads.
+    - #14898 5afa419 - Match the Integrated Browser color scheme to the current IDE theme so pages that support prefers-color-scheme render in dark or light to match the editor.
+    - #14893 3249118 Thanks @madrugado! - Retry provider connection resets (Connection reset by server) through the normal retry path with backoff instead of pausing the session waiting for network reconnection. Connection resets are transient server-side failures when the error is marked retryable; only genuine network disconnections still trigger the offline wait.
+    - #14738 d9f9d72 Thanks @brunoagatao! - Fix permission prompts from subagents failing with "Failed to update permissions" and getting stuck
+    - #14519 46428e7 Thanks @jsilvermist! - Fix backend startup when a Windows drive root is opened as a workspace.
+    - #14932 f852d17 - Show page cursor feedback in the Integrated Browser, including text fields, resize handles, and drag controls, without changing page scrolling or compositing.
+    - #14934 6e033dc - Use the standard open-in-browser icon for the Agent Manager PR panel's external link button, so it matches the open-in-browser affordance used elsewhere in the app.
+    - #14734 1ecce5a Thanks @brunoagatao! - Label scheduled cron and wakeup prompts in the chat instead of showing them as user messages
+    - #14901 2c25217 - Fix a thin line of diff content showing above the sticky file header in the Agent Manager diff panel and review when VS Code is zoomed.
+    - #14930 0988371 - Add a tooltip to the subagent open button in the chat transcript. It shows whether the subagent opens in an editor tab (sidebar) or in the Agent Manager panel.
+    - Updated dependencies [0a5c6df]:
+      - @kilocode/kilo-indexing@7.8.9
+      - @opencode-ai/core@7.8.9
+      - @kilocode/kilo-ui@7.8.9
+      - @opencode-ai/ui@7.8.9
+    CLI
+    7.8.12
+    Minor Changes
+    - #15030 d749650 - Route Kilo Gateway traffic (chat, models, embeddings, autocomplete, transcription) through https://ai-gateway.kilo.ai/api/v1 by default, and support a KILO_AI_GATEWAY_URL environment variable to override it. Setting only KILO_API_URL keeps routing gateway traffic through that server.
+    7.8.10
+    Minor Changes
+    - #14988 9a55ea4 Thanks @WebReflection! - Add an experimental Search Ignored Paths setting that lists ignored folders or files, such as build output, that the agent's glob tool should still search
+    - #15004 8f6c4e2 - Let the mobile app fork a session from a specific message onto a remote CLI: create_session accepts cloneUpToMessageId, imports only the transcript up to that message, and restores only the file edits made before it.
+    Patch Changes
+    - #15017 e48c978 Thanks @WebReflection! - Keep .gitignored files and folders, such as node_modules, out of glob results and grep include searches, even when the pattern matches folder names, like **/*
+    - #15056 0e6da31 - Fix grep failing with "Invalid ripgrep match output" when matched lines aren't valid UTF-8, such as in ISO-8859-1 / Windows-1252 encoded files
+    - #15047 fdb634f - Keep MCP sign-in from resetting
+      Automatic OAuth recovery no longer clears stored credentials another session just refreshed, and signing in to a remote MCP server now updates the authentication warning in every open session instead of only the one that started it. The optional MCP stream probe is also restricted to its own endpoint so it cannot rewrite OAuth metadata or token responses.
+    - #14857 37f81b1 Thanks @mardausdennis! - Reduce CPU usage while Windows background jobs are running and improve stop handling when a job takes longer to finish.
+    - #14857 5e99e9c Thanks @mardausdennis! - Fix Windows background jobs staying active after their command finishes or treating unrelated programs as part of the job. If a job cannot be stopped safely, the stop request fails with an error and the job output says why.
+    7.8.9
+    Patch Changes
+    - #14528 6f90fe1 - Tune the agent_manager and task tool instructions so agents only start new Agent Manager sessions or worktrees when the user explicitly asks, or after confirming with the user first.
+    - #14524 adf5026 Thanks @kimnamu! - Keep Amazon Bedrock GPT-6 and GPT-5.6 sessions working after a tool returns an image.
+    - #14192 4290338 Thanks @maphew! - Cloud sessions: the bash tool now advertises a session-scoped temp dir covered by the injected permission rules instead of the denied shared temp dir.
+    - #14064 1ed91ed Thanks @cpruijsen! - Stop reporting a false frontmatter parse error when saving command markdown files
+    - #14537 b9e4b1e - Report an error instead of silently keeping the old value when a config change is overridden by a higher-priority file such as opencode.json. Config validation and write failures now return the file and issue details instead of an opaque server error.
+    - #14757 f01c7dd Thanks @thomasbrugman! - Avoid enabling thinking automatically for custom providers whose names contain zai or zhipuai.
+    - #14651 07848e1 Thanks @quanzhuo! - Report empty summaries and unrecoverable context overflow during compaction instead of silently stopping. Preserve conversation history and explain when to retry compaction or start a new session.
+    - #14838 a1fbca0 Thanks @jhapate0704! - Improve missing binary error message on Windows ARM64 to provide actionable workarounds (x64 emulation or WSL2).
+    - #14906 2dd87e7 - Expose a custom or plugin command named goal as /goal:command instead of dropping it. /goal still starts a session goal, and the configuration warning now names the alias so the command stays reachable.
+    - #14970 296b9de - Respect permission settings from global and project kilo.jsonc in the JetBrains plugin. Edits now follow your configured permission.edit value instead of being forced to ask, and the Auto-Approve settings page reflects the effective level.
+    - #13593 1f093ff Thanks @maphew! - Log structural diagnostics (message part sequences, tool-call/result pairing, schema issue paths) when the AI SDK rejects an assembled request, instead of failing with a bare ModelMessage[] schema error.
+    - #14809 3b0be76 Thanks @kr1shna-exe! - Stop MCP servers from piling up when a request is cancelled while they are still starting. Servers that had already started are now shut down, and the next request starts MCP again instead of failing until the backend restarts.
+    - #14812 b4b51f2 - Keep slash commands working when a plugin or your config defines a command named goal. Such a command clashes with Kilo's own /goal and used to hide every slash command, including /init, /review, and your own, leaving autocomplete empty. The clashing command is now skipped and reported as a configuration warning, so the CLI, VS Code, and JetBrains all tell you which command was ignored and why, while the rest keep working. A command list that fails to load also shows a warning in the CLI instead of silently showing no commands.
+    - #14830 e38a045 Thanks @abdulhusainahk! - Force kilo serve to exit after five seconds if graceful shutdown stalls, so editor shutdown cannot leave the backend running indefinitely.
+    - #14816 3ad45fd Thanks @kr1shna-exe! - Reduce the work done on every agent step in long sessions once the request passes the payload pruning limit. The session transcript is no longer reloaded and re-serialized after pruning, and pruning no longer reads the whole session history again. Plan mode also keeps its plan file instructions on those steps.
+    - #14776 225c393 - Fix SVG and other non-raster image attachments failing the whole prompt instead of being read as source. Fix a rejected or failed send losing the typed message with no way to recover it, and add a Dismiss action to standalone error cards that have no transcript tail to retry.
+    - #14037 4ed8e7b Thanks @maphew! - Task tool: a bare model name in subagent_model or an agent model now resolves to the matching provider model instead of failing with a "Model not found" error or being ignored. The parent session's provider is preferred when several providers offer a model with the same name.
+    - #13955 bb652c5 Thanks @rakshith1928! - Fix permission and question prompts disappearing when switching sessions in the TUI. Approval prompts for running subagents and sessions now persist across session switches and are restored when switching back, so sessions are never left blocked on an unanswered prompt.
+    - Updated dependencies [0a5c6df]:
+      - @kilocode/kilo-indexing@7.8.9
+      - @opencode-ai/server@7.8.9
+      - @opencode-ai/tui@7.8.9
+      - @opencode-ai/ui@7.8.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.12
+ReleaseTime: 2026-10-15T09:08:09.0000000Z
