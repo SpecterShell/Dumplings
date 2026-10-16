@@ -1,13 +1,16 @@
 $LocaleMap = [ordered]@{
   'en-US' = '0x409'
+  'cs-CZ' = '0x405'
   'de-DE' = '0x407'
   'es-ES' = '0x40A' # 0xC0A
   'fr-FR' = '0x40C'
   'it-IT' = '0x410'
   'ja-JP' = '0x411'
   'ko-KR' = '0x412'
+  'pl-PL' = '0x415'
   'pt-BR' = '0x416'
   'ru-RU' = '0x419'
+  'tr-TR' = '0x41f'
   'zh-CN' = '0x804'
   'zh-TW' = '0x404'
 }
@@ -17,7 +20,7 @@ $ArchMap = [ordered]@{
 }
 
 $Object1 = Invoke-WebRequest -Uri 'https://learn.microsoft.com/en-us/sql/connect/oledb/release-notes-for-oledb-driver-for-sql-server' | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//div[contains(@class, "content")]/h2[1]')
+$Object2 = $Object1.SelectNodes('//div[contains(@class, "content")]/h2').Where({ $_.InnerText.StartsWith('18.') }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
@@ -57,6 +60,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     $this.Print()
     $this.Write()
