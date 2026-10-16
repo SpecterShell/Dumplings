@@ -1,0 +1,29 @@
+Version: 0.8.2
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/g0orx/hpsdr-rs/releases/download/v0.8.2/hpsdr-rs-0.8.2-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A small update to v0.8.1 -- see v0.8.0 for everything new in 0.8.
+    Changes
+    - RX Attenuation / RX Gain / RF Gain is now on the main window, next to AGC Gain, instead of in Settings → RX. It still shows the right control for the radio: RX Attenuation (0-31 dB) on most boards, RX Gain (-12 to +48 dB) on a HermesLite/HL2 over Protocol 1, and RF Gain on an RTL-SDR or MSI.SDR. Hover over its label for a short explanation. The RTL-SDR's Tuner AGC and direct-sampling options stay in Settings → RX.
+    - Spectrum: band edge markers and the dial line are now drawn under the spectrum trace, so a signal on a band edge or the dial frequency isn't hidden behind them.
+    Fixes
+    - Ozy (#8):
+      - On a system with only one Mercury, the background I2C poll no longer queries a second Mercury 4 times a second, which filled the log with "endpoint stalled" errors.
+      - A system without a Penny can now start; before, it failed with "endpoint stalled".
+      - Neither change has been tested on Ozy hardware yet.
+    Downloads
+    - Linux AppImage (x86_64 / aarch64): hpsdr-rs-0.8.2-x86_64.AppImage, hpsdr-rs-0.8.2-aarch64.AppImage -- chmod +x and run. USB radios still need the udev rules installed by hand; a copy is inside the AppImage under usr/share/doc/hpsdr-rs
+    - Debian/Ubuntu (amd64): hpsdr-rs_0.8.2-1_amd64.deb -- sudo apt install ./hpsdr-rs_0.8.2-1_amd64.deb
+    - Debian/Ubuntu/Raspberry Pi OS (arm64): hpsdr-rs_0.8.2-1_arm64.deb -- sudo apt install ./hpsdr-rs_0.8.2-1_arm64.deb
+    - Fedora/openSUSE RPM (x86_64 / aarch64): hpsdr-rs-0.8.2-1.x86_64.rpm, hpsdr-rs-0.8.2-1.aarch64.rpm -- sudo dnf install ./hpsdr-rs-0.8.2-1.x86_64.rpm, or on openSUSE sudo zypper install --allow-unsigned-rpm ./hpsdr-rs-0.8.2-1.x86_64.rpm
+    - macOS (Apple Silicon): hpsdr-rs-0.8.2-macos-arm64.tar.gz -- built in CI, unsigned and not notarized, so Gatekeeper warns on first launch: right-click the hpsdr-rs binary and choose Open, or run xattr -d com.apple.quarantine hpsdr-rs first
+    - Windows (x86_64): hpsdr-rs-0.8.2-x86_64.msi
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/g0orx/hpsdr-rs/releases/tag/v0.8.2
+ReleaseTime: 2026-10-16T15:16:58.0000000Z
