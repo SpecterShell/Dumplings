@@ -1,4 +1,4 @@
-$Prefix = 'https://airsdk.harman.com/runtime'
+$Prefix = 'https://airsdk.wxlift.com/runtime'
 
 $Object1 = Use-PlaywrightPage -Stealth -Headless {
   param($Page)
@@ -17,7 +17,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object3 = (Invoke-RestMethod -Uri 'https://airsdk.harman.com/api/versions/release-notes').Where({ $_.versionName -eq $this.CurrentState.Version })
+      $Object3 = (Invoke-RestMethod -Uri 'https://airsdk.wxlift.com/api/versions/release-notes').Where({ $_.versionName -eq $this.CurrentState.Version })
 
       if ($Object3) {
         # ReleaseTime
