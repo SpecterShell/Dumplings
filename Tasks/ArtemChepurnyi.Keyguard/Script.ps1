@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/AChep/keyguard-app/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/AChep/keyguard-app/releases/latest'
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object1.name, 'v(\d+(?:\.\d+)+)').Groups[1].Value
@@ -6,7 +6,13 @@ $this.CurrentState.Version = [regex]::Match($Object1.name, 'v(\d+(?:\.\d+)+)').G
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture  = 'x64'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and -not $_.name.Contains('aarch64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'wix'
+  Architecture  = 'arm64'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('aarch64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
