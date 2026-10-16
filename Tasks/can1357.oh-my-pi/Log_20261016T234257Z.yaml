@@ -1,0 +1,111 @@
+Version: 18.11.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.11.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - prepareQueuedMessages receives which queue (steering or followUp) a batch came from (#16026)
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed JSON Schema dereferencing rewriting literal values in const, enum, default, examples, and custom annotations, or treating property names as schema keywords (#15927 by @jchanghong023).
+    - Fixed Anthropic requests hanging forever on Bun 1.3 when the upstream accepted the request but never sent headers: aborting the request (including the first-event timeout) now fails it, so the turn retries instead of waiting until the user interrupts it (#16010 by @ca-io-systems)
+    - Fixed the auth gateway's POST /v1/chat/completions streams being dropped (terminated) after ~255 s without upstream output, e.g. while xAI generates a large tool call's arguments, which arrive only when complete; the stream now sends an SSE : keepalive comment every 15 s (#15940 by @radkawar)
+    - Fixed Anthropic models with mid-conversation system messages (e.g. Claude Opus 5.5) receiving @file mention contents and hidden extension messages as a trailing system message instead of ending the request on the user's turn (#15881)
+    @oh-my-pi/pi-catalog
+    Changed
+    - Renamed the built-in google-antigravity login option to "Google Antigravity (Gemini, Claude, GPT-OSS)" so it is distinguishable from similarly named third-party plugins and no longer implies support stops at Gemini 3 (#15998 by @savanne-kham).
+    Fixed
+    - Fixed Command Code's z-ai/glm-5.3-flash failing every request with "not available on this endpoint": the catalog routes it to chat completions, the only endpoint Command Code lists for it (#15922 by @jasonharrison)
+    - Fixed /handoff failing with 400 Provider returned error on OpenRouter's hosted Muse Spark 1.x and Muse Wonder models: requests no longer send a tool_choice the upstream Meta backend rejects (#15910)
+    - Fixed OpenCode Zen bringing back retired bundled models from an authoritative model cache, and dropping drop-listed models such as gemini-3.7-flash when a refresh fails after an upgrade (#15770 by @adi-IL)
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Extension ui.approve() hosts receive an optional session choice label and answer "once", "session", or "deny" instead of a boolean
+    Added
+    - Added imageCountBudget to custom models and modelOverrides in models.yml, so a custom gateway can state its host's image limit instead of the default of 5; past that limit the oldest images were dropped on every new image, which rewrote the provider's prompt cache (#15002, #15969 by @aramalipoor)
+    - The status line names the active profile next to the π brand (π-work), so sessions from different profiles are distinguishable at a glance; the default profile is unchanged (#15622 by @matthewrball)
+    - Added opt-in prewalk.auto (off, suggest, or on): the native judge decides per task whether to arm a prewalk handoff to prewalk.autoTarget, and the next task starts back on the planning model (#16026 by @taibenvenuti)
+    - Added /seance and the task seance agent: consult a saved session read-only, in place, without resuming it or copying its artifacts; pick the source and an optional model from pickers, and send follow-ups to the consultant (#15036 by @anatoli-tsinovoy)
+    Changed
+    - Tool approval prompts list Approve, Approve <tool> for this session, and Deny again: with an empty composer, pick with the arrow keys and Enter; typing in the composer denies and steers instead, and the Deny row reads "Deny and send message" while you do
+    Fixed
+    - Fixed the Isolate Subagents setting description implying that all tasks run isolated; each task must opt in with isolated: true (#15987).
+    - Fixed read labeling re-encoded images with the display format instead of the source file's format; it now identifies both when they differ (#15890).
+    - Fixed omp -p and task subagents reporting a clean finish with an earlier answer when a context overflow could not be compacted enough to retry; the overflow error is now the run's outcome (#15897 by @nhthung)
+    - Fixed Cursor's Shell tool killing commands once its block_until_ms wait elapsed; the wait no longer sets the kill deadline, which comes from Cursor's hard_timeout or the bash default (#15898 by @nhthung)
+    - Fixed an interrupted prompt's late setup cleanup marking the next prompt idle early, allowing overlapping submissions and releasing sleep prevention mid-turn (#15946)
+    - Fixed hashline REM hiding the path-recovery warning when a nonexistent path matched an earlier-read file (#15957).
+    - Fixed tool downloads (sd, sg, yt-dlp, trafilatura) failing with GitHub API error: 403 on a machine whose egress IP has spent GitHub's anonymous 60/hour budget; the release lookup now sends GITHUB_TOKEN/GH_TOKEN like omp's other GitHub API call sites (#15981 by @iacore)
+    - Background local memory extraction now stops after one bounded retry budget on repeated OpenAI-compatible 429 responses instead of multiplying transport, provider, and completion retries (#15826).
+    - Fixed a message-result subagent resumed by typing into its focused session leaving agent://<id> empty and never reporting its final reply to the parent (#15948)
+    - Fixed read of an RSS or Atom feed showing Untitled for every item and dropping feed titles, descriptions, dates, and RSS item links (#15954)
+    - Fixed read showing a binary notice instead of an HTML page when a server sends unlabeled gzip to the first request but decodable HTML to the second (#15956)
+    - Fixed read returning a homepage's site-wide feed or a page's site-wide llms.txt alternate instead of the requested page (#15955).
+    - Fixed ast_grep reporting a clean "No matches found" for a pattern that does not parse in the target language (e.g. a bare C# identifier); it now lists the pattern's ERROR node as a parse issue (#15950)
+    - Fixed --resume <id> and session listings skipping transcripts placed in the session directory as symlinks (#15878, #15884 by @peda-cos)
+    - Fixed sessions with a deferred-connecting MCP server listing every routed MCP tool twice, once as a mount notice and once in route guidance (#15982 by @zcyoung2000)
+    Removed
+    - Removed the built-in rs-parking-lot rule; Rust edits using std::sync::{Mutex, RwLock} with .lock().unwrap() are no longer steered to parking_lot
+    @oh-my-pi/pi-natives
+    Changed
+    - Changed encodeSixel and encodeSixelAsync to drop a partial last 6-pixel band, so an image never extends below the requested height and the caller no longer has to shrink it to a multiple of 6 (#16007)
+    @oh-my-pi/pi-tui
+    Added
+    - Added selection-only session and model picker actions for /seance, so choosing a source or model leaves the active session and model unchanged (#15036 by @anatoli-tsinovoy)
+    Changed
+    - ApprovalDialogComponent shows a choice list (Approve, an optional session row, Deny): the arrow keys move between them and Enter (armed after APPROVE_ARM_MS) takes the highlighted one; while a composer draft holds Enter the highlight sits on Deny, relabeled "Deny and send message"; Tern clicks on a choice take it; Page Up/Down scroll the details
+    Fixed
+    - Fixed a streamed Markdown list keeping every item out of native scrollback until the turn ended, so rows that scrolled off screen were unreachable mid-stream; items in front of the newest one now retire as soon as it begins (#13676, #15993 by @shgew)
+    - Fixed SIXEL charts and SVG figures being resampled before display, which softened their text, on terminals whose cell height is not a multiple of 6 such as Windows Terminal (#16007)
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed Markdown fence info-string parsing to keep backtick-containing backtick openers as paragraph text while accepting backticks in tilde info strings and Unicode line separators in either fence's info string (#15928 by @jchanghong023).
+    - Fixed parseHTML treating <link> in RSS/Atom documents as an HTML void element, which dropped the URL text of RSS <link>…</link> (#15954)
+    What's Changed
+    - fix(read): rendered rss and atom feed fields instead of untitled by @roboomp in https://github.com/can1357/oh-my-pi/pull/15959
+    - fix(tools): scoped read alternates to the requested page by @roboomp in https://github.com/can1357/oh-my-pi/pull/15960
+    - fix(read): rendered decoded html from binary refetch by @roboomp in https://github.com/can1357/oh-my-pi/pull/15961
+    - fix(edit): preserved recovery warnings on deleted files by @roboomp in https://github.com/can1357/oh-my-pi/pull/15962
+    - feat(coding-agent): configurable imageCountBudget for custom models by @aramalipoor in https://github.com/can1357/oh-my-pi/pull/15969
+    - fix(tools): send the environment token to the GitHub release lookup by @iacore in https://github.com/can1357/oh-my-pi/pull/15981
+    - fix(coding-agent): suppress mount notices duplicated by route guidance by @zcyoung2000 in https://github.com/can1357/oh-my-pi/pull/15982
+    - fix(task): clarify opt-in subagent isolation setting by @roboomp in https://github.com/can1357/oh-my-pi/pull/15990
+    - fix(tui): retire finished items of a streaming list mid-stream by @shgew in https://github.com/can1357/oh-my-pi/pull/15993
+    - fix(catalog): rename Google Antigravity login label by @savanne-kham in https://github.com/can1357/oh-my-pi/pull/15998
+    - fix(tui): encoded sixel images at their cell box without resampling by @roboomp in https://github.com/can1357/oh-my-pi/pull/16009
+    - fix(ai): failed an aborted cowork request that never received headers by @ca-io-systems in https://github.com/can1357/oh-my-pi/pull/16010
+    - feat(tui): tag the status-line brand with the active profile by @matthewrball in https://github.com/can1357/oh-my-pi/pull/15622
+    - fix(catalog): preserve authoritative caches in resolveProviderModels by @adi-IL in https://github.com/can1357/oh-my-pi/pull/15770
+    - fix(memory): bounded background extraction retries by @roboomp in https://github.com/can1357/oh-my-pi/pull/15827
+    - fix(ai): kept user-attributed developer turns off anthropic system role by @roboomp in https://github.com/can1357/oh-my-pi/pull/15883
+    - fix(session): follow symlinks in session inventory scans by @peda-cos in https://github.com/can1357/oh-my-pi/pull/15884
+    - fix(read): corrected source image format labels by @roboomp in https://github.com/can1357/oh-my-pi/pull/15892
+    - fix(coding-agent): kept an unrecovered context overflow as the run's outcome by @nhthung in https://github.com/can1357/oh-my-pi/pull/15897
+    - fix(cursor): stopped killing Shell commands at the block_until_ms wait by @nhthung in https://github.com/can1357/oh-my-pi/pull/15898
+    - fix(catalog): route Command Code z-ai/glm-5.3-flash to chat completions by @jasonharrison in https://github.com/can1357/oh-my-pi/pull/15922
+    - fix(ai): preserve literal data while dereferencing schemas by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/15927
+    - fix(utils): preserve invalid backtick fences as prose by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/15928
+    - fix(ai): keep auth-gateway chat-completions SSE streams alive during upstream silence by @radkawar in https://github.com/can1357/oh-my-pi/pull/15940
+    - fix(session): preserved next prompt state after interrupted setup by @roboomp in https://github.com/can1357/oh-my-pi/pull/15947
+    - fix(task): publish user-resumed message results to agent:// and parent by @roboomp in https://github.com/can1357/oh-my-pi/pull/15949
+    - fix(natives): reported ast-grep patterns that parse to an ERROR node by @roboomp in https://github.com/can1357/oh-my-pi/pull/15958
+    - fix(catalog): omitted tool_choice for openrouter muse models by @roboomp in https://github.com/can1357/oh-my-pi/pull/15911
+    - feat(coding-agent): add opt-in auto-prewalk routing with native judgment by @taibenvenuti in https://github.com/can1357/oh-my-pi/pull/16026
+    - feat(coding-agent): add focused read-only session seance by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/15036
+    - chore(coding-agent): remove stale rs-parking-lot TTSR rule by @H4vC in https://github.com/can1357/oh-my-pi/pull/16034
+    New Contributors
+    - @zcyoung2000 made their first contribution in https://github.com/can1357/oh-my-pi/pull/15982
+    - @ca-io-systems made their first contribution in https://github.com/can1357/oh-my-pi/pull/16010
+    - @matthewrball made their first contribution in https://github.com/can1357/oh-my-pi/pull/15622
+    - @adi-IL made their first contribution in https://github.com/can1357/oh-my-pi/pull/15770
+    - @nhthung made their first contribution in https://github.com/can1357/oh-my-pi/pull/15897
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.11.2...v18.11.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.11.3
+ReleaseTime: 2026-10-16T21:45:36.0000000Z
