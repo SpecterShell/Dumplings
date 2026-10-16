@@ -1,6 +1,6 @@
 $ReleaseNotesUrl = 'https://www.thunderheadeng.com/docs/latest/ventus/'
 $Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n"
-$ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl ([regex]::Match($Object1, 'location.href="([^"]+)"').Groups[1].Value)
+$ReleaseNotesUrl = Join-Uri $ReleaseNotesUrl ([regex]::Match($Object1, 'var t="([^"]+)"').Groups[1].Value)
 $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n"
 
 # Installer
