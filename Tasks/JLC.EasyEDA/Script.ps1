@@ -2,25 +2,12 @@ $Object1 = Invoke-WebRequest -Uri 'https://easyeda.com/page/download' | ConvertF
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerUrlX86 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[2]/a').Attributes['href'].Value
-}
-$VersionX86 = [regex]::Match($InstallerUrlX86, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
-
-$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrlX64 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
-}
-$VersionX64 = [regex]::Match($InstallerUrlX64, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
-
-if ($VersionX86 -ne $VersionX64) {
-  $this.Log("x86 version: ${VersionX86}")
-  $this.Log("x64 version: ${VersionX64}")
-  throw 'Inconsistent versions detected'
+  InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
 }
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
