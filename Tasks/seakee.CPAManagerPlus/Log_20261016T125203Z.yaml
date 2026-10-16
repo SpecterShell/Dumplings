@@ -1,0 +1,88 @@
+Version: 1.14.7
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.7_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.7/cpa-manager-plus_v1.14.7_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.7_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.7/cpa-manager-plus_v1.14.7_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.7
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.7
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.7 is a 1.x maintenance release after v1.14.6. It includes five already-merged fixes and performance improvements: a SQLite covering index for long-window latency analytics (#960), removal of history-sized candidate reads from the quota-snapshot writer hot path (#981), the Antigravity Hub client-identity compatibility fix (#986), unified non-blocking background refresh behavior across v1 views (#987), and inclusion of the first request after a Codex five-hour rollover (#991).
+    This release adds no new 1.x feature, does not change CPA management APIs, credential privileges, the SQLite schema, or configuration formats, and introduces no new polling jobs or timers.
+    Highlights
+    Fixes
+    - Background refresh behavior (#987): Loaded credentials, configuration, OAuth rules, Dashboard data, logs, plugins, System data, provider model discovery, Usage Analytics, and action-candidate views now retain the current successful snapshot while revalidating within the same data scope instead of reverting to full loading, blank content, or a false empty state.
+    - A transient revalidation failure keeps the last successful content visible with lightweight failure feedback, while a successful empty response is treated as a loaded empty snapshot. Connection, provider, credential, and capability scope changes invalidate stale data, late responses, and captured destructive actions.
+    - Loaded credential configuration remains visible but read-only after a reload failure and becomes editable again after a successful retry. Log reading position, plugin iframes, and loaded charts remain stable during ordinary refreshes.
+    - Antigravity quota compatibility (#986): Replace the obsolete antigravity/cli/1.0.13 management-request identity with the Hub identity used by current CPA so Cloud Code no longer truncates retrieveUserQuotaSummary because of the old-client floor. Gemini weekly and five-hour quota buckets are available again without changing endpoints, polling, or quota parsing semantics.
+    - First Codex request after a five-hour rollover (#991): When the previous cycle has ended but a request starts a few seconds before the response headers establish the new scheduled cycle start, that confirmed request now belongs to the new cycle's actual interval rather than being omitted from both cycles. Scheduled boundaries remain unchanged and the request is not double counted.
+    - Quota Snapshot write performance (#981): Remove the history-sized candidate query and sort from the writer hot path while leaving cross-request boundary canonicalization in the existing lifecycle repository. External quota APIs, displayed semantics, and persistence formats are unchanged.
+    Performance
+    - Long-window latency analytics (#960): Add a (timestamp_ms, latency_ms, ttft_ms) covering index through the existing deferred/offline derived-index lifecycle while retaining production SQL, the timestamp index, and exact percentile definitions.
+    - On a warmed synthetic 3.2M-event database, the 30-day raw SQL scan median fell from about 3.77 seconds to 0.43 seconds. The exact 120-day percentile SQL remains sorting-bound, improving from roughly 49 seconds to 25 seconds in that experiment. These figures describe the measured index boundary and are not an end-to-end guarantee for every deployment.
+    - The index adds modest disk and write overhead. Complex provider/model/account filters can still require table reads, and very long exact-percentile windows remain a future optimization area; this maintenance release does not expand into pre-aggregation or percentile-algorithm redesign.
+    Upgrade Notes
+    - A normal upgrade and restart is sufficient for all correctness fixes in v1.14.7. There is no SQLite schema or configuration-format migration, so migration_required remains false.
+    - On an existing non-empty usage.sqlite, the new latency covering index from #960 follows the existing deferred/offline maintenance lifecycle. Skipping that maintenance does not prevent Manager Server from starting or serving requests; it only postpones the index's performance benefit.
+    - To build the new index for an existing large database, stop Manager Server, run the existing offline maintenance command:
+      cpa-manager-plus cleanup-derived --db-path
+      and restart Manager Server afterward. Docker deployments should use the repository's existing stopped-service offline cleanup-derived procedure.
+    - compact-usage does not replace cleanup-derived; it serves the usage compaction/cleanup path and does not complete this deferred derived-index build. Keep a consistent database backup before offline database maintenance.
+    - Fresh empty databases continue to create the relevant indexes through the existing post-listen maintenance path and do not require the separate offline step.
+    - #991 applies to newly reconciled Codex five-hour rollovers after upgrade; already-persisted historical cycle boundaries are not automatically backfilled or rewritten.
+    - The minimum CPA baseline for full Muse / Meta functionality remains v7.3.4+; #986 does not raise the minimum CPA version.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.6...v1.14.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.7-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.7 是 v1.14.6 之后的 1.x 维护版本，收录五项已经合并并通过 CI 的修复与性能改进：长窗口延迟分析的 SQLite 覆盖索引（#960）、Quota Snapshot 写入热路径去除历史候选读取（#981）、Antigravity Hub 客户端身份兼容修复（#986）、v1 页面后台刷新体验统一修复（#987），以及 Codex 5 小时周期切换后的首条请求计入修复（#991）。
+    本版本不新增 1.x 功能，不改变 CPA 管理 API、凭证权限、SQLite Schema 或配置格式，也不增加新的后台轮询或定时器。
+    Highlights
+    Fixes
+    - 后台刷新体验（#987）：凭证、配置、OAuth 规则、Dashboard、日志、插件、System、Provider 模型发现、Usage Analytics 与候选列表等已加载区域，在同一数据作用域内刷新时继续保留当前成功快照，不再退回整块 Loading、空白或误判空态。
+    - 后台重验证失败时保留最后一次成功内容并显示轻量错误反馈；成功返回空结果会被识别为已加载的空快照。连接、Provider、凭证或能力作用域发生变化时，旧数据、迟到请求和旧危险操作会失效，避免跨作用域回写。
+    - 已加载的凭证配置在重新读取失败时保持可见但只读，成功 Retry 后恢复编辑与保存；日志阅读位置、插件 iframe 和已加载图表在普通刷新期间保持稳定。
+    - Antigravity 配额兼容（#986）：将 CPAMP 管理请求的过时 antigravity/cli/1.0.13 身份对齐到 CPA 当前使用的 Hub 客户端身份，使 Cloud Code 不再因旧客户端门槛裁剪 retrieveUserQuotaSummary，恢复 Gemini weekly / 5-hour 等完整额度桶。请求端点、轮询策略和额度解析语义不变。
+    - Codex 5 小时周期首条请求（#991）：当旧周期已经结束、请求先于响应头确认的新周期计划起点数秒开始时，该请求现在会纳入新周期实际区间，不再同时遗漏于新旧周期；计划边界保持不变，也不会双计。
+    - Quota Snapshot 写入性能（#981）：移除 writer 热路径上随历史规模增长的历史候选读取与排序，跨请求边界归一仍由既有 lifecycle repository 负责。对外额度 API、展示语义和持久化格式不变。
+    Performance
+    - 长窗口延迟分析（#960）：在既有 deferred/offline derived-index 生命周期中新增 (timestamp_ms, latency_ms, ttft_ms) 覆盖索引，保持生产 SQL、时间戳索引和精确分位数定义不变。
+    - 在预热的 320 万条合成事件基准中，30 天原始 SQL 扫描中位数从约 3.77 秒降至约 0.43 秒；120 天精确 percentile SQL 仍受排序限制，约从 49 秒降至 25 秒。该结果用于说明索引收益边界，不代表所有真实部署的端到端延迟。
+    - 新索引会增加少量磁盘与写入成本；复杂 Provider / Model / Account 筛选仍可能回表，120 天精确 P95 等长窗口查询仍有继续优化空间，本版本不扩大到预聚合或分位数算法重构。
+    Upgrade Notes
+    - 正常升级并重启即可使用 v1.14.7 的所有正确性修复。 本版本没有数据库 Schema 或配置格式迁移，migration_required 保持为 false。
+    - 对已有非空 usage.sqlite，#960 的新 latency covering index 会沿既有机制进入 deferred/offline maintenance；未执行该维护不会阻止 Manager Server 启动或正常服务，只是暂时无法获得该索引的性能收益。
+    - 如需完成现有大库的新索引构建，请先停止 Manager Server，再运行现有离线维护命令：
+      cpa-manager-plus cleanup-derived --db-path <数据库路径>
+      完成后再启动 Manager Server。Docker 部署请使用仓库现有的停止服务 + 离线 cleanup-derived 运行方式。
+    - compact-usage 不能替代 cleanup-derived；前者用于用量压缩/清理流程，不会完成本次 deferred derived-index 构建。执行离线数据库维护前建议保留一致的数据库备份。
+    - 新建空库继续通过既有 post-listen maintenance 创建相关索引，无需单独执行上述离线步骤。
+    - #991 只修正升级后新产生并重新协调的 Codex 5 小时 rollover；已经持久化的旧历史周期不会自动回填或重写。
+    - 完整 Muse / Meta 功能的 CPA 最低兼容基线仍为 v7.3.4+；#986 不要求提高最低 CPA 版本。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.6...v1.14.7
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.7-zh.md
+ReleaseTime: 2026-10-16T11:38:41.0000000Z
