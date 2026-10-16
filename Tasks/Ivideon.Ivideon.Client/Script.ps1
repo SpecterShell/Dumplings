@@ -1,11 +1,10 @@
-# $Object1 = Invoke-RestMethod -Uri 'https://eu01-api.ivideon.com/public/version/client_windows'
-
-$Object1 = Invoke-WebRequest -Uri 'https://www.ivideon.com/downloads/'
+$Object1 = Invoke-RestMethod -Uri 'https://updates.iv-cdn.com/bundles/bundles.json'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
   InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'IvideonClient' } catch {} }, 'First')[0].href
+  InstallerUrl  = $Object1.client.platforms.win64.url
 }
 
 # Version
