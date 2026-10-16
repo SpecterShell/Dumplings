@@ -5,12 +5,14 @@ $this.CurrentState.Version = $Object1.build
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.downloads.windows_x64.link
+  Architecture  = 'x64'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.downloads.windows_msix_x64.link
 }
 $this.CurrentState.Installer += $InstallerARM64 = [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.downloads.windows_aarch64.link
+  Architecture  = 'arm64'
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.downloads.windows_msix_aarch64.link
 }
 
 switch -Regex ($this.Check()) {
@@ -40,10 +42,6 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
-
-    # InstallerSha256
-    $InstallerX64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windows_x64.checksumLink).Split()[0].ToUpper()
-    $InstallerARM64['InstallerSha256'] = (Invoke-RestMethod -Uri $Object1.downloads.windows_aarch64.checksumLink).Split()[0].ToUpper()
 
     $this.Print()
     $this.Write()
