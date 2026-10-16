@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/InterceptSuite/ProxyBridge/releases/latest'
+$Object1 = (Invoke-GitHubApi -Uri 'https://api.github.com/repos/InterceptSuite/ProxyBridge/releases').Where({ -not $_.prerelease -and $_.tag_name -match '^v\d+(?:\.\d+)+$' }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
