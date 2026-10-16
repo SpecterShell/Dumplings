@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.amyxun.com/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.amyxun.com/' -Headers @{ Accept = 'text/html' } | ConvertFrom-Html
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
