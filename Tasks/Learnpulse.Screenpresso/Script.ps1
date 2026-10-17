@@ -12,6 +12,10 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
   InstallerUrl  = $Object1.checkforupdate.latestversion.downloadurl | Split-Uri -Parent | Join-Uri -ChildUri 'ScreenpressoSetup.msi'
 }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType = 'msix'
+  InstallerUrl  = $Object1.checkforupdate.latestversion.downloadurlmsix
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
@@ -44,11 +48,16 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri $Object1.checkforupdate.latestversion.releasesummary | ConvertFrom-Html
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object2.SelectSingleNode('//div[contains(@class, "container")]') | Get-TextContent | Format-Text
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h1[contains(@class, 'sp-release-version') and contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::div[contains(@class, "sp-release-content")]') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl (en-US)
