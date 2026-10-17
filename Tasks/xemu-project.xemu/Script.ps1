@@ -1,12 +1,20 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/xemu-project/xemu/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/xemu-project/xemu/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.assets.Where({ $_.name -match 'win' -and $_.name.Contains('x86_64') -and $_.name -match 'release' -and $_.name -notmatch 'pdb' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name -match 'win' -and $_.name.Contains('x86_64') -and $_.name -match 'release' -and $_.name -notmatch 'pdb' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name -match 'win' -and $_.name.Contains('aarch64') -and $_.name -match 'release' -and $_.name -notmatch 'pdb' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
