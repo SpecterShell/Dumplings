@@ -1,0 +1,68 @@
+Version: 1.42.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.42.1/skills-manager_1.42.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.42.1/skills-manager_1.42.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.42.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.42.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-10-17
+    Commit range: v1.42.0...v1.42.1
+    Release Overview
+    - Fixes for skills that came back after being removed from a preset, preset changes that did not reach other devices, monorepo skills that always showed an update, and workspace folders deleted by a single click. The market now shows the real error, and local, Windows and Linux installs get smaller fixes.
+    User-facing
+    - Removing a skill from a workspace asks first — In a library skill's Project Workspaces block, clicking the green "Added" chip deleted the skill's folder from the workspace at once. The folder did not go to the Trash, and in a linked workspace it is the folder the agent reads. The chip now asks first. On a project page, turning an agent off for a skill, or turning a preset off, also asks when a workspace copy differs from the library (#542).
+    - Skills removed from the active preset stay removed — Removing a skill that belongs to the active preset came back at the next launch. This happened whether you removed it on an agent page, from the tray, or with skills-manager-cli presets undeploy / skills undeploy. The removal is now kept, and deploying the skill again brings it back (#549).
+    - Removing the last preset member syncs to your other devices — When you removed the last skill from your presets, other devices kept the old membership. They could even back it up again, so the removed skill came back everywhere. Removals now sync (#553).
+    - Monorepo skills no longer always show an update — A skill installed from a subfolder of a repository was flagged "update available" after any commit anywhere in that repository. Now only changes to its own folder count (#561, #507).
+    - Remove a partially added preset — When only some of a preset's skills are in a workspace, a × next to the preset removes them. Thanks to @huoguojun123 (#571).
+    - The market shows the real error — When skills.sh could not be reached, the market said [object Object]. It now shows the cause, such as a timeout or a DNS failure (#529).
+    - Uploading a local-only skill whose folder links back into the library works — It failed with "infinite recursion". Thanks to @shuaiyafei (#565, #560).
+    - Windows: installing a local skill now shows the skill's name, not its full path, in the confirmation. Thanks to @shuaiyafei (#558, #512).
+    - Linux: the tray icon no longer turns into another Tauri app's icon while both are running. Thanks to @jubeater (#564, #563).
+    Developer & Governance
+    - Settings reads the app version at runtime with getVersion(). The locale files hold a {{version}} template, and release:prepare no longer rewrites them. Thanks to @shuaiyafei (#557, #511).
+    - Sync metadata counts a preset snapshot as complete when schema.json and scenarios/ exist. A missing scenario-skills/ now means zero memberships, because Git drops the empty directory.
+    - Per-agent preset toggles changed outside the skill detail panel are written to that member's metadata file under the repo lock. Before, they were stored only in the database, and the next reindex overwrote them. apply_skills_to_tools now writes these toggles for active-preset skills before it adds or removes anything.
+    - The update check for subfolder skills fetches only trees and commits (--filter=blob:none --depth=1) into a throwaway bare repository. It compares the subfolder's tree and every ancestor .gitattributes with libgit2. Any failure still reports an update.
+    - When the central destination of a local install is a real directory, the install returns early; a symlink there is still copied into the library.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-10-17
+    递交范围：v1.42.0...v1.42.1
+    发布概览
+    - 修复几类问题：从 Preset 移除的 Skill 重启后又回来；Preset 的改动不同步到其他设备；monorepo 里的 Skill 总显示有更新；点一下就删掉工作区目录。另外，市场页会显示真实的报错原因，本地安装、Windows 和 Linux 上也各有小修复。
+    用户可见更新
+    - 从工作区移除 Skill 前先确认 — 在技能库 Skill 详情的「项目工作区」区块里，点绿色的「已添加」会直接删掉工作区里这个 Skill 的目录。删除不进废纸篓；如果是关联工作区，删掉的就是 Agent 正在读的那个目录。现在点了会先确认。项目页上，关闭某个 Skill 的 Agent 开关或取消某个 Preset 时，如果工作区里的副本与技能库不一致，也会先确认（#542）。
+    - 从当前生效的 Preset 移除的 Skill 不再复活 — 移除一个属于当前生效 Preset 的 Skill 后，下次启动它又会被装回来。不论是在 Agent 页、在托盘，还是用 skills-manager-cli presets undeploy / skills undeploy 移除，都有这个问题。现在会记住这次移除；重新部署则会恢复（#549）。
+    - 移除最后一个 Preset 成员也能同步到其他设备 — 把 Preset 里最后一个 Skill 移除后，其他设备上的旧成员不会被删掉，还可能被它们重新备份上去，于是已移除的 Skill 在所有设备上又出现了。现在移除能正常同步（#553）。
+    - monorepo 里的 Skill 不再总显示「有更新」 — 从仓库某个子目录安装的 Skill，过去只要仓库里任何地方有新提交，就会显示「有更新」。现在只有它自己的目录变了才算（#561、#507）。
+    - 可以移除部分已添加的 Preset — 一个 Preset 只有部分 Skill 在工作区里时，旁边会出现 ×，点它即可移除这些 Skill。感谢 @huoguojun123（#571）。
+    - 市场页显示真实的报错原因 — 连不上 skills.sh 时，过去只显示 [object Object]，现在会显示具体原因，比如超时或 DNS 解析失败（#529）。
+    - 上传「仅本地」的 Skill 不再报 infinite recursion — 当这个 Skill 的目录是指回技能库的软链时，过去会报这个错。感谢 @shuaiyafei（#565、#560）。
+    - Windows：本地安装 Skill 后，提示里显示的是 Skill 的名称，不再是完整路径。感谢 @shuaiyafei（#558、#512）。
+    - Linux：同时运行其他 Tauri 应用时，托盘图标不再被换成它的图标。感谢 @jubeater（#564、#563）。
+    开发者与治理更新
+    - 设置页改为运行时用 getVersion() 读取版本号；语言文件里存的是 {{version}} 模板，release:prepare 不再改写它们。感谢 @shuaiyafei（#557、#511）。
+    - 同步 metadata 中，只要 schema.json 和 scenarios/ 都在，Preset 快照就算完整；缺 scenario-skills/ 表示零个成员，因为 Git 不保存空目录。
+    - 在 Skill 详情面板之外修改的 Preset 按 Agent 开关，现在会在 repo 锁内写回该成员的 metadata 文件。过去只存在数据库里，下次 reindex 会被覆盖。apply_skills_to_tools 在添加或移除之前，会先写当前生效 Preset 中相关 Skill 的开关。
+    - 子目录 Skill 的更新检查只把 tree 和 commit（--filter=blob:none --depth=1）取到一个用完即删的 bare 仓库，用 libgit2 比较该子目录的 tree 以及沿途每一级 .gitattributes。任何失败都仍按「有更新」处理。
+    - 本地安装时，技能库里的目标是真实目录才直接返回；如果目标是软链，仍会复制成真实目录。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-10-17T02:59:29.0000000Z
