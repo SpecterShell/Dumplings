@@ -20,7 +20,7 @@ switch -Regex ($this.Check()) {
         $Skip = $false
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
           if ($Node.Name -in @('h1', 'h2')) {
-            $Skip = $Node.InnerText -match '下载'
+            $Skip = $Node.InnerText -match '下载|文件摘要'
           }
           if (-not $Skip) { $Node }
         }
