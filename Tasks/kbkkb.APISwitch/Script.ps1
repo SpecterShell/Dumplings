@@ -16,12 +16,12 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $ReleaseNotesObject = $Object1.body.TrimStart([char]65279) | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h3[contains(., "English")]')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h3[contains(., "中文")]')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./*[(self::h2 or self::h3) and contains(., "English")]')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./*[(self::h2 or self::h3) and contains(., "中文")]')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'h3', 'hr') -and -not ($Node.Name -eq 'h4' -and $Node.InnerText -match 'Downloads'); $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesTitleNode.Name, 'hr') -and -not ($Node.Name -eq 'h4' -and $Node.InnerText -match 'Downloads'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
@@ -29,7 +29,7 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'h3', 'hr') -and -not ($Node.Name -eq 'h4' -and $Node.InnerText -match '下载'); $Node = $Node.NextSibling) { $Node }
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesCNTitleNode.Name, 'hr') -and -not ($Node.Name -eq 'h4' -and $Node.InnerText -match '下载'); $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
