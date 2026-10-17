@@ -17,12 +17,6 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        # ReleaseNotes (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
-        }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
@@ -33,12 +27,6 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
-      }
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
