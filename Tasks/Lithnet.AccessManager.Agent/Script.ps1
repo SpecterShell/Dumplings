@@ -15,12 +15,12 @@ $this.CurrentState.Version = $VersionX64
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'exe'
+  InstallerType = 'msi'
   InstallerUrl  = "https://packages.lithnet.io/$($Object2.Assets.Where({ $_.Description -eq 'Windows Agent MSI' }, 'First')[0].Uri)"
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
-  InstallerType = 'exe'
+  InstallerType = 'msi'
   InstallerUrl  = "https://packages.lithnet.io/$($Object3.Assets.Where({ $_.Description -eq 'Windows Agent MSI' }, 'First')[0].Uri)"
 }
 
