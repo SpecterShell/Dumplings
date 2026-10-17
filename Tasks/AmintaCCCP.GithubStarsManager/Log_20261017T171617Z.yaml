@@ -1,0 +1,95 @@
+Version: 0.8.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AmintaCCCP/GithubStarsManager/releases/download/v0.8.7/GitHub.Stars.Manager.Setup.0.8.7.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    GitHub Stars Manager v0.8.7
+    Highlights / 特性亮点
+    1. Vector Search One-Click Interactive Deployment Wizard / 向量搜索跨平台一键部署向导 (#479)
+    - EN: Introducing an end-to-end, cross-platform interactive terminal deployment wizard (TUI) for Cloudflare Worker & Vectorize semantic search. You can now deploy and configure vector search with zero manual Wrangler CLI commands or dashboard clicking!
+      - Cross-platform launchers: npm run deploy:vector, ./deploy-vector.sh (macOS/Linux), and double-clickable deploy-vector.bat or deploy-vector.ps1 (Windows).
+      - One-click browser OAuth login via Cloudflare Wrangler, automatic index creation, safe secret provisioning, and automatic local config generation.
+      - Safe & smart: Automatically preserves existing remote Vectorize indices and auth secrets without data loss.
+      - Redesigned Vector Search settings in the app with bilingual step-by-step guidance tabs.
+    - ZH: 推出 Cloudflare Worker 与 Vectorize 语义检索的一键交互式部署向导（TUI）。无需登录 Cloudflare 网页控制台或记忆复杂的 Wrangler 命令即可轻松完成部署与配置！
+      - 跨平台便捷启动：支持 npm run deploy:vector、./deploy-vector.sh（macOS/Linux），以及 Windows 下双击 deploy-vector.bat 或运行 deploy-vector.ps1。
+      - 浏览器一键 OAuth 授权登录、自动创建与探测 Vectorize 向量索引、安全注入鉴权密钥，并自动生成本地配置。
+      - 智能安全保障：自动探测并严格保护远端已有的向量索引和密钥，绝不覆盖已有向量数据。
+      - 应用内重构了向量搜索设置页，提供清晰明了的中英双语指引选项卡。
+    2. Custom Quick Actions on Repository Cards / 自定义仓库卡片快捷操作 (#467, #443)
+    - EN:
+      - Customizable action order: In Appearance Settings, you can now customize the order and display of quick action buttons on repository cards. Your most frequently used actions can stay right on the card face, while others remain easily accessible under "More Actions" (#467).
+      - Safer UX: The destructive "Unstar" action has been moved to the bottom of the "More Actions" menu with a visual separator to prevent accidental clicks (#443).
+      - UI Simplification: Renamed "Repository Health Facts" to "Repository Overview" in the release sidebar, and streamlined the QA history session counter (#443).
+    - ZH:
+      - 快捷操作自定义：在外观设置中新增卡片快捷操作定制功能，可自由调整按钮排序和显隐。常用操作可常驻卡片，其余操作遵循排序收纳至“更多操作”菜单 (#467)。
+      - 防误触体验优化：将“取消 Star”操作移至“更多操作”菜单底部并以分割线隔离，大幅降低误触概率 (#443)。
+      - 界面精简对齐：将侧栏“仓库健康事实”更名为更通俗易懂的“仓库概况”，并优化了搜索栏问答历史的会话计数显示 (#443)。
+    3. Granular Category Push to GitHub Lists / 支持指定分类推送到 GitHub Lists (#445)
+    - EN: In addition to pushing all categories at once, you can now select one or multiple specific categories to push to GitHub Lists without affecting other lists or triggering a full resync.
+    - ZH: 在原有一键全量推送到 GitHub Lists 之外，新增支持勾选单个或多个指定分类进行增量推送，不再强求全量同步。
+    4. Local AI & LAN API Endpoints Support / 本地大模型与局域网接入点支持 (#441)
+    - EN: Added full support for local and LAN IP addresses / hostnames as custom AI model API endpoints, with plain HTTP allowed. Connect your locally running Ollama, LM Studio, or LocalAI instances smoothly without HTTPS or CORS hurdles!
+    - ZH: 支持将本机和局域网 IP/主机名设置为自定义 AI 接入点，并放行明文 HTTP 协议。方便直接接入局域网或本机运行的 Ollama、LM Studio、LocalAI 等私有大模型，不再受强制 HTTPS 限制。
+    5. Security & Build Hardening / 全面安全加固与防御提升 (#464, #478, #442, #447)
+    - EN:
+      - CodeQL Security Fixes: Added API rate limiting (express-rate-limit) against DoS, switched session/OAuth tokens to cryptographically secure random values (crypto.randomUUID / crypto.getRandomValues), tightened ReDoS/SSRF regexes, and sanitized error responses (#478).
+      - Desktop Packaging Hardening: Enabled asar archive packaging to protect source distribution and cleared dev toolchain vulnerabilities (#464).
+      - Dependency Vulnerability Fixes: Patched KaTeX (CVE-2026-103923), sharp, and postcss-selector-parser (CVE-2026-104844) vulnerabilities (#442, #447).
+    - ZH:
+      - CodeQL 安全告警修复：后端接入 express-rate-limit 限流防范 DoS 攻击；会话 ID 与 OAuth 授权状态换用加密安全随机数；加固正则防范 ReDoS 攻击；收紧 URL 协议校验并屏蔽堆栈泄露 (#478)。
+      - 桌面端打包安全加固：启用 asar 归档避免明文源码分发，彻底治理构建工具链安全告警 (#464)。
+      - 漏洞修复：修复 KaTeX 原型污染、sharp 及 postcss-selector-parser CPU 耗尽等上游已知安全漏洞 (#442, #447)。
+
+    Special Thanks to External Contributors / 特别鸣谢外部贡献者
+    Heartfelt thanks to the community contributors who helped make this release better!
+    衷心感谢以下外部社区贡献者对本版本的精彩贡献：
+    - @Khk-NL for implementing customizable quick actions on repository cards (#467), improving unstar safety, and refining repository overview UX (#443).
+    - @SlickShady96 for implementing selective single/multi-category pushing to GitHub Lists (#445).
+    Thank you for your valuable time and outstanding work! 💖
+
+    What's Changed / 更新内容
+
+    | PR   | English Summary                                                                                              | 中文说明                                                                  | Contributor      |
+    | ---- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- | ---------------- |
+    | #479 | feat(vector-search): Cross-platform interactive one-click deployment wizard for Cloudflare Vectorize         | 新增 Cloudflare Vectorize 跨平台一键终端交互式部署向导及双语配置指引      | @AmintaCCCP      |
+    | #478 | fix(security): Resolve CodeQL code scanning alerts (rate limit, secure crypto random, ReDoS, URL validation) | 修复 CodeQL 安全扫描告警（接口限流、安全随机数、防 ReDoS 与危险协议拦截） | @AmintaCCCP      |
+    | #476 | build(deps-dev): Bump ajv from 6.15.0 to 8.20.0                                                              | 升级 ajv 依赖库至 8.20.0                                                  | @dependabot[bot] |
+    | #475 | build(deps-dev): Bump lucide-react to 1.55.0                                                                 | 升级 lucide-react 图标库至 1.55.0                                         | @dependabot[bot] |
+    | #473 | build(deps-dev): Bump vite from 7.3.7 to 8.3.4                                                               | 升级 vite 构建工具至 8.3.4                                                | @dependabot[bot] |
+    | #471 | build(deps-dev): Bump @cloudflare/workers-types in /cloudflare-worker                                        | 升级 Cloudflare Workers 类型定义                                          | @dependabot[bot] |
+    | #470 | build(deps): Bump helmet from 7.2.0 to 8.3.0 in /server                                                      | 服务端升级 helmet 安全中间件至 8.3.0                                      | @dependabot[bot] |
+    | #469 | build(deps): Bump zod from 4.4.3 to 4.6.6 in /server                                                         | 服务端升级 zod 校验库至 4.6.6                                             | @dependabot[bot] |
+    | #468 | build(deps): Bump @modelcontextprotocol/sdk from 1.31.0 to 1.32.1 in /server                                 | 服务端升级 MCP SDK 核心库至 1.32.1                                        | @dependabot[bot] |
+    | #467 | feat(card-actions): Allow customizing the order and visibility of quick actions on repo cards                | 支持在外观设置中自定义仓库卡片快捷操作的顺序与显示                        | @Khk-NL          |
+    | #466 | ci: Restore manual release version and changelog control with draft release verification                     | 恢复手动控制版本号与手写更新日志，CI 增加 draft release 前置守卫          | @AmintaCCCP      |
+    | #465 | build(deps-dev): Bump minor and patch dependencies                                                           | 升级常规开发依赖小版本                                                    | @dependabot[bot] |
+    | #464 | build(desktop): Electron-builder audit resolutions, enable asar packaging, toolchain cleanups                | 桌面端打包安全加固，开启 asar 归档，治理构建工具链漏洞                    | @AmintaCCCP      |
+    | #463 | build(deps-dev): Bump tailwindcss from 3.4.19 to 4.3.3                                                       | 升级 tailwindcss 样式引擎至 4.3.3                                         | @dependabot[bot] |
+    | #462 | build(deps-dev): Bump vitest from 4.1.11 to 5.0.3                                                            | 升级 vitest 测试框架至 5.0.3                                              | @dependabot[bot] |
+    | #461 | build(deps-dev): Bump lucide-react to 1.54.0                                                                 | 升级 lucide-react 图标库至 1.54.0                                         | @dependabot[bot] |
+    | #460 | build(deps-dev): Bump react and @types/react                                                                 | 升级 react 核心及类型定义                                                 | @dependabot[bot] |
+    | #458 | build(deps): Bump actions/setup-node from 6.5.0 to 7.1.0                                                     | 升级 GitHub Actions setup-node 动作                                       | @dependabot[bot] |
+    | #457 | build(deps): Bump docker/setup-buildx-action from 4.3.0 to 4.4.1                                             | 升级 Docker buildx 动作                                                   | @dependabot[bot] |
+    | #456 | build(deps): Bump actions/checkout from 6.0.2 to 7.0.1                                                       | 升级 GitHub Actions checkout 动作至 7.0.1                                 | @dependabot[bot] |
+    | #455 | build(deps): Bump docker/setup-qemu-action from 4.2.0 to 4.4.0                                               | 升级 Docker QEMU 仿真动作                                                 | @dependabot[bot] |
+    | #454 | build(deps-dev): Bump tsx from 4.23.13 to 4.23.15 in /server                                                 | 升级服务端 tsx 运行环境至 4.23.15                                         | @dependabot[bot] |
+    | #453 | build(deps): Bump socks-proxy-agent from 9.0.0 to 10.1.0 in /server                                          | 服务端升级 socks-proxy-agent 代理组件                                     | @dependabot[bot] |
+    | #452 | build(deps-dev): Bump wrangler from 4.146.0 to 4.149.0 in /cloudflare-worker                                 | 升级 Cloudflare Wrangler CLI 至 4.149.0                                   | @dependabot[bot] |
+    | #451 | build(deps-dev): Bump supertest and @types/supertest in /server                                              | 升级服务端接口测试库 supertest                                            | @dependabot[bot] |
+    | #450 | build(deps-dev): Bump typescript from 5.9.3 to 7.0.2 in /cloudflare-worker                                   | 升级 Cloudflare Worker typescript 编译器                                  | @dependabot[bot] |
+    | #449 | build(deps): Bump docker/build-push-action from 7.3.0 to 7.4.0                                               | 升级 Docker 镜像构建推送动作                                              | @dependabot[bot] |
+    | #448 | ci: Engineering & release pipeline governance (timeouts, zero-artifact guard, server CI)                     | CI 流水线加固治理（增加超时控制、零产物防漏拦截与服务端自动化测试）       | @AmintaCCCP      |
+    | #447 | build(deps): Force postcss-selector-parser ^7.1.6 to fix GHSA-rj75-hqrm-r3gf                                 | 强制升级 postcss-selector-parser 修复 CPU 耗尽 DoS 漏洞                   | @AmintaCCCP      |
+    | #445 | feat(lists): Support pushing single or multiple selected categories to GitHub Lists                          | 支持勾选单个或多个指定分类增量推送到 GitHub Lists                         | @SlickShady96    |
+    | #443 | UX: Fold unstar action and streamline repository UI prompts                                                  | 仓库卡片取消 Star 操作收起防误触，简化概况及问答计数界面提示              | @Khk-NL          |
+    | #442 | fix(deps): Resolve KaTeX and sharp security vulnerabilities                                                  | 升级修复 KaTeX 原型污染与 sharp 上游安全漏洞                              | @AmintaCCCP      |
+    | #441 | feat(ai): Support LAN & local IP/hostname endpoints and allow plain HTTP                                     | 支持局域网与本机私有 AI 接入点并放行明文 HTTP 协议                        | @AmintaCCCP      |
+    | #436 | build(deps): Bump npm_and_yarn group across 2 directories                                                    | 批量升级常规 npm 依赖库版本                                               | @dependabot[bot] |
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AmintaCCCP/GithubStarsManager/releases/tag/v0.8.7
+ReleaseTime: 2026-10-17T15:07:11.0000000Z

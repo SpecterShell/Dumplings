@@ -1,0 +1,20 @@
+Version: 0.20.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.20.1/magic-context-dashboard-windows-x64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.20.1/magic-context-dashboard-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Broca sessions show their data again. Newer Broca versions write session records with features this dashboard didn't recognise yet, so those sessions showed "no data". The dashboard now reads them.
+    - Cache Diagnostics no longer blames a pass that changed nothing. A Magic Context pass that left the request unchanged was sometimes shown as the cause of a cache bust. Only passes that actually changed the request are named now. (#713)
+    - Cache Diagnostics labels cache losses Magic Context didn't cause. It now shows "Cache expired after N min idle" when the gap since the previous request was longer than the cache lifetime. It shows "Provider cache miss (no change recorded by Magic Context)" when a warm cache went cold seconds later and Magic Context recorded no change to the request. When the cache lifetime isn't known and the gap falls between the provider's shortest and longest lifetimes, the bust stays unlabelled, because either cause is possible. A cause Magic Context recorded always takes precedence. (#713)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cortexkit/magic-context/releases/tag/dashboard-v0.20.1
+ReleaseTime: 2026-10-17T15:13:20.0000000Z

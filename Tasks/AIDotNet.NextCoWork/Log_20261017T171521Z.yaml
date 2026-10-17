@@ -1,0 +1,20 @@
+Version: 2.8.4
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.8.4/nextcowork-2.8.4-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 终端里 ⌘+点击打开链接(#178):npm run dev 打出的 http://localhost:5173 这类地址，按住 ⌘(非 macOS 为 Ctrl)点击即可跳系统浏览器，与 macOS「终端」/ VS Code 一致。必须带修饰键，裸点击仍用于选中文本和全屏 TUI 的鼠标事件。新增依赖 @xterm/addon-web-links
+    修复
+    - 终端认不出 brew / nvm 装的命令(#178):交互终端改为以登录 shell(-l)启动，能读到 ~/.zprofile / ~/.bash_profile 里的 PATH;Windows 与不认识的 shell 保持原样
+    - Skill 安装失败的提示更具体：磁盘权限不足、磁盘已满、网络失败、ZIP 结构或 SKILL.md 不合法、包过大、摘要校验失败、市场无可安装版本、写入后未能加载，各有对应文案(中英文);仍认不出的错误在通用提示后附上原始信息
+    - provider:changed 广播(账号切换、客户端登录同步、配置同步)统一使用解析后的模型列表
+    安全
+    - openExternal 由「仅 https」放宽为 http(s);file:、自定义协议与带账号密码的链接仍然拒绝
+    测试
+    - 新增 terminalShellArgs 用例，本地 Shell 配置生效范围的断言跟上登录参数
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.8.4
+ReleaseTime: 2026-10-17T16:10:29.0000000Z
