@@ -1,0 +1,214 @@
+Version: 18.12.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.12.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - The failed-tool-call correction sent to DeepSeek models now also covers chat-template tool-call tokens written out as text, not only malformed DSML (#16216 by @H4vC)
+    Fixed
+    - Fixed Ollama chat history estimates counting stripped native thinking and missing foreign thinking replayed as text, which skewed compaction after model switches (#16164)
+    @oh-my-pi/pi-ai
+    Added
+    - Added nativeJudgmentImageBounds(): the image bounds a native judge enforces, its wire's transport limits tightened by the catalog's model bounds
+    - Added Box judgment questions (BoxQuestion/BoxAnswer, TypeSafe Jev 1.14+ direct or through OpenRouter): each names the request image it searches by image index, and comes back as that image's edges as 0–1 fractions; text, OpenAI Decisions, and Workers AI judges reject them
+    Fixed
+    - Fixed Muse Code usage going stale whenever its 5-hour window sits idle: the idle window now reports as unused, and weekly usage carries over from the last active window until its reset (#16193 by @eggpeat)
+    - Fixed DeepSeek tool calls never running when the model writes them as chat-template tokens with _ in place of ▁, a missing ｜, or no per-call close (e.g. <｜tool_calls_begin｜>…<｜tool_calls_end｜>): they now run as tool calls, and any that still cannot be parsed are removed from history and reported to the model as a failed call (#16216 by @H4vC)
+    @oh-my-pi/browser-relay
+    Fixed
+    - Fixed a relay tab close failing when Chrome refuses it for a moment (a tab being dragged); the extension retries it (#16119 by @will-bogusz)
+    - Fixed tabs created for a relay request whose connection dropped mid-create staying open, and answers to such requests going to a later connection (#16119)
+    - Fixed the relay resolving an old tab id to a different tab after a browser restart; the extension now reports each browser run (#16119)
+    @oh-my-pi/pi-catalog
+    Changed
+    - Seeded TypeSafe jev-1.14.0 and OpenRouter typesafe/jev-1.14, and made them the judge role defaults and TypeSafe's default model; TypeSafe discovery keeps seeded ids its alias-only /v1/models listing omits
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added computer.backgroundFallback (takeover by default, or refuse): when a computer window input call has no background route, the tool reruns that one call in takeover, hands focus back to your app and says so in its result; refuse fails the call instead and also refuses the agent's own foreground requests (takeover: true, raise(), an activating apps.open, desktop input, and on macOS menus and AXOpen) (#15191 by @will-bogusz)
+    - Added DeepSeek as a web search engine (web/deepseek), using DeepSeek's new Search API with your existing DEEPSEEK_API_KEY or stored deepseek credential
+    - Added el.selectText(text, { prefix?, suffix?, select? }) to the macOS computer tool: it selects text (or places a caret) in a background app's text field without taking focus, moving the pointer or sending keys, so typing into that field replaces it (#15175 by @will-bogusz)
+    - Added { takeover: true } to computer-use win.move, so a hover that a window refuses in the background can be retried in the foreground (#15173 by @will-bogusz)
+    - Added a menu option to the computer tool's win.click, el.click, el.press and el.perform, so on macOS the call that opens a menu also chooses its item, e.g. menu: ["Add to", "Fonts"] (#15185 by @will-bogusz)
+    - Added el.type(text) and el.press(chord) to the computer tool, which send text and keys to that element instead of wherever its window's focus is; on macOS and Windows nothing is sent when the element cannot be addressed without taking your focus (#15563 by @will-bogusz)
+    - Added: pressing Escape during takeover input now stops computer use for the rest of the turn, and that session's later computer calls are refused, unsent, until your next message (#15564 by @will-bogusz)
+    - Added the computer tool's UserIntervened error on macOS: input into an app you have used since the agent last read its window fails without sending, and the agent is told to read the window again and keep your edits (#15562 by @will-bogusz)
+    - Added tui.completeScrollback: rows a growing HUD or dialog pushes off screen go straight to scrollback instead of missing from it until it shrinks (#15692 by @Ilm-Alan)
+    Changed
+    - The computer tool and its errors no longer tell the model to retry with takeover: true, and its instructions tell it never to call raise() or apps.open(…, { activate: true }) to make input work (#15191 by @will-bogusz)
+    - Computer-use window input with takeover omitted now stays in the background after computer.control.acquire, so an acquired grant no longer activates the target app or moves the user's pointer; pass takeover: true for foreground input (#15173 by @will-bogusz)
+    - Pressing Escape in your own app no longer stops the computer tool's background window input unless task control is held; Escape in omp still interrupts it, and physical Escape still stops takeover input (#15176 by @will-bogusz)
+    - Added Box questions to ChainJudge: they go only to Jev judges that answer them, and the box edges measure the image you passed even when it was padded to fit Jev's size bounds
+    - A relay browser.open without app.target now opens its own background tab instead of adopting the visible one (after reinstalling the relay extension; older ones select it), and browser.close closes it; app.target still borrows an existing tab (#16119 by @nnnnoel and @will-bogusz)
+    - Computer-use win.menu.items now needs exec approval and is rejected in read_only runs, since on macOS it makes the window key in its own application before reading its menus (#15184 by @will-bogusz)
+    - The computer tool no longer takes over your screen for macOS drags and holds on sliders, scroll bars, splitters and steppers, modified clicks, right-clicks and scrolls; they run in the background (#15185 by @will-bogusz)
+    - The default judge role now uses TypeSafe Jev 1.14 (typesafe/jev-1.14.0, then openrouter/typesafe/jev-1.14): jev-latest is TypeSafe's stable alias and answered as jev-1.13.0
+    - Idle compaction on a 1-hour prompt cache (Anthropic long retention) now runs just before the cache entry expires, about 54 minutes after the last request, so the summary still reads the cached context; compaction.idleTimeoutSeconds still applies with a 5-minute cache or an unknown lifetime (#16198, #16204 by @H4vC)
+    - Tool-call intents now say what the agent wants from the call's output and what it already knows (e.g. "Find where the retry delay is computed and whether it honours Retry-After; the client is in http.py") instead of a short label like "Reading config file"
+    Fixed
+    - Fixed repeated status commands such as /goal show showing nothing after the first few times in a native terminal when the text had not changed
+    - Fixed browser relay tabs that a browser already had open when its extension connected staying invisible to omp until they changed; opening such a tab by app.target could fail with "Selected tab did not become available before omp could attach"
+    - Fixed Ollama Cloud sessions compacting too early on stripped thinking or too late after switching from another model (#16164)
+    - Fixed Google sign-in rejecting the /login perplexity SSO browser window with "This browser or app may not be secure"; the sign-in browser no longer runs in automation mode (#16141)
+    - Fixed task.softRequestBudget never stopping Cursor subagents (#16182 by @joseotaviorf)
+    - Fixed image judgments (judge()/judge_batch() with images) leaving TypeSafe Jev for the local tiny model whenever an image fell outside Jev's 280–1568 px bounds, which most screenshots do: images are now resized into the bounds, and strips padded, before Jev sees them
+    - Fixed a Codex turn stopping on "Request failed … unsupported_native_inflight_message" when you sent a message while the response was writing text; the session now keeps the partial reply and continues with your message
+    - Fixed the bash tool dropping variables, functions, and shell options between calls whenever auto-background was on (the default): a call that starts in the foreground now runs in the session's persistent shell, a failing command under set -e or an exit no longer resets that shell, and a call that overlaps a still-running one says it ran in a temporary shell (#16153 by @alphastorm)
+    - Fixed the macOS computer tool's StaleRef for an element the app rebuilt in place, such as an Automator rule popup after its neighbour changed, leaving the agent to re-read the window: it now names the one element of the window with the fields the ref was read with, for the agent to check before acting on it (#15574 by @will-bogusz)
+    - Fixed an eval cell's timeout aborting an awaited tool.task(...) or tool.wait(...) and losing its subagents' results: time spent waiting on them no longer counts against the cell, as with agent() handles, while a turn cancel still stops them (#16154 by @alphastorm)
+    - Fixed the Up arrow crashing omp with text.replace is not a function when history.db was damaged; recall skips unreadable rows, and a damaged store is moved aside to history.db.corrupt-* with every readable prompt, session title, and recap copied into its replacement (#15751 by @Shadorain)
+    - Fixed browser tab.screenshot() raising Chrome over the app you were typing in and switching its visible tab; background tabs and windows behind other apps are now captured in place, including ones idle long enough that Chrome stopped drawing them, as is a relay or app.cdp_url tab the user switched away from (#15174 by @will-bogusz)
+    - Fixed tabs omp opens through a relay shared by two browsers landing in whichever browser reconnected last; they open in the browser of the tab omp used last, else the one showing the first selected tab (#16119 by @will-bogusz)
+    - Fixed a relay browser.close after a browser restart closing a tab the user had opened since, when Chrome reused the old tab's id; a tab omp opens while its browser's relay extension reconnects now waits for it instead of opening in another browser, and one Chrome finishes creating after the extension's connection dropped is closed (#16119)
+    - Fixed computer.run and browser tab.run silently dropping args that were not an array (such as { args: { path } }) or were given with a code string, so the function ran without them after its first steps had already acted; both now throw before the run starts, while omitted or null args still pass none (#16149 by @will-bogusz)
+    - Fixed computer helpers or browser tab calls started together (such as Promise.all over computer.window) failing with a bare "Computer worker is busy" or "Tab … is busy"; the error now says to await each call before starting the next, or group the steps in one computer.run or tab.run (#16149 by @will-bogusz)
+    - Commands in bash can hand skill://, local://, and other file-backed URLs to external programs again (python skill://example-skill/tool.py "query"), and can run them from a cd'd writable URL directory such as local://; a URL the provider rejects, such as an unknown skill, now fails the command with the provider's error (#14838 by @koyzdev)
+    - Fixed computer.apps.open returning before the app had a window, or never giving a hidden running app one; it now returns the app's frontmost window as window, waiting up to 3 s on macOS (#15184 by @will-bogusz)
+    - Fixed a key you were typing on macOS arriving twice or more when omp exited after computer use (#15562 by @will-bogusz)
+    - Fixed omp --restore and /retry reporting nothing to retry for a turn cut off by a process exit in a session that had used eval; the interrupted turn now continues (#16195)
+    - Fixed session loading on Windows treating a session path with a regular-file component as a missing session (an empty session) instead of rejecting it with ENOTDIR like POSIX does (#16145 by @jchanghong023)
+    - Fixed models from extension providers listed in enabledModels or --models missing from /model, the Ctrl+P cycle and the startup model scope notice until the background catalog refresh finished (#16096 by @skipper019)
+    @oh-my-pi/pi-natives
+    Added
+    - Added a refuseMenu option to click, drag and holdMouse: a macOS background left click on a menu button or popup button, or a drag or hold starting on one, throws BackgroundUnavailable before anything is sent (#15191 by @will-bogusz)
+    - Added a returnFocus option for window input with takeover: on macOS the takeover hands focus back to your app even if you clicked meanwhile, and only a third app you switched to keeps focus (#15191 by @will-bogusz)
+    - Added DesktopSession.axSelectText (macOS) to select text in an accessibility element's value by UTF-16 range, refusing missing or ambiguous matches and returning the selection read back (#15175 by @will-bogusz)
+    - Added a menu item path to click options and axPerform: a macOS click or action that opens a menu chooses that item, submenus included, and leaves no menu open (#15185 by @will-bogusz)
+    - Added DesktopSession.axType and axKeyChord, which type into or press keys in one accessibility element; on macOS a field that does not report keyboard focus gets nothing and the error names what has focus; on Windows background input goes straight to the element's own control window and refuses a windowless element (#15563 by @will-bogusz)
+    - Added DesktopSession.escapeStops and desktopEscapeStops(key), counting takeover input you stopped with physical Escape on macOS, Windows and X11, apart from host cancels (#15564 by @will-bogusz)
+    - Added UserIntervened on macOS: keys and clicks stop at your first key or click in the app they go to, and input to an app you used since it was last read waits up to 5 s for you to pause, then fails without sending (needs Input Monitoring) (#15562 by @will-bogusz)
+    Changed
+    - Reduced Mermaid XY-chart rendering overhead while preserving chart colors and layout (#16214 by @kyle-elliott).
+    - Reading recent commit subjects in a long Git history now reads only the commits requested instead of walking the whole history (#16210 by @kyle-elliott).
+    - Improved AST search and edit performance in directories containing many unsupported files (#16213 by @kyle-elliott).
+    - Faster numbered source formatting for hashline reads (#16211 by @kyle-elliott).
+    - Improved word-diff performance for inline change highlighting (#16212 by @kyle-elliott).
+    - Window input calls, element axClick, axType and axKeyChord included, resolve to a DesktopFocusReturn (handedBack, previousPid, frontPid) when a macOS takeover ran, and to null otherwise (#15191 by @will-bogusz)
+    - BackgroundUnavailable and partial-delivery errors no longer tell the caller to retry with takeover:true; they say whether any input was sent (#15191 by @will-bogusz)
+    - Reduced allocation overhead for uncached, result-limited file searches in large directory trees (#16115 by @kyle-elliott).
+    - Desktop window input with takeover omitted is now background on every platform even while task control is held; only takeover: true selects foreground delivery (#15173 by @will-bogusz)
+    - Computer use's physical Escape stop now watches the keyboard only during takeover input (takeover: true, held control, desktop-level input, raises); without held control, an Escape the user presses in their own app no longer cancels background window input, which the host interrupt still stops (#15176 by @will-bogusz)
+    - macOS background keys, typing, left clicks and menu commands now refuse with BackgroundUnavailable when aimed at a non-key window of the app you are using, or once you have come to the target app, instead of moving your typing there; keys sent while another window of the target app becomes key stop with InputFailed (#15184 by @will-bogusz)
+    - macOS win.menu.items now makes the window key within its app before reading, so it takes the input lock and throws InputBusy while another operation holds it (#15184 by @will-bogusz)
+    - macOS background drags and holds on sliders, scroll bars, splitters and steppers, modified clicks, right-clicks, Electron scrolls and Tk 8.5 clicks now run without bringing the app forward; drags that could pick up files or text still throw BackgroundUnavailable (#15185 by @will-bogusz)
+    Fixed
+    - Fixed macOS UserIntervened missing your input during element writes (axSelectText, setValue, native-field typing, AX actions and popups), a reused Open/Save panel process id counting another app's input, and an event tap started during exit staying live (#15562)
+    - Fixed macOS remote-screen press/holdKeys landing in a Screen Sharing window you brought forward during the layout read, iPhone Mirroring dropping a press right after a release, and a modifier two characters need being pressed twice (#15193)
+    - Fixed the macOS focus guard missing switches while a click hit-test stalled and missing an app the action brought forward 200–500 ms after its last send; background actions now keep guarding for that window before returning (#15195)
+    - Fixed macOS key rerouting sending your keys to the app you had left after you switched to a third app, letting a menu that still held the keyboard from an earlier action take your keys, and dropping a theft when key focus could not be read (#16140)
+    - Fixed macOS keys and mouse buttons staying down when omp is killed or its native input code panics mid-gesture; a key or button you are physically holding is left for you to release (#15192 by @will-bogusz)
+    - Fixed macOS and X11 background input throwing BackgroundUnavailable ("nothing was sent") after part of the call was already sent; it now throws InputFailed, and on macOS a call stopped because you came to the target app throws UserIntervened (#15191 by @will-bogusz)
+    - Fixed macOS takeover InputFailed naming only the target window when another held focus; it now names the app's focused window, such as an alert or sheet, or the app that stayed in front (#15191 by @will-bogusz)
+    - Fixed a macOS takeover: true click or key that opened a document or closed a sheet or panel leaving its app in front for good; focus now returns to your app unless you clicked or pressed a shortcut during the takeover (#15191 by @will-bogusz)
+    - Fixed the in-process cksum --check panicking on a tagged checksum line that starts with ( (for example (file)= <hash>) instead of reporting it as an invalid checksum line (#16142 by @jchanghong023)
+    - Fixed grep --path-separator leaving \ separators untouched in printed paths on Windows, so displayed paths no longer mix \ with the configured separator (#16143 by @jchanghong023)
+    - Fixed macOS computer use reporting a working physical Escape stop (globalEscape: true) when Input Monitoring was turned off and the stop could not see keys; inputPermission now reports event-posting access, and permission errors name the terminal or IDE to grant (#15157 by @will-bogusz)
+    - Fixed a persistent Shell session discarding its variables, functions, and options when a command ran exit or stopped under set -e; those now end only the command, and only a failed run resets the session (#16153 by @alphastorm)
+    - Fixed a macOS element-ref StaleRef giving no lead when the app destroyed the element and put an identical one in its place: the error now names the one element of the window with the fields the ref was read with, registered as a new ref, and sends nothing to it (#15574 by @will-bogusz)
+    - Fixed macOS takeover input sending the user back to their previous app when they clicked in the takeover target as the input ended, and keeping the target in front for good when they merely kept typing while takeover held it: a click, a shortcut (any key with Command or Control, such as Command-Tab or Control-Up, a function key or a Globe shortcut), or a switch to another app now leaves the front app to the user, and macOS refuses the hand-back if one came after the takeover's own input; plain typing alone no longer does, once Input Monitoring lets omp tell it apart (#15176 by @will-bogusz)
+    - Fixed macOS background input taking keyboard focus from your app, which then dropped pastes and shortcuts until clicked again, and the focus guard sending your app back to the front just after you picked the target yourself (#15184 by @will-bogusz)
+    - Fixed macOS background input doing nothing or landing in the wrong place for Chrome pages, apps with several windows, Finder, sheets, popovers, inline editors such as Finder's rename field, and system Open/Save panels; keys for a window behind its own focused sheet now throw InvalidTarget naming the sheet (#15184 by @will-bogusz)
+    - Fixed TextEdit and Script Editor freezing after a background ⌘S, and background shortcuts reporting success when the app stopped answering; they now throw InputFailed saying the outcome is unknown (#15184 by @will-bogusz)
+    - Fixed macOS win.menu.items and win.menu.select treating commands such as Font Book's File ▸ New Collection as disabled while the app was in the background or had not yet caught up with an edit (#15184 by @will-bogusz)
+    - Fixed macOS openApplication leaving a hidden running app without a window and bringing Notes or Contacts to the front; it now shows the app behind yours and returns its first window (#15184 by @will-bogusz)
+    - Fixed macOS background and takeover input refusing while your front app showed no window, as Finder does after a click on the desktop (#15184 by @will-bogusz)
+    - Fixed a macOS background AX action that failed yet brought its app forward, such as AXOpen in Chrome's Open panel, leaving that app in front of yours (#15184 by @will-bogusz)
+    - Fixed macOS background right-clicks, menu button presses and popup setValue leaving a menu open in the target app, which took your keyboard; the menu now closes, and a right-click or press that opened one throws InputFailed (#15185 by @will-bogusz)
+    - Fixed a macOS menu path or background press() on a popup in an Open or Save panel, such as Automator's Where: popup, failing to find its menu (#15185 by @will-bogusz)
+    - Fixed your typing landing in the macOS app a background action targets when that app brings itself to the front while you type (#15195 by @will-bogusz)
+    - Fixed macOS background input sending you back to your previous app after you opened the target app from Spotlight during the action (#15195 by @will-bogusz)
+    - Fixed an app that a macOS background action opens something in, such as TextEdit after a background ⌘O in Finder, staying in front of your app; it is sent back like the target (#15195 by @will-bogusz)
+    - Fixed a key you typed on macOS reaching your app twice or more when a process holding a computer-use event tap exited; closeDesktopEventTaps() closes them first (#15562 by @will-bogusz)
+    - Fixed macOS typing into Screen Sharing and iPhone Mirroring arriving as the wrong characters: it now presses your keyboard layout's keys, types unmodified text in the background and stops while you hold a modifier or Caps Lock is on, and iPhone Mirroring taps and scrolls land where aimed (#15193 by @will-bogusz)
+    - Fixed your keystrokes landing in the app a macOS background action targets, or vanishing into a menu it opened, when it takes the keyboard mid-action; they now reach your app (#16140 by @will-bogusz)
+    - Fixed computer use input that had already gone out, such as typed text, a shortcut or a click, reporting Cancelled when you stopped it moments later; the stop now ends the next call instead (#16202 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Added
+    - Added ComposerPreferences.completeScrollback (default false): rows a growing HUD or dialog pushes off screen go straight to scrollback instead of being held back until it shrinks (#15692 by @Ilm-Alan)
+    Fixed
+    - Fixed table charts picking the wrong label and measure columns when numbers group thousands with spaces (1 988, 17 083); they now read like 1,988 (#16175)
+    - Fixed terminal capability replies relayed through win32-input-mode appearing as typed input in WSL terminals (#16137)
+    - Fixed the status-bar activity spinner and turn timer freezing until the next keypress when the working-row loader is stopped mid-turn; an open turn window now repaints the status line on its own timer (#16109 by @tommymorgan).
+    - Fixed pasting sometimes inserting a block of base64 text instead of the pasted text in terminals that deliver pastes through the Kitty clipboard protocol (OSC 5522), most often with dictation apps that paste for you; a slow paste now arrives whole, and keys typed while a paste never finishes are given back instead of lost (#16170 by @H4vC)
+    - Fixed a streaming table bouncing everything below it up and down while its last cell was still being written (#16116 by @galtamam-cmyk)
+    - Fixed inline images in iTerm2 being sized for the wrong cell shape, which left charts smeared or offset (#16118 by @galtamam-cmyk)
+    @oh-my-pi/pi-utils
+    Added
+    - Added readSalvageableRows() to read the rows of a damaged SQLite table that are still readable, skipping only the damaged pages (#15751 by @Shadorain)
+    What's Changed
+    - perf(walker): reduce allocations for ranked file finding by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16115
+    - fix(natives): report the macOS Escape stop honestly by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15157
+    - fix(natives,coding-agent): name the element that replaced a stale macOS computer ref by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15574
+    - fix(coding-agent): salvaged damaged history.db instead of crashing on history recall by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15751
+    - fix(natives,coding-agent): keep omitted takeover in the background while computer control is held by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15173
+    - feat(computer): select text in a background macOS element by accessibility by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15175
+    - feat(web-search): add DeepSeek Search API engine (web/deepseek) by @H4vC in https://github.com/can1357/oh-my-pi/pull/16136
+    - fix(coding-agent): capture browser tabs in place instead of raising Chrome by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15174
+    - fix(natives): keep the user's app focused during macOS background input by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15184
+    - fix(shell): hand external commands the files that backed URLs alias by @koyzdev in https://github.com/can1357/oh-my-pi/pull/14838
+    - fix(natives): stop computer use on physical Escape only during takeover input by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15176
+    - feat(computer): stop computer use for the rest of the turn when the user presses Escape by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15564
+    - feat(computer): type into one element with el.type and el.press, sending nothing if it won't take focus by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15563
+    - fix(natives): keep the user's app in front when a macOS background target activates itself while they type by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15195
+    - feat(natives): send the user's keys back to their app while a macOS background target holds the keyboard uninvited by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16140
+    - fix(natives): type into macOS Screen Sharing and iPhone Mirroring with the keyboard layout's keys by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15193
+    - feat(computer): stop typing and re-read when the user types in the agent's macOS app by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15562
+    - fix(tui): resolve stalled OSC/DCS/APC strings by grammar instead of timeouts by @H4vC in https://github.com/can1357/oh-my-pi/pull/16170
+    - feat(natives): deliver macOS background drags, holds, modified and right-clicks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15185
+    - fix(natives): release keys and buttons a macOS input request still holds when omp dies by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15192
+    - feat(computer): rerun refused macOS background input in takeover, set by computer.backgroundFallback by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15191
+    - fix(eval): exclude delegated tool waits from cell timeouts by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16154
+    - fix(task): budget Cursor subagent steps by @joseotaviorf in https://github.com/can1357/oh-my-pi/pull/16182
+    - fix(tui): read iTerm2's cell size from ReportCellSize by @galtamam-cmyk in https://github.com/can1357/oh-my-pi/pull/16118
+    - test(coding-agent): isolate system prompt discovery environment by @C-W-Z in https://github.com/can1357/oh-my-pi/pull/16166
+    - fix(pi-builtins): reject a tagged cksum line starting with ( instead of panicking by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/16142
+    - test(natives): gave each ast test tree its own temp directory by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16163
+    - test(natives): keep a click placed in the user's app from reading as a new click in the macOS focus guard test by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16187
+    - fix(tui): hold a streaming table's height while its last cell grows by @galtamam-cmyk in https://github.com/can1357/oh-my-pi/pull/16116
+    - feat(coding-agent): time idle compaction to prompt cache TTL by @H4vC in https://github.com/can1357/oh-my-pi/pull/16198
+    - fix(coding-agent): time idle compaction only to the 1h prompt cache by @H4vC in https://github.com/can1357/oh-my-pi/pull/16204
+    - docs(coding-agent): note cold short-tier idle summary trade-off by @H4vC in https://github.com/can1357/oh-my-pi/pull/16207
+    - fix(ai): keep Muse Code usage current while the 5-hour window is idle by @eggpeat in https://github.com/can1357/oh-my-pi/pull/16193
+    - perf(diff): borrow word tokens instead of copying them by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16212
+    - fix(tui): repaint the status line on its own timer while a turn runs by @tommymorgan in https://github.com/can1357/oh-my-pi/pull/16109
+    - perf(edit): format numbered lines into one output buffer by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16211
+    - perf(ast): avoid discarded errors when filtering unsupported files by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16213
+    - fix(coding-agent): add extension models to the enabledModels scope before the first frame by @skipper019 in https://github.com/can1357/oh-my-pi/pull/16096
+    - fix(natives): stop Linux clippy flagging macOS-only text-range helpers by @tommymorgan in https://github.com/can1357/oh-my-pi/pull/16158
+    - perf(vcs): bound retained commit IDs for prefix queries by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16210
+    - perf(mermaid): borrow palette colors in XY chart cells by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16214
+    - test(natives): expect UserIntervened when the user brings iPhone Mirroring forward mid-tap by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16200
+    - fix(natives): send a macOS background target back however late it activates itself by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16185
+    - fix(natives): count a takeover tap kind without an arm as the user's input by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16188
+    - fix(natives): say that clicks, not only keys, stop at the user's input in macOS UserIntervened by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16206
+    - fix(coding-agent): keep the ENOTDIR rejection for session paths with a file component by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/16145
+    - fix(pi-builtins): rewrite the native path separator in grep --path-separator output by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/16143
+    - fix(coding-agent): reject unusable run args and explain busy errors in computer and browser calls by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16149
+    - feat(browser): open relay tabs omp owns in the background by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16119
+    - fix(bash): keep the persistent shell's state between calls by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16153
+    - fix(ai): heal DeepSeek tool calls written in re-spelled template tokens by @H4vC in https://github.com/can1357/oh-my-pi/pull/16216
+    - fix(coding-agent): skipped trailing eval state snapshot in turn retry by @roboomp in https://github.com/can1357/oh-my-pi/pull/16197
+    - fix(coding-agent): ran perplexity sso browser outside automation mode by @roboomp in https://github.com/can1357/oh-my-pi/pull/16147
+    - fix(agent): excluded stripped ollama thinking from context estimates by @roboomp in https://github.com/can1357/oh-my-pi/pull/16165
+    - fix(tui): routed relayed replies through terminal parser by @roboomp in https://github.com/can1357/oh-my-pi/pull/16138
+    - fix(tui): read space-grouped thousands in table chart cells by @roboomp in https://github.com/can1357/oh-my-pi/pull/16177
+    - fix(skills): dropped stale IrcTool from builtin prompt probe by @roboomp in https://github.com/can1357/oh-my-pi/pull/16168
+    - fix(natives): keep computer input that already went out from reporting Cancelled by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16202
+    - fix(natives): keep a lingering macOS release helper from cutting short a later press by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16205
+    - feat(tui): add tui.completeScrollback so displaced rows reach scrollback by @Ilm-Alan in https://github.com/can1357/oh-my-pi/pull/15692
+    New Contributors
+    - @kyle-elliott made their first contribution in https://github.com/can1357/oh-my-pi/pull/16115
+    - @koyzdev made their first contribution in https://github.com/can1357/oh-my-pi/pull/14838
+    - @galtamam-cmyk made their first contribution in https://github.com/can1357/oh-my-pi/pull/16118
+    - @C-W-Z made their first contribution in https://github.com/can1357/oh-my-pi/pull/16166
+    - @skipper019 made their first contribution in https://github.com/can1357/oh-my-pi/pull/16096
+    - @Ilm-Alan made their first contribution in https://github.com/can1357/oh-my-pi/pull/15692
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.12.1...v18.12.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.12.2
+ReleaseTime: 2026-10-18T21:03:22.0000000Z
