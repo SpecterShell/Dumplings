@@ -1,0 +1,477 @@
+Version: 1.0.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.2/Octop-desktop-windows-amd64-1.0.2.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.2/Octop-desktop-windows-arm64-1.0.2.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 两台 Octop 可以连起来用：通过云端协同使用对方的专家，能聊天，也能改对方工作区里的文件
+    - 专家可以组队。主持人负责分派任务和收尾总结，成员的回复会回到聊天，也会同步到即时通讯
+    - 新连接器：企查查、OpenAlex、语雀、Obsidian、Agent Mail，以及钉钉命令行（设备码登录后可查通讯录、日程和文档）
+    - 可以用公司的 LDAP 账号登录。Telegram 机器人可以限定哪些用户能跟它说话
+    - 记忆可以手改「用户档案」和「强记忆」。和已有记忆打架时先请你确认，不会悄悄覆盖；也可以备份和恢复
+    - 技能和技能包可以导出成一个 ZIP，换一台机器再导入。技能包可以关掉别人的打包下载
+    - 定时任务可以只跑一次，跑完自动停用，仍留在列表里。聊天进行中可以再补一句，不用等这一轮结束
+    - 每个专家可以设定默认对话方式：问答、规划或动手。侧栏可以按自己的账号重新排列
+    - 语音支持腾讯云边说边出字。当前模型不可用时，可以按健康状态自动换一个
+    - 知识库旁边可以按文件夹浏览文档。新增业务流程、知识工作等专家模板。内置助手可以回答产品和用法问题
+    - 别的程序可以通过 Agent MCP 网关调用这个 Agent。ONNX 模型可以不连 Hugging Face 直接加载
+    修复
+    - 中文 Windows 上，搜索或执行命令碰到编码问题时，不再把整轮对话判失败，也不再把命令输出弄丢
+    - 旧版 Word（.doc）在知识库里改为显示抽出的文字，在工作区、对话和技能里改为下载
+    - 云端团队刷新页面后，正在生成的成员回复还在。对方拒绝登录时，不会把你自己的账号退出
+    - 删掉会话会一并清掉它留下的数据。远程存储卡住时，不再挡住整个服务启动
+    - 邮件标题里没有按规范编码的中文，可以正常读出来
+    变更
+    - 聊天侧栏分成专家、团队、云端三块；还没有团队或云端连接时，可以直接去创建
+    - 个性化里的技能、子智能体、工具、插件、性格和记忆可以分别授权，不必一次全开
+    - 输入栏不常用的入口收进「+」。没有开启审批时，不再出现批准按钮
+    - 飞牛提供 ARM 安装包，安装后走建账号向导
+    新增
+    - 新增钉钉 CLI 连接器：通过官方钉钉 Workspace CLI（dws）操作通讯录、聊天、日程、文档等；保存后在连接器设置里用设备码登录授权钉钉账号，默认使用钉钉官方应用，也可填写自建应用的 AppKey / AppSecret（#930）
+    - 聊天侧栏可置顶专家，并按专家名或会话标题搜索
+    - 新增业务流程专家模板，涵盖 SOP、操作手册、流程优化、风险评估、供应商评估和运营报告；中文界面默认使用中文，基于用户提供的材料工作，无需连接器。
+    - 自建技能可以单个或批量导出为一个 ZIP；技能包也可以整包导出为同一个 ZIP 格式，再导入到其他专家或技能包（#260）。技能包可以关闭打包下载，关闭后其他用户不能导出 ZIP，创建者和管理员仍可下载
+    - 记忆页新增「用户档案」Tab 手动编辑 USER.md，与「强记忆」复用编辑器和会话快照；Agent 文件工具只读。保存后核对 USER.md／MEMORY.md 与普通记忆：手动文档优先，明确冲突转候选审核并提示用户，重复内容避免重复召回。停止的 Agent 也可检查，语义检查不确定或不可用时明确提示，旧版本候选禁止采纳。
+    - 记忆页新增「强记忆」Tab，用户可手动编辑 MEMORY.md，支持停止状态的 Agent。每个会话首次加载全文快照并持续复用，修改对新会话生效。用户说「记住」通过 memory_save 保存到 octop-memory，Agent 不再自动改写 MEMORY.md。
+    - 聊天侧栏置顶专家；业务流程专家；技能与技能包导出 ZIP
+    - 记忆页可手改用户档案与强记忆，冲突转入审核
+    - 技能、工具与团队的决策模型；通道插件；模型健康切换
+    - 对外 Agent MCP 网关；ONNX 模型可离线加载
+    修复
+    - 无路径搜索不再打满主机内存；失败回合会正常结束
+    - 云端专家结束态、未安装插件提示，以及对端模型与知识库显示
+    - 用量显示专家名；定时任务会话有标题；文件描述符与 accept 日志
+    - Docker 外部数据库重启、知识库运行时与安装后重启提示
+    - Embedding 与 rerank 分开识别；飞牛 beta 可升级并保留浏览器驱动
+    - 安装向导在已有用户后不再签发令牌
+    变更
+    - 用户消息的复制、编辑按钮一直显示
+    - 升级 octop-memory 1.0.2、octop-harness 1.0.4、octop-gateway 1.0.3
+    新增
+    - 对话 mid-turn steering
+    - 当前专家记忆备份、恢复与存储维护
+    - Telegram 可限制允许的用户 ID
+    修复
+    - Windows 记忆备份恢复；微信旧库定时任务与重启后推送
+    - 审批放通、Steer 续跑，以及历史加载中消息消失
+    - 知识库上限为 0、本地索引内存、技能集缺包、WPS / 旧版 Word
+    - 云端协同多链接与附件；撤销授权未清 API Key
+    - App 内下载、输入法回车误提交、命令行默认模型说明
+    变更
+    - 升级 octop-harness 1.0.3 与 octop-gateway 1.0.2
+    新增
+    - Obsidian CLI 连接器；内置连接器目录改为中英文 JSON
+    - arXiv 论文检索；Telegram 可限制允许的用户 ID
+    - 腾讯云实时语音；记忆提炼预算与超时可配置
+    - 云端桥接命令行；会话列表显示进行中与待处理状态
+    - 权限选择与自定义侧栏对齐，对话始终可用
+    修复
+    - 回复操作始终可见；无 PostgreSQL 驱动时仍用 SQLite 启动
+    - 团队审批期间保留成员回复；删除会话或用户时清理 checkpoint 与工作区
+    - 桌面端保留监听配置，支持拖入文件夹，端口占用时不另起实例
+    - Docker 首次启动、云端协同连接，以及不兼容的流式用量参数
+    - 暗色主题编辑器、英文界面残留中文、便携版升级与输入栏「+」菜单
+    - 飞牛原生启动退出、元宝图标，以及对端专家的模型与知识库保存
+    变更
+    - 头像、技能卡片、个人设置抽屉与登录页外观
+    - 升级 octop-harness 与 octop-memory；README 加入 Octop Pet
+    新增
+    - Agent Mail 连接器（授权、邮件工具、新邮件任务）
+    - LDAP 目录登录
+    - 专家默认对话模式；输入栏「+」菜单；未开审批时隐藏批准入口
+    - 飞牛 ARM 安装包与多架构镜像
+    - 邮箱连接器读取含裸非 ASCII 字节邮件头（如未 MIME 编码的中文发件人/主题）时崩溃 Object of type Header is not JSON serializable：search_emails/read_email 改用 email.policy.default 解析并统一 str() 转换，同时自动解码 MIME 编码头为可读文本；正文中声明未知字符集（如 unknown-8bit）时回退 UTF-8 而非抛 LookupError。影响所有基于该通用 IMAP/SMTP 适配器的邮箱（QQ/网易/Gmail 等）。
+    新增
+    - 专家可配置默认对话模式（Ask / Plan / Craft）：新建 / 编辑专家及从专家创建时可选，新建对话与无模式粘性的线程（含 IM / CLI / cron 渠道）按该默认解析，缺省为 Craft；已有对话保持各自粘性的模式不变（Fixes #1310）。
+    - 记忆提炼调用参数可配置：记忆设置页新增提炼输出预算、单次提炼/批量整理等待超时；API 另支持 extract_extra_body 传递思考开关等厂商参数。参数经 agent 配置透传到 harness 的记忆辅助调用，与提炼时机（空闲/间隔）相互独立，深度思考的本地模型不再必然撑爆默认 120 秒读取超时（Fixes #1360，需配套 octop-harness / octop-memory 的同名变更）。
+    变更
+    - octop-harness 升到 1.0.1；飞牛安装改为建账号向导
+    修复
+    - 会话「放通所有 / 放通这些工具」后后续 execute 仍弹审批
+    - 误报流式失败、提问卡不弹出、TLS 下内部 MCP、过长工具名
+    - 远程存储卡住堵住启动；S3 / Postgres 浏览；桌面 beta 覆盖安装；飞牛 8089 残留
+    - Windows 全盘存储根、邮箱非 ASCII 头、缺失界面文案
+    - PWA 诊断页在手机上可滚动
+    新增
+    - Octop↔Octop 云端桥接，经隧道使用远程专家（聊天与工作区可写；工具/插件/渠道部分可写；技能包、全局 ACP、连接器、知识库仅本机）
+    - 内置助手可回答产品与使用问题
+    - 可配置 Ollama 本地模型下载目录
+    - 账号可自定义侧边栏；角色改为存模板 id（账号侧栏与权限快照，不是运行时角色同步）
+    修复
+    - 媒体预览 CSP、Langfuse 环境变量、IM 附件元数据
+    - CLI 状态文件原子读写；移动端采集失败后停止 JPEG 流
+    - 服务关闭时仍可识别本机 Ollama 模型
+    - Dashboard 设计 token、知识库暗色预览、备份导入内置技能过滤
+    - 旧插件 harness_agent 导入；移动端输入框避让视口
+    变更
+    - 更新 README 路线图、锚点与产品名链接
+    新增
+    - 侧栏可按账号自定义；角色模板 id 持久化
+    修复
+    - 暗色主题下知识库 Markdown 预览不可见
+    变更
+    - README 路线图与产品链接更新
+    新增
+    - 角色模板、邀请快照与头像；登录页「记住登录状态」
+    - 企查查同时支持一键 OAuth 与 API Key
+    - 团队产物、工具轨迹与主持人收尾；管理员批量策略与令牌
+    变更
+    - 运行时依赖切换为 octop-harness / octop-gateway / octop-memory / octop-browser 1.0.0
+    修复
+    - 团队聊天与 IM：思考仅在团队房间默认折叠，工具状态改为通用提示
+    - 知识库文档上限与重命名、审计/会话列表 limit、多 worker 下角色与 HITL 即时生效
+    - 内置技能写保护、超大插件 UI 剥离、端口/验证码分数/IPv6 等边界校验
+    - 旧备份恢复时幂等补齐 schema v18
+    新增
+    - Teams 主持人改写派工，成员回复同步 IM
+    - 企查查、OpenAlex 连接器
+    修复
+    - 专家编辑、聊天欢迎标题与专家切换预填
+    - FPK 预发布版本解析、沙箱 ACP 委托、桌面重启 WAL、定时任务失败后 prompt 残留
+    - 连接器 OAuth 回调安全加固
+    新增
+    - 技能包新增「复制策略」（copy_policy，默认 snapshot 行为不变）：创建者/管理员可按包设为 lock（复制出的工作区副本带 origin/locked 水印，非创建者在工作区写接口被拒）或 deny（复制端点 403、前端按钮禁用）；复制成功与拒绝均落 audit。锁定副本在 Agent 工具层的写保护依赖 harness 侧配合，已在 issue 中单列（#770）
+    - 登录验证码新增极验行为验 v4（#870）：设置页配置 captcha_id / captcha_key，登录弹窗完成验证，服务端按官方协议 HMAC-SHA256 签名后到 gcaptcha4 二次校验（form-urlencoded，仅 result=success 放行）
+    - 对话支持默认折叠思考与工具过程（浏览器本地偏好）(#718)
+    - 对话中可隐藏不常用的共享专家（浏览器本地偏好）(#589)
+    - 腾讯云语音新增实时（流式）识别：开启后输入框麦克风为按住说话，边说边显示中间结果、松开即出全文；凭据仅保存在服务端，浏览器只收到开关状态；配置存于语音 provider 的 extra_json，无数据库迁移
+    修复
+    - 切换专家或会话时，聊天输入框不再沿用上一专家的一次性预填提示词，改为恢复目标专家/会话的草稿（#363）
+    - 聊天输入框对话模式与模型按钮改为仅显示图标（选中项放到 tooltip），模型选择弹框补上提供商 logo
+    - 发布专家时保留源专家的公开头像（内置 SVG 或远程肖像）；仅上传过自定义图片时才走快照头像接口，不再发布后只剩默认图标
+    - CLI cron run-now 等待执行及状态、审计落库完成后再关闭内嵌服务；执行失败返回非零退出码，不再提前打印 ok（#946）
+    - 专家清单生成读取技能元数据改用共享 frontmatter 解析器：模块内自带的解析只认首行 --- 并按 : 逐行切分，导致 description: >- 折叠块被当成字面量 '>-'、前导 HTML 注释会让整段 frontmatter 失效——技能描述以空值/错值进入生成提示词，进而写坏专家清单的 description 与 welcome_message
+    - date: 定时触发与 cron: 一样使用 default_timezone，裸 ISO 时间不再回落宿主系统时区
+    - HITL resume 流失败时将 pending 标为 expired（不再像成功批准），避免错误状态误导排查
+    - SQLite 写事务改用 BEGIN IMMEDIATE：多 worker（octop run --workers N）或 CLI 与服务并发写入时，先读后写的事务不再因快照过期而立即报 database is locked
+    - 登录页「忘记密码」改为按需展开：优先提示联系管理员，本机 CLI 重置作为次要说明（#869）
+    - iOS PWA 状态栏不再虚化遮挡内容：顶栏改为不透明、去掉 backdrop-filter；登录页与设置向导补 safe-area-inset 内边距（#874）
+    - 知识库纯文本/Markdown/CSV 在 UTF-8 失败时回退 GB18030，避免 Windows GBK 文档被替换成乱码后入库
+    - Dashboard 保存 Agent 运行参数后立即刷新当前 Agent 上下文，避免重置按钮和聊天页继续使用旧值
+    - Dashboard ask_user_question 卡片不再在刷新/切会话后重复弹出：HITL pending 在恢复开始即标记完成，新回合会作废遗留提问，历史重注入按 pending_id 幂等去重 (#782)
+    - 远程 OCR 返回「未收到图片 / 请上传图片」等拒绝提示时不再当作正文入库（此前会被向量化、文档仍标记 ready），现按无可提取文本处理
+    - 环境变量值含换行（如粘贴的多行密钥）时，保存后再读取会被截断并残留引号；现按引号跨行读回，保证「写入 → 读取」往返保真
+    - 定时任务与系统任务（TLS 自动续期、自动备份）此前按宿主系统时区触发，现按 default_timezone 配置时区执行
+    - 删除知识库文件夹不再误删名字相近的文件夹：此前用 path LIKE '<目录>/%' 匹配子项，文件夹名里的 _ / % 被当作通配符（删 a_b 会连带删 axb/…），且 SQLite 的 LIKE 不区分大小写（删 Docs 会删 docs/…，与 PostgreSQL 不一致）；现改为大小写敏感的前缀比较
+    - 修复知识库选择未按专家记忆的问题：对话中选择的知识库此前是全局单一状态，切换专家后既不恢复该专家上次的手动选择、还会把上一个专家的选择带入（或在会话间被默认值覆盖）；现与连接器一致，按专家持久化选择（localStorage），切回专家时恢复其上次手动选择（含显式清空），新会话仍按专家默认值初始化；连接器选择同样补上切换专家时的状态重置，消除其跨专家串选（A 专家的连接器带入 B 专家会话）问题
+    - Dashboard 在 Chromium 90 等旧版浏览器中因缺少 Object.hasOwn 而无法启动
+    - 侧栏切换路由不再因 AuthGuard 重跑校验而整页闪 Spinner；仅右侧内容区切换 (#696)
+    - 无网络或后端不可达时，启动页展示明确错误与重试，而不再白屏 (#696)
+    - iOS PWA 顶栏/侧栏避让状态栏：env(safe-area-inset-top) 垫高移动端 Header 与抽屉品牌行（#664）
+    - 定时任务空状态提示词：workspace 缺省时回退到专家目录模板 / 名称默认，与 welcome 共用解析 (#651)
+    - 对话 Ask / Plan / Craft 模式，以及折叠思考与工具过程
+    - 生成模型多厂商管理与图片/视频独立路由（火山方舟、百炼、MiniMax）
+    - 插件市场；专家团队宿主；Discord 渠道
+    - 登录极验行为验 v4；按专家记忆知识库/连接器选择，可隐藏不常用共享专家
+    修复
+    - Windows 自升级：octop.exe 运行中也可完成升级
+    - 同一线程回合串行，避免 HITL 与普通回合交错污染会话
+    - agent 配置 PATCH 不再丢掉 workspace_dir；cron / 系统任务按时区触发
+    - iOS PWA 状态栏与 safe-area；无网络启动错误提示；旧版 Chromium 启动兼容
+    变更
+    - 升级 harness-agent 至 1.0.14；Dashboard 空状态与聊天输入交互微调
+    - 连接器 OAuth 回调对重定向 URL 和错误消息安全编码，拒绝外站和控制字符绕过；弹窗仅向同源窗口发送授权通知，并保留回跳路径的查询参数与片段
+    What's Changed
+    - chore: sync main into develop after 1.0.1 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/793
+    - feat: plugin marketplace and related dashboard polish by @jubaoliang in https://github.com/TencentCloud/Octop/pull/815
+    - docs: fix references to non-existent files by @louisss1016 in https://github.com/TencentCloud/Octop/pull/821
+    - docs: fix broken relative links in user-guide.md by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/797
+    - docs: document the undocumented 'octop captcha' CLI command by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/796
+    - docs: translate stray Chinese example message in acp.md to English by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/795
+    - docs: translate stray Chinese text in configuration.md to English by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/794
+    - docs: fix CN readme structure and document OCTOP_DATA env var by @Momoru2002 in https://github.com/TencentCloud/Octop/pull/791
+    - fix: normalize a protocol-relative URL instead of producing a hostless one by @sclfcz in https://github.com/TencentCloud/Octop/pull/823
+    - fix: treat an uppercase HTTP(S) scheme as already absolute in browser nav by @sclfcz in https://github.com/TencentCloud/Octop/pull/822
+    - fix(providers): don't classify cloud Ollama (ollama.com) as local runtime by @louisss1016 in https://github.com/TencentCloud/Octop/pull/824
+    - fix: skip a one-line HTML comment before the frontmatter fence by @sclfcz in https://github.com/TencentCloud/Octop/pull/820
+    - fix: reject non-positive interval cron triggers by @sclfcz in https://github.com/TencentCloud/Octop/pull/819
+    - fix: round-trip escaped values in the env file by @sclfcz in https://github.com/TencentCloud/Octop/pull/818
+    - fix(dashboard): polyfill Object.hasOwn for Chromium 90 by @JY-M666 in https://github.com/TencentCloud/Octop/pull/826
+    - fix(boot): 无网络启动时展示错误与重试，避免白屏 (#696) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/744
+    - fix(pwa): iOS 加到桌面后顶栏避让状态栏 (#664) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/746
+    - feat(cron): 定时任务空状态提示词按专家区分 (#651) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/747
+    - feat: conversation support collapse thinking by @fatelei in https://github.com/TencentCloud/Octop/pull/750
+    - feat(chat): 对话中可隐藏不常用的共享专家 (#589) by @Zara1024 in https://github.com/TencentCloud/Octop/pull/745
+    - fix(dashboard): AuthGuard 侧栏切页不整页重载；收敛 task_examples 解析 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/841
+    - fix(chat): per-expert composer selection for knowledge bases + connectors by @huangcheng in https://github.com/TencentCloud/Octop/pull/860
+    - fix: LAN MCP HTTP、TLS 公网 IP 预检与 Models 侧栏抽屉 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/863
+    - fix(chat): omit skills group from shortcut picker by @jubaoliang in https://github.com/TencentCloud/Octop/pull/866
+    - feat(teams): add expert team hosts without changing 1:1 chat by @jubaoliang in https://github.com/TencentCloud/Octop/pull/868
+    - fix(knowledge): 删除文件夹时不再误删名字相近的文件夹（LIKE 通配符 / 大小写语义） by @sclfcz in https://github.com/TencentCloud/Octop/pull/889
+    - fix(chat): clean up sessions bound to deleted threads (#833) by @dangzitou in https://github.com/TencentCloud/Octop/pull/884
+    - fix(providers): report Codex OAuth device-code start failures by @yftx293 in https://github.com/TencentCloud/Octop/pull/858
+    - docs(agents): fix broken CONTRIBUTING.md links in technical-writer subagents by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/875
+    - docs(readme): fix broken TOC anchor links in README.md and README_CN.md by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/873
+    - docs(adr): remove broken related links in ADR 002 by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/872
+    - fix(cron,hitl): date timezone + HITL resume expire on error by @jubaoliang in https://github.com/TencentCloud/Octop/pull/890
+    - feat(experts): compose prompts and skills when creating experts by @jubaoliang in https://github.com/TencentCloud/Octop/pull/891
+    - fix(dashboard): collapse login forgot-password CLI tip by @jubaoliang in https://github.com/TencentCloud/Octop/pull/898
+    - docs(configuration): add password and url to database schema example by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/896
+    - docs(acp): add language identifier to bare code block by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/895
+    - feat(auth): GeeTest v4 login captcha provider (#870) by @huangcheng in https://github.com/TencentCloud/Octop/pull/900
+    - Feature/memory slim tool by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/865
+    - feat(dashboard): chat workspace dock + help link to octop.cloud by @jubaoliang in https://github.com/TencentCloud/Octop/pull/929
+    - feat(chat): add Ask / Plan / Craft conversation modes by @jubaoliang in https://github.com/TencentCloud/Octop/pull/934
+    - fix(experts): 发布专家时保留公开头像 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/955
+    - fix(chat): make composer mode and model triggers icon-only by @jubaoliang in https://github.com/TencentCloud/Octop/pull/963
+    - fix(experts): read skill frontmatter with the shared parser by @jubaoliang in https://github.com/TencentCloud/Octop/pull/962
+    - fix(backup): include .octop and runtime dirs in workspace zip export by @jubaoliang in https://github.com/TencentCloud/Octop/pull/964
+    - fix(cron): wait for CLI-triggered runs before shutting down embedded runtime by @jubaoliang in https://github.com/TencentCloud/Octop/pull/961
+    - fix(agents): 配置更新不再丢掉 workspace_dir（scoped/容器 agent 的工作区被换掉） by @sclfcz in https://github.com/TencentCloud/Octop/pull/953
+    - feat(media): add multi-provider configuration and routing UI by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/951
+    - feat(chat): dock 标题栏 + 菜单打开工作区/浏览器/终端 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/982
+    - Feature/support discord by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/972
+    - feat(chat): add per-thread HITL allow policy by @jubaoliang in https://github.com/TencentCloud/Octop/pull/987
+    - fix(dashboard): MBTI 未配置人格时不再显示空的「已选中」引号 (#973) by @sxh313 in https://github.com/TencentCloud/Octop/pull/989
+    - fix(agents): serialize harness execution per thread for turns and HITL resume (#782) by @jubaoliang in https://github.com/TencentCloud/Octop/pull/960
+    - Fix OpenCode session header matching and bump harness-agent to 1.0.14 by @liukewia in https://github.com/TencentCloud/Octop/pull/992
+    - fix(update): unlock Windows self-upgrade when octop.exe is running by @liukewia in https://github.com/TencentCloud/Octop/pull/1000
+    - fix(dashboard): honor PWA safe-area insets and widen mobile chat bubbles by @liukewia in https://github.com/TencentCloud/Octop/pull/666
+    - feat(dashboard): unify empty guides with Tasks-like plain style by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1006
+    - chore: release 1.0.2b1 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1008
+    - chore: sync main into develop after 1.0.2b1 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/1030
+    - fix(connectors): secure OAuth callback redirects and popup messages by @dangzitou in https://github.com/TencentCloud/Octop/pull/942
+    - fix(cron): 执行失败的定时任务不再留下空会话线程 (#516) by @sxh313 in https://github.com/TencentCloud/Octop/pull/984
+    - fix(update): checkpoint SQLite WAL before desktop process restart by @Theater-ahyeon in https://github.com/TencentCloud/Octop/pull/918
+    - fix(chat): avoid carrying prefill text across expert switches by @wxhking in https://github.com/TencentCloud/Octop/pull/920
+    - feat(connectors): add OpenAlex connector by @locip123 in https://github.com/TencentCloud/Octop/pull/1009
+    - feat(connectors): 新增企查查 OAuth 连接器，一次授权接入五类 MCP 服务 by @duhu2000 in https://github.com/TencentCloud/Octop/pull/1033
+    - feat(connectors): 企查查改为 API Key，并用 internal 模式加载工具 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1046
+    - fix(chat): show the real team name on the welcome heading by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1048
+    - fix(acp): 沙箱环境下禁用向外委托 Runner by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1061
+    - feat(teams): 主持人先改写再派工，成员回复同步到 IM 通道 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1064
+    - fix(fnos): 支持预发布版本号解析（1.0.2b1 FPK） by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1063
+    - fix(experts): 编辑专家去掉多余的添加技能/子智能体按钮 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1075
+    - chore: release 1.0.2b2 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1076
+    - chore: sync main into develop after 1.0.2b2 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/1079
+    - fix(plugins): keep wiki_summary requests under *.wikipedia.org by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/1027
+    - fix(auth): OCTOP_CAPTCHA_V3_MIN_SCORE 只接受 [0, 1] 内的有限值，NaN 不再静默关掉 recaptcha-v3 分数门槛 (#1087) by @sxh313 in https://github.com/TencentCloud/Octop/pull/1088
+    - fix(workspace): PUT /file 与 POST /upload 补上 _builtin_skills 写保护 (#1100) by @sxh313 in https://github.com/TencentCloud/Octop/pull/1101
+    - fix(backup): 导入工作区 zip 时跳过 Octop 自有的 _builtin_skills 条目 (#1104) by @sxh313 in https://github.com/TencentCloud/Octop/pull/1105
+    - fix(users): 角色与禁用状态改为读库，多 worker 下撤权不再滞后 (#1102) by @sxh313 in https://github.com/TencentCloud/Octop/pull/1103
+    - fix(agents): HITL 会话「跳过审批」不再按进程缓存，多 worker 下撤销与授予立刻生效 (#1089) by @sxh313 in https://github.com/TencentCloud/Octop/pull/1090
+    - fix(security): keep IPv6 brackets and path params when rebuilding pinned URLs by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/1092
+    - fix(api): bound the thread-list limit before it reaches SQL LIMIT by @sxh313 in https://github.com/TencentCloud/Octop/pull/1018
+    - fix(knowledge): keep the suffix that keys a renamed document by @sxh313 in https://github.com/TencentCloud/Octop/pull/1108
+    - fix(knowledge): map per-base document cap to KNOWLEDGE_DOC_LIMIT by @sxh313 in https://github.com/TencentCloud/Octop/pull/1013
+    - feat: admin user batch policies, token UX, default FS root, and media push hardening by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1114
+    - docs: point README at TencentCloud octop-harness repos by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1121
+    - fix: connectors empty layout and restore prior control-plane behaviors by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1122
+    - chore(deps): switch runtime packages to octop-* 1.0.0 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1136
+    - feat(chat): team artifacts, fan-in tool trail, and host wrap-up context by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1149
+    - feat(connectors): 恢复企查查一键 OAuth，保留 internal HTTP 工具加载 by @duhu2000 in https://github.com/TencentCloud/Octop/pull/1106
+    - refactor(infra): group agents modules and clarify package ownership by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1164
+    - fix(plugins): offload oversized octop_ui payloads to ToolMessage.artifact (#1032) by @huangcheng in https://github.com/TencentCloud/Octop/pull/1116
+    - fix: team chat/IM UX, ACP sandbox, and channel thinking by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1166
+    - docs(cn): sync README_CN CLI reference with memory commands by @yc2bgr8 in https://github.com/TencentCloud/Octop/pull/1060
+    - fix(api): bound the audit-log limit before it reaches SQL LIMIT by @huiq777 in https://github.com/TencentCloud/Octop/pull/1135
+    - fix(config): bound OCTOP_PORT and --port to a bindable range by @Lesereingrape in https://github.com/TencentCloud/Octop/pull/1150
+    - feat(dashboard): 登录页增加「记住登录状态」 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1178
+    - fix(chat): default-collapse thinking in team rooms only by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1179
+    - test(chat): cover member live bit across tool gaps after host unlock by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1181
+    - feat(users): add role templates, invite snapshots, and profile avatars by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1180
+    - fix(chat): show generic calling-tools status instead of tool names by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1182
+    - fix(dashboard): add lock icons to account change-password fields by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1184
+    - docs(fnos): name the fpk packages the release actually ships by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/1145
+    - fix(db): apply schema v18 via idempotent helper for old restores by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1183
+    - feat(connectors): 企查查同时支持一键 OAuth 与 API Key by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1186
+    - fix(chat): dedupe duplicate team live-across-tool-gap test by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1187
+    - chore: release 1.0.2b3 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1188
+    - chore: sync main into develop after 1.0.2b3 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/1209
+    - docs: refresh README roadmap, anchors, and product sync by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1211
+    - docs: refresh README roadmap, anchors, and product sync by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1212
+    - fix(dashboard): define missing --fn-bg-container theme variable by @dangzitou in https://github.com/TencentCloud/Octop/pull/1216
+    - feat(dashboard): 按账号自定义左侧导航 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1218
+    - style(dashboard): 对齐 Prettier 漂移的前端文件 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1222
+    - feat: store role-template id on users.role and harden mobile composer by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1220
+    - docs: use product names for sibling project links in the README by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1225
+    - chore: release 1.0.2b4 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1226
+    - docs(publish): bump version badges in all localized READMEs by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1229
+    - fix: load plugins that still import harness_agent by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1260
+    - fix(backup): skip the Octop-owned _builtin_skills prefix on zip import by @dangzitou in https://github.com/TencentCloud/Octop/pull/1255
+    - fix(dashboard): define the missing --fn-* design tokens by @dangzitou in https://github.com/TencentCloud/Octop/pull/1240
+    - feat(ollama): allow configuring local model download directory by @Master-Frank in https://github.com/TencentCloud/Octop/pull/1279
+    - feat(skills): let octop-assistant answer product and help questions by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1311
+    - fix(ollama): list local models even when Octop service is off by @Master-Frank in https://github.com/TencentCloud/Octop/pull/1316
+    - fix(mobile): stop the JPEG stream after a run of failed captures by @c020627 in https://github.com/TencentCloud/Octop/pull/1309
+    - fix(cli): read and write cli_state.json through the shared JSON helpers by @c020627 in https://github.com/TencentCloud/Octop/pull/1307
+    - fix(gateway): preserve IM attachment metadata in history by @locip123 in https://github.com/TencentCloud/Octop/pull/1276
+    - fix(docker): ship the langfuse env var the client actually reads by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/1258
+    - fix(api): sandbox media preview responses by @dangzitou in https://github.com/TencentCloud/Octop/pull/1243
+    - feat: add Octop↔Octop cloud collab for remote experts by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1281
+    - chore: release 1.0.2b5 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1321
+    - chore: sync main into develop after 1.0.2b5 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/1323
+    - fix: beta upgrade notes and fnpack download resilience by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1327
+    - feat(experts): add default conversation mode (Ask/Plan/Craft) to expert settings by @dangzitou in https://github.com/TencentCloud/Octop/pull/1338
+    - feat(skills): per-package copy policy for skill packages (#770) by @vicfei in https://github.com/TencentCloud/Octop/pull/1336
+    - fix(httpx): honor CIDR entries in NO_PROXY by @Master-Frank in https://github.com/TencentCloud/Octop/pull/1354
+    - fix(qq-mail): 修复裸非 ASCII 邮件头导致 search_emails/read_email JSON 崩溃 by @miaowmint in https://github.com/TencentCloud/Octop/pull/1343
+    - fix(desktop): expand the optional wheel overrides under bash 3.2 by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/1363
+    - fix(dashboard): gate SkillPackagesTab detail and copy requests by @c020627 in https://github.com/TencentCloud/Octop/pull/1333
+    - fix(wechat-ops): scope the publisher token cache to its AppID by @c020627 in https://github.com/TencentCloud/Octop/pull/1332
+    - fix(history): bound trajectory events written to the v2 archive by @c020627 in https://github.com/TencentCloud/Octop/pull/1331
+    - fix(connectors): retry a transient streamable-HTTP MCP probe once by @c020627 in https://github.com/TencentCloud/Octop/pull/1330
+    - fix(dashboard): do not cache the timezone fallback when the fetch fails by @c020627 in https://github.com/TencentCloud/Octop/pull/1326
+    - fix(mobile): settle the install SSE stream exactly once by @c020627 in https://github.com/TencentCloud/Octop/pull/1325
+    - fix(skills): fetch SkillHub rankings through the shared capped HTTP client by @c020627 in https://github.com/TencentCloud/Octop/pull/1308
+    - fix(dashboard): add the missing locale entries for t() keys by @dangzitou in https://github.com/TencentCloud/Octop/pull/1241
+    - fix(agents): propagate exhausted model retries as failures by @dangzitou in https://github.com/TencentCloud/Octop/pull/1012
+    - fix(dashboard): browse every drive in the storage-root picker on Windows by @zhilangtaosha in https://github.com/TencentCloud/Octop/pull/1429
+    - feat(auth): implement LDAP directory login by @zsuroy in https://github.com/TencentCloud/Octop/pull/1123
+    - feat(dashboard): tuck composer extras into a plus-menu flyout by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1513
+    - feat(fnos): harden App Center install and native startup by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1539
+    - fix(dashboard): center the empty-chat model prompt by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1542
+    - fix: give the model a concrete retry failure instead of a generic toast by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1545
+    - chore: keep infra off api and tidy post-b3 leftovers by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1550
+    - fix(fnos): stop native leftover on 8089 so App Center can start again by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1572
+    - fix: adapt S3/Postgres backends and restore admin storage browse by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1565
+    - fix(desktop): compare portable runtime versions using PEP 440 by @MakerFlyFly in https://github.com/TencentCloud/Octop/pull/1561
+    - feat(connectors): support Agent Mail auth, tools and new-mail tasks by @dangzitou in https://github.com/TencentCloud/Octop/pull/1573
+    - feat(dashboard): show teams in the memory and channels agent picker by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1588
+    - fix: keep hung remote backends from blocking boot by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1586
+    - feat(hitl): hide approval surfaces unless tools can actually pause by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1594
+    - fix: restore ask_user_question cards after LangGraph v2 interrupt move by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1595
+    - fix: stream-error false positives, TLS internal MCP, and 64-char tool names by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1599
+    - feat(connectors): add official Agent Mail logo by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1608
+    - fix(dashboard): let the PWA debug page scroll on mobile by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1603
+    - fix(hitl): honor allow-all session bypass for later tool approvals by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1617
+    - chore: release 1.0.2b6 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1612
+    - chore: sync main into develop after 1.0.2b6 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/1637
+    - fix(ci): stop stripping Docker Hub name from publish outputs by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1642
+    - fix(dashboard): tunnel peer expert edits and refresh dashboard visuals by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1647
+    - add bridge cli by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1658
+    - fix(dashboard): update Yuanbao channel logo (#1670) by @locip123 in https://github.com/TencentCloud/Octop/pull/1678
+    - update discord join link by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1680
+    - feat(dashboard): show thread work status in the chat history rail by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1660
+    - feat(dashboard): show model name on assistant trajectory summaries by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1661
+    - fix(ci): produce advertised FnOS native ARM64 fpk by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1723
+    - feat(plugins): add arXiv paper search by @locip123 in https://github.com/TencentCloud/Octop/pull/1718
+    - fix(dashboard): raise composer picker panel height and inline knowledge count (#1645) by @ChinaSiro in https://github.com/TencentCloud/Octop/pull/1689
+    - Fix/updata readme discord by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1804
+    - fix(update): repair in-app upgrade installation and version verification by @lymerin in https://github.com/TencentCloud/Octop/pull/1576
+    - fix(dashboard): localize remaining hardcoded Chinese UI strings (browser AI panel, skill recording, PWA guides) by @fengyue-xve in https://github.com/TencentCloud/Octop/pull/1799
+    - fix(dashboard): follow app light/dark mode in Monaco editors by @dangzitou in https://github.com/TencentCloud/Octop/pull/1356
+    - fix: harden Docker bootstrap, Bridge sessions, and desktop/provider UX by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1825
+    - docs: add Octop Pet to Related projects by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1168
+    - docs: update readme banner image by @lulinzhi37-alt in https://github.com/TencentCloud/Octop/pull/1838
+    - feat(dashboard): Telegram allowed user IDs field by @nattiini45 in https://github.com/TencentCloud/Octop/pull/1773
+    - chore: require octop-gateway 1.0.1 by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1844
+    - fix: preserve desktop listen config and accept folder drops in chat by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1874
+    - feat(voice): add Tencent Cloud realtime (streaming) speech recognition by @Yourdaylight in https://github.com/TencentCloud/Octop/pull/1003
+    - Fix/delete persisted conversation data by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1855
+    - feat(memory): configurable distillation call limits (budget, timeouts) by @haiyu614 in https://github.com/TencentCloud/Octop/pull/1382
+    - feat(connectors): add Obsidian CLI as a built-in connector by @Master-Frank in https://github.com/TencentCloud/Octop/pull/1856
+    - feat(connectors): localize the built-in catalog from JSON by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1922
+    - fix(teams): 批准后保留成员回答，并避免团队对话串台 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1928
+    - fix(experts): start SQLite when libpq is unavailable by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1934
+    - fix(chat): keep assistant message actions visible by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1943
+    - feat(dashboard): align the permission picker with custom navigation by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1941
+    - chore: release 1.0.2b7 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1951
+    - chore: sync main into develop after 1.0.2b7 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1963
+    - feat(knowledge): support .wps/.doc via firecrawl-anydoc (#1345) by @huangcheng in https://github.com/TencentCloud/Octop/pull/1938
+    - fix(providers): clear the API key when authorization is revoked by @seed30 in https://github.com/TencentCloud/Octop/pull/1953
+    - fix(chat): keep a turn sent while history is still loading by @seed30 in https://github.com/TencentCloud/Octop/pull/1952
+    - fix(skills): skip a skillset skill whose package is not published by @seed30 in https://github.com/TencentCloud/Octop/pull/1954
+    - fix: bound local knowledge indexing memory and service restarts by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1985
+    - fix(bridge): keep simultaneous peer logins and tunnel chat attachments by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1986
+    - fix(dashboard): treat a zero document cap as unlimited and follow expert defaults by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1989
+    - feat(connectors): add Yuque (语雀) gateway connector by @Yesno1314 in https://github.com/TencentCloud/Octop/pull/1936
+    - fix(bridge): accept peers that advertise the default loopback URL by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1994
+    - fix(channels): restore Telegram allowed user IDs by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/1993
+    - fix(bridge): do not treat a WebSocket 403 as a missing route by @jubaoliang in https://github.com/TencentCloud/Octop/pull/1997
+    - feat(chat): mid-turn steering for dashboard conversations (#1300) by @huangcheng in https://github.com/TencentCloud/Octop/pull/1988
+    - fix: let in-app browsers download files through a short-lived link by @alison-xx in https://github.com/TencentCloud/Octop/pull/1991
+    - fix(dashboard): don't submit edits and renames on the IME confirm Enter by @alison-xx in https://github.com/TencentCloud/Octop/pull/1285
+    - fix(cli): explain an unset default model and show what agents fall back to by @alison-xx in https://github.com/TencentCloud/Octop/pull/2025
+    - fix(dashboard): keep bridge cards compact and update one row at a time by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2024
+    - docs: add a China GHCR compose file when ghcr.io is unreachable by @liukewia in https://github.com/TencentCloud/Octop/pull/2034
+    - docs: add Zenith Hosting deploy option by @odpay in https://github.com/TencentCloud/Octop/pull/1969
+    - fix(chat): keep steer, approvals, and stream errors consistent by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2037
+    - ci: upload desktop and FnOS release installers to COS by @liukewia in https://github.com/TencentCloud/Octop/pull/2036
+    - fix(weixin): keep a durable send token and repair old cron columns by @seed30 in https://github.com/TencentCloud/Octop/pull/1999
+    - feat(memory): 完善提炼设置与当前专家存储维护、备份恢复 by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2041
+    - chore: release 1.0.2b8 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2050
+    - chore: sync main into develop after 1.0.2b8 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/2055
+    - feat(experts): add knowledge-work expert templates converted from Claude plugins by @Jeffrey8864 in https://github.com/TencentCloud/Octop/pull/2021
+    - fix: peer composer defaults, usage names, and cron titles by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2066
+    - fix(docker): stop re-running octop init on restart with PostgreSQL (#1866) by @fengyue-xve in https://github.com/TencentCloud/Octop/pull/1868
+    - fix(providers): recognise embedding models by naming convention by @mediasambb in https://github.com/TencentCloud/Octop/pull/2049
+    - fix(setup): stop issuing wizard tokens after the first user exists by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2074
+    - fix(dashboard): gate PWA update prompt by permission and stop re-prompting by @zsuroy in https://github.com/TencentCloud/Octop/pull/2080
+    - fix(docker): bake local knowledge dependencies into the image by @ideshun in https://github.com/TencentCloud/Octop/pull/2082
+    - fix(knowledge): tell the user a restart is what the install needs by @sclfcz in https://github.com/TencentCloud/Octop/pull/1493
+    - docs: add Pull Request submission guidelines to CONTRIBUTING.md by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2109
+    - feat: add Agent MCP Gateway by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/2106
+    - feat(agents): add health-aware model failover by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/2107
+    - fix: raise fd limits and coalesce accept resource errors by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2076
+    - feat: add a decision model for skills, tools, and teams by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2098
+    - feat(channels): 打通通道插件安装与运行生命周期 by @ideshun in https://github.com/TencentCloud/Octop/pull/1823
+    - feat(memory): add manual profile context and conflict review by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2103
+    - feat(skills): export selected skills and skill packages as ZIP by @jenbonzhang in https://github.com/TencentCloud/Octop/pull/1990
+    - feat(experts): add Chinese-first business process expert by @bobbanga in https://github.com/TencentCloud/Octop/pull/2084
+    - feat(dashboard): pin chat experts and note missing remote plugins by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2117
+    - fix: cap python grep fallback so unscoped search cannot OOM the host by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2116
+    - fix(dashboard): show ONNX download progress above the confirm dialog by @liukewia in https://github.com/TencentCloud/Octop/pull/2115
+    - fix(onnx): load downloaded embedding models fully offline by @liukewia in https://github.com/TencentCloud/Octop/pull/2114
+    - fix(dashboard): 英文模式 Admin 侧边导航改为 Model by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2128
+    - fix(knowledge): warn when container recreate drops local runtimes by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2130
+    - fix(fnos): keep Playwright driver in the native package by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2129
+    - fix(fnos): encode beta versions so the app store can upgrade by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2131
+    - chore: release 1.0.2b9 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2132
+    - chore: sync main into develop after 1.0.2b9 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/2137
+    - feat(connectors): add DingTalk CLI (dws) connector with device login by @dangzitou in https://github.com/TencentCloud/Octop/pull/2004
+    - feat: one-shot tasks, personalization permissions, and log names by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2157
+    - fix(dashboard): preview legacy .doc safely and scope knowledge upload progress by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2161
+    - fix(voice): round the Edge TTS rate instead of truncating it by @lihongyuan99 in https://github.com/TencentCloud/Octop/pull/2165
+    - fix(bridge): keep team member streams alive through refresh by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2159
+    - fix(channels): 调整 QQ 频道配置顺序 by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/2181
+    - fix(backend): decode grep and shell output off the host code page by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2178
+    - chore: release 1.0.2 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2184
+    New Contributors
+    - @louisss1016 made their first contribution in https://github.com/TencentCloud/Octop/pull/821
+    - @Momoru2002 made their first contribution in https://github.com/TencentCloud/Octop/pull/797
+    - @sclfcz made their first contribution in https://github.com/TencentCloud/Octop/pull/823
+    - @JY-M666 made their first contribution in https://github.com/TencentCloud/Octop/pull/826
+    - @fatelei made their first contribution in https://github.com/TencentCloud/Octop/pull/750
+    - @dangzitou made their first contribution in https://github.com/TencentCloud/Octop/pull/884
+    - @yftx293 made their first contribution in https://github.com/TencentCloud/Octop/pull/858
+    - @Theater-ahyeon made their first contribution in https://github.com/TencentCloud/Octop/pull/875
+    - @sxh313 made their first contribution in https://github.com/TencentCloud/Octop/pull/989
+    - @wxhking made their first contribution in https://github.com/TencentCloud/Octop/pull/920
+    - @locip123 made their first contribution in https://github.com/TencentCloud/Octop/pull/1009
+    - @duhu2000 made their first contribution in https://github.com/TencentCloud/Octop/pull/1033
+    - @lihongyuan99 made their first contribution in https://github.com/TencentCloud/Octop/pull/1027
+    - @yc2bgr8 made their first contribution in https://github.com/TencentCloud/Octop/pull/1060
+    - @huiq777 made their first contribution in https://github.com/TencentCloud/Octop/pull/1135
+    - @Lesereingrape made their first contribution in https://github.com/TencentCloud/Octop/pull/1150
+    - @Master-Frank made their first contribution in https://github.com/TencentCloud/Octop/pull/1279
+    - @vicfei made their first contribution in https://github.com/TencentCloud/Octop/pull/1336
+    - @zhilangtaosha made their first contribution in https://github.com/TencentCloud/Octop/pull/1429
+    - @zsuroy made their first contribution in https://github.com/TencentCloud/Octop/pull/1123
+    - @MakerFlyFly made their first contribution in https://github.com/TencentCloud/Octop/pull/1561
+    - @ChinaSiro made their first contribution in https://github.com/TencentCloud/Octop/pull/1689
+    - @lymerin made their first contribution in https://github.com/TencentCloud/Octop/pull/1576
+    - @fengyue-xve made their first contribution in https://github.com/TencentCloud/Octop/pull/1799
+    - @lulinzhi37-alt made their first contribution in https://github.com/TencentCloud/Octop/pull/1838
+    - @nattiini45 made their first contribution in https://github.com/TencentCloud/Octop/pull/1773
+    - @Yourdaylight made their first contribution in https://github.com/TencentCloud/Octop/pull/1003
+    - @haiyu614 made their first contribution in https://github.com/TencentCloud/Octop/pull/1382
+    - @Yesno1314 made their first contribution in https://github.com/TencentCloud/Octop/pull/1936
+    - @alison-xx made their first contribution in https://github.com/TencentCloud/Octop/pull/1991
+    - @odpay made their first contribution in https://github.com/TencentCloud/Octop/pull/1969
+    - @Jeffrey8864 made their first contribution in https://github.com/TencentCloud/Octop/pull/2021
+    - @mediasambb made their first contribution in https://github.com/TencentCloud/Octop/pull/2049
+    - @ideshun made their first contribution in https://github.com/TencentCloud/Octop/pull/2082
+    - @jenbonzhang made their first contribution in https://github.com/TencentCloud/Octop/pull/1990
+    - @bobbanga made their first contribution in https://github.com/TencentCloud/Octop/pull/2084
+    Full Changelog: https://github.com/TencentCloud/Octop/compare/v1.0.1...v1.0.2
+- Key: ReleaseNotesUrl
+  Value: https://github.com/TencentCloud/Octop/releases/tag/v1.0.2
+ReleaseTime: 2026-10-18T15:09:37.0000000Z
