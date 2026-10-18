@@ -1,0 +1,34 @@
+Version: 0.16.5.20261018.1143
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.16.5/Runner-Setup-0.16.5.20261018.1143-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.5 is a feature release for macOS and Windows on top of 0.16.4.
+    New
+    - Address a mission message to several members. In the mission composer, type @ at the start and pick a member to add a recipient chip; repeat to choose several. Click a chip to remove it, or press Backspace in an empty draft to remove the last one. Only the recipients get an inbox notification, so the rest of the crew keeps working undisturbed. A message with no recipients still goes to the whole crew, and mentions in the middle of the text stay text. From the CLI, repeat --to or start the message with mentions: runner msg post "@coder, @reviewer: please check the parser." (#826)
+    - Agents read only new messages. runner msg read now shows only unread inbox messages, followed by a short digest of what other members sent each other. --all shows every crew message since joining, and --since and --from filter the history. Crew members spend less of their context rereading old traffic. (#826)
+    - Drop files onto a terminal. Drag files from Finder or File Explorer onto a chat pane, a drawer terminal or a mission slot to insert their paths at the prompt, quoted as when you paste files. The terminal highlights while the files are over it and takes focus when you drop them; nothing runs until you press Return. (#898)
+    Bug fixes
+    - Mission messages are no longer lost or left unsent. A message to a crew member could be typed into an agent that was still starting up and left sitting unsent in its input, typed into a draft you had left there, or lost when Runner's background service restarted. Runner now keeps each message until the member receives it, confirms that the agent submitted it, and waits while you have an unsent draft. If a message still is not submitted, the mission slot shows "Message not submitted — press Return". Runner's own notices in the mission feed are now labelled System. (#907)
+    - pi chats show their real title. A pi chat with no name showed a literal "π" as its title, and a named one showed "π - ". Unnamed pi chats now fall back to the role name like other runtimes, and named ones show just the name. (#941)
+    - Chats keep a symlinked folder's path. On macOS, a chat started in a folder reached through a symbolic link showed the resolved path in its shell prompt and title instead of the path you chose. Agents also see the correct PWD. (#944)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.5 是 macOS 和 Windows 上基于 0.16.4 的功能版本。
+    新功能
+    - 任务消息可以同时发给多位成员。 在任务的消息输入框开头输入 @ 并选择一位成员，即可添加一个收件人标签；重复操作可选择多位成员。点击标签可将其移除，在草稿为空时按 Backspace 会移除最后一个标签。只有收件人会收到收件箱通知，其他成员的工作不会被打断。没有收件人的消息仍会发给整个团队，正文中间的 @ 提及只作为普通文本。在 CLI 中，可以重复使用 --to，或在消息开头写提及：runner msg post "@coder, @reviewer: please check the parser." (#826)
+    - 智能体只读取新消息。 runner msg read 现在只显示未读的收件箱消息，后面附上一段简短摘要，列出其他成员之间互发的消息。--all 显示加入以来的全部团队消息，--since 和 --from 可用于筛选历史。团队成员不必再花上下文重读旧消息。 (#826)
+    - 把文件拖到终端上。 从访达（Finder）或文件资源管理器中把文件拖到对话窗格、抽屉终端或任务成员的终端上，即可在提示符处插入它们的路径，引号处理与粘贴文件时相同。文件悬停在终端上方时终端会高亮，松开后终端获得焦点；在你按下回车之前不会执行任何内容。 (#898)
+    问题修复
+    - 任务消息不再丢失或停留在未发送状态。 此前，发给团队成员的消息可能在智能体仍在启动时被输入，然后停留在输入框中没有发送；也可能被输入到你留在那里的草稿里；或在 Runner 后台服务重启时丢失。现在 Runner 会保留每条消息直到成员收到，确认智能体已经提交，并会在你有未发送的草稿时等待。如果消息仍未提交，任务成员的终端上会显示“消息未提交 — 请按回车键”。任务动态中 Runner 自己的通知现在标记为 System。 (#907)
+    - pi 对话显示正确的标题。 此前未命名的 pi 对话标题显示为字面上的“π”，已命名的显示为“π - <名称>”。现在未命名的 pi 对话会像其他运行时一样回退为角色名称，已命名的只显示名称。 (#941)
+    - 对话保留符号链接文件夹的路径。 在 macOS 上，从通过符号链接访问的文件夹启动的对话，其 shell 提示符和标题显示的是解析后的路径，而不是你选择的路径。智能体看到的 PWD 现在也是正确的。 (#944)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.16.5
+ReleaseTime: 2026-10-18T14:00:25.0000000Z

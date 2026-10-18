@@ -1,0 +1,32 @@
+Version: "103.0"
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/103.0/mkvtoolnix-32-bit-103.0-setup.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/103.0/mkvtoolnix-64-bit-103.0-setup.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/103.0/mkvtoolnix-32-bit-103.0.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/103.0/mkvtoolnix-64-bit-103.0.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features and enhancements
+    - mkvmerge: AVC/H.264: the stereo mode is now set from the frame packing arrangement SEI message in the video stream if neither the command line nor the container specifies one. This works for MP4, Matroska, AVC elementary stream and MPEG transport stream input and is already known during file identification. Implements the AVC part of #6309.
+    - mkvmerge: HEVC/H.265: the stereo mode is now set from the frame packing arrangement SEI message in the video stream if neither the command line nor the container specifies one. This works for MP4, Matroska, HEVC elementary stream and MPEG transport stream input and is already known during file identification. Implements the HEVC part of #6309.
+    - MKVToolNix GUI: multiplexer: added new actions to the tracks context menu for enabling/disabling all items belonging to the same source file as the selected item. Implements #6318.
+
+    Bug fixes
+    - mkvmerge: MP4 reader: fixed losing video frames at the end of the file due to flushing the packetizers too early (when the first track ends instead of only when all tracks in the file have ended). Another byproduct is that BlockDuration attributes aren't set for the last frame when they aren't needed anymore. Fixes #6320.
+    - MKVToolNix GUI: multiplexer: when identification fails due to an unrecognized or unsupported format, clicking the "Cancel" button in the error dialog shown no longer locks up the GUI in the state of "identification is still running", which disabled most elements. Fixes #6298.
+    - MKVToolNix GUI: chapter editor: when adding chapters mandatory elements set to their default values are removed in the underlying data structures. This restores consistency to how the chapter editor worked when copying values from the UI into them for the selected chapter. The result is that those elements won't show up in saved XML/Matroska files even if they have never been selected in the UI. Fixes #6294.
+    - macOS: GUI: fixed check boxes in lists such as the multiplexer's track list being invisible on macOS 27 by patching the Qt bundled with the app. Patch by corticalcode, based on the fix J.D. Purcell proposed in QTBUG-150017. Fixes #6307.
+ReleaseTime: 2026-10-18
+RealVersion: 103.0.0
