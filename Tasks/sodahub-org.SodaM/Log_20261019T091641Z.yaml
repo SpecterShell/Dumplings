@@ -1,0 +1,17 @@
+Version: 0.3.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/sodahub-org/sodam/releases/download/v0.3.1/sodam-0.3.1-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 整曲下载改成流式，播放内存大幅下降：之前的下载会把整首无损（40~80MB）连同解密副本一起放进内存，多首预取并发时进程能涨到 600MB 上下。现在边下边解密边写盘，单个下载的额外占用降到「一个样本」量级；实测连续下载 84MB 无损期间 RSS 不增长。真实曲目校验：同一首的下载结果与旧路径逐字节一致。
+    - Linux 系统托盘修复：菜单顶部现在正确显示「艺人 – 曲名」与专辑封面（之前一直显示 Nothing playing，且没有封面）。
+    - Linux 媒体键 / 桌面挂件修复：MPRIS 注册失败（上一个实例未退出、或同时开了两个 sodam）会自动退避重试，不再出现「第二个实例永远没有媒体控制」；D-Bus 断开后也会自动重连。
+    - 单实例防护：第二次启动不再开新窗口，而是把已经在跑的窗口提到前台（Linux/macOS 走 Unix socket，Windows 走命名互斥体）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sodahub-org/sodam/releases/tag/v0.3.1
+ReleaseTime: 2026-10-19T09:13:28.0000000Z
