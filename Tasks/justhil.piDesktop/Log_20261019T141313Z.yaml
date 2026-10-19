@@ -1,0 +1,28 @@
+Version: 0.7.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/justhil/pi-app/releases/download/v0.7.6/pi.Desktop-Setup-0.7.6-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    pi Desktop v0.7.6
+    优化
+    - 上下文用量：输入框、运行面板和 Context 面板统一使用 pi SDK 返回的 token 用量与模型容量，不再按字符数估算已加载会话的占用；切换模型后会刷新容量，压缩后用量暂未确定时不再显示旧数字
+    修复
+    - Windows SDK 升级：设置里选择版本后点「升级并切换」没有反应、独立 SDK 始终安装不上；现在能正确启动系统 npm，安装失败后也可以重试（#125）
+    - 会话切换与新对话：切换会话后仍显示上一个会话的运行状态、发送被阻塞；创建新对话或运行中刷新历史时串入其他会话的内容；回到已回退的会话后丢失当前分支
+    - 完成通知：点击通知回到当前会话时，正在输出的回复不再停住；只读子会话点击「继续」也能正常退出预览状态
+    - 排队消息：已经处理的消息，切走再回来后不再重新显示为排队
+    - 思考强度：在新会话中调整强度不再误改后台运行中的会话；手动选择的强度不再被延迟返回的默认值覆盖
+    - 斜杠命令：恢复输入框的命令菜单，/compact 会真正压缩当前会话，而不是只显示完成提示
+    - 活动标题：Worker 退出后，活动列表里的会话标题仍能正确恢复
+    - WSL Git：打开 WSL 会话后能正确识别项目仓库，分支选择器正常列出分支
+    - 网页粘贴：从 GitHub 等网页复制日志到输入框时，不再插入多余空行
+
+    安装包见本页 Assets。更新说明以本正文为准（应用内「发现新版本」弹窗会展示）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/justhil/pi-app/releases/tag/v0.7.6
+ReleaseTime: 2026-10-19T13:51:07.0000000Z
