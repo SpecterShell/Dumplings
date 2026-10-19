@@ -1,0 +1,165 @@
+Version: 18.12.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.12.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - AgentTool gained the optional approvalCacheTargets hook, which the always-ask-cached approval mode uses to check and record per-file grants (#16049 by @Peribunt)
+    Changed
+    - Tools with lenientArgValidation now receive unknown root arguments that their closed schema would otherwise drop, so they can reject them (#16317)
+    @oh-my-pi/pi-ai
+    Added
+    - Added validateToolArguments(tool, call, { keepUnknownRootKeys: true }) to keep unknown root keys that a closed schema would otherwise drop during argument repair (#16317)
+    Fixed
+    - Fixed Claude streams that a gateway cut off before message_delta failing the turn instead of being retried (#16341 by @lz-lunzi)
+    - Fixed Gemini pairing parallel same-name tool results with the wrong call when history stores them out of call order (sessions from before 18.4.2, SDK-built contexts) (#16259 by @will-bogusz)
+    - Fixed Factory Droid Gemini dropping calls to tools with names over 64 characters (most MCP tools) and their results from later requests, so the model called the tool again; such names now shorten to 64 characters (#16283 by @will-bogusz)
+    - Fixed Factory Droid Gemini requests failing with 400 "For schema with items, schema type should be ARRAY" when a tool parameter accepts a string or a list, as the default task tool's model field does (#16249 by @will-bogusz)
+    - Fixed PI_REQ_DEBUG=1 request dumps writing your API key, bearer token and response cookies to disk in plain text: credential headers now read [redacted], as in rejected-request dumps (#16293 by @will-bogusz)
+    - Fixed finalized signed reasoning disappearing from displayed thinking when no deltas streamed (#16227)
+    @oh-my-pi/pi-catalog
+    Changed
+    - MiniMax MiniMax-M3.1-Flash (the launch id) now gets the always-on low–max thinking the bundled MiniMax-M3.1-Flash-Preview rows have, and omits sampling params (temperature, top_p, top_k) it rejects (#16315 by @SaladDay)
+    Fixed
+    - Gemma 4 models on Google AI Studio (google/gemma-4-31b-it, google/gemma-4-26b-a4b-it, …) no longer fail every request with Thinking budget is not supported for this model; thinking is now toggled with thinkingLevel (on = high, off = minimal) (#16350)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the Ask and remember approval mode (tools.approvalMode: always-ask-cached, --approval-mode always-ask-cached): it also asks before file reads, and file prompts can remember the folder or the file, for this session or across sessions, through approval-cache.db (#16049 by @Peribunt)
+    - Added /forget-approvals to forget every file and folder approval Ask and remember has recorded (#16049 by @Peribunt)
+    - Extension ui.approve() hosts can render the new prompt.grants choices and answer { grant, always }; hosts that ignore them keep answering once/session/deny (#16049 by @Peribunt)
+    - Extension and custom tools can declare approvalCacheTargets to take part in Ask and remember grants (#16049 by @Peribunt)
+    - Added proc://<id>/streams for bash jobs: it lists the command's pipes, and proc://<id>/streams/<n> shows what has crossed pipe n so far, so cmd | tail -5 can be followed live without rerunning cmd
+    - Background job widgets are designed per job by the new widget model role (resolves like smol until you assign it): one request writes rules that read the job's output and its pipes (cmd | tail included), and every later update is computed locally with no further model calls or messages to the agent; a subagent gets a widget only once it says which output shows its progress, and a job with nothing worth charting gets none; turn them off with async.widgets: false
+    - Running subagents now show their current step, in their own words, on the task card; the periodic completion check also asks the subagent which output shows its progress, so the job widget knows what to chart
+    - The wait card shows the watched jobs as a row of tiles, each with its status, name (a subagent's in full), what it is doing, and its headline figure and live widget when it has one (a throughput chart with its target line, per-model bars, CI job status, trial progress), and a subagent's own completion estimate as a ring that turns from blue to green as it fills (hover the tile for the percentage); the HUD jobs pill shows the freshest job's headline and a mini chart, and hovering it opens a card with the running jobs as tiles; the jobs sheet shows the selected job's widget above its output, and the terminal status line appends the headline to the jobs count
+    Changed
+    - While a subagent is focused, /model, /switch, /effort, Alt+P, Ctrl+P, and Shift+Tab change that subagent's model and thinking level (session-only) instead of telling you to return to the main session; /model and Alt+M open the session-only picker there, since role assignments configure the main session
+    Fixed
+    - Fixed omp skill list omitting skills from a skills.customDirectories entry that starts with ~; such an entry now resolves against your home directory, matching the skill loader (#16347 by @yuzu-octopus)
+    - Fixed grep treating a ;-separated list of internal URLs (e.g. artifact://44;artifact://43) as one URI and refusing to search it; every listed resource is now searched (#14091)
+    - Fixed grep refusing a web URL that carries a :raw (or :conflicts) selector before the page was fetched; the selector now reaches the fetch, so :raw searches the verbatim response body (#14092)
+    - Fixed browser role/<role>[name="…" exact] selectors in Chromium and Tern tabs matching nothing for many names copied from observe(); a button or link with visible text is no longer matched by its title (#16252 by @will-bogusz)
+    - Fixed /tan clones with Mnemopi auto-recall re-sending the parent's recalled memories as an extra system-prompt block, which duplicated them and missed the parent's prompt cache (#16337)
+    - Fixed legacy pi extensions that import contentText from pi-ai or formatSkillsForPrompt from pi-coding-agent, such as pi-claude-bridge, failing to load (#16313 by @Jerryx333)
+    - Fixed legacy Pi plugins such as pi-ssh-remote crashing at session start when reading shell settings through SettingsManager (#16256)
+    - Fixed newly authenticated models missing from the current session's scoped /model picker and model cycle after login, including setup-wizard sign-in, without changing the active model or widening the configured scope (#16234 by @lazy1523)
+    - Fixed the computer tool's control.acquire returning the same { active: false } when nobody could be asked (a subagent or headless run) as when you declined; it now reports reason: "no-ui" or reason: "denied" (#16295 by @will-bogusz)
+    - Fixed a browser screenshot waiting past its deadline when Chrome was slow to open a DevTools session; it now stops at the deadline (#16230 by @will-bogusz)
+    - Fixed a parked subagent waking up with the todo tool and its instructions when messaged, though subagents are spawned without them (#16281 by @will-bogusz)
+    - Fixed wait failing with "Skipped due to a queued background completion" when the job it was waiting for had just finished; it now returns that job's result, and a steer, peer message or aside arriving at the same moment no longer turns a settled job or waiting peer message into that skip (#16301 by @will-bogusz)
+    - Fixed the second of two extension asides (pi.sendMessage(…, { deliverAs: "aside" })) sent together to an idle session being lost; it now reaches the agent after the first (#16292 by @will-bogusz)
+    - Fixed every idle agent woken by an agent://all broadcast answering the sender automatically, mostly to say the message was not for it; a direct message still gets the woken agent's turn back (#16312 by @will-bogusz)
+    - Fixed a subagent woken by an IRC message sending its waker and parent every line of text it wrote that turn run together (Checking.Answer.) instead of just its final answer (#16302 by @will-bogusz)
+    - Fixed a parent follow-up sent while a peer-woken subagent was running leaving the accepted agent:// result unchanged and skipping the parent's completion (#16305)
+    - Fixed yield reporting success while silently omitting unsupported root fields; such calls are now rejected with an error naming the fields (#16317)
+    - Fixed brew install and brew upgrade of omp failing with a 403 behind corporate proxies (#16264 by @debanjanbasu)
+    - Fixed browser timeouts in the release binary surfacing as raw errors such as Og: Navigation timeout of 7000 ms exceeded; a timed-out tab.goto or browser.open now stops the pending load and keeps the tab, as running from source did (#16266 by @will-bogusz)
+    - Fixed find, glob and ast_grep always refusing ssh:// paths with "ssh:// access needs exec approval; this command was approved at read": they now ask for exec approval like read and grep do (#16285 by @will-bogusz)
+    - Fixed a conflict://* write of per-id lines with literal values (1: foo, 2: bar) writing all of them into every conflict block and reporting success; it now fails without touching the file and points to per-block conflict://<N> writes (#16267 by @will-bogusz)
+    - Fixed hashline block edits (PUT N*:, CUT N*) applying over block lines a read never fully showed, such as a line cut at the column cap, which silently dropped that line's tail; they are now rejected like the equivalent explicit range (#16209)
+    - Fixed a resumed session's next snapcompact compaction losing the newest archived history once the archive passed 500k characters, and drawing [Session persistence truncated large content] into its frames; the archive's source text is now saved whole (#16282 by @will-bogusz)
+    - Fixed /compact, /new or a session switch during a running tool dropping that tool's result from the session file, so the model and a resumed session saw "No result provided" instead of what the tool returned (#16241 by @will-bogusz)
+    - Fixed read middle-eliding large file pages into an artifact; a page past the output spill threshold now stops at a line boundary with an exact :N continuation (#16277)
+    - Fixed an edit after a restart replacing a line that read or grep had shown cut at the column cap and silently dropping the rest of that line; such edits now ask for a full :raw read of the line first, while edits to lines within the cap still apply (#16171)
+    - Fixed Enter on an unknown slash command such as /not-a-command running a command whose description happened to match it (e.g. /loop, which then resent every later prompt after each turn); Enter now sends what you typed, including as the deny-and-steer message for a pending tool approval, unless you select a suggestion first (#16265)
+    - Fixed read of web pages dropping collapsed sections such as accordion and expander panels (e.g. a product page's "Item details" table); content in <template>, <noscript> and scripts stays out (#16246)
+    - Fixed /mcp reauth and /mcp add opening an unrelated origin-root authorization server's login page when the authorization server an MCP server advertises in its protected-resource metadata has invalid metadata; discovery now uses only the advertised servers and reports the issuer mismatch naming the server (#16339)
+    - Fixed auto thinking offering the judge effort levels the current model does not support, which could leave a sparse-ladder model on the wrong level; with at most one usable level under the ceiling it now skips the judge call (#16327 by @savanne-kham)
+    - Fixed subagents that were cancelled, interrupted, timed out, or killed refusing messages as "hard-aborted and cannot be messaged or revived": a message (or Agent Hub revive/focus) now resumes them from their transcript with full context
+    - Fixed interrupting a focused subagent to send it a queued message (empty Enter) sometimes ending its run as cancelled before it read the message; the subagent now answers the message and keeps working
+    - Fixed sessions whose first reply starts with a todo plan getting a title without its icon and code: the plan's title refresh no longer replaces the card title that is still being generated
+    - Fixed generated titles that come out without an icon and code (a subagent's title, a title-model fallback, a malformed card reply) staying plain: they now get a card like /rename titles do
+    - Fixed running the test suite adding fixture titles (PLAN, renamed session, …) to your real ~/.omp/agent/history.db
+    @oh-my-pi/pi-natives
+    Added
+    - Added a hiddenContent option to htmlToMarkdown: "drop" (default) omits hidden content, "reachable" keeps content the page can reveal such as collapsed sections and inactive tab panels, and "all" also keeps <template> and <noscript> content; other values throw (#16246)
+    - Added normalizePtyDimensions(cols, rows) to size screen emulators with the same effective dimensions as native PTY sessions (#16192 by @C-W-Z)
+    - Added LineMatcher, a native multi-pattern line matcher: matchLines returns a batch's matches column-wise as typed arrays (line, pattern, and the UTF-16 span of each named group in groupNames() order)
+    - Added PipeStreams and the streams option of Shell.run: every pipe the run opens keeps a readable copy of its newest megabyte, so a stage's output stays visible while a later stage (| tail) holds it back
+    Fixed
+    - Fixed the output minimizer altering what ssh commands print in the bash tool: remote lines were cut to 120 characters and blank lines dropped; ssh's own login and connection notices are still stripped (#16314 by @will-bogusz)
+    - Fixed X11 background shortcuts and typing reporting Cancelled when you stopped them right after the last key went down: the key releases now always go out and the call succeeds (#16235 by @will-bogusz)
+    - Fixed wrapTextWithAnsi leaving rows half-empty in Chinese and Japanese text: CJK runs now break between characters to fill each row, closing punctuation such as ，。！」 never starts a row, and opening brackets never end one (#16219)
+    - Fixed a cancelled or timed-out macOS computer call finishing its lookup of a sheet, popover or menu window, up to 5,000 accessibility elements, before it stopped and let the next request run (#16233 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Added
+    - Added IrcMessage.broadcast, set on each copy of an agent://all broadcast so recipients can tell it from a direct message (#16312 by @will-bogusz)
+    - AutocompleteItem.descriptionMatch marks a slash command matched only through its description; Editor Enter no longer applies such a row unless the user moved the selection onto it (#16265)
+    - ApprovalDialogComponent accepts grants and onGrant: grant choices above Approve Once, led by a toggle that keeps them across sessions (#16049 by @Peribunt)
+    - Added describeJobWidget/renderJobWidgetLines to draw a background job's widget natively and as terminal lines, describeJobTiles/renderJobTileLines to draw jobs as tiles (status, title, figure, widget), and renderSparkline (with peakBuckets/fitSparkValues) for one-row block sparklines
+    Fixed
+    - Fixed transparent images with empty top rows disappearing inside Zellij (#16346 by @Bouska)
+    - Fixed bash output rewritten by the output minimizer skipping the per-line column cap (tools.outputMaxColumns), so a line wider than the cap reached the model whole; the raw output stays in its artifact (#16314 by @will-bogusz)
+    - Fixed the composer caret drifting one cell left per pasted image or video chip in terminals that draw the chip icon as a wide emoji (JetBrains terminal); the unicode preset now uses 📷/🎬 chip icons (#16270)
+    - Fixed Tern hiding user text sent with /skill:<name> inside a collapsed skill card; only the loaded skill prompt is hidden (#16311)
+    - Fixed SIXEL charts and images overlapping following content when their top rows scroll out of the viewport (#16245 by @JustasMasiulis).
+    @oh-my-pi/pi-wire
+    Added
+    - Added min, max and dashed reference marks to bars/spark chart nodes, a tone per series column, and the common hovercard prop: a node tree Tern floats over the node while the pointer rests on it
+    What's Changed
+    - fix(tui): clip SIXEL rasters at the viewport top by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/16245
+    - fix(tui): kept Enter from running description-only slash matches by @roboomp in https://github.com/can1357/oh-my-pi/pull/16268
+    - fix(ai): preserved finalized native reasoning without deltas by @roboomp in https://github.com/can1357/oh-my-pi/pull/16229
+    - fix(tui): used emoji-presentation glyphs for image and video chips by @roboomp in https://github.com/can1357/oh-my-pi/pull/16276
+    - fix(tui): kept skill draft visible in tern transcript by @roboomp in https://github.com/can1357/oh-my-pi/pull/16320
+    - fix(read): paged file reads at the spill threshold instead of eliding by @roboomp in https://github.com/can1357/oh-my-pi/pull/16280
+    - fix(tui-debug): support native Windows without /bin/sh by @C-W-Z in https://github.com/can1357/oh-my-pi/pull/16192
+    - fix(ai): redact credential headers in PI_REQ_DEBUG dumps by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16293
+    - fix(coding-agent): keep a running tool's result when /compact, /new or a session switch aborts it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16241
+    - fix(coding-agent): persist snapcompact archive source text whole by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16282
+    - fix(edit): checked every block line in the hashline seen-line guard by @roboomp in https://github.com/can1357/oh-my-pi/pull/16218
+    - fix(coding-agent): reject conflict://* per-id blocks with literal values by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16267
+    - fix(coding-agent): ask exec approval for ssh:// paths in find, glob and ast_grep by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16285
+    - fix(natives): never cancel X11 uinput releases by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16235
+    - fix(mcp): restricted oauth discovery to advertised auth servers by @roboomp in https://github.com/can1357/oh-my-pi/pull/16340
+    - fix(ai): keep Factory Droid Gemini tool schemas valid when a parameter takes a string or a list by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16249
+    - fix(ai): keep Factory Droid Gemini calls to long-named tools in later requests by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16283
+    - fix(ai): send parallel Gemini tool results back in call order by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16259
+    - fix(catalog): sent thinkingLevel for gemma 4 on google ai studio by @roboomp in https://github.com/can1357/oh-my-pi/pull/16354
+    - fix(browser): recognize Puppeteer timeouts in release builds by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16266
+    - fix(ci): fall back to the GitHub release in the Homebrew formula by @debanjanbasu in https://github.com/can1357/oh-my-pi/pull/16264
+    - fix(coding-agent): rejected yield calls carrying fields beside data by @roboomp in https://github.com/can1357/oh-my-pi/pull/16323
+    - fix(task): published parent-injected wake results by @roboomp in https://github.com/can1357/oh-my-pi/pull/16307
+    - fix(task): relay a woken subagent's final report, not all its turn text by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16302
+    - fix: address review follow-ups for #16323, #16340, #16249, #16241 by @H4vC in https://github.com/can1357/oh-my-pi/pull/16362
+    - fix(coding-agent,tui): stop woken agents auto-replying to agent://all broadcasts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16312
+    - fix(coding-agent): deliver both of two asides sent together to an idle session by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16292
+    - fix(coding-agent): return a just-finished job from a wait its completion notice cut short by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16301
+    - fix(pi-shell,tui): keep ssh remote output intact in the minimizer by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16314
+    - fix(natives): broke cjk runs between characters in wrapTextWithAnsi by @roboomp in https://github.com/can1357/oh-my-pi/pull/16228
+    - fix(coding-agent): keep todo stripped from a warm-revived subagent by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16281
+    - fix(natives): stop a cancelled macOS stale-ref search before it looks up the window by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16233
+    - fix(coding-agent): stop a browser screenshot waiting on a DevTools session past its deadline by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16230
+    - fix(coding-agent): tell a computer.control.acquire nobody could answer apart from a refusal by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16295
+    - fix(ai): classify mid-stream message_delta drops as retryable by @lz-lunzi in https://github.com/can1357/oh-my-pi/pull/16341
+    - fix(coding-agent): refresh scoped models after OAuth login by @lazy1523 in https://github.com/can1357/oh-my-pi/pull/16234
+    - fix(coding-agent): restored legacy shell settings accessors by @roboomp in https://github.com/can1357/oh-my-pi/pull/16258
+    - fix(coding-agent): export contentText and formatSkillsForPrompt from the legacy pi shims by @Jerryx333 in https://github.com/can1357/oh-my-pi/pull/16313
+    - fix(mnemopi): kept /tan clones from re-injecting the parent recall by @roboomp in https://github.com/can1357/oh-my-pi/pull/16338
+    - fix(coding-agent): match browser role/ exact names to the names observe() shows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16252
+    - fix(coding-agent): let grep fetch a web URL that carries a :raw selector by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/16352
+    - fix(coding-agent): search every resource in a semicolon list of internal URLs by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/16353
+    - fix(coding-agent): expand tilde in skill list custom directories by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/16347
+    - fix(tui): preserve transparent SIXEL image width in Zellij by @Bouska in https://github.com/can1357/oh-my-pi/pull/16346
+    - fix(coding-agent): add the legacy skills prompt template by @H4vC in https://github.com/can1357/oh-my-pi/pull/16364
+    - fix: address second round of review follow-ups by @H4vC in https://github.com/can1357/oh-my-pi/pull/16365
+    - fix(coding-agent): constrain auto-thinking choices to supported model efforts by @savanne-kham in https://github.com/can1357/oh-my-pi/pull/16327
+    - fix(catalog): move MiniMax M3.1 Flash rules to the launch id MiniMax-M3.1-Flash by @SaladDay in https://github.com/can1357/oh-my-pi/pull/16315
+    - docs(changelog): describe the auto-thinking fix by its effect by @H4vC in https://github.com/can1357/oh-my-pi/pull/16367
+    New Contributors
+    - @JustasMasiulis made their first contribution in https://github.com/can1357/oh-my-pi/pull/16245
+    - @debanjanbasu made their first contribution in https://github.com/can1357/oh-my-pi/pull/16264
+    - @lz-lunzi made their first contribution in https://github.com/can1357/oh-my-pi/pull/16341
+    - @lazy1523 made their first contribution in https://github.com/can1357/oh-my-pi/pull/16234
+    - @Jerryx333 made their first contribution in https://github.com/can1357/oh-my-pi/pull/16313
+    - @SaladDay made their first contribution in https://github.com/can1357/oh-my-pi/pull/16315
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.12.2...v18.12.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.12.3
+ReleaseTime: 2026-10-19T18:41:25.0000000Z
