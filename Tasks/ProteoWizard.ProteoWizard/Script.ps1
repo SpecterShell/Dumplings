@@ -11,7 +11,7 @@ $this.CurrentState.Version = $Matches.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'wix'
+  InstallerType = 'inno'
   InstallerUrl  = "https://mc-tca-01.s3.us-west-2.amazonaws.com/ProteoWizard/bt83/$($Matches.BuildId)/$($Matches.FileName)"
 }
 
