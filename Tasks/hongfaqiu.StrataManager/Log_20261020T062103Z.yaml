@@ -1,0 +1,16 @@
+Version: 0.2.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.8/Strata.Manager_0.2.8_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: "- Supports Strata 0.2.0: upstream 0.2.0 no longer publishes strata-windows-x64*.zip; it ships a signed feed (strata-feed.json) and per-GPU strata-engine-<version>-windows-x86_64-<type>.tar.gz engine packages. Manager now accepts pre-release versions such as v0.2.0-beta, verifies the feed's Ed25519 signature, channel, expiry and sequence (an older feed cannot be replayed), and offers only Windows packages whose size and SHA256 agree between the feed and the GitHub release assets: CUDA 13, CUDA 12, AMD HIP RX 9000 / R9700 and AMD HIP RX 7000 / Strix Halo. After download it checks the package SHA256, extracts the tar.gz safely (regular files only; links, path traversal and case collisions are refused) and then checks every file and its SHA256 against the signed engine-component.json manifest inside the package; one extra or missing file stops the install. The same-version source now keeps strata_control, which the 0.2.0 server needs; an update whose Python requirements only shrink (0.2.0 dropped cmake / ninja) is applied in place. 0.2.0 CUDA packages bundle cuBLAS, so new installs no longer download the CUDA runtime wheels. An older multi-GPU HIP engine asks you to choose the matching AMD package. Local files can be .tar.gz or legacy .zip; installing and updating from earlier ZIP releases is unchanged. A full install on real NVIDIA / AMD hardware has not been validated yet."
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: '- 支持 Strata 0.2.0：上游 0.2.0 不再发布 strata-windows-x64*.zip，改为签名 feed（strata-feed.json）加按显卡分开的 strata-engine-<版本>-windows-x86_64-<类型>.tar.gz 引擎包。Manager 现在会识别 v0.2.0-beta 这类预发布版本号，校验 feed 的 Ed25519 签名、渠道、有效期和序号（不接受回放旧 feed），只提供 feed 与 GitHub 发布资产在长度和 SHA256 上都一致的 Windows 包：CUDA 13、CUDA 12、AMD HIP RX 9000 / R9700、AMD HIP RX 7000 / Strix Halo。下载后先核对整包 SHA256，再安全解包 tar.gz（只接受普通文件，拒绝链接、路径穿越和大小写冲突），最后用包内签名清单 engine-component.json 逐个核对文件和 SHA256，多一个或少一个文件都不安装。同版本源码会带上 0.2.0 服务启动所需的 strata_control；依赖只减少时（0.2.0 移除了 cmake / ninja）可原地更新。0.2.0 的 CUDA 包已自带 cuBLAS，新安装不再额外下载 CUDA 运行库。旧版多显卡 HIP 引擎需在更新时手动选择对应的 AMD 包。本地文件可选 .tar.gz 或旧版 .zip；旧版 ZIP 发布的安装与更新不变。尚未在真实 NVIDIA / AMD 硬件上做完整安装验收。'
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.8
+ReleaseTime: 2026-10-20T03:51:56.0000000Z
