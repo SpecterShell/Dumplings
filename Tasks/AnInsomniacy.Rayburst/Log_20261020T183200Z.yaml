@@ -1,0 +1,108 @@
+Version: 4.1.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.0/Rayburst_4.1.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.0/Rayburst_4.1.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    Rayburst 4.1 needs Rayburst Connect 2.1.2 or later. Browser handoff was rebuilt for this release. With Connect 2.0.x the extension shows "Desktop version not supported" and the browser keeps its downloads. Update the extension from the Chrome Web Store, Edge Add-ons or Firefox Add-ons. Connect 2.1.2 and later also work with Rayburst 4.0.
+    What's Changed
+    Rayburst 4.1.0 is the largest update since 4.0 and brings eleven betas to the stable channel. It moves to the rebuilt Aria2 Next 3 engine, bundled here as 3.0.8, which replaces the event loop inherited from aria2 with Boost.Asio, libcurl, libtorrent and SQLite. The app now reads the engine through one native pump instead of several polling loops, and a browser download is released only after the engine confirms it would receive the same file. Every new download is confirmed in a standalone add window, an optional floating window shows progress over other apps, and site rules, multi-select, moving unfinished downloads and post-download actions are new. Linux rendering, start at login and file safety are fixed across the board.
+    🚀 Performance
+    Aria2 Next 3.0.0 against the 2.8.6 engine of Rayburst 4.0.1, measured on the same machine and network; every downloaded file was verified.
+
+    | Download                                            | Size    | 4.1.0 vs 4.0.1                                         |
+    | --------------------------------------------------- | ------- | ------------------------------------------------------ |
+    | openSUSE image from a Metalink with several mirrors | 261 MiB | about 20× faster                                       |
+    | eMule installer over ED2K                           | 3.2 MiB | about 6× faster                                        |
+    | Sintel torrent with a web seed                      | 123 MiB | about 2× faster; first data about 10× sooner           |
+    | Linux kernel tarball from kernel.org                | 149 MiB | about 1.8× faster                                      |
+    | HLS and DASH streams                                | 4 cases | all complete; 4.0.1 failed 3                           |
+    | Server that throttles with 503 or 429               | —       | completes at the server's limit; 4.0.1 failed the task |
+    | One response with a wrong Content-Range             | —       | about 14× faster; 4.0.1 dropped to one connection      |
+    | Connections that open but never send data           | —       | completes; 4.0.1 stalled                               |
+
+    - Fast single servers download at the same speed with 2–4× less CPU time and less memory.
+    - Downloads from one server share its connections by remaining bytes when the server limits them, so a large video no longer waits behind its audio and subtitles.
+    - The app reads the global status and the task lists in one call per tick, and the window no longer polls. Busy engines no longer trigger restart storms (#690).
+    - Large torrents stay responsive: the file selector is virtualized, and the window receives at most 64 files per task, except the task whose details are open (#447).
+    🔗 Rayburst Connect
+
+    |                                 | Rayburst 4.0.x | Rayburst 4.1.0       |
+    | ------------------------------- | -------------- | -------------------- |
+    | Rayburst Connect 2.0.x          | ✅              | Update the extension |
+    | Rayburst Connect 2.1.2 or later | ✅              | ✅                    |
+
+    - Verified handoffs: the extension holds a browser download until Rayburst answers. Rayburst asks the engine to request the URL with the browser's headers and cookies, and takes over only when the server answers with the expected file. Web pages, rejected or unreachable URLs and size mismatches stay in the browser, and a lost answer never leaves a download in neither place.
+    - With the confirm behavior and Connect 2.1.4 or later, the browser releases a download as soon as the add window shows it (#720).
+    - The popup lists unfinished and recent tasks with pause, resume and show in folder.
+    - Browser .torrent links either open the torrent's content or are saved as plain files; they are always saved while BitTorrent is off (connect#50).
+    - Starting Rayburst from Firefox works when the browser forbids leaving its job object (connect#62).
+    - Media from a CDN without captured headers is requested with the page origin as Referer, so split audio and video tracks no longer answer 403.
+    ✨ New Features
+    - Standalone add window — every new download, from the menu, tray, links, drops or the extension, is confirmed in one movable window that opens at once. It reads each link's size and file name the way the download will request them, shows the total against the folder's free space, and accepts dropped .torrent files (#693, #445, #379, #400, #718)
+    - Floating window — an optional orb that stays on top, fills with the overall progress and shows the speed. Click it for a panel to pause or resume each download, or drop links and torrents on it. Show it always, only while downloading or never; on Windows it steps aside for fullscreen apps (#718, #726)
+    - Site rules — choose the proxy and cap connections per host, for the add window and browser downloads (#489, connect#52)
+    - Multi-select — Ctrl/Shift click, Ctrl+A and Esc, with batch resume, pause and delete (#473)
+    - Move unfinished downloads — Task details → "Save to" → "Move to…" pauses the download, moves its files across disks too, and resumes it (#696)
+    - Per-task speed limits in the add window and task details, including live upload limits for BitTorrent
+    - Duplicate detection against live tasks and history, even after the earlier file was moved or deleted, with skip, add anyway or cancel (#491, #545)
+    - Replace a task's URL, or retry a failed task with a new one (#548)
+    - Post-download program with {file}, {dir} and {name} arguments, and shut down when complete from the speed popover (#651, #733)
+    - Expected checksum for single downloads, DNS over HTTPS with presets, and a switch to skip certificate checks for trusted self-signed servers (#337, #704)
+    - Download torrents in order, so files finish one after another like the episodes of a series (#703)
+    - Torrent links open their file list when copied or pasted (#737)
+    - Mark unfinished files with .ray until they complete, and remove records when complete while keeping the files (#721, #722)
+    - Notifications — clicking one on Windows shows or opens the file, and Settings says when the system turns Rayburst's notifications off, with a test notification (#609, #742)
+    - Redirect target — task details show where a redirected link leads, and the download is filed under the category of the file it delivers (#730)
+    - Interface size with Ctrl/Cmd +, − and 0, optional IEC units (KiB, MiB) and a Linux system title bar option (#367, #496, #533)
+    - Tray icon can be hidden, and shows a dot while downloads run and the speeds in its tooltip (#352, #508, #283)
+    - GPU acceleration on Linux — Settings → Advanced picks whether the graphics card or the CPU draws the window (#731)
+    🛠 Improvements
+    - Bundles Aria2 Next 3.0.8. It keeps an existing file intact when a server ignores ranges, writes BitTorrent names as UTF-8 under any Linux locale and names an unavailable Windows drive or network share. XML-RPC, Thunder links and the PeerBanHelper blocklist methods remain available
+    - Settings are reorganized so related options sit together, with shorter hints in all languages. Save and Discard appear only when something changed (#691, #723)
+    - The BitTorrent file selector shows a folder tree with file-type icons, type shortcuts and invert selection (#598, #472)
+    - Taken file names are numbered name (1).ext, as browsers and file managers do; a typed name is used exactly as written (#709)
+    - Split archive parts such as .7z.001, .z01 and .r00 are filed with the archive's category (#736)
+    - Clipboard detection offers file links only by default, and only links copied after Rayburst started (#683, #738)
+    - Lightweight mode frees every window in the tray, leaving only Rayburst and the engine; the floating window can optionally stay (#735)
+    - The add window, the floating window and its panel follow the system text size and interface zoom on Windows and Linux (#731)
+    - Esc hides the window like its close button without quitting (#569)
+    - Update checks finish within 15 seconds and check both channels together (#657)
+    - Task progress is rounded down to one decimal, so a task never reads 100% before it finishes
+    - History written by a newer version is kept; the notice offers an update or, after confirmation, a reset (#729)
+    - The engine saves unfinished tasks every 60 seconds and checkpoints progress every 10 seconds. Crash recovery stops after three crashes in five minutes
+    - docs/LINUX.md lists fixes for Linux display problems
+    ⚠️ Changed Behavior
+    - Resume downloads is removed. A new download of an existing file name is renamed instead of continuing into that file; Retry still resumes the task's own file (#595)
+    - New installs use 16 connections per file; saved preferences keep their value
+    - Downloaded .torrent files are saved instead of started; open them to start the torrent. A new switch turns BitTorrent off entirely (#558)
+    - The engine maps BitTorrent and ED2K ports itself and moves to another port when one is taken; a taken RPC port falls back to a free local port. The port-conflict recovery settings are removed
+    - The maximum HTTP range size setting is removed; the engine sizes ranges by connection speed
+    - On Linux, GPU acceleration replaces the software rendering switch and is off by default. Remove WebKitGTK environment variables you added for earlier versions
+    - External RPC clients see the Aria2 Next 3 changes: RPC over TLS is gone, retired engine options are ignored with a warning, and Metalink 3 is no longer read. See the engine release notes
+    - Settings for removed features are dropped on first start; everything else carries over, and unfinished downloads resume with their progress
+    🐛 Bug Fixes
+    - Fixed a download continuing into another download's file of the same name, including when the server ignores ranges (#595)
+    - Fixed Linux windows flickering or showing only the area around the pointer with WebKitGTK 2.54: every frame is now repainted in full. WebKitGTK also keeps compositing, so translucent shadows no longer pile up (#650, #705, #731)
+    - Fixed the AppImage staying invisible with EGL_BAD_PARAMETER on newer Mesa (#714)
+    - Fixed KDE showing a generic icon for Rayburst, and Rayburst missing from application menus in deb and rpm installs (#745, #731)
+    - Fixed the main window popping up after a KDE panel restart (#707)
+    - Fixed start at login on Windows for install paths with spaces, such as D:\Program Files; the next launch repairs the entry (#716)
+    - Fixed "Open file" for downloads on network shares such as \\server\share (#715)
+    - Fixed notifications on Windows installs upgraded from an older product, start notifications for tasks added by any RPC client, and tasks announced as "Unknown" (#685, #534)
+    - Fixed a silent autostart showing a maximized window (#576)
+    - Fixed queued magnets showing as fetching metadata (#611)
+    - Fixed shortened long multibyte file names losing their extension (#509)
+    - Fixed seeding-only or unsized downloads animating the taskbar indefinitely
+    - Bounded Extension API requests in flight and their write rate (#603)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/rayburst/releases/tag/v4.1.0
+ReleaseTime: 2026-10-20T16:15:32.0000000Z
