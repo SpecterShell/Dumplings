@@ -1,0 +1,34 @@
+Version: 0.2.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.9/Strata.Manager_0.2.9_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Linux prebuilt engines: Linux x86_64 (desktop and the headless Server) can now install and update the official engine packages from the signed feed: CUDA 13, CUDA 12, AMD HIP RX 9000 / R9700, AMD HIP RX 7000 and AMD HIP Strix Halo. Verification matches Windows exactly: the feed's Ed25519 signature, channel, expiry and sequence, the package SHA256, safe extraction, then every file against the signed engine-component.json manifest. Automatic matching reads the installed engine's BUILD.json first (including Linux builds that carry variant, such as halo, instead of backend). Without an engine it picks by the detected GPU: for NVIDIA it reads the driver and compute capability (nvidia-smi, falling back to /proc/driver/nvidia/version), prefers CUDA 13, and switches to CUDA 12 or asks for a driver update when the driver is older than the feed requires; for AMD it reads the gfx target (KFD topology, falling back to rocminfo). When both vendors or no GPU are found, or several packages fit, it does not guess: it asks you to choose under "Official update package" and shows why. Executable permissions survive extraction, and a Linux .venv missing new requirements is completed automatically. The source install is unchanged; first installs still build from source, and later version updates use the official prebuilt engine.
+    - Trial start and automatic rollback: after an engine install or update, Manager first trial-starts the new engine (strata --version with the package's library folders), then restarts services and checks their health. If any step fails, the previous engine and program files are restored automatically, models and settings stay untouched, and the previous services restart. The previous version is kept until the trial passes. The Strata page shows "The new engine failed its trial start and was rolled back", the restored version and the exact reason; the update confirmation explains this in advance.
+    - Overview: one model name, no wall of errors while loading (Xiaohongshu feedback, 2× RTX 2080 Ti):
+      - The startup card and the running card now both show the model you picked. The configuration's model_name (the name clients send to the API) appears next to it as a small "API model name" detail. The running card used to put model_name in the headline, which looked like a different model had started.
+      - Fixed old runs leaking into the startup log. Upstream appends to the engine log, and Manager showed the end of the file, including the previous run's per-request statistics (missed experts skipped, prompt … tokens), as this start's output. Only lines written after this start are shown now.
+      - During a cold start, polls that fail because the API port is not open yet or the engine is busy are no longer shown as red errors. Health and metrics failures are hidden while a start is pending, for 2 minutes after the process starts, and (metrics) while /health reports the model is still loading; failures that last longer are shown.
+      - The startup card's "Engine output" is collapsed by default with only the latest line in its header; expanded, it notes that these are load progress and statistics, not errors. Real error lines (Traceback, …Error:, out of memory, fatal) are red and expand the panel automatically.
+      - The running card has a new "Startup parameters" button that opens the current model's startup parameters (context length, GPU split, the full engine argument list and the full JSON editor; saves are backed up, and "Save and restart current model" applies them).
+    - Readable Strata engine download and update progress: progress used to show raw byte counts (e.g. 1320702444 / 2254857830 字节). It now reads like 下载进度：1.23 GiB / 2.10 GiB（58%）· 12.4 MiB/s, with percent and download speed. Resume, retry, SHA256-verified, local engine package and same-version source download messages also use KiB / MiB / GiB. Exact byte counts under "Package details" in the update dialog are unchanged.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Linux 官方预编译引擎：Linux x86_64（桌面版与无头 Server）现在也能从签名 feed 安装和更新官方引擎包：CUDA 13、CUDA 12、AMD HIP RX 9000 / R9700、AMD HIP RX 7000、AMD HIP Strix Halo。校验与 Windows 完全相同：feed Ed25519 签名、渠道、有效期和序号，整包 SHA256，安全解包，再按包内签名清单 engine-component.json 逐个核对文件。「自动匹配」会先看已安装引擎的 BUILD.json（兼容 Linux 包没有 backend、只有 variant 如 halo 的写法），没有引擎时按检测到的显卡选包：NVIDIA 读取驱动版本和计算能力（nvidia-smi，退而读 /proc/driver/nvidia/version），优先 CUDA 13，驱动低于 feed 要求时改选 CUDA 12 或提示升级驱动；AMD 读取 gfx 架构（KFD 拓扑，退而用 rocminfo）。同时检测到 NVIDIA 与 AMD、未检测到显卡或有多个包都合适时，不猜测，提示在「官方更新包」中手动选择，并在界面上显示匹配理由。解包后保留可执行权限；Linux 的 .venv 缺少新版依赖时会自动补装。源码安装方式不变；首次安装仍走源码方式，之后的版本更新使用官方预编译引擎。
+    - 试启动与自动回滚：安装或更新引擎后，先用新引擎试启动（strata --version，加载包内库目录），再重启服务并做健康检查；任一步未通过都会自动恢复原来的引擎和程序文件，模型和配置不受影响，并重启原服务。原版本在试启动通过前一直保留。Strata 页面会显示「新引擎试启动未通过，已自动回滚」、恢复到的版本和具体原因；更新确认窗口会提前说明这一机制。
+    - 概览：模型名称统一、加载时不再满屏报错（小红书用户反馈，2× RTX 2080 Ti）：
+      - 上方启动卡和下方运行卡现在都显示你选中的模型名。配置里的 model_name（客户端调用 API 时填写的名称）作为「API 模型名」小字显示在旁边。以前下方大标题用的是 model_name，看起来像启动了另一个模型。
+      - 修复启动日志里混进上一次运行记录的问题。上游以追加方式写引擎日志，Manager 之前会把文件末尾的旧内容（上次的请求统计，如 missed experts skipped、prompt … tokens）当成本次启动输出显示。现在只显示本次启动之后写入的内容。
+      - 冷启动期间，接口还没打开或引擎忙时偶尔失败的轮询不再显示成红色报错：启动进行中、进程启动后 2 分钟内、以及 /health 报告模型仍在加载时，状态和指标的连接失败会被隐藏；超过这段时间仍然失败才提示。
+      - 启动卡里的「引擎输出」默认收起，只在标题行显示最新一行；展开后注明这是加载进度和统计，不是报错。真正的错误行（Traceback、…Error:、显存不足、fatal 等）标红，并自动展开。
+      - 运行卡新增「启动参数」按钮，直接打开当前模型的启动参数页（上下文长度、显卡分配、完整引擎参数列表、完整 JSON 编辑，保存前自动备份，可「保存并重启当前模型」）。
+    - Strata 引擎下载与更新进度改为易读格式：以前进度显示原始字节数（如 1320702444 / 2254857830 字节），现在显示为 下载进度：1.23 GiB / 2.10 GiB（58%）· 12.4 MiB/s，带百分比和下载速度。断点续传、重试、SHA256 校验通过、本地引擎包读取、官方同版本源码下载等提示也都改用 KiB / MiB / GiB。更新弹窗「包信息」里的精确字节数保持不变。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.9
+ReleaseTime: 2026-10-20T09:54:22.0000000Z
