@@ -1,0 +1,252 @@
+Version: 18.12.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.12.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Enabled native compaction for supported Bedrock Claude models (#16343 by @anatoli-tsinovoy)
+    @oh-my-pi/pi-ai
+    Added
+    - Added opt-in reclaimAbovePct to auth.accountPolicies: sessions automatically moved to a lower-priority account return to the preferred one once it has that much quota left (#14237 by @will-bogusz)
+    - Added reachesBudgetedHost(): whether the catalog's host request budgets (inline image bytes, official image count) apply to a request, true on a model's official endpoint and on Factory Droid's own hosts (#16288 by @will-bogusz)
+    - Added Inception API-key login (/login inception) and INCEPTION_API_KEY environment authentication (#16439 by @eggpeat)
+    - Added image support for native OpenAI Decisions and Workers AI judgments, prompted vision chat, and auth-gateway System One requests; images exceeding a judgment API's documented caps (e.g. Clef's 4 images, 4 MiB each) are rejected locally (#15471 by @anatoli-tsinovoy).
+    - isSurvivingAssistant in providers/transform-messages: whether an assistant turn reaches a replay, malformed tool calls dropped first, so callers outside transformMessages pick the same latest turn (#15791 by @will-bogusz)
+    - Broker account-pool files (OMP_AUTH_BROKER_ACCOUNT_POOL_FILE) can hide whole providers and API keys: "*": false makes the file an allow-list, and an entry can be true, false, or { "accounts": [...], "apiKeys": false } (#14235 by @will-bogusz)
+    Changed
+    - cursorRawReadPath() writes a bare start line as raw:N- (file:10 → file:raw:10-), so Cursor exec reads of such a path still read from line N onward now that read takes N:raw as one line (#16438 by @will-bogusz)
+    Fixed
+    - Fixed Anthropic and Bedrock logging one warning per dropped thinking block (hundreds for one request) after a conversation change; the drop now logs one warning with the count (#16392 by @will-bogusz)
+    - Fixed Factory Droid Core models (Kimi, GLM, DeepSeek and others) dropping calls to tools with names over 64 characters and their results from later requests; such names now shorten to 64 characters, and shorter names are sent unchanged (#16384 by @will-bogusz)
+    - Fixed Devin /usage showing no data for accounts signed in with /login devin, and Devin chat sending a failing extra auth request for legacy Windsurf Enterprise keys (#13677 by @will-bogusz)
+    - Turns stopped for a thinking loop now keep the tokens and cost the provider had reported, the response id, the request's start time, and its time to first token and duration, instead of recording zero usage and no timing (#16437 by @will-bogusz)
+    - Fixed Claude requests answering a turn whose attachment is a video, PDF, HEIC or other format sent outside a JPEG/PNG/GIF/WebP image as if nothing were attached; the turn now fails with an error naming the format (#16407 by @will-bogusz)
+    - Fixed the repeated-tool-call guard missing a loop the model interleaves with a wait that elapses with nothing new; a wait that returns finished work still ends the repetition (#11874 by @dickyudhandika)
+    - Fixed Google Antigravity chat and image requests failing with false 429 quota-exhausted errors (#11849 by @jotafurtado)
+    - Fixed the stream loop guard never stopping a model stuck repeating punctuation or symbols (?!?!, ✓✓✓) until the output limit; such runs now trip once they repeat for 1 KB, while digit and whitespace runs such as padding and hexdumps are left alone (#14436 by @F0Rextasy)
+    - Fixed native remote compaction for supported Bedrock Claude models without changing ordinary Converse turns; a custom non-AWS baseUrl needs remoteCompaction.enabled: true (#16343 by @anatoli-tsinovoy)
+    - Fixed Anthropic compaction blocks dropping their signed tool_changes, which made the replayed block fail its signature (#16343 by @anatoli-tsinovoy)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added native Inception support with Mercury 3, Mercury 2.5, and Mercury 2, live chat-model discovery, API-key login, reasoning controls, and Mercury 3 launch pricing while its catalog reports none; Mercury 3 waits up to 10 minutes for its first output, since high-effort reasoning streams nothing (#16439 by @eggpeat)
+    Changed
+    - Changed Devin model discovery to send legacy Windsurf Enterprise keys unprefixed in one request, dropping the Windsurf-editor retry that returned a smaller model list (#13677 by @will-bogusz)
+    Fixed
+    - Factory Droid now carries Droid's 3.5 MB inline-image budget (inline-image-byte-budget) for its hosted routes, under their 4.5 MB request limit, and the new request-body-byte-limit axis (resolveRequestBodyByteLimit) records that limit; it applies on Factory's own hosts through pi-ai's reachesBudgetedHost (#16288 by @will-bogusz)
+    - DeepSeek V4.1 Flash images are now priced by DeepSeek's own billing (994 tokens for a snapcompact frame) instead of a GPT or Claude rate (2,882 to 3,136), so a 25-frame archive no longer counts about 50k tokens the provider never bills and triggers compaction early (#16418 by @will-bogusz)
+    - Fixed Amazon Bedrock Kimi K3 (global./us.moonshotai.kimi-k3) offering Anthropic-style thinking budgets it ignores; it now offers low, high and max effort, defaulting to max (#13697 by @alblez)
+    - Marked supported Bedrock Claude models as eligible for native compaction (#16343 by @anatoli-tsinovoy)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - bash tool commands now see PI_SESSION_ID and PI_SESSION_FILE, so a script can find the running session's ID and transcript path (#16442 by @johnrichardrinehart and @will-bogusz)
+    - Added GitLab merge request support to /review and /annotate code-review: pass an MR URL, pick one mentioned in the conversation, or choose "Review a specific PR/MR" in a GitLab checkout to list open MRs (requires glab); large MRs link per-file diffs through the new mr://<host>/<group>/<project>/<iid>/diff URLs (#16361 by @Shadorain)
+    - Added MCP tool progress: tools/call requests ask the server for notifications/progress when the progress can be shown, and updates appear in the running tool card and as an in-place mcp_progress status line in Eval cells, including after auto-backgrounding; request deadlines and Eval timeouts are unchanged (#16431 by @alphastorm)
+    - Added image attachments to single and batch eval judge()/judge_batch() calls (local paths or embedded images); image judgments skip candidates without image support and fail explicitly instead of dropping images (#15471 by @anatoli-tsinovoy)
+    - Added a job tree to /jobs, /jobs full and the jobs pill's sheet, in the terminal UI and over ACP: subagents' background jobs now appear nested under the task that runs them, with the busiest branches listed first; only your own jobs offer Cancel (#15854 by @H4vC)
+    - Added ctx.ui.getEditorComponent() so extensions can wrap the active custom editor factory instead of replacing it (#8655 by @jovi-tsx)
+    - omp auth-gateway serve and check can be limited to the providers and API keys the account-pool file allows, using "*": false and "apiKeys": false (#14235 by @will-bogusz)
+    - omp usage shows an account's reclaimAbovePct next to its priority and reserve (#14237 by @will-bogusz)
+    Changed
+    - An agent that messages another agent can now wait for the reply instead of erroring; the wait ends early, without an error, once the agent asked finishes its turn without replying or is itself waiting on the caller's result (#16445 by @will-bogusz)
+    - Built-in style rule reminders no longer tell the model a user-defined rule matched and it MUST comply; they ask it to check its code against the rule and its exceptions, so models rewrite code a built-in rule allows less often (#16420 by @will-bogusz)
+    - read of a SQLite ?q=SELECT … query now accepts &limit= and &offset= and pages the query's rows, as table reads and JSON ?q= reads already do, instead of rejecting the read (#16444 by @will-bogusz)
+    - Agents using the browser tool are steered to wait for the text, URL or element they need after a click or navigation instead of sleeping a fixed time, which can finish steps sooner on pages that load content after a variable delay (#16404 by @will-bogusz)
+    - The pinned Subagents list shows how many agents are running and the agent hub key, and previews an agent's assignment at full width instead of the first 40 characters of its prompt template (#16486 by @H4vC)
+    Fixed
+    - Fixed auto-QA reports whose tool is a URI (xd://tui: …) being filed under the wrong tool name; a one-line report without : after its tool name is now refused with the format hint (#16278 by @will-bogusz)
+    - Fixed agents guessing conflict://<N> ids for merge conflicts a ranged read didn't show: the warning and the not-found error now point to <path>:conflicts to register them (#16269 by @will-bogusz)
+    - Fixed agents opening your own Chrome through the relay (with browser.relay on) when they asked the browser tool for Chromium with app.tern: false; the tool now points them to app.relay: false (#16294 by @will-bogusz)
+    - Fixed %pip install in Python eval failing with "No module named pip" when the kernel's interpreter is a venv without pip, such as one made by uv venv: it now installs pip into that venv first, with ensurepip or, where that is unavailable, uv (#16300 by @will-bogusz)
+    - Reduced HTTP 413 failures on Factory Droid once a session's screenshots and pasted images pass Factory's 4.5 MB request limit: older inline images are now dropped to keep them under 3.5 MB, while the newest message's and newest tool result's images stay when they alone fit the limit; a custom gateway baseUrl is left alone (#16288 by @will-bogusz)
+    - Fixed hashline edits under an older tag overwriting the wrong line when their line numbers came from grep -n, sed -n or a :raw read: a shifted edit whose body matches the current line at those numbers, or that breaks the file's syntax, is now rejected with the current tag and lines (#16383 by @will-bogusz)
+    - Fixed PI_SESSION_FILE in eval cells being a relative path when omp was started with a relative --session-dir (or PI_CODING_AGENT_SESSION_DIR), so it no longer worked once code changed directory (#16442 by @will-bogusz)
+    - Fixed waking a parked subagent re-sending its whole conversation without the prompt cache whenever other agents had started, finished or parked meanwhile (#15523) (#16369 by @will-bogusz)
+    - Fixed edit accepting changes to lines nothing showed after a stale or unknown tag: a resend under the current tag from the rejection now passes the seen-line check only on the rows that rejection printed (or a retained read showed), so a line seen only through bash is no longer overwritten blind (#16422 by @will-bogusz)
+    - Fixed plugin settings marked secret being readable by other local users in omp-plugins.lock.json; the lockfile is now written owner-only (0600) (#12999, #16368 by @jonasboos)
+    - Fixed agents misreading computer.windows() results on their first call (#16299 by @will-bogusz)
+    - Fixed GitLab merge request reads rendering [object Promise] instead of the description (#16477 by @adi-IL)
+    - Fixed /restart losing the active named profile and failing to resume its session (#15742 by @sapran)
+    - Fixed aborted and timed-out stdio MCP requests continuing to run on the server: OMP now sends notifications/cancelled with the original request id, once and never for initialize, after settling the call and without waiting on the pipe (#16430 by @alphastorm)
+    - Fixed the agent restarting on its own after you stopped it with Esc whenever a background subagent or job finished; the result is recorded in the transcript and the agent waits for your next message
+    - Fixed Mnemopi memory completions ignoring the memory role's thinking suffix, including one inherited from tiny or smol when modelRoles.memory is unset; each retry.fallbackChains.memory entry sends its own level, and :off disables reasoning (#16378 by @alphastorm)
+    - Fixed MCP tools running a call twice when the server connection dropped mid-request: a stdio request already written to the server, or an HTTP or legacy SSE request whose connection reset or closed after it was sent, now fails as non-retryable with a diagnostic saying it may have run, instead of being replayed after a reconnect; requests that never left OMP, including refused connections, still reconnect and retry once (#16429 by @alphastorm)
+    - Fixed /move path completion jumping into a subfolder on Tab: .., ., and ~ now complete to ../, ./, and ~/ before listing their children, a trailing \ lists a folder on Windows, absolute Windows paths (C:/…) are no longer rewritten as relative paths, and the project directory is offered as ./ instead of /
+    - Fixed edit blaming boundary indentation when a one-row replacement only fails because its body ends with a trailing comma (e.g. the last element of a JSON array); the error now names the comma (#16423 by @will-bogusz)
+    - Fixed a timed-out browser selector action dropping its match count without a word when omp could not count the matches; the error now says why (#16389 by @will-bogusz)
+    - Fixed every session in a project without .vscode/mcp.json logging a "[VS Code] Failed to read …/.vscode/mcp.json" warning; a missing file is now skipped silently, while an unreadable or unparsable one still warns (#16434 by @will-bogusz)
+    - Fixed agents opening pages in your own signed-in Chrome when browser.relay is on and you asked for a throwaway browser (#16390 by @will-bogusz)
+    - Fixed the built-in ts-no-tiny-functions and ts-promise-with-resolvers rules reminding you about code they allow: exported functions, public class and object members, type guards, if/try/catch blocks, and never-settling new Promise(() => {}) (#16419 by @will-bogusz)
+    - Fixed read losing the last lines of a comma list that pairs ranges with a tail (file:1-30,-30, file:1-30,:-30), and erroring on the same list for artifact:// and other internal URLs; both parts are now read (#16435 by @will-bogusz)
+    - Fixed edit rejecting a placeholder tag (#AUTO, #????), a missing tag, or a header with no ops without naming the file's current tag; these now get the same reply as an unknown tag, so the retry can use that tag instead of a read (#16425 by @will-bogusz)
+    - Fixed read line ranges and tails (:9-11, :-50) of macOS .sample.txt reports and .cpuprofile files returning lines of the generated profile summary instead of the file, so edits from them were rejected as stale; the summary now appears only on a whole-file read, without line numbers (#16397 by @will-bogusz)
+    - Models whose provider strips images from requests, such as DeepSeek V4 Flash on Venice or NanoGPT, now get text compaction and text-only image handling like text-only models; snapcompact archived onto frames that reached them as [image omitted] placeholders, and history images were still processed and uploaded before being dropped (#16436 by @will-bogusz)
+    - Line range reads of ssh://, URLs and other in-memory resources no longer return only the line above the range when that line fills the 50KB budget; the page now starts at the requested line, and byte-limit notices state the 50KB limit instead of the bytes shown (#16391 by @will-bogusz)
+    - Fixed Auto-QA grievances sharing your home directory and login name with the qa.omp.sh collector; paths under your home are sent as ~/…, and the login name inside labels and paths as <user>, including reports recorded before this fix (#16409 by @will-bogusz)
+    - Fixed the computer tool's control.acquire prompt, left unanswered, failing the whole call with "Computer code execution timed out"; the prompt now expires shortly before the timeout and the call returns reason: "unanswered" (#16388 by @will-bogusz)
+    - Fixed reads whose optional leading context line exceeded the byte budget returning only the oversized-line notice or a preview of that context line and hiding the requested lines; the read now retries from the requested start without leading context (#16485 by @adi-IL).
+    - Fixed read path:N:raw (and :raw:N, URLs included) returning a page from line N instead of the one line N; grep on internal and web URLs now filters :N:raw to that line too, and :N-:raw still runs on from N (#16438 by @will-bogusz)
+    - Fixed Anthropic web search answers breaking into separate paragraphs at every citation, with sentences split mid-way and lines starting with . (#16396 by @a-glapinski)
+    - Fixed custom tools that import an @oh-my-pi/* package (such as @oh-my-pi/pi-natives or @oh-my-pi/pi-utils) failing to load with "Cannot find package" in the installed omp binary; they now get the host's copy, as extensions already did (#16421 by @will-bogusz)
+    - Fixed resuming a session selecting an abandoned branch after a late off-branch entry such as a background bash result; off-branch entries now record the active leaf they interrupted and replay restores it (#16483 by @adi-IL).
+    - Fixed hashline REM deleting and MV moving a file under an invented or stale tag; a bare file op now needs the file's current tag, like a line edit (#16381 by @will-bogusz)
+    - Fixed write deleting the leading numbers of every line in content such as hex dumps, disassembly and timestamped logs; it now removes copied read line numbers only when they count up by one, as read and grep print them (#16441 by @will-bogusz)
+    - Fixed auto thinking chosen for the DEFAULT role in the /model hub reverting to the model's default effort (e.g. max on Z.AI glm-5.3) on the next launch (#16370, #16398 by @alvadorn)
+    - Fixed Google Antigravity web search failing with false 429 quota-exhausted errors (#11849 by @jotafurtado)
+    - Fixed omp exiting to the shell when the model picker (Alt+P) or model hub opened after compatibility extensions loaded (#12293, #12653 by @wolfiesch)
+    - Fixed todo lists set over RPC set_todos disappearing when the session is reloaded, resumed, or compacted; RpcClient.setTodos() sends the command (#12590 by @anthonyrisinger)
+    - Fixed batch task calls silently running the default agent when a specialist such as reviewer, scout, or a custom agent was set at the top level instead of in tasks[].agent; the call is now rejected with that guidance (#12610 by @dbc-hbin)
+    - Fixed sessions started before an omp upgrade losing word completion and restarting the shared word-completion daemon every 30 seconds, which reloaded its model for every session on the new version; they now use the newer daemon (#15610) (#16380 by @will-bogusz)
+    - Fixed supported Bedrock Claude models falling back to soft instead of remote compaction (#16343 by @anatoli-tsinovoy)
+    - Fixed browser tab.run(fn, [url]) and browser.open("https://…") failing with a bare "expects an options object"; the errors now say to pass { args: [...] } and browser.open({ url, name }) (#16236 by @will-bogusz)
+    - Fixed the built-in ts-set-map, ts-import-type and ts-no-any rules reminding you about code they allow: an empty or computed Set/Map, a runtime await import(), or the word "any" in a comment (#16242 by @will-bogusz)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed background fact extraction storing only the first 5 facts of a plain-line extractor answer; it now keeps up to 20, matching JSON answers (#16377 by @alphastorm)
+    @oh-my-pi/pi-natives
+    Changed
+    - Reduced native Git diff allocation overhead (#16349 by @kyle-elliott)
+    - Reduced native memory-reranking allocations when candidate text contains repeated words (#16348 by @kyle-elliott)
+    - Reduced allocation overhead when collecting directory grep results, including paginated searches (#16226 by @kyle-elliott)
+    - Token counting for OpenAI, Qwen, DeepSeek, Kimi, GLM and Jev models is 11-30% faster on English text, code and Markdown (#16399 by @will-bogusz)
+    Fixed
+    - Fixed index.d.ts drifting from the generated bindings, so building the natives no longer leaves the checkout modified (#16306 by @will-bogusz)
+    - Fixed cargo test writing crash reports from panicking Rust tests into your real ~/.omp/logs: they now go to a per-user pi-natives-test-logs-<uid>/ under the OS temp dir (#16386 by @will-bogusz)
+    - Fixed the bash tool's rm -rf reporting No such file or directory for entries another process removed first and leaving the parent directories behind; under -f an entry already gone now counts as removed, as in GNU rm (#16433 by @will-bogusz)
+    - Fixed the bash tool's rg -c and rg --count-matches printing path:0 for every file without a match; zero counts are now printed only with --include-zero, as in ripgrep (#16432 by @will-bogusz)
+    - Fixed ln -s local://… <path> in the bash tool creating a host symlink that holds the URL text, which nothing can follow; a symlink on the host to a file-backed URL now stores the file it stands for (#16428 by @will-bogusz)
+    - Fixed macOS background input leaving the target app in front of yours when it came forward just as you clicked another window of your app; your app comes back with the window you clicked (#16217 by @will-bogusz)
+    - Fixed omp sessions on macOS adding a terminal icon to the Dock after the computer tool listed displays (#13455 by @VelizarSeleznev)
+    @oh-my-pi/snapcompact
+    Fixed
+    - Fixed snapcompact archive frames for Factory Droid models ignoring Factory's inline-image budget: they are now sized to half of it, like other budgeted hosts (#16288 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Added
+    - Added mergeLineRanges and an optional BareLineMode argument to parseLineRanges ("single" reads a lone bare N as that one line) (#16435 by @will-bogusz)
+    Changed
+    - selectorLineRanges() reads a bare N compounded with raw (17:raw, raw:17) as the single line N; parseLineRanges() takes an optional "single" mode for the same rule (#16438 by @will-bogusz)
+    - Collapsed wait cards show one row per finished job (or a single "waiting on N jobs" line) instead of re-printing the whole job tree on every poll; Ctrl+O shows the full tree (#16486 by @H4vC)
+    - Bash cards show the elapsed time while a command runs, and wall time, timeout and backgrounded job in the bottom border instead of a separate ⟨…⟩ line (#16486 by @H4vC)
+    - The terminal /jobs sheet shows the selected job's full command (#16486 by @H4vC)
+    - Grep, glob, find, IRC message, and proc:///agent:///cfg:// result rows start at the same column as other tool rows (#16486 by @H4vC)
+    Fixed
+    - Fixed Tern sessions logging TSP: terminal stopped acknowledging frames every 5 seconds for as long as the terminal stops acknowledging frames; it now warns once per stall and logs the stall's length when acknowledgements resume (#16393 by @will-bogusz)
+    - splitPathAndSel and splitInternalUrlSel peel comma line lists that include a tail chunk (:1-12,-15) or repeat the colon after a comma (:1-30,:-30, also beside :raw); splitPathAndSel(path, { foldListColons: false }) keeps the repeated colon in the path (#16435 by @will-bogusz)
+    - Generic tool cards now reveal the complete result when expanded (#15335 by @yuzu-octopus)
+    - Added footerMeta to OutputBlockOptions and ToolCardSnapshot to draw short facts inside a frame's bottom border (#16486 by @H4vC)
+    - Fixed markdown table rows shattering at narrow widths when a wide glyph sat in a one-cell column; the glyph is now clamped to its column instead of re-wrapping the row (#16479 by @adi-IL).
+    - Fixed charts in answers drawing as blank bands, on screen and in scrollback, when iTerm2 drew them in a background tab; inline images now carry an explicit height in rows (#16471 by @galtamam-cmyk)
+    - Fixed an inline image (such as a table's chart) disappearing in iTerm2 when new output pushed it past the top of the screen; it now moves to scrollback whole (#16467 by @galtamam-cmyk)
+    - Fixed inline images, hyperlinks, notifications and styled underlines staying off in iTerm2 sessions reached over SSH, where the forwarded LC_TERMINAL marker was ignored (#16450 by @yuzu-octopus)
+    - Added Eval mcp_progress status events, updated in place per call and evictable under the status-event cap, plus formatMCPProgress() and MCPToolDetails.progress for MCP progress display (#16431 by @alphastorm)
+    @oh-my-pi/pi-utils
+    Breaking Changes
+    - readTarEntriesFromBuffer() in @oh-my-pi/pi-utils/ar/tar now returns Promise<ArchiveIndexEntry[]> instead of ArchiveIndexEntry[]; await its result (#16394 by @will-bogusz)
+    Added
+    - Added maxStreamSize to ArchiveLimits (default 4 GB): the most a large .tar.gz or .tar.zst may decompress in one pass, so a decompression bomb fails instead of running without bound (#16394 by @will-bogusz)
+    Fixed
+    - Fixed bun test runs writing their logs into your real ~/.omp/logs: test processes now log to a per-user omp-test-logs-<uid>/ under the OS temp dir (#16386 by @will-bogusz)
+    - Fixed .tar.gz and .tar.zst archives that decompress past 256 MB failing to list or read with a raw Cannot create a Buffer larger than … error; a bare .gz or .zst that large now names the archive size limit (#16394 by @will-bogusz)
+    - Fixed frontmatter repair deleting HTML comments from document bodies and plain markdown; it now strips only leading comments ahead of the opening delimiter, so prompt bodies keep their comments (#16481 by @adi-IL).
+    What's Changed
+    - fix(mnemopi): keep up to 20 plain-line extracted facts per memory by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16377
+    - fix(memory): forward the memory role's thinking level by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16378
+    - perf(natives): avoid temporary vectors in directory grep by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16226
+    - perf(natives): deduplicate MMR tokens before allocating owned strings by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16348
+    - perf(natives): reuse the first rendered Git diff buffer by @kyle-elliott in https://github.com/can1357/oh-my-pi/pull/16349
+    - feat(catalog): add native Inception provider for Mercury models by @eggpeat in https://github.com/can1357/oh-my-pi/pull/16439
+    - fix(web): render the GitLab merge request description by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16477
+    - fix(tui): tightened wait, bash, jobs and subagent HUD rendering by @H4vC in https://github.com/can1357/oh-my-pi/pull/16486
+    - fix(pi-builtins): print rg counts only for files with matches by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16432
+    - fix(tui): give iTerm2 inline images an explicit height so background tabs keep them by @galtamam-cmyk in https://github.com/can1357/oh-my-pi/pull/16471
+    - fix(utils): keep HTML comments in frontmatter bodies by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16481
+    - fix(coding-agent): keep DEFAULT-role auto thinking on fresh launch by @alvadorn in https://github.com/can1357/oh-my-pi/pull/16398
+    - fix(bedrock): enable native Claude compaction for Converse models by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/16343
+    - fix(mcp): don't replay a tool call after its request was sent by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16429
+    - fix(mcp): cancel aborted and timed-out stdio requests on the server by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16430
+    - fix(write): keep content whose leading numbers do not count up by one by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16441
+    - fix(coding-agent): keep a newer text-predict daemon instead of shutting it down by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16380
+    - fix(edit): required a live tag for bare hashline MV and REM by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16381
+    - fix(task): reject misplaced batch agent selectors by @dbc-hbin in https://github.com/can1357/oh-my-pi/pull/12610
+    - feat(mcp): show tools/call progress in tool updates and eval status by @alphastorm in https://github.com/can1357/oh-my-pi/pull/16431
+    - fix(session): replay the active leaf after an off-branch entry by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16483
+    - fix(coding-agent): load custom tools that import omp packages in the binary by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16421
+    - fix(coding-agent): point browser waits at waitFor* helpers instead of fixed sleeps by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16404
+    - fix(coding-agent): say computer.windows() returns plain records, not window handles by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16299
+    - fix(catalog): correct thinking efforts for Bedrock Moonshot Kimi K3 by @alblez in https://github.com/can1357/oh-my-pi/pull/13697
+    - fix(tui): keep wide-glyph table cells inside their column by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16479
+    - fix(coding-agent): keep Anthropic web search citations inline in the answer by @a-glapinski in https://github.com/can1357/oh-my-pi/pull/16396
+    - Guard catches models stuck in punctuation-only loops by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14436
+    - fix(read): read one line for a bare N beside :raw by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16438
+    - fix(rpc): persist host todo edits on the session branch by @anthonyrisinger in https://github.com/can1357/oh-my-pi/pull/12590
+    - fix(coding-agent): prevent model picker exits with compatibility plugins by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/12653
+    - fix(coding-agent): preserve active profile across restart by @sapran in https://github.com/can1357/oh-my-pi/pull/15742
+    - fix(tui): detect iTerm2 over SSH from the forwarded LC_TERMINAL marker by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/16450
+    - fix(read): keep requested lines when leading context exceeds the byte budget by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16485
+    - fix(coding-agent): close an unanswered computer.control.acquire prompt before the call times out by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16388
+    - fix(coding-agent): redact home directory and login name from autoqa grievances by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16409
+    - fix(coding-agent): kept requested lines in in-memory range reads by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16391
+    - fix(coding-agent): keep the plugin runtime lockfile readable only by its owner by @jonasboos in https://github.com/can1357/oh-my-pi/pull/16368
+    - fix(natives): kept omp out of the macOS Dock when it touches AppKit by @VelizarSeleznev in https://github.com/can1357/oh-my-pi/pull/13455
+    - fix(ai): omit Antigravity requestType to avoid false 429 quota exhaustion by @jotafurtado in https://github.com/can1357/oh-my-pi/pull/11849
+    - fix(tui): let Ctrl+O uncap generic tool cards and drop the 64 KiB native pre-slice by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/15335
+    - feat(review): support GitLab merge requests in /review and /annotate by @Shadorain in https://github.com/can1357/oh-my-pi/pull/16361
+    - fix(tui): commit an iTerm2 inline image to scrollback whole instead of splitting it by @galtamam-cmyk in https://github.com/can1357/oh-my-pi/pull/16467
+    - fix(ai): exempt tool-call turns must not reset the loop-guard counter by @dickyudhandika in https://github.com/can1357/oh-my-pi/pull/11874
+    - fix(edit): counted only a mismatch reply's displayed rows as seen by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16422
+    - fix(ai): fail Claude turns that attach media Claude cannot read by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16407
+    - fix(coding-agent): gate snapcompact on images the wire actually sends by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16436
+    - fix(utils): stream tar.gz and tar.zst archives that decompress past the in-memory limit by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16394
+    - fix(coding-agent): read profile line ranges from the file, not its summary by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16397
+    - fix(coding-agent): keep a warm-revived subagent's peer roster as it last saw it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16369
+    - feat(coding-agent): expose PI_SESSION_ID and PI_SESSION_FILE to bash commands by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16442
+    - fix(ai): keep usage and timing on thinking-loop aborts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16437
+    - perf(natives/utok): memoize short-piece merge counts per thread by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16399
+    - fix(ai,catalog): encode Devin credentials by shape and drop the Windsurf fallbacks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13677
+    - fix(edit): refuse stale-tag remaps aimed at the current lines by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16383
+    - fix(catalog): price DeepSeek V4.1 Flash images by its own vision config by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16418
+    - fix(catalog,coding-agent): keep Factory Droid requests under its body limit by budgeting inline images by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16288
+    - fix(edit): answered placeholder tags, missing tags and header-only input with the current tag by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16425
+    - fix(coding-agent): install with %pip into venvs that have no pip by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16300
+    - fix(read): read tail chunks in comma line lists by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16435
+    - feat(read): page SQLite ?q= query rows with limit and offset by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16444
+    - fix(coding-agent): word built-in rule reminders as a check against the rule, not a user-defined MUST by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16420
+    - feat(ai): let broker account-pool files act as a provider and API-key allow-list by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14235
+    - feat(ai): opt-in account reclaim for accountPolicies by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14237
+    - fix(ai): keep Factory Droid Core calls to long-named tools in later requests by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16384
+    - fix(browser): tell agents how to skip a configured relay by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16294
+    - fix(utils,natives): keep test runs out of the real ~/.omp/logs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16386
+    - fix(pi-builtins): treat entries already gone as removed under rm -f by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16433
+    - fix(coding-agent): fire ts-set-map, ts-import-type and ts-no-any only on code they flag by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16242
+    - fix(coding-agent): fire ts-no-tiny-functions and ts-promise-with-resolvers only on code they flag by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16419
+    - feat(coding-agent): let wait block for the reply to a message the agent sent by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16445
+    - fix(pi-builtins): link host paths to the file a backed URL aliases by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16428
+    - fix(tui): warn once per TSP ack stall instead of every 5 s by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16393
+    - fix(coding-agent): tell the model an open without app drives the user's Chrome while the relay is on by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16390
+    - fix(ai): log one warning per request for dropped thinking blocks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16392
+    - fix(coding-agent): skip a missing .vscode/mcp.json without warning by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16434
+    - fix(coding-agent): say why a timed-out browser selector's matches could not be counted by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16389
+    - fix(edit): name the trailing comma when a one-row replacement only fails on it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16423
+    - fix(coding-agent): name registered conflict ids when a hidden block is guessed by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16269
+    - fix(coding-agent): name the expected shape when browser tab.run gets an args array or open gets a URL by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16236
+    - fix(coding-agent): keep URIs in auto-QA report tool names by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16278
+    - test(natives): let the macOS release-helper wait test wait for its shell stand-in by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16405
+    - fix(natives): keep a macOS user's app in front with the window they clicked when the target comes forward by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16217
+    - chore(natives): regenerate index.d.ts from the current bindings by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16306
+    New Contributors
+    - @alvadorn made their first contribution in https://github.com/can1357/oh-my-pi/pull/16398
+    - @alblez made their first contribution in https://github.com/can1357/oh-my-pi/pull/13697
+    - @sapran made their first contribution in https://github.com/can1357/oh-my-pi/pull/15742
+    - @jonasboos made their first contribution in https://github.com/can1357/oh-my-pi/pull/16368
+    - @VelizarSeleznev made their first contribution in https://github.com/can1357/oh-my-pi/pull/13455
+    - @jotafurtado made their first contribution in https://github.com/can1357/oh-my-pi/pull/11849
+    - @dickyudhandika made their first contribution in https://github.com/can1357/oh-my-pi/pull/11874
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.12.3...v18.12.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.12.4
+ReleaseTime: 2026-10-20T19:42:57.0000000Z
