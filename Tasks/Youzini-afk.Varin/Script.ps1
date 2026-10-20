@@ -24,10 +24,16 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
 
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
-        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -notmatch "[${CJK}]" }, 'First')
+        $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
-          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) { $Node }
+          $Skip = $false
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesTitleNode.Name, 'hr'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2', 'h3')) {
+              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (en-US)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
@@ -35,7 +41,13 @@ switch -Regex ($this.Check()) {
             Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
 
-          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) { $Node }
+          $Skip = $false
+          $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesCNTitleNode.Name, 'hr'); $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2', 'h3')) {
+              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
@@ -44,11 +56,18 @@ switch -Regex ($this.Check()) {
           }
         } else {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+          $Skip = $false
+          $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
+            if ($Node.Name -in @('h1', 'h2', 'h3')) {
+              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            }
+            if (-not $Skip) { $Node }
+          }
           # ReleaseNotes (zh-CN)
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
           }
         }
       } else {
