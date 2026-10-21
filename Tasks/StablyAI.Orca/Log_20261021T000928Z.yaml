@@ -1,0 +1,96 @@
+Version: 1.4.235
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.235/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    This release makes conversations easier to revisit, keeps more of your agent's work, and cuts background editor activity when you're juggling workspaces.
+    The short version
+    - Rewind Claude chats: Use Rewind to here on a message that started a turn, edit your prompt, and take the conversation in a new direction. Claude continues from the history you kept.
+    - Your chat, your settings: Each conversation remembers its own model, effort and Fast settings. Switching models keeps compatible choices, and changes to an agent's defaults no longer silently move a chat that has recorded its settings.
+    - Keep more of your agent's work: Completed replies and tool results are saved in full rather than cut off at the preview limit. Use Show full output on desktop or phone, or Show full message on phone, to load more content from shortened previews.
+    - Less waiting, less background work: New Chat opens the composer immediately, Codex chats get the time they need to start, and the workspace jump palette is preloaded. The editor watches active, recent and at-risk workspaces instead of every workspace with an open tab.
+    - A better phone experience: Live chats reconnect from where they left off, project groups stay in step with desktop, and ready cloud dictation models can be selected from the phone. Workspace creation starts preparing the checkout while you fill in the form.
+    - Everyday polish: Edit images in queued desktop messages, see machine labels only when project names collide, and get more reliable workspace lists, file-conflict handling and remote workflows.
+    Phone updates: Updating Orca on your desktop also updates the app on your connected phone—the phone loads it directly from your desktop.
+    Compatibility & upgrade notes
+    Native chat (experimental): Keep paired and SSH hosts updated alongside Orca for the latest chat features. Full-content loading requires host support; content discarded by older versions cannot be recovered. Very large items may still be shortened for display or delivery.
+    Cloud dictation: Select a ready cloud model from the phone's dictation setup or Settings → Voice. Configure its API key on the computer serving the phone first.
+
+    Product experience
+    Native chat (experimental)
+    Revisit Claude conversations, keep each chat’s settings consistent, and work with images and long outputs more comfortably.
+    - Rewind Claude chats from messages that started a turn, continuing with the conversation you kept by @brennanb2025 in https://github.com/stablyai/orca/pull/30400
+    - Remember model, effort, speed and Fast choices per conversation, including across restarts by @brennanb2025 in https://github.com/stablyai/orca/pull/30561
+    - Save completed replies and tool results in full, with controls to load more from shortened previews by @brennanb2025 in https://github.com/stablyai/orca/pull/29982
+    - Edit images in queued desktop messages: remove, paste, drop or attach by @brennanb2025 in https://github.com/stablyai/orca/pull/30815
+    - Open the New Chat composer immediately while the host gets ready by @brennanb2025 in https://github.com/stablyai/orca/pull/29358
+    - Wait for Codex when opening or resuming a chat instead of failing after 30 seconds by @brennanb2025 in https://github.com/stablyai/orca/pull/30395
+    - Name chats from the first message immediately, even if automatic title generation fails by @brennanb2025 in https://github.com/stablyai/orca/pull/30392
+    - Avoid starting user MCP servers and hooks for background Claude runs by @brennanb2025 in https://github.com/stablyai/orca/pull/30939
+    - Clarify labels for switching agents between terminal and chat by @AmethystLiang in https://github.com/stablyai/orca/pull/31134
+    - Polish the appearance of chat question options by @AmethystLiang in https://github.com/stablyai/orca/pull/31219
+    Phone
+    Keep conversations and project groups current, create workspaces with less waiting, and select cloud dictation models directly from your phone.
+    - Reconnect a chat’s live feed from its last received row when the stream ends by @brennanb2025 in https://github.com/stablyai/orca/pull/29007
+    - Update projects, project groups and workspace rows together so phone grouping stays in sync by @Jinwoo-H in https://github.com/stablyai/orca/pull/31102
+    - Prepare the worktree checkout while the new-workspace form is open by @AmoabaKelvin in https://github.com/stablyai/orca/pull/31167
+    - Select ready cloud dictation models from setup and Settings → Voice by @nwparker in https://github.com/stablyai/orca/pull/31221
+    - Show mobile home statistics when connected to an orca serve host by @nwparker in https://github.com/stablyai/orca/pull/31197
+    - Keep chat composer controls inside their row by @brennanb2025 in https://github.com/stablyai/orca/pull/28983
+    - Keep session tab icons full size beside long titles by @AmoabaKelvin in https://github.com/stablyai/orca/pull/31169
+    Editor, performance & file safety
+    Reduce background file watching, speed up workspace navigation, and make reloads and save conflicts more dependable across tabs and devices.
+    - Watch active, recent and at-risk workspaces; refresh open files when you return to an unwatched workspace by @nwparker in https://github.com/stablyai/orca/pull/30415
+    - Preload the workspace jump palette before first use by @brennanb2025 in https://github.com/stablyai/orca/pull/30935
+    - Improve save-conflict checks, Undo after reload, autosave during heavy file activity and chat-start error messages by @nwparker in https://github.com/stablyai/orca/pull/31216
+    - Release superseded and closed editor-tab watch probes and disk-check records by @nwparker in https://github.com/stablyai/orca/pull/31128
+    - Avoid reapplying terminal bindings that already match when saving state by @AmethystLiang in https://github.com/stablyai/orca/pull/31033
+    Workspaces, SSH & remote servers
+    Keep workspace lists current, make same-named projects easier to distinguish, and improve remote server transitions and permissions.
+    - Show machine labels only when projects have the same name by @nwparker in https://github.com/stablyai/orca/pull/31233
+    - Keep the desktop workspace list current while hidden and include workspaces created on paired servers or other clients by @Jinwoo-H in https://github.com/stablyai/orca/pull/31090
+    - Refuse ambiguous same-path project routing instead of following the Active Server selection by @nwparker in https://github.com/stablyai/orca/pull/31119
+    - Allow an older SSH host to move to its managed server while a relay shell identified by its tab remains running by @Jinwoo-H in https://github.com/stablyai/orca/pull/31093
+    - Make orca open-url on a manually started server ask for a paired desktop rather than an SSH setting by @Jinwoo-H in https://github.com/stablyai/orca/pull/31120
+    - Respect the login umask for remote worktrees instead of making them owner-only by @AmethystLiang in https://github.com/stablyai/orca/pull/31135
+    - Improve WSL migration checks for path casing, panes without restore folders and stale agent records by @nwparker in https://github.com/stablyai/orca/pull/31211
+    Settings & security
+    Keep Experimental settings accessible after language updates and tighten permissions for newly created Codex configuration files.
+    - Prevent Experimental settings from crashing after language-pack updates by @nwparker in https://github.com/stablyai/orca/pull/31202
+    - Create new Codex config.toml files with owner-only permissions by @nwparker in https://github.com/stablyai/orca/pull/31228
+    Relay service
+    Give each relay director revision its own instance limit during rollouts.
+    - Use a separate instance maximum per director revision rather than splitting a shared service cap by @Jinwoo-H in https://github.com/stablyai/orca/pull/31178
+    Tests, CI & maintenance
+    Expanded compatibility and regression coverage, leaner release builds, and continued terminal-layout groundwork. Layout-owner changes below remain behind a feature switch and are not enabled product features in this release.
+    - Layout groundwork (disabled): open CLI- and phone-requested files in the visible tab group by @Jinwoo-H in https://github.com/stablyai/orca/pull/31123
+    - Layout groundwork (disabled): surface running terminals without visible panes and determine startup reconnections by @Jinwoo-H in https://github.com/stablyai/orca/pull/31118
+    - Test custom terminal titles with older phone layouts by @Jinwoo-H in https://github.com/stablyai/orca/pull/31127
+    - Include headless server specs in the manually enabled layout CI run by @Jinwoo-H in https://github.com/stablyai/orca/pull/31108
+    - Layout groundwork (disabled): advertise layout-change support to paired desktops by @Jinwoo-H in https://github.com/stablyai/orca/pull/31131
+    - Test terminal readiness after a layout-owner server restart loses a pane binding by @Jinwoo-H in https://github.com/stablyai/orca/pull/31132
+    - Test file opening from older phone layouts against a layout-owner build by @Jinwoo-H in https://github.com/stablyai/orca/pull/31138
+    - Layout groundwork (disabled): use consistent file identities in layout updates by @Jinwoo-H in https://github.com/stablyai/orca/pull/31140
+    - Test that windowless host reloads preserve terminals created by main by @Jinwoo-H in https://github.com/stablyai/orca/pull/31144
+    - Layout groundwork (disabled): apply individual layout records instead of rebuilding the whole session by @Jinwoo-H in https://github.com/stablyai/orca/pull/31152
+    - Layout groundwork (disabled): render paired-server workspaces from the server’s layout stream by @Jinwoo-H in https://github.com/stablyai/orca/pull/31181
+    - Format the files changed by the full chat-output update by @Jinwoo-H in https://github.com/stablyai/orca/pull/31184
+    - Layout groundwork (disabled): let main create, start and close terminal tabs and panes by @Jinwoo-H in https://github.com/stablyai/orca/pull/31130
+    - Update nine end-to-end specs to match intended product behavior by @brennanb2025 in https://github.com/stablyai/orca/pull/30897
+    - Bump the mobile app to 0.0.58 and Android versionCode to 22 by @Jinwoo-H in https://github.com/stablyai/orca/pull/31194
+    - Keep Windows daemon teardown tests from counting processes with reused parent IDs by @Jinwoo-H in https://github.com/stablyai/orca/pull/31192
+    - Layout groundwork (disabled): restore each terminal pane once at its saved size and identify sleeping or held panes by @Jinwoo-H in https://github.com/stablyai/orca/pull/31171
+    - Add checks for host-aware repository routing and migrate existing callers by @nwparker in https://github.com/stablyai/orca/pull/31096
+    - Test that SSH health probes stay responsive while the SSH layer is stuck by @nwparker in https://github.com/stablyai/orca/pull/31193
+    - Update Zod to 4.6.7 for recursive schema type compatibility by @nwparker in https://github.com/stablyai/orca/pull/31222
+    - Test Claude dispatch metadata received after stopping a turn by @nwparker in https://github.com/stablyai/orca/pull/31229
+    - Reduce duplicate release builds and history downloads by @nwparker in https://github.com/stablyai/orca/pull/31227
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.233...v1.4.235
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.235
+ReleaseTime: 2026-10-20T22:52:23.0000000Z

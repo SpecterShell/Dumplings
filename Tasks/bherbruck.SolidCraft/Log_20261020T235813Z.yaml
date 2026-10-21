@@ -1,0 +1,44 @@
+Version: 0.18.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.18.1/solidcraft-0.18.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.18.1/solidcraft-0.18.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.18.1/solidcraft-0.18.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Why 0.18.1: a patch release for imported threads and IGES files. See 0.18.0 for the new interface.
+    Imported threads and IGES fixes
+    - Threads: hovering a long helical edge, such as a STEP thread, takes 29 ms instead of freezing the window for 7.6 s, and a design with such threads no longer keeps loading forever (#3818).
+    - IGES import: a revolved arc becomes a cap, not a whole sphere (#3813); trim curves with reversed pieces no longer drop their faces (#3359).
+    New
+    - Languages: Dutch, Swedish, Traditional Chinese, Indonesian, Romanian and Hungarian (#3826).
+    - Browser app: designs saved on your computer reopen from the recent list after a reload, and files that no longer exist are forgotten (#3834).
+    - Workflow: Shift+R repeats the last tool or dialog (#3160); parameter autocomplete matches anywhere in the name, with prefix matches first (#2849).
+    Fixed
+    - Sketch: dragging fully determined sketch geometry is skipped instead of attempted (#2199).
+    Compatibility
+    0.18.1 writes design file format 28, the same as 0.17 and 0.18.0.
+    Thanks
+    Thank you to everyone who contributed to this release: @DuBearte, @pankleks, @phanoob and @raykholo.
+    Install
+    Upgrading from 0.7 or earlier. 0.8 changed the Linux app ID to ai.storyteller.solidcraft:
+    flatpak update offers to replace the old app, and the .deb, .rpm and AppImage remove the old
+    menu entry.
+    Upgrading from 0.5 or earlier. 0.6 renamed SolveCraft to SolidCraft and made the zip
+    container the default save format. .solvecraft designs, old settings folders and
+    SOLVECRAFT_* variables are still picked up, and solvecraft-cli still forwards to
+    solidcraft-cli. Want plain JSON? Use File ▸ Save As JSON… or --save design.json. On
+    macOS, replace SolveCraft.app with SolidCraft.app. Details:
+    compatibility notes.
+    Documentation, the browser app and the Flatpak feed use the SolidCraft project Pages URLs.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.18.1
+ReleaseTime: 2026-10-20T22:47:21.0000000Z
