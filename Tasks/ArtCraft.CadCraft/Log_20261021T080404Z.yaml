@@ -1,0 +1,124 @@
+Version: 0.10.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.10.0/cadcraft-0.10.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.10.0/cadcraft-0.10.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.10.0/cadcraft-0.10.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Note
+    No FreeBSD aarch64 build in this release. We are having trouble building this architecture within the 5-hour CI timeout across all Craft apps, so we are releasing without it to unblock builds. FreeBSD x86_64 and every other platform are included. FreeBSD aarch64 builds will return once the build fits in CI.
+    What's Changed
+    - docs: drop references to competing commercial software by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1545
+    - ci: configure Dependabot for Cargo and GitHub Actions by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1577
+    - SVG import: name what was left out instead of dropping it silently (#627) by @switch87 in https://github.com/storytold/cadcraft/pull/1016
+    - i18n: add Hungarian (hu) interface translation by @Skaywalker in https://github.com/storytold/cadcraft/pull/1027
+    - feat(options): add a saved two-click selection preference by @leonardopbatista in https://github.com/storytold/cadcraft/pull/1032
+    - AutoCAD interop: justified text, DIMPOST, current dimension style, *D block colours by @aldozar in https://github.com/storytold/cadcraft/pull/1062
+    - DIMASSOC: reference polyline vertices by segment, as AutoCAD does (#1049) by @aldozar in https://github.com/storytold/cadcraft/pull/1064
+    - DWG: entities of a second layout stay on it in AutoCAD (#1057) by @aldozar in https://github.com/storytold/cadcraft/pull/1080
+    - Layouts in millimetres plot in millimetres whatever MEASUREMENT says (#1058) by @aldozar in https://github.com/storytold/cadcraft/pull/1085
+    - Dynamic blocks: show a distance's grip only at an end an action follows, and the grips of parameters a visibility state lists by @codyvogt in https://github.com/storytold/cadcraft/pull/1090
+    - DWG dimensions: text at its default position unless it was moved, and bit 32 kept by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1096
+    - Collapsed Tool Sets leave a strip on the left edge that expands them again by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1101
+    - MEASUREGEOM typed at the command line asks for the option, then the points by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1104
+    - ARC continuation starts from the last picked end of a clockwise arc by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1110
+    - Status bar toggles don't cancel the running command, as F7-F12 don't by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1111
+    - Dynamic Input: the CIRCLE radius prompt shows one distance field, not X/Y by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1137
+    - Tool Sets: the Parametric category offers Fix, Symmetric, the dimensional constraints and Delete Constraints by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1138
+    - A fixed point stays put when its grip is dragged: Fix locks the position it had before the edit by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1139
+    - Angular constraint between two lines holds the angle it draws, whichever way the lines run by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1140
+    - Parameters Manager: double-click a name to rename the parameter and every expression that uses it by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1142
+    - BLOCK: a keep value other than convert, retain or delete is an error, not a delete by @C00kieMonsta in https://github.com/storytold/cadcraft/pull/1160
+    - contributors: add C00kieMonsta by @C00kieMonsta in https://github.com/storytold/cadcraft/pull/1186
+    - AREA, Object: an open polyline's perimeter is its length, without the closing side by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1188
+    - DIMRADIUS/DIMDIAMETER: a location outside the circle puts the text at that point by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1189
+    - AutoLISP entity lists hold angles in radians, as entget does in AutoCAD by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1190
+    - BREAK opens a closed polyline instead of refusing it by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1191
+    - Select objects accepts keywords with a leading underscore (_L, _ALL, _W…) by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1193
+    - New metric drawings get metric Standard multileader and table styles by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1195
+    - LTSCALE typed at the command line asks for the scale factor by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1199
+    - DXF files that declare no units stay unitless when saved again by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1210
+    - CLI: convert to an image warns about the entities it can't draw by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1212
+    - DXF: $ANGBASE is in degrees by @codyvogt in https://github.com/storytold/cadcraft/pull/1234
+    - Drafting Settings: polar increment angle no longer shows 15 decimals by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1239
+    - Carry engineering distance rounding into the next foot by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1255
+    - Properties: a rotation shows and is typed as the drawing measures directions (ANGBASE, ANGDIR) by @codyvogt in https://github.com/storytold/cadcraft/pull/1275
+    - UI: let the Chinese and Arabic language gates accept an embedded craf… by @gisgaleno in https://github.com/storytold/cadcraft/pull/1294
+    - render: the even-odd fill cuts a slab at the crossings inside it (#927) by @wstock in https://github.com/storytold/cadcraft/pull/1308
+    - Keep line and arc elevation when lengthening with LENGTHEN by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1313
+    - Fix table formula range shifting for one-cell and reversed ranges by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1328
+    - Fix AutoLISP real printing of subnormals and mantissa round-up by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1334
+    - Drop minus sign from dimension text that rounds to zero by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1403
+    - ARC: hold Ctrl to switch the arc direction by @william-wwh in https://github.com/storytold/cadcraft/pull/1422
+    - Layer Off: stay active until Enter or Esc (#1418) by @kostyk348 in https://github.com/storytold/cadcraft/pull/1426
+    - Reject lone '-' or '"' in parse_distance instead of reading 0 by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1444
+    - A wide polyline thinner than a pixel keeps every side on screen by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1453
+    - Strip the UTF-8 BOM when reading a data link CSV file by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1457
+    - Properties: paint the selected entity's colour swatch by @AlexMaster23 in https://github.com/storytold/cadcraft/pull/1466
+    - Properties: scroll long layer menus by @AlexMaster23 in https://github.com/storytold/cadcraft/pull/1467
+    - Offset elliptical arcs towards the picked side by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1475
+    - Scale SVG export precision and point size to the drawing's extents by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1495
+    - Options: an interface scale preference by @mattlafy in https://github.com/storytold/cadcraft/pull/1508
+    - ID, DIST and LIST report Z by @aldozar in https://github.com/storytold/cadcraft/pull/1509
+    - cadcraft-cli: --help / -h / help exit 0 and print the usage to stdout by @switch87 in https://github.com/storytold/cadcraft/pull/1526
+    - ViewCube: draw the WCS pill's arrow instead of a "⌄" glyph (fixes #1541) by @filforce95 in https://github.com/storytold/cadcraft/pull/1558
+    - docs: customizing and automating CADCraft (for #1561) by @C00kieMonsta in https://github.com/storytold/cadcraft/pull/1569
+    - Reject non-hex characters such as '+' in Rgb::parse_hex by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1601
+    - Wrap format_angle to zero when rounding reaches a full turn by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1256
+    - i18n:Add missing translations for the print dialog and page settings. by @mayloglog in https://github.com/storytold/cadcraft/pull/1289
+    - Properties: a dimension's text height, arrow size, overall scale and precision (#1259) by @aldozar in https://github.com/storytold/cadcraft/pull/1473
+    - feat(engine): support AUDITCTL system variable and .adt log generation (gaps F4) by @aljormon84 in https://github.com/storytold/cadcraft/pull/1504
+    - Inquiry: SHAPES reports closed-shape geometry facts by @mattlafy in https://github.com/storytold/cadcraft/pull/1507
+    - fix(render): stabilize dashed highlights of filled objects by @leonardopbatista in https://github.com/storytold/cadcraft/pull/1046
+    - Dynamic blocks: a grip drag previews the reference in its own colours by @codyvogt in https://github.com/storytold/cadcraft/pull/1124
+    - Constraints: the settings checkboxes show or hide all, dropping per-object exceptions by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1144
+    - Selection cycling: a click over overlapping objects lists them, Shift+Space steps through them by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1149
+    - HATCHEDIT: add and remove boundary loops by @anekhirun in https://github.com/storytold/cadcraft/pull/1156
+    - JOIN with a single arc or elliptical arc offers cLose: the arc becomes its circle, the elliptical arc its full ellipse by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1197
+    - Holding Shift overrides ortho while it is held, as in AutoCAD by @mxx-kor in https://github.com/storytold/cadcraft/pull/1198
+    - Add selected-entity queries to the engine and MCP by @sangik-dev in https://github.com/storytold/cadcraft/pull/1253
+    - i18n(sv): translate the 95 strings added since the Swedish catalog by @kler in https://github.com/storytold/cadcraft/pull/1258
+    - Keep Z and elevation of the pieces left by BREAK by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1270
+    - BREAKLINE: a polyline with a break symbol between two points, with Block, Size and Extension by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1340
+    - TXT2MTXT: selected TEXT combined into one MTEXT top-down, or one MTEXT per TEXT, with SEttings by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1343
+    - BURST: explode block references with their attribute values as text by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1345
+    - MLEDIT Merged Tee: the first multiline's inner elements run on to the second's by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1375
+    - Print signed two-digit exponent for scientific units (LUNITS 1) by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1386
+    - MOCORO: move, copy, rotate and scale a selection from one base point until eXit by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1388
+    - ALIASEDIT opens the Command Aliases dialog (#1381) by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/1391
+    - AREA: an ellipse's perimeter is its exact length, not a closed-form estimate by @SBaksa in https://github.com/storytold/cadcraft/pull/1471
+    - DWG: leave out orphaned DGN line style components, so DGN-bloated drawings open (fixes #1482) by @gurparvez in https://github.com/storytold/cadcraft/pull/1501
+    - Turkish interface (Türkçe) by @ogzhnklvz in https://github.com/storytold/cadcraft/pull/1529
+    - Menu bar switches to the hovered menu once one is open (fixes #1567) by @C00kieMonsta in https://github.com/storytold/cadcraft/pull/1571
+    - Bound CAL unary minus/plus and ^ chain recursion by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/1586
+    - Add Greek (el) interface localization by @Camthalion77 in https://github.com/storytold/cadcraft/pull/1307
+    New Contributors
+    - @Skaywalker made their first contribution in https://github.com/storytold/cadcraft/pull/1027
+    - @leonardopbatista made their first contribution in https://github.com/storytold/cadcraft/pull/1032
+    - @C00kieMonsta made their first contribution in https://github.com/storytold/cadcraft/pull/1160
+    - @gisgaleno made their first contribution in https://github.com/storytold/cadcraft/pull/1294
+    - @wstock made their first contribution in https://github.com/storytold/cadcraft/pull/1308
+    - @kostyk348 made their first contribution in https://github.com/storytold/cadcraft/pull/1426
+    - @AlexMaster23 made their first contribution in https://github.com/storytold/cadcraft/pull/1466
+    - @filforce95 made their first contribution in https://github.com/storytold/cadcraft/pull/1558
+    - @aljormon84 made their first contribution in https://github.com/storytold/cadcraft/pull/1504
+    - @anekhirun made their first contribution in https://github.com/storytold/cadcraft/pull/1156
+    - @mxx-kor made their first contribution in https://github.com/storytold/cadcraft/pull/1198
+    - @sangik-dev made their first contribution in https://github.com/storytold/cadcraft/pull/1253
+    - @kler made their first contribution in https://github.com/storytold/cadcraft/pull/1258
+    - @gurparvez made their first contribution in https://github.com/storytold/cadcraft/pull/1501
+    - @ogzhnklvz made their first contribution in https://github.com/storytold/cadcraft/pull/1529
+    - @Camthalion77 made their first contribution in https://github.com/storytold/cadcraft/pull/1307
+    Full Changelog: https://github.com/storytold/cadcraft/compare/v0.8.0...v0.10.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/cadcraft/releases/tag/v0.10.0
+ReleaseTime: 2026-10-21T07:46:12.0000000Z
