@@ -1,0 +1,39 @@
+Version: 18.12.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.12.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added OpenAI 12-hour prompt caching for GPT-5.6+ on the Responses API: cacheRetention: "long" now requests prompt_cache_options.ttl: "12h" (instead of the ignored legacy prompt_cache_retention: "24h"), and promptCache.ttl accepts "12h"
+    Fixed
+    - Fixed every OpenAI Codex request failing with HTTP 404 {"detail":"Not Found"} on personal ChatGPT accounts whose token is not region-pinned (#16493)
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Moonshot kimi-k3 pricing cache writes at $0; usage cost now includes cache writes at Moonshot's $3/M 5-minute rate (#16508)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - providers.cacheRetention: long now keeps OpenAI GPT-5.6+ prompt caches for 12 hours (Responses API; cache writes cost 2.5× input instead of 1.25×)
+    Fixed
+    - Fixed subagents spawning at a caller-supplied effort (e.g. hi → max) while task.enableEffort is off; the field is now ignored and the agent's configured thinking level (including :auto) applies (#16402)
+    - Fixed omp update --check failing against JFrog Artifactory registries that add empty dist-tags to a tagged manifest; the update check now uses the registry's curated latest version (#16375)
+    - Fixed <path>:conflicts on a file past the 10 MiB scan cap reporting no conflicts with no hint: it now names the line the scan stopped at and the ranged read that registers the blocks after it (#16269)
+    - Fixed the ts-set-map rule stalling tool-call streaming for seconds on a long single-line Map literal, and missing Map entries written ["key", value] as const (#16242)
+    - Fixed the ts-import-type rule missing inline type imports whose member name is non-ASCII, such as import("./units").温度 (#16242)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed a macOS background action leaving its target in front of your app after you clicked another of your windows, when placing the click took longer than the click itself (#16217)
+    What's Changed
+    - fix(update): handled empty Artifactory dist-tags on tagged manifests by @roboomp in https://github.com/can1357/oh-my-pi/pull/16379
+    - fix(task): ignored caller effort while task.enableEffort is off by @roboomp in https://github.com/can1357/oh-my-pi/pull/16406
+    - fix(catalog): stopped declaring no_constraint codex residency by @roboomp in https://github.com/can1357/oh-my-pi/pull/16501
+    - fix(catalog): priced moonshot kimi-k3 cache writes at the 5min rate by @roboomp in https://github.com/can1357/oh-my-pi/pull/16529
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.12.4...v18.12.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.12.5
+ReleaseTime: 2026-10-21T02:31:29.0000000Z
