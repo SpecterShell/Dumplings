@@ -1,0 +1,35 @@
+Version: 1.13.18
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.13.18/Mini-Term_1.13.18_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版汇总 v1.13.16-pre 与 v1.13.17-pre：AI agent 用的 SSH 工具（mt-ssh-cli）一批稳定性与安全修复，并修复了文字区域被误拖选的问题。
+    更新内容
+    修复
+    - 点完标题栏或菜单后，划过文字会被误选中 —— 打开会话详情或 Markdown 预览后，单击标题栏（或点了右键菜单里的一项），鼠标再划过文字，就会从顶部一路选中到光标处，直到下一次点击才消失。现在不会了；在文字里按住拖选、双击选词、复制照常。
+    - 在 $(…)、管道或 WSL 里调用 SSH 工具不再卡住 —— 首次调用拉起后台进程时不再带走调用方的输出管道，命令结束即返回；后台进程也不再锁住项目目录。
+    - 连不上的服务器不再无限等待 —— 建连整段最多 20 秒，--timeout 覆盖整个调用；超时报错写明卡在哪一步（DNS / TCP / 握手 / 认证）。
+    - 同一连接上的多个命令可以并发 —— 以前一个长命令或大文件传输会让同一连接上的其他调用全部排队；网络切换后失效的连接会自动淘汰重连。
+    - 读 stdin 的命令不再挂到超时；远程命令被信号终止时退出码为 128+n 并说明是哪个信号；--cwd 带空格或特殊字符的目录不再出错。
+    - 大文件下载更快 —— 多个读请求同时在途，高延迟线路上不再因逐块串行读而超时。
+    - 上传不再改坏远端文件 —— 保留原文件的权限与属主，软链保持软链；替换中途失败或调用超时都不会丢失原文件。
+    - Git Bash 下的远端路径 —— Git Bash 会把 /var/log/x 这类参数改写成 Windows 路径；SKILL.md 现在教 agent 把远端命令整条单引号传、远端路径写成 //var/log/x，CLI 发现被改写的参数会直接报错提示，不再执行错误的命令。
+    - 报错更具体 —— 令牌对不上、配置文件不存在等情况分别给出原因与处理办法，不再一律显示「invalid project token」。
+    体验
+    - SSH 认证可以回落 —— 依次尝试连接里配置的私钥、ssh-agent 里的 key、已存密码，前一种不行自动换下一种。~/.ssh 里仍然只读写 known_hosts，不读 ~/.ssh/config，也不自动尝试默认私钥。
+    - 认证失败后自动冷却 —— 同一连接 30 秒内不再重试，并发请求也只会尝试一次，避免把本机 IP 送进 fail2ban。
+    - 只支持老算法的服务器也能连上；known_hosts 支持通配主机与 @revoked 吊销标记。
+    - AI 工具用的 SSH 后台进程会在升级后自动换成新版本，不需要手动重启。
+    安全性
+    - SSH 工具只与当前用户的后台进程通信，防止其他用户抢占端点冒充；以管理员身份运行时不再使用共享的后台进程。
+    - 上传遇到共享目录（如 /tmp）里他人放置的软链时拒绝跟随，防止被引去覆盖别人的文件。
+    - 生成的 SKILL.md 只预批 list / exec，上传下载每次都需要确认；数据目录护栏识别更多路径别名；审计日志脱敏覆盖更多凭据写法。
+    - 开发实例（设置了 MT_APP_DATA_DIR）不再覆盖或删除装机版生成的 SKILL.md；主程序启动时自动更新项目里过期的 SKILL.md。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.13.18
+ReleaseTime: 2026-10-21T13:55:03.0000000Z
