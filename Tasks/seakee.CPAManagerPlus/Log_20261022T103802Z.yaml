@@ -1,0 +1,70 @@
+Version: 1.14.9
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.9_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.9/cpa-manager-plus_v1.14.9_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.9_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.9/cpa-manager-plus_v1.14.9_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.9
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.9 is a 1.x security-maintenance release after v1.14.8. It contains the merged dependency and CI-security maintenance changes in #1049. The focus is to use patched build toolchains and dependencies and prevent future changes with failing dependency scans from passing the existing CI gate.
+    There are no new user-facing features. This release does not include v2 architecture work or change CPA management APIs, authentication, database schemas, credential/configuration formats, or historical usage data.
+    Security and Build Maintenance
+    - Go and Manager Server (#1049): Require Go 1.26.10 for source builds, update golang.org/x/sys to v0.44.0, select the CI Go version from go.mod, and pin the Docker Go builder. The SQLite dependency remains at v1.46.1.
+    - Node.js and frontend dependencies (#1049): Pin Docker's frontend builder to Node.js 22.23.4 and CI to 24.22.1. Update axios, React Router, Vite, Vitest, and related locked dependencies.
+    - Documentation dependencies (#1049): Resolve relevant VitePress/DocSearch advisories with scoped dependency overrides while retaining VitePress 1.6.4, without undertaking a documentation-site redesign.
+    - Ongoing dependency security (#1049): Add a full-workspace npm audit and Go vulnerability scans for Linux, macOS, and Windows on both amd64 and arm64. Missing, skipped, or failed results now block Required checks. Add scheduled security scans and weekly Dependabot updates targeting dev.
+    - The verification recorded on #1049 reduced the npm audit from 26 affected package nodes to zero reported advisories and found no known issues in the six Go source scan targets. These are findings against the vulnerability database snapshot used for that verification, not a guarantee against future advisories.
+    Upgrade Notes
+    - Upgrade from v1.14.8 and restart normally. No database migration, configuration rewrite, or credential recreation is required; migration_required remains false.
+    - Users of prebuilt Docker images or native packages do not need to install Go or Node.js on the host. Source builds of Manager Server now require Go 1.26.10; Node.js builds require compatible 22.23.4+ (22.x), 24.22.1+ (24.x), or 26.12.1+ runtimes.
+    - The dependency/toolchain changes are substantial, but no user-visible UI, authentication, API, or data behavior changes are intended. Check the management UI, existing connections, and key workflows after upgrading.
+    - The CPA compatibility baseline for full Muse / Meta features remains v7.3.4+.
+    - The existing offline derived-index maintenance guidance from v1.14.7 still applies; this release adds no further maintenance steps.
+    - #1049's local verification covered frontend/server tests, offline pages, and native cross-builds. Local Docker build completion was blocked by a base-image metadata fetch error. Formal CI and the release Dry Run remain the authority for publish readiness.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.8...v1.14.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.9-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.9 是 v1.14.8 之后的 1.x 安全维护版本，包含已合并的依赖安全更新与持续检查改进（#1049）。本次重点是更新构建工具链及依赖项、减少已知安全告警，并阻止后续存在未通过依赖扫描的改动直接通过既有 CI 门禁。
+    本次没有新增用户功能。 不包含 v2 架构改造，也不修改 CPA 管理 API、身份认证逻辑、数据库 Schema、凭证格式、配置格式或历史用量数据。
+    Security and Build Maintenance
+    - Go 与 Manager Server（#1049）：将 Go 源码构建工具链更新到 1.26.10，升级 golang.org/x/sys 至 v0.44.0；CI 依据 go.mod 选取工具链，Docker 构建阶段固定相应版本。SQLite 依赖仍为 v1.46.1。
+    - Node.js 与前端依赖（#1049）：Docker 前端构建固定使用 Node.js 22.23.4，CI 使用 24.22.1；同时更新 axios、React Router、Vite、Vitest 等依赖及其锁定版本。
+    - 文档构建依赖（#1049）：通过限定范围的依赖覆盖处理 VitePress / DocSearch 相关安全告警，保留当前 VitePress 1.6.4，不扩展为文档站重构。
+    - 持续安全检查（#1049）：新增 npm 全工作区依赖审计，以及 Linux、macOS、Windows 的 amd64 / arm64 六组 Go 漏洞扫描。扫描失败、跳过或缺失时，现有 Required checks 不予通过；新增每周依赖检查与面向 dev 的 Dependabot 更新。
+    - 在 #1049 的验证记录中，npm 审计由 26 个受影响依赖节点降至 0 项报告告警，六平台 Go 源码扫描亦未报告已知漏洞。结果对应当时的扫描数据库快照，并非对未来零漏洞的保证。
+    Upgrade Notes
+    - 从 v1.14.8 正常升级并重启即可。 不需要数据库迁移、配置修改或凭证重建；migration_required 为 false。
+    - 使用官方构建好的 Docker 镜像或原生安装包时，无须在宿主机另行安装 Go 或 Node.js。自行从源码构建 Manager Server 需要 Go 1.26.10；Node.js 源码构建需要兼容的 22.23.4+（22.x）、24.22.1+（24.x） 或 26.12.1+ 工具链。
+    - 本次依赖跨度较大，但没有预期的用户界面、认证、API 或数据行为变更。升级后建议检查管理页面、已有连接及主要功能是否正常。
+    - 完整 Muse / Meta 功能的 CPA 最低兼容版本仍为 v7.3.4+，本次未提高该要求。
+    - v1.14.7 以来针对已有数据库的离线派生索引维护说明继续适用，本次没有新增维护步骤。
+    - #1049 的本地验证覆盖前端、服务端、离线页面及原生跨平台构建；本地 Docker 构建因拉取基础镜像元数据失败未完成。因此正式发布仍以现有 CI 与发布 Dry Run 的构建检查为准。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.8...v1.14.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.9-zh.md
+ReleaseTime: 2026-10-22T10:30:14.0000000Z
