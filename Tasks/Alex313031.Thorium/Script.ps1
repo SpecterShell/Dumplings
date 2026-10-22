@@ -1,6 +1,6 @@
 # $RepoNameARM64 = 'Thorium-WOA'
 
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/gz83/thorium/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/gz83/thorium/releases/latest'
 $Version = $Object1.tag_name -replace '^M'
 
 # $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/${RepoOwner}/${RepoNameARM64}/releases/latest"
@@ -13,7 +13,13 @@ $this.CurrentState.Version = $Version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'SSE3' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType = 'exe'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'SSE3' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'SSE3' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 # $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'arm64'
