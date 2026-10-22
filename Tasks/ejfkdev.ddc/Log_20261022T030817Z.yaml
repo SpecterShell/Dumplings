@@ -1,0 +1,48 @@
+Version: 0.1.32
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.32/ddc-v0.1.32-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.32/ddc-v0.1.32-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Breaking changes — output changes
+    - listclasses, findrefs, hierarchy, members and res now print a
+      compressed prefix frontier with counts by default instead of the full
+      flat listing. Use --full (REST/MCP: full=true) for the previous
+      complete output.
+    - The --summary / --tree / --flat flags were removed; unknown flags
+      are usage errors now.
+    - REST/MCP: the full parameter replaces flat; summary is gone from
+      ddc.listclasses / ddc.findrefs / ddc.hierarchy (ddc.strings
+      keeps it for its reference-site view). Unknown REST query parameters
+      now return 400 (--xyz.allow-unknown-query opts out).
+    - Multi-dex listing order is natural image order now (previously reverse
+      8-image waves), so row order differs; decompiled source is unchanged.
+    - Invalid values and missing targets now fail instead of returning a
+      plausible-looking result: manifest --component typos, largest -n
+      ⇐ 0, and disasm / hierarchy with an unknown class.
+    Progressive output
+    - Prefix frontier rows carry counts; --prefix/--depth drill,
+      --sort count, --samples N, --limit/--offset page (JSON carries
+      total/next_offset).
+    - strings --summary groups matching reference sites by owning
+      class/package; the raw string table stays the default view.
+    - MCP list tools cap responses at 500 rows by default and append a
+      visible truncation hint with next_offset; serverInfo reports the
+      real ddc version.
+    Dependencies
+    - xyz-rust 0.4.11 → 0.4.13 (rmcp 3.6.0): strict query parameters, CORS
+      preflight fix, better JSON-RPC id/error handling.
+    Performance
+    - Summary views aggregate on the fly: members 1.13s/855MB →
+      0.21s/223MB; strings windows 0.20s/452MB → 0.08s/218MB.
+    - Class-name scans inflate dex images in bounded waves: serve RSS
+      560MB → 252MB after repeated requests.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.31...v0.1.32
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.32
+ReleaseTime: 2026-10-22T02:06:39.0000000Z
