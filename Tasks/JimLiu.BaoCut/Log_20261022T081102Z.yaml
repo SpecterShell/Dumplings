@@ -1,0 +1,80 @@
+Version: 3.10.0-build.80
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/JimLiu/baocut/releases/download/baocut-v3.10.0-build.80/BaoCut-3.10.0-build.80-win-x64-cuda-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    BaoCut 3.10.0 (Build 80)
+    Review workspace
+    Review is the default video view, with chapter or speech segment chips, scrubbing, zoom, looping, chapter-boundary editing and remembered per-video or global view choices. The side panel follows playback, shows chapter-sheet notes, read-only translations and transcription or translation progress with cancellation. Lines and Script tabs provide the creation script, version comparisons, undoable restoration and access to subtitle styles.
+    Sources: 521a9def be838391
+    Frame annotations
+    Review and Timeline share element picking, comments, pen, shapes, numbered pins and styled text with color, stroke width, font, size, bold, italic and underline. Undo and redo, frame bookmarks and chapter-band stamps help navigate feedback. Marks retain their own frame times, group by frame and attach one repainted screenshot per frame to chat; pending feedback expands the floating chat and updates its badge. Canvas compositions can declare pick regions.
+    Sources: 8e899c3f df10855a
+    Web review and screenshots
+    Issue a stable link for one video with baocut web review. Review sessions are limited to that video and hide task, export and file-management controls. Web markup can pick elements and copy or download a marked PNG, clearing that frame after success. Live-canvas capture is supported when its contents can be reproduced; DOM text, images, filters and other unsupported live content may prevent capture. A rich-text image copy is used when direct PNG clipboard access is denied. Electron captures the live stage directly.
+    Sources: c97e17dd 713ba68d
+    Preview playback
+    Audible media now plays at the requested rate and the preview clock follows the lead audible source, reducing crackle and keeping pictures and captions aligned with sound. Silent timelines use the wall clock; buffering and lead handoffs are handled without clock jumps. Live compositions have a separate initialization budget for large fonts, and Web serves bundles from a dedicated loopback origin for stricter embedded browsers. The preparing panel covers the stage while an in-view playback copy converts and names the relevant media.
+    Sources: 4e4a96b8 68a483b8
+    Audio videos and canvas controls
+    A native audio-envelope waveform is now the default, with mirrored amplitude bars, played and upcoming colors, a center line and progress timestamps; existing spectrum styles remain selectable. Waveform and progress style and color controls open directly from the canvas toolbar, show the current style name and omit empty color groups. Audio-video guidance uses the native waveform, creates captions promptly and coordinates topic-specific backgrounds, waveform and captions as one palette.
+    Sources: cf1dc9d7 5083356a
+    Subtitle language layers
+    On-screen subtitle chips group original or translated segments by language. Visibility and style presets apply to the whole group, a segment picker chooses the clip to proofread, Flip swaps all corresponding pairs, and the compare bar follows the chosen segment. Sidebar style entries open the gallery. Burned-in subtitle rows in video export use the same language groups rather than repeating one row per clip.
+    Sources: 47acf103 a5576e60
+    Export
+    Export a subtitle language layer as one timeline-ordered SRT, VTT, ASS or JSON file, including bilingual layers assembled from multiple clip documents. Video export defaults to the effective resolution of the enabled source video instances, adjusted for pixel aspect ratio and canvas crop; higher output sizes remain available with an upscaling notice. When source dimensions are unavailable, the canvas default is retained.
+    Sources: 9a50c81b 2cdb3a0d
+    Caption text and speaker labels
+    Agent and CLI transcript word edits update derived original-caption text in the same transaction while preserving hand-edited cues and reporting them in the receipt. Caption timing and cue IDs are retained. Studio captions can display a speaker name above the caption block, including bilingual sound bites.
+    Sources: 082520fb 88a249cf
+    Custom caption layout
+    Caption scenes gain fixed word-page quotas independent of wrapping, remaining-word page plans, sibling-line geometry and grapheme reads, wrapping within fixed rows, widest-row fitting and integer page tags. Word-count or seeded pagination programs can isolate keywords. These are opt-in capabilities with validation for incompatible layout modes; existing scenes keep their default behavior.
+    Sources: 98f6243b 98887b00
+    Custom caption rendering
+    Caption scenes gain bounded GPU material plans, paint sources and stacks, blur and spread, gradient domains, affine sampling, glow, noise and wave displacement, page-context effects, resource-bound font sources and additional expression clocks and functions. Bounded glyph-distance masks, static word paint selections and up to 64 paint layers support richer effects with shared geometry and budget checks. Associated-add bitmaps use DrawOp v9; unsupported combinations are rejected.
+    Sources: 7d2349af 99e98c7d
+    Bailian model management
+    Add and remove declared Qwen text and synchronous ASR models alongside the protected built-in models. Refresh treats a missing discovery entry as advisory for declared models. Removed defaults remain selected but unavailable until changed. Asynchronous filetrans models remain unsupported.
+    Sources: a850b904 #96
+    Video production tools
+    New clip-montage and production-scripts skills separate footage-led storytelling, reusable production pipelines and explainer craft. edits_assemble places narration, code scenes, footage, transitions, cards and watermarks from a plan, supports dry runs and incremental ripple updates, rejects locked targets before writing and reports bake results. Removed placed segments require explicit handling. edits_apply accepts complete insertItems records, and inspect reports current asset revisions.
+    Sources: 95b3deac 1a86bc65
+    Timeline footage and script migration
+    Production scripts place linked source footage, editable source labels, original audio, sound-bite captions and watermarks directly on the timeline with source in-points, crop, focal point, picture-in-picture and transitions. Sound-bite caption styles stay separate from narration. overlay.mjs --render and --preview are removed; use --place. The former still-image motion option is rejected; use a static image or a prepared video. Selected link-download sections can be fetched as separate assets, up to 20 ranges; sections cannot be combined with transcription or subtitle-language downloads.
+    Sources: 72f320e1 0b35b832
+    Production reliability
+    Scripts read spilled CLI output, support footage at segment starts, shorten narration-caption display around sound bites, honor configured caption styles, avoid loading module scripts twice, warn about missing bundled glyphs and background-bake long segments. Narration pitch checks can retry drifting takes. Guidance adds coverage checks for transparent overlays, short-form pacing and cut reviews, free-space checks and reclaimable-file reporting.
+    Sources: b7e7bafd 67246af8
+    Live compositions and bake provenance
+    Import code scenes with live: true for editor review without a bake, then replace them with baked output before export. Live preview currently requires one full-frame bottom code scene outside transitions; transparent overlays above footage must be baked before review. Byte-identical re-bakes from another source bundle now receive a new prerender revision so provenance can become current instead of leaving export permanently stale.
+    Sources: 07dd1256 01a9b02b
+    Packaging and dependencies
+    Repair Mac signing order for the bundled CLI and use the existing longer Intel model-worker startup budget during package self-checks. Public Mac releases remain Apple Silicon; Intel packaging is a separate local preview path with semantic-search limitations. Electron is upgraded to 44.9.3 and development/CI Node to 24.22.1. Electron's embedded Node 24.22.0 still awaits the October Node security fixes; the development Node update does not patch the embedded runtime.
+    Sources: 942748cd #94
+    Platform requirements and validation
+    Mac Apple Silicon packages require Developer ID signing and Apple notarization. Windows CPU, CUDA and Vulkan packages are unsigned and require an AVX2-capable CPU and the Microsoft Visual C++ v14 x64 Redistributable. CUDA targets supported NVIDIA GPUs; Vulkan serves compatible AMD, Intel and other supported GPUs.
+    UI/export workflows, live model or GPU inference, physical IME candidate windows and paid agent calls are outside the automated release checks. Mac and all three Windows variants passed native packaging and independent public asset read-back. The Windows CPU, CUDA and Vulkan installers passed installation, update-in-place and ZIP self-checks. All four appcasts carry the consolidated release notes.
+    Change coverage
+    Baseline: 3.9.0 Build 79. All 132 commits (130 existing changes plus two release-preparation commits), 122 source groups and both associated PRs were reconciled in five batches, including merges, generated prototype assets, prior-release feed updates and superseded work. There are no unclassified commits.
+    Full source comparison
+    Frozen source: 6914de1333358290656f91ccc439c7aac780b699.
+    macOS publication verification
+    BaoCut 3.10.0 (Build 80) for Apple Silicon, macOS 14+.
+    Bundle ID: com.baocut.app. Developer ID signed, hardened runtime and Apple notarization accepted for both App and DMG.
+    Runtime and native Worker startup, signer fingerprint, staple and Gatekeeper checks passed. UI/export, real model inference and paid Agent calls were not exercised by this workflow. ffmpeg/ffprobe and an agent engine are external dependencies.
+    Source: 6914de1333358290656f91ccc439c7aac780b699
+    Actions: https://github.com/JimLiu/baocut/actions/runs/39732677138
+    Windows x64
+    Variants: cpu, cuda, vulkan. NSIS installers and portable ZIPs are unsigned. Real credential migration and model/Agent/GPU inference were not exercised by the installer tests. Requires the Microsoft Visual C++ v14 x64 Redistributable; the current package does not bundle the VC runtime DLLs.
+    Native build and installer verification: https://github.com/JimLiu/baocut/actions/runs/39732677138
+    Additional source validation
+    The frozen source passed all TypeScript typechecks and 11,116 TypeScript tests (365 conditionally skipped). The Rust workspace suite passed 4,330 tests with 41 ignored cases after correcting a stale WASM preset-order assertion in 3e807403; that validation commit changes only the test assertion, with production sources identical to the frozen release. Full CI results.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JimLiu/baocut/releases/tag/baocut-v3.10.0-build.80
+ReleaseTime: 2026-10-22T06:52:36.0000000Z
