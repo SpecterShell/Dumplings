@@ -1,0 +1,17 @@
+Version: 4.10.9
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.9/agy-switch-4.10.9-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 4.10.8 可用额度判断：模型额度同时受五小时和周窗口限制；周额度耗尽时不再显示可用 100%，重置时间跟随实际限制窗口。共享摘要也不能覆盖模型自身更低的额度。自动切换和 CLI 同步修正；菜单栏／托盘仍分别展示两个原始窗口。
+    - Gemini 4 Argon 可在展示设置中单独勾选，即使模型目录还没返回该项。有独立周额度时使用该池；未返回时保持未知。保留没有 quotaInfo 的目录模型及其元数据，不伪造可用额度，也不会通过刷新解锁模型。
+    - 配额和模型目录优先查询生产接口；权限失败、损坏或空摘要可回退。刷新重新查询订阅等级，修复 isDefault 解析及升级后一直显示 Free 的问题。
+    - 修复本机文件选择器把账号 JSON 导出当作 SQLite 数据库打开的问题，按导出的 OAuth client 验证凭据。导入前验证完整批次，保留部分失败计数和结果。
+    - macOS 手动切换纳入独立 App Hub 的关闭／重启，避免它在 App 窗口关闭后仍保留旧会话。无法核实或关闭 Hub 时阻止凭据写入。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.9
+ReleaseTime: 2026-10-22T09:14:38.0000000Z

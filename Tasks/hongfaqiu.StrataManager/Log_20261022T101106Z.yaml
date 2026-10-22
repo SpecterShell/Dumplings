@@ -1,0 +1,22 @@
+Version: 0.2.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.15/Strata.Manager_0.2.15_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed "failed to read background message: unexpected end of file" a few seconds after starting a model on Windows with AMD graphics (#124, #127): the AMD GPU monitoring added in 0.2.12 loaded AMD's ADLX driver library (amdadlx64.dll) straight into the background process. When that library failed on the first monitoring read, a few seconds after a model started, the whole background process exited and took the loading engine with it, leaving only this error and an empty startup diagnostic. ADLX now runs in a separate small helper process, and the background process and the headless server only read the one line of readings it prints each second. If the helper fails, AMD GPU readings are missing for a while and retried after 5 minutes; the background process and the model start are not affected. If problems remain, set the environment variable STRATA_MANAGER_AMD_TELEMETRY=0 to turn AMD readings off completely. This fix has not been verified on real Windows AMD hardware yet.
+    - The two built-in GitHub proxies are labelled by host name (#126): when updating Strata or Manager, the download sources "GH Proxy" and "GHProxy" differed only by a space and looked like duplicates, although they are two different proxies. They now show as gh-proxy.org and ghproxy.net. A download source you already chose is not affected.
+    - Faster CI (no app changes): Windows and Linux native tests now run in 5 shards per platform instead of 3, balanced by measured test times so every shard spends about the same time testing (the new scripts/native-test-timings.mjs regenerates the timing table from the latest CI run). Linux system dependencies are installed from a cache, so a slow Ubuntu mirror no longer slows the jobs down; if the cache cannot be installed, the job falls back to installing online.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 Windows AMD 显卡上启动模型几秒后报「读取后台消息失败：unexpected end of file」（#124、#127）：0.2.12 加入的 AMD 显卡监控会在后台进程里直接加载 AMD 驱动的 ADLX 库（amdadlx64.dll）。模型启动几秒后第一次读取监控数据时，如果这个库出错，后台进程会整个退出，正在加载的引擎也被一起结束，界面上只剩这条报错，启动诊断也是空的。现在 ADLX 改到一个独立的小进程里读取，后台和无头 Server 只接收它每秒输出的一行读数。这个小进程出错时，只是暂时没有 AMD 显卡读数，5 分钟后再重试，不会影响后台和模型启动。如果仍有问题，可以设置环境变量 STRATA_MANAGER_AMD_TELEMETRY=0，完全关闭 AMD 读数。这个修复还没有在 Windows AMD 真机上验证过。
+    - 内置的两个 GitHub 代理改为按域名显示（#126）：更新 Strata 和 Manager 时，下载来源里的「GH Proxy」和「GHProxy」只差一个空格，看起来像重复项，其实是两个不同的代理。现在直接显示为 gh-proxy.org 和 ghproxy.net。已经选好的下载来源不受影响。
+    - CI 提速（不影响应用）：Windows 和 Linux 的原生测试从每个平台 3 个分片增加到 5 个，并按实测耗时分配，各分片跑测试的时间基本一致（新增 scripts/native-test-timings.mjs，可以用最新一次 CI 重新生成耗时表）。Linux 的系统依赖改为从缓存安装，不再受 Ubuntu 软件源快慢影响；缓存装不上时自动改回联网安装。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.15
+ReleaseTime: 2026-10-22T09:48:36.0000000Z
