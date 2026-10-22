@@ -1,0 +1,34 @@
+Version: 0.1.24
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/333-wg/pi-wm/releases/download/v0.1.24/Pi-Wm-0.1.24-Setup-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Pi-Wm v0.1.24：后台任务、全局技能与工作台体验优化
+    验证记录
+    - npm run check 通过：源码、前端、E2E 与 12 个工作区测试类型检查，以及 8 套主题各 80 对颜色对比检查。
+    - 后台任务、运行时续接、全局技能、停止与调度、用量缓存、浏览器批量操作及预览服务定向回归：20 个文件、325 项通过。浏览器新窗口快照回归已修复。
+    - 项目切换、最近对话、停止任务、技能管理、用量统计和媒体设置共 24 项 E2E 通过，包含桌面与手机宽度。用量旧测试补齐打开既有会话及运行面板的前置步骤后，两项用量测试重跑通过；保留统计、重启及项目隐藏断言。
+    - 已查看本次 E2E 生成的全局技能、最近对话与媒体移除弹窗截图；ego-browser 截图接口超时，使用本轮自动化截图补齐对应视觉检查，不将超时计为产品修复。
+    - npm run desktop:dist 通过：生产构建、15,821 个运行时文件清单、路径预算、安装包 SHA-512、blockmap 和公开更新源一致性检查通过。
+    - node scripts/verify-desktop.mjs --packaged=release/win-unpacked/Pi-Wm.exe 通过：移出源码目录后验证构建 UI、鉴权 API/WebSocket、原生终端、渲染器隔离、单实例、项目与主题保存、令牌轮换和正常退出。未运行安装器。
+    - 版本修改只更新桌面版本及锁文件版本为 0.1.24，未改变依赖版本。git diff --check 通过。
+    - macOS 工作流 39729381588 通过：Apple Silicon 和 Intel 均完成原生 DMG/ZIP 构建、ad-hoc 签名验证、原生运行时与包内启动验收，并上传六个附件。按定向验证策略跳过完整桌面回归。
+    - 九个发布附件已核验：Windows 三个文件大小和 GitHub SHA-256 与本地一致，远端 latest.yml 与本地逐字节一致；四个 Mac DMG/ZIP 的 GitHub SHA-256 与对应校验文件一致，校验文件自身摘要也已核验。
+    - 提交钩子执行后，应用及测试代码与已验证候选无内容差异；最终 E2E 类型检查通过。常规全仓库 CI 按既有发布策略跳过，保留本地定向检查与 macOS 专项构建验收。
+    - 发布后确认 GitHub Latest 指向 v0.1.24，正式版非草稿、非预发布；全部九个附件再次核验通过，匿名下载公开 latest.yml 与本地逐字节一致。
+    Windows 安装包 SHA-256：87ee71b3aecb2e2584ae7a2a3708d52a0484fc80c7b91a0ce314b4913b961c4e（249,642,849 字节）。
+    本地证据：test-results/release-0.1.24-e2e/、test-results/release-0.1.24-usage-final-2/、test-results/release-0.1.24-build.log、test-results/release-0.1.24-packaged.log。预览与测试数据不作为发布附件。
+    已知限制与未执行检查
+    - 后台任务不会恢复重启前的原进程；远程服务可能在本地取消后继续运行。任务路径声明用于协调，不替代文件系统权限与沙箱。
+    - 本次不承诺固定提速比例；后台任务拆分和浏览器批量操作效果取决于模型、服务商与项目环境。未发起真实收费模型请求。
+    - 本次未重复后台任务完整浏览器验收；后台任务运行、取消及自动续接由真实 Pi 执行循环配合本地模拟响应的定向测试覆盖。保留前端主包超过 500 kB、SQLite 实验性和构建依赖弃用提示。
+    - Windows 未配置发布者签名；macOS 使用 ad-hoc 签名，未经 Apple Developer ID 签名与公证，系统可能拦截安装。
+    - 按改动风险执行定向验证，未运行全仓库测试、完整 E2E、完整桌面回归或真实安装升级矩阵；安装器、更新器与依赖版本未改动。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/333-wg/pi-wm/releases/tag/v0.1.24
+ReleaseTime: 2026-10-22T05:59:44.0000000Z
