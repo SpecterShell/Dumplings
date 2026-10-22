@@ -1,0 +1,39 @@
+Version: 0.1.33
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.33/ddc-v0.1.33-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.33/ddc-v0.1.33-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - Non-BMP (supplementary-plane) names and literals now decode and match
+      correctly: strings, findrefs, members and getclass no longer lose
+      them to U+FFFD or fail to find them.
+    - disasm accepts a full method descriptor to select one exact overload,
+      e.g. 'com.example.Foo.parse(Ljava/lang/String;)V'; a bare method name
+      still lists every overload.
+    - Memory: one-shot query processes use immediate allocator purging and a
+      byte-budgeted wave, cutting peak physical footprint by roughly 25-30%
+      on multi-dex APKs. Single-class getclass on a 398 MB APK went from
+      1.17 GB to about 0.87 GB peak.
+    - Performance: cure 0.1.9 replaces repeated statement-subtree scans with
+      per-statement name/index tables. A 5k-line class drops from 5.4s to
+      0.22s in cure; full export of deepseek drops from 8.1s to about 3.0s
+      and weixin from 53.9s to about 40s, with byte-identical output.
+    Notes
+    - No breaking CLI changes. Default output changes only where previously
+      corrupt non-BMP text is now correct.
+    - Benchmarks in the README/docs were refreshed and corrected: the previous
+      table was recorded on an earlier (pre-cure) version; full and --fast
+      are now separate columns.
+    - DDC_GET_TWO_TIER=1 is an experimental low-memory single-class path
+      (small closures only; automatic fallback to full parse). Off by default.
+    - Dependencies: cure 0.1.9, jdc-core 0.2.17.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.32...v0.1.33
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.33
+ReleaseTime: 2026-10-22T11:27:21.0000000Z
