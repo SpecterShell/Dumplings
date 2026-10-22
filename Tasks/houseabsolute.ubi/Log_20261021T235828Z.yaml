@@ -1,0 +1,18 @@
+Version: 0.13.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/houseabsolute/ubi/releases/download/v0.13.0/ubi-Windows-msvc-i686.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/houseabsolute/ubi/releases/download/v0.13.0/ubi-Windows-msvc-x86_64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/houseabsolute/ubi/releases/download/v0.13.0/ubi-Windows-msvc-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - The ubi crate no longer declares a minimum supported Rust version (MSRV). It was 1.88. The crate is now only tested with the current stable Rust release.
+    - Fixed a bug where a token env var set to the empty string, like GITHUB_TOKEN=, was treated as a token. This made ubi send an Authorization: Bearer header, which the forge rejects, instead of simply making an unauthenticated request. An empty token is now treated as not being set at all, whether it comes from an env var or is passed to UbiBuilder::token.
+    - Updated to the latest rustls-webpki and webpki-root-certs crates to remove support for the compromised eMudhra intermediate CA certificates.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/houseabsolute/ubi/releases/tag/v0.13.0
+ReleaseTime: 2026-10-21T23:42:12.0000000Z
