@@ -3,22 +3,22 @@ $RootPath = '/qbittorrent-win32'
 $PatternFilename = 'qbittorrent-(\d+(?:\.\d+)+)/.+setup\.exe'
 
 $Object1 = Invoke-RestMethod -Uri "https://sourceforge.net/projects/${ProjectName}/rss?path=${RootPath}"
-$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternFilename}$" })
+$Assets = $Object1.Where({ $_.title.'#cdata-section' -match "^$([regex]::Escape($RootPath))/${PatternFilename}$" -and $_.title.'#cdata-section'.Contains('x64') -and $_.title.'#cdata-section'.Contains('lt20') }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Assets[0].title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternFilename}").Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Assets.title.'#cdata-section', "^$([regex]::Escape($RootPath))/${PatternFilename}").Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Assets.Where({ $_.title.'#cdata-section'.Contains('x64') -and $_.title.'#cdata-section'.Contains('lt20') }, 'First')[0].link | ConvertTo-UnescapedUri
+  InstallerUrl = $Assets.link | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets[0].pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Assets.pubDate, 'ddd, dd MMM yyyy HH:mm:ss "UT"', (Get-Culture -Name 'en-US')) | ConvertTo-UtcDateTime -Id 'UTC'
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
