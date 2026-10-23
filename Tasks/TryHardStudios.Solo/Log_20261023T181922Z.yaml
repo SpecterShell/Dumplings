@@ -1,0 +1,223 @@
+Version: 0.11.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://releases.soloterm.com/windows/x86_64/Solo_0.11.1_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    TL;DR
+    - Solo now runs on Linux: a signed x86_64 AppImage with automatic updates, Solo's own title bar, and a renderer check that picks the right terminal mode on software-rendered setups.
+    - Agents are easier to keep going: Muse is a first-class provider, Solo offers to resume running agents after a quit or crash, you can attach a resume ID by hand, and timer and MCP messages reliably submit, including to Codex.
+    - Settings now opens full screen with a grouped sidebar, and Todos, Scratchpads, Prompt templates, and Activity monitor can each be turned off without losing their data.
+    - Terminal output processing is more than twice as fast and uses about half the CPU, and many other rendering, process, and sidebar paths do less work. On macOS, Solo no longer slows down in the background because of App Nap.
+    - Solo is much harder to freeze or wedge: MCP process actions, window moves and closes, stuck agents, leftover child processes, locked databases, and concurrent license limits no longer stall or break the app. Changes made in one window now show up in every other window.
+    - Integrations can send terminal input through the HTTP API, CLI, and routines, and agents can wait for a coordination lock in a single call. Solo also sends much less anonymous usage data.
+    Added
+    Agents
+    - Muse is now a first-class agent provider, with installation detection, activity and session tracking, exact resume support, safe Solo MCP health and reconnection, and settings/terminal UI support.
+    - When Solo quits or crashes while agents are running, the next launch offers to resume them with "Resume all" or "Not now". Only agents with a saved session and exact resume support are offered; agents you stopped, agents that exited on their own, and agents whose CLI is still running are skipped, and dismissed or failed resumes are not offered again.
+    - Agents without a stored resume ID now show an "Attach resume ID" field in the resume panel. Solo validates the ID against the provider's format and never replaces an existing ID. The resume panel also shows a provider chip and inline copy confirmation.
+    - Programs running in Solo can report that they are working, blocked, done, failed, or idle through the OSC 7501 program status protocol. These reports drive the activity indicator and attention alerts, and while a program reports that it is blocked, timer and MCP messages wait until it continues.
+    Processes & Projects
+    - Project headers now offer an "Open on GitHub" quick action when the project has a GitHub remote.
+    - The Tracked processes dialog now marks Claude Code background tasks with a "Background task" badge, labels them from the session transcript when possible, shows their command, and lists them ahead of helper processes such as MCP servers.
+    Command Palette
+    - The attention and favorites palette (Cmd/Ctrl+Shift+E) now shows a blue dot beside processes that need attention, making them easy to distinguish from other favorites.
+    - A new "Configure custom agent" action in both the Cmd/Ctrl+K command palette and Cmd/Ctrl+T new-item palette opens Settings → Agents → Agent tools, making custom-agent setup easier to discover.
+    Prompt Templates
+    - Prompt templates now have a "Copy link" action. Links to project and global templates open their detail view and can be pasted into the command palette.
+    MCP
+    - Agents can now wait for a coordination lock in one lock_acquire call using optional wait_ms, clamped to a 20-second wait budget. Waiting supports cancellation; omitted or zero waits still try immediately.
+    - send_input distinguishes queued messages from intentional prompt interactions. Process status and timer inspection now report pending and recent input delivery outcomes.
+    HTTP API & CLI
+    - Terminal input can now be sent through the local HTTP API (POST /api/processes/{processId}/input), the solo processes input command, and routines (solo.processes.sendInput), with the same queueing and "do not resend" rules as MCP send_input. The API returns 200 when the input was delivered, 202 when it was queued, and 503 when delivery is uncertain.
+    Settings
+    - Todos, Scratchpads, Prompt templates, and Activity monitor each have their own Settings page with an on/off switch and an Open button. They stay on after updating. Turning one off hides it throughout Solo, including its sidebar section, menu items, command palette entries, links, and Back/Forward history, while keeping its data; turning it back on restores everything. The switches stay in sync across open windows.
+    - While Todos or Scratchpads are off, Solo MCP, the local HTTP API, the solo CLI, and routines can't read or change them and report which setting turns the feature back on. Routine steps whose condition is false are skipped instead of failing. Turning off Prompt templates also removes their MCP tools.
+    UI & Platform
+    - Solo is now available on Linux as a signed x86_64 AppImage with automatic updates. The AppImage uses the system's Wayland libraries, so it renders correctly on distributions with current Mesa, such as Arch.
+    - Linux now attempts a per-view native WebKit renderer check when explicit settings do not already decide the policy, selecting Canvas terminals with non-accelerated compositing for recognized software renderers, including recognized Zink/Lavapipe names. The diagnostic format was validated on WebKitGTK 2.52.6; missing or unknown results preserve the normal path. The explicit software-rendering option remains available.
+    - Cmd/Ctrl+L now copies a link to the selected process, scratchpad, todo, or prompt template, even while editing. The shortcut can be changed in Settings → Hotkeys.
+    - A new "Close window" command in Settings → Hotkeys lets you bind a shortcut to close the current workspace window. It has no default binding and follows the normal close confirmation flow.
+    Changed
+    Processes & Projects
+    - Process CPU and memory updates now send only changed values, and port discovery and other OS inspections share bounded work across consumers. Recovering surviving processes after a crash batches PID checks instead of inspecting each process separately.
+    - Process launches resolve only the selected execution profile and share cached shell environments, reducing repeated shell probes. Environment refreshes run with bounded output and time limits and retain the last good environment when a refresh fails.
+    - solo.yml changes now coalesce per project and wake the watcher only when work is pending, reducing idle polling and memory growth during bursts of filesystem events.
+    - Activity Monitor refreshes resolve every managed process's command lines with one ps call instead of one call per process, making refreshes with many processes much faster.
+    Terminal
+    - Terminal output processing is more than twice as fast on Solo's terminal benchmarks and uses about half the CPU per megabyte, with the largest gains for line erasing, shell output, long scrollback, and agent output. Release builds are also fully optimized at link time.
+    - Terminal rendering uses less CPU during heavy output by skipping repeated scrollback lookups, glyph classification, and style work.
+    - Software-rendered terminals reuse unchanged rows and temporary text bitmaps, improving responsiveness during fast output, including in software-rendered XRDP sessions.
+    - Terminal output reuses parsed grid observations for activity and notification tracking, and live search reuses unchanged scrollback. Keystrokes, including Ctrl+C, can reach the PTY writer without first waiting for terminal output parsing.
+    - Terminal font previews coalesce rapid setting changes and reuse unchanged measurements, reducing redundant font loading and renderer updates. Font diagnostics wait for fonts to settle and reuse cached results.
+    Command Palette
+    - The command palette is wider, giving names and actions more room.
+    - Command-palette scope shortcuts remain inline on macOS and move into button tooltips on Windows and Linux, keeping the toolbar compact without horizontal overflow.
+    Scratchpads & Todos
+    - Remote Markdown images support PNG, JPEG, GIF, WebP, BMP, AVIF, and ICO. SVG images, including many README and CI badges, are not supported through the remote image loader; Solo shows their alt text or URL instead. Use a raster image URL when an image preview is needed.
+    - Todo lists batch blocker loading, and Todo and scratchpad operations verify their project directly instead of loading the entire project catalog. Markdown editing reuses unchanged block conversion, while unchanged read-only comments avoid repeated rendering.
+    Universal Chat
+    - Long conversations initially load the latest page of complete turns, with "Load older messages" to retrieve earlier history while preserving the reading position. Provider events are saved in atomic batches to reduce database work.
+    - Streamed text updates are batched, Markdown rendering is paced during streaming, and completed text blocks use static rendering. Unchanged Markdown blocks are reused. Scrolling up now preserves the reading position as new output arrives; "Jump to latest" resumes following the conversation.
+    Timers
+    - Timer indicators share one snapshot and keep countdown updates local to the selected pane, reducing background queries and sidebar updates.
+    MCP
+    - Generated AGENTS.md and CLAUDE.md integration instructions now focus on detecting SOLO_PROCESS_ID, using Solo MCP help, and reusing existing dev commands instead of embedding a full tool catalog.
+    - stop_process and restart_process now refuse to stop or restart the calling agent's own process unless confirm_self_stop is true, matching close_process and confirm_self_close.
+    - MCP message framing now scans incoming data once and bounds buffered messages. Analytics buffering, retries, and flush work are also bounded to limit overhead when delivery is slow or unavailable.
+    Settings
+    - Settings now opens full screen, with its pages listed in a sidebar grouped under General, Workspace, Terminal, Agents, Features, and Integrations. Back or Escape returns to where you were, and the Up and Down arrow keys move between pages unless a dropdown has focus. The sidebar keeps the active page in view.
+    - Larger settings pages are split up: Terminal into Appearance, Behavior, Shells, Compatibility, and Tools; Agents into Agent tools, Names, Summaries, Context pins, Timers, and Key-value; and Integrations into MCP and HTTP API & CLI.
+    Licensing
+    - Linux license device-ID generation no longer scans running processes, reducing CPU and file-descriptor use while preserving existing device IDs.
+    Privacy
+    - Solo sends much less anonymous usage data. Everyday actions such as starting processes, creating todos and scratchpads, using the command palette, and calling MCP tools are no longer reported individually. Instead, Solo sends at most one summary of usage counts per active day, containing no project names, paths, commands, or text.
+    UI & Platform
+    - Linux workspace windows now use Solo's draggable title bar and window controls without attaching the redundant GTK application menu. Linux also keeps its native font rasterization instead of applying macOS-specific font smoothing.
+    - Process context menus now group related actions consistently. "Duplicate all commands to" is available from the project menu, and "Automatic renaming" uses a checked menu item.
+    - Terminal notifications and the attention menu now lead with the process name or live terminal title, so they say which process needs attention. An agent's generic title such as "Claude Code" no longer hides its task title, and attention menu entries strip Markdown links and skip a redundant project name.
+    - Large project lists and command palettes share catalog data, build only the active palette models, and reuse unchanged rows. Sidebar layout measurements are coalesced, text truncation reuses cached measurements, collapsed rows release their subscriptions, and dragging the sidebar or changing transient UI state avoids unrelated renders and persistence writes.
+    - Only one copy of Solo can use a data directory at a time. A second copy launched against the same data shows a startup error instead of running against the same database.
+    - Local debug build/open and performance tooling now supports Linux and Windows direct-binary launches, honors checkout-specific .env.local Cargo target directories, and collects platform-native process CPU and memory counters.
+    - Local development launches preserve incremental Rust build caches instead of deleting them on every start.
+    Fixed
+    Agents
+    - Messages delivered through timers or Solo MCP now arrive as a bracketed paste whenever the agent enables paste mode, including custom agents, and Solo waits for the agent to read the text before sending Enter. This keeps short messages to Codex, and messages sent under heavy load, from being left unsubmitted in the composer. Explicit prompt interactions still arrive as keystrokes. Delivery receipts confirm PTY writes, not that the agent accepted or started a turn.
+    - Codex session capture now follows wrapper descendant trees to the writable active rollout and records shutdown footer IDs after exit, so Resume targets the right conversation. Ambiguous or changing process trees safely retry instead of attaching the wrong session. With Codex 0.157 and later, which writes sessions from a shared background service, each agent again records its own resume ID, including when several Codex agents launch at once, and Solo MCP calls identify the calling Codex agent instead of whichever agent started the service. When several Codex agents start in the same folder, each is matched to its session by the first message Solo sends it, so Solo no longer adds arguments to Codex launches and read-only Codex agents start normally.
+    - Antigravity session capture now works with Antigravity CLI 1.2.17 and later, so Resume returns to the right conversation.
+    - Pressing Enter repeatedly, or while an input method is composing, in the custom agent flags dialog no longer launches duplicate agents, and a finished launch no longer closes a dialog reopened for a different target.
+    - Resuming an agent reuses an existing matching session argument instead of adding a duplicate. A conflicting session argument now shows a "Session ID mismatch" dialog explaining how to correct the command.
+    - Codex session capture now accepts group-writable session files and directories on Ubuntu when they are inside a private Codex home directory. World-writable paths remain rejected. On Windows, session capture also accepts private files owned by the elevated process token's default owner while continuing to reject unsafe permissions.
+    - Codex terminal titles retain their full text, including | separators, instead of dropping text that looks like a repository suffix. Pinned names remain unchanged.
+    - Timers and MCP agent messages now share delivery ordering and recent-typing protection. Waiting for input admission no longer uses up the ten-second PTY write timeout.
+    - Typing or explicit interruption cancels a pending automated Enter. Enter, Tab, or newline input sent through send_input now waits behind earlier timer and MCP messages instead of interrupting them, and is dropped if you type in the meantime; other control input such as Ctrl+C or Escape still interrupts immediately. If an interrupted submission may have left a draft, further input is blocked until the process restarts, preventing a later message from submitting leftover text. MCP messages no longer count as physical human typing.
+    - Universal chat provider fallback resolution now preserves quoted CLI arguments, including Windows paths containing spaces.
+    - Kimi MCP setup now detects whether the installed executable uses CLI commands or a configuration file, honors custom configuration roots from the selected shell, and preserves existing client settings.
+    - Native Codex and Claude permission prompts now report their waiting-for-approval state more accurately.
+    - Agent activity indicators now load the current state when a window initializes, without waiting for another activity event or overwriting newer updates.
+    - Muse setup on Windows now follows the agent's configuration-path precedence, including XDG_CONFIG_HOME, HOME, and USERPROFILE.
+    - Partial or uncertain MCP and timer deliveries are not retried into a running or replacement process.
+    - Agent installation checks now preserve quoted paths and wrapper arguments, ignore shell startup banners when reading versions, and continue working if the app's original working directory has been removed.
+    - Agent summary generation no longer hangs when a summary command stops reading input or produces large output; timed-out commands are stopped so later summaries can proceed.
+    - Claude recap summaries in notifications no longer show run-together or missing words, or broken characters such as em dashes and curly quotes.
+    - On Windows, Codex session capture no longer stalls when an agent receives a process ID that a long-gone system process once used, so those agents record their resume ID again.
+    Workspaces
+    - Workspace deletion through the local HTTP API now returns distinct conflict, not-found, unavailable, and internal-error responses instead of collapsing protected deletes and backend failures into generic bad requests.
+    - Changes made in one workspace window now appear in every other open window. Previously, other windows kept stale values until restart: favorites (so the Focus palette's "All workspaces" scope missed them), per-process settings like skip stop confirmation, terminal title updates, notification levels and cleared exit status, per-project settings like auto-start, execution profile, editor and notification level, and app settings such as default apps, editors and terminals, quick actions, auto-focus, sidebar layout, stats thresholds, and the summarizer. Changes made through MCP and the local HTTP API now also reach every window.
+    Processes & Projects
+    - Local server discovery now includes listening ports from 49152 through 65535, so servers assigned a high-numbered port appear in process details.
+    - Concurrent project onboarding and command/YAML changes now commit atomically: canonical-equivalent project adds reuse the same project, rejected command batches restore the exact solo.yml, and durable deletions no longer reappear after restart.
+    - Generated agent and terminal names now skip names owned by configured commands, while explicit or concurrent cross-kind name collisions fail cleanly without overwriting an existing process.
+    - Surviving commands are re-adopted after an app restart even when their configured command changed, while stable process identity prevents a replacement row from claiming the old child process.
+    - Orphan recovery and cleanup now verify the original native process identity, preventing reused process IDs from targeting unrelated processes.
+    - Removing a process, including through solo.yml, now clears its stale crash and unread-attention indicators.
+    - Windows processes that exit with code 259 are now correctly recognized as exited instead of remaining marked as running.
+    - Stopping a process now still attempts forced termination when waiting for graceful shutdown times out.
+    - Changing a project's folder keeps its displayed path current even if setting up the new solo.yml watcher fails, and retrying the same folder restores watching.
+    - Project onboarding now shows the correct FastAPI, Flask, and Spring Boot labels.
+    - Starting, stopping, restarting, closing, and spawning processes through Solo MCP, including bulk commands and project deletion, no longer freezes the app. Closing an agent that ignores the stop signal from the sidebar, local HTTP API, or MCP no longer stalls Solo for the stop grace period.
+    - After a macOS restart, processes tracked before the reboot are cleaned up at launch instead of being reported as still running, and Kill All no longer refuses to remove them.
+    - Solo no longer leaves a defunct child process behind each time it opens a link, file, or folder, or launches an editor, terminal, or browser. Over long sessions these could reach the system's per-user process limit and prevent new processes from starting.
+    - Stopping or killing a process while it is still starting now sticks: it no longer ends up shown as Running without a PID, is not brought back by auto-restart, and does not show a launch-failure toast.
+    - Clearing a process's working directory in its settings now resets it to the project root instead of keeping the old directory.
+    - When saving a favorite, collapsed project, or project icon fails, Solo now undoes only that change and keeps renames, status updates, and other changes that arrived in the meantime.
+    - The project icon picker now accepts only images inside the project folder; files in a sibling folder whose name starts with the project's name no longer count.
+    - Socket discovery now avoids blocking filesystem probes, preventing slow or unavailable mounts from delaying discovery or leaving inspection helpers behind.
+    - Linux process accounting no longer counts threads as independent child processes or duplicates their memory, and diagnostic process-tree sampling now finds children spawned by any worker thread.
+    Terminal
+    - Terminal text selection now works when input arrives through the mouse-event fallback, while preserving normal pointer gestures and terminal application mouse reporting.
+    - Wrapped terminal links now underline across all their visual rows. Standalone directory paths containing spaces are checked and opened as complete paths, while surrounding prose stays unlinked.
+    - Cursors and search highlights remain visible after software-rendered terminal canvases resize.
+    - Terminal, cursor, and decoration repaints clear complete physical edge pixels at fractional display scaling, preventing stale borders and cursor remnants.
+    - Clearing terminal output now also invalidates retained scrollback, preventing cleared history from reappearing after reattaching.
+    - Typing or pasting while scrolled up now jumps to the live prompt, so input appears immediately without having to scroll back to the bottom.
+    - Terminal dimensions are now clamped consistently to a safe 2×2 minimum across persisted settings, PTYs, and renderer snapshots, preventing undersized layouts from corrupting or desynchronizing terminal state.
+    - Verified file paths split across a hard newline after / or \, or across a hyphen with matching indentation, now open as one terminal link, while unrelated paths on adjacent lines remain separate.
+    - Command-clicking terminal links now tolerates slight pointer movement instead of accidentally starting a selection.
+    - Unicode glyphs now repaint on the next terminal update after a temporary canvas rendering failure instead of remaining stale or missing.
+    - Unicode-heavy terminal output now avoids repainting unchanged glyphs, reducing rendering work during scrolling and frequent updates.
+    - Stopped agents and commands whose saved terminal output is entirely blank now show their resume or start actions instead of leaving an empty pane.
+    - Status-line repaints preserve terminal tail geometry, and related output bursts are coalesced to reduce flashing and intermediate redraws, including synchronized output and short split panes.
+    - Terminal resizing now retries temporary PTY lock contention so the process eventually receives the current pane dimensions instead of remaining at a stale size.
+    - Recovering from a temporary terminal connection failure now preserves visible output and scroll position through retries, preventing blank flashes.
+    - Older scrollback remains loadable when retained output is compacted while a history request is in progress.
+    - Terminals taller than 128 rows now repaint changed rows correctly. Wide characters wrap correctly at blank right margins, and resizing very long wrapped lines preserves the cursor position.
+    - Excessive terminal protocol queries no longer leave ordinary typing unusable. Holding a key now produces correct repeat events in applications using the Kitty keyboard protocol.
+    - Windows terminals now handle color queries and cursor restoration correctly, and cmd.exe launches preserve quoted paths and command operators.
+    - Windows command launches now honor the configured cmd.exe AutoRun policy instead of implicitly disabling it; explicitly configured /D still disables AutoRun.
+    - A queued Windows input timeout no longer cancels an unrelated active PTY write.
+    - Agents and terminals launched in WSL now receive their Solo process and project identity, allowing integrations to identify the correct process.
+    - Terminal rows no longer lose text when an update lands inside a run of blank cells. Overwriting or erasing half of a wide character such as CJK or emoji now clears, or colors, both halves instead of leaving a stray fragment.
+    - Apps that query the Kitty keyboard protocol now receive the flags actually in effect instead of always being told no enhancements are enabled.
+    - Typing right after switching processes can no longer send keystrokes to the previously selected process.
+    - A newly started terminal no longer occasionally fails to load its first screen when output arrives while it is opening.
+    - Resizing a pane running a full-screen program such as Claude Code, vim, or htop now completes almost instantly regardless of session length, instead of replaying all retained output and stalling terminal updates for seconds in long sessions.
+    - On macOS, Command+C in a full-screen app that uses the Kitty keyboard protocol, such as Claude Code or Codex, now copies the app's own selection when nothing is selected in Solo. With a Solo selection, Command+C still copies it.
+    Command Palette
+    - Jumping to project sections, Todos, Scratchpads, or prompt templates through the command palette no longer records an intermediate project route as a phantom Back/Forward history entry.
+    - Launching an agent closes the command palette immediately instead of leaving it open while the agent starts. Opening custom agent flags preserves the underlying project selection and focuses the command input.
+    - Command-palette rows now keep their titles correctly aligned when displaying truncated names.
+    Scratchpads & Todos
+    - MCP todo_create now rejects unknown fields such as description with an error pointing to body, preventing silently empty Todos.
+    - Scratchpad tag filters show counts below tag names so names remain readable, including at larger interface font sizes.
+    - Scratchpad edits now save when leaving the pane, including edits made during an earlier save. Rapid navigation, save failures, and conflicts preserve the latest draft for recovery.
+    - When a scratchpad changes while you are editing it, you can now keep your version as a separate "(conflict copy)" scratchpad or discard your edits and load the latest, instead of only reloading.
+    - Editing Todo blockers no longer overwrites unrelated blockers during concurrent changes, and terminal Todo pins refresh after changes from other windows or integrations.
+    Prompt Templates
+    - The scope filter now groups projects into workspace submenus when workspaces are available, keeping Global at the top level.
+    - Cmd/Ctrl+F now expands and focuses the search field on the prompt templates page.
+    Universal Chat
+    - Approval policies now normalize Claude notebook paths and Codex grant roots before matching rules. Empty or wildcard deny rules correctly block every matching resource, while blanket allow rules and empty-resource session approvals cannot become reusable trust rules.
+    - Late transcript loads and provider events from a previous conversation can no longer overwrite the newly selected conversation or change its running state.
+    Timers
+    - Slow message delivery to one process no longer delays timers targeting other processes. Repeating timers preserve their original cadence instead of accumulating delivery delays, and messages already queued for one run cannot spill into a restarted process.
+    - A timer that fires while its target is restarting, or waiting to auto-restart after a crash, is now delivered once to the new run instead of being lost. A timer that fires at a stopped or exited process is marked undelivered once and not retried.
+    - Repeating timers whose target process has been deleted are now cancelled instead of firing indefinitely, and their messages no longer replay on every recovery scan or crowd real delivery outcomes out of get_process_status. Fired and cancelled timers older than seven days are pruned automatically; timers owned by an external agent stay active while it is connected or was seen within the last seven days.
+    - Idle timer checks use an index and no longer hold a database write transaction, reducing CPU use with large timer histories. Agent summary scheduling and server notification checks no longer block work shared with the UI and MCP, reducing app-wide stalls under heavy agent load.
+    Routines
+    - Clarified the existing lifetime of routine command helpers: after a command exits, even successfully, Solo force-cleans its owned process group/job without a graceful phase. Commands must wait for children that need to flush or shut down; use managed processes for persistent services.
+    - On Windows, routine hook paths now resolve with native separators and the JavaScript worker has enough stack for bundled routine sources, preventing hook lookup failures and parser stack exhaustion.
+    - Routine run confirmations and trust reviews no longer reappear after cancellation or apply to a different routine after navigation, and failed submissions can be retried.
+    MCP
+    - Windows MCP helpers now finish pending responses and exit after their input closes instead of hanging indefinitely.
+    - send_input now returns within 30 seconds instead of potentially hanging. A timed-out call reports whether the message was not accepted and is safe to retry, was queued with a delivery ID, or may have been delivered.
+    - whoami now identifies an agent that calls it while it is still starting, such as right after Solo relaunches and resumes agents, instead of reporting that it cannot be identified. It also identifies an agent that calls it at the moment its launch completes.
+    - MCP setup status now reports Solo as not connected when its entry has been removed from an agent's configuration, even if a running session still has Solo's MCP helper. Claude Code checks look up only Solo's entry, so they no longer time out when other MCP servers are slow to connect.
+    - Linux MCP caller identification now inspects only the caller's process ancestry, reducing inspection overhead. Process monitoring also keeps fewer file descriptors open, leaving more headroom for terminals and connections.
+    Licensing
+    - Offline license grace now ends exactly 14 days after the last successful validation instead of lasting almost a day longer.
+    - License state now remains bound to verified signed claims. Stale or concurrent validation, activation, deactivation, expiry, and revocation results can no longer restore an older entitlement or erase recoverable license data.
+    - Effective project and process limits are now admitted atomically across the app, CLI/HTTP API, MCP, YAML imports, starts, restarts, and autonomous restarts. Concurrent requests cannot exceed a limit or leave partial records, and the license dialog now distinguishes project-only from process overages while remaining dismissible during revalidation.
+    Data & Migrations
+    - Retried agent-channel migrations now preserve agents, channels, messages, timers, Todos, comments, and blockers. Valid legacy Todo statuses, including In progress, survive schema repair while invalid statuses normalize to Open.
+    - A database upgrade that fails at its final step is now rolled back cleanly so it can run again on the next launch, instead of leaving the database partway through.
+    - Saving changes no longer fails right away with "database is locked" while the solo CLI, Solo MCP, or another connection is writing. Solo now waits its turn.
+    UI & Platform
+    - Terminal and search inputs now recover focus when returning to a Solo window.
+    - A window that gains focus during startup is no longer treated as unfocused, which could show notifications that should have been suppressed while you were looking at it.
+    - Solo announcements that fail to appear are retried instead of skipped, and dismissing an announcement as it appears now dismisses it for good.
+    - Windows startup now verifies that the main window is visible before closing the splash screen.
+    - When native dialogs cannot represent all choices or a "Don't ask again" option, Solo now preserves them in an in-app confirmation dialog.
+    - Linux windows now preserve their remembered normal size when a maximized resize arrives before the window-state notification, preventing maximized dimensions from overwriting the saved normal dimensions.
+    - Native context menus now open at the clicked row or keyboard-focused control instead of appearing at an unrelated screen position, with safe handling for display-origin and invalid coordinates.
+    - Linux file and folder pickers now use the desktop portal, improving dialog sizing on tiling desktops, while alerts and confirmations retain native GTK dialogs.
+    - Clicking the native "Close window" menu item on macOS no longer risks an AppKit exception. Close-window shortcuts reject conflicting bindings, and concurrent hotkey edits across windows no longer silently overwrite newer settings.
+    - Closing a workspace window on Linux or Windows now enters Solo's shared confirmation and graceful shutdown flow instead of preserving the window as though it were macOS.
+    - Choosing Help → Report an issue now opens the feedback dialog only in the active workspace window instead of every Solo window.
+    - Feedback drafts queued before the interface is ready are now preserved and opened once it can receive them.
+    - Project headers no longer flicker or shift the sidebar content beneath them when hover actions appear at non-default interface font scales.
+    - Long sidebar titles no longer create unwanted horizontal scrolling.
+    - Sidebar filter visibility, settings-footer visibility, section decorations, and subgroup ordering now stay in sync across workspace windows without reverting newer project changes.
+    - Failures while writing diagnostic output, including closed or broken standard streams, no longer panic Solo or poison process locks.
+    - On macOS, a failed native Save dialog now returns cancellation instead of crashing when AppKit cannot create the panel.
+    - Retrying an app update no longer lets progress or errors from an earlier attempt overwrite the current attempt's status.
+    - On macOS, Solo no longer slows down when it is in the background behind other windows. App Nap previously throttled Solo's terminal, MCP, and app threads while hosted agents kept running at full speed; idle system sleep is still allowed.
+    - Linux startup no longer intermittently exits while setting up the workspace window.
+    - The notification toast stack no longer stays expanded after the pointer leaves when toasts arrive or slide away under a resting pointer.
+    - Solo no longer freezes when you move, resize, leave, or close a workspace window, switch, close, move, or pop out a workspace, click a notification toast, or quit while another window is opening or coming to the front, such as after clicking a notification.
+    Security
+    - Updated rustls to 0.23.46, which fixes RUSTSEC-2026-0346, RUSTSEC-2026-0347, RUSTSEC-2026-0348, and RUSTSEC-2026-0349.
+ReleaseTime: 2026-10-18T23:13:23.0000000Z
