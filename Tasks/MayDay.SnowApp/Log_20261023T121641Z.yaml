@@ -1,0 +1,62 @@
+Version: 0.5.4
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.4/Snow-App-Setup-0.5.4.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Reply Prediction: an opt-in ghost hint in the chat input predicts your next message from recent history and saved user memories, accepted with Tab.
+    - Cross-Project User Memory: memory tools gain scope=user - global entries are injected into every project and ranked first.
+    - Repo Wiki: the AI reads the codebase with read-only tools and generates an architecture guide stored under ~/.snowapp/repo-wiki, with token usage tracking and the wiki path injected into the system prompt.
+    - File Lookup Tool: grep-find finds files by glob (ripgrep --files with a native fallback and SSH remote dispatch), reports per-root stats and searches linked projects.
+    - Image Path Annotation: vision-capable models now receive the resolved absolute path and MIME type of attached images, so they can pass them straight to imagegen-generate.
+    - Copy Generated Images: generated images can be copied to the clipboard from the tool card, lightbox, drawing studio history and image library.
+    Improvements
+    - The plus menu hides toggles in a secondary panel, grouping auto-scroll, auto-format, reply prediction and tool correction under Preferences.
+    - Workspace symbols and LSP result notices get a reworked view: symbol category icons, scope splitting, copy path / copy list, and severity-graded status, description and warnings.
+    - Global MCP server and Skill switches now ask for confirmation, explain the impact and offer to keep them enabled for the current project.
+    - Tool card display names are resolved by a shared helper, including readable fallbacks for external MCP tools; sub-agent sendMessage cards parse incomplete streamed arguments safely, work after a restart and map error codes.
+    - External MCP tools no longer participate in the checkpoint execution lock.
+    - Session state is split into separate contexts with stable sidebar projections and incremental scroll following, reducing re-renders while streaming and switching sessions.
+    - The plugin market gains a "Hide installed" toggle with an installed count.
+    Breaking Changes
+    - The built-in CodeLens service and tools are removed; code navigation is covered solely by the lsp server, with grep/read as fallback.
+    What's Changed
+    - feat: 视觉主模型图片路径注解 + 生成图片一键复制到剪贴板 by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/260
+    - feat: 工具卡片显示名统一、子代理 sendMessage 卡片健壮性与 LSP 结果视图重构（3 提交） by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/264
+    - fix(responses): preserve images in their matching tool outputs by @Gelly52 in https://github.com/MayDay-wpf/snow-app/pull/268
+    New Contributors
+    - @Gelly52 made their first contribution in https://github.com/MayDay-wpf/snow-app/pull/268
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.3...v0.5.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 回复预测：可在输入框开启（默认关闭），根据最近历史与已保存的用户记忆预测下一条消息并显示为灰色提示，按 Tab 采纳。
+    - 跨项目用户记忆：记忆工具新增 scope=user，全局条目注入到所有项目，并在检索结果中优先排序。
+    - 代码库 Wiki：AI 通过只读工具阅读代码库并生成架构指南，保存在 ~/.snowapp/repo-wiki，记录 token 用量，存在 Wiki 时其路径会注入系统提示词。
+    - 文件查找工具：新增 grep-find，按 glob 查找文件（ripgrep --files，带原生回退与 SSH 远程支持），按根目录统计结果并支持关联项目。
+    - 图片路径注解：支持视觉的主模型现在能收到附件图片的绝对路径与 MIME 类型，可直接传给 imagegen-generate。
+    - 生成图片复制：生成图片可从工具卡片、灯箱、绘画工作室历史与图片库直接复制到剪贴板。
+    改进
+    - 加号菜单把开关收进二级面板，自动滚动、自动格式化、回复预测与工具纠错归入「偏好设置」。
+    - 重构 LSP 工作区符号与结果提示：符号分类图标、作用域拆分、复制路径/清单，提示按失败/警告/信息分级展示。
+    - 全局关闭 MCP 服务器或 Skill 时新增确认，说明影响并可选择仍为当前项目启用。
+    - 工具卡片显示名统一由共享逻辑解析（含外部 MCP 工具的可读回退名）；子代理 sendMessage 卡片在流式参数不完整时安全解析，重启后仍可跳转，并映射错误码。
+    - 外部 MCP 工具不再参与检查点执行锁。
+    - 拆分会话状态上下文、侧边栏改为稳定投影、滚动跟随只处理增量 DOM，降低流式输出与会话切换的重渲染开销。
+    - 插件市场新增「隐藏已安装」开关并显示已安装数量。
+    重大变更
+    - 移除内置 CodeLens 服务与工具，代码符号定位统一由 lsp 服务器承担，未覆盖的语言或操作回退到 grep/read。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v054
+ReleaseTime: 2026-10-23T11:51:56.0000000Z
