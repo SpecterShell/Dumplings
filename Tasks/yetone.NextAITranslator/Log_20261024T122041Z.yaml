@@ -1,0 +1,18 @@
+Version: 0.6.45
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/nextai-translator/nextai-translator/releases/download/v0.6.45/NextAI.Translator_0.6.45_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Shorter wait for the first character, and no more garbled Chinese
+    - Shortened time to first character: the HTTP client is now reused between translations instead of paying a fresh DNS + TCP + TLS handshake each time, the first streamed token is painted immediately instead of waiting out the 120ms batching window, and settings are cached instead of re-read from disk on every request
+    - Fixed streamed translations that could start mid-sentence because the first chunks arrived before the desktop app had registered its listeners
+    - Fixed multi-byte characters turning into replacement characters when a network chunk split them, which affected most Chinese, Japanese and Korean translations
+    - Fixed the desktop abort listener leaking when a request failed, and a few panics on malformed request options
+    - Added time-to-first-token tracing: each translation reports where its time went - prompt, settings, network setup, provider thinking, first paint - in the devtools console, in the app's stdout, and through window.__translatePerf
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nextai-translator/nextai-translator/releases/tag/v0.6.45
+ReleaseTime: 2026-10-24T10:22:13.0000000Z

@@ -1,0 +1,44 @@
+Version: 3.5.0
+Installer:
+- InstallerType: wix
+  Architecture: x64
+  InstallerUrl: https://github.com/AChep/keyguard-app/releases/download/r20261024.1/Keyguard-3.5.0.msi
+- InstallerType: wix
+  Architecture: arm64
+  InstallerUrl: https://github.com/AChep/keyguard-app/releases/download/r20261024.1/Keyguard-3.5.0-aarch64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds experimental native passkey support on Windows, preview for ZIP archive attachments, and the Environment item type.
+    New
+    - Windows: Added experimental native passkey support (#991).
+    - Android: Added Termux addon for GPG agent (#1642).
+    - Attachments: Added preview for ZIP archive attachments.
+    - Vault: Added the Environment item type.
+    Improvements
+    - GPG: Item details screen now shows Expiry, Keygrip, and Keyserver status.
+    - GPG: Keyserver lookups are now safer and support fingerprint QR codes.
+    - GPG: Multiple User IDs can now be managed and appear as separate items.
+    - Vault: Account and Item IDs now include copy actions.
+    Security
+    - SSH agent: PPK imports now require integrity verification.
+    - GPG: Unsigned cleartext OpenPGP headers are now rejected.
+    Fixes
+    - Desktop: Fixed a crash when scrolling the unread alert list in Watchtower.
+    - Desktop: Fixed Watchtower background checks so they start.
+    - macOS: Fixed process caller detection so it detects the outermost .app.
+    - Bitwarden: Fixed sync so it skips unsupported Send types instead of failing.
+    - Passkeys: Fixed passkey selection so only passkeys the authenticator can sign with are offered.
+    - SSH agent: Fixed the agent so it accepts nonzero SSH forwarding flags and refuses unknown extensions.
+    - GPG: Fixed the agent so it matches the GPG version on non-sandboxed environments.
+    - GPG: Fixed key handling so the same key can be stored in multiple items.
+    - GPG: Fixed binary key imports so key files are read as bytes.
+    - GPG: Fixed the agent so SIGKEY is treated as an alias of SETKEY.
+    - Vault: Fixed archived items so they are not indexed or used by GPG and SSH agents.
+    - Accounts: Fixed account setup so the same Bitwarden or KDBX account cannot be added twice.
+    - Unlock: Fixed the elevated access dialog so it sends a Deny event when dismissed.
+    - WebDAV: Fixed malformed URLs so they are handled gracefully.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AChep/keyguard-app/releases/tag/r20261024.1
+ReleaseTime: 2026-10-24T11:18:08.0000000Z
