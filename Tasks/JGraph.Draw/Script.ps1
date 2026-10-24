@@ -39,7 +39,7 @@ switch -Regex ($this.Check()) {
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'en-US'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesTitleNode.SelectNodes('.|./following-sibling::node()') | Get-TextContent | Format-Text
           }
         } else {
           # ReleaseNotes (en-US)
