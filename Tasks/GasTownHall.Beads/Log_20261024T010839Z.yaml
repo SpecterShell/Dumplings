@@ -1,0 +1,166 @@
+Version: 1.3.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.3.2/beads_1.3.2_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.3.2/beads_1.3.2_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Beads v1.3.2
+    v1.3.2 — the second patch release on the 1.3 line. Released 2026-10-24, cut from
+    hotfix/1.3.1 at 9b65b9e19. It ships exactly the code that was qualified as v1.3.2-rc.3; the
+    only change since that candidate is the version stamp.
+    There is no schema migration, and the embedded Dolt engine is unchanged (Dolt 2.2.0). Upgrading
+    from v1.3.1 or any v1.3.2 release candidate is a binary swap. If you are coming from v1.3.0 or
+    earlier, read the v1.3.1 release notes
+    first — everything in them applies, and this release adds to it.
+    This is a fix-only release. It closes two ways v1.3.1's new retention and backup paths could lose
+    data, makes the post-commit blocked-state recheck safe under concurrent writes, lets a
+    least-privilege Dolt user write again, removes an export stall on large wisp sets, and rebuilds with
+    Go 1.26.10 and patched dependencies. It also carries an upgrade note for every store that crossed
+    migration 0059 under bd 1.3.0 or later: read it before you upgrade.
+    Highlights
+    - bd purge no longer deletes the closed root of a chain that still has live work under it
+      (#7041, fixes #7031). v1.3.1's live-dependent protection only covered a closed bead a live bead
+      pointed at directly, so an orchestrator's bd purge --wisps-plane --older-than ... retention
+      sweep could delete a closed root above a closed child above an open grandchild, orphaning both.
+      Protection now propagates up the whole closed chain.
+    - Auto-backup never claims a commit the snapshot does not contain (#7044, fixes #7032). The
+      watermark is read before the sync, so a commit that lands mid-sync stays pending for the next
+      backup instead of being skipped as "no changes".
+    - The fan-in recheck no longer reverts concurrent writes (#7146, backport of #6876, fixes
+      #7030). On the Dolt server backend, the post-commit blocked-state recheck could write rows other
+      sessions had just committed back to their earlier values. It now runs in its own transaction and
+      publishes its Dolt commit after that transaction commits.
+    - A least-privilege Dolt user can write again (#7786, backport of #7322). bd create --graph,
+      bd mol wisp, bd history and bd recompute-blocked no longer fail with command denied for a
+      server user granted EXECUTE on only dolt_add/dolt_commit.
+    - bd export --all no longer stalls on workspaces with many wisps (#7603, backport of #6444,
+      with #7785). Bulk readers read at most 200 ids per statement, and a repeated id is read once.
+    - Security rebuild. Release binaries build with Go 1.26.10 (#7732), and x/net, x/crypto,
+      grpc and thrift are raised past every fixable advisory that reaches the binary (#6355,
+      #7495).
+    Upgrading Notes
+    - After upgrading from bd 1.3.0 or earlier, run bd recompute-blocked once per workspace
+      (#7037). Migration 0059, first shipped in v1.3.0, recomputes the stored is_blocked flag with a
+      recursive query. On Dolt servers older than 2.4.0, and on the embedded engine, a query-planner bug
+      (dolthub/dolt#11886, fixed in Dolt 2.4.0) drops
+      the query's parent-child edge filter, so blockedness spreads across every dependency type,
+      including relates-to, discovered-from and tracks. Beads that are not blocked are marked
+      blocked and silently disappear from bd ready and bd list --ready. The flag is stored, so the
+      damage persists until it is recomputed, and nothing in v1.3.2 repairs it automatically. This
+      applies to every workspace whose store crossed migration 0059 under bd 1.3.0 or later, which
+      includes a workspace now on v1.3.1 that was first created by 1.2.x or earlier. The command is
+      idempotent, reports rows_corrected, and changes nothing on a workspace that was not affected.
+    - bd purge keeps more closed beads (#7041). Every closed bead in a chain above a live bead is
+      now kept and counted in live_dependent_skipped, on every backend. A retention sweep that used to
+      delete such a root no longer does, so its purged count can drop.
+    - The bd purge --limit N confirmation suggests a --force command that keeps --limit
+      (#7540, fixes #7534). The suggested command used to drop --limit, so running it as printed
+      deleted every eligible row instead of N. If you copied that suggestion into a script, check it.
+    - A negative --older-than that overflows is refused on bd purge and bd prune (#7540, fixes
+      #7524). A large negative day count, such as --older-than=-213503d, used to wrap to a small
+      positive age and purge.
+    - bd export fails when it cannot classify wisp-plane rows (#7603). When the wisps table
+      exists but its membership cannot be read, export now fails with failed to classify wisp-plane rows instead of silently exporting without wisp markers. Only a missing wisps table is
+      tolerated.
+    Fixed
+    - bd purge keeps the whole closed chain above a live bead (#7041, fixes #7031). Take a closed
+      root R, a closed child S1 and an open grandchild S2. v1.3.1 protected S1, because S2 is live, but
+      not R, because its only dependent S1 is closed, so purge deleted R and orphaned S1 and S2;
+      --dry-run reported the same deletion. Protection now propagates through closed candidates until
+      nothing changes, on the Dolt server, embedded and proxied backends.
+    - The auto-backup watermark no longer runs ahead of the snapshot (#7044, fixes #7032).
+      Auto-backup read Dolt HEAD after the sync and recorded it as the newest commit backed up, so a
+      commit that landed during the sync was recorded as backed up although the snapshot lacked it, and
+      auto-backup then reported "no changes since last backup" until HEAD moved again. Only opted-in
+      auto-backup (backup.enabled: true) was affected; bd backup sync records no commit watermark.
+    - The post-commit blocked-state recheck no longer reverts concurrent writes (#7146, backport of
+      #6876, fixes #7030). v1.3.1's #6716 fan-in fix minted its Dolt commit while its own SQL
+      transaction was still open. DOLT_ADD stages the table from the session's BEGIN-time root, so the
+      commit could write issues rows that other sessions had just committed back to their BEGIN-time
+      values. The recheck runs only when unblocking writes (closes, dependency removals, deletes) race,
+      which is exactly when this matters. The recompute now runs alone in its own retried transaction
+      and the Dolt commit is published after it. A failed trailing commit is counted as
+      post_tx_commit_dropped and logged, instead of being reported as a recheck failure, because the
+      flag repair itself is already committed.
+    - A least-privilege Dolt user can write again (#7786, backport of #7322). Two fresh-connection
+      paths ran CALL DOLT_CHECKOUT even when the session was already on the requested branch: the
+      fallback for the ignored-tables transaction, and the pinned connection used by long-timeout
+      versioned reads and the blocked recompute. A server user granted EXECUTE on only
+      dolt_add/dolt_commit is denied even that no-op checkout. The checkout now runs only when the
+      session is on a different branch.
+    - bd export --all no longer stalls on workspaces with many wisps (#7603, backport of #6444).
+      The bulk label, comment, dependency and issue readers sent every id in one IN (...) list, and
+      Dolt's cost grows faster than linearly in the list length; one reported workspace stopped
+      completing exports past about 21k wisps. The readers now read at most 200 ids per statement, and
+      export reads the wisp-plane relations only for ids that are wisps. A repeated id is read once, so
+      batching never duplicates or drops a row (#7785).
+    - bd purge --limit N confirmation and --older-than overflow (#7784, backport of #7540, fixes
+      #7534 and #7524). See Upgrading Notes.
+    Security
+    - Release binaries build with Go 1.26.10 (#7787, backport of #7732), which distrusts the
+      compromised eMudhra intermediate CAs in crypto/x509. release.yml uses uv 0.13.4, which ships
+      the same distrust.
+    - Dependency floors raised (#7787): golang.org/x/net v0.60.0 and golang.org/x/crypto
+      v0.57.0 (backport of #6355), and google.golang.org/grpc v1.83.2 and github.com/apache/thrift
+      v0.24.0 (backport of #7495). govulncheck reported 16 reachable advisories on rc.2's module set
+      and none on rc.3's, which is the v1.3.2 module set.
+    Validation
+    - v1.3.2 is the qualified rc.3 code. The tag (9b65b9e19) differs from v1.3.2-rc.3
+      (0dee73e43) only in the version stamp, the CHANGELOG, the bd info digest, and package and
+      plugin version metadata.
+    - Every fix landed on hotfix/1.3.1 as a cherry-pick -x PR of a commit already on main,
+      tested at its head. The backport PRs (#7220, #7146, #7786, #7784, #7603, #7787) and the three
+      RC prep PRs (#7221, #7461, #7788) each passed the full PR matrix of 120–122 checks, including the
+      required CI Gate / Required gate that PRs into hotfix/** now run (#7198, ported in #7217). The
+      promotion PR (#7809) passed 121 checks plus the Nightly Full Tests workflow by dispatch, once for
+      the full test suite
+      (40042534271) and once for the
+      PR Linux command suite
+      (40042536408).
+    - The release pipeline completed green (run
+      40044707863):
+      verify-version-consistency, both goreleaser legs (linux and macOS), both package gates (MCP and
+      npm), publish-pypi, publish-npm and release attestation. The tag-triggered Migration Test
+      Harness (40044708076) and
+      Cross-Version Smoke Tests
+      (40044707912) also passed. 11
+      assets were published: linux amd64/arm64, darwin amd64/arm64, windows amd64/arm64, freebsd amd64,
+      android arm64, the contract corpus, an SPDX SBOM and checksums. All three release candidates also
+      completed their release pipelines.
+    - Qualified against a real downstream consumer before the tag. Gas City's hotfix/1.5.1
+      branch, pinned to v1.3.2-rc.3, passed its full RC Gate on the first attempt:
+      40034407401, at
+      9d970f7cc8. No job failed: the Linux CI parity tiers (including the beads topology
+      acceptance, the bd CLI contract jobs against the current and minimum-supported bd, and a contract
+      radar against beads main), acceptance A, B and C, all integration shards, tutorial goldens 1–6,
+      the four worker-core providers, the goreleaser snapshot, and the full macOS regression set.
+    Installing
+    Pre-compiled binaries for Linux, macOS (Intel & Apple Silicon), Windows (AMD64 & ARM64),
+    Android/Termux (ARM64), and FreeBSD are attached to this release.
+    Homebrew (macOS/Linux):
+    brew install beads
+    Quick Install (macOS/Linux/FreeBSD):
+    curl -sSL https://raw.githubusercontent.com/gastownhall/beads/main/scripts/install.sh | bash
+    Windows (PowerShell):
+    irm https://raw.githubusercontent.com/gastownhall/beads/main/install.ps1 | iex
+    Manual Install:
+    Download the appropriate binary for your platform below, extract it, and place it in your PATH.
+    Whichever method you use, run which -a bd afterwards. A second, older bd earlier in PATH is
+    the mixed-version fleet problem described in the v1.3.0 upgrading notes. Then run
+    bd recompute-blocked once per workspace if the first upgrading note applies to you.
+    Contributors
+    Thanks to everyone who contributed to v1.3.2 (between v1.3.1 and v1.3.2):
+    @bee-ghosttrack, @bourgois, @brandonmartin, @julianknutsen, @rjgeng
+    Full Changelog: https://github.com/gastownhall/beads/compare/v1.3.1...v1.3.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gastownhall/beads/releases/tag/v1.3.2
+ReleaseTime: 2026-10-24T00:43:03.0000000Z
