@@ -1,0 +1,30 @@
+Version: 4.1.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.1/Rayburst_4.1.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release bundles Aria2 Next 3.0.9 for all platforms. Downloads finish without a slow tail, a retried download no longer corrupts its file, and a slow IPv6 route no longer holds a download back. It also fixes the Windows installer and caption buttons, external links, repeated clipboard prompts and RPM upgrades from a beta.
+    🛠 Improvements
+    - Aria2 Next 3.0.9 — a slow connection hands its remaining range to idle ones at the end of a download (#762); connections move off an address family that is several times slower, so a broken IPv6 route no longer keeps a download at a crawl; connections that fall far behind are replaced
+    - Clipboard — a copied link is offered once per run, also after the main window is recreated from the tray or the link was already used in the add window (#751)
+    - Browser takeover — when the engine receives a verification page instead of the file, Rayburst takes over from the address the browser actually landed on (rayburst-connect#104)
+    🐛 Bug Fixes
+    - Fixed corrupted downloads after a retry: the unwritten part of a preallocated file is no longer counted as downloaded, and a server that rejects extra connections with 403 lowers the connection count instead of failing (#767)
+    - Fixed the Windows installer failing to stop running processes (#756)
+    - Fixed the caption buttons not reacting to hover or clicks on Windows 10 (#755)
+    - Fixed links in the update notes opening inside the app; links that leave the app open in the system browser (#764)
+    - Fixed a window hidden to the tray reappearing when the GNOME session locks (#759)
+    - Fixed a paused multi-file torrent asking for its file selection again (#754)
+    - Fixed RPM upgrades from a beta to the stable release being refused as a downgrade (#766)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/rayburst/releases/tag/v4.1.1
+ReleaseTime: 2026-10-25T01:49:59.0000000Z
