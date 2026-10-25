@@ -6,7 +6,7 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
-  InstallerType = 'inno'
+  InstallerType = 'nullsoft'
   InstallerUrl  = Join-Uri "https://downloads.noderr.xyz/windows/$($this.CurrentState.Version)/" $Object1.files.installer.name
 }
 
