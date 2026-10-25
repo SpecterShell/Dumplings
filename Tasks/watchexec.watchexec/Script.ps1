@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/watchexec/watchexec/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/watchexec/watchexec/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -10,12 +10,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType        = 'zip'
   NestedInstallerType  = 'portable'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)/watchexec.exe"
-      PortableCommandAlias = 'watchexec'
-    }
-  )
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)/watchexec.exe" })
 }
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'windows' -and $_.name.Contains('aarch64') }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
@@ -23,12 +18,7 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerType        = 'zip'
   NestedInstallerType  = 'portable'
   InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath     = "$($Asset.name | Split-Path -LeafBase)/watchexec.exe"
-      PortableCommandAlias = 'watchexec'
-    }
-  )
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)/watchexec.exe" })
 }
 
 switch -Regex ($this.Check()) {
@@ -37,18 +27,6 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
-    try {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
@@ -58,6 +36,13 @@ switch -Regex ($this.Check()) {
         }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
