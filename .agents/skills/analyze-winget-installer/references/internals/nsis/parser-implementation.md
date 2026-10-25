@@ -40,6 +40,8 @@ Each route is independent. A Unicode string block does not prove official NSIS 3
 
 Operand validation includes command-specific invariants where arity alone is insufficient. For example, Park3 normally uses the log-enabled layout, and an all-zero record cannot be `FindProc`; that rule distinguishes its `LockWindow` records from the otherwise plausible non-log interpretation.
 
+`EW_FPUTWS` and `EW_FGETWS` also have overlapping operand counts. The compiler stores a literal `0` or `1` in `EW_FPUTWS.offsets[2]` to select text or `FileWriteWord`, while `EW_FGETWS.offsets[2]` is a string-table offset for the maximum read length. An inserted `EW_LOG` shifts raw opcode 69 between these meanings. A value greater than one rejects the write interpretation without guessing whether logging was enabled; a value of zero or one alone cannot settle the ambiguity. Varin 0.9.32 ARM64 exercises this distinction. These checks follow `Source/script.cpp` command emission and `Source/exehead/exec.c` operand use.
+
 Packed and solid header routes must also compete structurally. A solid LZMA property prefix can look like a packed-size word with its compression bit set. Accept a candidate only after it expands to the declared header length and its block descriptors consume valid ranges.
 
 The selected profile should expose an edition and ABI range. It should not guess an exact compiler version that the output does not encode.
