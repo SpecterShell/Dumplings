@@ -25,8 +25,13 @@ switch -Regex ($this.Check()) {
         Value = "https://multicommander.com/ReleaseInfo/$($this.CurrentState.Version.Split('.')[-1])"
       }
 
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object3.SelectSingleNode('//*[@class="release-date"]').InnerText | Get-Date -Format 'yyyy-MM-dd'
+      $ReleaseTime = [datetime]::new(0)
+      if ([datetime]::TryParse($Object3.SelectSingleNode('//*[@class="release-date"]').InnerText, (Get-Culture 'nl-NL'), [ref]$ReleaseTime) -or [datetime]::TryParse($Object3.SelectSingleNode('//*[@class="release-date"]').InnerText, [ref]$ReleaseTime)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $ReleaseTime.ToString('yyyy-MM-dd')
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
