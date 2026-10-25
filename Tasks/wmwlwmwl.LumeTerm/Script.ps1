@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/wmwlwmwl/Lumin-SSH/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/wmwlwmwl/LumeTerm/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
