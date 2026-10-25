@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
-        Value  = [regex]::Matches($Object1.result.version_list[0].VersionLog, '(?<=<li>).+?(?=</li>)').Value | Format-Text | ConvertTo-UnorderedList
+        Value  = $Object1.result.version_list[0].VersionLog | ConvertFrom-Html | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
