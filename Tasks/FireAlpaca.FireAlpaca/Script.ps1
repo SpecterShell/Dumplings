@@ -8,7 +8,8 @@ $this.CurrentState.Version = [regex]::Match($FileName, '(\d+(?:_\d+)+)').Groups[
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
-  InstallerUrl  = Join-Uri 'https://firealpaca.com/bin/' $FileName
+  # InstallerUrl  = Join-Uri 'https://firealpaca.com/bin/' $FileName
+  InstallerUrl  = 'https://firealpaca.com/download/win64'
 }
 
 switch -Regex ($this.Check()) {
