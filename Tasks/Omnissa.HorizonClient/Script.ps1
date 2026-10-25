@@ -34,13 +34,13 @@ switch -Regex ($this.Check()) {
         Value  = $ReleaseNotesUrl = $Object4.SelectSingleNode('//a').Attributes['href'].DeEntitizeValue
       }
 
-      $Object5 = Invoke-RestMethod -Uri $ReleaseNotesUrl.Replace('docs.omnissa.com', 'docs-be.omnissa.com/api')
+      $Object5 = curl -fsSLA $DumplingsInternetExplorerUserAgent $ReleaseNotesUrl | Join-String -Separator "`n" | ConvertFrom-Html
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $Object5.topic_html | ConvertFrom-Html | Get-TextContent | Format-Text
+        Value  = $Object5.SelectSingleNode('.//div[contains(@class, "doc-body")]') | Get-TextContent | Format-Text
       }
     } catch {
       $_ | Out-Host
