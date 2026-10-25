@@ -1,0 +1,218 @@
+Version: 0.14.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/pdfcraft/releases/download/v0.14.0/pdfcraft-0.14.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/pdfcraft/releases/download/v0.14.0/pdfcraft-0.14.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/pdfcraft/releases/download/v0.14.0/pdfcraft-0.14.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(cos): one decode budget per page walk, so repeated stream references cannot multiply decoding by @aiongg in https://github.com/storytold/pdfcraft/pull/4114
+    - fix(cos, content, filters, crypt, model, render, print, a11y): bound the work that repeated keys, streams and page values multiply by @aiongg in https://github.com/storytold/pdfcraft/pull/4128
+    - fix(limits): bound the decoding and listing work that repeated references and small inputs multiply by @aiongg in https://github.com/storytold/pdfcraft/pull/4117
+    - fix(js, xfa): bound the text and work that form scripts and XFA data can multiply by @aiongg in https://github.com/storytold/pdfcraft/pull/4121
+    - fix(edit,organize,create): bound the work hostile files cause in editing, page organizing and image import by @aiongg in https://github.com/storytold/pdfcraft/pull/4151
+    - chore(sonar): exclude vendored crates and the spec-mandated MD5/RIPEMD-160 (SonarCloud rust:S4790) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4169
+    - fix(packaging): use [[ tests and name positional parameters (SonarCloud shelldre:S7688, S7679, S7682, S131) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4170
+    - fix(audit): find covers the audit missed, bound its work and honour the copy permission by @aiongg in https://github.com/storytold/pdfcraft/pull/4109
+    - fix(xfdf, sign, preflight, engine, forms, measure, annot): bound repeated work in form exchange, preflight and export, and check what imports and time stamps claim by @aiongg in https://github.com/storytold/pdfcraft/pull/4129
+    - M14: update ctutils to 0.4.5 for RUSTSEC-2026-0385 by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4220
+    - Fix FormCalc Str() printing small negative numbers as "-0" by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4108
+    - Accept long unit names in FormCalc UnitValue by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4116
+    - test(sign): serialize the Keychain search-list tests by @ffishman in https://github.com/storytold/pdfcraft/pull/4124
+    - M9: sign_list lists a hidden or NoView signature field as not visible by @EricKaden in https://github.com/storytold/pdfcraft/pull/4141
+    - M6: scripts see xfa_version, and xfa_installed in XFA forms by @EricKaden in https://github.com/storytold/pdfcraft/pull/4142
+    - Regression tests for #246, #843 and #2028 by @skylartaylor in https://github.com/storytold/pdfcraft/pull/4143
+    - fix(optimize): keep a destination referenced only through an indirect /Dest by @Matoo125 in https://github.com/storytold/pdfcraft/pull/4212
+    - CI: the workflow token is read-only by @oracola91 in https://github.com/storytold/pdfcraft/pull/4026
+    - ci(deps): bump Swatinem/rust-cache from 2.9.2 to 2.9.3 in the actions group by @dependabot[bot] in https://github.com/storytold/pdfcraft/pull/4227
+    - FreeBSD: package the aarch64 cross build (craft-common-actions#39) by @zuujiscom in https://github.com/storytold/pdfcraft/pull/4137
+    - Reject non-hex characters in XFDF colour parsing by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4145
+    - fix(edit): setting a paragraph's width no longer panics on text larger than a page by @Matoo125 in https://github.com/storytold/pdfcraft/pull/4110
+    - fix(redact,sign,cos): close the still-open high-severity scan findings by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4244
+    - fix(docs): one row per crate in the vendor README table and remove duplicates by @alehel in https://github.com/storytold/pdfcraft/pull/4015
+    - M10: odd and even pages are page numbers, as Acrobat counts them (#3984) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4034
+    - fix: Issue #4017. Flattening removes empty fields it cannot draw by @Ridzzz0Alam in https://github.com/storytold/pdfcraft/pull/4033
+    - M11: Convert to PDF/A needs the owner's permission on an encrypted document (#3921) by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4203
+    - M5: stamp_custom places a picture fitted inside a rect (#4077) by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4233
+    - M5: sticky notes draw the icon they name (ISO 32000-2 Table 175) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4182
+    - M3: a Launch link that names a PDF opens it in PdfCraft (ISO 32000-2 §12.6.4.6) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4185
+    - ui: prevent top item clipping under panel header separators by @piyushgoel2808 in https://github.com/storytold/pdfcraft/pull/4073
+    - fix(ui): keep colour popups open when "+" opens the custom colour picker by @agent-reed in https://github.com/storytold/pdfcraft/pull/4066
+    - M6: calculations read their notation only from a comment, and a regex after a condition as a regex by @Piohrun in https://github.com/storytold/pdfcraft/pull/3993
+    - Accessibility: set a table's Summary and a header cell's Scope (#4103, #4104) by @pat26-dotcom in https://github.com/storytold/pdfcraft/pull/4130
+    - M4: bookmarks show and set their title colour and style (ISO 32000-2 Tables 151, 152) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4171
+    - Cancel stale Organize page drags after document changes by @ahmadmuj in https://github.com/storytold/pdfcraft/pull/4039
+    - M2: text extraction finishes a column before the next one across a paragraph gap (#3658) by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4214
+    - fix: Issue #4076, pdfcraft --help prints usage instead of opening the app. by @Ridzzz0Alam in https://github.com/storytold/pdfcraft/pull/4093
+    - Open Save As and export dialogs in the document's own folder by @aalbertiarchitecte in https://github.com/storytold/pdfcraft/pull/4012
+    - M9: visible signatures read upright on rotated pages by @vjeko2404 in https://github.com/storytold/pdfcraft/pull/4067
+    - G14: Romanian: translate the 64 catalog rows still in English by @vioreltus in https://github.com/storytold/pdfcraft/pull/4016
+    - Packaging: pin the signing client and appimagetool, and check their hashes by @aiongg in https://github.com/storytold/pdfcraft/pull/3731
+    - fix(links): resolve remote document paths with craft-docpath's resolve_absolute by @aiongg in https://github.com/storytold/pdfcraft/pull/3730
+    - Allow OFL typefaces, Noto CJK and Source Han included (AGENTS.md §1.1) by @aiongg in https://github.com/storytold/pdfcraft/pull/3908
+    - CI: nextest, line tables only, one wasm check by @aiongg in https://github.com/storytold/pdfcraft/pull/4269
+    - CI: shared gate workflow; nightly fuzzing in its own workflow by @aiongg in https://github.com/storytold/pdfcraft/pull/4270
+    - test(automation): give sign_document a real digital ID and document in the hostile-arguments sweep by @aiongg in https://github.com/storytold/pdfcraft/pull/4277
+    - release: the git-sources gate moves into craft-common-actions (storytold/craft-common-actions#78) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4292
+    - Translations: a missing string never fails; xtask ci prints the gaps by @aiongg in https://github.com/storytold/pdfcraft/pull/4302
+    - Assets: don't hash translation catalogs in ATTRIBUTION.toml by @aiongg in https://github.com/storytold/pdfcraft/pull/4284
+    - ci(sonar): stop cancelling main-branch runs so coverage is published by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4321
+    - fix(render): bound xref streams, JBIG2 referred-to counts, saved graphics states and /W2 runs by @aiongg in https://github.com/storytold/pdfcraft/pull/4350
+    - chore: resolve SonarCloud maintainability issues by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4356
+    - fix(deps): bump crypto-bigint to 0.7.6 (RUSTSEC-2026-0387) by @aiongg in https://github.com/storytold/pdfcraft/pull/4366
+    - Tests: UI tests wait for background work by time, not frame count (#4186) by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4242
+    - fix(demo): resolve SonarCloud web/css issues in showcase.html by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4402
+    - Integration batch 3: 47 contributor PRs (editing, forms, XFA, rendering) by @aiongg in https://github.com/storytold/pdfcraft/pull/4390
+    - fix(xfa): skip PDF fallback scripts while XFA layout is active by @PerchAnton in https://github.com/storytold/pdfcraft/pull/2648
+    - M6: dotted field names make parent fields (#2696) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/2957
+    - fix(edit): batch styled paragraph fallback glyphs by @PerchAnton in https://github.com/storytold/pdfcraft/pull/3000
+    - fix(ui): the header, footer and watermark previews show the page under the marks (#2837) by @guillehr2 in https://github.com/storytold/pdfcraft/pull/3009
+    - M12: laying out a dynamic XFA form takes off the usage rights it voids by @EricKaden in https://github.com/storytold/pdfcraft/pull/3401
+    - fix(forms): write each /DR font as its own object, so Acrobat keeps typed text (#3441) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/3488
+    - Save commits the open Edit Text boxes before writing the file (#3496) by @MarekSpodBiedry in https://github.com/storytold/pdfcraft/pull/3546
+    - M6: util.scand reads dates as another viewer does by @EricKaden in https://github.com/storytold/pdfcraft/pull/3549
+    - Edit text: keep Tr, stroke, line width and gs set inside BT when rewriting a paragraph (#3508, #3509) by @cadelass in https://github.com/storytold/pdfcraft/pull/3551
+    - M12: a date typed by another of an XFA field's edit patterns is kept in its first by @EricKaden in https://github.com/storytold/pdfcraft/pull/3552
+    - M6: form buttons show the side panels (app.execMenuItem) by @EricKaden in https://github.com/storytold/pdfcraft/pull/3580
+    - Redaction: follow nested forms as deep as the readers do by @Hamza0101 in https://github.com/storytold/pdfcraft/pull/3670
+    - M6: values typed into Password fields are written to no file (#3926) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/3943
+    - M6: a document script that throws no longer stops the form's other scripts (#3940) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/3985
+    - fix: Issue #4018, form_fill warns when a value does not fit its field (#4018) by @Ridzzz0Alam in https://github.com/storytold/pdfcraft/pull/4053
+    - M4: a save prompt that opens in the background asks for the user's attention by @EricKaden in https://github.com/storytold/pdfcraft/pull/4155
+    - M2: a symbolic TrueType font reads its (3, 0) cmap before its (1, 0) one (#4156) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4157
+    - fix(ui): the added-text editor keeps the box's alignment by @RiceDee in https://github.com/storytold/pdfcraft/pull/4178
+    - M11: PDF Optimizer ▸ Clean Up stores LZW streams with Flate (optimize.flate-unencoded) by @marcoarnulfo in https://github.com/storytold/pdfcraft/pull/4181
+    - fix(audit): covered_text reports the words under the cover, not the whole line by @mercuryVM in https://github.com/storytold/pdfcraft/pull/4198
+    - M7: edited text keeps the spaces typed, except at the edges of a stretched justified row (#4199, #3797) by @Jayesh-Prajapati9 in https://github.com/storytold/pdfcraft/pull/4217
+    - M7: paste added text boxes and images in the engine and through content_copy (#2636) by @lev-n in https://github.com/storytold/pdfcraft/pull/4230
+    - M7: a batch of content edits refreshes the added content and page marks by @lev-n in https://github.com/storytold/pdfcraft/pull/4258
+    - M7: added text takes character spacing from Format text by @marcoarnulfo in https://github.com/storytold/pdfcraft/pull/4266
+    - M12: XFA text is measured at its standard-14 font's own widths by @EricKaden in https://github.com/storytold/pdfcraft/pull/4287
+    - Check boxes and radio buttons draw their mark in the field's text colour by @marcoarnulfo in https://github.com/storytold/pdfcraft/pull/4295
+    - Omit minus sign when FormCalc Format() rounds to zero by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4299
+    - M6: Field Properties ▸ Actions: Edit opens an existing script (#4006) by @marcoarnulfo in https://github.com/storytold/pdfcraft/pull/4307
+    - M11: honor page UserUnit when measuring image resolution by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4310
+    - M10: write DOCX cell widths from their grid columns by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4311
+    - M7: a bold paragraph's stand-in font no longer turns earlier edits bold (#4280) by @Lcoding15 in https://github.com/storytold/pdfcraft/pull/4316
+    - M12: round XFA check buttons draw a round background and border by @EricKaden in https://github.com/storytold/pdfcraft/pull/4317
+    - M12: links in XFA rich text become clickable links by @EricKaden in https://github.com/storytold/pdfcraft/pull/4318
+    - M12: XFA borders and rectangles with rounded corners are drawn rounded by @EricKaden in https://github.com/storytold/pdfcraft/pull/4319
+    - M10: preserve table text from covered export slots by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4329
+    - M8: redact labelled Italian international slash numbers by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4330
+    - M10: apply soft-mask Decode intervals to image exports by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4331
+    - M12: flowed XFA subforms are drawn with their border and fill by @EricKaden in https://github.com/storytold/pdfcraft/pull/4338
+    - M6: fields that don't scroll stop taking text when full by @EricKaden in https://github.com/storytold/pdfcraft/pull/4339
+    - M6: the date picker has a Today button (#4274) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4343
+    - M2: a DeviceN colour with twelve inks paints, and a colour that can't be evaluated no longer blanks the page (ISO 32000-2 §8.6.6.5) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4345
+    - M6: check boxes, radio buttons and push buttons without an appearance are drawn, and comb fields show their cells (ISO 32000-2 Table 192, 12.7.5) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4368
+    - M2: Invisible annotations of unknown types and popups don't paint their appearance on the page (ISO 32000-2 Table 167) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4371
+    - M2: a stand-in for a non-embedded font keeps its glyph shapes at wider /Widths advances (Arial,Bold no longer draws i and l as blocks) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4374
+    - M2: a non-embedded CIDFont's fallback request carries its descendant's font descriptor (ISO 32000-2 §9.7.4, §9.8) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4380
+    - fix(edit): Delete removes the selected paragraph or objects in Edit text by @meethere in https://github.com/storytold/pdfcraft/pull/4111
+    - Integration batch 4: 26 contributor PRs (comments, viewer, pages, printing), after #4390 by @aiongg in https://github.com/storytold/pdfcraft/pull/4391
+    - M5: sticky notes stay upright where they are placed on rotated pages (NoRotate, #2583) by @guillehr2 in https://github.com/storytold/pdfcraft/pull/3016
+    - feat(organize): Extract pages takes typed page ranges (#3593) by @Lombardi2003 in https://github.com/storytold/pdfcraft/pull/3750
+    - M5: the arrow keys move the selected comment by @ohagmann in https://github.com/storytold/pdfcraft/pull/3786
+    - Leave the page grid when the Crop tool is chosen by @eliets2 in https://github.com/storytold/pdfcraft/pull/3974
+    - fix(automation): guard MCP dispatch and bound line and file reads (#3924) by @jonathanwxh-cell in https://github.com/storytold/pdfcraft/pull/3997
+    - M12: type or pick an architect's 1:N drawing scale in the Measure panel, applied at once by @aalbertiarchitecte in https://github.com/storytold/pdfcraft/pull/4058
+    - i18n(fi): translate the 64 labels left in English after #2210 by @Janiz-zzz in https://github.com/storytold/pdfcraft/pull/4068
+    - feat(ui): the secured-document notice can be turned off for good (#4035) by @Lombardi2003 in https://github.com/storytold/pdfcraft/pull/4096
+    - fix(sign): judge a page's indirect /Annots array by the annotations it gains by @ffishman in https://github.com/storytold/pdfcraft/pull/4132
+    - fix(sign): let an LTV update declare the ESIC extension in the catalog by @ffishman in https://github.com/storytold/pdfcraft/pull/4133
+    - Flatten comments from the page's right-click menu and the Comments panel's menu by @ohagmann in https://github.com/storytold/pdfcraft/pull/4147
+    - M10: every paper size reaches the printer, from the dialog and doc_print (#3752) by @thesilvjurado in https://github.com/storytold/pdfcraft/pull/4161
+    - feat(ui): add 'Split document...' to page thumbnail context menus by @so-sai in https://github.com/storytold/pdfcraft/pull/4211
+    - M3: a link without a position keeps the reader's place (ISO 32000-2 §12.3.2.2) by @Lcoding15 in https://github.com/storytold/pdfcraft/pull/4303
+    - M10: preserve page artwork when printing annotations by @KyleKassen in https://github.com/storytold/pdfcraft/pull/4312
+    - test(ui): recovery idle tests make folders that never share a name by @EricKaden in https://github.com/storytold/pdfcraft/pull/4323
+    - M5: stamps without an appearance draw the stamp they name (ISO 32000-2 Table 184) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4349
+    - Reject open-ended page range on a document with no pages by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4352
+    - M3: a fresh install follows the desktop's appearance (#1248) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/2190
+    - M3: restore last view settings when reopening documents (#1767) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/2195
+    - organize: split a combined field/widget so every copied page owns its widget by @midasmatterhorn in https://github.com/storytold/pdfcraft/pull/2289
+    - M10: a booklet decides two-sided itself, as Acrobat does (#2707) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/2748
+    - cli: the argument bugs photocraft#7071 lists are live here too by @Hamza0101 in https://github.com/storytold/pdfcraft/pull/3849
+    - M3: resize and move the window again right after a resize or move (Wayland) by @bmh129 in https://github.com/storytold/pdfcraft/pull/3970
+    - Comments: the composer hides while its comment is scrolled away (#4021) by @mmmaarian03-crypto in https://github.com/storytold/pdfcraft/pull/4095
+    - M5: comments without an appearance draw their /Border dashes, Ink dashes and the caret's ¶ (ISO 32000-2 Tables 166, 168, 183) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4362
+    - Integration batch 5: 9 contributor PRs (OCR, attachments, documents, selection), after #4391 by @aiongg in https://github.com/storytold/pdfcraft/pull/4394
+    - M10: recognize a scanned page when Edit is turned on for it by @philip-tam in https://github.com/storytold/pdfcraft/pull/1609
+    - Attachments: attach a file and delete one (panel, edit, tools); duplicate names numbered as text by @regendorf-ux in https://github.com/storytold/pdfcraft/pull/1960
+    - M3: Document Properties shows a title and author stated only in XMP (#2373) by @magdale76 in https://github.com/storytold/pdfcraft/pull/2588
+    - M11: Optimize keeps a JPEG's colour transform (#1201) by @guillehr2 in https://github.com/storytold/pdfcraft/pull/3012
+    - fix(ui): the back arrows leave Edit as the Edit tab does by @guillehr2 in https://github.com/storytold/pdfcraft/pull/3056
+    - Select All takes the whole document's text while scrolling continuously (fixes #2639) by @SBaksa in https://github.com/storytold/pdfcraft/pull/3694
+    - Refuse an OCR batch whose inputs would write one output file by @eliets2 in https://github.com/storytold/pdfcraft/pull/3765
+    - fix: Issue #4020, Extract keeps the bookmarks of the pages it copies by @Ridzzz0Alam in https://github.com/storytold/pdfcraft/pull/4041
+    - OCR: a recognizer panic or a dead worker ends the run (#3919) by @mmmaarian03-crypto in https://github.com/storytold/pdfcraft/pull/4196
+    - fix(forms): a multiline field rejects a glyph wider than the field by @aiongg in https://github.com/storytold/pdfcraft/pull/4447
+    - fix(render): vendor hayro-postscript so a run of << in a CMap can't overflow the stack by @aiongg in https://github.com/storytold/pdfcraft/pull/4363
+    - Fixed broken link to nFPM installation site by @roopeshor in https://github.com/storytold/pdfcraft/pull/4372
+    - Redaction keeps images still drawn through a form without /Resources by @oracola91 in https://github.com/storytold/pdfcraft/pull/4413
+    - fix(optimize): a GoToR or GoToE /D no longer keeps a local named destination by @dotCooCoo in https://github.com/storytold/pdfcraft/pull/4445
+    - refactor(xtask): reduce cognitive complexity in parity and layers by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4406
+    - refactor(a11y): reduce cognitive complexity in autotag and alt by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4407
+    - refactor(engine): reduce cognitive complexity in camera_edges and word_count by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4408
+    - refactor(ui): split field-table divider input (Sonar S3776) by @FredApps in https://github.com/storytold/pdfcraft/pull/4419
+    - fix(ui): seven tools take the page zoom from the side the page's width is on in a turned view by @Lombardi2003 in https://github.com/storytold/pdfcraft/pull/4425
+    - M2: tiling pattern cells sit at their XStep/YStep multiples at every scale (ISO 32000-2 8.7.3.1) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4421
+    - fix(automation): roots-only mode refuses other shares and devices by name by @mercuryVM in https://github.com/storytold/pdfcraft/pull/4289
+    - M12: XFA check boxes sit where their margins, caption and alignment put them by @EricKaden in https://github.com/storytold/pdfcraft/pull/4300
+    - M5: line comments draw their leader lines and caption (ISO 32000-2 Table 178) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4354
+    - M3: a document opens at its /OpenAction destination, position and named destinations included (ISO 32000-2 Table 149, 12.3.2.4) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4376
+    - M4: Document Properties has a Custom tab for custom properties by @dotCooCoo in https://github.com/storytold/pdfcraft/pull/4387
+    - M3: a closed top-level bookmark opens closed (ISO 32000-2 Table 151 /Count) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4389
+    - fix(ui): header, footer and watermark previews step through the pages by @aiongg in https://github.com/storytold/pdfcraft/pull/4448
+    - Reject non-finite numbers in XFDF coordinate lists on import by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4449
+    - refactor(xfa): explicit model imports (Sonar S2208) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4403
+    - M2: Type 3 text in rendering mode 7 is not rendered and adds no clip (ISO 32000-2 9.3.6) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4430
+    - M2: a Separation /All colour paints every colourant, gray 1 − tint on screen (ISO 32000-2 8.6.6.4) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4439
+    - Remember the annotation tool pin across restarts (#4253) by @PerchAnton in https://github.com/storytold/pdfcraft/pull/4276
+    - M6: an editable combo box takes a typed value (ISO 32000-2 Table 233 Edit) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/4451
+    - chore: order the render integration-test modules (fmt) by @echelon in https://github.com/storytold/pdfcraft/pull/4486
+    - fix(ui): text typed into a new text box counts as unsaved work by @aiongg in https://github.com/storytold/pdfcraft/pull/4441
+    - Integration batch 6: 6 contributor PRs (All tools view, page pointer, comments, redaction, Properties, Home) by @aiongg in https://github.com/storytold/pdfcraft/pull/4566
+    - M3: All tools expands to a full, searchable view by @alehel in https://github.com/storytold/pdfcraft/pull/2460
+    - fix(ui): Document Properties layout, Space Audit tab, no page cursors under dialogs by @alehel in https://github.com/storytold/pdfcraft/pull/2556
+    - M3: the community card on Home can be closed for the rest of the run by @max1e6 in https://github.com/storytold/pdfcraft/pull/2617
+    - fix(ui): one page pointer per frame, so taps work and nothing over a page lets it through by @alehel in https://github.com/storytold/pdfcraft/pull/2685
+    - fix(comments): thread replies by their /IRT reference, count comments like Acrobat by @alehel in https://github.com/storytold/pdfcraft/pull/4061
+    - fix(redact,cos): cleared redaction marks leave nothing behind by @alehel in https://github.com/storytold/pdfcraft/pull/4226
+    - fix(xfa): require full save when stripping XFA packets by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4568
+    - fix(forms): align has_password_flag traversal depth with field enumeration by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4570
+    - fix(redact): remove AcroForm on Hidden::FormFields even when field count is zero by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/4571
+    - forms: clear typed XFA password field values from datasets on save (#3944) by @jonathanwxh-cell in https://github.com/storytold/pdfcraft/pull/4506
+    - fix(ui): the page ignores the pointer while a panel is being dragged by @aiongg in https://github.com/storytold/pdfcraft/pull/4581
+    New Contributors
+    - @Matoo125 made their first contribution in https://github.com/storytold/pdfcraft/pull/4212
+    - @zuujiscom made their first contribution in https://github.com/storytold/pdfcraft/pull/4137
+    - @piyushgoel2808 made their first contribution in https://github.com/storytold/pdfcraft/pull/4073
+    - @agent-reed made their first contribution in https://github.com/storytold/pdfcraft/pull/4066
+    - @pat26-dotcom made their first contribution in https://github.com/storytold/pdfcraft/pull/4130
+    - @aalbertiarchitecte made their first contribution in https://github.com/storytold/pdfcraft/pull/4012
+    - @vjeko2404 made their first contribution in https://github.com/storytold/pdfcraft/pull/4067
+    - @vioreltus made their first contribution in https://github.com/storytold/pdfcraft/pull/4016
+    - @cadelass made their first contribution in https://github.com/storytold/pdfcraft/pull/3551
+    - @RiceDee made their first contribution in https://github.com/storytold/pdfcraft/pull/4178
+    - @mercuryVM made their first contribution in https://github.com/storytold/pdfcraft/pull/4198
+    - @lev-n made their first contribution in https://github.com/storytold/pdfcraft/pull/4230
+    - @KyleKassen made their first contribution in https://github.com/storytold/pdfcraft/pull/4310
+    - @meethere made their first contribution in https://github.com/storytold/pdfcraft/pull/4111
+    - @thesilvjurado made their first contribution in https://github.com/storytold/pdfcraft/pull/4161
+    - @so-sai made their first contribution in https://github.com/storytold/pdfcraft/pull/4211
+    - @roopeshor made their first contribution in https://github.com/storytold/pdfcraft/pull/4372
+    - @dotCooCoo made their first contribution in https://github.com/storytold/pdfcraft/pull/4445
+    Full Changelog: https://github.com/storytold/pdfcraft/compare/v0.13.0...v0.14.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/pdfcraft/releases/tag/v0.14.0
+ReleaseTime: 2026-10-25T13:56:05.0000000Z

@@ -1,0 +1,135 @@
+Version: 0.13.1
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/soundcraft/releases/download/v0.13.1/soundcraft-0.13.1-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/soundcraft/releases/download/v0.13.1/soundcraft-0.13.1-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/soundcraft/releases/download/v0.13.1/soundcraft-0.13.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - chore(deps): bump the cargo-dependencies group across 1 directory with 11 updates by @dependabot[bot] in https://github.com/storytold/soundcraft/pull/767
+    - style: normalize the prores DCT basis literals (SonarCloud rust:S7454) by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/962
+    - style: use [
+
+      ], named locals and explicit returns in packaging scripts (SonarCloud S7688/S7679/S7682) by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/950
+    - Use chrono instead of hand-rolled UTC conversion by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/844
+    - Deps: fix the workspace build after the dependency bump by @wayward-L in https://github.com/storytold/soundcraft/pull/954
+    - Packaging: pin the signing client and appimagetool, and check their hashes by @aiongg in https://github.com/storytold/soundcraft/pull/827
+    - Autosave: give every session its own folder; keep the tests apart from coarse mtimes (#579) by @switch87 in https://github.com/storytold/soundcraft/pull/594
+    - Sessions: resolve stored source paths with craft-docpath's resolve_absolute by @aiongg in https://github.com/storytold/soundcraft/pull/826
+    - Audio: check the WAVE behind a skipped RIFF form; hold egui at 0.36 in Dependabot by @aiongg in https://github.com/storytold/soundcraft/pull/978
+    - CI: one test binary per crate, nextest, line tables only by @aiongg in https://github.com/storytold/soundcraft/pull/985
+    - CI: shared gate workflow; FreeBSD nightly and on release by @aiongg in https://github.com/storytold/soundcraft/pull/955
+    - style: replace flagged glob imports with explicit uses (SonarCloud rust:S2208); move release workflow's write permission to the job (S8233) by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/988
+    - Build: use craft-media for bitstream and isobmff by @aiongg in https://github.com/storytold/soundcraft/pull/776
+    - ci(sonar): stop cancelling main-branch runs so coverage is published by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/992
+    - chore: resolve SonarCloud maintainability issues by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/1003
+    - Edit window: draw large edited sessions without per-clip work every frame by @mrrobbiec in https://github.com/storytold/soundcraft/pull/805
+    - Follow the desktop light/dark setting for the System theme on Linux (#951) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/977
+    - FreeBSD: package the aarch64 cross build (craft-common-actions#39) by @zuujiscom in https://github.com/storytold/soundcraft/pull/941
+    - Fix stale sample read at the end of each mix block when device and session rates differ by @DCubix in https://github.com/storytold/soundcraft/pull/573
+    - Plugin-only editor changes mark the session modified by @marcoarnulfo in https://github.com/storytold/soundcraft/pull/653
+    - Prevent H.264 skip-run bounds overflow by @justinjohn0306 in https://github.com/storytold/soundcraft/pull/957
+    - Save Session: a bare file name is checked as the working directory against the write root by @marcoarnulfo in https://github.com/storytold/soundcraft/pull/947
+    - Heal separations left by a cut, not only splits by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/780
+    - Resolve hostnames in remote control client targets by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/824
+    - Resolve same-pitch overlapping notes when writing SMF by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/833
+    - Reset fades at cut edges in copy_range by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/867
+    - Place Seconds and Frames grid lines at exact multiples of the step by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/875
+    - Fix automation_id overflow and bad ids for high send/plugin slots by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/940
+    - Require replace: true for file.export_session_text to overwrite by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/980
+    - Keep delay-line storage when the compensated latency changes by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/986
+    - MCP: --automation-read-root and --automation-write-root may each be given more than once by @marcoarnulfo in https://github.com/storytold/soundcraft/pull/979
+    - Regression test for #264 by @skylartaylor in https://github.com/storytold/soundcraft/pull/946
+    - Scroll Into View in the track name menu: the track goes to the top of the Edit window and the left of the Mix by @marcoarnulfo in https://github.com/storytold/soundcraft/pull/679
+    - fix(model): saturate the arithmetic in trim_start_to / trim_end_to (#907) by @rollroyces in https://github.com/storytold/soundcraft/pull/960
+    - Autosave: the autosave folders are owner-only on Unix by @oracola91 in https://github.com/storytold/soundcraft/pull/868
+    - Don't register a source for a take that a punch range misses by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/981
+    - Restore all engine side-effect state when a command panics by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/983
+    - Bound offline render commands: dedupe tracks and a total sample budget (fixes #896) by @sbacaro in https://github.com/storytold/soundcraft/pull/996
+    - Video: clamp H.264 IDCT inputs and temporal-direct mvs to the spec ranges (#928) by @SusieeTheLinuxUser in https://github.com/storytold/soundcraft/pull/994
+    - Guard all playback output paths against NaN from interpolation overflow by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/982
+    - audiosuite: saturating render budget, and a sharper budget test (follow-up to #996) by @echelon in https://github.com/storytold/soundcraft/pull/1009
+    - refactor(video): replace first_chunk closures with method paths (Sonar S1612) by @dylanmtaylor in https://github.com/storytold/soundcraft/pull/1012
+    - Integration batch 1: 36 contributor PRs (files, editing, sessions, CLI, mixer, MIDI, plug-ins, interface) by @aiongg in https://github.com/storytold/soundcraft/pull/1011
+    - fix(ui): capture live plugin state before saving track presets by @euisuh in https://github.com/storytold/soundcraft/pull/662
+    - Fix source offset when trimming the start of a stretched audio clip by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/674
+    - Keep the existing volume lane in automation.clip_gain_to_volume by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/716
+    - Preserve finite headroom in Float32 WAV and AIFF-C encoding by @mattburlage in https://github.com/storytold/soundcraft/pull/792
+    - Fix saved audio trust test on Windows by joining path parts separately (#789) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/798
+    - Name F12 in the Record button's tooltip by @lucasegen in https://github.com/storytold/soundcraft/pull/967
+    - Fix the macOS build: import registry in au-host's api module by @lucasegen in https://github.com/storytold/soundcraft/pull/997
+    - Tracks: clip track and group names to their rows in the side lists (fixes #990) by @SusieeTheLinuxUser in https://github.com/storytold/soundcraft/pull/1008
+    - Preserve exact channel formats when committing tracks by @ProdByBuddha in https://github.com/storytold/soundcraft/pull/340
+    - Prevent track-name collisions after truncation by @ProdByBuddha in https://github.com/storytold/soundcraft/pull/346
+    - VST3 host: IMessage and IAttributeList for plugins (Helix loads its database) by @Limestudio90 in https://github.com/storytold/soundcraft/pull/484
+    - Validate the full WAVE_FORMAT_EXTENSIBLE fmt chunk (#465) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/509
+    - Heal keeps each clip's gain envelope and skips clips whose mute or stretch differ (#450) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/517
+    - Keep unrelated overlapping clips untouched when deleting fades (#449) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/518
+    - Load older sessions whose track height is the bare Fit string (#447) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/519
+    - Keep MIDI note selection valid across clip, session and note-order changes (#443) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/521
+    - Bounce: a Dither option in the dialog and for stems (#522) by @switch87 in https://github.com/storytold/soundcraft/pull/551
+    - convert: dither only when the output loses resolution (#548) by @switch87 in https://github.com/storytold/soundcraft/pull/555
+    - mix: clamp negative fractional source position in stretched-clip rendering by @midasmatterhorn in https://github.com/storytold/soundcraft/pull/557
+    - Keep deep Aux and Folder routing chains in dependency order by @ProdByBuddha in https://github.com/storytold/soundcraft/pull/561
+    - A Pencil click on a MIDI clip selects it, so the MIDI Editor follows by @marcoarnulfo in https://github.com/storytold/soundcraft/pull/565
+    - session: reject duplicate ids and an exhausted id space on load by @midasmatterhorn in https://github.com/storytold/soundcraft/pull/586
+    - Round negative timecode and feet+frames positions symmetrically by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/587
+    - ui: MIDI Real-Time Properties submits only the property that changed (#444) by @midasmatterhorn in https://github.com/storytold/soundcraft/pull/593
+    - Save a session bundle only if it opens again (#433) by @vxMacDev in https://github.com/storytold/soundcraft/pull/595
+    - Release held VST3 notes on reset instead of discarding them by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/605
+    - Apply strip mute automation within each processing block by @ProdByBuddha in https://github.com/storytold/soundcraft/pull/617
+    - Give the New Tracks name field its own row so it stays wide (#626) by @MarekSpodBiedry in https://github.com/storytold/soundcraft/pull/631
+    - Import audio off the UI thread (#597) by @4waymedia in https://github.com/storytold/soundcraft/pull/636
+    - Resample through a polyphase bank: 5x faster rate-converting imports (#597) by @4waymedia in https://github.com/storytold/soundcraft/pull/643
+    - Fix Split into Mono repeating the left channel by @reoniazx in https://github.com/storytold/soundcraft/pull/663
+    - Bounce the whole session when CLI --bounce has no range by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/760
+    - Mix tests: never load real plug-ins (cargo test hangs on machines with plug-ins installed) by @derekmwright in https://github.com/storytold/soundcraft/pull/763
+    - Fix empty SMF export re-importing as one phantom empty track by @Silvertree2010 in https://github.com/storytold/soundcraft/pull/784
+    - cli: reject unknown options and missing option values by @Hamza0101 in https://github.com/storytold/soundcraft/pull/552
+    - ui: move panel docking onto craft-ui's shared Workspace and DockCommand by @aiongg in https://github.com/storytold/soundcraft/pull/1035
+    - Merge 13 open PRs (tested batch) by @aiongg in https://github.com/storytold/soundcraft/pull/1058
+    - Add a built-in Ring Modulator plugin by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1010
+    - Add a built-in Auto Pan plugin by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1013
+    - AudioSuite: Vari-Fi slows a clip down to a stop or speeds it up from one by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1016
+    - Autosave: allow the Unix-only mut, so clippy passes on Windows by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1017
+    - CLI tests: the several-roots test uses plain paths, so it passes on Windows by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1018
+    - Add a built-in Subharmonic plugin by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1019
+    - Docs: the built-in plugin counts match the registry, and the sampler is no longer listed as missing by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1023
+    - Clip > Loop... opens Clip Looping: Number of Loops, Loop Length, or until the next clip or the session end by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1030
+    - Strip Silence: Extract keeps the silence, and Separate cuts the clips without removing any by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1040
+    - Strip Silence: Rename sets the names of the clips it leaves by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1044
+    - Fades: Create refuses a shape that is not a string over a selection by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1053
+    - Clip List: Auto Rename sets the names of the clips separated from a clip by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1054
+    - Strip Silence: rectangles show what Strip keeps while the window is open by @dotCooCoo in https://github.com/storytold/soundcraft/pull/1055
+    New Contributors
+    - @dependabot[bot] made their first contribution in https://github.com/storytold/soundcraft/pull/767
+    - @wayward-L made their first contribution in https://github.com/storytold/soundcraft/pull/954
+    - @aiongg made their first contribution in https://github.com/storytold/soundcraft/pull/827
+    - @mrrobbiec made their first contribution in https://github.com/storytold/soundcraft/pull/805
+    - @zuujiscom made their first contribution in https://github.com/storytold/soundcraft/pull/941
+    - @DCubix made their first contribution in https://github.com/storytold/soundcraft/pull/573
+    - @oracola91 made their first contribution in https://github.com/storytold/soundcraft/pull/868
+    - @sbacaro made their first contribution in https://github.com/storytold/soundcraft/pull/996
+    - @SusieeTheLinuxUser made their first contribution in https://github.com/storytold/soundcraft/pull/994
+    - @mattburlage made their first contribution in https://github.com/storytold/soundcraft/pull/792
+    - @lucasegen made their first contribution in https://github.com/storytold/soundcraft/pull/967
+    - @ProdByBuddha made their first contribution in https://github.com/storytold/soundcraft/pull/340
+    - @midasmatterhorn made their first contribution in https://github.com/storytold/soundcraft/pull/557
+    - @vxMacDev made their first contribution in https://github.com/storytold/soundcraft/pull/595
+    - @4waymedia made their first contribution in https://github.com/storytold/soundcraft/pull/636
+    - @derekmwright made their first contribution in https://github.com/storytold/soundcraft/pull/763
+    - @Hamza0101 made their first contribution in https://github.com/storytold/soundcraft/pull/552
+    - @dotCooCoo made their first contribution in https://github.com/storytold/soundcraft/pull/1010
+    Full Changelog: https://github.com/storytold/soundcraft/compare/v0.12.1...v0.13.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/soundcraft/releases/tag/v0.13.1
+ReleaseTime: 2026-10-25T13:44:38.0000000Z
