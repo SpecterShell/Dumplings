@@ -1,0 +1,22 @@
+Version: 0.3.231
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/whiteguo233/OpenBiliClaw/releases/download/openbiliclaw-v0.3.231/OpenBiliClaw-windows-0.3.231-Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/whiteguo233/OpenBiliClaw/blob/HEAD/docs/changelog.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Instagram 与 TikTok 转正式来源：两者不再标注实验性。README、项目首页、模块文档、隐私说明、商店 listing 与 AMO 元数据统一为「正式可用、默认关闭、需在设置中显式启用」；能力范围不变（Instagram topic / creator 发现 + 登录态有界只读初始化；TikTok 访客 feed / hashtag / creator + 登录后关键词搜索），已知限制（TikTok 站内收藏暂缓、非空账号画像与周期增量、Firefox 登录态待验；Instagram 完整 Likes 历史、双账号、Firefox 登录态与手机真机待验）保留为明确的「已知限制」，不再用「实验性」描述。
+    - 大肥鱼的通知文案改由人设生成：新增 build_blue_fish_notice_prompt（system 字节静态，人设 / 视频 / 主人在 user 消息），每次通知花一次模型调用写一句 ≤45 字的钩子，提示词里带正反例，明确拒绝「推荐你看看」「正合你口味」这类模板腔；模型不可用或 JSON 不合规时回落原模板。fish.owner_notice 登记为 maintenance caller。
+    - 大肥鱼的默认人设更可爱、私信真正可用：默认 persona 改成「圆滚滚、反应慢半拍，会「哇」「救命」「谁懂啊」，偶尔自称本鱼」，通知 prompt 明确角色扮演并把「太像影评」的书面腔列进反例；私信补上 msg[dev_id]（此前 B 站返回 -400 请求错误），通知失败不再回落成公开回复。
+    - 修复 Ollama embedding 在无聊天 SDK 时的构建问题（#318）：embedding 客户端独立于 chat SDK 构建，部署不再要求额外安装 OpenAI 兼容聊天依赖。
+    - 版本号同步：pyproject.toml / extension/manifest.json / extension/package.json → 0.3.231；Firefox / Safari 清单的版本由构建脚本从 Chrome 清单注入。发布记录见 v0.3.231 发布记录。
+    - 国内镜像同步状态（2026-10-22）：检查时 Gitee main 已同步至 8b99ed46，与当时 GitHub main 一致；v0.3.231 四个标签均指向 13ea1e37，Gitee Release 页尚未创建。AtomGit main 为 58185cbb，比当时 GitHub main（8b99ed46）落后 8 个提交；123 云盘分享页仍列出 v0.3.213 的 7 个文件，v0.3.231 安装包尚未上传。各镜像状态与后续同步记录见 发布记录。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/whiteguo233/OpenBiliClaw/blob/HEAD/docs/changelog.md#v03231instagram-tiktok-2026-10-22
+ReleaseTime: 2026-10-22T09:47:17.0000000Z
