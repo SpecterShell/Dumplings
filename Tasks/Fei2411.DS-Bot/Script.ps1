@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Fei2411/DeepSeek-Bot/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Fei2411/DS-Bot/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
