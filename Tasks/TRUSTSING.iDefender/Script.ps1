@@ -13,15 +13,15 @@ function Get-ReleaseNotes {
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'zh-CN'
       Key    = 'ReleaseNotesUrl'
-      Value  = $ReleaseNotesUrl = 'https://trustsing.com/idefender/'
+      Value  = $ReleaseNotesUrl = 'https://idefender.trustsing.com/changelog'
     }
 
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+    $Object2 = Invoke-PlaywrightFetch -Uri $ReleaseNotesUrl -Stealth -Headless -WaitMilliseconds 2000 | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='theme-hope-content']/h3[contains(., '$($this.CurrentState.Version)')]")
+    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='markdown-body']/h3[contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
     if ($ReleaseNotesTitleNode) {
       $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) {
-        if (-not $Node.HasClass('button-group')) {
+        if (-not $Node.Attributes.Contains('data-v-app')) {
           $Node
         }
       }
