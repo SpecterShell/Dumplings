@@ -11,7 +11,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.remoteutilities.com/product/release-notes.php' | ConvertFrom-Html
+      $Object2 = curl -fSsLA $DumplingsInternetExplorerUserAgent 'https://www.remoteutilities.com/product/release-notes.php' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'Remote Utilities $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
@@ -38,7 +38,7 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      $Object3 = Invoke-WebRequest -Uri 'https://www.remoteutilities.com/zh-Hans/product/release-notes.php' | ConvertFrom-Html
+      $Object3 = curl -fSsLA $DumplingsInternetExplorerUserAgent 'https://www.remoteutilities.com/zh-Hans/product/release-notes.php' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesCNTitleNode = $Object3.SelectSingleNode("//h2[contains(text(), 'Remote Utilities $($this.CurrentState.Version)')]")
       if ($ReleaseNotesCNTitleNode) {
