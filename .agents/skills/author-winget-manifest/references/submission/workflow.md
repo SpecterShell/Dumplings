@@ -12,7 +12,7 @@ Test-WinGetManifest -Path $ManifestDirectory
 
 `Get-WinGetManifestValidationResult -Path <manifest-directory>` always returns structured diagnostics, effective installer entries, and dependency evidence. It also accepts `-Manifest` for an in-memory logical manifest. Use `Test-WinGetManifest -Path <manifest-directory> -PassThru` when the same result should be returned only after validation errors have been converted to a terminating error. Add `-ErrorOnWarning` to `Test-WinGetManifest` for the strict warning behavior of `winget validate`. That switch does not belong to `Get-WinGetManifestValidationResult`. Validation does not download or execute installers and does not require `winget.exe`. The winget-pkgs validation service remains authoritative for repository, catalog, security, and installer-content checks.
 
-Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the repository-recommended version consistently, currently `1.12.0`.
+Before validation, confirm every YAML file uses the exact fixed two-line Dumplings header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). Its schema family must match `ManifestType`, and every schema URL and `ManifestVersion` in the submitted set must use the Dumplings authoring default `1.28.0` consistently.
 
 Also check the exact physical names from [File set](../manifest/model-and-files.md#file-set). The version document must be `<PackageIdentifier>.yaml`. A filename such as `<PackageIdentifier>.version.yaml` fails the winget-pkgs manifest-path rules even when the YAML contains `ManifestType: version`.
 
@@ -121,4 +121,4 @@ When presenting a completed manifest update, report:
 - [winget-pkgs policies](https://github.com/microsoft/winget-pkgs/blob/master/doc/Policies.md)
 - [winget-pkgs validation stages](https://github.com/microsoft/winget-pkgs/blob/master/doc/Validation.md)
 - [winget-pkgs validation failure guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md)
-- [WinGet manifest schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.12.0)
+- [WinGet manifest schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.28.0)

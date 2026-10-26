@@ -25,7 +25,7 @@ Minimal installer skeleton:
 
 ```yaml
 # Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.28.0.schema.json
 
 PackageIdentifier: Publisher.Package
 PackageVersion: 1.2.3
@@ -35,7 +35,7 @@ Installers:
   InstallerUrl: https://example.com/Product-1.2.3-x64.exe
   InstallerSha256: <SHA256>
 ManifestType: installer
-ManifestVersion: 1.12.0
+ManifestVersion: 1.28.0
 ```
 
 ## Output Checklist
@@ -47,7 +47,7 @@ Before claiming the manifest is ready:
 - Installer URLs are stable across refreshes or intentionally use a stable official redirect URL.
 - Manifest path splits every `PackageIdentifier` component into its own directory and ends with the exact `PackageVersion`.
 - Every file begins with the exact fixed two-line header for its `ManifestType`.
-- Every schema URL is versioned, matches `ManifestVersion`, and uses the winget-pkgs-recommended schema consistently across the manifest set, currently `1.12.0`.
+- Every schema URL is versioned, matches `ManifestVersion`, and uses the Dumplings authoring default `1.28.0` consistently across the manifest set.
 - Required fields exist in all files.
 - Installer type and architecture match evidence.
 - Every verified independent full-installer family is represented, including both NSIS and WiX when available. Follow [artifact selection](../package/artifact-selection.md#include-independent-installer-families) for exclusions and equivalent EXE/MSI wrappers.

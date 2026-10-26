@@ -171,7 +171,7 @@ $WiseResult = $Analysis.ParserResults | Where-Object { $_.Name -eq 'Wise' -and $
 $WiseResult.Result.SuggestedManifestFields
 ```
 
-Suggestions contain only WinGet 1.12 installer fields. Exact route evidence overrides the generic family template. For example, NavigatorPlus receives `interactive` only and no switch object, while TI Connect receives its MSI install-location property and MSI-owned ARP type.
+Suggestions contain only WinGet 1.28 installer fields. Exact route evidence overrides the generic family template. For example, NavigatorPlus receives `interactive` only and no switch object, while TI Connect receives its MSI install-location property and MSI-owned ARP type.
 
 ## Step 7: Validate dynamically when required
 

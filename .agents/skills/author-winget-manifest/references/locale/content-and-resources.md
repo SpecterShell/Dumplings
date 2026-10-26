@@ -181,6 +181,6 @@ The schema supports `IconUrl`, `IconFileType`, `IconResolution`, `IconTheme`, an
 ## Sources
 
 - [winget-pkgs authoring guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/Authoring.md)
-- [WinGet 1.12 default-locale schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.12.0/manifest.defaultLocale.1.12.0.json)
-- [WinGet 1.12 locale schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.12.0/manifest.locale.1.12.0.json)
+- [WinGet 1.28 default-locale schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.28.0/manifest.defaultLocale.1.28.0.json)
+- [WinGet 1.28 locale schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.28.0/manifest.locale.1.28.0.json)
 - [SPDX license list](https://spdx.org/licenses/)

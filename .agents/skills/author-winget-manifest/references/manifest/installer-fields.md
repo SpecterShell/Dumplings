@@ -84,7 +84,7 @@ For `InstallerType: zip` with `NestedInstallerType: portable`, add `ArchiveBinar
 
 The presence of README files, licenses, checksums, icons, or other incidental non-executable content does not require this field. Multiple independent EXE files do not prove it either. Instead, add all of them to NestedInstallerFiles. Inspect imports, adjacent runtime files, project documentation, and a WinGet installation in the VM. Set the field whenever the selected portable executable needs the archive's companion files to start or operate correctly. The field applies only to archive-plus-portable installers and defaults to `false` when omitted.
 
-This behavior is defined by the WinGet [manifest schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.12.0/manifest.installer.1.12.0.json) and the portable installation path in [`PortableInstaller.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCLICore/PortableInstaller.cpp).
+This behavior is defined by the WinGet [manifest schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.28.0/manifest.installer.1.28.0.json) and the portable installation path in [`PortableInstaller.cpp`](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCLICore/PortableInstaller.cpp).
 
 ```yaml
 InstallerType: zip

@@ -28,7 +28,7 @@ PackageLocale: zh-CN
 Publisher: 本地化发布者名称
 PackageName: 本地化产品名称
 ManifestType: locale
-ManifestVersion: 1.12.0
+ManifestVersion: 1.28.0
 ```
 
 Review `AppsAndFeaturesEntryEvidence` to correlate each value with its `LanguageId`, `Locale`, registry hive/key, scope, and visibility. `Diagnostics` explains when distinct localized identities were found. Confirm runtime language selection in the VM if the installed locale cannot be inferred statically. Retain a localized `DisplayName` or `Publisher` in `AppsAndFeaturesEntries` only when no corresponding locale manifest exists. `Optimize-WinGetManifest` otherwise removes values matched by any authored localization.

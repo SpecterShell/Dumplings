@@ -43,7 +43,7 @@ Define a new identifier only after `winget search`, direct manifest inspection, 
 
 ### Schema Contract
 
-The WinGet 1.12 manifest schema uses this `PackageIdentifier` pattern:
+The WinGet 1.28 manifest schema uses this `PackageIdentifier` pattern:
 
 ```text
 ^[^\.\s\\/:*?"<>|\x01-\x1f]{1,32}(\.[^\.\s\\/:*?"<>|\x01-\x1f]{1,32}){1,7}$
@@ -104,7 +104,7 @@ Before deciding to split, inspect several historical versions of both installer 
 
 Source grounding:
 
-- [WinGet 1.12 version-manifest schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.12.0/manifest.version.1.12.0.json)
+- [WinGet 1.28 version-manifest schema](https://github.com/microsoft/winget-cli/blob/master/schemas/JSON/manifests/v1.28.0/manifest.version.1.28.0.json)
 - [ARP range construction in Manifest.cpp](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerCommonCore/Manifest/Manifest.cpp)
 - [ARP range overlap validation in Interface_1_5.cpp](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerRepositoryCore/Microsoft/Schema/1_5/Interface_1_5.cpp)
 - [Installed-version mapping in CompositeSource.cpp](https://github.com/microsoft/winget-cli/blob/master/src/AppInstallerRepositoryCore/CompositeSource.cpp)

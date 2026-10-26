@@ -23,7 +23,7 @@ The default-locale manifest is the complete fallback localization. An additional
 
 ## Manifest Headers
 
-Use the exact fixed `defaultLocale` or `locale` header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). The schema URL must use the repository-recommended version, currently `1.12.0`, and must match `ManifestVersion` and the schema version used by every other file in the manifest set.
+Use the exact fixed `defaultLocale` or `locale` header from [Manifest model and files](../manifest/model-and-files.md#fixed-headers). The schema URL must use the Dumplings authoring default `1.28.0` and match `ManifestVersion` and the schema version used by every other file in the manifest set.
 
 ## Locale Selection And Inheritance
 

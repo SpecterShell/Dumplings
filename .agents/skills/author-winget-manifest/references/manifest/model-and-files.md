@@ -23,13 +23,11 @@ Create multi-file manifests:
 - `<PackageIdentifier>.locale.<default-locale>.yaml` with `ManifestType: defaultLocale`
 - `<PackageIdentifier>.locale.<locale>.yaml` with `ManifestType: locale` for each optional additional locale that has reliable localized metadata.
 
-The version filename has no manifest-type suffix. Use `<PackageIdentifier>.yaml`, never `<PackageIdentifier>.version.yaml`. Likewise, the default-locale filename uses `.locale.<default-locale>.yaml`, not `.defaultLocale.yaml`. `ManifestType` distinguishes the default locale from an additional locale. These names follow the winget-pkgs 1.12 multi-file structure and its manifest-path validation rules. See the official [YAML filename and folder structure](https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.12.0/README.md#yaml-file-name-and-folder-structure) and [`Manifest-Path-Error` guidance](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md#manifest-path-error).
+The version filename has no manifest-type suffix. Use `<PackageIdentifier>.yaml`, never `<PackageIdentifier>.version.yaml`. Likewise, the default-locale filename uses `.locale.<default-locale>.yaml`, not `.defaultLocale.yaml`. `ManifestType` distinguishes the default locale from an additional locale. These names follow the winget-pkgs multi-file structure and its manifest-path validation rules. See the official [YAML filename and folder structure](https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.28.0/README.md#yaml-file-name-and-folder-structure) and [`Manifest-Path-Error` guidance](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md#manifest-path-error).
 
 Build the directory hierarchy by splitting `PackageIdentifier` at every dot. Preserve each component's casing and place it in its own directory. Thus, `Google.Chrome.Canary` belongs in `manifests/g/Google/Chrome/Canary/<PackageVersion>/`. Neither `manifests/g/Google.Chrome.Canary/` nor `manifests/g/Google/Chrome.Canary/` is a valid identifier hierarchy. The final directory is the exact `PackageVersion`, so dots are valid there.
 
-Use the schema version recommended for submissions by winget-pkgs, currently `1.12.0`. The [validation failure guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md#manifest-version-deprecated) also accepts `1.10.0`. Before changing the authoring default, verify repository acceptance there. Newer schemas such as `1.28.0` existing in winget-cli or the [schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema) do not by themselves establish a new submission recommendation. Update both schema URLs and `ManifestVersion` consistently when the repository recommendation changes.
-
-When updating an existing package, use the repository-recommended schema in every YAML file included in the submitted manifest set. Do not select an unreleased client schema merely because it is the highest version in the source tree.
+Dumplings authors new and updated manifests with schema `1.28.0`. Use this version in every schema URL and `ManifestVersion` in the set. Historical schema revisions remain supported for reading and validation. See the [schema documentation](https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.28.0).
 
 ## Working manifest lifecycle
 
@@ -84,28 +82,28 @@ Version manifest:
 
 ```yaml
 # Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.12.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.28.0.schema.json
 ```
 
 Installer manifest:
 
 ```yaml
 # Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.28.0.schema.json
 ```
 
 Default-locale manifest:
 
 ```yaml
 # Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.12.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.28.0.schema.json
 ```
 
 Additional-locale manifest:
 
 ```yaml
 # Created with YamlCreate.ps1 Dumplings Mod
-# yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.12.0.schema.json
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.28.0.schema.json
 ```
 
 The schema family must agree with `ManifestType`: `version`, `installer`, `defaultLocale`, or `locale`. The version in the schema URL must agree with `ManifestVersion`, and all files in one manifest set must use the same version. Use a versioned schema URL in committed manifests. Do not use `latest` or `preview` in the header.
@@ -117,7 +115,7 @@ Set:
 - `PackageIdentifier`: exact casing and segments matching the manifest path. For a new package, follow [Define The Package Identifier](../package/identity.md#define-the-package-identifier) before creating the directory tree.
 - `PackageVersion`: normally the installed ARP version or the version that best prevents upgrade loops.
 - `DefaultLocale`: the evidence-backed BCP-47 locale of the default-locale manifest. It must exactly match that manifest's `PackageLocale`. Choose its region through the [regional locale workflow](../locale/model.md#regional-locale-selection). Do not default English to `en-US` or another language to its most common country.
-- `ManifestVersion`: `1.12.0`.
+- `ManifestVersion`: `1.28.0`.
 
 If upstream marketing version and ARP `DisplayVersion` differ, decide explicitly which value is `PackageVersion` and whether `AppsAndFeaturesEntries.DisplayVersion` is required.
 

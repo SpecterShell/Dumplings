@@ -39,7 +39,7 @@ If host or VM security software flags an executable as a virus or malware, stop 
 
 Do not invent publisher identities, legal names, URLs, release notes, versions, registry metadata, or switches. Search all likely authoritative sources before omitting an applicable optional field.
 
-Current authoring uses schema `1.12.0` and the fixed Dumplings headers.
+Current authoring uses schema `1.28.0` and the fixed Dumplings headers.
 
 Do not add `Moniker` automatically. Do not author `UnsupportedOSArchitectures` at present. Omit known installer switches, modes, and return codes when they equal WinGet defaults.
 
