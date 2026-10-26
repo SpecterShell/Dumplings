@@ -1,0 +1,38 @@
+Version: 0.5.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/murray17/rovai-ai/releases/download/v0.5.1/Rovai-AI-0.5.1-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新支持在创建使命时选用团队，改善会话引用与执行状态展示，并修复多项智能体运行问题。
+    -【功能】创建使命时支持选用团队。 可直接使用已保存的队员组合、队长和协作指引，也可自定义成员。较长的指引支持展开阅读全文，描述中额外 @ 的队员也会加入使命。
+    -【交互】优化会话与使命引用。 长标题自动省略显示，避免撑开输入框和消息气泡，详情中仍可查看完整标题。在公屏 @ 列表中，可用 Tab、Shift+Tab 切换队员、会话和使命，用 Enter 插入引用。
+    -【交互】统一执行启动与停止时的提示。 启动阶段显示“启动中”，尚未开始处理的消息显示“准备中”或“排队中”。停止时保留已有内容和执行步骤，减少重复提示。
+    -【修复】修复 Claude Code 审批通过后可能一直显示运行中的问题。 当原生进程已经退出、工具结果未返回时，执行会结束为中断状态，并保留操作结果未知的记录。
+    -【修复】修复新版 Copilot CLI 无法启动的问题。 调整启动参数，兼容 Copilot CLI 1.0.103。
+    -【修复】修复运行时检测使用的路径不一致问题。 应用启动、重新检测和单项检查统一使用相同的命令搜索路径；主动点击“检查”时会刷新路径，减少 macOS 从 Dock 启动后反复检测失败的情况。
+    -【修复】补齐 Command Code 写入文件的差异展示。 对新建文件或空文件写入内容并成功后，可查看新增行数和完整差异，不再只显示一次文件操作。
+    -【优化】减少 MCP 配置快照的重复写入。 同一次执行恢复时复用配置快照，并补齐 Grok 临时 MCP 插件的启动清理。
+    感谢 @arschlochnop 反馈的 Claude Code 审批与运行时检测问题（#889、#891）。
+    完整变更
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release brings team presets to mission creation, improves conversation references and execution status, and fixes several agent runtime issues.
+    - [Feature] Use saved teams when creating missions. Choose an existing teammate lineup, lead, and collaboration guidance, or set up a custom roster. Expand long guidance to read it in full. Additional teammates mentioned in the description also join the mission.
+    - [Interaction] Improve conversation and mission references. Long titles are ellipsized to fit the input and message bubble, with full titles available in the details. In the public @ picker, use Tab or Shift+Tab to switch between teammates, conversations, and missions, then Enter to insert a reference.
+    - [Interaction] Make startup and stop feedback consistent. Show a single startup status, distinguish preparation from queued messages, and retain existing content and execution steps while stopping, with fewer duplicate notices.
+    - [Fix] Fix Claude Code remaining in a running state after approval. If the native process has exited without returning its tool result, finish the execution as interrupted while retaining an unknown result for the affected operation.
+    - [Fix] Restore startup with newer Copilot CLI releases. Update launch arguments for compatibility with Copilot CLI 1.0.103.
+    - [Fix] Use consistent command search paths for runtime checks. Startup, rediscovery, and individual checks now use the same path capture policy. Clicking Check refreshes the paths, reducing repeated detection failures when launching from the macOS Dock.
+    - [Fix] Show complete diffs for Command Code writes from empty content. Successful writes to new or empty files now show added line counts and the full diff instead of only a file operation.
+    - [Improvement] Reduce duplicate MCP configuration snapshots. Reuse the snapshot when recovering the same execution, and clean up abandoned temporary Grok MCP plugins at startup.
+    Thanks to @arschlochnop for reporting the Claude Code approval and runtime detection issues (#889, #891).
+    Full changelog
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/murray17/rovai-ai/releases/tag/v0.5.1
+ReleaseTime: 2026-10-26T16:43:33.0000000Z
