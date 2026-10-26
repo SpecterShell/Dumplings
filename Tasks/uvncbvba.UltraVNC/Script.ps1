@@ -1,13 +1,13 @@
 $Prefix = 'https://uvnc.com/downloads/ultravnc.html'
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
-$Object2 = $Object1.SelectSingleNode('//th[@class="list-title"]/a')
+$Object2 = $Object1.SelectSingleNode('//th[@class="list-title"]/a[not(contains(., "dev"))]')
 
 # Version
 $this.CurrentState.Version = [regex]::Match($Object2.InnerText, 'UltraVNC (\d+(?:\.\d+){3})').Groups[1].Value
 
 $Object3 = Invoke-WebRequest -Uri ($Prefix = Join-Uri $Prefix $Object2.Attributes['href'].Value) | ConvertFrom-Html
-$Object4 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'X86') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
-$Object5 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'X64') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
+$Object4 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'x86') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
+$Object5 = Invoke-WebRequest -Uri (Join-Uri $Prefix $Object3.SelectSingleNode("//div[contains(@class, 'jd_content') and contains(./div[contains(@class, 'jd_download_title')], '$($this.CurrentState.Version)') and contains(./div[contains(@class, 'jd_download_title')], 'x64') and not(contains(./div[contains(@class, 'jd_download_title')], 'msi'))]//div[contains(@class, 'jd_url_download_right')]//a").Attributes['href'].Value).Replace('/summary/', '/send/')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
