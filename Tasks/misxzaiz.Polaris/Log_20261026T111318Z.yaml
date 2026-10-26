@@ -1,0 +1,381 @@
+Version: 11.0.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/misxzaiz/Polaris/releases/download/v11.0.0/polaris_11.0.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Polaris 11.0.0 发布说明
+    本次发布包含 Tauri 桌面端 + Web 独立服务双端产物。
+    优化与变更
+    - 5dc92f1d chore: release v11.0.0
+    - ba1165ed feat(router): 停用 Plugin 源审批名单——AI 高危动作默认放行
+    - d5c48f12 fix(router): cap.http 权限仲裁并表+禁用系统代理
+    - cb1ff823 chore(release): 10.9.5 修复 opencode incompatibleRuntime 与移除任务中心/HTML 卡片入口
+    - 1e630604 feat(chat): 引用映射层——轻引用 chip + 发送末尾包含 + 注册表延伸
+    - 189b598d feat(pwa): manifest+ServiceWorker 离线壳——手机可安装入口(阶段 1B)
+    - 3f75552b feat(storage): JSONL 归档单写者收敛——dialog_consolidate 原子合并写+device_id 真实化
+    - 1b497255 feat(web): P0 安全部署闸——未设 token 拒绑非回环+登录限速+config 远程脱敏+files 根白名单
+    - af80192c docs(plans): 纯手机端可行性分析定案——方案 A(常开设备托管+手机薄客户端)
+    - 0392e24e fix(chat): /cap 建议选中不生效——双 token 命中 replaceSlashToken 盲区
+    - 5a8dbdd8 feat(chat): /cap 斜杠命令——cap 协议速查注入 + 中文短名补全
+    - 07c9f1c0 feat(router): cap describe 契约归一——describe 立为协议唯一权威
+    - ac8fed0d test: 修复存量测试目标编译错误，解锁 cargo test --lib
+    - 0905a5eb fix(router): cap.pluginDiscovery 远程只读拆分，修复移动端/Web 插件识别
+    - d990a74d fix(voiceBroadcast): 统一 MiMo 默认音色 id 修复 TTS 400
+    - 0e1fe357 fix(voiceBroadcast): 统一 MiMo 默认音色 id 修复 TTS 400
+    - 5ab32f91 fix(simpleai): 流式 usage 双口径混用——delta 修正 input_tokens，消除 50% 命中率假象
+    - 0acaac45 docs(plans): 补 simpleai 中断竞态修复实施记录（提交哈希+验证结论+遗留项）
+    - 23a3108b fix(session): 终态事件轮次代际过滤+续聊乐观 running+中断等待语义收紧
+    - 45fae73b fix(simpleai): compact 摘要与 MCP 调用接入中断，收窄不可中断窗口
+    - 2891a325 fix(router): cap.ai.chat 流式失败发可路由终态——排他门拒绝不再让前端永久转圈
+    - 3381b681 fix(simpleai): continue 引擎级轮次互斥——旧轮收尾后才开新轮，消除双循环并发
+    - a6aa30f6 docs(plans): simpleai 中断→再发送竞态修复 spec——六病灶定位与 B/F 修复方案
+    - 7651d329 chore: 忽略会话工件目录 .zcode/ 与移动端打包产物 lib/
+    - a2f8e9de docs(plans): 记录 cap.ui.render 任意 JS 能力扩展需求（仅分析，未实施）
+    - 65d7c30c chore(mobile): 打包脚本无 BOM 写入修正与 versionCode 对齐，版本升至 10.9.0
+    - a27d91b1 fix(chat): 修复对话导航悬停展开闪动——定位/动画分离+零死区+意图延迟
+    - 1467e6bd fix(chat): 过程块折叠行为统一——移除 auto/legacy 双模式与 SessionSummaryCard
+    - a49ba455 chore(mobile): 增加 APK 一键打包脚本 build-apk.ps1（版本同步/前端嵌入/so 重编全流程）
+    - 15cbf5c4 docs(plans): 补充过程块折叠行为调整问题文档（待实施）
+    - b33f2196 fix(router): 治理收紧——横幅白名单、ui_control 策略旁路与高危 cap 审批
+    - 9e828e9a feat(ai): 会话注入客户端上下文，AI 能正确回答「用户在用什么端对话」
+    - 154fa938 refactor(theme): 主题域去手动化——移除编辑器链与内置 Spider-Man，AI 直调闭环+跨端同步
+    - b9139f11 docs: align two-bus reference with registry-derived dispatch and fix capability lists
+    - 76194099 feat: custom frame renders html chart preview via sandboxed iframe
+    - da62aaee feat: add chart node (hand-drawn svg) to cap.ui.render template dsl
+    - c4a592b9 docs: add cap.* integration test report
+    - 48b55edc docs: add two-bus architecture reference
+    - d555d9ed docs: add cap.ui.render chart node spec (FR-P2)
+    - 7d8f3406 chore: bump version to 10.8.1
+    - 049cefaf docs: add realtime sync design article and two plans
+    - 9aa2425b refactor(chat): simplify EmptyState and remove unused avatar imports
+    - 10638890 chore: bump version to 10.8.0
+    - 2d12b5dd fix(logging): 配置域日志走 tracing + Logger 初始化前移
+    - b16be06a chore: 移除误入库的一次性补丁脚本 patch_p2d.py
+    - ea1be8a0 fix(theme): 表格边框改用主题变量，customCss 在主题加载时真正生效
+    - 606b74ca docs(plans): P0 spec 提交哈希对齐最终变基
+    - 3ce34272 docs(plans): 实施记录提交哈希对齐二次变基（main 6ee1b2ef）
+    - a6a30d14 chore: 清理误入库的补丁脚本 + 新代码 clippy 残余（assembly 未用变量/审批 pending 字段标注）
+    - 1ebe72f7 docs(plans): 审计梯队 P1-P5 实施记录归档 + 契约 doc 格式清理
+    - d75282ce feat(plugins): 样式作用域与校验 + views slot/slotMode 漂移修复（审计 P5 前两项）
+    - 4e74d175 feat(plugins): skill 插件化——contributes.skills + DataRoot 同步（审计 P4）
+    - 3ba88134 fix(ai): cap 使用说明治理——去手抄枚举、bus_help 去矛盾、snippet 逐字段、persona 兜底（审计 P3）
+    - 32b2ea8a feat(plugins): manifest contributes.capabilities 声明面 + 装配器 + executors 门控（审计 P2-d）
+    - 37948cf1 feat(router): cap 自由度 L2+L3——PluginRpc handler 与覆盖链（审计 P2，plugin-cap-full-freedom 落地）
+    - 67be4af3 feat(router): 能力注册查重 + toolProviders 归属校验 + RealContext 权限补全（审计 X12/X6/RealContext）
+    - ddc179c3 feat(router): Web 插件管理放行（token 分级）+ AI 操控审批门 + bus 进程读用户规则（审计 X9/X7/X8/P1-6）
+    - 2d30c02e fix(plugins): MCP stderr 消费 + 插件更新先停服务（审计 X10 / P1-5）
+    - 0ecf97e8 feat(plugins): 服务端口治理 + healthCheck 状态机 + 状态回推前端（审计 P1-1/2/3）
+    - 93aca7b8 docs(plans): 插件与 Cap 机制审计报告 + P0 地基修复实施 spec 归档
+    - aba91319 fix(plugins): 插件服务停止竞态与退出孤儿进程修复（审计 X2/X3）
+    - f0ae25ca fix(router): 审计补全与 dispatch 超时护栏（审计 X4/X5）
+    - 8ff3709f fix(router): 动态能力转发保留原始调用方 Source，封堵 Remote deny 洗白
+    - 6ee1b2ef fix(session): 加入会话步骤④的新鲜快照修复——过期 stores Map 导致校正整块跳过
+    - de83c51c fix(session): 补提交——Follower 启动迁移 main.tsx 静态化（上轮遗漏的关联改动）
+    - 3868befa fix(session): 加入 running 会话三大缺陷——页面卡死 P0/停止按钮失效/幻影会话
+    - 9bf502db docs: add zcode attribution to acknowledgements
+    - 8713e7db feat(session): 跨端入口迁至 QuickSwitchPanel（右缘悬浮把手）——用户指定位置
+    - 194d4213 fix(session): 跟随发现推导修复——已收尾会话收到新 start 重新拉起 running + 推导抽纯函数单测锁定
+    - 962ecbf3 fix(ui): 对话导航悬浮球在本端流式期间常驻——发起端可见、形成位置记忆
+    - 9f0aedd1 docs(plans): backlog 二次更新——批 6/7 与测试债全部完成，全量测试归零
+    - 237d7942 test: case-4 对账性能护栏放宽至 1000ms（对齐 case-1 同款处理）
+    - 6cfa3856 docs(plans): v2 spec 实施记录——方案 A/B 落地 + 加入后操作完整性源码验证结论
+    - efb7d044 feat(session): 跨端交互 v2 方案 A——对话导航入口 + 一键加入窗口（UI 层）
+    - e3f7a725 test: 清偿测试漂移组 2——services/组件/session-v2 9 文件对齐现状（14 文件全部回绿）
+    - 2dc25f61 test: 清偿测试漂移组 1——utils/engines 5 文件对齐有意演进后的实现（120 用例全绿）
+    - ddef9c99 docs(plans): 跨端会话交互 v2 交互原型 + spec + 批 6/7 评估结论
+    - df60a84d fix(security): WS 开放模式连接告警——未配 token 且绑定非回环时提示暴露面
+    - d3d5d6bf feat(ui): 批 6 打磨收尾——回底常驻/富空态/输入上限/断线常驻提示/触屏长按
+    - e306b282 feat(session): joinSession 能力层——远端会话一键接入本端窗口（spec remote-session-join-v2 §2.2）
+    - 490eef36 docs(plans): 裁决方案实施记录终值——批 0-5 完成 + 批 6/7 部分，验证矩阵与剩余清单
+    - f6a97e8e fix(session): regenerate/editAndResend 失败恢复被删历史（审计 4.5 补遗）
+    - 0b7f5dde fix(ui): 语音「停止」命令真正生效 + 会话格待处理卡片徽标
+    - 424d09bf feat(session): 跨端路由正典化（conversationId 反向索引）+ 宿主桥白名单 + 草稿串号修复
+    - a989edc7 fix(session): 前端状态收敛——块终态统一/轮次代际/发送事务化/中断加固
+    - d05cb901 feat(session): 跨端只读会话跟随——另一设备的流式会话本端实时可见（M2 核心场景）
+    - acbfa954 fix(ai): 后端会话核心正确性——中断协议统一/运行态真实/panic 监督/start 排他/错配告警
+    - 69051c2f fix(history): 标注旁挂备份——索引重建不再丢置顶/星标/归档/标签
+    - c8c3cc99 fix(ui): 删除/截断前端闭环——先中断再删、墓碑触发、静默会话不落盘
+    - 5b3e626a fix(persist): 后端存储地基——软删除墓碑/覆盖面全量/用户消息按 contextId 配对+即时落盘
+    - 01cc7c4e fix(storage): JSONL 归档原子写加固——唯一 tmp/刷盘/失败清理/残留回收
+    - 9668d6e0 docs(plans): AI 会话域问题全景审计与修复方案竞选裁决归档
+    - 55a3c357 fix(ui): 输入框止血——IME 组词回车误发/流式中编辑丢字/停止按钮无中断反馈
+    - ef77cf25 fix(ui): 消息操作与卡片反馈止血——重新生成接线/提交失败提示/复制失败提示/思考块标题
+    - 8d7b92df fix(transport): 补 WS 事件丢失两缺口——Lagged 控制帧与首连快照恢复
+    - 9cedeb51 fix(ui): 会话完成桌面通知改为本端会话触发，不再对任何端的流结束弹通知
+    - de998480 fix(storage): 会话状态库拆分独立 state.db，根除与消息库 user_version 互删清库
+    - cce258e0 fix(ui): PendingPluginCard 来源标记 source 字段补全两处初始化
+    - 8f24af54 chore(release): bump version to 10.7.9
+    - 24e34106 feat(plugins): 多设备会话插件宿主桥——暴露 POLARIS_HOST_LISTEN
+    - df9fd515 fix(ui): 修复 cap.ui.render 外部入口渲染事件兜底投递到活跃会话
+    - 0f6b18ff chore: remove deprecated sky & polaris-pocket subprojects
+    - 0703d40f chore(release): bump version to 10.7.8
+    - 7e0faabd feat(ui): cap.ui.render v2 UI 模板运行时注册
+    - 47f1f9ee chore(release): bump version to 10.7.7
+    - d4a3cdaf fix(ui): 识别 mcp__polaris-dispatch 前缀的 cap_dispatch 工具
+    - 5475375c feat(mcp): bus_dispatch 全量放开并补齐本进程能力注册
+    - 78601a3c chore(release): bump version to 10.7.5
+    - 5b7b4d10 fix(router): emit exactly one dispatch.end per sync dispatch
+    - fcd4ec06 feat(plugins): phase 1.1 blite manifest contract hardening
+    - 19f4ccf5 refactor(plugins): extract single-source manifest field validation
+    - c0e44ce0 feat(plugins): sync adapter staleness marker to ts discovery issue type
+    - a858a41c test(migrate,gates): fix pre-existing cfg(test) compile errors
+    - d755d276 feat(plugins): add generic manifest adapter capability (s1+s2)
+    - ca5ce66c chore(dev): sky zt-test 占位记录归档
+    - b21694d3 docs(plans): 插件系统升级阶段 1 spec——止血与让失败变响亮
+    - 79d4d511 feat(git-panel): 历史 tab p1——多选对比/键盘交互/搜索诚信提示/泳道修复
+    - 87b1ac4c refactor(history): 摘除 prompt-store 默认死代码与历史 local 残壳
+    - cb135778 fix(model-profile): claude settings 级联目标修正为 ~/.claude 并收敛写原语
+    - b24dbb88 fix(requirement): requirement 存储统一 data-root 并收编遗留双落点
+    - cca1540f fix(simpleai): 压缩检查点走 data-root 单例并消除静默丢失
+    - 26aa8ef8 docs(plans): 存储归一化 v1 spec——4 轮对抗审查定稿与 3 评审投票
+    - c92bd731 chore(release): 版本号升至 10.7.4，忽略 release 构建产物与移动端本地 NDK 配置
+    - 49e31c81 feat(chat): HTML 卡片 Cap 桥——沙箱 iframe 经宿主 RouterBus 调用 cap 能力
+    - 5b3f280c feat(git-panel): 多选与批量操作提速——行内快捷按钮、Shift 区间多选、批量 unstage/discard
+    - 61a206d2 feat(chat): HTML 卡片手机浏览器端适配——窄屏布局/iframe 高度自适应/iOS 伪全屏降级/safe-area 补偿
+    - f16393a4 feat(chat): HTML 卡片渲染——AI 输出完整 HTML 自动变可交互卡片
+    - 4df8e002 docs(plans): 无限畅听电台 P3 实施前评估——逐项裁决不做与重启条件，如实交代边界
+    - 760c0419 feat(radio-broadcast): P2 体验层——换台/插话/续播入口/北极星埋点
+    - df73e58f docs(plans): 无限畅听电台 P2 体验层子 spec——换台/插话/续播/埋点边界与验收
+    - fc844503 feat(radio-broadcast): P1 资产层——cap.voice 能力与三页签（回听/内容库/音色库）
+    - b620bd23 docs(plans): 无限畅听电台 P1 资产层子 spec——cap.voice 契约细化与实施方案
+    - 1adbc7a1 feat(radio-broadcast): P0 快赢—字幕跟读、倍速、睡眠定时、锁屏控制、合成缓存、动态音色
+    - 2e310c80 docs(plans): 无限畅听电台总纲 spec 与 PRD 原型、P0 快赢子 spec
+    - ba1b6375 chore(mobile): bump APK version to 10.7.3
+    - 2cf443f2 chore(release): bump version to 10.7.3
+    - ffac451b chore(vcs): 归档 master 历史导出 patch 备份
+    - b928a35c refactor(ui): z-index 层级系统——聊天区浮层收敛到 token（z-dropdown/z-float）
+    - fad705db fix(mcp): 修复内置 MCP 二进制定位——平铺安装 double-exe 后缀 + Web 打包旧名
+    - 88e82177 refactor(ui): ChatStatusBar 移除流式速率徽章——StreamRateBadge 展示收敛到 ContextMeter
+    - 8fd07489 build(mobile): Tauri 打包前自动重建前端——beforeBuildCommand 调 build-dist.mjs 同步最新 dist（修复 APK 打包过期前端）
+    - bb996c0c refactor(mcp): launcher/state 改用 builtin 标记过滤与聚合——内置总暴露（含真实归属插件），外部插件仍走 aiToolAccess 检查
+    - d751d755 feat(mcp): MCP server 增加 builtin 标记与真实归属插件 ID——内置走信任、cap.mcp 按 via builtin/external 区分
+    - b6ef542a docs(agents): 分支约定——main 唯一权威，master 已废弃并删除（tag 备份）
+    - 035567ef Merge branch 'feat/git-backlog-r6'
+    - 29fd036b docs(git): 第七轮执行记录——master-plan § 十一状态改真实值 + § 十二 bench 归档 + handoff § 二/spec 收尾对齐
+    - 9925a02d feat(git): D1 bench-git.mjs——真机性能预算脚本（log 首页/翻页/深翻页/热开；polaris-web 带 git feature 构建 + 数据根隔离）
+    - 144b20ce refactor(git): D2 lane 计算抽 polaris-git-lanes mini crate（graph.c 父去重合并语义，真实跑测 5/5 通过；log.rs 薄适配，协议零漂移）
+    - 1cb69957 feat(git): C2 RebaseTodoDialog HTML5 拖拽排序（与上下移按钮并存，首项锁定约束不变，drop 合法位校验保留）
+    - fd7e0c06 feat(git): C1 reword 支持——todo 行内改写标题，后端预写消息文件 + GIT_EDITOR 脚本按序回放（单测已写、编译过、运行受 DLL 基线限制）
+    - 9ba1b174 feat(git): C9 序列操作活动窗口自抑制——rebase/merge 等写动作延长窗口，fileWatcher 自动刷新放宽 ≤3s 防风暴
+    - 8c19f1bc feat(git): PR-2a B2 写闸升级 FIFO 票号队列 + progress 合流器基础设施（polaris-gate-queue，独立单测真实通过 4/4）
+    - f1f4305f chore(release): bump version 10.7.1 → 10.7.2
+    - 32d958f3 chore(deps): 对齐前端 Tauri 依赖版本(@tauri-apps/api 2.12.4 / plugin-process 精确锁 2.3.1)以修复打包版本 mismatch
+    - fac7de26 feat(git): PR-2a C1 Reply 结构化错误——{code,kind,stderrSnip} 双边贯通（marker 承载、router 拆包、前后端字段级测试）
+    - 9c883f12 feat(git): FR-P2-3 收尾——危险操作成功 toast 携「撤销」按钮（toastWithUndo，复用 undoSlice 恢复语义）
+    - d83339b9 feat(git): AI-3 风险卡明细跳转 diff（发现条目点击 → 打开暂存区该文件 diff）
+    - 99ebaa63 feat(git): AI-7 危护 v1——危险操作确认卡确定性损失预告 + 安全网建议（AI 可缺席，0 token）
+    - ed81055c docs(ai): 缓存断点方案补实施记录与实测收益修正
+    - e425d701 docs(plans): AI 大任务拆分实施分析 + 浏览器 F11 面板全屏方案
+    - 40549391 fix(file-explorer): 冷启动/刷新空白——effect 依赖 + 刷新自举 + 折叠错误分类
+    - b66b2128 feat(ai): Anthropic 提示词缓存断点——system 转 block + tools/末尾 user 断点
+    - 719b5fae fix(plugin): 主仓库默认 features 编译错误——补 Manager import + 修 chat_state move
+    - 8d517cbe fix(file-explorer): 冷启动/刷新空白——effect 依赖 + 刷新自举 + 折叠错误分类
+    - 0e1e22a8 fix(hook): 恢复 ai.session.start/end 插桩——ai 速率统计提交误删
+    - 179c86e2 feat(ai): 流式生成速率统计与首 token 延迟展示
+    - efa2a268 feat(plugin): 插件管理闭环——生命周期事件 + hook 机制 + cap.ui.render + AI 工具注入管理
+    - a6611886 feat(browser): F11 面板内全屏
+    - 6cb04cbd feat(git): PR-2a C1 Reply 结构化错误——{code,kind,stderrSnip} 双边贯通（marker 承载、router 拆包、前后端字段级测试）
+    - a394feed feat(git): FR-P2-3 收尾——危险操作成功 toast 携「撤销」按钮（toastWithUndo，复用 undoSlice 恢复语义）
+    - 2e1ccab6 feat(git): AI-3 风险卡明细跳转 diff（发现条目点击 → 打开暂存区该文件 diff）
+    - 9c0fa0a1 feat(git): AI-7 危护 v1——危险操作确认卡确定性损失预告 + 安全网建议（AI 可缺席，0 token）
+    - 3a116502 fix(browser): 移除侧边栏打开浏览器时自动收起侧栏
+    - 14f05db4 docs(plans): git 欠账总清偿 round-6 spec（11 项审计 → A/B/C/D 四组实施序）
+    - c0a0a594 docs(plans): 新增插件生效注入与 cap 可交互渲染方案
+    - 2e2bf0ea docs(git): 第六轮执行记录——AI-2 卡片移除、编辑器工作台下线、未实施清单总审计（11 项）
+    - 981d4d76 refactor(git): 下线编辑器内 Git 工作台变体（openGitTab/CenterStage git 分支/面板 workbench 按钮），git 面板回归侧栏自适应宽度形态
+    - 604e72f9 refactor(git): 变更页移除 AI-2 原子提交建议卡（目录聚类伪细分建议 + 挤压文件列表空间）
+    - 5fc84156 fix(git): 补齐原子提交建议卡缺失的 atomic i18n 键块（zh-CN/en-US）
+    - fe3a0794 docs(plans): 归档 2026-10 规划文档与日报
+    - 85767f23 chore(gitignore): 忽略本地产物目录（签名密钥 / 安装包 / 3D 实验）
+    - c8f0b8b6 chore(lint): 移除 8 处不再需要的 eslint-disable 注释
+    - 00bb74a8 fix(rendering): 渲染与文本处理修正
+    - 8946a6de feat(broadcast): 装配 cap.mcp 外部插件 MCP server（mimo-tts 声音后端）
+    - 079a939e docs(git): master-plan 第五轮执行记录与在册欠账盘点
+    - 7cb51970 feat(git): AI-6 v0——自然语言历史查询编译器（无 LLM，0 token）
+    - 51aa2ddc feat(git): P4 生态出口——bus_dispatch 白名单进 cap.git + 图标白名单漂移顺修
+    - 33f56358 feat(git): FR-P2-3 收尾——可撤销快照条 UndoBar（一键恢复 UI）
+    - 800b3397 feat(git): AI-8 fixup!/squash! 整理建议（纯本地启发式，复用 Rebase todo 协议）
+    - 365ad333 feat(git): AI-3 提交前风险扫描卡（Review 门，纯本地零 AI）
+    - 51ea461b feat(git): 面板化 Interactive Rebase（FR-P3-2）核心闭环
+    - 08af7a02 docs(git): P3 冲突域接手修复执行记录
+    - 8a1890ec chore(lint): 修复分支基线机械类 lint(等价正则转义 + prefer-const)
+    - 54611845 feat(git): 冲突合并器真三窗重写 + 流转闭环 + 文件列表入口
+    - a73195c7 fix(git): 冲突文件解决三态语义（假解决根修 + 删类 kind 反转）
+    - fa3a318c docs(git): 交接文档 WIP 快照（自 main stash 迁入）
+    - eb9f42d7 Revert "chore(git): revert 批次 1/2——前段 17 提交的应用中间态（面板功能迁移 feat/git-panel-vnext）"
+    - cd096640 Reapply "docs(git): 交接文档标记 FR-P2-2 watcher 已完成并补提交记录"
+    - 5cc210ec Reapply "feat(git): FR-P2-2 外部文件变化自动刷新 status（file-system-change 订阅）"
+    - 4d683659 Revert "revert(git): 面板 vNext 功能整体撤回（P0~P3 迁移至 feat/git-panel-vnext 分支）"
+    - d706a00a Revert "revert(git): 补齐时代新建文件删除（conflict/ LaneGraph sequence.rs conflictSlice 等 65 文件遗留）"
+    - 1fccd8ed feat(broadcast): 单句合成失败自动重试 + 播报音柱动画 + stopReason 断言锁
+    - 4a486d21 feat(broadcast): 双视图闭环 + 引擎可改下次生效 + 引擎自适应换行
+    - 4f3b0925 feat(broadcast): 播报面板生产级升级 — 分组布局/双视图/音量/进度/Toast/校验/持久化
+    - efe78615 feat(broadcast): 段级提前量 lookahead — 播放同时后台生成下一段，消除段间静默
+    - 50ea8ee8 fix(plugin-panel): 给插件面板传 onSendToChat，注入 POLARIS_SEND_TO_CHAT 全局桥
+    - 7011a45a feat(broadcast): 播报改左侧栏面板 + 引擎/模型可配置 + 轮次/时长自动停止
+    - d54473e7 fix(broadcast): 移动端连续播报段空循环与 base64 合成超时修复
+    - 297bb834 revert(git): 补齐时代新建文件删除（conflict/ LaneGraph sequence.rs conflictSlice 等 65 文件遗留）
+    - cad933a5 revert(git): 面板 vNext 功能整体撤回（P0~P3 迁移至 feat/git-panel-vnext 分支）
+    - 31c7a17f Revert "feat(git): FR-P2-2 外部文件变化自动刷新 status（file-system-change 订阅）"
+    - 8f02ae03 Revert "docs(git): 交接文档标记 FR-P2-2 watcher 已完成并补提交记录"
+    - 2f28ab27 chore(git): revert 批次 1/2——前段 17 提交的应用中间态（面板功能迁移 feat/git-panel-vnext）
+    - a099aa3e feat(git): P3 冲突域协议升级 + 序列操作机 + 冲突合并器（C10/C11/FR-P3-1）
+    - 1392aa13 docs(radio): 运行时验收补全——语音口令/停止/连续播报实测通过
+    - 8dda1a4c chore(lint): 补全 ignore 与豁免，收敛全量 lint 至 0 errors
+    - c82b050d feat(radio): AI 连续语音播报（方向→AI 连续生成→mimo-tts 合成→句间连续播放→停止）
+    - 4bfdd717 docs(git): 交接文档 P2 泳道图 lane 收缩完成（P2 全部收官，进 P3）
+    - 1cd5a532 feat(git): P2 泳道图 lane 收缩合并（graph.c 式列释放，消 ghost 竖线）
+    - 0fb115dd docs(git): P2 泳道图增量 lane 收缩合并 spec（graph.c 式列释放）
+    - 917b165e docs(git): 交接文档 P2 泳道图增量 log 缓存完成（90%，剩 graph.c 收缩）
+    - f32d537d feat(git): P2 泳道图增量 log 缓存（语义 map 跨页缓存，键=repo+branch+head+refs 指纹）
+    - de578a21 docs(git): P2 泳道图增量 log 缓存 spec（四段式：语义 map 跨页缓存）
+    - 474731f5 docs(git): 交接文档标记 P2 泳道图增量语义着色+WIP/stash 完成
+    - 79ff77af feat(git): P2 泳道图增量（语义着色 + WIP/stash 虚拟节点上图）
+    - b6f30bca docs(git): P2 泳道图增量 spec（语义着色 + WIP/stash 虚拟节点）
+    - 301af2a2 docs(git): 交接文档补 FR-P2-AI4 提交记录
+    - 946d43b8 feat(git): FR-P2-AI4 冲突预测（fetch 后确定性风险清单 + 卡片）
+    - c02b4e49 docs(git): FR-P2-AI4 冲突预测 spec（确定性风险清单，AI 解释层砍除）
+    - 9b1891a7 docs(git): 交接文档标记 FR-P2-4 已完成并补提交记录
+    - 2133ee20 feat(git): FR-P2-4 操作流水（写动作留痕 + git-operation 事件 + 面板折叠区）
+    - c23cf6ca docs(git): FR-P2-4 操作流水 spec（写动作留痕 + git-operation 事件 + 50/ws 环形缓冲）
+    - e2da3128 feat(git): FR-P2-3 Undo 网络（危险操作快照 + 一键恢复）
+    - 44643557 feat(git): FR-P2-3 undo 事件通道（Context::emit + 桌面 git-undo-snapshot 中继）
+    - bf522844 docs(git): FR-P2-3 Undo 网络 spec（git-native ref 快照 + 统一单点挂钩）
+    - fdb3b203 docs(git): 交接文档标记 FR-P2-2 watcher 已完成并补提交记录
+    - 55c341d6 feat(git): FR-P2-2 外部文件变化自动刷新 status（file-system-change 订阅）
+    - d05a6d37 docs(git): FR-P2-2 file-watcher 自动 status 刷新 spec（四段式）
+    - ede24831 docs(git): 交接文档对齐 P2 泳道图初版与 AI-3 新形态
+    - 9e9d42e8 feat(git): P2 泳道图（lanea 分配放 Rust + refs 装饰 + LaneGraph 渲染）
+    - f1948fb2 feat(git): AI-2 原子提交建议（本地预检分组 + AI 解释层 + 后端按组原子提交）
+    - f6a05786 docs(git): 面板 vNext 规划与 P0/P1 规格
+    - b3ccd260 test(git): 补齐存储层与 AI-1 加固测试
+    - 826c63e4 feat(git): 面板 P1 UI 绑定（F1-F6）+ 双语 i18n
+    - 45e8bcc9 feat(git): store 层补齐 P1 动作 + wsPath 分片 + AI-1 加固
+    - 98ebf387 refactor(git): 命令层 git 域整域摘除并上收 cap.git
+    - 39fdbc73 feat(router): AI 运行时自拓展与自我管理能力域
+    - f4557a62 chore: release v10.7.1
+    - e320b919 fix(config): persist uiControlEnabled so AI UI control switch survives restart
+    - f78fa543 chore: release v10.7.0
+    - 084ff2d4 feat(chat): 新建会话支持选择模型供应商/模型并按引擎用 cap.kv 记忆
+    - 2d95ed82 fix(browser): pre-check iframe embeddability (X-Frame-Options/CSP) before navigation, switch default page to Wikipedia
+    - bc4da809 fix(browser): make built-in browser usable in web mode via iframe fallback
+    - 7a03be0a fix(chat): user message toolbar moved to bubble bottom, fix the first message's hover buttons being clipped by the scroll container
+    - 5c85315f chore: release v10.6.13
+    - 1fc1ce07 feat(chat): prompt 历史上键召回对齐 zcode，历史经 cap.kv 持久化
+    - 279462a7 feat: optimize pending queue dispatch with edit pending
+    - d97b0bd6 fix(simpleai): compact 压缩 tool 结果改保头保尾截断，长文关键结论不丢
+    - 052b0efc chore: release v10.6.12
+    - b2629973 feat(left-panel): tab strip 极细滚动条 + tab 右键菜单
+    - 88a66a52 feat(left-panel): 保活多面板 + 高密度 tab strip 折叠彻底隐藏
+    - d737c0b3 test(ui): 补 cap.ui.theme 后端与前端测试覆盖
+    - 0f6b0c01 docs(plans): opencode Code Mode 聊天卡片适配 spec
+    - 7b32b1e5 chore(git): ignore local opencode tool config and critique artifacts
+    - 72cf59fc feat(tool-switcher): hover-flyout quick access with high-density 3-column grid
+    - 42ee13a4 chore: release v10.6.11
+    - da79da26 docs(plans): opencode 预览卡片适配方案定稿 + PRD 预览 UX 优化规划（线 1 已实现/线 2 待做）
+    - 7381802c fix(chat): opencode Code Mode 预览卡片全链路适配 —— 拆包/加载 key/汇总卡直展/投影 hydration
+    - 234ab253 chore: release v10.6.10
+    - d5f3a52f feat(engine): opencode MCP 桥接 —— 项目级 opencode.json 注入 + EOF 恢复工作区
+    - 8f1cdcb5 docs(plans): opencode Rev3.2 —— dev 后端真实运行时端到端实证 + 驱动杂记
+    - 127e020c feat(engine): opencode 批次 2 P1 + 批次 3-速赢 —— 未知事件兜底/--file 长消息/探测缓存/模型缓存/日志降级
+    - b9ffe1a2 fix(engine): opencode 错误文案映射 —— Bun 传输类报错转友好提示
+    - c03fa674 fix(engine): opencode 批次 1 P0 —— 中断语义修正 + 去 sleep + --standalone
+    - 5d56088d chore: release v10.6.9
+    - d08ded55 feat(engine): 接入 opencode 内置引擎 — JSONL 事件解析 + 模型选择 + 前端展示
+    - 4f91118a chore: release v10.6.8
+    - 0a7cd157 fix(session): 会话消息存储统一重构 — 消除重复 AI 回复 + id 统一 + 死代码清理
+    - 2121b9f7 Merge branch 'worktree-ai-uicontrol-p0'
+    - 547ae580 chore: release v10.6.7
+    - ebca2fc2 test(ui): cap.ui 消费链路集成测试（tool_call_start → store 生效）
+    - eb99d9a6 refactor(ui): cap.ui 注册统一到 create_app_state，三端共享
+    - 302301bf feat(mcp): 新增 bus_mcp_status / bus_mcp_regenerate 诊断工具，AI 自治定位并修复 Bridge 端口漂移
+    - 4af0e84d feat(ui): AI 经 cap.ui 控制主题与对话渲染配置
+    - 114eb84b refactor(chat): 按 ZCode 范式重构自动滚动跟随权
+    - c673b00b fix(mcp): Bridge MCP 端口自愈，ask/browser/dispatch 失联自动重连
+    - b30401aa Revert "fix(chat): 移除流式跟随的双滚动竞争与调试日志，提升滚动手感"
+    - dcbb4c10 fix(chat): 移除流式跟随的双滚动竞争与调试日志，提升滚动手感
+    - d8ee08a3 fix(chat): 上拉离开后重新滚回底部即恢复自动滚动
+    - bbb634b8 fix(chat): 上拉查看时 AI 流式输出不再自动划回底部
+    - 2d60de9f refactor(sidebar): 移除 cap.bash 后台任务面板
+    - 41f8cf21 chore: release v10.6.6
+    - 5f041713 feat(session): 消息持久化后端兜底，客户端中途关闭后回复仍入归档
+    - 3d9d95ba feat(chat): 流式 checkpoint 中断保护与恢复去重
+    - 41085af1 fix(git): Git 面板工作区跟随顶部，状态按路径键控防串档
+    - 8317b505 fix(layout): 窄窗口左面板抽屉层级错乱，遮罩盖抽屉致一点就关、抽屉压编辑器
+    - df4a4106 fix(git): Git 面板工作区切换改为独立状态，不再影响全局浏览
+    - 81a04be2 fix(anim): 退场动画补 forwards，修复手机端关闭设置面板闪一下
+    - e0affcca fix(git): 工作区下拉改用 setViewingWorkspace，修复全局切换后 git 面板不跟随的问题
+    - a368e207 feat(git): Git 面板所有状态(聚合/子仓库/正常)支持工作区切换
+    - a36daa57 chore: release v10.6.5
+    - 6b2509aa docs(deployment): 私有构建仓库 polaris-x 发布规范 — 补 main 对齐铁律、secrets 占位禁令与初始化实况
+    - f81a1cc0 Revert "feat(session): S2 阶段 1 — workspace 分桶层 + workspaceKey 解析"
+    - 1fffe68f Revert "feat(session): S2 阶段 2 — 桶层接入 sessionStoreManager"
+    - b0b1058a Revert "feat(session): S3 阶段 1 — 跨端投影订阅（拉取版）"
+    - dacfa327 Revert "feat(session): S4 阶段 1 — 统一仲裁命令层（前端）"
+    - 488b2798 Revert "feat(session): S5 — session_mapping 映射表 + 移动端协议文档"
+    - 4d0e4629 Revert "feat(session): S3 阶段 2 — 会话投影多端广播（后端）"
+    - 281a53ab Revert "feat(session): S3 阶段 3 — 会话投影多端同步（前端接线）"
+    - 2c3e8fd5 Revert "feat(session): S3 会话投影批次 — 跨端会话列表实时同步（前端接线收尾）"
+    - c0bc061f Revert "feat(session): S3 消息双向实时同步 — 阶段 1-4 桌面↔Web 打通（渐进方案 A）"
+    - b529e060 Revert "feat(session): S3 阶段 5 — 共享历史恢复（一致性闭环，SQLite 权威）"
+    - 43ef97b1 Revert "fix(session): session_mapping_upsert 收业务参数 + 远端消息 blocks 兜底"
+    - 195861f7 Revert "feat(session): S3 Phase4 消息流式实时输出 — 首轮即时广播 + assistant 边打边跨端"
+    - e317a748 Revert "fix(session): S3 稳定同步桶 syncConversationId — 首轮固化独立于引擎会话 id"
+    - e64e2da2 Revert "fix(session): 远端会话按需投影 + 实时预览 — 流式期间另一端实时可见"
+    - 17dda141 fix(session): 远端会话按需投影 + 实时预览 — 流式期间另一端实时可见
+    - 61efd997 fix(session): S3 稳定同步桶 syncConversationId — 首轮固化独立于引擎会话 id
+    - 527abade feat(session): S3 Phase4 消息流式实时输出 — 首轮即时广播 + assistant 边打边跨端
+    - f867ce38 fix(session): session_mapping_upsert 收业务参数 + 远端消息 blocks 兜底
+    - 4e4e9ef2 feat(session): S3 阶段 5 — 共享历史恢复（一致性闭环，SQLite 权威）
+    - 55e1df1a feat(session): S3 消息双向实时同步 — 阶段 1-4 桌面↔Web 打通（渐进方案 A）
+    - 41249fbe feat(session): S3 会话投影批次 — 跨端会话列表实时同步（前端接线收尾）
+    - 5207b8e9 feat(session): S3 阶段 3 — 会话投影多端同步（前端接线）
+    - bbbd3fcd feat(session): S3 阶段 2 — 会话投影多端广播（后端）
+    - f309b19a feat(session): S5 — session_mapping 映射表 + 移动端协议文档
+    - 681fac6c feat(session): S4 阶段 1 — 统一仲裁命令层（前端）
+    - b842e908 feat(session): S3 阶段 1 — 跨端投影订阅（拉取版）
+    - 9ff9d561 feat(session): S2 阶段 2 — 桶层接入 sessionStoreManager
+    - a2fcaa69 feat(session): S2 阶段 1 — workspace 分桶层 + workspaceKey 解析
+    - 1926e7e8 refactor(frontend): BrowserPanel 瘦身 + 历史服务类型收紧
+    - f7587fd2 chore(governance): 落地 AGENTS.md 治理规范 + Clippy 存量修复
+    - 86cd1175 feat(session): S1 后端会话权威收敛 — sessions_index 投影表
+    - 6040471c refactor: remove deprecated PluginPreviewPanel and register cap.bash
+    - 61aa4ea3 feat(settings): 移除主题页的对话显示设置区块
+    - 81f3827d chore: 整合设置页与会话配置，移除废弃 store，新增 sky web 前端与计划文档
+    - 721fa783 refactor(settings): 移除设置-通用中的任务派发区块
+    - 3c1c0c4a feat(sky): 新增 cap.form — 表单拉起/提交/回执闭环
+    - 4acdc120 refactor(sky): 移除前端，回归无头 Capability OS Core
+    - 2cd8bc99 refactor(frontend): 六阶段架构重构 P0-P4 落地
+    - f48753ee feat(sky): AI 对话增强 - 重新生成 + 思考链流式渲染
+    - f2bab2a1 fix(sky): 会话串话根因 (启动 getCurrent 竞态) + 系统提示 + 错误可见性
+    - 332d1660 fix(sky): 新增会话静默失败 — 401/断线场景的明确反馈与状态自愈
+    - e43ec88a feat(sky): AI-first 交互原型 — 对话即全功能 (手机优先)
+    - 85dab53d feat(sky): AI-first 原型后端 — 停止生成 + cap.ui.window + 认证下的配置防御
+    - 100374b0 docs(sky): README 重写 — 31 caps / 认证指南 / cap.edit 工作流 / 测试入口
+    - 872940ce feat(sky): cap.edit 工作区文件编辑 — AI 代码编辑核心能力
+    - 0b2f0f2b feat(sky): cap.auth 接口认证管理 + 服务端强制校验 + 配置密钥脱敏
+    - 0d25f094 fix(sky): 工作区选择器 + 文件浏览器 + 设置页扩展 — 修复模板字符串转义层
+    - d616a577 feat(sky): 前端重写 Phase 1 — 对齐 Polaris 布局范式
+    - 3514e89f docs(sky): 前端重写规划 v1 — 对齐 Polaris 布局范式
+    - f7c13150 feat(sky): cap.workspace 支持任意绝对路径 — 用 node:fs 直读，不限 dataRoot
+    - aa2fee01 feat(sky): cap.capability scaffold 闭环 — AI 写插件→装→立即调用
+    - c8aad1bf feat(sky): 内置会话列表 + AI 组件真脚本执行
+    - 0f3f69a3 fix(sky): cap.session 消息计数恒 0 + cap.ui.component 脚本契约 + UI State 结构迁移
+    - 8f7d80e1 feat(sky): 续聊 + AI 自写 cap.session/cap.workspace 插件 + 动态组件渲染
+    - 55d4c0aa feat(sky): 工具调用分组折叠 + 流式结束自动折叠 (对齐 Polaris)
+    - 1ce5802f fix(sky): 工具块尺寸过大 — SVG 图标缺固定宽高撑开 head
+    - 7610f2c9 feat(sky): 解除工具调用次数限制 + 禁用 emoji 图标 + 聊天样式重构
+    - 292df36a chore: ignore Polaris-test/ 数据根 (test-profile 隔离运行时数据)
+    - 24797e01 feat(sky): 移动端优先适配 — Tab 导航 + 软键盘 + safe-area
+    - e5883a7d feat(sky): 前端样式自动演进 — UI State + 6 个 ui cap + Shell 反向 cap
+    - eade9d72 feat(sky): 全可插拔架构 — 拦截器链 + 元 cap + AI 自我演化
+    - af648794 feat(sky): 加事件流审计 + 5 个新 cap (audit/fs/http/task/time)
+    - c7ada311 feat(sky): 新增 Node 预览版 — 能力 OS + AI 工具闭环
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/misxzaiz/Polaris/releases/tag/v11.0.0
+ReleaseTime: 2026-10-26T10:29:31.0000000Z
