@@ -6,11 +6,23 @@ $this.CurrentState.Version = $Object1.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/$($this.CurrentState.Version)/Cortex-Code-win32-x64-user-setup.exe"
+  Scope        = 'user'
+  InstallerUrl = 'https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/latest/Cortex-Code-win32-x64-user-setup.exe'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = 'https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/latest/Cortex-Code-win32-x64-system-setup.exe'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = "https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/$($this.CurrentState.Version)/Cortex-Code-win32-arm64-user-setup.exe"
+  Scope        = 'user'
+  InstallerUrl = 'https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/latest/Cortex-Code-win32-arm64-user-setup.exe'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'machine'
+  InstallerUrl = 'https://sfc-repo.snowflakecomputing.com/coco-desktop/downloads/latest/Cortex-Code-win32-arm64-system-setup.exe'
 }
 
 switch -Regex ($this.Check()) {
