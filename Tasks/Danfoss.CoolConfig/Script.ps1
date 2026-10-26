@@ -8,10 +8,10 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.danfoss.com/en-us/service-and-support/downloads/dcs/coolconfig/'
+$Object1 = curl -fSsLA $DumplingsInternetExplorerUserAgent 'https://www.danfoss.com/en-us/service-and-support/downloads/dcs/coolconfig/' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href | ConvertTo-Https
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href | ConvertTo-Https
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
