@@ -1,3 +1,5 @@
+$Object1 = Invoke-RestMethod -Uri 'https://github.com/DROOdotFOO/raxol/releases/download/raxol-cli-channel/latest.json'
+
 # Version
 $this.CurrentState.Version = $Object1.version
 
