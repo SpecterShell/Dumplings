@@ -1,0 +1,26 @@
+Version: 0.2.24
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.24/Strata.Manager_0.2.24_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Strata upgrades now use a quick check by default, so you no longer wait for the model to load again: updates, switching installed versions and automatic updates now only check that the new service responds (a health check) instead of loading the model and sending a short request first. A failed check still restores the previous version automatically. A model that was loaded before the upgrade reloads in the background after the switch, without holding up the update, and it loads only once. Before, a model that was not loaded was loaded for the check and then unloaded, which wasted a load. If the background load fails, the log shows a warning and nothing rolls back: load the model by hand, or switch back under "Installed versions". For extra safety, turn on "Full model acceptance after upgrades" in "Download settings and test" (off by default): upgrades then load the model and send a short request before switching, as before, and roll back if either fails.
+    - The monitor show/hide shortcut is now user-defined, and off by default: In Desktop monitor → Monitor strip, click Record and press the combination you want. You can change or clear it at any time, and it takes effect immediately. A combination must include Ctrl, Alt or Win (F13–F24 can be used alone). Common shortcuts such as WeChat / QQ screenshots (Alt+A, Ctrl+Alt+A), Alt+F4 and input-method switching are rejected with a hint, and a combination taken by another app shows why it could not be registered. New and upgraded installs have no default shortcut: the old default Ctrl+Alt+M is no longer registered automatically, while a combination you picked yourself is kept.
+    - More compact Monitor strip settings: The shortcut now lives in the strip settings, layout, text rows and font size share one row, each metric's checkbox, color and order fit on one line, and display options use three columns, so the page is much shorter.
+    - Fixed the title bar and tabs disappearing on Desktop monitor after scrolling: Opening Settings / Taskbar colors from the tray or strip menu could scroll the whole window and push the title bar off screen. Now only the content area scrolls, and the title bar and tabs stay visible.
+    - Fixed the monitor strip appearing on its own: When the taskbar monitor failed to start, missed its first frame, or its helper crashed or disconnected (for example when it was restored at sign-in, after an Explorer restart, a display change or sleep/wake), the app used to open the desktop strip instead, and it came back after you closed it. These failures now only stop the taskbar monitor and show the reason. The strip appears only when you click Open floating monitor, choose Switch to desktop strip in the taskbar monitor menu, or press your own shortcut, and it stays closed once you close it. On non-Windows systems a taskbar monitor request now reports that it is not supported instead of opening the strip.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Strata 升级默认改为快速校验，升级后不用再等模型重新加载：更新、切换已安装版本和自动更新现在只检查新版服务能否正常响应（健康检查），不再先加载模型、发送短请求，检查不通过照常自动恢复原版本。更新前已加载的模型会在切换完成后在后台重新加载，不会拖住更新，只加载一次（之前更新前没加载模型时也会先加载、验收后再卸载，白白多加载一次）；后台加载失败只在日志里提示，不会回滚，可以手动加载，或在「已安装版本」切回原版本。需要更稳妥时，可在「下载设置与测试」里打开「升级后加载模型完整验收」（默认关闭），升级会和以前一样先加载模型并发送短请求，任一失败都会回滚。
+    - 监控的显示快捷键改为自定义，默认不设置：「桌面监控 → 监控浮条」里点「录制」后按下想要的组合键即可，可随时更改或清除，保存后立即生效。组合键需包含 Ctrl、Alt 或 Win（F13–F24 可单独使用）；微信 / QQ 截图（Alt+A、Ctrl+Alt+A）、Alt+F4、输入法切换等常用快捷键会直接提示换一个；被其他程序占用时显示注册失败原因。新安装和升级用户都不再有默认快捷键：以前默认的 Ctrl+Alt+M 不再自动注册，之前手动选过的组合会保留。
+    - 「监控浮条」设置更紧凑：快捷键并入浮条设置；布局、文字行数和字号排成一行；每个指标的勾选、配色和排序收进一行；显示选项改为三列，整页高度明显减少。
+    - 修复「桌面监控」页滚动后顶部标题栏和页签消失：从托盘或浮条菜单打开「设置 / 任务栏颜色」跳转时，整个窗口会被带着滚动，标题栏被推出屏幕；现在只有内容区滚动，标题栏和页签始终可见。
+    - 修复监控浮条自己弹出来：任务栏监控在开机恢复、资源管理器重启、显示器变化或睡眠唤醒后启动失败、首帧超时、辅助进程崩溃或断开时，以前会自动改为打开桌面浮条，关掉后下次又会出现。现在这些情况只停止任务栏监控并显示原因，不再打开浮条；浮条只在你点「打开监控浮条」、在任务栏监控菜单里选「切换到桌面浮条」或按自己设置的快捷键时出现，关掉后保持关闭。非 Windows 系统请求任务栏监控时直接提示不支持，也不会改开浮条。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.24
+ReleaseTime: 2026-10-26T11:28:19.0000000Z
