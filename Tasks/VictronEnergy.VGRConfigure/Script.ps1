@@ -1,10 +1,14 @@
+# Version and InstallerUrl
+$Software = $Global:DumplingsStorage.VictronEnergySoftwareCatalog.Where({ $_.title -eq 'Victron Global Remote Configuration tool' }, 'First')[0]
+$Object1 = Invoke-RestMethod -Uri "$($Global:DumplingsStorage.VictronEnergySoftwareApiPrefix)$($Software.id)/"
+$Download = $Object1.sections.accordion.links.Where({ $_.label -match 'VGR Configure' -and $_.url.EndsWith('.msi') }, 'First')[0]
+
+$this.CurrentState.Version = [regex]::Match($Download.label, '^\(([^)]+)\)').Groups[1].Value
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Global:DumplingsStorage.VictronEnergyPrefix $Global:DumplingsStorage.VictronEnergyDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('VGR_Configure_Setup') } catch {} }, 'First')[0].href
+  InstallerUrl = $Download.url
 }
-
-# Version
-$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
