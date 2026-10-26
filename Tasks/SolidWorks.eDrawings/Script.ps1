@@ -1,4 +1,4 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://restapiext.solidworks.com/FreeDL/v1.0/FreeAPI/Downloads2/All?api_key=49a246f63bee47b7a1394da7e3ec5b4c').data.Where({ $_.ID -eq 335 }, 'First')[0]
+$Object1 = (Invoke-RestMethod -Uri 'https://restapiext.solidworks.com/FreeDL/v1.0/FreeAPI/Downloads2/All?api_key=972253af2214441db121b6b13b0abdce').data.Where({ $_.ID -eq 335 }, 'First')[0]
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
