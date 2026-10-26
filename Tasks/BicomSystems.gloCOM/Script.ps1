@@ -1,48 +1,53 @@
-# Installer
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType          = 'exe'
-  InstallerUrl           = $InstallerUrlEXE = $Global:DumplingsStorage.BicomSystemsDownloadPage.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('gloCOM') } catch {} }, 'First')[0].href
-  AppsAndFeaturesEntries = @(
-    [ordered]@{
-      DisplayVersion = $VersionEXE = [regex]::Match($InstallerUrlEXE, '(\d+(?:\.\d+)+)').Groups[1].Value
+# Version and Installer
+# Not every release directory carries every product, so take the newest version that publishes both Windows packages.
+foreach ($Candidate in $Global:DumplingsStorage.BicomSystemsVersions) {
+  $UrlEXE = "$($Global:DumplingsStorage.BicomSystemsDownloadRoot)${Candidate}/glocom/gloCOM-${Candidate}.exe"
+  $UrlMSIX = "$($Global:DumplingsStorage.BicomSystemsDownloadRoot)${Candidate}/glocom/gloCOM-${Candidate}.msix"
+  if (((Invoke-WebRequest -Uri $UrlEXE -Method Head -MaximumRetryCount 0 -SkipHttpErrorCheck).StatusCode -eq 200) -and
+    ((Invoke-WebRequest -Uri $UrlMSIX -Method Head -MaximumRetryCount 0 -SkipHttpErrorCheck).StatusCode -eq 200)) {
+    # Version
+    $this.CurrentState.Version = $Candidate
+    # Installer
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerType          = 'exe'
+      InstallerUrl           = $UrlEXE
+      AppsAndFeaturesEntries = @(
+        [ordered]@{
+          DisplayVersion = $Candidate
+        }
+      )
     }
-  )
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerType = 'msix'
+      InstallerUrl  = $UrlMSIX
+    }
+    break
+  }
 }
-
-$this.CurrentState.Installer += [ordered]@{
-  InstallerType = 'msix'
-  InstallerUrl  = $InstallerUrlMSIX = $Global:DumplingsStorage.BicomSystemsDownloadPage.Links.Where({ try { $_.href.EndsWith('.msix') -and $_.href.Contains('gloCOM') } catch {} }, 'First')[0].href
+if (-not $this.CurrentState.Contains('Version')) {
+  throw 'No gloCOM installer pair was found in the Bicom Systems download index.'
 }
-$VersionMSIX = [regex]::Match($InstallerUrlMSIX, '(\d+(?:\.\d+)+)').Groups[1].Value
-
-if ($VersionEXE -ne $VersionMSIX) {
-  $this.Log("EXE version: ${VersionEXE}")
-  $this.Log("MSIX version: ${VersionMSIX}")
-  throw 'Inconsistent versions detected'
-}
-
-# Version
-$this.CurrentState.Version = $VersionEXE
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      if ($ReleaseNotesUrlLink = $Global:DumplingsStorage.BicomSystemsDownloadPage.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('gloCOM') -and $_.href -match 'Changelog' } catch {} }, 'First')) {
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $ReleaseNotesUrlLink[0].href
-        }
-      } else {
-        $this.Log("No ReleaseNotesUrl (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      $ReleaseNotesUrl = "$($Global:DumplingsStorage.BicomSystemsChangelogRoot)Changelog_gloCOM_${Candidate}.pdf"
+      if ((Invoke-WebRequest -Uri $ReleaseNotesUrl -Method Head -MaximumRetryCount 0 -SkipHttpErrorCheck).StatusCode -ne 200) {
+        $ReleaseNotesUrl = $null
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl
       }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
-    $this.InstallerFiles[$InstallerUrlMSIX] = $InstallerFile = Get-TempFile -Uri $InstallerUrlMSIX
+    $this.InstallerFiles[$UrlMSIX] = $InstallerFile = Get-TempFile -Uri $UrlMSIX
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMSIX
 
