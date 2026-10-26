@@ -1,9 +1,14 @@
-$Object1 = (Invoke-RestMethod -Uri 'http://wordpress.venturi.de/?feed=atom&s=HideVolumeOSD').Where({ $_.content.'#cdata-section'.Contains('smd_process_download') })[0]
-$Object2 = $Object1.content.'#cdata-section' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'http://wordpress.venturi.de/?feed=atom&s=HideVolumeOSD' -UserAgent $DumplingsBrowserUserAgent | Read-ResponseContent | ConvertFrom-Xml
+
+# The search feed is unordered, so take the newest post that still exposes a download link
+$Entry = @($Object1.feed.entry | Where-Object { $_.content.InnerText.Contains('sdm_process_download') } | Sort-Object { [datetime]$_.updated } -Descending)[0]
+$Object2 = $Entry.content.InnerText | ConvertFrom-Html
+
+$RedirectChain = @(Get-RedirectedUrls -Uri $Object2.SelectNodes('//a[@href]').Where({ $_.Attributes['href'].Value.Contains('sdm_process_download') }, 'First')[0].Attributes['href'].Value -Method GET)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri $Object2.SelectNodes('//a[@href]').Where({ $_.Attributes['href'].Value.Contains('smd_process_download') }, 'First')[0].Attributes['href'].Value
+  InstallerUrl = $InstallerUrl = $RedirectChain[-1]
 }
 
 # Version
@@ -12,7 +17,7 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'HideVolumeOSD-(\d+(?
 # PackageUrl
 $this.CurrentState.Locale += [ordered]@{
   Key   = 'PackageUrl'
-  Value = $Object1.content.base
+  Value = $Entry.content.base
 }
 
 switch -Regex ($this.Check()) {
