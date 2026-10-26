@@ -6,8 +6,10 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
+$Object1 = Invoke-WebRequest -Uri 'https://www.hovercam.com/flex11'
+
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.PathwayDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('HoverCamFlex') -and $_.href.Contains('11') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href.Contains('HoverCam-Flex') -and $_.href.Contains('11') } catch {} }, 'First')[0].href
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
