@@ -1,7 +1,7 @@
 $Object1 = Invoke-WebRequest -Uri 'https://www.sdcard.org/downloads/formatter/'
 
 # Version
-$this.CurrentState.Version = [regex]::Match($Object1.Content, 'SD Memory Card Formatter\s+(\d+(?:\.\d+)+)\s+for Windows').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.Content, 'SD Memory Card Formatter\s+(\d+(?:\.\d+)+)').Groups[1].Value
 
 $Object2 = Invoke-WebRequest -Uri 'https://www.sdcard.org/downloads/formatter/sd-memory-card-formatter-for-windows-download/'
 
