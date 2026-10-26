@@ -1,0 +1,142 @@
+Version: 1.13.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/emqx/MQTTX/releases/download/v1.13.2/MQTTX-Setup-1.13.2-ia32.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/emqx/MQTTX/releases/download/v1.13.2/MQTTX-Setup-1.13.2-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release Note 🎉
+    🤖 MQTTX Agent, Dashboard & GZIP Decompression
+    MQTTX 1.13.2 introduces Dashboard for visualizing MQTT data, turns the desktop Copilot into MQTTX Agent, and adds optional GZIP decompression to Desktop and Web. It also improves performance with large Topic Trees, adds per-connection publish drafts and history, and preserves groups in JSON backups.
+    MQTTX Agent 🤖
+    MQTTX Agent brings MQTT tools into the desktop assistant. Create and connect clients, subscribe and publish, inspect messages and logs, work with scripts and schemas, and build dashboards using natural language.
+    - Use / to choose Skills for client code, test data, schemas, custom functions, diagnostics, MQTTX CLI and Zero EMQX.
+    - Mention a connection with @ to give the Agent the connection context for your request.
+    - Open the Agent full screen or in a movable, resizable floating window with Cmd/Ctrl + J.
+    - Use built-in MQTT tools alongside tools from your MCP servers, with action approval in Ask mode.
+    - See context usage and keep long conversations working with automatic compaction.
+    - Select reasoning strength when the chosen model supports it.
+    - Create a free temporary Zero EMQX test broker and save its connection in MQTTX.
+    - Read clearer tool steps and replies with improved spacing for paragraphs, headings, lists, code blocks and tables.
+    Dashboard 📊
+    Dashboard is now available in Viewer → Dashboard. Turn MQTT message fields into live values and charts without writing code.
+    - Add Big Number, Line and Gauge widgets to a dashboard.
+    - Choose a connection, topic filter and payload field for each widget.
+    - Arrange widgets by dragging and resizing them on the dashboard grid.
+    - Select a time range to review stored messages matched by each widget's MQTT topic filter, or follow live updates.
+    - Ask MQTTX Agent to create dashboards, add widgets and arrange their positions and sizes.
+    Features 🌈
+    Desktop, Web:
+    - Add a settings switch to decompress incoming GZIP messages.
+    - Delete individual entries from publish topic history.
+    - Refresh the connections empty page with quick connection actions.
+    - Show EMQ products as a message flow on the About page.
+    Desktop:
+    - Keep the publish area and history separate for each connection.
+    - Select a connection group when creating or editing a connection, and preserve groups in JSON backups.
+    - Delete or disable subscriptions while a connection is disconnected.
+    - Display MQTT 5.0 Response Information returned by the broker.
+    - Add Dashboard with Big Number, Line and Gauge widgets, a configurable grid layout and time-range controls.
+    - Keep the Topic Tree responsive with large topic sets through batched updates, bounded sub-topic lists and confirmation before expanding large trees.
+    - Show direct sub-topics, sub-topic counts and depth in the Topic Tree, with a resizable information panel.
+    - Mark GZIP-decompressed messages.
+    - Add visible row menu buttons for connections and groups.
+    CLI:
+    - Display MQTT 5.0 Response Information when requested and returned by the broker.
+    - Add EMQ product links to the root help output.
+    Fixes 🛠
+    Desktop, Web:
+    - Correct MQTT topic matching in the message list, including wildcard levels, system topics, shared subscriptions and case sensitivity.
+    - Show the active topic filter and provide a clear action.
+    - Reset subscription dialog loading state across subscription edit outcomes.
+    - Keep topic colors readable across themes and keep QoS labels on the same line when a scrollbar appears.
+    Desktop:
+    - Preserve the subscription filter during topic search and keep the nearest messages when paging older history.
+    - Apply edited connection settings immediately and stop stale clients from reconnecting.
+    - Preserve collapsed connection groups across navigation and reveal newly created connections.
+    - Ask for confirmation before clearing connection history.
+    - Keep Ctrl+W / Cmd+W from quitting the application through the main window.
+    - Install the correct native CLI architecture on Apple Silicon.
+    - Align closing braces in decoded Protobuf output and report unreadable Excel import files.
+    - Report persisted subscription counts correctly in the Agent connection list.
+    - Restore Agent connection context and the @ menu after a reload, send supported reasoning levels and keep the Agent from changing its own reasoning strength.
+    - Align menus, list rows and translations, and keep view styles consistent across navigation.
+    Web:
+    - Reveal the connection list when opening it from the empty page.
+    - Allow Node.js versions matching >=18 in the Web build configuration.
+    What's Changed
+    - fix: make topic colors legible across dark, night, and light themes by @deviationist in https://github.com/emqx/MQTTX/pull/2050
+    - feat(connections): move Clear History button from menu to hotbar by @DanInSpace104 in https://github.com/emqx/MQTTX/pull/2052
+    - fix: align web topic text constant and hoist topicTextColor invariants by @ysfscream in https://github.com/emqx/MQTTX/pull/2069
+    - refactor(connections): remove unreachable clearHistory command dispatch by @ysfscream in https://github.com/emqx/MQTTX/pull/2070
+    - chore(lint): repair eslint config, resolve errors, apply prettier + eslint --fix by @ysfscream in https://github.com/emqx/MQTTX/pull/2071
+    - ci: add lint check workflow for desktop app by @ysfscream in https://github.com/emqx/MQTTX/pull/2072
+    - fix(desktop): reset subscription dialog loading on all edit paths by @ysfscream in https://github.com/emqx/MQTTX/pull/2074
+    - fix(mqtt): drop empty-string MQTT 5 properties from cleared number inputs by @ysfscream in https://github.com/emqx/MQTTX/pull/2073
+    - fix(web): reset subscription dialog loading on all edit paths by @ysfscream in https://github.com/emqx/MQTTX/pull/2076
+    - fix(web): relax engines.node constraint to >=18 by @ysfscream in https://github.com/emqx/MQTTX/pull/2075
+    - fix(connections): keep QoS on the same line when scrollbar appears by @ysfscream in https://github.com/emqx/MQTTX/pull/2079
+    - fix(desktop): align closing braces in protobuf decoded output by @ysfscream in https://github.com/emqx/MQTTX/pull/2081
+    - feat(publish): support deleting individual publish topic history by @ysfscream in https://github.com/emqx/MQTTX/pull/2082
+    - fix(connections): select groups in the connection form by @ysfscream in https://github.com/emqx/MQTTX/pull/2088
+    - feat(cli): display requested MQTT 5 response information by @ysfscream in https://github.com/emqx/MQTTX/pull/2085
+    - feat(desktop): display CONNACK response information by @ysfscream in https://github.com/emqx/MQTTX/pull/2090
+    - fix(desktop): install native CLI on Apple Silicon by @ysfscream in https://github.com/emqx/MQTTX/pull/2093
+    - feat(desktop): preserve connection groups in JSON backups by @ysfscream in https://github.com/emqx/MQTTX/pull/2091
+    - fix(desktop): preserve subscription filter during topic search by @ysfscream in https://github.com/emqx/MQTTX/pull/2083
+    - fix(desktop): preserve nearest messages when paging older history by @ysfscream in https://github.com/emqx/MQTTX/pull/2086
+    - fix(desktop,web): align MQTT topic filtering by @ysfscream in https://github.com/emqx/MQTTX/pull/2084
+    - fix(desktop): apply topic patterns to live dashboard messages by @ysfscream in https://github.com/emqx/MQTTX/pull/2094
+    - feat(connections): allow deleting and disabling subscriptions when disconnected by @sourabhburse in https://github.com/emqx/MQTTX/pull/2064
+    - fix(desktop): keep Ctrl+W/Cmd+W from quitting via the main window by @ysfscream in https://github.com/emqx/MQTTX/pull/2096
+    - refactor(desktop): remove unused payload history update method by @ysfscream in https://github.com/emqx/MQTTX/pull/2098
+    - fix(connections): preserve collapsed groups across navigation by @ysfscream in https://github.com/emqx/MQTTX/pull/2089
+    - feat: promote Device Agent in About pages and CLI help by @ysfscream in https://github.com/emqx/MQTTX/pull/2099
+    - fix(desktop,web): show and clear the active topic filter by @ysfscream in https://github.com/emqx/MQTTX/pull/2087
+    - feat(desktop): keep publish area and history per connection by @ysfscream in https://github.com/emqx/MQTTX/pull/2092
+    - fix(desktop): show the hidden connection list from the empty page by @ysfscream in https://github.com/emqx/MQTTX/pull/2101
+    - fix(desktop): ensure updated connection config takes effect immediately by @XuKing in https://github.com/emqx/MQTTX/pull/2095
+    - fix(desktop): confirm before clearing connection history by @ysfscream in https://github.com/emqx/MQTTX/pull/2105
+    - feat(desktop): redesign the connections empty page by @ysfscream in https://github.com/emqx/MQTTX/pull/2109
+    - feat(web): bring the redesigned empty page to MQTTX Web by @ysfscream in https://github.com/emqx/MQTTX/pull/2110
+    - fix(web): show the hidden connection list from the empty page by @ysfscream in https://github.com/emqx/MQTTX/pull/2111
+    - feat(desktop): polish the dashboard, fix its data loading and show its tab again by @ysfscream in https://github.com/emqx/MQTTX/pull/2107
+    - feat(desktop): turn Copilot into MQTTX Agent on the latest AI SDK by @ysfscream in https://github.com/emqx/MQTTX/pull/2097
+    - perf(desktop): keep the Topic Tree responsive with large topic sets by @ysfscream in https://github.com/emqx/MQTTX/pull/2106
+    - feat: add support for GZIP decompression by @T3rm1 in https://github.com/emqx/MQTTX/pull/2051
+    - feat(web): decompress gzip messages from a settings switch by @ysfscream in https://github.com/emqx/MQTTX/pull/2102
+    - feat(desktop): mark GZIP-decompressed messages by @ysfscream in https://github.com/emqx/MQTTX/pull/2113
+    - fix(desktop): keep the Agent from changing its own reasoning strength by @ysfscream in https://github.com/emqx/MQTTX/pull/2112
+    - fix(desktop): list the connections in the Agent @ menu after a reload by @ysfscream in https://github.com/emqx/MQTTX/pull/2115
+    - feat(desktop): let the Agent create and use a free Zero EMQX broker by @ysfscream in https://github.com/emqx/MQTTX/pull/2114
+    - refactor(desktop): simplify MQTTX Agent internals by @ysfscream in https://github.com/emqx/MQTTX/pull/2116
+    - style(desktop): align the dashboard menus, gauge and widget editor by @ysfscream in https://github.com/emqx/MQTTX/pull/2117
+    - style(desktop): share one ⋯ trigger and one menu surface by @ysfscream in https://github.com/emqx/MQTTX/pull/2118
+    - fix(desktop): translate the remaining hard-coded English by @ysfscream in https://github.com/emqx/MQTTX/pull/2119
+    - refactor(desktop): stop styles from depending on which page loaded first by @ysfscream in https://github.com/emqx/MQTTX/pull/2120
+    - refactor(desktop): build the Payload Inspector message header once by @ysfscream in https://github.com/emqx/MQTTX/pull/2121
+    - refactor(desktop): share the chart resize observer by @ysfscream in https://github.com/emqx/MQTTX/pull/2125
+    - refactor(desktop): share the view height and the pane drag by @ysfscream in https://github.com/emqx/MQTTX/pull/2123
+    - fix(desktop): scope the styles of four views by @ysfscream in https://github.com/emqx/MQTTX/pull/2122
+    - feat(desktop): add a row menu button to connections and groups by @ysfscream in https://github.com/emqx/MQTTX/pull/2124
+    - fix(desktop): align connection list rows with the other lists by @ysfscream in https://github.com/emqx/MQTTX/pull/2126
+    - docs: refresh READMEs and desktop docs for v1.13.2 by @ysfscream in https://github.com/emqx/MQTTX/pull/2103
+    - fix(desktop): improve Agent reply readability by @ysfscream in https://github.com/emqx/MQTTX/pull/2127
+    - fix(desktop): match MQTT topic filters in Viewer history by @ysfscream in https://github.com/emqx/MQTTX/pull/2129
+    - fix(desktop): count persisted subscriptions in Agent connection lists by @ysfscream in https://github.com/emqx/MQTTX/pull/2130
+    - fix(ci): separate CLI build and npm publish runtimes by @ysfscream in https://github.com/emqx/MQTTX/pull/2131
+    - 1.13.2 by @ysfscream in https://github.com/emqx/MQTTX/pull/2132
+    - fix(cli): declare repository metadata for npm provenance by @ysfscream in https://github.com/emqx/MQTTX/pull/2133
+    - refactor: simplify release preparation code and tests by @ysfscream in https://github.com/emqx/MQTTX/pull/2134
+    New Contributors
+    - @DanInSpace104 made their first contribution in https://github.com/emqx/MQTTX/pull/2052
+    - @sourabhburse made their first contribution in https://github.com/emqx/MQTTX/pull/2064
+    - @XuKing made their first contribution in https://github.com/emqx/MQTTX/pull/2095
+    - @T3rm1 made their first contribution in https://github.com/emqx/MQTTX/pull/2051
+    Full Changelog: https://github.com/emqx/MQTTX/compare/v1.13.1...v1.13.2
+- Key: ReleaseNotesUrl
+  Value: https://github.com/emqx/MQTTX/releases/tag/v1.13.2
+ReleaseTime: 2026-10-26T03:00:13.0000000Z
