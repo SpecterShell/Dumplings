@@ -1,0 +1,99 @@
+Version: 0.1.16
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/XiaomiMiMo/MiMo-Code/releases/download/v0.1.16/mimocode-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Upgrade notes
+    中文
+    本版本移除 legacy Compose：compose 主智能体、内置 workflow 及全部 compose:* 技能不再提供，复杂任务请改用 build 模式下的 /compose-next（clarify → spec → implement → verify → review → finish）。MCP 工具默认懒加载，按需发现并在就绪后调用。npm i @mimo-ai/cli 目前仅包含启动器，完整体验建议使用原生安装脚本。实验性 Orchestrator 模式已移除；Claude 会话导入与 agent-CLI 技能（claude-code / codex / grok-build）需通过环境变量显式启用。
+    English
+    Legacy Compose is retired in this release. The old compose agent, its built-in workflow, and the whole compose:* skill set are gone — for non-trivial work, switch to /compose-next on the build agent (clarify → spec → implement → verify → review → finish). On the MCP side, tools now load lazily instead of dumping the full catalog up front; they are discovered on demand and become callable once ready. Install-wise, npm i @mimo-ai/cli is only a thin launcher now, so the native installer remains the recommended path. Also worth knowing: the experimental Orchestrator mode is gone, and both Claude Code session import and the agent-CLI skills (claude-code / codex / grok-build) are opt-in via env flags.
+
+    What's Changed
+    - fix(mcp): support explicit user confirmation for recording by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2488
+    - Codex/audit intervention transport by @penghao9 in https://github.com/XiaomiMiMo/MiMo-Code/pull/2501
+    - fix: drop PascalCase tool projection and tool-call flooding; cancel same-step duplicates by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2515
+    - refactor: remove Orchestrator mode, isolate worktree chain, and isolated-git-guard by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2523
+    - fix(session): preserve local image attachment paths by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2525
+    - refactor(tools): remove the unused shell invocation style by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2524
+    - fix(session): remove unreleased same-step tool-call duplicate cancel by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2532
+    - fix(test): stop tmpdir disposal racing Instance.provide setup by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2530
+    - fix(agent): make ask interactive orthogonal to background for agent-spawned subagents by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2520
+    - fix(actor): remove TaskGate completion gate and passive downgrade by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2533
+    - feat: add host-defined API error classification and retry policies by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2521
+    - fix(session): close disposed event streams and stop unauthorized retries by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2540
+    - fix(instance): defer config refresh until live executions finish by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2546
+    - fix(events): preserve cron workspace and interactive request ownership by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2551
+    - docs(cron): document that cron expressions evaluate in UTC by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2552
+    - chore(repo): remove dead web/desktop/cloud packages and unused tooling by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2573
+    - chore(toolchain): drop turbo, upgrade tsgo pin, fold packages/script by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2575
+    - fix(session): persist cancellation during assistant preparation by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2580
+    - chore(build): pure public build without private overlay by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2588
+    - docs: remove non-spec docs and superseded/AIGC/Chinese specs by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2589
+    - chore(release): release from public repo with .env by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2590
+    - chore(repo): rename packages/opencode to packages/cli by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2591
+    - chore(repo): drop dead install/test/lint leftovers and husky by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2592
+    - refactor: rename leftover OPENCODE_* env, flatten packages/sdk, drop dead IDE caller by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2593
+    - fix(provider): refresh model configuration without disposing instances by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2603
+    - feat(cli): make Claude Code session import on startup opt-in by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2621
+    - fix(skills): close xlsx-official create.md library table row by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2624
+    - docs(agents): keep only enforced conventions in the style guide by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2640
+    - feat(release): publish tagged releases from CI by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2639
+    - feat(plugin): serve the plugin SDK from the host instead of installing it by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2645
+    - fix(provider): recognize model context window overflow prose by @peipeiwang-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2643
+    - feat(compose): retire legacy compose agent, workflow, and skills by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2644
+    - fix(plugin): detect the plugin SDK host by Bun.plugin, not the Bun global by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2647
+    - chore(test): restore root bunfig test root guard by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2649
+    - fix(cron): fire scheduled prompts into the creating session by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2648
+    - chore(test): allow root script tests while blocking packages tests by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2651
+    - fix(fs): treat absolute path.relative results as outside in contains by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2650
+    - feat(cli): FDS launcher for @mimo-ai/cli (npm limited support) by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2652
+    - feat(mcp): defer MCP tools with conversation-scoped lazy loading by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2653
+    - docs(readme): MiMo Desktop GA and MiMo-V2.6 model naming by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2654
+    - fix(session): send x-opencode-session on OpenCode Go requests by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2655
+    - feat(history): restore history_fts.kind classification by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2642
+    - feat(mcp): connect servers in the background with a bounded first-turn wait by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2657
+    - fix(session): preserve recovery after empty stops and surface request-phase retries by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2618
+    - fix(memory): support native Windows paths in memory indexing by @peipeiwang-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2659
+    - fix(history): make kind/body_idx column ensure idempotent by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2661
+    - fix(inbox): preserve instance ownership across queued wakes by @penghao9 in https://github.com/XiaomiMiMo/MiMo-Code/pull/2663
+    - fix(session): keep media parts when replaying the user message after overflow compaction by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2662
+    - fix(session): classify InvalidOutputError as retryable by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2672
+    - fix(session): retry empty model output via SessionRetry.policy by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2673
+    - feat(turn-queue): durable scheduling and subagent waiting by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2452
+    - fix(release): grant publish permission to npm trusted publisher by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2676
+    - fix(release): gate publish on FDS canary and complete tarballs by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2677
+    - fix(tips): stop recommending /login when providers already have credentials by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2678
+    - fix(tui): keep completion footer mounted on finish=tool-calls by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2679
+    - fix(tui): stop pinning actor send on the Delegating pending label by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2681
+    - fix(session): send mid-turn user messages verbatim to keep thinking signatures valid by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2682
+    - feat(mcp): call deferred MCP tools through mcp_tool_use by @MiMoHardFather in https://github.com/XiaomiMiMo/MiMo-Code/pull/2684
+    - feat(mcp): add concise readiness hints for deferred tools by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2685
+    - fix(test): isolate prefixCaptureRef in checkpoint-drain suite by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2687
+    - fix(session): contain prefix-capture defects and fix drainWriters accounting by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2690
+    - feat(skill): generalize compose-next unavailable-input and finish contract by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2693
+    - fix(session): replace per-message recall reminder with one memory paths reminder per context window by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2689
+    - fix(skill): make compose-next source YAML-safe and clarify finish contract by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2696
+    - fix(session): reset empty-turn content without removing its message identity by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2695
+    - refactor(session): stop rewriting persisted tool output to shrink context by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2691
+    - feat(voice): switch default control model to mimo-v2.6-flash by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2700
+    - fix(session): stop persistent retries for HTTP 403 quota exhaustion by @liuchaofan3 in https://github.com/XiaomiMiMo/MiMo-Code/pull/2701
+    - fix(session): append the rebuild boundary after the newest message by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2702
+    - fix(skill): restore compose-next Sn anchors for old-spec covers by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2706
+    - docs(compose): point specs at merged PR URLs by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2707
+    - fix(session): retry empty output persistently and persist retry records until the turn succeeds by @wqymi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2703
+    - feat(skill): gate agent-CLI skills behind MIMOCODE_ENABLE_AGENT_CLI_SKILLS by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2715
+    - chore: bump version to 0.1.16 by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2710
+    - fix(release): upload via external FDS endpoint and drop tag unit retests by @yanyihan-xiaomi in https://github.com/XiaomiMiMo/MiMo-Code/pull/2716
+    New Contributors
+    - @liuchaofan3 made their first contribution in https://github.com/XiaomiMiMo/MiMo-Code/pull/2701
+    Full Changelog: https://github.com/XiaomiMiMo/MiMo-Code/compare/v0.1.15...v0.1.16
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/XiaomiMiMo/MiMo-Code/releases/tag/v0.1.16
+ReleaseTime: 2026-10-26T09:44:36.0000000Z
