@@ -1,90 +1,25 @@
-function Read-Installer {
-  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-  $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
-  $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name.EndsWith('.exe') }, 'First')[0].FullName.Replace('/', '\') })
-  $ZipFile.Dispose()
-  $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
-  # Version
-  $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromExe
-  # InstallerSha256
-  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-  Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-}
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' $Global:DumplingsStorage.PohlConDownloadPage.SelectSingleNode('//li[@data-cbid="10762"]//a[@class="figure__cover-link"]').Attributes['href'].Value
+  InstallerUrl         = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' $Global:DumplingsStorage.PohlConDownloadPage.SelectSingleNode('//a[@class="figure__cover-link"][contains(@href,"SOF_PRO_JDSD-EXPERT")]').Attributes['href'].Value
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = 'EXPERT_Software_JDSD.exe'
+    }
+  )
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# Last Modified
-$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
-
-# Case 0: Force submit the manifest
-if ($Global:DumplingsPreference.Contains('Force')) {
-  $this.Log('Skip checking states', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 1: The task is new
-if ($this.Status.Contains('New')) {
-  $this.Log('New task', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  return
-}
-
-# Case 2: The Last Modified is unchanged
-if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
-  return
-} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
-  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`"", 'Warning')
-  return
-}
-
-Read-Installer
-
-# Case 3: The current state has an invalid version
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-  throw 'The current state has an invalid version'
-}
-
-# Case 4: The Last Modified has updated, but the SHA256 is not
-if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
-  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
-
-  $this.Write()
-  return
-}
-
-switch -Regex ($this.Check()) {
-  # Case 6: The Last Modified, the SHA256 and the version have changed
-  'Updated|Rollbacked' {
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
-  }
-  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
-  default {
-    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
-    $this.Config.IgnorePRCheck = $true
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
-  }
-}
+# The server re-stamps every file nightly while the bytes stay identical, so no fast validator is reliable here.
+$Result = $this.CheckInstallerUpdates(@{
+    Validator   = 'Hash'
+    LegacyState = @{ ValidatorField = 'LastModified'; InstallerIndex = 0 }
+    ReadVersion = {
+      param($Path)
+      $Extracted = Expand-TempArchive -Path $Path -Name 'EXPERT_Software_JDSD.exe'
+      try {
+        Read-ProductVersionFromExe -Path (Join-Path $Extracted 'EXPERT_Software_JDSD.exe')
+      } finally {
+        Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      }
+    }
+  })
+$this.CompleteInstallerUpdates($Result)

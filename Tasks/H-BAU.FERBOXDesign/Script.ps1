@@ -1,98 +1,41 @@
-function Read-Installer {
-  foreach ($Installer in $this.CurrentState.Installer) {
-    $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
-    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
-    $Installer['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName -match '\.exe$' }, 'First')[0].FullName.Replace('/', '\') })
-    $ZipFile.Dispose()
+$InstallerUrl = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' $Global:DumplingsStorage.PohlConDownloadPage.SelectSingleNode('//a[@class="figure__cover-link"][contains(@href,"SOF_PRO_FERBOX-DESIGN_")]').Attributes['href'].Value
 
-    $InstallerFileExtracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $Installer.NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $Installer.NestedInstallerFiles[0].RelativeFilePath
-    $InstallerFile2Extracted = New-TempFolder
-    7z.exe e -aoa -ba -bd -y -o"${InstallerFile2Extracted}" $InstallerFile2 'files.txt' | Out-Host
+# The wrapped executable name carries the marketing version, so read it from the archive before registering the entry.
+$this.InstallerFiles[$InstallerUrl] = $ArchiveFile = Get-TempFile -Uri $InstallerUrl
+$Archive = [System.IO.Compression.ZipFile]::OpenRead($ArchiveFile)
+$InnerName = $Archive.Entries.Where({ $_.Name -like '*.exe' }, 'First')[0].FullName
+$Archive.Dispose()
 
-    # Version
-    $this.CurrentState.Version = [regex]::Match((Join-Path $InstallerFile2Extracted 'files.txt' | Get-Item | Get-Content -Raw), '(?m)^DisplayVersion\r\n(\d+(?:\.\d+)+)').Groups[1].Value
-    # InstallerSha256
-    $Installer['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
-
-    Remove-Item -Path $InstallerFile2Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
-  }
-}
-
-# Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri 'https://pohlcon.com/fileadmin/crossbase/SOF/PRO/' $Global:DumplingsStorage.PohlConDownloadPage.SelectSingleNode('//li[@data-cbid="10985"]//a[@class="figure__cover-link"]').Attributes['href'].Value
+  InstallerUrl         = $InstallerUrl
+  NestedInstallerFiles = @(
+    [ordered]@{
+      RelativeFilePath = $InnerName
+    }
+  )
 }
 
-$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-# Last Modified
-$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
-
-# Case 0: Force submit the manifest
-if ($Global:DumplingsPreference.Contains('Force')) {
-  $this.Log('Skip checking states', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  $this.Message()
-  $this.Submit()
-  return
-}
-
-# Case 1: The task is new
-if ($this.Status.Contains('New')) {
-  $this.Log('New task', 'Info')
-
-  Read-Installer
-
-  $this.Print()
-  $this.Write()
-  return
-}
-
-# Case 2: The Last Modified is unchanged
-if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
-  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
-  return
-} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
-  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`"", 'Warning')
-  return
-}
-
-Read-Installer
-
-# Case 3: The current state has an invalid version
-if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
-  throw 'The current state has an invalid version'
-}
-
-# Case 4: The Last Modified has updated, but the SHA256 is not
-if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
-  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
-
-  $this.Write()
-  return
-}
-
-switch -Regex ($this.Check()) {
-  # Case 6: The Last Modified, the SHA256 and the version have changed
-  'Updated|Rollbacked' {
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
-  }
-  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
-  default {
-    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
-    $this.Config.IgnorePRCheck = $true
-    $this.Print()
-    $this.Write()
-    $this.Message()
-    $this.Submit()
-  }
-}
+# The wrapper only exposes its product version through files.txt, and the server re-stamps bytes nightly without changing them.
+$Result = $this.CheckInstallerUpdates(@{
+    Validator   = 'Hash'
+    LegacyState = @{ ValidatorField = 'LastModified'; InstallerIndex = 0 }
+    ReadVersion = {
+      param($Path)
+      $Extracted = Expand-TempArchive -Path $Path -Name $InnerName
+      try {
+        $InnerExtracted = New-TempFolder
+        try {
+          & 7z.exe e -aoa -ba -bd -y "-o$InnerExtracted" (Join-Path $Extracted $InnerName) 'files.txt' | Out-Host
+          if ($LASTEXITCODE -ne 0) { throw "7z failed to extract files.txt with exit code $LASTEXITCODE." }
+          $Match = [regex]::Match((Join-Path $InnerExtracted 'files.txt' | Get-Item | Get-Content -Raw), '(?m)^DisplayVersion\r\n(\d+(?:\.\d+)+)')
+          if (-not $Match.Success) { throw 'files.txt did not provide a DisplayVersion.' }
+          $Match.Groups[1].Value
+        } finally {
+          Remove-Item -LiteralPath $InnerExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+        }
+      } finally {
+        Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+      }
+    }
+  })
+$this.CompleteInstallerUpdates($Result)
