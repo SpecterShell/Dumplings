@@ -1,0 +1,22 @@
+Version: 1.13.20
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.13.20/Mini-Term_1.13.20_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版三个新功能：终端里按住 Ctrl 单击文件路径直接打开文件、设置里新增全局「环境变量」、文件树空白处右键「在文件夹中打开」。
+    更新内容
+    新功能
+    - 终端文件链接 —— 按住 Ctrl（macOS ⌘）把鼠标移到终端里的文件路径上，路径会出下划线；单击就在文件页打开这个文件，带行号的（如 src/app.ts:20、app.ts(30,5)）直接跳到那一行，已经开过的会切过去并重新定位。
+      - 相对路径依次按 AI 会话的启动目录、终端当前目录、项目根目录查找，适合直接点 Claude / Codex 输出里提到的文件。
+      - WSL 的 /mnt/d/... 和 Git Bash 的 /d/... 会自动换成 Windows 路径；被自动换行、或被 AI 工具自己折成两行的长路径也能整段识别。
+      - 只对项目目录内的文件生效，项目外或不存在的路径不会出下划线。
+    - 全局环境变量 —— 「设置 → 终端 → 环境变量」新增一张全局表，所有项目新建的本地终端都会带上。和项目右键菜单里的「环境变量」同名时以项目的为准（项目里取消勾选的变量不会遮掉全局值）。改完即保存，无需点保存按钮；只影响之后新开的终端，SSH 远程终端不注入。
+    - 文件树空白处右键「在文件夹中打开」 —— 在系统文件管理器里直接打开项目根目录（本地项目）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.13.20
+ReleaseTime: 2026-10-27T08:21:14.0000000Z

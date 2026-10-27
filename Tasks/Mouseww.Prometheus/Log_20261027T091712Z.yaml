@@ -1,0 +1,32 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.12.0/Prometheus_0.12.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.12.0/Prometheus_0.12.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增：多 Agent 运行时
+    同一套界面，现在可以由 PI、Claude Code 或 Codex 驱动对话。
+    - 选 Agent，再选模型：新建会话时选择 Agent，模型选择器列出它能用的全部模型——自带登录的模型，加上每个兼容网关的模型（按网关分组）。选自带登录的模型就走 Agent 自己的账号，选网关里的模型就经本机中继走该网关；会话内可随时换，网关密钥不会交给命令行进程。
+    - 工具、权限、隐私一致：记忆、知识库、SSH、连接器、子代理等工具，权限确认、计划模式与隐私面罩，在三个运行时里行为一致；Claude Code、Codex 的内置工具复用同样的 diff、命令输出与待办面板。
+    - 中途切换 Agent：已有对话可以换一个 Agent 接着聊。原会话保留，新会话显示之前的消息，并把对话记录作为背景交给新的 Agent。
+    - 自定义 Agent：设置 → Agent 里基于 Claude Code 或 Codex 添加自己的 Agent，可指定可执行文件与环境变量（例如另一个 CLAUDE_CONFIG_DIR）；内置的两个也可以改路径和环境变量。
+    - Claude Code、Codex 需要先在本机安装并登录；Android 本机模式下不可用，需连接服务器。详见 docs/agent-runtime.md。
+    新增：一个网关支持多种协议
+    - AI 网关除主协议外，可同时声明其它协议（OpenAI Chat / Responses、Anthropic、Gemini）及各自的地址。Claude Code 使用 Anthropic Messages，Codex 使用 OpenAI Responses，对话时自动选它支持的协议。
+    修复
+    - 修复 Claude Code、Codex 子进程把发往本机中继的请求也送进 HTTP(S)_PROXY 的问题。
+    - 修复网关变更后前端模型列表不刷新的问题。
+    - 重试提示不再只显示 unknown，会提示检查代理、登录或网关。
+    说明
+    - Codex 的「自带登录」会读取账号的 ~/.codex/config.toml；该文件无法解析时 Codex 会报配置错误，需要先修好它。
+    - Codex 经网关使用时，网关需要提供可用的 Responses 接口。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.12.0
+ReleaseTime: 2026-10-27T08:13:27.0000000Z
