@@ -1,0 +1,22 @@
+Version: 0.2.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.27/Strata.Manager_0.2.27_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed a Mac showing "engine files incomplete" after preparing a model, so the model was never registered (a 0.2.26 regression): since 0.2.26 a Mac installs Strata through the no-compile control mode, which writes the run config's engine as component:strata-engine instead of a file path. The check after setup still looked for that text as a file, found nothing and reported "engine files incomplete" even though the model files were downloaded. The check now resolves the component reference to the prebuilt engine Manager installed in the runtime's engine folder; when no engine package is found the error says why and points to "Update engine" in Settings. A leftover build-metal folder from an older failed source build no longer matters.
+    - Fixed "this platform cannot read local processes" after setup on macOS: a Mac has no /proc, so the code that lists local processes always failed there and blocked registration, detection and automatic start once the model was prepared. A Mac now reads Strata servers' command lines from the system process table; Windows and Linux behave as before.
+    - Fixed the runtime upgrade refusing with "Other programs are still running from this folder" without saying which: after stopping its own services the upgrade checked once and failed as soon as any Strata server process still referenced the folder, without waiting for it to exit or naming it. It now waits up to about 12 seconds for just-stopped processes to leave before deciding. If something still holds the folder, the error lists the process name, PID and config file and separates services this app manages (stop them on the Services page) from programs started elsewhere (close that window or app, or end the PID in Task Manager → Details). What is checked and the rollback on failure are unchanged, and the Manager never ends processes it does not own.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 Mac 上装完模型后显示「模型引擎文件不完整」、模型无法登记（0.2.26 回归）：0.2.26 起 Mac 上的 Strata 安装走免编译的控制模式，运行配置里的引擎写成 component:strata-engine，而不是文件路径。安装完成后的校验仍把它当成路径去找文件，找不到就判定「模型引擎文件不完整」，模型文件已经下好却不会登记。现在这个校验按组件引用解析，使用 Manager 装在运行环境 engine 目录里的预制引擎；找不到引擎包时，错误会说明原因并提示在设置里「更新引擎」。旧版留下的半编译目录（build-metal）不影响判断。
+    - 修复 macOS 上安装后「此平台无法读取本机进程，不能安全自动启动」：Mac 没有 /proc，读取本机进程清单的代码在 Mac 上总是失败，导致模型准备完成后的登记、检测和自动启动都被拦下。现在 Mac 通过系统进程表读取 Strata 服务的命令行；Windows 和 Linux 的行为不变。
+    - 修复升级运行环境时“检测到其它程序仍在运行此目录，未替换文件”却不说是谁：此前停掉 Manager 自己的服务后只检查一次，只要还有任何 Strata 服务进程引用该目录就直接失败，既不等进程退出，也不告诉你是哪个进程。现在会先等待最多约 12 秒让刚停止的进程退出再判断；仍有占用时，报错会列出进程名、PID 和配置文件，并区分“本应用管理的服务”（去「服务」页停止）与“其它程序启动的”（关闭对应窗口或应用，或在任务管理器「详细信息」页按 PID 结束）。判断范围、失败后的回滚行为不变，Manager 不会擅自结束不属于它的进程。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.27
+ReleaseTime: 2026-10-27T14:45:14.0000000Z
