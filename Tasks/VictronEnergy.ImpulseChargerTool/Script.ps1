@@ -4,7 +4,7 @@ $Object1 = Invoke-RestMethod -Uri "$($Global:DumplingsStorage.VictronEnergySoftw
 $Download = $Object1.sections.accordion.links.Where({ $_.label -match 'Impulse PC software' -and $_.url.EndsWith('.zip') }, 'First')[0]
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = [System.Uri]::new((Join-Uri $Global:DumplingsStorage.VictronEnergyWebsitePrefix $Download.url)).AbsoluteUri
+  InstallerUrl         = Join-Uri $Global:DumplingsStorage.VictronEnergyWebsitePrefix $Download.url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = 'ImpulseSetup.msi'
@@ -13,16 +13,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator   = 'ETag'
-  LegacyState = @{ ValidatorField = 'ETag' }
-  ReadVersion = {
-    param($Path)
-    $Extracted = Expand-TempArchive -Path $Path -RelativeFilePath 'ImpulseSetup.msi' -CollisionAction Rename
-    try {
-      Read-ProductVersionFromMsi -Path (Join-Path $Extracted 'ImpulseSetup.msi')
-    } finally {
-      Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+    Validator   = 'ETag'
+    LegacyState = @{ ValidatorField = 'ETag' }
+    ReadVersion = {
+      param($Path)
+      $Extracted = Expand-TempArchive -Path $Path -RelativeFilePath 'ImpulseSetup.msi' -CollisionAction Rename
+      try {
+        Read-ProductVersionFromMsi -Path (Join-Path $Extracted 'ImpulseSetup.msi')
+      } finally {
+        Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+      }
     }
-  }
-})
+  })
 $this.CompleteInstallerUpdates($Result)

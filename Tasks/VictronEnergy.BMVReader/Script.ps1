@@ -7,7 +7,7 @@ $this.CurrentState.Version = [regex]::Match($Download.label, '^\(([^)]+)\)').Gro
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = [System.Uri]::new((Join-Uri $Global:DumplingsStorage.VictronEnergyWebsitePrefix $Download.url)).AbsoluteUri
+  InstallerUrl         = Join-Uri $Global:DumplingsStorage.VictronEnergyWebsitePrefix $Download.url | ConvertTo-UnescapedUri
   NestedInstallerFiles = @(
     [ordered]@{
       RelativeFilePath = "$($Download.url | Split-Path -LeafBase)\setup.msi"
