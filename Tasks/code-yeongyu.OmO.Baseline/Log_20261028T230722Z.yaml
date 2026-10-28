@@ -1,0 +1,508 @@
+Version: 5.1.51
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.51/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    5.1.49 and 5.1.50 were not published; their changes ship here.
+    Session startup and task RPC attachment no longer wait for task-host liveness probes. Recovery runs independently per host, stops claiming or reviving children after shutdown, and preserves newer ownership claims. (#11335) DAG recovery and workpool reconciliation now wait for that same session-start reconcile (one shared gate) without holding admission, so a paused DAG's revivable child is never judged orphaned and a queued workpool item of an orphaned worker is redelivered rather than marked delivery_uncertain. (#11525)
+    Continuing a synchronous task whose session was already deleted now fails at once with an error saying to start a new task, instead of waiting out the 30-minute sync poll timeout; a sync poll also stops when the server keeps reporting its session as not found. Completed sync task sessions now honor background_task.taskCleanupDelayMs instead of a fixed 10 minutes. Reported by @orgito. (#11524, fixes #11520)
+    omo.dev deploys again after the document-shell change. The /design showcase became a root layout of its own and lost the hourly revalidation it used to inherit, so one prerendered page had no expiry and the deploy's asset-retention check refused the build. The design layout revalidates hourly again, within the site's one-hour HTML lifetime. (#11587, fixes #11585)
+    Release pull requests no longer fail the changelog gate when fragments for the next release land on the base branch after the cut. (#11574)
+    - Release preparation no longer fails its own command-string audit when changelog fragments have been folded into the changelog. (#11562)
+    The frontend skill now builds in ten habits that design reviewers check for. Before designing a new screen, a redesign, or a design system, it reads the guideline source in full, defines the ideal state per persona and journey step, and records every gap in a ledger. Controls keep the same box size in every state, and a spinner or arrow never adds padding. Pointer targets are at least 24 px, colour roles come before components (built from shadcn/ui anatomy), glass and dated trend surfaces stay out unless the brief asks for them, and the subtract pass counts the controls. Every UI or design-system deliverable states a per-criterion WCAG 2.2 AA result. (#11536, fixes #11534)
+    macOS computer use releases the keys and buttons it holds even if the engine dies mid-call. An input request that presses now starts the engine binary again as a hidden release helper and streams every press, drag move and release to it; when the engine is killed, crashes or a request unwinds with something still held, the helper posts the releases (within 2 seconds) through the same routes, leaving any key or button the user is physically holding to the user. The helper runs in its own session, ignores the hangup and terminate a group kill sends until its releases are out, and refuses to run unless the engine that spawned it is its parent and the stream carries its per-spawn token. Other platforms are unchanged. (#11535)
+    A process child whose provider has no usable sign-in now moves on to the next provider instead of failing. When the engine refuses a child's first prompt with provider_credentials_missing or provider_credentials_expired, the task skips the remaining models on that provider and starts on the next provider in its fallback chain, ending on the parent session's model when nothing else is left. Each hop is recorded as a task_model_fallback event naming the provider. An engine that does not send these codes behaves exactly as before. Every other refused first prompt in process mode now also carries the engine's validated error code as cause_code in its task_start_failed event and in the start-failure message (for example host_refused: host_memory_pressure); this is diagnostic only and does not change what the task does. (#11440, part of #10806) (#11525)
+    A queued steer to a subagent keeps its own id across the child boundary, and a lost acknowledgment is checked before anything is sent again. A message queued for a child that is still starting reaches it under the id it was queued with, so a drain repeated after a restart replays instead of delivering a second copy. When the child's acknowledgment is lost, omo asks the child whether it holds that id (get_pending_inputs): held settles it, not held resends the same id, and an unreadable answer keeps it uncertain instead of guessing. (#11427, part of sisyphuslabs/omo-desktop-app#2838) (#11525)
+    Model-profile notices no longer reach the model. A notice such as "model profile ... has no available model" was sent as part of the conversation, so the model read it ahead of your first message, and on a slow start it could cost an extra model request. The notice now stays out of the conversation: when there is something to do, the desktop app shows it as a notice with the next step (sign in from Provider authentication settings, or choose a model in the composer), and a headless run logs it. (#11365) A stored login that failed while a working provider was used instead still reaches you as a notice naming the provider to re-authenticate, and a profile model the registry no longer finds is reported with the step to choose another model. (#11525)
+    Memory read grants now check the file a raw-string tool actually opens. Containment follows native filesystem traversal before normalizing paths, so a directory symlink followed by .. cannot redirect a project-memory grant to another identity. Built-in tools retain their resolved-path behavior, missing notes remain readable through their existing canonical ancestor, and case aliases of the same directory remain accepted. (#11339) (#11525)
+    Completed Momus review verdicts are now persisted as numbered Markdown artifacts next to the plan file. Each .omo/plans/{plan}.reviews/NNN-okay.md or NNN-reject.md artifact captures the verdict, timestamp, model, plan sha256, review duration, reviewer session id, and the verdict block (the reasoning that precedes the verdict is not stored), so a finished review survives the end of the session. A .gitignore written next to the plans keeps the .reviews directories out of the user's own staging area. Momus itself stays read-only; persistence happens entirely on the orchestrator side after the review result returns. (#11237, fixes #3002) Thanks to @surlymochan for this contribution. (#11525)
+    Release binaries may be up to 200 MiB, and 5.1.49 was not published. omo 5.1.49's Linux binaries came out over the 182 MiB size budget (linux-x64 200.0 MB, linux-arm64 198.2 MB), so that release stopped before anything was published. The growth is the Bun 1.4.4 runtime itself: an empty compiled Bun program grew from 90.8 MB to 109.1 MB between Bun 1.4.3 and 1.4.4, while everything omo added since 5.1.48 is about 0.46 MB. The budget moves from 182 MiB to 200 MiB so releases keep shipping the Bun version CI tests. (#11491) (#11525)
+    Every omo.dev page now declares its own language and the dark colour scheme, and starts with a skip link. Korean, Japanese, Chinese and the other locales set <html lang> to their language (it was always English), form controls and scrollbars render dark, the first Tab offers "Skip to content", focused controls no longer hide under the sticky header, and unknown pages show a 404 in the reader's language. (#11498)
+    The omo.dev docs search box has a visible edge and a real label. Its border now meets the 3:1 contrast floor (it was 1.2:1), screen readers announce it as "Filter documentation sections" instead of its placeholder, and the section list has its own name. (#11492)
+    Icon buttons on omo.dev show their label on keyboard focus, and Escape closes the mobile menu. The workflow graph's Fit and Center buttons get a real tooltip (shown on hover and focus, dismissed with Escape), and Escape closes the mobile navigation sheet and puts focus back on the menu button. (#11490)
+    Dimmed graph nodes and quiet labels on omo.dev are readable again. Nodes off the highlighted path in the workflow graph recede by colour instead of fading to 20% (text contrast goes from 1.1:1 to 5.8:1), and step numbers and the corrected word in the demo no longer use the decoration-only grey. (#11488)
+    The opencode edition's skill tool no longer repeats skill descriptions OpenCode already lists. A skill is left out of the skill tool's item list only when OpenCode core's own skill list has the same skill (same name, same file) with a description, so its description is sent once per request instead of twice. Skills core does not list (flat .md skills, skills without a name or description, skills core skips because of its disable flags or a custom Claude config dir, OMO-bundled skills) stay in the skill tool's list, and when core's list cannot be read nothing is left out. (#11456)
+    The provider sign-in page shows the OmO logo. Every omo launch path (npm, the compiled binary, the local launcher) hands the engine the OmO icon with its brand, so the page a browser shows after signing in to a provider can carry the OmO mark instead of only the name. The logo appears only once omo pins a senpi release that includes senpi#4432/#4434; the currently pinned senpi (2026.10.27-1) ignores it. (#11445, fixes #11444)
+    Release preparation no longer fails its own tests. The changelog stamp-agreement test read changes/unreleased unconditionally; a release-state tree has consumed every fragment and has no such directory, so the test crashed on every release PR. It now reads the real fragments only when the directory exists. (#11443)
+    LazyCodex bug-fix skills now send fixes to the repository that owns the source. lcx-contribute-bug-fix told agents that a LazyCodex-owned defect must become a verified-fix issue carrying the patch on the code-yeongyu/lazycodex mirror, so a fix that already sat as an open lead PR here was filed a second time as a full diff on the mirror. The skill now searches the author's own open PRs across repos first, then opens a fork PR against code-yeongyu/oh-my-openagent (base dev, packages/omo-codex/plugin/... paths, changelog fragment); the mirror gets no PR and at most a short issue that links it. lcx-report-bug routes fixes the same way. Upstream openai/codex routing is unchanged. (#11410)
+    Research fact locators now bind to original snapshot bytes. Source snapshots retain the fetched bytes as raw.bin; a --text file alone becomes a converted-only source that supports warned quotations but no measured rows, and --raw <bytes> --text <extraction> keeps the original next to a declared extraction. Page locators read only reader-visible text nodes (never attributes, scripts, styles, or hidden elements), record byte offsets in the source's own encoding, and fact verify fails closed when a cited snapshot cannot be read. The new source refresh command repins a re-fetched source and re-anchors its rows by quote and context; a legacy row on a refreshed source is listed as not re-anchored and blocks verification instead of passing unchecked. (#11287)
+    Research collection now catches numbers that text conversion changed, and refuses to register them. source probe-conversion compares numeric multisets with one grouped-number grammar (a footnote digit glued onto 12,345 is reported; a lone 1.234 is a decimal), never groups digits across a table cell, row, list item or line break, lets digits copied from link targets, image sources, alt text and titles cover only numbers inside Markdown link or image syntax, treats a converter's ordered-list markers (only where the source has that <ol> item, lazy 1. 1. 1. numbering included), numeric reference-link labels, footnote-definition labels and hard-wrapped digit groups as conversion syntax rather than numbers, reads a sign through the emphasis, code, titled-link, image and escape markup a converter adds (**2019**-2023 is a range), decodes named references with one table on both sides (−,  ), reads the raw inline HTML a converter keeps (10<sup>-5</sup>, a sized <img>) as the source's own tags, accepts a reference title on the next line, and counts a minus touching Korean text, a single letter or an exponent, or written as an en dash. source snapshot prints the altered numbers, and fact add refuses a value its source's conversion altered with conversion_altered_number; the recovery is source snapshot --id S<n> --text <verified.txt> --replace, refused while an active row cites the source. The fact-ledger reference declares the probe's guaranteed scope and lists what is out of scope (shortcodes, LaTeX, non-CommonMark tables), which always reports as altered. Both research editions describe this flow; their existing phase instructions now live in focused references. (#11286)
+    Skill MCP clients can use MCP 2026-07-28 servers. Modern servers receive discovery and per-request protocol metadata without an initialization handshake. Input-required operations stop with a clear error because skill MCP does not support elicitation. Legacy servers receive a discovery probe before their existing initialization negotiation; a timed-out probe logs the fallback and is paid only once per server per process, because later connects to that server go straight to legacy initialization (a failed legacy initialization forgets it), and unsupported-version fallback preserves the legacy server's capabilities and identity. (#11243, part of #11205)
+    The desktop-engine MCP server also serves MCP 2026-07-28 clients. Discovery and per-request protocol metadata work without initialization; modern results identify the server and complete result type, and tool lists include cache hints. Unsupported request versions are rejected before daemon access, notifications receive no reply, and legacy initialization keeps its existing supported-version negotiation. (#11239, part of #11205)
+    Fixed
+    - Atlas schedules its delayed boulder-continuation retry through an injectable scheduler (default: the real timer), and its tests drive that scheduler instead of patching global timers, so a whole-suite run no longer fires other modules' timers in the retry tests (#11619, fixes #11617)
+    - Cancelling a prompt now stops an in-flight skill MCP call: skill_mcp passes the session abort signal to the MCP request, which rejects at once with the abort reason, and an HTTP MCP server's request and SSE stream are closed instead of staying open until the connection is torn down (#11592)
+    - The Prometheus planning-file guard resolves Windows paths the way the executor opens them: both / and \ split the physical walk, so a link/.. spelling is followed through the link instead of being collapsed lexically (a symlink escape was allowed), a symlinked or junctioned planning directory such as .omo -> docs\plans is recognised again, and 8.3 short names, drive-letter case and directory case all resolve to one canonical path. Inside-planning checks compare the canonical paths exactly, which keeps case-variant entries on case-sensitive directories distinct (#11548)
+    - A ChatGPT subscription whose sign-in refresh fails only briefly at session start (connection refused, timeout, a 408/429/5xx from the token endpoint) now stays selected in the model profile. Before, the session moved to the next provider, for example a configured OpenAI API key, and stayed on that metered lane until it was restarted. A refused refresh still skips the provider with the re-authenticate notice, a credential failure seen while re-checking the model still skips the provider with the matching notice, a model whose own request headers fail to resolve is still skipped, and a candidate kept while its refresh is still unresolved logs one warning with the error class and transport code so a later first-turn failure can be traced (#11442, fixes #11432) (#11525)
+    - omo logout now leaves a small sign-out note (no credentials, just the device and the time), so OmO Desktop can tell a deliberate sign-out from a credential store that hasn't answered yet. omo account token and export report it with exit code 10; exit 4 still means nothing could be read. Signing in again removes the note. The note is written before the credentials are removed, so a failed write leaves you signed in and omo logout reports the error; a damaged note is ignored (exit 4) and never breaks omo account show. (#11441, fixes #11434) (#11525)
+    - A workflow (DAG) category node whose whole model chain is spent or signed out now finishes on the parent session's model, the same last rung a task child gets. The model is captured when the workflow starts and kept on the run, so retried and recovered nodes keep it too. (#11439) (#11525)
+    - Prometheus checks and executes the same authorized planning-file path, including relative symlink/.. paths, aliased project roots, hashline renames, and patch moves. Patch headers must round-trip through the supported executor parser without changing authorized operations or targets. Rename/delete preserve named final links; content writes follow only allowed targets. The physical planning directory may have any name the user chose (for example .omo -> docs/plans) but must be strictly inside the real project root, never the root itself or an ancestor; a .omo path segment matches with filesystem-native casing. Every denial is logged with its specific reason. Nested plans and parent-folder Windows paths remain supported; required argument rewrites fail closed if the host's retained arguments cannot receive them (#11424)
+    - Bundled skills no longer ship a top-level __tests__ or *_test folder. Only a skill's top-level test/ and tests/ folders are exempt from the test-folder filter; before, any top-level folder name escaped it. (#11398, fixes #11393)
+    - Prometheus now checks every apply_patch Add, Update, Delete, and Move target using the executor's line-splitting and header-slicing rules, including carriage returns and Unicode line separators; empty or unclassifiable headers fail closed (#11392)
+    - Prometheus allows plan updates beside Markdown horizontal rules and triple-emphasized text by treating Update context as content, while still checking subsequent mutation headers (#11392)
+    - omo run starts its OpenCode server with a per-run password when OPENCODE_SERVER_PASSWORD is not set, so a web page on another localhost port can no longer drive it; attaching to that server from outside the run now needs the password (#11370)
+    - Authenticated tmux panes receive credentials through owner-only, one-use files instead of process arguments; run cleanup removes any unread files (#11370).
+    - Research fidelity verification now blocks only the facts whose source snapshot is unreadable, names the cause, accepts grouped derived values such as "3,234 KRW-e8" exactly as fill writes them, and detects edits to the original value or unit shown beside a conversion, in any bracket style (ASCII, fullwidth, square, lenticular, corner or tortoise-shell), a missing or misplaced original, a non-numeric bracket, a dash in place of brackets, and a second original (a bare figure in the operand's dimension right after the conversion), in HTML and Markdown editions; another filled fact, a parenthetical figure in prose, a year, or a range after a conversion no longer blocks an untampered report. (#11310)
+    - Verified and assumed claim placeholders now fill with their claim marks in HTML and Markdown verification; format guidance reflects Markdown support. (#11310)
+    - Research fidelity verification binds the unit written right after a value-only fact, with or without a space and with a Korean particle, a currency sign before it, its unit placeholder, or its table column header by visual column, so hand-edited units block and ordinary prose such as "m in total length" no longer raises a false unit mismatch. A scale word inside the value ("3,234억", "12 million") is part of the value, and a row header in a key/value table is never read as a column header. A qualifier after the value ("초과", "이상", "or more") or an ordinary word that is also a unit alias ("won awards", "second place") is never read as a unit; a unit wrapped in inline markup, in parentheses or after a line break is read; and fill records each value's bound unit, mode included, in the fill map, so an edit to an unknown unit, a deleted unit, or a deleted data-fact-mode attribute still blocks. The longest unit written after a value is the one checked, so a longer unit that starts with the row's unit ("12% 포인트", "12 percent points" for a row in %) blocks, and an ordinary unit word beside a currency sign of another currency ("$320 pounds") blocks. (#11301)
+    - First-person verification cues ("we verified", "we double-checked", and the Korean equivalents) warn only when the clause names a result and no document before the clause ends ("We measured a latency of 40 ms, as this report shows." and "We verified the value on page 3." warn); one cue list covers English and Korean. (#11301)
+    - Research fidelity verification now matches complete source revisions (a sentence-final period included), reports a missing operand timestamp and a missing operand row under their own codes instead of a window mismatch, and reads quoted CSV labels correctly. (#11290)
+    - Polished report editions retain their original brief binding in a separate <out>.polished.fill-map.json, the pre-polish fill map is never rewritten (so fact pairs --changed-since still re-checks every sentence that changed, including after polishing in place), a fill map that does not match the report is refused, and editions without a fill map cannot bypass a changed brief. (#11290)
+    - Fact derivation requires caller-supplied observation time (fact derive --now; without it the command refuses with missing_now) and preserves ledger validation errors. Quote exact rules, negative zero, source-value rendering, placeholder identifiers, and literal-brace guidance are corrected. (#11290)
+    Added
+    - CI now fails a pull request that adds an unused file, an unused export, an unused dependency, or an unlisted or unresolved import (bun run knip:check, knip 6.43.0). Findings already on dev are scoped ignores in knip.jsonc, each with its reason. (#11481, fixes #11433)
+    - Add the OpenSSL hash-directory selection for the planned engine CA importer: it reads only the hash files Bun's own lookup can reach, walking constructed <hash>.N names and stopping at the first failure, so an orphan, misnamed or post-gap file is never trusted. Nothing uses it yet. (#11430, part of #10762)
+    - Add the OpenSSL default-file rule for the planned engine CA importer: a default file Bun would reject, or one holding a certificate it indexes but cannot parse, now contributes nothing as a whole, so the importer never trusts a root that Bun itself cannot reach. Nothing uses it yet. (#11411, part of #10762)
+    - Add the Linux trust-bundle selector for the planned engine CA importer: it picks the one distribution-generated TLS bundle from os-release (Debian, Fedora and SUSE families, with no cross-family fallback) and reads it with an 8 MiB cap and a replacement check. Nothing uses it yet. (#11407, part of #10762)
+    - Add the v1 engine trust policy, the pure decision behind the planned engine CA importer: from per-OS certificate facts it selects the SSL-server roots and chain-building intermediates, and it applies every OS Deny or Disallowed entry. Nothing uses it yet; the engine still trusts the OS store through NODE_USE_SYSTEM_CA. (#11405, part of #10762)
+    Security
+    - Capture the host execution arguments before the complete before-hook chain, rejecting detached or subsequently changed Prometheus approvals. Tests also cover aliased temporary roots rather than assuming temporary paths are canonical. (#11424)
+    - Known and not fixed here: a hard link already under .omo can share an inode with a file outside .omo; realpath does not provide inode isolation. (#11424)
+    - Known and not fixed here: TOCTOU between tool.execute.before and the tool's open. Closing this race requires tool-side O_NOFOLLOW and directory-handle confinement. (#11424)
+    - Known and not fixed here: the patch round-trip trusts the vendored parser pinned to OpenCode 32f278b4; if the host parser changes, checked and executed targets can diverge again. (#11424)
+    Also in this release: the changes prepared for 5.1.49
+    Error messages name a step that works today. While terminal sign-in is closed, every "run omo login" hint (sign-in, omo sync, expired or unreadable sign-ins, memory sync) points at the OmO desktop app instead, and keeps naming omo login once accounts open. A refused service request says whether to sign in again, wait, try later or update omo, instead of always blaming sign-in. A missing plugin file, omo thread and omo update on a broken current install print the exact reinstall command, and /computer says why computer use is unavailable. (#11390, part of #11379) (#11417)
+    Maintainers can inspect or recreate a stuck get.omo.dev channel pointer from the installer mirror workflow. A manual run with op=head prints the signed HEAD and GET of channels/latest or channels/beta (status, every response header, body; credentials redacted), and op=recreate deletes the pointer and writes the given version as a new object, then reads it back; it refuses a version that is not fully mirrored or does not fit the channel (a prerelease on beta, a stable release on latest). Both share one concurrency group per channel with a mirror that moves that channel. (#11349, part of #11313) (#11417)
+    A permission denial or a refusal by the user is final for what the refused call was meant to do. Every model route of Sisyphus, Sisyphus-Junior, Hephaestus and Atlas now ends its prompt (before any prompt_append) with one rule: never reach a refused result with another tool, command, path or host; ask the user. Every ultrawork variant (default, Gemini, GLM, GPT, Codex, planner) and the todo and boulder continuations carry the same rule. A test enumerates every prompt route, so a new route without the rule fails. The continuations say "Proceed without asking whether to continue" instead of "Proceed without asking for permission". Computer-use telemetry still counts a refusal as a permission denial when senpi adds guidance after its first sentence. (#11371, part of code-yeongyu/senpi#4309) (#11391)
+    Bug reports reach the OmO team again. Every report sent from /bug, /feedback or the desktop's in-app report was refused by the report service, which the app showed as a connection problem. Reports now carry the exact-body SHA-256 and length and a semantic redactor version, as the service requires, and terminal reports use your omo login account when you are signed in; signed-out reports still work, and an expired or unusable sign-in sends the report without your account instead of blocking it. In the terminal, each refusal the service can answer is now named: sign-in refusals point to omo login, a request the service rejects shows its error code and request ID, a service-side failure says to try again later, and only a send with no answer is reported as a connection problem (#11194, #11213). (#11391)
+    Runs on senpi 2026.10.27-1, which tightens shell permission checks. (#11364)
+    Memory patches that move a file twice in one change no longer leave the memory repository blocked. A chained move such as a.md -> c.md -> d.md listed the intermediate c.md as a path to commit even though it never existed, so git refused the commit and the next memory write found a dirty tree. The intermediate is now dropped when it never existed and kept when it was a real tracked file. Thanks to @MoerAI for the fix. (#11305, car #11307, part of #10858) (#11363)
+    Memory notice warnings go through the memory logger, and a failed watermark rename keeps its own error. Directory-sync warnings after a soul or agreement watermark is published are now reported through the memory component's logger instead of a direct console.warn, so the host decides where they go, and a temp-file cleanup failure no longer replaces the original rename error. (#11284, part of #10707) (#11363)
+    omo.dev/download now redirects temporarily (307) to the public desktop beta page. Browsers no longer cache the redirect, so they will reach omo.dev's own download page once that page is enabled; a browser that already cached the earlier permanent (301) redirect keeps it until that cache entry expires. (#11272, follow-up to #11270) (#11363)
+    Claude Fable 5.5 leads the Fable chains once released. Once 5.5 is released, every builtin chain or profile that runs Claude Fable 5.1 tries 5.5 first at the same effort, with 5.1 kept as the next step. Until then no builtin default, chain or profile lists 5.5, so 5.1 keeps running (#10798, #10800). (#11350)
+    Claude Fable 5.5 is recognised ahead of its launch. Model detection, context limits, telemetry and the refusal fallback notice know Claude Fable 5.5. Until it is released, no routing path picks the provisional id without proof the model exists, and catalog data always wins over the launch placeholder (#10798, #10800). (#11350)
+    The frontend skill's llms.txt fetch allowance covers same-origin pages only, and robots.txt still wins over it. Agents read the pages a site's own llms.txt links on that site, never off-site links, and a robots.txt disallow beats an llms.txt link. (#11338, fixes #11337)
+    The omo.dev desktop beta button reads naturally in Spanish, Portuguese, French and Chinese. (#11331)
+    The frontend skill's fetch rule now covers pages a site's own llms.txt links. footer.design's /styles pages were listed as an agent surface while the same file forbade reading HTML pages; agents may now read the pages a site's llms.txt links and still never crawl other HTML pages. (#11323, fixes #11320)
+    omo.dev's hero links the OmO desktop public beta. A "Get the desktop beta" button next to Get started opens https://get.omo.dev/desktop/beta/ in every site language. (#11315)
+    The frontend skill routes more design sources and asks for research before a landing redesign. MicroKit, Motion Primitives, Uiverse and 21st.dev join the component catalog with licence, agent surface and measured reduced-motion coverage; section galleries (navbar, pricing, CTA, hero, footer, landing.love, Awwwards) are listed as structure-only references; Mobbin is used only through the user's own connected MCP. A marketing-page redesign writes a four-part research report before the first edit, the draft guard names invented proof, prop decoration and repeated headline formulas, and fix passes after the first build stay scoped to one region. (#11314, fixes #11312)
+    Bun type declarations now match the Bun 1.4.4 toolchain. Every package manifest pins bun-types or @types/bun to 1.4.4, with the root, web, worker, Codex plugin and both LSP package lockfiles synchronized. The committed Codex installer was regenerated in the pinned Linux container. (#11311)
+    A session command OmO adds later is no longer sent to an attach-enforcing senpi host without an attachment. The thread client fenced only a fixed list of mutations, while the host refuses every session command from an unattached connection except its read allowlist; under SENPI_RPC_REQUIRE_ATTACH=1 any command missing from the client's list would be refused. The client now fences every session command except the reads the host exempts. (#11278, part of #10944) (#11297)
+    A summary queued by a session that named only its profile is judged with the account's home again. Since #11202 a queued session summary is judged by the config it was recorded under; when that config named a profile but no home, the consent read had no home at all and fell back to the working directory. It now reads the account's home, as the send gate does. The reference doc also says that summaries queued before #11202 keep the old reading until they expire. (#11275) (#11297)
+    Memory sync and the memory tool no longer hang while a macOS keychain approval dialog is open. A session's sign-in read now gives up after 5 s with an error that names the "bun wants to access key omo-cli" dialog to answer, instead of waiting with no end. Memory sync skips that pass, logs why, and retries after 15 s, doubling to a 5-minute cap, and the memory tool returns at once. A one-time "Allow" clicked after that 5 s deadline is not kept, so the next sync retry asks again; choose "Always Allow" to stop the prompts. All reads in one process share the one keychain request that is still waiting, so parallel sessions no longer stack a blocked read (and another dialog) per request, and after a late approval the next read goes back to the OS store, so another process's rotated token cannot be replaced by an old answer. omo login, omo whoami, omo account and omo sync still wait for the dialog, and now say so after 2 s. Reported by @floweredao. (#11264, part of #11262) (#11297)
+    The research delivery barrier checks one meaning record per delivered edition. fact meaning-check --edition <format> writes fidelity-meaning-defects.<format>.json bound to that edition's bytes, so an html report delivered with a byte-different inline, Markdown, or post edition passes once each edition with different bytes is checked (an edition whose bytes match a checked edition, such as a copy at another path or a PDF of the html edition, shares its record), and a stale or unchecked edition refuses alone. A single-edition session keeps using fidelity-meaning-defects.json unchanged. Existing session fidelity records remain blocking even when a delivered row attaches a different clean record, and two paths to one record (including through a symlink) no longer duplicate its defects. (Closes #11241, Part of #11009) (#11289)
+    CI, release workflows and the devcontainer run Bun 1.4.4. Every oven-sh/setup-bun step installs Bun 1.4.4 instead of 1.4.3, the Bun install-cache keys move to bun-1.4.4-, the devcontainer installs bun-v1.4.4, and script/agent/setup.sh expects 1.4.4. (#10895)
+    Added
+    - Set OMO_BUNDLED_SKILLS_DIR to an absolute directory to share bundled skills
+      across runtime installations. Absent or empty is unchanged. An invalid
+      OMO_BUNDLED_SKILLS_DIR (relative, missing, not a directory, unreadable) now
+      logs ONE error naming the variable and falls back to the plugin-relative
+      bundled skills; task tools and the bare skill commands stay
+      registered. Conditional, user, project, and memory skill roots keep their
+      existing locations. (#11332) (#11417)
+    - An explicit skillsDir option now wins over a valid
+      OMO_BUNDLED_SKILLS_DIR; precedence is explicit option, then a valid
+      override, then the plugin default. (#11332) (#11417)
+    - The override resolver lives in the bundled-skills component itself (no
+      separate module), which keeps the built omo.js inside its size budget:
+      the change costs 531 bytes instead of 1,899. (#11332) (#11417)
+    - Add generation-fenced computer-use stop-authority admission: a newer stop
+      rejects an in-flight activation, and durable completion cannot reopen input.
+      This is the local safety prerequisite for the protected stop broker; existing
+      launch modes retain their behavior. (#11333) (#11363)
+    Fixed
+    - After quitting and reopening the same stopped session, the person's next message releases the Stop and reopens task admission even if an acknowledged paused child cannot restore. That child's failure remains recorded, its acknowledged cutoff is kept, and a later Resume can retry it without a live hold observer. This does not recover a parked queued admission (held_admission) marked lost: after restart, retryLost has no resume credential to re-admit it, so it stays stranded (omo#10864, item 1). (#11401) (#11417)
+    - Bundled skills no longer ship test, tests, __tests__, or *_test folders nested below a skill's top level (such as ultimate-browsing's engine/tests), so a test module can no longer run inside the installed app and write caches there. Top-level test/ and tests/ resources still ship. (#11377, part of #11373) (#11391)
+    - Running a bundled skill no longer writes files inside the installed app, so OmO Desktop no longer reports its files as changed and stops its local server after the coding-agent-sessions, ultimate-browsing or frontend skills run their Python scripts. A manual ast-grep install now downloads into a user cache folder instead of the skill folder. Python the agent runs now keeps its compiled bytecode in an OmO cache folder instead of next to the script, so your projects still start fast without __pycache__ folders appearing in them; if you set PYTHONDONTWRITEBYTECODE or PYTHONPYCACHEPREFIX yourself, OmO leaves both alone. Thanks to @minerva32 for the report. (#11376, fixes #11373) (#11391)
+    - Prometheus can no longer write outside .omo/*.md through apply_patch, multiedit or a hashline edit's rename; a write whose target it cannot read is blocked (#11369)
+    - Count a Windows stop-hotkey request once in authority mode instead of
+      advancing its stop generation again when the worker completes it. (#11333) (#11363)
+    - Codex installations now contain only regular files and directories, preventing dependency symlinks from disabling every OmO hook during plugin fingerprinting. Native comment-checker resolution remains available without npm executable links. (#11328) (#11363)
+    - The direct Codex package now includes its local LSP dependency so installation can materialize it instead of leaving a dangling package link. (#11328) (#11363)
+    - Hosted tasks retain their original session through missed state probes, report unresponsive and recovered status to the parent, and resume queued steering without creating another child. An overdue unresponsive session is reported ended only after the live host confirms its absence following close, never from an acknowledgement or closed frame alone. (#11317) (#11350)
+    - Child activity resets missed heartbeat probes, so a delayed state reply does not label a still-streaming child unresponsive. (#11317) (#11350)
+    - Finished resident children report retryable unresponsiveness, and transient liveness oscillations are coalesced instead of repeatedly waking the parent. (#11317) (#11350)
+    - Research outcome initialization records the run clock once, from --started-at, an earlier valid manifest, a supervisor's run-state file, or the timestamped session directory name, and refuses impossible, future, or copied start times. (#11302)
+    - Claim prefixes (V, A, D) fill through the claim-kind registry, and Sources sections check every sentence holding a numeral that is not a citation field (a year or date, a page, volume, issue, or edition marker, a number inside a URL, DOI, arXiv id, ISBN, quoted or cited title, or a citation tag), so reference entries stay exempt and claim sentences are checked; a number in an unquoted title is checked. A year range and link text count as citation fields, and a digit run glued to letters that are not a unit, multiplier, or currency (a commit hash, an issue number, GPT-4, Q3) is a name rather than a numeral, while 50M, 10k, 3x, x3, 2.5GB, 12%, 5mn, 40pct, 5yrs and 1.234.567 stay numerals, also when a word is glued in front of the measure. (#11302)
+    - Keep quoted style end-tag attributes inside the polish markup boundary, report edits adjacent to unfinished character references precisely, and respect Markdown closing-fence indentation. (#11291)
+    - Expose whether every polish edit applied through a JSON boolean while preserving partial-output success and accepted-edit counts. (#11291)
+    - Memory supervisor integration tests report an exited supervisor's code, stderr and run artifacts when a child start or durable state never arrives, instead of stalling until a timeout. (#11288)
+    - c8955517dd docs(release): 5.1.51 notes: drop the dev-only knip bullet and the stale next-release line
+    - 95c926c34c docs(release): 5.1.51 notes: ship the unpublished 5.1.49 and 5.1.50 entries, lead with the speed fixes
+    - 4c0afd4679 Merge pull request #11664 from code-yeongyu/fix/knip-telemetry-rename-rows
+    - 3cc1f5eefb Merge remote-tracking branch 'origin/dev' into fix/knip-telemetry-rename-rows
+    - e9ad0f09c9 Merge pull request #11548 from code-yeongyu/fix/11541-windows-path-identity
+    - aa6e9d184d Merge pull request #11646 from code-yeongyu/fix/knip-dev-design-revalidate
+    - bd1310b65d Merge pull request #11563 from code-yeongyu/fix/9766-script-scratch-temp-leak
+    - a57d2da4fb Merge pull request #11502 from code-yeongyu/p0/p0-06i-control-confirm-char
+    - d0b1623163 Merge origin/dev into fix/11541-windows-path-identity
+    - 8159bfbbf4 docs(changes): changelog fragment for #11664
+    - 5922108d69 fix(knip): follow #11572's telemetry rename in the preExistingExports rows
+    - 7a2a2a9a54 Merge remote-tracking branch 'origin/dev' into fix/9766-script-scratch-temp-leak
+    - 4c87d16a73 Merge pull request #11572 from code-yeongyu/fix/telemetry-no-host-derived-ids
+    - 17d0cacbef chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - 5c749f1445 chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - f29883d236 Merge origin/dev into p0/p0-06i-control-confirm-char
+    - 88a2b06e3f Merge pull request #11481 from code-yeongyu/chore/knip-dead-code-gate
+    - 6d5e0d81c1 Merge pull request #11619 from code-yeongyu/fix/atlas-timer-seam
+    - 6219e7a1fd test(prometheus-md-only): read the 8.3 spelling from FileSystemObject.ShortPath
+    - ae481df61a Merge pull request #11535 from code-yeongyu/feat/11466-cu-release-helper
+    - 237dadf76b docs(changes): add fragment for #11619
+    - ee18cf2b39 fix(atlas): schedule the delayed retry through an injected scheduler so tests stop capturing global timers (#11617)
+    - 9e4443c924 Merge pull request #11600 from code-yeongyu/ci/pr-concurrency-cancel
+    - d15551c329 test(prometheus-md-only): strip the escaped quote cmd echoes around the 8.3 spelling
+    - b76f02e6e1 Merge pull request #11592 from code-yeongyu/fix/3364-mcp-abort-signal
+    - b469db9cfe Merge pull request #11587 from code-yeongyu/fix/web-prerender-revalidate
+    - 86f892178c Merge pull request #11536 from code-yeongyu/feat/frontend-designer-habits
+    - 8b4846e404 Merge remote-tracking branch 'origin/dev' into feat/11466-cu-release-helper
+    - 138ec3bfa5 test(knip): remove each repo-sized copy inside its test, under the test bound
+    - aec03798d7 Merge pull request #11574 from code-yeongyu/fix/changelog-gate-release-merge-base
+    - 90d19f1ff0 ci(memory-takeover-trace): cancel the superseded pull-request matrix (#11596)
+    - 44f9274a11 Merge remote-tracking branch 'origin/dev' into fix/9766-script-scratch-temp-leak
+    - 0b1ea8c5df Merge pull request #11544 from code-yeongyu/fix/11543-dag-runtime-idle-reclaimer
+    - d402e6caa6 fix(knip): export-check every Next.js special file and the otlp-opt-out entry after the dev merge
+    - 168328b22c Merge origin/dev into chore/knip-dead-code-gate
+    - fb1392d662 docs(changes): add fragment for #11592 (#3364)
+    - 5414dd3ef7 fix(skill-mcp): propagate the session abort signal into MCP calls and close their HTTP stream (#3364)
+    - 2b5831715e Merge pull request #11562 from code-yeongyu/fix/audit-skip-unreleased-fragments
+    - 8ad58f847f test(prometheus-md-only): build the 8.3 and drive-letter forms correctly
+    - ce8ec7e1cd docs(changes): add the #11587 fragment
+    - e7f59d651c fix(web): keep /design prerenders inside the expiry budget
+    - fa866972d5 Merge pull request #11498 from code-yeongyu/fix/web-document-shell-11468
+    - b94e71ef7d chore(changelog): name the fragment for #11574
+    - 8f67f74dcc chore(changes): name fragment after PR #11572
+    - c9f52f625a fix(changelog-gate): release PRs only owe the fragments present at the merge base
+    - 344fe53a98 chore(changes): add fragment for telemetry identifiers
+    - 5a9aaa1668 docs(telemetry): describe telemetry ids as random local install ids
+    - 71adc25360 fix(telemetry): derive every telemetry id from a random local install id
+    - 088b7393a2 fix(knip): bound each entry section at the next section header
+    - d25c04fe75 fix(knip): read only an entry section's own paths array
+    - 13553df6cb fix(knip): read every knip entry and link every package dir on Windows
+    - ad3cb2e28d Merge pull request #11410 from LilMGenius/fix/lcx-route-source-pr
+    - 21b167fad4 Merge remote-tracking branch 'origin/dev' into fix/11543-dag-runtime-idle-reclaimer
+    - 0e87541041 chore(changes): name the fragment after PR #11562
+    - d77f025d01 fix(script): remove scratch repos on every path in the changelog CLI tests
+    - 25c13d9bd7 test(audit): skip changes/unreleased fragments in the agent-command-string scan
+    - 2c70c54e9f Merge dev into fix/web-document-shell-11468
+    - 0845b3f0a9 Merge remote-tracking branch 'origin/dev' into feat/frontend-designer-habits
+    - 2cbdc31c3e Merge pull request #11290 from code-yeongyu/fix/11285-fill-verify-value-rules
+    - 286f9e2c01 Merge pull request #11492 from code-yeongyu/fix/web-search-input-11470
+    - 976b2e4d30 Merge pull request #11490 from code-yeongyu/fix/web-tooltip-sheet-11475
+    - dc2df2cc4e test(prometheus-md-only): isolate the denial log on Windows and build canonical fixtures per platform
+    - 1b5b216712 Merge pull request #11488 from code-yeongyu/fix/web-text-faint-11469
+    - 2147e2abf8 Merge remote-tracking branch 'origin/dev' into feat/11466-cu-release-helper
+    - 3cc3c6566a Merge remote-tracking branch 'origin/dev' into HEAD
+    - 4664e5ee40 Merge remote-tracking branch 'origin/dev' into fix/11285-fill-verify-value-rules
+    - 9d0cfff4bd Merge dev into fix/web-text-faint-11469
+    - ea87920b59 Merge dev into fix/web-search-input-11470
+    - 1ce202956e Merge dev into fix/web-document-shell-11468
+    - ebcb18d6c5 Merge dev into fix/web-tooltip-sheet-11475
+    - beca5f3418 Merge pull request #11525 from code-yeongyu/batch/memsync-coord-19
+    - a5061c6ee5 fix(prometheus-md-only): canonicalize Windows path identity the way the executor opens it
+    - 61b7fd10c2 chore(knip): record the unused exports dev added after the last merge
+    - b09c18ab86 fix(knip): resolve the probe copy with realpathSync.native so Windows 8.3 temp paths match knip output
+    - 6c8f359621 Merge remote-tracking branch 'origin/dev' into chore/knip-dead-code-gate
+    - e26a99a0ba Merge dev into fix/web-tooltip-sheet-11475
+    - 5dd11007ec Merge dev into fix/web-text-faint-11469
+    - de739e7056 Merge dev into fix/web-document-shell-11468
+    - 0e97e51030 Merge dev into fix/web-search-input-11470
+    - 4e6328d8df Merge pull request #11487 from code-yeongyu/fix/web-focus-ring-11467
+    - a81042caf6 test(ulw-research): snapshot the support text source as raw bytes (compose glue)
+    - a899598eca Merge pull request #11456 from code-yeongyu/fix/8108-skill-description-dedupe-on-dev
+    - 030aee3ed1 fix(ulw-research): pass the ledger to the value-unit check
+    - 688da47db0 fix(ulw-research): bind the currency sign outside and inside a value-mode element
+    - 560ce3fe9c fix(ulw-research): compose value-rules revision checks with fail-closed snapshots
+    - fa806d4fc8 Merge remote-tracking branch 'origin/dev' into fix/11285-fill-verify-value-rules
+    - cb4c6831d5 Merge pull request #11287 from code-yeongyu/feat/11285-raw-bytes-locator
+    - ee44838ee4 Merge pull request #11524 from code-yeongyu/fix/11520-sync-continuation-deleted-session
+    - 24e7c2bea1 test(prometheus-md-only): table every Windows alias form and probe link/.. path identity
+    - 8178532c7f Merge dev into fix/web-tooltip-sheet-11475
+    - 4ff82184c5 Merge dev into fix/web-text-faint-11469
+    - a8e67d1960 Merge remote-tracking branch 'origin/dev' into feat/11285-raw-bytes-locator
+    - 447b2e6c91 Merge dev into fix/web-document-shell-11468
+    - b6090e3858 Merge dev into fix/web-search-input-11470
+    - ae186f8d92 Merge dev into fix/web-focus-ring-11467
+    - 43eec3ddaf Merge pull request #11398 from code-yeongyu/fix/11393-toplevel-test-dir-exemption
+    - 6152a65599 chore(knip): cover entries and declarations dev added after the last merge
+    - 7e6bd860bd Merge remote-tracking branch 'origin/dev' into fix/8108-skill-description-dedupe-on-dev
+    - 62171340a7 Merge origin/dev into chore/knip-dead-code-gate
+    - 61af4dbf47 chore(bundle): regenerate generated outputs for batch #19 (after the dev merge and member fixes)
+    - 27d8c35a8c test(desktop-engine): find the stand-in helper pid after libtest output
+    - 34ce899b00 fix(memory): the missing-note walk checks its ancestor on the filesystem realpath used (#11339)
+    - 9acfa6c24a docs(changes): fold #11491 into the batch #19 fragment
+    - da01ca85a0 Merge #11491 (release binary budget 200 MiB) into batch #19
+    - 8a8db1d309 Merge pull request #11445 from code-yeongyu/fix/11444-brand-logo
+    - dc7058a5b5 fix(frontend): AA exceptions for 2.5.8, 1.4.10 and 3.3.8, and what grounding captures on a new screen
+    - 449f7e4358 fix(frontend): exact 2.5.8 spacing and 2.4.11 wording, and a stated check for system order and surfaces
+    - 47018060a5 test(web): read focus variants structurally instead of by shape
+    - 9061489aa1 fix(desktop-macos): read a helper that already exited as closed on macOS
+    - 326fa016ce fix(frontend): drop the existing-surface inventory and brand-continuity rule from grounding
+    - bd46d3df7d docs(web): scope the Tooltip rule to the controls that carry one
+    - 822e99cba9 fix(frontend): grounding inventories only the target project's own surfaces
+    - b290ee0df8 feat(frontend): grounding covers every rule source, a planned proof per row, and parallel multi-PR execution
+    - e0f12da0e9 docs(changes): add the frontend designer-habits fragment
+    - 5acce705d1 docs(changes): add release-helper fragment for #11535
+    - 04b4661885 feat(frontend): ground, state-stable controls, colour-first systems, and a stated WCAG 2.2 AA result
+    - cc9408d4db feat(desktop-macos): release held input even if the engine dies
+    - 8cf7b4f3d3 test(model-profile): read #11442's lane outcome from the session entry #11365 records
+    - cdf982617c Merge dev into batch #19
+    - 64cc19db75 docs(web): say which 404 actually renders for unknown URLs
+    - b3bb0861f4 test(web): restore paren-aware variant splitting and cover data-[focus]
+    - 59c7d07d01 test(web): cover compound focus variants and arbitrary outline forms
+    - e7fcf59028 fix(delegate-task): count only a definite 404 as a deleted sync session
+    - 0ba0026e5f fix(web): keep locale routes open so a Worker cache miss renders
+    - 63f9344003 docs(changes): credit @surlymochan for #11237
+    - e8e94f5e24 docs(changes): fold batch #19 fragments into 11525
+    - bf5306420b chore(bundle): regenerate generated outputs for batch #19
+    - 1f914a297b test(web): classify focus outlines by variant chain, not one regex
+    - 60bfeed180 docs(changes): add fragment for #11524
+    - ed06a4caf7 fix(delegate-task): fail fast when a sync continuation targets a deleted session
+    - 29e45dfa78 fix(delegate-task): honor taskCleanupDelayMs for sync subagent sessions
+    - b81db78764 fix(web): keep the graph hero's focus ring visible and widen the outline guard
+    - c46cdcda92 docs(web): describe the docs search as the labelled --input control
+    - dae7512208 Merge pull request #11424 from code-yeongyu/fix/11367-prometheus-symlink
+    - 3a832509e6 docs(ulw-research): drop the unlinked reference files left by the dev merge
+    - 05e5b9f04b chore(knip): name the unused exports dev added after this check (4d3161eabd); drop the row dev now uses
+    - 658f79b47a docs(web): move the sheet Escape rule to DESIGN.md §8
+    - 7fabb3f583 Merge remote-tracking branch 'origin/dev' into chore/knip-dead-code-gate
+    - 1a2d6aab03 fix(web): pin view-timeline insets so scroll padding does not move reveals
+    - 5693348eda fix(ulw-research): dedupe snapshot blockers across source checks (compose glue)
+    - 662f9498b4 fix(ulw-research): compose raw-snapshot verify with the required fill map
+    - aed6c128c5 fix(ulw-research): compose conversion-originals derive calls with the required now
+    - 16b351e2f6 fix(ulw-research): compose --text --replace as declared measurable text
+    - f8c04396da Merge remote-tracking branch 'origin/dev' into feat/11285-raw-bytes-locator
+    - 4d3161eabd Merge pull request #11286 from code-yeongyu/feat/11285-conversion-probe
+    - c9e63761bb Merge remote-tracking branch 'origin/dev' into fix/11393-toplevel-test-dir-exemption
+    - 19c54bd92e fix(web): make the tooltip hoverable and keep Escape from stealing focus
+    - 5b8be05932 test(web): make the --text-faint guard parse JSX and scan .ts files
+    - f75add612c Merge #11431 (with collector-cutover resolution 162042f62) into batch #19
+    - a692aa8ed9 Merge #11428 into batch #19
+    - 162042f62d Merge #11431 into the 5.1.50 car
+    - 92676073fc Merge #11428 into the 5.1.50 car
+    - 3d69b805c9 Merge commit 'd3a6295b23d8852c9b8a6256f4c392be6dce9984' into fix/web-document-shell-11468
+    - eccca44898 Merge commit 'd3a6295b23d8852c9b8a6256f4c392be6dce9984' into fix/web-search-input-11470
+    - d3a6295b23 docs(changes): drop the optional #11487 fragment
+    - 47836d5a37 docs(changes): add the #11498 fragment
+    - f2a7ec093a Merge pull request #11239 from code-yeongyu/fix/11205-rust-modern-mcp
+    - 7e973a1c84 Merge pull request #11243 from code-yeongyu/fix/11205-skill-modern-mcp
+    - 01032d2d80 fix(omo-opencode): dedupe skill descriptions against core's real skill list (#8108)
+    - f8080dc5c0 Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - 14e3638d48 Merge pull request #11301 from code-yeongyu/fix/11285-value-mode-unit-and-confirmed-cue
+    - 55f7356dae Merge pull request #11370 from code-yeongyu/fix/11367-run-server-password
+    - b412e6fca5 fix(web): one document shell per locale: html lang, colour-scheme, tokens, skip link
+    - 04d09943fc chore(knip): share the preprocessor byte for byte with omo-relay-daemon
+    - e973ae1db3 Merge origin/dev into fix/11367-prometheus-symlink
+    - b15e882f8a docs(release): complete the 5.1.49 size breakdown and name the measured Linux targets
+    - ddb6629049 Merge pull request #11392 from code-yeongyu/fix/11367-prometheus-patch-lines
+    - 0319edc746 docs(changes): add the #11492 fragment
+    - 0cce4857ae docs(changes): add the #11490 fragment
+    - 982888082e chore(knip): coverage never shrinks; name pre-existing unused exports per symbol
+    - 09a9700124 docs(changelog): fragment for #11491
+    - 8afc24776a build(release): raise the release binary size budget to 200 MiB for the Bun 1.4.4 runtime
+    - 120faed7af fix(web): give the docs search a 3:1 boundary and its own label
+    - 9f6ed5c847 fix(web): accessible tooltip for icon controls and Escape for the mobile sheet
+    - 72422b427b docs(changes): add the #11488 fragment
+    - cf7d4550c2 fix(web): keep meaningful text off --text-faint and dimmed DAG nodes legible
+    - c199351c88 docs(changes): add the #11487 fragment
+    - 1ae1ff2253 fix(web): draw every focus ring at 3:1 or better from one recipe
+    - 6803303cfc Merge pull request #11430 from code-yeongyu/feat/10762-hash-dir
+    - b6325e0150 chore(changelog): name the knip fragment for #11481
+    - 9c97e87447 Merge #11439 into batch #19
+    - bf516588aa Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - 6412854b98 Merge remote-tracking branch 'origin/dev' into fix/11285-value-mode-unit-and-confirmed-cue
+    - a0e94eed4f Merge pull request #11310 from code-yeongyu/fix/11285-gate-findings
+    - 9fee5d6266 Merge pull request #11411 from code-yeongyu/feat/10762-default-file-rule
+    - 338571986c Merge pull request #11407 from code-yeongyu/feat/10762-linux-bundle
+    - 93f909ebdf docs(changelog): fragment for #11456
+    - 03f460e3d8 test(omo-opencode): keep the ordering test on skills core does not list (#8108)
+    - a7a31c5cc1 Merge remote-tracking branch 'origin/dev' into HEAD
+    - e66b7eeb6f Merge origin/dev into fix/11367-run-server-password
+    - f5d4ce36d8 Merge origin/dev into fix/11367-prometheus-patch-lines
+    - 8abceecf01 Merge pull request #11405 from code-yeongyu/feat/10762-trust-policy
+    - 4b480ad3c8 Merge remote-tracking branch 'origin/dev' into fix/11205-skill-modern-mcp
+    - 09904f61b7 Merge #11442 into batch #19
+    - a02a546f74 Merge #11440 into batch #19
+    - 5cff78ffcd Merge #11237 into batch #19
+    - 2c63394ac7 Merge #11427 into batch #19
+    - 6eee529ab6 Merge #11339 into batch #19
+    - 56dd6fa6fd Merge #11335 into batch #19
+    - 849c42fc8c Merge #11365 into batch #19
+    - 3101d20ba7 Merge #11441 into batch #19
+    - 058086c9ef Merge remote-tracking branch 'origin/dev' into fix/11205-rust-modern-mcp
+    - 522fb05f7d Merge pull request #11443 from code-yeongyu/fix/stamp-agreement-release-tree
+    - a7e5a5941f test(telemetry): the ingest-key gate also scans .github/scripts and pins the build define to an empty env default
+    - b015e348f0 Merge remote-tracking branch 'origin/dev' into fix/11285-gate-findings
+    - 09e062cdcf Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - 8b014966f9 Merge remote-tracking branch 'origin/dev' into fix/11285-value-mode-unit-and-confirmed-cue
+    - b2325a67c2 Merge remote-tracking branch 'origin/dev' into feat/10762-hash-dir
+    - 753a07949c Merge remote-tracking branch 'origin/dev' into feat/10762-default-file-rule
+    - ed4f0e9eee Merge remote-tracking branch 'origin/dev' into feat/10762-linux-bundle
+    - 797378836f test(telemetry): block any build from baking the OTLP ingest key until the projection fixes ship
+    - d622b5230f Merge remote-tracking branch 'origin/dev' into feat/10762-trust-policy
+    - 4686e425b5 Merge pull request #11435 from code-yeongyu/release/v5.1.49-source-state
+    - d653234381 fix(brand): keep the brand logo stable on CRLF checkouts and check it in CI
+    - 61f0672a6e docs(changes): fragment for #11445
+    - 873637a94e fix(brand): send the OmO icon as the SENPI_BRAND logo on every launch path
+    - 13c327012d fix(account): write the logout marker before clearing; ignore an unusable marker (#11434)
+    - 2751648ee5 docs(changelog): fragment for #11443
+    - 9da101d45b test(changelog): read real fragments only when changes/unreleased exists
+    - ed715eefd3 changes: fragment for #11442
+    - 73ab82f075 test(changelog): read real fragments only when changes/unreleased exists
+    - 2653de7ccb docs(changes): fragment for the logout sign-out marker (#11441)
+    - af3de6bed7 fix(account): omo logout leaves a sign-out marker; token/export answer exit 10 (#11434)
+    - fc0fc17c65 docs(changes): add fragment for #11440
+    - 8c8f5cf46a docs(changes): add fragment for #11439
+    - e8498a1b6e chore(changes): state that the opt-out spool purge is machine-wide
+    - aed2cfc61b fix(telemetry): keep a running writer's sealed OTLP batches on opted-out starts
+    - f5745e3b50 chore(changes): describe the persisted-opt-out spool purge
+    - 8bc56300b3 fix(telemetry): keep live consented OTLP spools on opted-out starts
+    - 77fcfce646 docs(release): 5.1.49 notes: drop the dark telemetry entry and internal wording
+    - 8a9c0b8cea fix(prometheus): require the execution carrier and compare approved targets by value
+    - 43ad105573 Merge remote-tracking branch 'origin/fix/11367-prometheus-patch-lines' into fix/11367-prometheus-symlink
+    - 462de3f690 Merge remote-tracking branch 'origin/dev' into fix/11285-value-mode-unit-and-confirmed-cue
+    - 4773f7cbb9 Merge remote-tracking branch 'origin/dev' into fix/11285-fill-verify-value-rules
+    - cbf5ed38d9 Merge remote-tracking branch 'origin/dev' into feat/11285-raw-bytes-locator
+    - 28e542b5e7 Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - 3b530a89b3 Merge remote-tracking branch 'origin/dev' into fix/11367-run-server-password
+    - 142992c9ee Merge remote-tracking branch 'origin/dev' into fix/11367-prometheus-patch-lines
+    - 1bd7d277dc fix(prometheus): recheck every target field and isolate denial-log tests
+    - 7152f8a60a test(audit): list the pinned model-id copy as a model-identity file
+    - 015c2ad24c fix(prometheus): allow user-chosen planning layouts and log every denial
+    - c9fce9ae86 fix(prometheus): retain execution args across hook chain
+    - b28d38a48a fix(momus-review-persistence): persist only the verdict block and check containment before reading the plan
+    - f9b87f3a2c fix(boulder-state): contain the plans root in the project, dedupe sessions by exact line, ignore review dirs
+    - 0b551794f0 chore(changes): name the fragment after PR #11431
+    - 510866c0ce Merge remote-tracking branch 'origin/dev' into fix/11205-skill-modern-mcp
+    - 4f9c031149 fix(omo-native): exclude certificates whose block carries an AUX trailer under any label; gate hash-dir tests off win32 (#10762)
+    - 2f47c232e5 Merge remote-tracking branch 'origin/dev' into fix/11205-rust-modern-mcp
+    - 4dc02a85f7 fix(telemetry): address OTLP projection and startup review findings
+    - 210e2a38fe fix(prometheus): close patch and host handoff gaps
+    - 24566a785d fix(telemetry): pin model ids on the turn span and session_summary ranks too
+    - 90ebae0a72 changes: fragment for #11430
+    - 950c2dd65f feat(omo-native): OpenSSL hash-directory selection by Bun's by_dir walk (#10762)
+    - b00495c259 chore(changes): name the fragment after PR #11428
+    - 70b79a6b1a fix(telemetry): map model ids outside the collector pin to custom
+    - 92c86c3fb7 docs(changes): fragment for #11427
+    - 79d7978383 Merge pull request #11417 from code-yeongyu/batch/memsync-coord-18
+    - 9859e21dec Merge remote-tracking branch 'origin/dev' into fix/11285-fill-verify-value-rules
+    - 621a05ac63 Merge remote-tracking branch 'origin/dev' into feat/11285-raw-bytes-locator
+    - c3ecbd4fd2 Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - 8ff08c7ed9 Merge remote-tracking branch 'origin/dev' into feat/10762-default-file-rule
+    - f8dc00e73b Merge remote-tracking branch 'origin/dev' into feat/10762-linux-bundle
+    - 64c5337c86 Merge remote-tracking branch 'origin/dev' into feat/10762-trust-policy
+    - f3bc0797ee Merge remote-tracking branch 'origin/dev' into fix/11285-value-mode-unit-and-confirmed-cue
+    - 32b90f4c1c fix(prometheus): fold parser and physical path confinement
+    - 35345b7dad Merge remote-tracking branch 'origin/dev' into fix/11393-toplevel-test-dir-exemption
+    - acd4f73d74 docs(changes): record Prometheus symlink containment fix
+    - bb8ed0bb3b fix(prometheus): check verbatim absolute write targets
+    - a850ebec0d fix(prometheus): confine writes to real planning paths
+    - d67ea00b8b Merge #11322 (37c38c6fa7: per-platform QA temp root) into batch #18
+    - 37c38c6fa7 fix(qa): resolve thread-tool QA temp paths per platform
+    - 5a6f360833 docs(changes): fold batch #18 fragments into 11417
+    - b7289aaa00 Merge #11322 into batch #18
+    - 8fe88292eb Merge #11349 into batch #18
+    - cda2b61e54 chore(bundle): regenerate generated outputs for batch #18
+    - 9b9e9713de Merge #11413 into batch #18
+    - cbe487daca Merge #11332 into batch #18
+    - 41a1b4bbfb Merge #11390 into batch #18
+    - b2bc9ca83c Merge #11401 into batch #18
+    - e31528c08b Merge pull request #11391 from code-yeongyu/batch/memsync-coord-cut7
+    - 81fce2e821 Merge pull request #11311 from code-yeongyu/chore/bun-types-1.4.4
+    - 2fee18ca30 Merge pull request #11289 from code-yeongyu/fix/11241-meaning-record-edition
+    - b8a941c419 Merge pull request #11302 from code-yeongyu/fix/11285-outcome-dir-dplaceholder-sources
+    - 1c5c22b675 fix(telemetry): lazy-load OTLP exporter sidecar (#11413)
+    - aafb73ef4f chore(changes): name the fragment after PR #11413
+    - ba0965a236 fix(telemetry): dual-send product events to OTLP (#11412)
+    - 08bac597be fix(omo-native): read the default file as bytes, reject space-only block lines, test the Bun-only guard (#10762)
+    - d30236e536 fix(omo-native): canonical-PEM gate, BoringSSL noncharacters, Bun-only guard for the default-file rule (#10762)
+    - c3699f4406 Merge remote-tracking branch 'origin/dev' into fix/11241-meaning-record-edition
+    - 4efa6ab3ba Merge remote-tracking branch 'origin/dev' into fix/11285-fill-verify-value-rules
+    - f5233e1148 Merge remote-tracking branch 'origin/dev' into feat/11285-raw-bytes-locator
+    - 0ce54d2941 Merge remote-tracking branch 'origin/dev' into feat/11285-conversion-probe
+    - c630716b7e Merge remote-tracking branch 'origin/dev' into fix/11285-outcome-dir-dplaceholder-sources
+    - 53a6a5ed94 Merge remote-tracking branch 'origin/dev' into fix/11285-value-mode-unit-and-confirmed-cue
+    - 61512435b6 Merge remote-tracking branch 'origin/dev' into fix/11285-gate-findings
+    - b8d2706323 test(prometheus-md-only): type patch fixtures
+    - 4ce97481ce changes: fragment for #11411
+    - 4746837737 fix(omo-native): mark an unverifiable auxiliary block as a narrowing, not a Bun-equal drop (#10762)
+    - 6f93a3475d docs(changes): note the LazyCodex fix routing fragment for #11410
+    - 2c1de1c9b7 feat(omo-native): OpenSSL default-file whole-file rule (#10762)
+    - 466745b61a fix(lcx): route LazyCodex fixes to oh-my-openagent PRs
+    - 0941526b8e fix(ulw-research): the newest meaning record for an edition's bytes wins
+    - 415e9ccf1b docs(hooks): list momus-review-persistence in available hooks and fix style nits
+    - aa6207a9ce fix(hooks): persist only synchronous Momus verdicts in momus-review-persistence
+    - a6a3485d54 fix(boulder-state): contain Momus review artifacts inside the project plans dir
+    - cf2566953e test(omo-native): pin TrustAsRoot non-CA, default-input non-CA intermediate and anchor CTL fixtures (#10762)
+    - 8990e0e098 chore(codex): regenerate install-local.mjs on the merge result (canonical linux/amd64 container, Bun 1.4.4)
+    - fcb878451f fix(omo-native): portable temp dir, systemd-style continuation, handle-identity check in the Linux bundle read (#10762)
+    - 291cca2619 fix(ulw-research): bind an edition's meaning record by bytes, not source path
+    - bc67bad023 fix(ulw-research): entities decode on both sides, raw inline HTML in the converted Markdown is read as tags, next-line reference titles are link syntax; the probe's scope is declared (review round 6 #11286)
+    - 5045ddabd3 Merge pull request #11291 from code-yeongyu/fix/11232-polish-markup-backstop
+    - 25e33926a2 changes: fragment for #11407
+    - 239e7da398 feat(omo-native): select and read the Linux trust bundle (#10762)
+    - 0fbc2519fd fix(omo-native): apply CTL and Disallowed denies to non-candidate chain members; keep self-signed non-CA macOS TrustRoot (#10762)
+    - f12c2636fd fix(ulw-research): keep the pre-polish fill map authoritative and take derive time from --now
+    - f188f940e2 Merge #11376 (e3dc9bfe20: Windows path separators in its test) into the cut-7 car
+    - 58d45cfbcb Merge remote-tracking branch 'origin/dev' into fix/11205-rust-modern-mcp
+    - e3dc9bfe20 fix(shared-skills): normalize recorded script paths on Windows (#11373)
+    - e6394162fa changes: fragment for #11405
+    - 7708eaac1d Merge remote-tracking branch 'origin/dev' into chore/bun-types-1.4.4
+    - b8e29c2d9d feat(omo-native): pure v1 engine trust policy (#10762)
+    - 45311963df fix(ulw-research): one meaning record per delivered edition
+    - 70fd003fec fix(ulw-research): link and image closers are read with the CommonMark inline grammar; raw named references decode as a converter decodes them (review round 5 #11286)
+    - bef58edaa0 fix(deps): bun-types 1.4.4 in the LSP package-locks (#11311 review)
+    - d4f5066208 fix(prometheus-md-only): preserve patch context
+    - da96cb4bac docs(changelog): clarify paused-child retry scope
+    - 74860ebdbb test(ulw-research): the what-can-follow table cites the fixture's pinned S4 rows, so it also holds under #11287's pin check (review delta #11310 r5)
+    - 43132d7c6d Merge remote-tracking branch 'origin/dev' into fix/11205-skill-modern-mcp
+    - 03b9e43c41 fix(skill-mcp): remember legacy servers so discovery costs one connect
+    - 7bed03a2dc fix(ulw-research): read the longest unit after a value, and ordinary unit words beside a sign (review round 5 #11301)
+    - 7f8366a5e4 fix(ulw-research): text after a conversion is another original only when it is a bare figure in the operand's dimension; one snapshot_hash_mismatch wording (review delta #11310 r5)
+    - d21dddea90 fix(ulw-research): Markdown markup never decides a sign; footnote definitions are prose, lazy list numbering passes (review round 4 #11286)
+    - 0638db2b14 test(tmux): fix private auth channel checks (#11370)
+    - af04e58eaf fix(ulw-research): hide text only under unconditional CSS; evaluate the cascade; case-sensitive class and id (review round 4 #11287)
+    - 504f03da67 fix(ulw-research): one bracket grammar for conversion originals, a missing or extra original is a mismatch, in HTML and Markdown (review delta #11310 r4)
+    - f8b4fc1a16 fix(ulw-research): converter list markers, reference labels and wrapped groups are not numbers; a minus after one letter or an exponent is a sign (review round 3 #11286)
+    - a76f96a8c6 fix(ulw-research): read qualifiers and ordinary words as words, units through markup, and the fill map's bound unit (review round 4 #11301)
+    - 315df77ec1 test(ulw-research): sweep the Sources numeral classes into one table-driven test each; read Korean ordinals, quarters and symbol units consistently (review round 5 #11302)
+    - 707f7a120f fix(installer-mirror): summarize channel maintenance, fit version to channel, share channel concurrency
+    - 3c0c4bc1a4 docs(changes): add fragment for #11398
+    - d8d580b6c5 fix(shared-skills): exempt only top-level test/ and tests/ from the test-dir filter (#11393)
+    - 1534ec0da9 fix(ulw-research): read a unit on the right before letters on the left; add mn, pct, yr, mo; read 1.234.567 as a numeral (review round 5 #11302)
+    - 8767ca54df Merge origin/dev into fix/11000-native-path-containment (bundles left to the car: PR carries source only)
+    - 234ee9c4ce docs(changes): note the cross-platform missing-remainder refusal and the telemetry home verdict (#11339)
+    - 4c0a37e0a6 chore(cut-7 car): sync the checked-in frontend builtin skill copy with its shared source after #11376
+    - 2730aed6dd fix(service-auth): preserve refusal guidance in sync
+    - 546616a28b chore(cut-7 car): canonical regen on the merge result (pair 9323617c4f98b675)
+    - f495911fbc docs(changes): fragment for #11392
+    - b6e34affad fix(prometheus-md-only): mirror executor patch header parsing
+    - c8bd435bbb test(tmux): scope shell credential checks to Unix (#11370)
+    - 2da9bc749d fix(run): keep pane passwords out of tmux argv (#11370)
+    - ff8a4d617c docs(changes): fold car fragments #11213 #11376 #11371 #11377 into the batch fragment (fold-batch)
+    - d5ae0e4e49 Merge #11377 (c9082c8f8a) into the cut-7 car
+    - bba9406f6d Merge #11213 (8f76e97fa0) into the cut-7 car
+    - c9082c8f8a fix(shared-skills): cover nested test dir aliases
+    - 1792f2a86a Merge #11371 (192c113853) into the cut-7 car
+    - 73f634e40f Merge #11376 (b3ae80b8da) into the cut-7 car
+    - d0e350c3f5 Merge pull request #11253 from code-yeongyu/fix/10477-changelog-review-lows
+    - 6823e1bf42 docs(changes): add fragment for #11390
+    - 1461b16b1f Merge pull request #11369 from code-yeongyu/fix/11367-prometheus-apply-patch
+    - f5e69e1ca0 fix(ulw-research): read a month/day under Sources as a date (lead date ruling, review round 4 #11302)
+    - 4566ba58f4 fix(ulw-research): read a digit run glued to letters as a name, link text and year ranges as citation fields (lead ruling, review round 4 #11302)
+    - d762c7e58e fix(run): run every cleanup step even when closing the server throws (#11370)
+    - 36fd04e468 chore(ulw-research): sync number-grammar with #11286 (byte-identical shared module)
+    - a5b284bba7 chore(ulw-research): sync number-grammar with #11286 (byte-identical shared module)
+    - 5cd80e5a35 fix(ulw-research): attribute digits cover only link syntax, breaks never group digits, and a working --replace recovery (review round 2 #11286)
+    - 9ded9437f9 test(ulw-research): use footer, not aside, in the hidden-element fixture (de-personalization gate)
+    - 50f7c4b6ca fix(shared-skills): never ship nested test dirs in bundled skills (#11373)
+    - cc4a56d4ed fix(shared-skills): bundled skill scripts never write inside the shipped tree (#11373)
+    - 7c0fed935c Merge pull request #11363 from code-yeongyu/batch/memsync-coord-16
+    - 13f8b936d6 test(prometheus-md-only): pin CRLF and indented patch headers (#11369)
+    - 192c113853 fix: carry the refusal-is-final rule on every agent prompt route and ultrawork variant, enumerated by tests
+    - e3ba690730 Merge origin/dev into fix/bug-report-intake-11194
+    - 520e5c6cf9 fix(run): close the server and restore the password when client auth injection throws (#11370)
+    - 9406e2977c fix(ulw-research): read a conversion original the way verify reads a quantity; the snapshot preflight is the only gate for row-backed sources (review delta #11310)
+    - 5144116e00 fix(ulw-research): end the verification cue's document guard at the clause (shared cue list, identical with #11301)
+    - 9b11685e6f fix(ulw-research): end the verification cue's document guard at the clause (shared cue list, identical with #11301)
+    - 0dbf6457ee fix(ulw-research): trace a checked Sources sentence without its URL, title, and tag fields; headings stay exempt
+    - f0fa041cf6 fix(ulw-research): under Sources check every sentence whose numerals are not all citation fields (decision 25, review round 3 #11302)
+    - f6130daa14 fix(changelog): indented code right after a closing fence is code too (#11253 review round 5 LOW 1)
+    - f20124a96c fix(ulw-research): fail closed on legacy rows of a refreshed source, emulate an unreadable raw.bin on win32, honor simple
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.51
+ReleaseTime: 2026-10-28T22:42:36.0000000Z
