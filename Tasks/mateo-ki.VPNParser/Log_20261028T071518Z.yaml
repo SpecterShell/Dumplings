@@ -1,0 +1,33 @@
+Version: 1.15.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.0/vpn-parser-1.15.0-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.0 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.0！本版重磅首发集成纯 Rust 原生全协议极速代理内核 VP-Core，全面优化内存与高并发调度，同时重构活跃连接与审计抽屉、自适应高 DPI 布局，并完善 GitHub 更新通道：
+    ✨ 新特性与核心升级
+    - 重磅集成 VP-Core 全协议极速 Rust 代理内核：
+      - 官方深度集成纯 Rust 现代化代理内核 VP-Core（https://github.com/mateo-ki/vp_core）；
+      - 支持主流协议全覆盖（Trojan, VLESS Reality/Vision, VMess AEAD, Shadowsocks, Hysteria 2, Snell 等）；
+      - 深度集成原生 TUN 模式与 Fake-IP 域名劫持、自动路由下发；
+      - 极致内存优化：全面接入 mimalloc 内存分配器、工作集自动修剪、GeoSite/GeoIP 零拷贝 mmap 与流式按需解码、域名 Trie 前缀剪枝与规则智能合并，运行内存大幅压降。
+    - 活跃连接与 DNS 审计抽屉全面焕新：
+      - 修复活跃连接抽屉顶栏布局与多余文字冲突，右上角关闭按钮精准靠右对齐；
+      - 抽屉内容区全宽自适应拉伸（760~1400px），告别右侧大面积空白；
+      - 连接列表、活跃进程与 DNS 审计三大表格全面引入水平滚动保护与长域名/IP 智能截断，确保 7 列网络明细在任意屏幕缩放下完整呈现。
+    - 关于菜单高 DPI 按钮显示优化：
+      - 针对 Windows 1.2x 等高 DPI 缩放场景，增大按钮槽位与行高留白，彻底解决“安装包详情”和“本机路径”操作按钮（打开/复制）文字边缘被截断问题。
+    - GitHub Release 403 限频无感降级与更新稳定性：
+      - 接入官方 Web Atom Feed 动态解析兜底机制，遇到 GitHub API 403 Rate Limit 时自动无缝降级至 releases.atom 获取版本更新；
+      - 支持附带 GITHUB_TOKEN 鉴权，更新轮询周期优化为 6 小时，彻底根治版本检查失败。
+    - 编译器与链路稳定性增强：
+      - 在 Sing-box 与 Xray 编译器中透传 skip-cert-verify / allowInsecure 选项；
+      - 自定义覆写声明 proxy-groups 时自动注入候选节点池，修复代理开启后节点测速超时。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.0
+ReleaseTime: 2026-10-28T06:54:53.0000000Z
