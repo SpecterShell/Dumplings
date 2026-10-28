@@ -1,0 +1,40 @@
+Version: 0.5.8
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.8/Snow-App-Setup-0.5.8.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Sidebar Conversation Hover Card: hovering a conversation opens a card with its full title, pin state, relative time and project, replacing the title marquee; the card hides while any modal is open. Titles of running conversations get a shimmer, and sidebar badges stay visible when the sidebar is collapsed.
+    - Resizable Input Composer: drag the handle above the input to set its height, and keep dragging up to expand it into a large-screen composer (drag the handle down or press Esc to collapse).
+    - Structured Read-Only File Previews: spreadsheets (calamine) and SQLite databases preview with their real structure - windowed rows, column types and merge regions - PPTX extracts titles and text blocks in slide order, and DOCX is rendered from its original bytes; files that cannot be previewed show a localized reason with "open with system app" / "show in folder" exits, while the extract-text view stays available.
+    - Sensitive Command Denial Review: with decision-model hosting on, a new "let me confirm when denied" option turns a model denial into a manual confirmation instead of an automatic rejection; the card marks that you are overriding the model's verdict and the outcome is written to the system log.
+    Improvements
+    - WorkFlow Composer runs without an AI hop: sending from the composer no longer asks the model to forward the graph. The app writes the user message and a workflow-workflow-generate tool call directly (no authorization prompt), so the workflow card appears immediately and you just press "Run"; the execution result is still returned to the AI for summary or resume. The user message is now a collapsed WorkFlow chip (flow name plus node/edge counts, hover to see the node list) followed by your note, instead of the instruction text and JSON payload. The conversation title is generated once the real reply after the workflow finishes arrives, and the summary input collapses chip tags instead of feeding base64 payloads to the title model. Rolling back a composer submission no longer injects an unreadable tag into the input box: the WorkFlow composer reopens with the canvas, flow name and note restored from the graph snapshot.
+    Bug Fixes
+    - Fixed the Responses channel's default / off tier not taking effect: the backend deep-merges config_json, so verbosity and fast mode are now written explicitly instead of being omitted.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.7...v0.5.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 侧边栏会话悬停卡片：悬停会话显示完整标题、置顶状态、相对时间与所属项目，取代原来的标题跑马灯；任何弹窗打开时卡片自动隐藏。运行中的会话标题带流光效果，侧边栏收起时徽标仍保持可见。
+    - 输入框高度可调：拖动输入框上沿把手调整高度，继续上拖可展开为大屏输入（下拉把手或按 Esc 收起）。
+    - 结构化只读文件预览：表格文件（calamine）与 SQLite 数据库按真实结构预览——窗口化行数据、字段类型与合并区域；PPTX 按放映顺序提取标题与文本块，DOCX 由原始字节交给渲染层呈现；无法预览时给出本地化原因，并提供「用系统应用打开」「在文件夹中显示」等出口，同时保留「抽取文本」视图入口。
+    - 敏感命令拒绝转人工确认：决策模型托管开启时可勾选「拒绝时仍让我确认」——判定允许仍直接放行，判定拒绝则转为人工确认；确认卡片标注你正在覆盖模型判定，判定结果写入系统日志。
+    改进
+    - WorkFlow 手动编排直达执行：编排器发送后不再经 AI 转交，直接写入用户消息与 workflow-workflow-generate 工具调用（免授权弹窗），会话中立即出现工作流卡片，点「确认执行」即可运行；执行结果照常回传 AI 继续总结或续跑。用户消息改为折叠的 WorkFlow 标签（流程名 + 节点 / 连线数，悬停查看节点清单）加备注，不再显示指令文本与 JSON 载荷；会话标题在工作流执行后的真实回复完成时生成，摘要输入已折叠 chip 标签，不再把 base64 载荷喂给标题模型。回滚编排提交的消息时不再往输入框塞入无法识别的标签，而是重新打开编排器并按图快照还原画布、流程名与备注。
+    修复
+    - 修复 Responses 渠道「默认 / 关闭」档位不生效：后端对 config_json 深合并会保留省略键的旧值，现改为显式写入 verbosity 与 fast mode。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v058
+ReleaseTime: 2026-10-28T18:40:20.0000000Z
