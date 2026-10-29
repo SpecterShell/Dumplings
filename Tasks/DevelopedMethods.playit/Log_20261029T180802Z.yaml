@@ -1,0 +1,33 @@
+Version: 1.2.0
+Installer:
+- InstallerType: wix
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.2.0/playit-windows-x86-signed.msi
+- InstallerType: wix
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.2.0/playit-windows-x86_64-signed.msi
+- InstallerType: portable
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.2.0/playit-windows-x86-signed.exe
+- InstallerType: portable
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.2.0/playit-windows-x86_64-signed.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Minecraft Bedrock: NetherNet support for Geyser and WaterdogPE
+    Updated NetherNet tunnels to work with Playit’s NXS signaling service. The agent now forwards NetherNet traffic as UDP, removing the previous dependency on agent-managed signaling sessions.
+    - Geyser: Bedrock players can connect to your Java server using NetherNet.
+    - WaterdogPE: Bedrock players can connect through WaterdogPE to a vanilla Bedrock server.
+    To configure either server:
+    - Create a Minecraft Bedrock (NetherNet) tunnel.
+    - Enable NetherNet transport and select nxs signaling.
+    - Set the NXS endpoint to https://nethernet.playit.gg.
+    - Copy the token from your tunnel page into the NXS token setting.
+    - Disable STUN discovery. Manual advertised addresses are unnecessary; Playit determines the address automatically.
+    - Keep the tunnel’s Proxy Protocol setting at None.
+    Players connect using the tunnel hostname and port 19132, even if the tunnel page displays a different allocated UDP port.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/playit-cloud/playit-agent/releases/tag/v1.2.0
+ReleaseTime: 2026-10-29T17:46:57.0000000Z
