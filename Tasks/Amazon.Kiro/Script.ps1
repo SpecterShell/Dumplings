@@ -1,4 +1,16 @@
+# x64 user
 $Object1 = Invoke-RestMethod -Uri 'https://prod.download.desktop.kiro.dev/stable/metadata-win32-x64-user-stable.json'
+# x64 machine
+$Object3 = Invoke-RestMethod -Uri 'https://prod.download.desktop.kiro.dev/stable/metadata-win32-x64-system-stable.json'
+# arm64 user
+$Object4 = Invoke-RestMethod -Uri 'https://prod.download.desktop.kiro.dev/stable/metadata-win32-arm64-user-stable.json'
+# arm64 machine
+$Object5 = Invoke-RestMethod -Uri 'https://prod.download.desktop.kiro.dev/stable/metadata-win32-arm64-system-stable.json'
+
+if (@(@($Object1, $Object3, $Object4, $Object5) | Sort-Object -Property { $_.currentRelease } -Unique).Count -gt 1) {
+  $this.Log("Inconsistent versions: x64 user: $($Object1.currentRelease), x64 machine: $($Object3.currentRelease), arm64 user: $($Object4.currentRelease), arm64 machine: $($Object5.currentRelease)", 'Error')
+  return
+}
 
 # Version
 $this.CurrentState.Version = $Object1.currentRelease
@@ -6,10 +18,35 @@ $this.CurrentState.Version = $Object1.currentRelease
 $Object2 = $Object1.releases.Where({ $_.updateTo.version -eq $this.CurrentState.Version }, 'First')[0]
 
 # Installer
+# WinGetReplaceMode builds every entry from the existing x64 user installer, so each
+# entry sets its own Scope, ProductCode (Inno AppId + _is1) and install location.
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  Scope        = 'user'
-  InstallerUrl = $Object2.updateTo.url
+  Architecture         = 'x64'
+  Scope                = 'user'
+  InstallerUrl         = $Object2.updateTo.url
+  ProductCode          = '{A2CA08B5-C756-463E-B13D-F051F4F11F0B}_is1'
+  InstallationMetadata = [ordered]@{ DefaultInstallLocation = '%LocalAppData%\Programs\Kiro' }
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'x64'
+  Scope                = 'machine'
+  InstallerUrl         = $Object3.releases.Where({ $_.updateTo.version -eq $this.CurrentState.Version }, 'First')[0].updateTo.url
+  ProductCode          = '{ECDD7648-5B69-4BDC-9D21-C3452CE76CD2}_is1'
+  InstallationMetadata = [ordered]@{ DefaultInstallLocation = '%ProgramFiles%\Kiro' }
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  Scope                = 'user'
+  InstallerUrl         = $Object4.releases.Where({ $_.updateTo.version -eq $this.CurrentState.Version }, 'First')[0].updateTo.url
+  ProductCode          = '{C178CB1C-7689-4F22-B8CF-0952EC832496}_is1'
+  InstallationMetadata = [ordered]@{ DefaultInstallLocation = '%LocalAppData%\Programs\Kiro' }
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture         = 'arm64'
+  Scope                = 'machine'
+  InstallerUrl         = $Object5.releases.Where({ $_.updateTo.version -eq $this.CurrentState.Version }, 'First')[0].updateTo.url
+  ProductCode          = '{CF58DB1E-C697-42DB-9C64-722B37182E61}_is1'
+  InstallationMetadata = [ordered]@{ DefaultInstallLocation = '%ProgramFiles%\Kiro' }
 }
 
 switch -Regex ($this.Check()) {
