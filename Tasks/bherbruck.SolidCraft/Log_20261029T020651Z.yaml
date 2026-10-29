@@ -1,0 +1,77 @@
+Version: 0.26.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.26.0/solidcraft-0.26.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.26.0/solidcraft-0.26.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.26.0/solidcraft-0.26.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Designs saved in 0.26.0 use format 43 and don't open in 0.25.1 or older.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    New
+    - Point clouds: insert PLY, XYZ and PTS scans as a modelling reference beside the model, saved in the design and coloured by the file, a single colour or height; large scans are thinned to 5 million points by default (#5381).
+    - Drawings groundwork: there is no Drawing workspace yet, but components can now be given a bill of materials type (normal, phantom, reference, purchased or inseparable) through commands, scripts and MCP, and assembly.bom counts them by it; the Bill of Materials window doesn't show the type yet, and nothing changes unless a type is set (#8249).
+    - Edit a linked component in place: double-clicking a linked component now opens its design with the rest of the assembly drawn faded around it, and Finish Edit saves it and takes you back; to have double-click only activate components, change Preferences → Design → "Double-click a component to activate it, or to edit a linked one in place" (#7819).
+    - Status bar and view angles: two new options, off by default: a status bar that shows the sketch's state, what is being edited and the design's units (Preferences → Interface → Status bar), and a pitch, yaw and roll readout under the orientation gizmo that you can click to type exact angles (View → View angles) (#7248, #6249).
+    - Maya and HFSS mouse presets in Preferences → Navigation → Mouse mapping, a new option to reverse the vertical pan direction, off by default, and Ctrl+W (Cmd+W) closes the design shown, on the desktop and in the browser, asking first if it has unsaved changes (#8184, #5454, #5466).
+    - Themes: paste a copied theme onto the Import tile with Ctrl+V or drop a theme file on it, and a new option draws the logo in the theme's accent colour, off by default (#8227, #8534, #8133).
+    Render
+    - Shots strip: saved shots show as thumbnails along the bottom, with the active shot marked, Update and Revert when you move the camera, Save Shot in the Frame tools and a Render Image button (#6430).
+    - Focus view, compact and moveable docks: Tab hides the docks and the Shots strip and brings them back, below about 800 px wide the Browser folds into a chip that opens it as a floating card, and right-clicking the Inspector or Browser header moves it to the other side (#7376, #7230).
+    - Scene tree and picking: the Render Browser lists Environment, Lights, Shots, Objects and Output, with By object and By look views and a search field, and the Pick control in the Look tools picks a body, face or component, outlined in the render only (#6427, #6426).
+    - Appearance editor: one panel shows the look chain (Face, Body, Component, Material) and where the look comes from, what it applies to, and the Advanced settings, and the new appearance.replace command swaps a look everywhere it is used in one undo step (#6432, #6428).
+    - Appearances grid and studios: a panel under the Browser shows looks as lit spheres, filtered by In Design, Library, Recent and favourites, to click or drag onto the model, and Studios and Environments for the Light stage (#6429).
+    - Output: an Output editor with Image, Effects and Check sections, size presets, a progress pill, and a result viewer with Copy, with R and Esc as keys (#6433).
+    Sketch
+    - Alignment guides: hover a circle or arc centre or a line's midpoint, then move horizontally or vertically, and a dotted guide shows where you line up with it; this is on by default, and Preferences → Sketch → "Center and midpoint alignment guides" turns it off (#7903).
+    - Center Point Arc follows the cursor: the arc now runs clockwise or counter-clockwise the way you move round the centre; the old always-counter-clockwise behaviour is in Preferences → Sketch → "Center point arc follows the cursor's direction" (#6664).
+    - Sketch icons show their state: in the History and the Browser a sketch's icon now takes the colour of under constrained, fully constrained or conflicting; Preferences → Sketch → "Sketch icons in the color of their state" turns it off (#7250).
+    - Dimension new shapes: two new options, off by default, give each drawn shape its dimensions at the sizes drawn, and optionally place it from the origin so it is fully constrained (Preferences → Sketch) (#5987).
+    - Dimensions in their own colour: every built-in theme now draws sketch dimensions in a colour of their own instead of the fully constrained curve colour; a custom theme file can set dimension and dimension_driven to get the old look (#8124).
+    - More ways to dimension: an Arc Length Dimension in the right-click menu for a selected arc, a slot's two caps measure centre to centre, the 2-Tangent Circle asks for its radius before it is made, and a dimension between two points stays aligned unless you pull its text well past an end to make it horizontal or vertical (#6264, #7488, #8116, #7355).
+    - Sketch text in Arabic and Hebrew now reads right to left, with Arabic letters joined, and Bold works in a variable font (#8324, #8331).
+    - Reverse Spline Direction in the right-click menu for a selected spline, so a Sweep, Loft or Pipe along it starts from the other end (#8414).
+    - Starting a sketch: a new option, off by default, keeps the SKETCH tab in the ribbon outside a sketch and opens Create Sketch when you start one of its drawing tools (Preferences → Interface → Keep the Sketch tab shown); Create Sketch previews its grid on the plane under the pointer, and the History's sketch menu has Redefine Sketch Plane (#7906, #7404, #8024).
+    Modelling and interface
+    - Join, New Body or Cut chosen for you: Extrude, Revolve, Sweep, Loft, Coil and the primitives now pick the operation from what the material touches until you pick one, and hidden bodies are left out; the old behaviour is in Preferences → Design → "Choose the operation automatically" (#6903).
+    - Define a parameter from any value box: type name = value in an extrude distance, fillet radius, hole size or any other value input and the parameter is created (#7341).
+    - Sphere, Torus and Cone dialogs have placement fields for their centre or base, Measure numbers its two picks 1 and 2 in the view, and Appearance from the Browser applies to every selected body (#8328, #6021, #7941).
+    - Smoother interaction: a feature preview for a new selection starts without waiting for the previous one, and ambient occlusion uses fewer samples while the view moves (#7261, #7214).
+    - Navigation bar and Browser: the navigation bar has its own icons for visual styles, selection modes and display settings, Collapse All keeps the clicked row open, V runs Show/Hide on the row a menu was opened for, and picking a placed body reveals its row (#6898, #8033, #8377, #7948).
+    - Dialogs read in words: the primitive dialogs, Standard Parts, Contact Set and Insert Part label their fields in words and in your language instead of raw parameter names, and Insert Part's Length list opens on the default length (#7995, #8005, #8018, #8022).
+    - Assistant and updates: the Assistant chat has an OpenCode Go preset that routes each Go model to its own endpoint, and when a launcher such as ArtCraft Launcher manages SolidCraft, the update window points you to it instead of updating itself (#6111, #8403).
+    Assemblies
+    - Linked components keep their material and appearance: Insert Design keeps the source body's physical material, colour and finish, and Update Links brings source-only changes across without overwriting changes made in the assembly (#7616).
+    - Extrude on a face in an assembly picks the body shown at that point instead of refusing when two parts share a place, a pattern of another component's body follows its component when that moves, and a motion interference check that ran out of time no longer reports clear (#6469, #8467, #7934).
+    Files
+    - OBJ export writes the body colours in a .mtl file next to the .obj, and DXF import brings elliptical arcs in as exact conic arcs instead of a fitted spline (#6693, #8241).
+    - Largest file to open: Preferences → General and the --max-file-size launch flag raise the 512 MB import and 256 MB design limits, up to 16 GB (#7565).
+    - Stand-up offer: a STEP or IGES file from a program that isn't known to save Y up now gets a small note, and only when the part seems to lie on its back; the old dialog is in Preferences → Design → "For files from unknown programs" → Ask in a dialog (#7718).
+    - Save As offers the open file's own name, not the name stored inside the design (#8354), and on Windows an export over a file another program holds for a moment waits up to 2 s (#8125).
+    Fixed
+    - Sketch solving: dragging no longer breaks a midpoint-constrained line or collapses construction geometry, a rounded rectangle completes from a vertex, and an arc slot no longer gets a redundant Equal (#7810, #8160, #7943, #8395).
+    - Sketches on faces: a sketch on a filleted face closes its boundary, a sketch on the mirrored half of a combined Mirror stays on that face, and leaving a sketch opened inside a component gives the previous component back (#8386, #8278, #8157).
+    - Right-click on a Magic Mouse opens the menu instead of nudging the view, Select Other's hold works while Orbit, Pan or Zoom is lit, Move/Copy ends a triad drag where you release the button, and Mirror and Pattern of bodies reopen with Bodies and their Operation (#7939, #8438, #8309, #8298).
+    - Fewer failures: reordering in a long history of one body no longer crashes, Canvas and Decal place on a face of a large design, and hiding a body works when a sketch has the same name in other case (#8159, #5593, #7004).
+    - Windows and dialogs: closing from the taskbar brings the window forward to ask about unsaved changes, command dialogs stay above the Browser and History, and Preferences search scrolls freely and no longer redraws endlessly (#7784, #8203, #8388, #8399).
+    - Layout: ribbon captions and two-line labels stay inside their buttons, the Sketch Create menu rows share its width, the busy spinner sits with the dialog buttons, a long version no longer covers Report a bug, only one context menu row stays lit, and the Flat Pattern, Bill of Materials and Insert Design lists show their full text (#7956, #8405, #8409, #8362, #8280, #8066, #7496, #8144, #8122).
+    - Scripts and MCP: a Redefine reply reports the features it rebuilt, a list parameter refuses a wrong type instead of losing entries, new conic curves get their own id prefix, and the MCP server keeps folders it opened or saved in within reach (#8244, #6683, #8407, #7216).
+    Security
+    - zip updated to 9.1.3 for a critical advisory in reading crafted zip files, which SolidCraft does for designs, 3MF files and the updater's downloads (#8572).
+    Translations
+    New interface languages: Bosnian, Croatian and Serbian (#7813). New and updated strings in Czech, Dutch, French, Galician, German, Hungarian, Indonesian, Italian, Japanese, Malay, Norwegian Bokmål, Romanian, Russian, Swedish, Traditional Chinese, Turkish and Ukrainian, including the Render workspace, and many dialog labels, hints and menu items that read English in every language now translate.
+    Compatibility
+    0.26.0 writes design file format 43 (0.25.1 wrote 41). Format 42 keeps, for each linked component, the material, body look and face overrides it last inherited from its source, so Update Links can tell source edits from changes made in the assembly; format 43 adds point clouds. 0.26.0 opens every earlier design, but 0.25.1 and earlier refuse a design saved by 0.26.0. Drawing files (.scdwg) are format 1.
+    Thanks
+    Thanks to 39 contributors.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.26.0
+ReleaseTime: 2026-10-29T00:47:35.0000000Z
