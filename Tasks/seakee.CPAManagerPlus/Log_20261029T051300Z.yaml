@@ -1,0 +1,80 @@
+Version: 1.14.10
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.10_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.10/cpa-manager-plus_v1.14.10_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.10_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.10/cpa-manager-plus_v1.14.10_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.10
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.10 improves the 1.x credential workspace and addresses model-exclusion precedence, historical pricing reads, plugin configuration defaults, and in-page URL synchronization. Manager Server gains narrowly scoped read-only forwarding for CPA v8 API-key groups. No v2 architecture changes are included.
+    Changes
+    Credentials and UI
+    - Pinned credentials (#1098, #1102): Pin watched credentials in table or card view. Matching pins appear first in pin order while existing filters and the order of unpinned results remain in effect. A lightweight inline pin beside the account name avoids overlapping provider logos. Pins are browser-local and unavailable in selection mode.
+    - Effective model exclusions (#1080): Model badges, counts, actions, and editing guidance now reflect the CPA OAuth precedence for the detected version. CPA v6.10.8–v8.0.32 combines global and credential exclusions; v8.0.33+ makes a non-empty credential list override global exclusions, while an empty list inherits them. Editing avoids silently re-enabling globally excluded models, and unknown CPA versions receive conservative edit restrictions.
+    - Same-page URL state (#1099): Fix navigation updates that changed only search parameters or fragments. Credential filters, search, sorting, layout, and detail state stay synchronized with reloads, browser history, and shared links. Late URL echoes no longer overwrite newer search input.
+    - Plugin configuration defaults (#1073): When a saved field is absent, show the typed default declared by CPA without writing that default during unrelated saves. Explicit stored values such as false, 0, empty string, and null take precedence. Older CPA versions that do not expose defaults retain the prior behavior.
+    Manager Server and data reads
+    - Historical pricing recovery (#1083): Recover incomplete pricing reads from intact raw usage events when monitoring projection rows are missing or stale. This avoids some historical analytics and account-cost failures; genuinely missing historical data remains unrecoverable and is never synthesized. No price, schema, or stored-data migration.
+    - Read-only CPA v8 API-key groups (#1097): Manager Server now forwards only authenticated-admin GET /v8/management/config/api-keys requests and subpaths so plugin pages can view group names and key identifiers. Writes, other v8 management paths, and unsafe escaped paths remain blocked; CPA Panel mode is unchanged.
+    Maintenance
+    - Security tooling (#1093): Bump the development-only locked Zod dependency to resolve an audit advisory; no runtime application behavior change.
+    - Dependency update policy (#1070): Disable routine Dependabot version-update PRs in favor of deliberate development and targeted security updates; no product runtime change.
+    Upgrade Notes
+    - Upgrade normally from v1.14.9 and restart. There are no database migrations, credential recreations, or configuration-format changes.
+    - Pins are stored only in the current browser, are not synchronized between devices, and do not bypass filters. Renaming an auth file or changing its identity may leave a stale pin unmatched.
+    - The running CPA version determines OAuth exclusion precedence. Pay particular attention to non-empty credential-level lists on v8.0.33+; CPAMP now reflects upstream behavior rather than changing it.
+    - The new read-only group view requires CPA with the v8 endpoint. If Manager Server is behind a shared-domain reverse proxy, use the matching route in the reverse-proxy guide. It remains admin-only.
+    - The overall minimum CPA compatibility baseline for full Muse / Meta features remains v7.3.4+.
+    - The merged fixes and current dev head passed their respective tests and required CI checks; publication readiness remains subject to the Release Dry Run and release workflow.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.9...v1.14.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.10-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.10 是 v1.14.9 之后的 1.x 功能完善与问题修复版本。新增常用凭证置顶，并修复模型排除优先级、历史价格读取、插件配置默认值及同页面 URL 状态同步问题。Manager Server 还补充了范围受限的 CPA v8 API Key 分组只读转发。不包含 v2 架构改造。
+    Changes
+    凭证管理与页面交互
+    - 凭证置顶（#1098、#1102）：可在表格或卡片视图置顶关注的凭证；符合当前筛选条件的置顶项按置顶先后排在列表前列，其他项仍按原排序。图钉改为账号名称旁的轻量按钮，避免遮挡提供商标识。置顶状态仅保存在当前浏览器，选择模式下不提供置顶操作。
+    - 模型排除的实际生效规则（#1080）：按 CPA 版本区分 OAuth 排除优先级。CPA v6.10.8–v8.0.32 合并全局和凭证规则；v8.0.33+ 的非空凭证列表覆盖全局规则，空列表继承全局规则。模型数量、徽标、操作状态和编辑提示按实际生效规则展示；新增凭证排除时避免意外重新放开全局已排除模型。无法识别版本时采取保守的编辑限制。
+    - 同页面 URL 状态（#1099）：修复仅变更查询参数或锚点时页面未收到新地址的问题。凭证管理的筛选、搜索、排序、布局和详情状态能与 URL 保持一致，刷新、前进后退及分享链接可还原当前视图；修复快速输入时旧地址回写覆盖新搜索条件的问题。
+    - 插件默认配置（#1073）：当保存的插件配置缺少某字段时，配置抽屉显示 CPA 提供的声明默认值；已显式保存的 false、0、空字符串或 null 不受影响。仅展示默认值不会把它写入配置文件。未提供默认值的旧版 CPA 仍保持原有行为。
+    Manager Server 与数据读取
+    - 历史价格恢复（#1083）：当历史价格投影缺失或过期、但原始用量事件仍完整时，按原始事件恢复价格读取，避免部分用量分析和凭证历史查询因投影缺口报错。确实丢失的历史事件不会被臆造补齐；不改变价格、数据库结构或已存储数据。
+    - CPA v8 API Key 分组只读代理（#1097）：Manager Server 仅向已验证的 CPAMP 管理员转发 GET /v8/management/config/api-keys 及其子路径，供插件页面读取分组名称和密钥标识。拒绝写入及其他 v8 管理路径，并拦截路径穿越；CPA Panel 模式保持原状。
+    维护
+    - 依赖安全（#1093）：更新仅在开发工具中使用的 Zod 锁定版本，解除依赖漏洞扫描对 CI 的阻断；不改变运行时依赖行为。
+    - 依赖升级策略（#1070）：关闭例行 Dependabot 版本升级 PR，依赖升级回归开发迭代与针对性安全维护；不改变产品运行逻辑。
+    Upgrade Notes
+    - 从 v1.14.9 正常更新并重启即可；无数据库迁移、凭证重建或配置格式变更。
+    - 凭证置顶仅在当前浏览器保留，不跨设备同步，也不会越过既有筛选；文件重命名或身份标识变化后旧置顶可能不再匹配。
+    - 模型排除行为由运行的 CPA 版本决定，尤其注意 v8.0.33+ 的凭证级非空列表覆盖规则；本次调整的是 CPAMP 的解释与编辑交互，不会修改上游优先级。
+    - Manager Server 模式读取 CPA v8 API Key 分组需要上游支持该 v8 接口；经同域名反向代理部署时应检查 反向代理说明 中的对应路径。该接口仅限管理员只读访问。
+    - 完整 Muse / Meta 功能的 CPA 最低兼容基线仍为 v7.3.4+；此版本没有提高整体最低版本。
+    - 相关修复已通过合入时的测试和当前 dev 必需检查；正式发布仍以 Release Dry Run 及发布工作流为准。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.9...v1.14.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.10-zh.md
+ReleaseTime: 2026-10-29T04:45:36.0000000Z
