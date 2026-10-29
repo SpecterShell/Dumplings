@@ -1,0 +1,22 @@
+Version: 0.18.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.18.0/Prometheus_0.18.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.18.0/Prometheus_0.18.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 更多 Agent： 支持任何实现了 ACP（Agent Client Protocol）的 Agent。内置 Gemini CLI 和 Qwen Code，并提供 Goose、Kimi、Auggie 以及 claude-code-acp、codex-acp 适配器的预设。在 设置 → Agent 里选预设即可添加，权限、工具和上下文与其他 Agent 一致。
+    - OpenCode 服务模式： 可以连接一个长期运行的 opencode serve（填写地址与账号），多个会话共用同一个服务；也可以让 Prometheus 用固定端口共享一个服务。
+    - Agent 更新： 设置 → Agent 会检查各 Agent CLI 是否有新版本，一键更新到最新。更新后新会话立即使用新版本（Claude Code 不再固定使用内置版本，Codex、OpenCode 优先使用 Prometheus 安装的那份）。
+    变更
+    - 安装包大幅缩小： 安装包不再内置 Claude Code（约 280 MB），也去掉了用不到的本地 embedding 依赖（约 100 MB）。首次使用 Claude Code 时在 设置 → Agent 点“安装”，约半分钟装好，需要联网。Windows 安装包由 263 MB 降到约 112 MB。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.18.0
+ReleaseTime: 2026-10-29T16:12:57.0000000Z
