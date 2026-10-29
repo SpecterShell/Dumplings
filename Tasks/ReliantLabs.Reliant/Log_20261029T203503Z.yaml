@@ -1,0 +1,45 @@
+Version: 1.8.10
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.8.10-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.8.10-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Device login and richer observability
+    Sign in with a device code, inspect traces and RPC traffic, and browse more consistent tables. Conversation streaming and tool-command recovery are more reliable.
+    Sign in with a device code
+    The CLI supports device-code login, and daemon credentials inherit the signed-in user's scopes.
+    Inspect traces and RPC traffic
+    New tracing, RPC explorer, service graph, errors, and alerts views help explain what the system is doing.
+    Browse consistent tables and custom-domain links
+    Shared tables bring consistent navigation across the web interface, including custom-domain links.
+    Recover tool commands without duplicate execution
+    Shell commands are resent only when there is proof they never ran, and pending daemon commands are delivered when their consumer is created.
+    Keep conversations responsive
+    Streaming snapshot and replay work is reduced, and agent messaging supports a subject.
+    What's Changed
+    📦 Other Changes
+    - fix(runstep): re-send a shell command only on proof it never ran by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1819
+    - feat(chat): spawn_send subject + new-chat forge block removal + chat width fix by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1799
+    - fix(toolexec): the drain that creates a daemon's pending consumer delivers its command by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1821
+    - perf(streaming): StreamChatUpdates snapshot/replay work by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1800
+    - fix(electron): release.config.json carries the desktop renderer's session replay from control-plane's KCL by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1823
+    - feat(obs,tracing): tracing + RPC explorer/service graph UI + errors/alerts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1801
+    - refactor(web): shared DataTable + every table conversion + custom-domain links + e2e by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1802
+    - feat(auth): device-code reliant auth login; daemon credentials inherit every scope by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1784
+    - fix(launch): an expected launch decline is not logged as a failed transaction by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1812
+    - fix(test): question-handoff test spawns B only after A is asking (main release gate flake) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1828
+    - chore: release v1.8.10 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/1832
+    Full Changelog: https://github.com/reliant-labs/reliant/compare/v1.8.9...v1.8.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases/tag/v1.8.10
+ReleaseTime: 2026-10-29T20:29:07.0000000Z
