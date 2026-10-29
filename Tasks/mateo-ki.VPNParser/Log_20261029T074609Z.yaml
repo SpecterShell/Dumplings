@@ -1,0 +1,28 @@
+Version: 1.15.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.4/vpn-parser-1.15.4-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.4 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.4！本版重点攻坚并修复了 SSR 协议层加密时序缺陷与 ECH (Encrypted Client Hello) 全链路支持，通过了 10 个真实生产节点的严苛连通性实测：
+    🔒 ECH (Encrypted Client Hello) 全链路原生打通
+    - RFC 9180 HPKE 规范对齐：
+      - 彻底修复内核中 HPKE 自实现算法的标签与扩展缺陷（对齐 RFC 9180 A.1.1 官方测试向量），解决 Cloudflare 边缘服务器拒绝解密握手的问题；
+      - 完善 ServerRejectedEncryptedClientHello 动态重试机制与服务器 ECH Retry Config 实时缓存更新；
+    - VLESS / Trojan 懒握手与 ECH 订阅参数解析：
+      - 支持 ech=<query_server_name>+<doh_url> 格式的 ECH 订阅参数解析与配置导出；
+      - 针对 Cloudflare Worker 等边缘环境实现 VLESS 首帧懒握手（Request Header 与应用载荷同帧打包发送），根除早期握手死锁与空帧超时；
+      - 客户端配置导出模块原生适配 ech-opts（支持 enable/query-server-name/doh）。
+    ⚡ ShadowsocksR (SSR) 收发路径时序重构
+    - 矫正混淆层与流加密处理顺序：
+      - 修复 tls1.2_ticket_auth 混淆层误先被流密码（chacha20-ietf / rc4-md5）加密成乱码的倒置缺陷；
+      - 发送路径规范为：协议分帧 → SS 流加密 → TLS 记录封装（ClientHello 保持明文，[IV]+密文 正确封装入 0x17 记录）；
+      - 接收路径规范为：TLS 解帧 → 写入 SS 流缓冲区 → 提取 IV → 流解密，全面保障多混淆与多密码算法节点的稳定连通。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.4
+ReleaseTime: 2026-10-29T05:46:11.0000000Z
