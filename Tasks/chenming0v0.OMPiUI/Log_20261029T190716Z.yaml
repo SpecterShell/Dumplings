@@ -1,0 +1,18 @@
+Version: 0.6.46
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.46/OMPiUI_0.6.46_x64-setup-lite.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - feat(tools): 模型前台 Bash PTY 可在原工具正文交互；公开扩展执行前创建唯一进程，中文/Enter/方向与控制键/resize、writer 控制权、受认证 socket/pipe 与一次性 WebSocket 票据、输入 ACK 恢复去重和有界输出回放接通。真实退出/非零/超时/取消返回原 toolCallId，模型继续；不打开官方 OMP TUI、不另建 shell、不重跑命令，普通 Bash/async/name 服务沿用官方路径，历史浏览只读。官方 18.12.6/Bun 1.3.14 的隔离模型循环、真实 PTY、网页刷新/输入/续答及 WebSocket 四类终态验收通过，平台与厂商模型未测范围见 docs/tool-interaction.md。
+    - fix(composer): 发送失败不再通过 Undo/Fork editor 桥重放旧快照、覆盖等待期间的新文字／图片或复活已删除附件；重试成功按原 composer 快照清理（包括 command chip），保留后来的编辑，并清理已接受的原生恢复 marker，重挂载不复活。真实 InputBox＋PiChatPane 18 项组合／85 项聚焦、原生接受 helper 5 项、类型检查与生产构建通过。
+    - verification(commands): #375 明确收敛为菜单／图片传输与草稿保护；隔离官方 OMP 18.12.6＋本地 provider 实测菜单／手输原文与归一化图片一致、@file 正文送达、23 秒原生拒绝／接受时新草稿保护及真实重试／刷新。没有真实视觉模型读图调用，message:fileMention 专用显示未支持独立披露；Browser pane 未显示，截图未取得，不冒充视觉布局证明。详见 docs/command-images-acceptance.md。已集成到本版本。
+    - fix(diagnostics): 无来源的官方 extension_error 不再按接收时刻归入新会话，改走无 sessionId 的宿主诊断通道；扩展面板保留完整错误、事件与独立 runtime 标识，清空诊断不影响会话，切换后端清理。保留原生命令失败与草稿语义，不按文本／同名命令猜来源，不改官方内部 runner。--local-isolation 可单独验证迟到错误不进会话流；默认完整专项仍 exit 2 保留 #361 上游来源归属阻塞。详见 docs/session-transition-acceptance.md。
+    - fix(release): 命中 lite 预构建时，全量版任务使用显式 always()／取消与成功依赖门禁，避免间接 skipped 构建让已发布成功后的全量版也被默认 success() 跳过；保留预构建／只验收不发布／失败／取消边界。补入现有发布路由 CI 回归，不移动已发布 tag，手动补构建仍绑定原 tag 源码。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.46
+ReleaseTime: 2026-10-29T18:52:39.0000000Z

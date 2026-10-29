@@ -1,0 +1,227 @@
+Version: 18.14.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.14.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Removed the Bun event-loop workaround utilities from @oh-my-pi/pi-agent-core/utils/yield; agent loops no longer insert cooperative sleeps while streaming or between tool calls.
+    Added
+    - Added AgentTool.approvalRestrictionPaths so tools can report the paths they read, allowing restricted-folder approvals to cover those paths without remembering approval separately for each path.
+    - Added Agent.logContext, which adds custom context fields to every log record written during an agent run.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Moved Anthropic header and endpoint helpers, along with Codex session/transport inspection and OpenAI Responses replay/storage helpers, to dedicated provider modules. Update imports from the previous locations.
+    - Updated auth-gateway model resolvers to receive ModelResolveOptions, including the route's native API wire and the scoped client's accepted grants. Scoped client IDs no longer fall back to scanning all models; resolvers now select the best permitted candidate.
+    Added
+    - Added mTLS support for Anthropic connections through the CLAUDE_CODE_CLIENT_CERT and CLAUDE_CODE_CLIENT_KEY environment variables.
+    Changed
+    - Provider implementations are now loaded on demand, reducing startup and memory overhead while preserving existing stream timeouts, cancellation, and host overrides.
+    - Account policy priority now takes precedence when usage information is temporarily unavailable, keeping new sessions on the preferred account.
+    - Improved provider-specific credential usage lookups so they no longer wait for unrelated providers, while preserving cache freshness, cancellation isolation, and complete aggregate reports. The corresponding server-side latency improvement requires an updated auth broker.
+    - Credential usage is now prefetched during session setup without selecting, pinning, or advancing the OAuth account rotation.
+    Fixed
+    - Fixed Mistral thinking-message replay requests that could be rejected by LiteLLM with a 422 extra_forbidden error.
+    - Fixed native Judge API requests missing the omp/<version> User-Agent, so omp usage is correctly identified in upstream statistics.
+    - Fixed Codex capacity-error retries over WebSocket and SSE ignoring provider-supplied Retry-After delays and retrying too early.
+    - Fixed cancelled OAuth refresh requests aborting the entire session, and ensured requests joining an existing refresh can still use the refreshed credential when the original request is cancelled.
+    - Fixed Cursor models losing omp system-prompt context, including context files, skills, and rules, on subsequent turns or when earlier messages precede the active turn.
+    - Fixed short-lived commands that refresh OAuth credentials, such as omp token --force-refresh, remaining open for several seconds after completing.
+    - Fixed TypeSafe authentication when TYPESAFE_BASE_URL is configured by validating keys against the correct /v1/models endpoint.
+    - Fixed forced tool calls on non-reasoning models causing an unhandled reasoning-effort error.
+    - Fixed interrupted turns reporting a transport error instead of the caller-provided cancellation reason.
+    - Fixed long-running pi-native turns being terminated before their first event by fetch or proxy timeouts by supporting keepalives and the configured first-event timeout.
+    - Fixed pi-native clients crashing when the auth gateway reports an upstream failure during streaming.
+    - Fixed Cursor turns failing after a mid-turn stream interruption when an automatic retry receives a zero-token provider error; retries now continue on the rotated conversation.
+    - Corrected auth-gateway debug logs so they no longer claim a retry occurred when a usage-limit error was returned without retrying.
+    @oh-my-pi/pi-catalog
+    Breaking Changes
+    - Removed the raw @oh-my-pi/pi-catalog/models.json export; use the bundled model registry APIs instead.
+    Added
+    - Added nextBuildPriceChange(cost, now) to identify when a model's dated pricing card may change, allowing callers to safely reuse earlier builds until that time.
+    - Added the selector-revision-suffix catalog axis for Google Vertex, so google-vertex/claude-opus-4-8 resolves exactly to claude-opus-4-8@default.
+    Changed
+    - Reduced the bundled model catalog size and loading overhead.
+    - Updated role defaults so Factory Droid image models are preferred for the image role, allowing generate_image to work with only a Factory login.
+    - Updated smol and slow role defaults to use the currently bundled Cerebras and OpenAI Codex model identifiers.
+    Fixed
+    - Fixed Mistral reasoning models so streamed thinking appears in the transcript and is preserved for subsequent turns.
+    - Fixed later-turn HTTP 422 errors in Mistral-hosted DeepSeek conversations when assistant reasoning history is included.
+    - Fixed DeepSeek V4.1 Flash image attachments being dropped for publisher-namespaced model IDs such as ds/deepseek-flash.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Custom tool loaders now resolve the injected host SDK themselves; constructors take cwd as their first argument instead of a pi namespace.
+    - WebMCP now uses Chrome's native WebMCP support through WebMcpController, which accepts a Puppeteer Page. The former page-hook installation helpers, bridge constant, and page-hook types have been removed; Tern tabs no longer support WebMCP.
+    - Provider-qualified model selectors in --model, settings, roles, and task agents must identify an exact model ID or alias. Near matches now fail with a helpful error and suggestions instead of silently selecting a sibling model. Bare selectors such as opus retain fuzzy matching, and the Google Vertex Claude alias remains supported. Older migrated web fallback chains replace the retired Codex entry with openai-codex/gpt-5.6-sol.
+    Added
+    - Agents can send an interim response without ending the current task by writing Markdown to out:// (or using > out:// in bash), with streaming output up to 64 KiB. This is enabled by default in the interactive TUI and can be configured with out.enabled; it is disabled by default in print, RPC, and ACP sessions.
+    - Added computer-tool approval modes: tools.approval["computer.control"] can allow unattended foreground control on dedicated machines or deny the request without prompting. The approval mode does not itself grant access.
+    - Added optional task-file input (task.file=true), allowing subagent instructions to be loaded from an absolute UTF-8 file path or local:// URL with the submitted path and SHA-256 recorded (#17133 by @iliaal).
+    - Sessions can be pinned or unpinned from the resume picker with Alt+K and Alt+Shift+K, or the remappable app.session.pin and app.session.unpin actions. Pinned sessions move to the top and take priority in search results (#9837 by @zhang17-24).
+    - Added PI_LINK_SCHEME and optional PI_LINK_HOST, allowing file links from SSH or tmux sessions to open through a desktop protocol handler (#15855 by @KunoLu).
+    - Extensions and RPC clients can start live voice sessions using their own WebRTC peer, including phone-browser clients, through ctx.startLive() or live_connect (#17013 by @materemias).
+    - Extensions can customize assistant-text rendering and rerender individual replies through the opt-in extensionRenderers.assistantText setting (#16238 by @materemias), and can register interactive link schemes with extension callbacks and renderer fallbacks (#16239 by @materemias).
+    - /debug reports now include session-logs.txt containing all log records written by the reporting session and its subagents for the current day.
+    - Added prewalk.from and prewalk.into settings to choose the planning model and handoff target (default @default → @smol); /prewalk [into] and /prewalk restart [from] [into] override them for one command (#17373 by @H4vC).
+    Changed
+    - Improved startup responsiveness by deferring nonessential UI, accessibility, browser, provider, slash-command, and interactive-composer loading until needed, and by overlapping independent session preparation work.
+    - OpenAI live steering is now disabled by default for GPT models. Typed messages wait for the next tool boundary unless providers.openaiLiveSteering is enabled, avoiding unsupported in-flight message errors.
+    - HTML exports now match the /stats visual design with a higher-contrast light theme, timeline and full-trace views, and navigation for nested subagents and advisors. Packaged viewers use integrity-pinned shared assets and require network access; source checkouts continue to embed the viewer.
+    - tui.autoGraph now defaults to auto: charts are refined by the judge for supported native TypeSafe judge models and otherwise use the built-in estimate.
+    - Filesystem changes are detected automatically, so manual scan-cache invalidation after edits is no longer needed.
+    - Model refreshes use substantially less CPU by reusing unchanged models and avoiding repeated model-cache database opens.
+    - Overlapping sloppy-edit operations are now applied sequentially, with each operation matched against the result of the preceding operation.
+    - PI_INTENT_PROMPT and PI_INTENT_DESC can now customize the system guidance and tool-schema description for the i intent field.
+    - Printed JSON values in eval, including large Python dictionaries and lists, are displayed as collapsible JSON trees.
+    - Codex and Claude rate-limit reset warnings now appear once per reset across conversations and windows, only during the final six hours; the status line continues to show the countdown.
+    - The . and c continue shortcuts now simply answer an unanswered last message instead of adding a hidden continue directive.
+    - With bash.gitGuard enabled, checkout, switch, restore, reset, and stash operations run safely in linked worktrees, while discarded uncommitted changes are preserved for recovery.
+    - Sessions with computer use enabled receive the desktop guide before the first computer call.
+    - The Tern interface now presents warnings, errors, update notices, file reads, and completed background work consistently with chat messages.
+    - Muted live voice sessions remain visibly muted while the voice model starts work.
+    Fixed
+    - Fixed live configuration reloads missing edits immediately after a symlink switches to another file in the same directory.
+    - Fixed auth-gateway model routing after catalog refreshes so bare model IDs select the highest-priority credentialed provider, with wire-format compatibility used as a tie-breaker.
+    - Fixed chart recommendations that incorrectly inferred whether higher or lower values were better from row or column names; smart charting now uses the judge and avoids charting unsuitable numeric text such as page or step numbers.
+    - Fixed binary data flowing through background Bash pipelines being displayed as corrupted text or counted as huge line output.
+    - Fixed browser-tab closing delays when reattaching after a worker exits.
+    - Fixed startup warnings being obscured by the Tern interface; they now appear as normal in-app warnings.
+    - Fixed todo init clearing existing flat items when list was empty.
+    - Fixed legacy extensions using detached event handlers failing to load.
+    - Fixed MCP tools connected during vibe mode being activated prematurely and exceeding provider tool limits.
+    - Fixed Bash services rejecting port 0 when a log readiness condition was also provided.
+    - Fixed context usage and automatic compaction overstating token usage for inline tool descriptors.
+    - Fixed terminal titles not being restored after exit on terminals without title-stack support, including Windows consoles.
+    - Fixed cached approval directory grants that did not cover every target in a request.
+    - Fixed text typed during startup being delayed until startup completed, including resumed drafts.
+    - Fixed pull-request metadata and diffs remaining stale after a successful git push.
+    - Fixed live voice playback clicks when audio stalls mid-word.
+    - Fixed read rejecting artifact URLs from truncation hints under cached approvals or restricted folders.
+    - Fixed peer task acknowledgements being mistaken for final answers, so wait continues until the peer replies.
+    - Failed Hindsight memory recalls and retention operations now produce visible warnings instead of silently continuing without memory.
+    - Fixed long conflict-path handling, conflict-content selectors, and stale conflict IDs after aborted merges or external file changes.
+    - Fixed cancelled MCP OAuth flows and authentication lookups from crashing the session.
+    - Fixed progress HUD entries for idle local-model workers that were no longer used.
+    - Improved LSP diagnostics reliability across cold starts, push-diagnostics servers, save-only servers, retries, multi-server and multi-file edits, and reopened files; incomplete results are no longer reported as clean, and repeated clangd checks are faster.
+    - Fixed live job widgets showing incidental text from files, web pages, or search results instead of the actual job status.
+    - Fixed repeatedly failing advisor batches being retried indefinitely; they are now dropped after three failures.
+    - Fixed thinking overrides on prefix-bound Claude models from losing their provider prefix behavior during compaction and retries.
+    - Fixed failed large-value JSON queries from displaying the rejected value instead of a useful error.
+    - Fixed F5 retry reporting no retry when a background result arrived after cancellation or interruption.
+    - Fixed WebMCP invocation errors being empty and timed-out page invocations continuing to run.
+    - Fixed HTTP 413 errors for Factory Droid GPT and Grok after computer-use sessions by removing obsolete screenshots from requests.
+    - Fixed unavailable configured default or dictation models being silently replaced; omp now warns and identifies the fallback model.
+    - Fixed LSP references for files in sibling Git worktrees by adding those checkouts to the active workspace.
+    - Improved macOS computer-use behavior for applications without windows by opening the app and inspecting its returned window in one operation.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Removed the invalidateFsScanCache API and the associated filesystem scan cache environment variables (FS_SCAN_CACHE_TTL_MS, FS_SCAN_EMPTY_RECHECK_MS, FS_SCAN_CACHE_MAX_ENTRIES, and FS_SCAN_CACHE_MAX_BYTES); filesystem listing caches are now managed automatically.
+    Added
+    - Added a built-in rsync implementation to the bash tool, compatible with rsync 3.5.1 and protocol versions 29–33 across Linux, macOS, and Windows. It supports local copies, SSH remote shells via -e, and rsync:// daemons without requiring an installed binary; daemon serving is not supported, and PI_DISABLE_UUTILS_DESTRUCTIVE continues to use the system rsync.
+    - Added built-in ast-grep (also available as sg) support to the bash tool for structural code search and rewriting, including pattern matching, rewrites, context, headings, and JSON output.
+    Changed
+    - Improved native filesystem search performance, including faster globbing and more efficient grep, fuzzy finding, workspace listing, and structural search/edit operations, while preserving deterministic result ordering and streaming behavior.
+    - Native search and the bash tool's built-in rg, grep, fd, find, and ast-grep now stop filesystem work promptly when cancelled or timed out, including searches over JavaScript-provided filesystems and searches interrupted while reading large files.
+    - The bash tool's built-in rg and recursive grep now search files in parallel while retaining path-ordered output; grep can also stop promptly after reaching maxCount.
+    - Enabled safe reuse of unchanged directory listings when cache: true, with timestamp validation to prevent stale results.
+    Fixed
+    - Fixed cancelled native directory searches leaving filesystem-provider requests running during startup.
+    - Fixed built-in bash commands such as cat, grep, head, wc, read, and mapfile hanging at the end of FIFO input on macOS; read -t now returns at EOF.
+    - Fixed ANSI text wrapping for styled underlines, background colours, and colon-form RGB colours.
+    - Fixed clicking in native audio playback when the queue runs dry mid-waveform by smoothly fading output to silence and back.
+    @oh-my-pi/omp-stats
+    Changed
+    - Improved omp stats session synchronization performance by approximately 2–5× on large histories. The first sync after upgrading may take up to a minute while the stats database is optimized.
+    Fixed
+    - Fixed /stats and omp stats failing when another dashboard was syncing sessions or the configured port was already in use; busy dashboards are now reused, and a free port is selected when necessary.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Moved PINNED_HUD_TOGGLE_ID to the coding agent's task output manager so reserving subagent IDs no longer loads the interactive editor.
+    - Updated StatusLineHost.resetExpiryNotice to receive the session and manage warning deduplication; custom status-line components must use the new signature.
+    - Removed ToolExecutionHandle.setToolActivityVisible; tool-activity visibility is now controlled by transcript components, while reply blocks remain visible by default.
+    - Removed the @oh-my-pi/pi-tui/theme/defaults export. Bundled palettes are now available through getBuiltinThemes() from theme/defaults.json.
+    Fixed
+    - Fixed table-chart direction detection so measures are not incorrectly marked as better based on header words; single-measure tables are now sent for judging when local charting is appropriate.
+    - Fixed LSP diagnostics that incorrectly showed “No issues” before a language server had reported; such files are now shown as unverified. (#17293 by @JustasMasiulis)
+    - Fixed Esc-Esc rewind in Tern selecting interrupted turns with no visible output instead of the last displayed turn.
+    - Fixed streamed code blocks losing lines that scrolled off screen before the closing fence arrived; completed lines now remain available in scrollback. (#17333 by @gzkGit777)
+    @oh-my-pi/pi-utils
+    Added
+    - Added logger.withContext(fields, fn) to attach contextual fields to all records produced during a function and its asynchronous work, plus logger.withoutContext(fn) for work that should not inherit caller context.
+    Fixed
+    - Fixed untilAborted so promises passed to an already-aborted signal are still observed, preventing later rejections from being reported as unhandled.
+    @oh-my-pi/pi-wire
+    Added
+    - Added the TSP json kind for displaying raw JSON values as interactive, expandable trees in the terminal.
+    - Added TspEditorProps.typeahead support so programs that cannot yet read input can preserve typed text, display it at the caret, and submit it when input becomes available.
+    What's Changed
+    - fix(coding-agent): allow artifact reads through approval checks by @iliaal in https://github.com/can1357/oh-my-pi/pull/17282
+    - fix(catalog): keep DeepSeek V4.1 Flash images for namespaced ids by @ZanDev32 in https://github.com/can1357/oh-my-pi/pull/16470
+    - fix(coding-agent): warn when a Hindsight memory recall fails by @enieuwy in https://github.com/can1357/oh-my-pi/pull/17278
+    - fix(ai): kept cancelled OAuth refresh rejections observed by @H4vC in https://github.com/can1357/oh-my-pi/pull/17290
+    - feat(session-picker): add pin and unpin actions by @zhang17-24 in https://github.com/can1357/oh-my-pi/pull/9837
+    - feat(tui): support host-qualified file links in remote sessions by @KunoLu in https://github.com/can1357/oh-my-pi/pull/15855
+    - feat(coding-agent): add opt-in assistant text renderers for extensions by @materemias in https://github.com/can1357/oh-my-pi/pull/16238
+    - feat(coding-agent): run live voice sessions on a caller-owned WebRTC peer by @materemias in https://github.com/can1357/oh-my-pi/pull/17013
+    - fix(coding-agent): keep idle tiny-worker unloads out of the progress HUD by @H4vC in https://github.com/can1357/oh-my-pi/pull/17305
+    - fix(lsp): stopped diagnostics stalling, timing out, or reporting unanswered files as clean by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/17293
+    - fix(approval): only offer directory grants that cover all targets by @iliaal in https://github.com/can1357/oh-my-pi/pull/17309
+    - feat(task): dispatch subagent instructions from UTF-8 files by @iliaal in https://github.com/can1357/oh-my-pi/pull/17133
+    - fix(conflict): follow live conflict blocks across lists, ranges and the registry by @alphastorm in https://github.com/can1357/oh-my-pi/pull/17177
+    - fix(github): refresh pull request diffs after git push by @alphastorm in https://github.com/can1357/oh-my-pi/pull/17183
+    - fix(wait): keep a peer request owed until its reply arrives by @alphastorm in https://github.com/can1357/oh-my-pi/pull/17176
+    - feat(coding-agent): route clicks on extension-owned links to their extension by @materemias in https://github.com/can1357/oh-my-pi/pull/16239
+    - fix(coding-agent): clear terminal title on exit for terminals without title stack by @asuffield in https://github.com/can1357/oh-my-pi/pull/17321
+    - fix(ai): carried omp system prompt on cursor history-bearing roots by @robfeldmann in https://github.com/can1357/oh-my-pi/pull/17325
+    - fix(ai): rank account policy priority ahead of a missing usage report by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15124
+    - fix(lsp): add another checkout to the language server workspace before opening its files by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16271
+    - fix(coding-agent): fail provider-qualified model selectors that name no exact id instead of running a sibling by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16297
+    - fix(coding-agent): drop computer screenshots the Factory image budget evicts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16564
+    - fix(ai): stop logging a usage-limit retry the gateway does not make by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16579
+    - feat(coding-agent): tag each log record with the session that wrote it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16587
+    - fix(browser): use Chrome's native WebMCP on demand instead of injecting a page hook by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16756
+    - feat(coding-agent): let tools.approval grant computer foreground control on unattended machines by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16917
+    - feat(coding-agent): start desktop tasks without a documentation read by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16918
+    - fix(coding-agent): avoid failed window lookups when starting macOS desktop tasks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16925
+    - feat(pi-shell): keep the git guard's refusals to checkouts other sessions share by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17349
+    - feat(catalog): fall back to Factory Droid image models in the image role by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17351
+    - fix(catalog): prevented mistral deepseek reasoning replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/17366
+    - fix(ai): report the caller's abort reason instead of the transport's abort text by @MaisonnatM in https://github.com/can1357/oh-my-pi/pull/17216
+    - fix(coding-agent): preserved large json query error reasons by @roboomp in https://github.com/can1357/oh-my-pi/pull/17270
+    - fix(coding-agent): retried past trailing async-result after an interrupt by @roboomp in https://github.com/can1357/oh-my-pi/pull/17272
+    - fix(coding-agent): kept catalog prefix binding under thinking overrides by @roboomp in https://github.com/can1357/oh-my-pi/pull/17279
+    - fix(ai): handle disabled reasoning without supported efforts by @wyyufeng in https://github.com/can1357/oh-my-pi/pull/17283
+    - fix(advisor): keep the three strikes across a context-maintenance re-prime by @joshuaswarren in https://github.com/can1357/oh-my-pi/pull/17291
+    - fix(voice): faded playback edges around underruns by @roboomp in https://github.com/can1357/oh-my-pi/pull/17299
+    - fix(ai): Apply inference user agent to native judge requests by @BizerNotNull in https://github.com/can1357/oh-my-pi/pull/17311
+    - test(ai): remove racing timeout fallback by @DROOdotFOO in https://github.com/can1357/oh-my-pi/pull/17315
+    - fix(ai): retry a rotated Cursor conversation after a 400 by @morali in https://github.com/can1357/oh-my-pi/pull/17319
+    - fix(context): counted pruned tool specs when descriptions are inlined by @roboomp in https://github.com/can1357/oh-my-pi/pull/17332
+    - fix(tui): retire a streamed open fence's finished lines by @gzkGit777 in https://github.com/can1357/oh-my-pi/pull/17333
+    - fix(coding-agent): bind EventBus prototype methods for detached pi.events calls by @Zynoo71 in https://github.com/can1357/oh-my-pi/pull/17338
+    - fix(coding-agent): kept mcp refreshes off the vibe director toolset by @roboomp in https://github.com/can1357/oh-my-pi/pull/17343
+    - fix(coding-agent): kept flat todo init items when list is empty by @roboomp in https://github.com/can1357/oh-my-pi/pull/17348
+    - fix(ai): preserve Retry-After headers on Codex stream errors by @iFwu in https://github.com/can1357/oh-my-pi/pull/17362
+    - fix(ai): kept silent pi-native streams alive past bun's fetch timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/17364
+    - fix(ai): captured and replayed mistral thinking content parts by @roboomp in https://github.com/can1357/oh-my-pi/pull/17377
+    - feat(prewalk): add prewalk.from/prewalk.into and /prewalk selector arguments by @H4vC in https://github.com/can1357/oh-my-pi/pull/17373
+    New Contributors
+    - @ZanDev32 made their first contribution in https://github.com/can1357/oh-my-pi/pull/16470
+    - @materemias made their first contribution in https://github.com/can1357/oh-my-pi/pull/16238
+    - @wyyufeng made their first contribution in https://github.com/can1357/oh-my-pi/pull/17283
+    - @joshuaswarren made their first contribution in https://github.com/can1357/oh-my-pi/pull/17291
+    - @BizerNotNull made their first contribution in https://github.com/can1357/oh-my-pi/pull/17311
+    - @DROOdotFOO made their first contribution in https://github.com/can1357/oh-my-pi/pull/17315
+    - @morali made their first contribution in https://github.com/can1357/oh-my-pi/pull/17319
+    - @gzkGit777 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17333
+    - @Zynoo71 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17338
+    - @iFwu made their first contribution in https://github.com/can1357/oh-my-pi/pull/17362
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.13.3...v18.14.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.14.0
+ReleaseTime: 2026-10-29T18:25:10.0000000Z

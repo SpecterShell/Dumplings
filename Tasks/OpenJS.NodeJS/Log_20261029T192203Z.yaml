@@ -1,0 +1,496 @@
+Version: 27.0.0-alpha.0.0.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v27.0.0-alpha.0.0.0/node-v27.0.0-alpha.0.0.0-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v27.0.0-alpha.0.0.0/node-v27.0.0-alpha.0.0.0-arm64.msi
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v27.0.0-alpha.0.0.0/node-v27.0.0-alpha.0.0.0-win-x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v27.0.0-alpha.0.0.0-win-x64/node.exe
+    PortableCommandAlias: node
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v27.0.0-alpha.0.0.0/node-v27.0.0-alpha.0.0.0-win-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v27.0.0-alpha.0.0.0-win-arm64/node.exe
+    PortableCommandAlias: node
+Locale:
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v27.0.0-alpha.0.0.0/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/zh-cn/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v27.0.0-alpha.0.0.0/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/zh-cn/about/
+- Locale: en-US
+  Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v27.0.0-alpha.0.0.0/LICENSE
+- Locale: en-US
+  Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v27.0.0-alpha.0.0.0/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Notable Changes
+    V8 15.6
+    The V8 engine is updated to version 15.6.75.13, up from 14.6 in Node.js 26. Highlights:
+    - New language features enabled by default: Math.sumPrecise(), Intl.Locale.prototype.variants, Iterator.prototype.join(), Iterator.prototype.includes(), Iterator.zip() and Iterator.zipKeyed().
+    - Experimental features behind flags: import defer (--js-defer-import-eval), Immutable ArrayBuffer (--js-immutable-arraybuffer) and RegExp buffer boundaries (--js-regexp-buffer-boundaries).
+    - Memory: when --max-old-space-size is not set, the default heap size limit is now half of the physical memory clamped between 256 MB and 4 GB, and memory held by Buffer and ArrayBuffer instances now counts toward the heap limit. Applications that relied on the previous defaults should set --max-old-space-size explicitly.
+    - Serialization: v8.serialize(), structuredClone() and postMessage() use a new format that older Node.js releases cannot read. v8.cachedDataVersionTag() and the compile cache also change on every Node.js patch of V8, not only on V8 version changes.
+    - Observable behavior changes: Math methods now use LLVM's libm and may differ in the last bit; Math.random() sequences change for a given --random-seed; error.stack is no longer looked up through the prototype chain; await incurs fewer microtasks; Array.prototype.sort() uses PowerSort for large arrays and remains stable.
+    - Heap snapshots include internal objects, numeric values and full script sources. Taking one takes about twice as long and the file is about twice as large.
+    - WebAssembly: asm.js is no longer compiled to WebAssembly, and the --experimental-wasm-<name> flags are renamed --wasm-<name>.
+    A full changelog of the V8 changes between 14.6 and 15.6 will be shared soon.
+    Contributed by Joyee Cheung in #65161, #66537 and #66601.
+    Other notable changes
+    - [21cfb2a4ad] - (SEMVER-MAJOR) build: remove the bundled FIPS provider build (Filip Skokan) #64777
+    - [34e3b90621] - (SEMVER-MAJOR) build: require OpenSSL 3 or later (Filip Skokan) #64777
+    - [c362db6e24] - (SEMVER-MAJOR) build: downgrade Intel macOS support to experimental (Antoine du Hamel) #65427
+    - [fb8d52d75a] - (SEMVER-MAJOR) crypto: move DEP0093 to End-of-Life (Filip Skokan) #64777
+    - [8be36fb494] - (SEMVER-MAJOR) crypto: remove legacy OpenSSL code paths (Filip Skokan) #64777
+    - [718f044f07] - (SEMVER-MAJOR) crypto: validate digest output encodings (Filip Skokan) #66247
+    - [6b8001d219] - (SEMVER-MAJOR) crypto: validate update input encodings (Filip Skokan) #66247
+    - [127f79a911] - (SEMVER-MAJOR) crypto: validate inputEncoding in Cipher/Decipher update (Maruthan G) #66247
+    - [b116861e88] - (SEMVER-MAJOR) crypto: move DEP0198 to End-of-Life (Filip Skokan) #64000
+    - [4d09c04253] - (SEMVER-MAJOR) crypto: move DEP0203 and DEP0204 to End-of-Life (Filip Skokan) #63188
+    - [9d50432837] - (SEMVER-MAJOR) crypto: reject resizable backing stores in Web Crypto buffer parameters (Filip Skokan) #63925
+    - [63907e1018] - (SEMVER-MAJOR) crypto: throw on uninitialized DH computeSecret (Filip Skokan) #63922
+    - [463e56fb00] - (SEMVER-MAJOR) crypto: runtime-deprecate calling Hmac.digest() more than once (Madelyn) #63624
+    - [a2cd8aa883] - (SEMVER-MAJOR) crypto,https,tls: end OpenSSL engine support (Filip Skokan) #64777
+    - [3983092f63] - (SEMVER-MAJOR) deps: update archs files for openssl-4.1.0 (Node.js GitHub Bot) #66971
+    - [79239a48f1] - (SEMVER-MAJOR) deps: upgrade openssl sources to openssl-4.1.0 (Node.js GitHub Bot) #66971
+    - [85bfe9a938] - (SEMVER-MAJOR) deps: remove ncrypto legacy OpenSSL backend (Filip Skokan) #64777
+    - [826df076a3] - (SEMVER-MAJOR) deps: update V8 to 15.6.75.13 (Joyee Cheung) #66601
+    - [4eb3908d1f] - (SEMVER-MAJOR) deps: upgrade npm to 12.1.0 (npm team) #66212
+    - [cba0833111] - (SEMVER-MAJOR) dgram: skip the custom lookup for literal IP addresses (Ruben Bridgewater) #64131
+    - [54a5095764] - (SEMVER-MAJOR) dns: do not consult hosts file in reverse lookups (Archkon) #64268
+    - [efc0a14461] - (SEMVER-MAJOR) dns: stop using deprecated functions in SetServers (Antoine du Hamel) #64356
+    - [7f16850ef6] - (SEMVER-MAJOR) doc: remove OpenSSL 1.x references (Filip Skokan) #64777
+    - [9c67491706] - (SEMVER-MAJOR) doc: update Node.js 27 official binary toolchains (Richard Lau) #66377
+    - [6071f8bc32] - (SEMVER-MAJOR) domain: runtime-deprecate the module (Matteo Collina) #65074
+    - [2c4356cedf] - (SEMVER-MAJOR) domain: port to AsyncLocalStorage (Matteo Collina) #61095
+    - [a8f2bf007e] - (SEMVER-MAJOR) fs: implement glob natively (Aviv Keller) #65392
+    - [1f53d7ee3f] - (SEMVER-MAJOR) fs: return Buffer from mkdtemp when prefix is a Buffer (Hamid Reza Ghavami) #64397
+    - [e5778f78c5] - (SEMVER-MAJOR) http: reject responses exceeding header limit (Matteo Collina) #65010
+    - [25c0c8e18a] - (SEMVER-MAJOR) http: runtime deprecate instantiating without new (Yagiz Nizipli) #64853
+    - [9f75269840] - (SEMVER-MAJOR) http: increase keepAliveTimeout default to 65 seconds (Tim Perry) #62782
+    - [21436f0405] - (SEMVER-MAJOR) http: make req.headers have a null prototype (Matteo Collina) #62900
+    - [b2248fd370] - (SEMVER-MAJOR) http: reject addTrailers after finish (Ryuhei Shima) #62832
+    - [1576cb83b4] - (SEMVER-MAJOR) http2: increase default window sizes (Matteo Collina) #64623
+    - [12ce81920a] - (SEMVER-MAJOR) lib: deprecate _http_* (Sebastian Beltran) #58535
+    - [19c46abbef] - (SEMVER-MAJOR) lib: insert argv[0] at argv[1] in setDeserializeMainFunction (Daijiro Wachi) #62928
+    - [b1387e6aed] - (SEMVER-MAJOR) lib: use Object.freeze to avoid defensive cloning in SourceMap (Daijiro Wachi) #62830
+    - [9390c810d1] - (SEMVER-MAJOR) lib: reject SharedArrayBuffer in Blob constructor per spec (Ali Hassan) #63046
+    - [057e591f7c] - (SEMVER-MAJOR) lib,src: remove --no-experimental-websocket CLI flag (Antoine du Hamel) #65284
+    - [9746ebce07] - (SEMVER-MAJOR) net: race family autoselection attempts (Matteo Collina) #66229
+    - [e03e2f6486] - (SEMVER-MAJOR) net: throw on multiple listen calls (Matteo Collina) #64871
+    - [a6e7e6a95e] - (SEMVER-MAJOR) net: runtime-deprecate Server.prototype._listen2 (Guilherme Araújo) #64794
+    - [6d8baeabb0] - (SEMVER-MAJOR) net: add experimental net/promises API (Ethan Arrowood) #63965
+    - [4f844f4380] - (SEMVER-MAJOR) repl: use inspector over vm (Aviv Keller) #64034
+    - [fc28d9402f] - (SEMVER-MAJOR) src: officially deprecate node::ObjectWrap (Anna Henningsen) #63756
+    - [2d0c926907] - (SEMVER-MAJOR) src: merge CreateEnvironment() overloads (Anna Henningsen) #63596
+    - [f378cfcfbf] - (SEMVER-MAJOR) src,lib: add --allow-env permission (James M Snell) #66132
+    - [9f7ae86d8b] - (SEMVER-MAJOR) stream: destroy source when map iterator closes early (Y1D7NG) #64264
+    - [6698675526] - test_runner: use AsyncLocalStorage instead of async_hooks (Matteo Collina) #66795
+    - [7a11a9b2db] - (SEMVER-MAJOR) tls: move _tls_* to end-of-life (Sebastian Beltran) #60658
+    - [967d4af565] - (SEMVER-MAJOR) zlib: convert classes to modern syntax and eol DEP0184 (Yagiz Nizipli) #64849
+    Semver-Major Commits
+    - [984aa0c25e] - (SEMVER-MAJOR) async_hooks: remove legacy AsyncLocalStorage implementation (Matteo Collina) #63641
+    - [d1960949bb] - (SEMVER-MAJOR) benchmark: protect against accidental fork bomb (James M Snell) #66132
+    - [21cfb2a4ad] - (SEMVER-MAJOR) build: remove the bundled FIPS provider build (Filip Skokan) #64777
+    - [34e3b90621] - (SEMVER-MAJOR) build: require OpenSSL 3 or later (Filip Skokan) #64777
+    - [6f178cd39f] - (SEMVER-MAJOR) build: reset embedder string to "-node.0" (Joyee Cheung) #66601
+    - [60c7958b8e] - (SEMVER-MAJOR) build: update flags for V8 CI (Richard Lau) #66537
+    - [05c9b89d42] - (SEMVER-MAJOR) build: disable V8_USE_METAGEN_INSTANCE_TYPES (Joyee Cheung) #66537
+    - [18077b5d3a] - (SEMVER-MAJOR) build: do not match v8_libplatform_headers when scraping sources (Joyee Cheung) #66537
+    - [520388f362] - (SEMVER-MAJOR) build: reset embedder string to "-node.0" (Joyee Cheung) #66537
+    - [30074a3cc8] - (SEMVER-MAJOR) build: fix cppgc_base perfetto source scraper (Chengzhong Wu) #65161
+    - [b356886269] - (SEMVER-MAJOR) build: use ICU_UTIL_DATA_STATIC across V8 (Joyee Cheung) #65161
+    - [08a7331bb1] - (SEMVER-MAJOR) build: disable v8_postmortem_support (Joyee Cheung) #65161
+    - [c148a7f3ba] - (SEMVER-MAJOR) build: reset embedder string to "-node.0" (Joyee Cheung) #65161
+    - [87a4efb61f] - (SEMVER-MAJOR) Revert "build: update Makefile to support fat binary" (Antoine du Hamel) #65427
+    - [c362db6e24] - (SEMVER-MAJOR) build: downgrade Intel macOS support to experimental (Antoine du Hamel) #65427
+    - [ea86967557] - (SEMVER-MAJOR) build,win: do not quote cmd arguments (StefanStojanovic) #65161
+    - [fb8d52d75a] - (SEMVER-MAJOR) crypto: move DEP0093 to End-of-Life (Filip Skokan) #64777
+    - [8be36fb494] - (SEMVER-MAJOR) crypto: remove legacy OpenSSL code paths (Filip Skokan) #64777
+    - [718f044f07] - (SEMVER-MAJOR) crypto: validate digest output encodings (Filip Skokan) #66247
+    - [6b8001d219] - (SEMVER-MAJOR) crypto: validate update input encodings (Filip Skokan) #66247
+    - [127f79a911] - (SEMVER-MAJOR) crypto: validate inputEncoding in Cipher/Decipher update (Maruthan G) #66247
+    - [b116861e88] - (SEMVER-MAJOR) crypto: move DEP0198 to End-of-Life (Filip Skokan) #64000
+    - [4d09c04253] - (SEMVER-MAJOR) crypto: move DEP0203 and DEP0204 to End-of-Life (Filip Skokan) #63188
+    - [9d50432837] - (SEMVER-MAJOR) crypto: reject resizable backing stores in Web Crypto buffer parameters (Filip Skokan) #63925
+    - [63907e1018] - (SEMVER-MAJOR) crypto: throw on uninitialized DH computeSecret (Filip Skokan) #63922
+    - [463e56fb00] - (SEMVER-MAJOR) crypto: runtime-deprecate calling Hmac.digest() more than once (Madelyn) #63624
+    - [a2cd8aa883] - (SEMVER-MAJOR) crypto,https,tls: end OpenSSL engine support (Filip Skokan) #64777
+    - [b61e682fc0] - (SEMVER-MAJOR) Revert "crypto,https,tls: runtime-deprecate OpenSSL engine-based APIs (DEP0183)" (Filip Skokan) #64777
+    - [da516920fc] - (SEMVER-MAJOR) crypto,https,tls: runtime-deprecate OpenSSL engine-based APIs (DEP0183) (Filip Skokan) #63966
+    - [3983092f63] - (SEMVER-MAJOR) deps: update archs files for openssl-4.1.0 (Node.js GitHub Bot) #66971
+    - [79239a48f1] - (SEMVER-MAJOR) deps: upgrade openssl sources to openssl-4.1.0 (Node.js GitHub Bot) #66971
+    - [85bfe9a938] - (SEMVER-MAJOR) deps: remove ncrypto legacy OpenSSL backend (Filip Skokan) #64777
+    - [1c90519c1a] - (SEMVER-MAJOR) deps: V8: cherry-pick 8d14d49c4040 (Antoine du Hamel) #66601
+    - [2d87c56f37] - (SEMVER-MAJOR) deps: V8: cherry-pick 19173cde61d8 (Joyee Cheung) #66601
+    - [2589e42f48] - (SEMVER-MAJOR) deps: V8: cherry-pick 95626c699ff2 (Joyee Cheung) #66601
+    - [0e2f479a0c] - (SEMVER-MAJOR) deps: V8: cherry-pick 99ebeac9c548 (Joyee Cheung) #66601
+    - [c1e280b773] - (SEMVER-MAJOR) deps: V8: cherry-pick b2fc93f37507 (Joyee Cheung) #66601
+    - [66f9d2e907] - (SEMVER-MAJOR) deps: V8: cherry-pick e10d795bfe95 (Joyee Cheung) #66601
+    - [fc2b3fb0d0] - (SEMVER-MAJOR) deps: V8: cherry-pick 5dfeb2e42380 (Joyee Cheung) #66601
+    - [5fb4242977] - (SEMVER-MAJOR) deps: V8: cherry-pick 415b7d302d2e (Joyee Cheung) #66601
+    - [cb9469250e] - (SEMVER-MAJOR) deps: patch V8 to avoid duplicated zlib symbol (Michaël Zasso) #66601
+    - [415fe6e55e] - (SEMVER-MAJOR) deps: update Rust crates for V8 15.6.75.13 (Joyee Cheung) #66601
+    - [826df076a3] - (SEMVER-MAJOR) deps: update V8 to 15.6.75.13 (Joyee Cheung) #66601
+    - [18b117b30f] - (SEMVER-MAJOR) deps: patch V8 to fix Windows build (StefanStojanovic) #66537
+    - [87c1b1cfb4] - (SEMVER-MAJOR) deps: support madvise(3C) across ALL illumos revisions (Dan McDonald) #66537
+    - [5fb74d16f9] - (SEMVER-MAJOR) deps: patch V8 for illumos (Dan McDonald) #66537
+    - [ea41e655f3] - (SEMVER-MAJOR) deps: define V8_PRESERVE_MOST as no-op on Windows (Stefan Stojanovic) #66537
+    - [a633547d9c] - (SEMVER-MAJOR) deps: patch V8 to avoid duplicated zlib symbol (Michaël Zasso) #66537
+    - [bae4e709b8] - (SEMVER-MAJOR) deps: V8: cherry-pick 1246d3bfab1a (Joyee Cheung) #66537
+    - [a9cc80dd34] - (SEMVER-MAJOR) deps: V8: cherry-pick 00508c374a45 (Joyee Cheung) #66537
+    - [801d1c7a39] - (SEMVER-MAJOR) deps: V8: backport 9fb4444bfc46 (Steven R. Loomis) #66537
+    - [938487505f] - (SEMVER-MAJOR) deps: V8: cherry-pick 786c1c2d88d4 (Eliau Elkouby) #66537
+    - [e7db80914f] - (SEMVER-MAJOR) deps: V8: cherry-pick 820f3d72a638 (Joyee Cheung) #66537
+    - [2551a56021] - (SEMVER-MAJOR) deps: V8: cherry-pick 315d9c945ac3 (ishabi) #66537
+    - [bfd74f89dd] - (SEMVER-MAJOR) deps: V8: cherry-pick 37baecdd9479 (ishabi) #66537
+    - [fd1aba0dfa] - (SEMVER-MAJOR) deps: V8: cherry-pick 99ebeac9c548 (Joyee Cheung) #66537
+    - [f0273edb9e] - (SEMVER-MAJOR) deps: V8: cherry-pick b2fc93f37507 (Joyee Cheung) #66537
+    - [d5a8930d0f] - (SEMVER-MAJOR) deps: update Rust crates for V8 15.5.35.20 (Joyee Cheung) #66537
+    - [6b28cb0909] - (SEMVER-MAJOR) deps: update V8 to 15.5.35.20 (Joyee Cheung) #66537
+    - [93bb027b68] - (SEMVER-MAJOR) deps: V8: cherry-pick c795f5948568 (Aviv Keller) #65161
+    - [28553729d0] - (SEMVER-MAJOR) deps: remove broken NamedPropertyDefinerCallbackV2 converter (Joyee Cheung) #65161
+    - [84087531dc] - (SEMVER-MAJOR) deps: V8: backport 9fb4444bfc46 (Steven R. Loomis) #65161
+    - [346ac563dc] - (SEMVER-MAJOR) deps: V8: cherry-pick 786c1c2d88d4 (Eliau Elkouby) #65161
+    - [39d3b1d1a0] - (SEMVER-MAJOR) deps: V8: cherry-pick 5404e0f85a83 (Shelley Vohr) #65161
+    - [5d221d9cd6] - (SEMVER-MAJOR) deps: V8: cherry-pick 820f3d72a638 (Joyee Cheung) #65161
+    - [6faa33426f] - (SEMVER-MAJOR) deps: V8: cherry-pick 315d9c945ac3 (ishabi) #65161
+    - [daf03c0361] - (SEMVER-MAJOR) deps: V8: cherry-pick 37baecdd9479 (ishabi) #65161
+    - [9e274db98a] - (SEMVER-MAJOR) deps: V8: backport a0607c5006b8 (Antoine du Hamel) #65161
+    - [bfc94df374] - (SEMVER-MAJOR) deps: V8: cherry-pick f4221e09e812 (Gundepalli Sravani) #65161
+    - [f2967441e5] - (SEMVER-MAJOR) deps: V8: backport f3d4d458fe59 (Olivier Flückiger) #65161
+    - [33e5031503] - (SEMVER-MAJOR) deps: V8: cherry-pick 99ebeac9c548 (Joyee Cheung) #65161
+    - [c419eaca14] - (SEMVER-MAJOR) deps: V8: cherry-pick 811fe8b04203 (Milad Fa) #65161
+    - [677424cd86] - (SEMVER-MAJOR) deps: V8: cherry-pick ba4ef8d72cde (Joyee Cheung) #65161
+    - [268bd647fc] - (SEMVER-MAJOR) deps: V8: cherry-pick 68cf9ecd884b (Joyee Cheung) #65161
+    - [430abdf455] - (SEMVER-MAJOR) deps: fixup macros.h for GCC support (Michaël Zasso) #65161
+    - [109aaa78bd] - (SEMVER-MAJOR) deps: fix V8 race condition for AIX (Abdirahim Musse) #65161
+    - [38b9b32a3b] - (SEMVER-MAJOR) deps: patch V8 to fix Windows build (StefanStojanovic) #65161
+    - [a4c868738f] - (SEMVER-MAJOR) deps: support madvise(3C) across ALL illumos revisions (Dan McDonald) #65161
+    - [904ceda2cb] - (SEMVER-MAJOR) deps: patch V8 for illumos (Dan McDonald) #65161
+    - [ee7590d4b9] - (SEMVER-MAJOR) deps: V8: cherry-pick b2fc93f37507 (Joyee Cheung) #65161
+    - [1407687630] - (SEMVER-MAJOR) deps: define V8_PRESERVE_MOST as no-op on Windows (Stefan Stojanovic) #65161
+    - [0b7a5c99d3] - (SEMVER-MAJOR) deps: patch V8 to avoid duplicated zlib symbol (Michaël Zasso) #65161
+    - [888c6fd847] - (SEMVER-MAJOR) deps: update Rust crates for V8 15.2.124.38 (Joyee Cheung) #65161
+    - [07fa7280c1] - (SEMVER-MAJOR) deps: update V8 to 15.2.124.38 (Joyee Cheung) #65161
+    - [4eb3908d1f] - (SEMVER-MAJOR) deps: upgrade npm to 12.1.0 (npm team) #66212
+    - [cba0833111] - (SEMVER-MAJOR) dgram: skip the custom lookup for literal IP addresses (Ruben Bridgewater) #64131
+    - [54a5095764] - (SEMVER-MAJOR) dns: do not consult hosts file in reverse lookups (Archkon) #64268
+    - [efc0a14461] - (SEMVER-MAJOR) dns: stop using deprecated functions in SetServers (Antoine du Hamel) #64356
+    - [7f16850ef6] - (SEMVER-MAJOR) doc: remove OpenSSL 1.x references (Filip Skokan) #64777
+    - [9c67491706] - (SEMVER-MAJOR) doc: update Node.js 27 official binary toolchains (Richard Lau) #66377
+    - [6071f8bc32] - (SEMVER-MAJOR) domain: runtime-deprecate the module (Matteo Collina) #65074
+    - [2c4356cedf] - (SEMVER-MAJOR) domain: port to AsyncLocalStorage (Matteo Collina) #61095
+    - [a8f2bf007e] - (SEMVER-MAJOR) fs: implement glob natively (Aviv Keller) #65392
+    - [1f53d7ee3f] - (SEMVER-MAJOR) fs: return Buffer from mkdtemp when prefix is a Buffer (Hamid Reza Ghavami) #64397
+    - [e5778f78c5] - (SEMVER-MAJOR) http: reject responses exceeding header limit (Matteo Collina) #65010
+    - [25c0c8e18a] - (SEMVER-MAJOR) http: runtime deprecate instantiating without new (Yagiz Nizipli) #64853
+    - [9f75269840] - (SEMVER-MAJOR) http: increase keepAliveTimeout default to 65 seconds (Tim Perry) #62782
+    - [21436f0405] - (SEMVER-MAJOR) http: make req.headers have a null prototype (Matteo Collina) #62900
+    - [b2248fd370] - (SEMVER-MAJOR) http: reject addTrailers after finish (Ryuhei Shima) #62832
+    - [1576cb83b4] - (SEMVER-MAJOR) http2: increase default window sizes (Matteo Collina) #64623
+    - [12ce81920a] - (SEMVER-MAJOR) lib: deprecate _http_* (Sebastian Beltran) #58535
+    - [19c46abbef] - (SEMVER-MAJOR) lib: insert argv[0] at argv[1] in setDeserializeMainFunction (Daijiro Wachi) #62928
+    - [b1387e6aed] - (SEMVER-MAJOR) lib: use Object.freeze to avoid defensive cloning in SourceMap (Daijiro Wachi) #62830
+    - [9390c810d1] - (SEMVER-MAJOR) lib: reject SharedArrayBuffer in Blob constructor per spec (Ali Hassan) #63046
+    - [057e591f7c] - (SEMVER-MAJOR) lib,src: remove --no-experimental-websocket CLI flag (Antoine du Hamel) #65284
+    - [9746ebce07] - (SEMVER-MAJOR) net: race family autoselection attempts (Matteo Collina) #66229
+    - [e03e2f6486] - (SEMVER-MAJOR) net: throw on multiple listen calls (Matteo Collina) #64871
+    - [a6e7e6a95e] - (SEMVER-MAJOR) net: runtime-deprecate Server.prototype._listen2 (Guilherme Araújo) #64794
+    - [6d8baeabb0] - (SEMVER-MAJOR) net: add experimental net/promises API (Ethan Arrowood) #63965
+    - [4f844f4380] - (SEMVER-MAJOR) repl: use inspector over vm (Aviv Keller) #64034
+    - [d9264eb6f2] - (SEMVER-MAJOR) src: update NODE_MODULE_VERSION to 153 (Joyee Cheung) #66601
+    - [26cc118a75] - (SEMVER-MAJOR) src: update NODE_MODULE_VERSION to 152 (Joyee Cheung) #66537
+    - [6cf05e7ddc] - (SEMVER-MAJOR) src: fix external reference registration for new CFunction lifetime (Joyee Cheung) #65161
+    - [da93e7e4de] - (SEMVER-MAJOR) src: migrate from v8::PropertyCallbackInfo<void> (Michaël Zasso) #65161
+    - [45287a975f] - (SEMVER-MAJOR) src: migrate from deprecated xxxV2 APIs (Michaël Zasso) #65161
+    - [aa1d7b53ac] - (SEMVER-MAJOR) src: update NODE_MODULE_VERSION to 151 (Joyee Cheung) #65161
+    - [fc28d9402f] - (SEMVER-MAJOR) src: officially deprecate node::ObjectWrap (Anna Henningsen) #63756
+    - [2d0c926907] - (SEMVER-MAJOR) src: merge CreateEnvironment() overloads (Anna Henningsen) #63596
+    - [f92c252fe9] - (SEMVER-MAJOR) src, test: migrate to cppgc-owned v8::MicrotaskQueue (Joyee Cheung) #66537
+    - [f378cfcfbf] - (SEMVER-MAJOR) src,lib: add --allow-env permission (James M Snell) #66132
+    - [7e7ff40303] - (SEMVER-MAJOR) src,test: migrate GetPrototypeV2() to GetPrototype() (Joyee Cheung) #66537
+    - [9f7ae86d8b] - (SEMVER-MAJOR) stream: destroy source when map iterator closes early (Y1D7NG) #64264
+    - [a730f3bf1f] - (SEMVER-MAJOR) test: update for new V8 serialization format (Joyee Cheung) #65161
+    - [9b4d1576df] - (SEMVER-MAJOR) test: avoid worker in shared value conveyor test (Michaël Zasso) #65161
+    - [536cedd8bc] - (SEMVER-MAJOR) test: update test-heapdump-vm-script.js for new version of V8 (Joyee Cheung) #65161
+    - [27be1e05a4] - (SEMVER-MAJOR) test: update wpt Wasm jsapi expectations (Michaël Zasso) #65161
+    - [822e8ef3ce] - (SEMVER-MAJOR) test: fix fs write encoding coverage (Filip Skokan) #66247
+    - [acbc3ff133] - (SEMVER-MAJOR) test,benchmark: drop OpenSSL 1.x-only coverage (Filip Skokan) #64777
+    - [ee9ae88636] - (SEMVER-MAJOR) test,tools: drop OpenSSL 1.x-era FIPS leftovers (Filip Skokan) #64777
+    - [7a11a9b2db] - (SEMVER-MAJOR) tls: move _tls_* to end-of-life (Sebastian Beltran) #60658
+    - [1eead123e2] - (SEMVER-MAJOR) tools: increase constexpr step limit for MSVC STL (Joyee Cheung) #65161
+    - [6d854b7338] - (SEMVER-MAJOR) tools: update V8 gypfiles for 15.1 (Michaël Zasso) #65161
+    - [84de78ad23] - (SEMVER-MAJOR) tools: update V8 gypfiles for 15.0 (Michaël Zasso) #65161
+    - [60c6de2540] - (SEMVER-MAJOR) tools: update V8 gypfiles for 14.9 (Michaël Zasso) #65161
+    - [8394db37d8] - (SEMVER-MAJOR) tools: update V8 gypfiles for 14.8 (Michaël Zasso) #65161
+    - [967d4af565] - (SEMVER-MAJOR) zlib: convert classes to modern syntax and eol DEP0184 (Yagiz Nizipli) #64849
+    Semver-Minor Commits
+    - [bcf58508d8] - (SEMVER-MINOR) doc: promote alpine to tier 2. List alpine 3.21 as minimum (Stewart X Addison) #63737
+    - [1a885caa6e] - (SEMVER-MINOR) fs: add mkstemp() (Marco) #66484
+    - [6dea43a0f8] - (SEMVER-MINOR) lib: speed up AbortSignal (Robert Nagy) #66789
+    - [2052d0dcdf] - (SEMVER-MINOR) module: add --experimental-strip-private-modules (Marco Ippolito) #63869
+    - [9a9f7e87b8] - (SEMVER-MINOR) process: return unregister fn from finalization (Matteo Collina) #66482
+    - [f513ec7e7c] - (SEMVER-MINOR) test_runner: add mockReturnValue and promise helpers (Guilherme Araújo) #66631
+    - [49ad95045a] - (SEMVER-MINOR) vfs: unflag (Matteo Collina) #66318
+    - [df2ea49e00] - (SEMVER-MINOR) zlib: add crc32c (Philipp Dunkel) #66828
+    Semver-Patch Commits
+    - [a4231cfc6b] - benchmark: honor n in perf_hooks usertiming (Rafael Gonzaga) #66746
+    - [77609be7c0] - benchmark: use process.execPath when pinning CPUs in run.js (Rafael Gonzaga) #66724
+    - [2d908f48d9] - benchmark: fix hideStackFrames error benchmarks (Rafael Gonzaga) #66723
+    - [b41fabb13c] - build: respect OpenSSL's configured API level (Filip Skokan) #66953
+    - [5741b0ed04] - build: error on incompatible quic configure flags (Antoine du Hamel) #66893
+    - [262e9ac11f] - build: warn on incompatible dtls configure flags (Antoine du Hamel) #66892
+    - [d1ed17b708] - build: remove default values for libname (Antoine du Hamel) #66790
+    - [796a83a7ce] - build: do not pass vendored headers when building against shared libs (Antoine du Hamel) #66844
+    - [ef632266e5] - build: include v8_debug_helper sources in the tarball (Chengzhong Wu) #66763
+    - [754325cd2f] - build: warn on incompatible quic configure flags (Antoine du Hamel) #66754
+    - [cd192cd442] - build: load gtest_main using pkg-config (Antoine du Hamel) #66675
+    - [06c0e46c81] - build: align rustc version warning with minimum requirement (Yuya Inoue) #66794
+    - [e463b487c6] - build: fail Windows CI on missing GYP sources (Yuya Inoue) #66787
+    - [df214abc5f] - build: fix gtest integration (Antoine du Hamel) #66735
+    - [87db28b6ba] - build: remove nonexistent header from abseil.gyp (Jiawen Geng) #66583
+    - [7514ef8caf] - build: remove deleted V8 headers from metadata inputs (inoway46) #66531
+    - [313b83438f] - build: bump RUSTC_VERSION to 1.88 in github workflows (Joyee Cheung) #65742
+    - [b12bad4b11] - build,deps,tools: prepare to update to OpenSSL 4.1 (Filip Skokan) #66758
+    - [ca277a6294] - build,test: setup perfetto tests on windows build (Chengzhong Wu) #66731
+    - [4c294b3b27] - build,win: fix Perfetto (StefanStojanovic) #66876
+    - [28b50fb016] - build,win: fail fast in vcbuild without cargo (Ved Chaudhari) #66858
+    - [86066045ea] - cli: add No-Op --experimental-repl-await (Aviv Keller) #64986
+    - [7e58295439] - crypto: wire up SHA-3 with BoringSSL (Filip Skokan) #66922
+    - [91c4436158] - crypto: fix builds with older OpenSSL 3.0 (Filip Skokan) #66931
+    - [14ed05f86b] - crypto: fix BoringSSL RSA-PSS macro redefinitions (Filip Skokan) #66900
+    - [39e03b4673] - crypto: use OPENSSL_SIZE_T instead of hard coding int (Antoine du Hamel) #66889
+    - [fccdbc8b99] - crypto: do not leak scrypt param check errors (Lazizbek Ergashev) #66671
+    - [b5b07a0772] - crypto: use OPENSSL_SIZE_T instead of hard coding int (Antoine du Hamel) #66752
+    - [38aa1f3881] - crypto: avoid reusing randomInt() cache bytes (Jiawen Geng) #66597
+    - [f0f8115e10] - crypto: fix X509 curve name crash for non-NIST curves (Lazizbek Ergashev) #66694
+    - [75191c45af] - deps: patch npm engines to accept alpha versions (Rafael Gonzaga) #67063
+    - [640ce854c5] - deps: update zlib to 1.3.2.1-motley-9f9f52c (Node.js GitHub Bot) #66989
+    - [578d081148] - deps: update brotli to 1.2.1 (Node.js GitHub Bot) #66990
+    - [0f2a5394a5] - deps: update undici to 8.12.3 (Node.js GitHub Bot) #66993
+    - [352e81424f] - deps: patch V8 to 15.6.75.25 (Node.js GitHub Bot) #66820
+    - [3bc923a3e4] - deps: update googletest to cd8e73f067129f8489e35c7b51c7a68552b289d2 (Node.js GitHub Bot) #66814
+    - [7c2eaad296] - deps: V8: cherry-pick 785a2ea88a90 (Antoine du Hamel) #66876
+    - [00d716d323] - deps: update sqlite to 3.54.1 (Node.js GitHub Bot) #66816
+    - [ce3f25de37] - deps: update simdjson to 5.0.5 (Node.js GitHub Bot) #66817
+    - [c883ccf3b2] - deps: patch V8 to undefined (Node.js GitHub Bot) #66656
+    - [8b52f14ae5] - Revert "deps: enable V8 API interrupt JS check" (Antoine du Hamel) #65907
+    - [875d905390] - Revert "deps: V8: backport b36cf9f6ccd2" (Antoine du Hamel) #65907
+    - [ccd648eb0c] - deps: V8: backport b36cf9f6ccd2 (Olivier Flückiger) #65397
+    - [49e2608492] - deps: enable V8 API interrupt JS check (deepak1556) #65397
+    - [d8ac30125b] - deps: cherry-pick e807d4e379 from SQLite (Junsu Han) #63525
+    - [8ee5b26f86] - deps: V8: backport bef0d9c1bc90 (Joyee Cheung) #62132
+    - [88ec31414c] - Revert "deps,lib,tools: remove jitless and lite modes" (Joyee Cheung) #66516
+    - [7e39b8781a] - deps,lib,tools: remove jitless and lite modes (Paolo Insogna) #66459
+    - [45ae12c3aa] - diagnostics_channel: fix dangling binding pointer (Trevor Burnham) #65860
+    - [2f65b902d8] - dns: reserve vector capacity in ParseTxtReply (agape1225) #64978
+    - [3e6cca0e6a] - (CVE-2026-58042) dns: handle large resolveAny address replies (RafaelGSS) #64820
+    - [c558c8e81a] - dns: add tests for ENODATA states (David Evans) #64624
+    - [116302d950] - dns: address compile-time warnings (Antoine du Hamel) #64355
+    - [7abbd56cfd] - doc: document the alpha release process (Rafael Gonzaga) #66796
+    - [ba3c34a93a] - doc: fix grammar and phrasing in typescript.md (Ravi Arnan Irianto) #66977
+    - [2e4f8cfa20] - doc: add rafael and antoine as last security release stewards (Rafael Gonzaga) #66909
+    - [84f8e2f3a9] - doc: document --allow-fs-vfs in the permission model page (Rafael Gonzaga) #66793
+    - [952dcb2dc2] - doc: update config schema for test-forbid-only (Filip Skokan) #66945
+    - [6d4646731e] - doc: mark test runner watch mode as stable (Guilherme Araújo) #66708
+    - [67d0e5faca] - doc: update node-config-schema.json (Marco Ippolito) #66827
+    - [8df2dd89d0] - doc: update V8 ABI release policy (Rafael Gonzaga) #64196
+    - [5926201795] - doc: add doc on when to backport V8 patches to main (Chengzhong Wu) #66710
+    - [9df97a7c2b] - doc: reserve NMV 154 for Electron 46 (David Babenko-Sanders) #66712
+    - [ba4d9bf94b] - doc: add hoondongkang as triager (Donghoon Kang) #66427
+    - [c0c8ce80a8] - doc: warn against awaiting replies in module hooks (Paul Bouchon) #65590
+    - [4381c4730e] - doc: correct QuicStream direction and id types (Kisnner Obando) #66687
+    - [04fb145b6a] - doc: clarify hex code usage in styleText docs (Chris Swithinbank) #66539
+    - [886c7b41f3] - doc: list openssl-store channel and drop field in permissions (Rafael Gonzaga) #66558
+    - [d4484555ea] - doc: add documentation for the new release schedule (Antoine du Hamel) #66568
+    - [6f723ec6e7] - doc: fix crypto changes list sorting (Chengzhong Wu) #66073
+    - [dab3a73673] - doc: fix YAML errors due to bad conflict resolutions (Antoine du Hamel) #65921
+    - [bb5cffc091] - doc: clarify DEP0207 scope (Antoine du Hamel) #65618
+    - [e65df3b3e5] - doc: reserve NMV 150 for Electron 45 (John Kleinschmidt) #65405
+    - [0ce7b02d50] - doc: remove synopsis (Aviv Keller) #65246
+    - [d097de8855] - doc: reserve NMV 149 for Electron 44 (Calvin) #63859
+    - [a641226c91] - doc: fix lint-md (Rafael Gonzaga) #63127
+    - [fc192ee030] - doc: reserve NMV 148 for Electron 43 (Ryan Fitzgerald) #63016
+    - [936b20c074] - doc,crypto: mark raw key formats as stable (Filip Skokan) #66829
+    - [98dbf6070e] - events: report original once() listener on removal (Ved Chaudhari) #66621
+    - [1eb734d568] - ffi: drain task queues after event loop callbacks (Trivikram Kamat) #66918
+    - [e0619bb7e3] - ffi: fix handle leak in fast buffer arguments (Trivikram Kamat) #66867
+    - [4c14b9f58a] - ffi: add getFunction cache-miss benchmark (Donghoon Kang) #66456
+    - [8fbb315a4d] - ffi: add binary parameter to internal binding type (Donghoon Kang) #66502
+    - [bb3f9176ca] - fs: reduce glob section allocations (Roberto Bianchi) #66716
+    - [9c06dab7d0] - http: pass maxHeaderPairs to parser.initialize() (Matteo Collina) #66250
+    - [34c28d5a69] - Revert "http: do not emit socket errors after complete response" (Matteo Collina) #64511
+    - [17163ead33] - http: do not emit socket errors after complete response (Archkon) #64278
+    - [41b1e6845a] - http2: detect streams abandoned by nghttp2 (Matteo Collina) #66641
+    - [1f26576a3f] - http2: submit RST_STREAM before emitting 'aborted' (Lazizbek Ergashev) #66314
+    - [191a3b2db4] - http2: emit close for aborted HEAD compat responses (Robert Nagy) #66310
+    - [351da9c1b1] - http2: reduce scheduled callbacks per request (Matteo Collina) #64265
+    - [d3b20a7cd5] - http2: finish empty trailers natively for compat streams (Matteo Collina) #64265
+    - [ec8b9f49bf] - http2: skip trailers round trip for compat responses (Matteo Collina) #64265
+    - [a28496591e] - Revert "inspector: defer JS execution from V8 interrupts" (Antoine du Hamel) #65907
+    - [30f4990224] - inspector: defer JS execution from V8 interrupts (deepak1556) #65397
+    - [6353f4026c] - lib: optimize TextEncoder.encode for short strings (Mert Can Altin) #66831
+    - [d15ccb7e97] - meta: label top-level GN build files (Yuya Inoue) #66808
+    - [3ab2db8cb5] - meta: ignore AGENTS.override.md (Matteo Collina) #66629
+    - [8ae0ad0683] - module: add "worker" condition for Web Worker threads (Guy Bedford) #66635
+    - [c526694ae9] - module: fix require(esm) on the module.register() hooks thread (Matteo Collina) #66770
+    - [269cab6320] - net: fail closed when BlockList peer address is unavailable (Matteo Collina) #66640
+    - [c4429c85ec] - Revert "path: fix win32 normalize false-positive on reserved names" (Anna Henningsen) #64216
+    - [b0a4f162df] - path: fix win32 normalize false-positive on reserved names (Daijiro Wachi) #64159
+    - [a7e06d975d] - permission: reject wildcard references when dropping env (Rafael Gonzaga) #66773
+    - [53f037ecc3] - quic: remove obsolete setOutbound() (Efe Karasakal) #66646
+    - [1a54c4fe8c] - quic: truncate CONNECTION_CLOSE frame reason field (Efe Karasakal) #66644
+    - [107133ceb8] - quic: allow null body when opening streams (Efe Karasakal) #66690
+    - [6678d6f71d] - quic: reuse header support assertion (Efe Karasakal) #66777
+    - [f88a1d25e9] - quic: validate stream error codes (Efe Karasakal) #66650
+    - [8c1a7d3172] - quic: replace removed SetPrototypeV2 calls (Yuya Inoue) #66603
+    - [9f2fb935fd] - sea: mount vfsArchive at layer 0 and in workers (Philipp Dunkel) #66709
+    - [3f0c2e4c8b] - Revert "sea: mount vfsArchive at layer 0 and in workers" (Antoine du Hamel) #66706
+    - [ac9d85c418] - sea: mount vfsArchive at layer 0 and in workers (Philipp Dunkel) #66614
+    - [eb663fe6f4] - sqlite: avoid sqlite3_clear_bindings() before every run (Michał Fox) #66983
+    - [d630b5d88b] - sqlite: retry busy or locked backup steps (Lazizbek Ergashev) #66769
+    - [e20da720c8] - sqlite: validate backup() source is a Database (Guilherme Araújo) #66797
+    - [cfb2de3db8] - sqlite: skip return() on exhausted virtual table iterators (Trivikram Kamat) #66519
+    - [1bffd1d0a3] - sqlite: propagate errors from Database option getters (Guilherme Araújo) #66748
+    - [68df1db7b0] - sqlite: use shared-shape objects for result rows (Guilherme Araújo) #66385
+    - [6511fb8e34] - Revert "src: seed V8 from the OS CSPRNG instead of OpenSSL's DRBG" (Filip Skokan) #66903
+    - [03cca65be3] - src: fix build with --shared-brotli (Lazizbek Ergashev) #66895
+    - [1c12ff1667] - src: avoid truncating Blob sizes to 32 bits (Christian Aurich Zanettini Martins) #66207
+    - [5a566ac6b9] - src: cut small costs in node::MakeCallback (Nigro Simone) #66395
+    - [a0ce8f152b] - src: keep ALS store in AsyncResource::MakeCallback (Nigro Simone) #66326
+    - [f9f3fa96b2] - src: allow building the snapshot on top of a V8 startup blob (Shelley Vohr) #65374
+    - [21f0f2786f] - src: remove --harmony-import-attributes (Olivier Flückiger) #65396
+    - [0401a2d083] - src: fix external reference registration for new CFunction lifetime (Joyee Cheung) #63679
+    - [18f938d254] - src: bump NODE_MAJOR_VERSION to 27 (Rafael Gonzaga) #63128
+    - [967f0a7061] - src,permission: do not grant cwd read access without entrypoint (Rafael Gonzaga) #66645
+    - [60e6c84f4e] - stream: keep async context of parked writes (Matteo Collina) #66907
+    - [4e75b714df] - stream: trim TransformStream construction costs (Matteo Collina) #66643
+    - [153ec89621] - stream: make stream/iter from() cancellation waits cheaper (James M Snell) #66648
+    - [818f34833a] - stream: share the once option for stream/iter abort listeners (James M Snell) #66648
+    - [17e7b68996] - stream: do not miss 'drain' in fromWritable() (James M Snell) #66648
+    - [a7c156fd37] - stream: construct the options passed to stream/iter transforms (James M Snell) #66648
+    - [13d0167013] - stream: construct stream/iter wait and merge records (James M Snell) #66648
+    - [e6c9c8eecd] - stream: construct stream/iter byte view snapshots and batch entries (James M Snell) #66648
+    - [724190cfdc] - stream: avoid per-write allocations in stream/iter writers (James M Snell) #66648
+    - [778306c001] - stream: create stream/iter iterator results with a constructor (James M Snell) #66648
+    - [5bcade91de] - stream: make endSync() optional in pipeToSync() (James M Snell) #66648
+    - [82563d8c39] - stream: keep long-lived stream/iter objects in fast mode (James M Snell) #66648
+    - [64a762b7d3] - stream: fix flaky stream destroy, reachable from HTTP/2 teardown (Tim Perry) #65079
+    - [ddba9a535f] - test: check html and json doc files are generated (Richard Lau) #66613
+    - [62b471723d] - test: adapt test-blocklist to libuv 1.53+ (Antoine du Hamel) #67002
+    - [9b5d938fad] - test: remove obsolete BoringSSL skips (Filip Skokan) #66922
+    - [236f6e7217] - test: fix TLS coalescing test for OpenSSL 4.1 (Filip Skokan) #66962
+    - [b91d04955a] - Revert "test: mark worker init failure flaky on SmartOS" (Filip Skokan) #66903
+    - [08b09a2f62] - test: handle stringbytes allocation failures (Filip Skokan) #66887
+    - [2f91bc366d] - test: deflake test-http-agent-keepalive (Filip Skokan) #66887
+    - [727e0cac72] - test: send SNI in CA certificate test (Tamir Duberstein) #66835
+    - [fd20448111] - test: keep objects alive in finalization fixtures (Matteo Collina) #66869
+    - [ce9d6504a4] - test: check build options when skipping config schema test (Yuya Inoue) #66899
+    - [221b47d556] - test: run test-config-json-schema in default builds (Marco Ippolito) #66827
+    - [56da329c76] - test: update WPT for WebCryptoAPI to e15690d276 (Node.js GitHub Bot) #66813
+    - [4737802218] - test: skip openssl config test under BoringSSL (David Babenko-Sanders) #66780
+    - [c61ba86ed0] - test: account for OpenSSL 4.x changes (Filip Skokan) #66775
+    - [9347db1df9] - test: deflake test-filehandle-close (Filip Skokan) #66750
+    - [bc5af1c67c] - test: wait for shared-isolate Worker exit (Filip Skokan) #66722
+    - [0c2949dd9d] - test: move large SQLite string cases to pummel (Filip Skokan) #66722
+    - [c172bcd8a8] - test: allow periodic flush to finish under load (Filip Skokan) #66722
+    - [592a0bd89c] - test: wait for inspector restart before exit (Filip Skokan) #66722
+    - [6fc90e4427] - test: retry unready process timeout reports (Filip Skokan) #66722
+    - [8d4262525d] - test: reserve both families for local port test (Filip Skokan) #66722
+    - [2745698537] - test: cover source-specific membership on closed sockets (Rich Trott) #66624
+    - [782a3ac8ae] - test: update WPT for WebCryptoAPI to b638c093cd (Node.js GitHub Bot) #66689
+    - [4599b6a0f2] - test: skip test failing when run under root (Livia Medeiros) #66666
+    - [c570b67593] - test: unmark loader inspector wait test as flaky (Filip Skokan) #66319
+    - [c12d483b1f] - test: unmark exit timeout tests as flaky (Filip Skokan) #66319
+    - [1a15692fb6] - test: unmark test-cpu-prof-dir-worker as flaky (Filip Skokan) #66319
+    - [cbf3566b12] - test: remove stale SEA Linux debug flaky entries (Filip Skokan) #66319
+    - [e0a3c37c30] - test: remove stale flaky status entries (Filip Skokan) #66319
+    - [a4aa3c02cc] - test: fix flaky HTTP/2 reset callback check (Trivikram Kamat) #64730
+    - [2cc4c81e10] - Revert "test: reduce flakiness of different-registry-per-thread" (Antoine du Hamel) #63244
+    - [130398ab05] - test: reduce flakiness of different-registry-per-thread (Antoine du Hamel) #63209
+    - [45b6626457] - test_runner: add option to forbid exclusive tests (joao-oliveira-softtor) #66578
+    - [6698675526] - test_runner: use AsyncLocalStorage instead of async_hooks (Matteo Collina) #66795
+    - [a0b4170764] - tls: configure TLS 1.3 ciphers with BoringSSL (Filip Skokan) #66922
+    - [c7974d9982] - tls: coalesce buffered records into one read (Robert Nagy) #66698
+    - [135b70e670] - tls: add tlsSocket.socket, to access the raw stream beneath TLS (Tim Perry) #66598
+    - [a2ce2c6def] - tls,tools: update BoringSSL pin and TLS errors (Filip Skokan) #66922
+    - [79c1fc4fbb] - tools: bump remark-preset-lint-node (dependabot[bot]) #67023
+    - [8587d711a1] - tools: update nixpkgs-unstable to 901c54c08bdc20e00c2b3c73716b97497b1 (Node.js GitHub Bot) #66994
+    - [ec8e19d893] - Revert "tools: bump the doc group in /tools/doc with 2 updates" (Antoine du Hamel) #67015
+    - [763524d434] - tools: grant CI workflows Actions read permission (Filip Skokan) #66919
+    - [7eff3cc4cd] - tools: limit checkout for lint-addon-docs (Yuya Inoue) #66505
+    - [6209c29dcf] - tools: disable error-on-warn on x64 macOS (Antoine du Hamel) #66925
+    - [a232998e0d] - tools: add --error-on-warn configure flag in test-shared.yml (Antoine du Hamel) #66751
+    - [678c5551b2] - tools: reenable openssl 1.1.x and 3.0.x on test-shared.yml (Antoine du Hamel) #66711
+    - [d7b6fee8cc] - tools: update nixpkgs-unstable to f20cd90e28fe0403873f473b29e42662cd8 (Node.js GitHub Bot) #66819
+    - [8175dc3c05] - tools: add lint rule for unread benchmark n (Murat Kirazkaya) #66807
+    - [1bc3cdae37] - tools: bump the doc group in /tools/doc with 4 updates (dependabot[bot]) #66798
+    - [947b9a3aba] - tools: skip dependency update if PR has non-bot commits (Marco Ippolito) #66503
+    - [e2d5522773] - tools: tolerate non-UTF-8 test output (Filip Skokan) #66783
+    - [a5af6440be] - tools: update OpenSSL on the selected branch (Filip Skokan) #66704
+    - [e39f2e8cff] - tools: add read-only access in nix-changes.yml (Antoine du Hamel) #66691
+    - [d8d598b6d0] - tools: update nixpkgs-unstable to 8edc0c72e3a38faf5434e40d1f19431125f (Node.js GitHub Bot) #66497
+    - [2192f7f916] - tools: bump the doc group in /tools/doc with 2 updates (dependabot[bot]) #66632
+    - [28194a3037] - tools: bump the doc group in /tools/doc with 4 updates (dependabot[bot]) #66468
+    - [5d9228d5c3] - tools: pin sccache on all platforms to fix benchmark CI job (Tim Perry) #66284
+    - [d4120cbcc6] - tools: update nixpkgs-unstable to 79b35bf0bda5cd110f856aa5b5b2c5ba446 (Node.js GitHub Bot) #66146
+    - [fe10572a1c] - tools: update nixpkgs-unstable to aff8a0b28396750446e5537a96461bc4fac (Node.js GitHub Bot) #66010
+    - [278a9b21b3] - tools: update nixpkgs-unstable to e5ead30d0824debba629dcf0720abeddee5 (Node.js GitHub Bot) #65836
+    - [8e8ada7f6b] - tools: remove nghttp2 pin in sharedLibDeps.nix (Antoine du Hamel) #65687
+    - [f80223c414] - tools: update nixpkgs-unstable to 0e7911a191ea0fb9d6e8e771d24736d3618 (Node.js GitHub Bot) #65657
+    - [9d7f18516c] - tools: update nixpkgs-unstable to 391b592eb44808b3bd0cb80bb71b63a5a11 (Node.js GitHub Bot) #65496
+    - [04a0c270be] - tools: update nixpkgs-unstable to 6b5e5b7a6631f065bf6908986990b37d845 (Node.js GitHub Bot) #65224
+    - [1b0b7ae7c9] - tools: bump nixpkgs pins (Node.js GitHub Bot) #64747
+    - [c76aff4e0a] - tools: update nixpkgs-unstable to 20535e48e12c86043b577b8518234ff5dbb (Node.js GitHub Bot) #64589
+    - [56387dda0f] - tools: update nixpkgs pins (Node.js GitHub Bot) #64463
+    - [71812d1b43] - tools: pin to nixpkgs-26.05-darwin on Intel Macs (Antoine du Hamel) #64210
+    - [72b8d91212] - tools: update nixpkgs-unstable to d33369954a67ae3322177dc9a3d56409291 (Node.js GitHub Bot) #64298
+    - [0c59d78639] - tools: update nixpkgs-unstable to 89570f24e97e614aa34aa9ab1c927b6578a (Node.js GitHub Bot) #64183
+    - [1434a079e1] - tools: update nixpkgs-unstable to 3e41b24abd260e8f71dbe2f5737d24122f9 (Node.js GitHub Bot) #64041
+    - [e3a1c12f81] - tools: update nixpkgs-unstable to 49a4bd0573c376468dd7996ddb6f9fa31d8 (Node.js GitHub Bot) #63902
+    - [7378f014ae] - tools: update nixpkgs-unstable to cbb5cf358f50aa6acc9efd6113b7bcfbc35 (Node.js GitHub Bot) #63778
+    - [330f44f29c] - tools: update nixpkgs-unstable to e9a7635a57597d9754eccebdfc7045e6c86 (Node.js GitHub Bot) #63671
+    - [73c592be2f] - tools: update nixpkgs-unstable to 3d8f0f3f72a6cd4d93d0ad13203f2ea1cb7 (Node.js GitHub Bot) #63528
+    - [2ebf53330d] - tools: update nixpkgs-unstable to d233902339c02a9c334e7e593de68855ad2 (Node.js GitHub Bot) #63376
+    - [a37c61d1c2] - tools: update nixpkgs-unstable to b3da656039dc7a6240f27b2ef8cc6a3ef3b (Node.js GitHub Bot) #63218
+    - [f59539b514] - url: skip plain prefixes in percent-escape checks (Roberto Bianchi) #66696
+    - [dd7235cb6a] - url: reduce search params sort buffering (Roberto Bianchi) #66665
+    - [531d28fc36] - util: fix inspecting URL subclass prototypes (Donghoon Kang) #66822
+    - [c7ae7ab5b9] - vfs: fix readlink, realpath and mkdtemp encoding (Christian Aurich Zanettini Martins) #66352
+    - [fcb1aa83f6] - vfs: fix promises.watch() with an already-aborted signal (Trivikram Kamat) #66254
+    - [44d5d57ad2] - vfs: keep open memory handles in sync with file (Trivikram Kamat) #66356
+    - [06550c777f] - vfs: enforce readonly state on open handles (Harjoth Khara) #64403
+    - [62ca1bae5a] - vfs: allow mounting in permission audit mode (Rafael Gonzaga) #66745
+    - [1d5f8e6cba] - wasi: accept wasm i32 pointers with high bit set (Guy Bedford) #66636
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v27.0.0-alpha.0.0.0
+ReleaseTime: 2026-10-29
