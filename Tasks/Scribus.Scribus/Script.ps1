@@ -52,7 +52,7 @@ switch -Regex ($this.Check()) {
         Value  = 'https://www.scribus.net/news/'
       }
 
-      $Object2 = (Invoke-RestMethod -Uri 'https://www.scribus.net/news/feed/').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
+      $Object2 = (curl -fSsL 'https://www.scribus.net/news/feed/' | Join-String -Separator "`n" | ConvertFrom-Xml).rss.channel.item.Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
         # ReleaseNotes (en-US)
