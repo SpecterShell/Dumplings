@@ -1,0 +1,20 @@
+Version: 0.2.30
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.30/Strata.Manager_0.2.30_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - DeepSeek-V4.1-Flash configs no longer get Qwen-only flags from one-click speed-up, calibration results or restart candidates: the health-check fixes wrote --vram-reserve-mib / --expert-cache / --kv-resident, applying a calibration wrote --pcie-frac / --spec-min-p / --prefill-pipe, and scenario restart candidates wrote --pool-workers / --vram-reserve-mib / --prefill / --adapt-*. These are Qwen engine options. DeepSeek's own engine (strata-dsv41) does not know them and stops on an unknown option. For a DeepSeek config, the health check now shows one row: the engine is separate, so the checks and fixes do not apply. One-click speed-up, applying a calibration and full scenario tests show as unavailable with the reason. Every write first checks the flags and refuses anything outside the DeepSeek engine's option table; the background restart candidates and tuning apply refuse them too. Nothing was removed and Qwen configs behave as before; DeepSeek run options stay in the startup settings.
+    - Monitor strip no longer grows each time it is reopened: reopening the strip from the tray, taskbar or hotkey read the window size back as the outer size (Windows keeps an invisible resize border/shadow around undecorated windows) and applied it as the inner size, so every click added the border, about +22×13 px at 150% scaling, up to the maximum size. Reopening now reads the inner size and converts it with a single work-area scale, and placement accounts for the border so a strip docked near the bottom-right edge no longer drifts.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 DeepSeek-V4.1-Flash 配置被一键提速、校准结果或重启候选写入 Qwen 专用参数：体检的「显存余量」「长上下文」修复会写 --vram-reserve-mib / --expert-cache / --kv-resident，套用校准结果会写 --pcie-frac / --spec-min-p / --prefill-pipe，场景复验的重启候选会写 --pool-workers / --vram-reserve-mib / --prefill / --adapt-*。这些都是 Qwen 引擎的参数，DeepSeek 的独立引擎（strata-dsv41）不认识，遇到未知参数会停止启动。现在当前配置是 DeepSeek 时：体检只显示一行「引擎：使用独立引擎，检查和修复不适用」；一键提速、套用校准、完整场景实测都显示不可用并说明原因；写入前会检查参数，凡不在 DeepSeek 引擎参数表里的一律拒绝，后台的重启候选和应用调优也同样拦截。功能本身没有删除，Qwen 配置不受影响；DeepSeek 的运行选项仍在启动设置里调整。
+    - 监控浮条反复点击打开不再越变越大：每次从托盘、任务栏或快捷键重新打开浮条时，程序都会读回窗口尺寸，但读回的是包含边框的外框尺寸（Windows 无边框窗口有一圈看不见的缩放边框/阴影），再按内容区尺寸写回。于是每点一次就多出一圈边框，150% 缩放下约宽 +22、高 +13 像素，直到最大尺寸。现在改为读回内容区尺寸，并用同一个屏幕缩放比换算；摆放位置时把边框计入，靠右下边缘的浮条也不会漂移。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.30
+ReleaseTime: 2026-10-29T13:12:41.0000000Z
