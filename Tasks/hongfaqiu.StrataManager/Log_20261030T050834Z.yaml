@@ -1,0 +1,40 @@
+Version: 0.2.31
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.31/Strata.Manager_0.2.31_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - DeepSeek-V4.1-Flash image input is read from --vision on|off: since upstream v0.2.8 every DeepSeek config carries --vision on or --vision off. Manager counted any --vision as images on, so Arena uploads marked DeepSeek runs with images off as images on. For DeepSeek only an explicit on counts now; off or a missing value is off. Qwen's bare --vision switch is unchanged. DeepSeek's --reserve-mib (memory left for other apps) is now part of the benchmark group.
+    - "Enable image support" shows one switch for DeepSeek: the DeepSeek engine reads images itself, so there is no vision engine, model or projector to choose. Before, enabling images wrote a Qwen-style vision section and a bare --vision into a DeepSeek config; the engine then took the next option as its value or refused to start with a missing value. The switch now writes only --vision on or --vision off and leaves every other argument alone. The Qwen dialog is unchanged.
+    - Image input can no longer be enabled below macOS 27, and the dialog says why: the image reader strata-vision in the upstream Metal engine package is built for macOS 27 (Mach-O minimum 27.0) so older systems cannot start it. The Enable image support dialog now reads the reader's minimum macOS and compares it with this Mac. When it is too old the dialog shows "Image input needs macOS 27+" (this Mac → needed), save is disabled, and the pre-save file check refuses it too. Only the file header is read; nothing is started. Text chat is unaffected, and choosing a reader built for this macOS lifts the block. The DeepSeek image switch gets the same check against its engine: it cannot be turned on when the system is too old, and one already on can still be turned off. The notice covers all 10 interface languages.
+    - The default image engine path on Mac/Linux no longer ends in .exe: when the main engine is not an .exe, the default is strata-vision in the same folder; Windows is unchanged.
+    - Tighter checks to match Strata 0.2.8:
+      - The load wait now lasts the longer of the config's engine_ready_s and 30 minutes (DeepSeek configs set 3600 s), so a large model is no longer timed out halfway through loading.
+      - AMD HIP engines run 16 slots per batching window, so the concurrency cap and its hint now say 16; CUDA, SYCL and Metal stay at 8.
+      - tool_call_recovery accepts only true or false, as Strata does, and saving reports the error instead of a failed start.
+      - Intel Arc (SYCL) runtimes read the engine version from engine-sycl/BUILD.json first; a BUILD.json value that is not a version is no longer shown or compared.
+      - Platforms with no official engine package no longer fall back to picking the Windows x86_64 package; they are told no official engine package installs here.
+      - When no DeepSeek engine package fits, the message says NVIDIA needs an Ampere sm_86 or newer card.
+    - Pick the download source from App updates too: the source Manager's own updates follow could only be changed under Environment → engine → "Download settings and test". Settings → App updates now has a "Download source" menu (Official GitHub, gh-proxy.org, ghproxy.net, Custom) that shares the engine setting, so a change in either place shows in both. A custom address must be HTTPS, contain {url} and carry no credentials or # fragment; templates using only {version}/{asset} apply to engines only, and the menu says so. When the engine uses a local package, the menu shows "Local package (engine only)" and app updates keep choosing a source automatically. Available in all 10 interface languages.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - DeepSeek-V4.1-Flash 的图像开关按 --vision on|off 识别：上游 v0.2.8 起每个 DeepSeek 配置都写有 --vision on 或 --vision off，此前 Manager 只要看到 --vision 就当作开了图像，Arena 测速上传会把关着图像的 DeepSeek 跑分也标成「图像开」。现在 DeepSeek 只有明确写 on 才算开，off 或缺值都算关；Qwen 的不带值 --vision 不变。DeepSeek 留给其他应用的显存 --reserve-mib 也计入测速分组。
+    - 「启用图像支持」对 DeepSeek 只显示一个开关：DeepSeek 引擎自带读图，不需要另选视觉引擎、模型和投影文件。此前点「启用图像」会给 DeepSeek 写 Qwen 式的 vision 段并追加不带值的 --vision，DeepSeek 引擎会把下一个参数当成它的值，或直接报「缺少参数值」。现在打开开关只写 --vision on，关闭写 --vision off，其他参数不动；Qwen 配置的对话框不变。
+    - macOS 27 以下不再能启用图像输入，并直接说明原因：上游 Metal 引擎包里的读图组件 strata-vision 按 macOS 27 构建（Mach-O 最低系统 27.0），更早的系统无法启动它。现在「启用图像支持」窗口会读取读图组件的最低系统要求并与本机对比；不满足时显示「图像输入需要 macOS 27+」提示（本机版本 → 需要版本），保存按钮停用，保存前的文件检查也会拒绝。只读文件头，不会启动任何程序。文字对话不受影响；换用支持本机系统的读图组件后会自动恢复。DeepSeek 的图像开关也按其引擎做同样检查：系统不满足时不能打开，已打开的仍可关闭。提示覆盖全部 10 种界面语言。
+    - Mac/Linux 上图像引擎的默认路径不再带 .exe：主引擎不是 .exe 时，默认填 strata-vision（与主引擎同一文件夹）；Windows 不变。
+    - 按 Strata 0.2.8 收紧几处判断：
+      - 加载等待上限取配置 engine_ready_s 与 30 分钟中较长者（DeepSeek 配置为 3600 秒），不再在大模型加载到一半时判超时。
+      - AMD HIP 引擎每个批处理窗口 16 槽，并发上限与提示随之改为 16；CUDA、SYCL、Metal 仍为 8。
+      - tool_call_recovery 只接受 true / false，与 Strata 一致，保存时即报错，不再等到启动失败。
+      - Intel Arc（SYCL）运行时优先读 engine-sycl/BUILD.json 的引擎版本；BUILD.json 里不是版本号的值不再显示或参与比较。
+      - 没有官方引擎包的平台不再误按 Windows x86_64 选包，改为提示此平台没有可安装的官方引擎包。
+      - 没有合适 DeepSeek 引擎包时，提示写明 NVIDIA 需 Ampere sm_86 或更新的显卡。
+    - 「应用更新」里也能选下载来源：此前 Manager 自身更新跟随的下载来源只能在「环境」页引擎区的「下载设置与测试」里改，不好找。现在「公共设置 → 应用更新」多了一个「下载来源」下拉框（官方 GitHub、gh-proxy.org、ghproxy.net、自定义），和引擎下载共用同一份设置，两边改一处即同步。自定义地址须为 HTTPS、包含 {url}、不含账号密码或 # 片段；只用 {version}/{asset} 的模板仅适用于引擎，界面会直接说明。引擎选了本地包时下拉框显示「本地包（仅引擎）」，应用更新照旧自动选来源。覆盖全部 10 种界面语言。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.31
+ReleaseTime: 2026-10-30T05:04:59.0000000Z
