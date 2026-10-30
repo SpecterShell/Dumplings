@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.NodeJSReleases |
-  Where-Object -FilterScript { $_.lts } |
+  Where-Object -FilterScript { $_.lts -and $_.version -notmatch 'alpha|beta|rc' } |
   # Sort-Object -Property { [ChunkVersion]($_.version) } |
   Select-Object -First 1
 

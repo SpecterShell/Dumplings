@@ -1,5 +1,5 @@
 $Object1 = $Global:DumplingsStorage.NodeJSReleases |
-  Where-Object -FilterScript { -not $_.lts } |
+  Where-Object -FilterScript { -not $_.lts -and $_.version -notmatch 'alpha|beta|rc' } |
   # Sort-Object -Property { [ChunkVersion]($_.version) } |
   Select-Object -First 1
 
@@ -111,7 +111,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/nodejs/node/releases"
+        Value  = 'https://github.com/nodejs/node/releases'
       }
 
       $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/nodejs/node/releases/tags/v$($this.CurrentState.Version)"
