@@ -1,0 +1,32 @@
+Version: 3.12.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/buxuku/SmartSub/releases/download/v3.12.1/SmartSub_Windows_3.12.1_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v3.12.1 Windows 长路径转录紧急修复
+    fix
+    - 修复 3.12.0 在 Windows 上因任务音频路径过长而转录失败的问题，影响 FunASR、Qwen3-ASR、FireRedASR 和 NVIDIA Parakeet 等本地引擎；普通英文用户名也可能触发，升级后可重试失败任务（感谢 @PaytonX 定位与验证，#573）
+      Fix transcription failures in 3.12.0 when task audio paths exceed the Windows native path limit, affecting local engines including FunASR, Qwen3-ASR, FireRedASR and NVIDIA Parakeet. Ordinary ASCII user names can trigger this issue; retry failed tasks after upgrading. Thanks to @PaytonX for the investigation and verification (#573).
+    - 为内置 Whisper 补充长音频路径的兼容处理，并统一覆盖 sherpa 音频读取和写入
+      Add long audio path handling to built-in Whisper and cover both sherpa audio reads and writes.
+    说明 / Note
+    本次为长路径兼容性修复。新任务运行器的工作文件仍保存在应用数据目录；自定义临时目录未覆盖这些文件的问题将另行修复。
+    This patch fixes long-path compatibility. The new task runner still stores its working files in the application data directory; applying the custom temporary directory to these files will be addressed separately.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v3.12.1 Windows 长路径转录紧急修复
+    fix
+    - 修复 3.12.0 在 Windows 上因任务音频路径过长而转录失败的问题，影响 FunASR、Qwen3-ASR、FireRedASR 和 NVIDIA Parakeet 等本地引擎；普通英文用户名也可能触发，升级后可重试失败任务（感谢 @PaytonX 定位与验证，#573）
+      Fix transcription failures in 3.12.0 when task audio paths exceed the Windows native path limit, affecting local engines including FunASR, Qwen3-ASR, FireRedASR and NVIDIA Parakeet. Ordinary ASCII user names can trigger this issue; retry failed tasks after upgrading. Thanks to @PaytonX for the investigation and verification (#573).
+    - 为内置 Whisper 补充长音频路径的兼容处理，并统一覆盖 sherpa 音频读取和写入
+      Add long audio path handling to built-in Whisper and cover both sherpa audio reads and writes.
+    说明 / Note
+    本次为长路径兼容性修复。新任务运行器的工作文件仍保存在应用数据目录；自定义临时目录未覆盖这些文件的问题将另行修复。
+    This patch fixes long-path compatibility. The new task runner still stores its working files in the application data directory; applying the custom temporary directory to these files will be addressed separately.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/buxuku/SmartSub/releases/tag/v3.12.1
+ReleaseTime: 2026-10-30T07:10:07.0000000Z
