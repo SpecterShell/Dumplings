@@ -1,0 +1,79 @@
+Version: 0.27.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.27.0/solidcraft-0.27.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.27.0/solidcraft-0.27.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.27.0/solidcraft-0.27.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Designs saved in 0.27.0 use format 44 and don't open in 0.26.x or older.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    New
+    - Cut and paste features and sketches between components: select features or sketches, Cut with Ctrl+X (Cmd+X) and Paste with Ctrl+V (Cmd+V) into the active component. They keep their place in the timeline and the features that use them, the bodies they make move with them, and it is one undo step; a cut that would leave any feature broken is refused (#5805).
+    - Copy and paste between designs: copy bodies or components in one tab and paste them in another, at the same world position and in one undo step. Bodies arrive as imported bodies without their history; components arrive as an independent copy with their sketches and features, appearances, materials, joints between the copied parts and the user parameters they use. A component whose features use something outside it is refused, with a list of what it uses (#3512).
+    - Equation curves in sketches: Sketch › Create › Equation Curve draws a curve from parametric x(t) and y(t) formulas, or from y = f(x), over a range you set. The formulas take the design's parameters, so the curve follows a parameter change, and Extrude, Revolve and Sweep take it like any spline; Edit Equation Curve is on its context menu (#8353).
+    - 3D sketch tools: 3D Line, 3D Spline and 3D Point on the ribbon now start working tools in a 3D sketch, and a drawn 3D point is moved with a triad when you click it (#8041).
+    - Moment of inertia in Properties: the Properties window of a part, a component or an assembly shows the inertia tensor about the centre of mass, the principal moments and axes, and the first moments, with Copy matrix, and the view marks the centre of mass with the principal axes while it is open (#8103).
+    - Settings profiles: Preferences › General › Settings profiles saves the Interface, Navigation and Sketch preferences, the interface language, keyboard shortcuts and the toolbar under a name, switches between them, and exports and imports them as a file (#6254).
+    - Several keys for one command: on the Keyboard Shortcuts page, + after a command's key records another one, and every key runs the command (#6288).
+    - Button head cap screws (ISO 7380-1), M3 to M16, in the standard parts library (#8017).
+    - Arch Linux packages for x86_64 and aarch64 come with every release, to install with pacman -U (#8576).
+    - solidcraft-cli run --param-check takes off (the default), warn or strict, as mcp does, to report or stop on a misspelt key in a script step (#6924).
+    Improved
+    - Insert Design lists the open designs: with other designs open, Insert Design first lists them to insert one as a linked component, with Browse… for a file; Preferences → Design → "Insert Design lists the designs open in other tabs first" turns the list off (#8571).
+    - Navigation options: new options, all off by default or keeping today's behaviour until changed: a mouse-wheel zoom speed (Preferences → Navigation), zoom with two-finger scroll while holding a key you choose, Stop zoom at the model, a Traced orbit for the 3D mouse, and Right drag orbits (on by default). Picking the SolidWorks mouse mapping now turns Right drag orbits off and sets Middle double-click to Fit; turn Right drag orbits back on in Preferences → Navigation to keep orbiting with a right drag (#4179, #8584, #7991, #6497).
+    - View options: a Field of view slider for Perspective view (Preferences → Graphics), a background colour of your choice for the 3D view (Preferences → Interface → Theme → Background), and the navigation bar can sit at the top of the view (#5373, #8815, #8793).
+    - Status bar: when the status bar is on, a mouse mapping button switches between Fusion, SolidWorks, Blender and the other mappings (#8856).
+    - Toolbar tabs: hide and show ribbon tabs from the + after the tabs, a right-click on a tab, or Preferences → Interface → Toolbar tabs; every tab stays visible by default (#8594).
+    - Browser: the Browser remembers being folded, a new Reveal on hover option fades it out until the pointer reaches it (Preferences → Interface → Layout), and in the History "In browser" layout a feature that failed or built with a warning is marked, as is a folded row holding one (#8762, #8593).
+    - Command search: a new option, off by default, shows where a hovered result sits in the ribbon, opening a section's drop-down when it lives there (Preferences → Interface → Show search results in the ribbon) (#7322).
+    - Text fields have a right-click menu with Cut, Copy, Paste and Select All (#8882).
+    - Dialogs: Apply stays disabled until something has changed, Pattern on Path reopens a saved pattern in its dialog, and editing a feature after the history marker says that it isn't built (#8728, #8805, #8727).
+    - Updates: Update now checks for the newest release when pressed and installs that one, instead of the release an earlier check found (#7725).
+    - Settings in several browser tabs: in the web app, a setting changed in one tab shows in the other open tabs at once, and one tab no longer undoes another's changes when it saves (#8832).
+    - One surface analysis at a time: surface shading and Continuity now share one slot, keeping the last one started; turn off Preferences → Graphics → "Use a single surface analysis" to keep them on together as before (#8554).
+    - Keyboard Shortcuts: the read-only list opened from Home and Help says so, with an Edit shortcuts button (#7449).
+    - Large designs: the window no longer spends time every frame on lookups that grew with the square of the design, the History strip draws only the chips in view, and the first undo after opening a design no longer rebuilds the whole timeline (#8843, #8976, #8939).
+    - Parameters: hovering a name in the Parameters table shows the full name, the Name column cuts long names off less, the formula completion list is as wide as its longest name, and the Name columns line up across Favorites, User and Model (#8551, #8945).
+    - Segmented choices in dialogs, such as Coil, Revolve and Shell, show their options in your language (#8030).
+    Render
+    - GPU path tracing on macOS: the path tracer runs on Metal, so a Mac can render images on the GPU; the default image method is still Raster, and SOLIDCRAFT_GPU=cpu keeps the CPU (#7185).
+    - Larger preview scenes: on the desktop the Render preview's geometry limit follows the graphics device, up to 2 GiB, instead of a fixed size, and a refusal names the size and the limit in a readable card; Preferences → Graphics → "Use previous Render preview geometry budget" restores the old limit (#4154).
+    Sketch
+    - Line up with other points while drawing: a new option, off by default, lines the pointer up horizontally and vertically with other sketch points at once while drawing, with dotted guides, and keeps the alignment as constraints (Preferences → Sketch → "Line up with other sketch points while drawing") (#8474).
+    - Dimension a model edge: the Dimension tool measures a body's edge or vertex, projecting it into the sketch first (#8010).
+    - Sketch Intersect takes faces or whole bodies, and a Projection Link option makes ordinary sketch geometry (#7989).
+    - Press and drag draws one line: a new option, off by default, in Preferences → Sketch (#7252).
+    - A selected text moves when dragged from anywhere inside its frame (#8851).
+    Assemblies
+    - Drag along joint freedoms: Move on a jointed part shows handles for only the motion its joints allow, with a live distance or angle readout, joint limits and coarse and fine rotation steps; Preferences → Design → "Use joint motion handles for assembly Move" turned off gives the previous Move panel (#6904).
+    - Align components: Align has an Object Type, Bodies or Components, so one placement of a component can be aligned without moving its other placements (#7224).
+    - Joints in History folders: joints can go into History folders with features, so many joints fold into one tile (#8316).
+    Fixed
+    - Sketch solving: a constraint whose solve shrinks a line or circle to a point, even over two solves, or throws points far away, is refused instead of taken; the same constraint applied twice stays one; dragging an end the cursor can't reach no longer changes other lines; and Trim and Extend no longer leave a curve of no length (#8988, #9049, #8931, #8850, #8967, #9012).
+    - Sketch: a chamfer between two lines in line is refused, as a fillet is, an end held on a removed curve stays tied, near-coincident curves (for example from a DXF) leave every profile closed, and the Diameter box stays for a second circle on the same centre (#8802, #8779, #8922, #8904).
+    - Selection and dialogs: a pre-selected sketch line lying on a body edge goes into Fillet or Chamfer as that edge, V shows and hides a clicked Browser folder, and hiding or showing something while editing a feature no longer makes Apply or Cancel fail (#8942, #8925, #8827).
+    - History: with the strip filtered to one component, deleting after the marker deletes only the shown features, and Delete on a selected feature deletes the selection in both History layouts (#8866, #8867).
+    - View: Ctrl+wheel and pinch zoom reach the camera, rapid view cube clicks add full turns, a press held still with Orbit, Pan or Zoom lit keeps the highlight, and editing a material's colour redraws the bodies that use it (#8539, #8929, #8898, #8814).
+    - Windows over the view: Preferences and Report a bug stay above the Extrude and Move Distance box, notices keep their width beside a pane at the right edge, and Turn Up Axis on a placement row follows that placement (#9022, #8840, #8788).
+    - Parameters and expressions: Enter after pi mm keeps the unit, parameters.add without a unit takes the design's units, and an imported table may write the text unit as Text or TEXT, and a plain number beside a length takes the design's unit, so baseLength - 1 in an inch design takes off 1 in, not 1 mm (#8871, #8880, #8985, #9027).
+    - Standard parts: Resize Part with no standard part selected says what it works on, and Parts opens Insert Part (#8801).
+    - Language: the status line after a sketch dimension is in the interface language (#8879).
+    - Flatpak: closing one window no longer removes the control token another window uses (#8837).
+    Translations
+    Arabic reviews of the new strings, including settings profiles, the command search option, Assembly Move and the navigation bar (#8803, #8826, #8949, #9019).
+    Compatibility
+    0.27.0 writes design file format 44 (0.26.x wrote 43). Format 44 adds equation-driven sketch curves and joints in History folders. 0.27.0 opens every earlier design, but 0.26.x and earlier refuse a design saved by 0.27.0. Drawing files (.scdwg) are format 1.
+    Thanks
+    Thanks to 37 contributors.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.27.0
+ReleaseTime: 2026-10-30T00:54:39.0000000Z
