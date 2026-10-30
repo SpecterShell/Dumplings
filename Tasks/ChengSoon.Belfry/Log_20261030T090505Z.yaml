@@ -1,0 +1,42 @@
+Version: 0.22.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.22.0/Belfry_0.22.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.22.0/Belfry_0.22.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v0.22.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 协作房间：把多条 Agent 会话拉进同一间房，按「讨论 / 派活」两条通道协作。群聊消息直接进成员终端，不产生任务卡、不要求交差；选中成员再发送则派活，带任务卡、回执、验证与退回重做。房间挂在项目上，成员从项目里拉起，跨项目接活范围只增不减。
+    - 房间群聊更像真人在沟通：引用回复可跳回原消息；表情回应（成员 belfry room react）；未读分隔线与房间列表未读标记；最近活动时间与「以下为 N 条新消息」；输入框打 @ 弹成员点名单，发送时只发给被点的人（不 @ 则发给全体）；翻历史时新消息不拽人，增量攒成「回到底部」浮标，发送后自动回到底部；撤回自己刚发的消息。
+    - 看成员终端：在房间右栏直接看某位成员干活，不离开房间；同一会话的工作台那一路不受影响，成员行活动状态两路一致。
+    - 房间独立窗口：把一间房单独开成窗口，带着 ?room= 启动。
+    - 清除上下文：单成员或全体成员，各按 Agent 自己的重置命令（Claude /clear、Codex /new）送进终端；进程与会话不动。另可一键清空房间聊天记录，任务、决定与投递记录保留。
+    改进
+    - 成员会话从侧栏、Quick Open 与 ⌘1-9 中隔离（只隔离展示层），移出成员或删房间后回到普通列表。
+    - 回执一眼可见：收件人标签直接演状态（转圈＝还在回复、勾＝交差、红叉＝失败、问号＝结果未知），任务卡收成单行。
+    - 聊天正文里的文件路径可点开预览；成员头像按作者散色；消息时间悬停给出完整日期；正文里的 @角色 高亮成芯片。
+    修复
+    - 修复中文输入法按回车「选词」被当成发送的问题：macOS WebView 上确认候选的回车不带组合态标记，改用 keyCode 229 一并识别；全应用的按键守卫统一走同一个判定，含文本输入的表单也不再被选词回车误提交。
+    - 修复房间打开时新建的成员会话以退化网格（10 列）创建、成员行长期误报「空闲」的问题：被隐藏的宿主不参与尺寸拟合，也不把假尺寸报给后台。
+    - 修复「看终端」与工作台争抢同一会话订阅、导致工作台那一路活动判定冻结的问题：后台按连接登记多路订阅，收起一路只断自己那路。
+    - 修复房间独立窗口看终端时接驳被拒的问题：名册切片没有启动目录，比对时跳过该项，其余照旧严格。
+    - 修复开发构建复用正式版后台终端服务、导致成员收到消息却回不了话的问题：调试构建使用独立的后台目录。
+    升级提示
+    - 房间是新增功能，不影响既有会话与协作面板。
+    - 若成员终端里的 belfry 报「不认识的命令 room」，说明该会话由升级前的后台服务拉起：重建该成员会话即可。已在跑的后台服务不受本次升级影响。
+    - macOS 安装包为 ad-hoc 签名、未经 Apple 公证；Windows 未签名，SmartScreen 会提示「未知发布者」。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#0220---2026-10-30
+ReleaseTime: 2026-10-30T09:03:30.0000000Z
