@@ -1,0 +1,37 @@
+Version: 1.15.9
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.9/vpn-parser-1.15.9-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.9 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.9！本版新增系统设置“清理”独立 Tab 支持历史残留一键释放、全面解决 VP-Core Windows 原生 TUN 模式环路死循环、根治节点同义别名冲突导致的启动崩溃，并优化了 TUN 吞吐与 Fake-IP 短路防护：
+    🧹 系统清理抽屉（安全分级扫描与一键释放磁盘空间）
+    - 系统设置新增“清理”独立 Tab：
+      - 自动扫描并分级呈现系统各类运行时残留文件，展示总文件大小与细分类目统计；
+      - 历史版本程序与安装残留：扫描清理历史升级或覆盖安装保留的旧版执行文件镜像（.old / .bak）及 Inno Setup 安装向导暂存文件（is-*.tmp）；
+      - 在线更新安装包暂存：扫描清理 data/updates/ 下已完成安装的历史 .exe / .deb / .rpm 离线包与校验文件；
+      - 历史旧日志与临时文件：清理历史滚动旧日志（startup.log.1、*.log 备份）及非关键临时缓存，当前运行中的实时日志得到完备保护；
+      - 历史配置与数据快照：支持清理 data/backups/ 下积累的旧配置快照，释放宝贵磁盘空间。
+    🔌 VP-Core Windows 原生 TUN 路由环路防御与网络自愈
+    - 真实物理网卡路由探测（杜绝 ERR_TUNNEL_CONNECTION_FAILED）：
+      - 弃用容易选到虚拟 Wintun 网卡的 GetBestInterface，改为通过 Windows 原生路由表 GetIpForwardTable 精准探测物理网关适配器出站网卡（IfIndex），并排除 198.18.0.0/15 Fake-IP 网段；
+      - 彻底杜绝 TUN 模式下出站流量陷入自身虚拟网卡的死循环与 3000ms 超时。
+    - 本地回环免网卡绑定：
+      - 对 127.0.0.1 与 ::1 本地回环接口豁免网卡绑定，确保 IPC、单元测试及本地控制器流量通畅无阻。
+    🛡️ 节点同义别名字段去重与启动防崩溃治理
+    - 消除 duplicate field server_name 崩溃（退出码 1）：
+      - 在内核配置反序列化前新增别名归一化处理（sanitize_proxy_aliases），对 server_name / servername / sni / server-name、skip-cert-verify / allowInsecure、client-fingerprint / fp、alterId / alter_id 等并存的同义字段彻底去重收敛；
+      - 客户端配置编译器（VpCoreCompiler）与节点导出层（normalize_vmess, normalize_vless, normalize_trojan, normalize_hysteria2）同步增加严格去重保障，防止任何重复别名流入内核配置。
+    ⚡ 性能调优与 Fake-IP 优化
+    - TUN Fake-IP 归属地查询短路拦截：
+      - IP 归属地与风险查询模块遇 198.18.0.0/15 虚拟网段直接短路拦截，不再向公网发起无效 HTTP 探测；
+    - TUN MTU 性能调优：
+      - 默认 TUN MTU 调优至 9000，显著提升巨型帧传输与高吞吐网络环境下的代理转发性能。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.9
+ReleaseTime: 2026-10-30T16:48:29.0000000Z
