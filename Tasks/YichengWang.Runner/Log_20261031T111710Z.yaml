@@ -1,0 +1,44 @@
+Version: 0.19.0.20261031.1040
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.19.0/Runner-Setup-0.19.0.20261031.1040-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.0 is a feature release for macOS, Windows and Linux on top of 0.18.3.
+    New
+    - Panes as islands. Every chat and terminal pane, and the info panel, now sits in its own island. Its header shows the status, an always-visible Stop/Resume button, and the menu, split and close controls. A stopped chat shows a centered Chat stopped card with its reason and one Resume button. Missions get the same layout: the content, the Sessions/Info rail and an open drawer are separate islands. (#1086)
+    - One launcher for chats and terminals. ⌘N, the sidebar, a project, the command palette and an empty pane now all open the same launcher in place. It has a search field, your four most recent agents and roles, and Terminal and Mission shortcuts. A click, Enter or 1–4 starts an entry with its saved configuration. On the Start page, the project row under the search field sets the project and folder. A split pane uses its tab's project and starts in the neighbouring chat's folder. In a short pane the launcher drops rows from the bottom so it still fits. (#1092)
+    - No more terminal drawer under chats. Split the pane or open a terminal tab instead. Shells saved in chat drawers are closed on upgrade. Mission drawers stay (Alt-F12). (#1086)
+    - Terminals close without asking. A shell pane or mission shell closes as soon as its shell exits. Closing a terminal pane, tab or mission drawer is immediate, even while a command is running. Archiving a running chat still asks first. (#1086, #1092)
+    - Quieter scrollbars and refined light colors. List and sidebar scrollbars appear only while you hover, scroll or drag, and hide shortly after. Terminal scrollbars are unchanged. Runner Light has refined surfaces, and Rosé Pine Dawn uses Runner's warm terminal background. (#1086)
+    - Mission inbox notices wait for Idle. Inbox notices are now delivered only once a member is Idle, so messages sent during a turn no longer sit unsubmitted in its composer. A draft hold now ends ten minutes after your last keystroke. Input-method text left behind by a disconnected client is cleared. (#1046)
+    Bug fixes
+    - Claude Code hooks no longer time out on Windows. Runner's status hooks for Claude Code, Copilot and Antigravity now get 10 seconds instead of 2. A slow shell start on Windows no longer shows a red "UserPromptSubmit hook … timed out after 2s" error or loses the status update. (#1081)
+    - Remote access asks new hosts for a PIN. After a new host signs in, its Settings window asks for a PIN and keeps a setup row until one is set. The CLI login prints the same next step. Picking a paused or offline computer now shows an Offline dialog instead of looking like a wrong PIN. After a timeout or relay error, the PIN you entered is kept for one retry. (#1044)
+    - Extra Claude Code accounts reuse the main settings. An account that shares the main account's configuration now links its settings.json as well. It starts with the main account's effort and settings, and its mission sessions no longer stall at startup. On Windows the link needs Developer Mode; without it, Runner keeps merging the settings as before. (#1074)
+    - Claude Code's answer marker is no longer a blue emoji on Windows. One-column terminal symbols such as ⏺, ⏸ and ⏹ are now drawn as text with Segoe UI Symbol instead of the color emoji font. This mostly showed when a Windows computer viewed a Mac-hosted Claude Code session. Wide emoji keep their color. (#1064)
+    - A Codex rollback no longer leaves inbox delivery held. After an interrupt and a Codex rollback, clearing the composer releases the Drafting hold. Submit / clear is offered once Codex's hooks report that the turn is over. (#1018)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.0 是 macOS、Windows 和 Linux 上基于 0.18.3 的功能版本。
+    新功能
+    - Pane 以岛屿形式呈现。 每个聊天和终端 pane 以及信息面板现在都位于各自的岛屿中。标题栏显示状态、始终可见的 Stop/Resume 按钮，以及菜单、拆分和关闭控件。已停止的聊天会在中央显示 Chat stopped 卡片，附带停止原因和一个 Resume 按钮。Mission 采用相同布局：内容、Sessions/Info 侧栏和打开的抽屉分别是独立的岛屿。(#1086)
+    - 聊天和终端共用一个启动器。 ⌘N、侧栏、项目、命令面板和空 pane 现在都会就地打开同一个启动器。它包含搜索框、最近使用的四个 agent 和角色，以及 Terminal 和 Mission 快捷项。单击、Enter 或 1–4 会以保存的配置启动对应项。在 Start 页面，搜索框下方的项目行用于设置项目和文件夹。拆分出的 pane 使用其 tab 的项目，并在相邻聊天的文件夹中启动。在较矮的 pane 中，启动器会从底部依次隐藏行以适应空间。(#1092)
+    - 聊天下方不再有终端抽屉。 请改为拆分 pane 或打开终端 tab。升级时会关闭保存在聊天抽屉中的 shell。Mission 抽屉保留（Alt-F12）。(#1086)
+    - 终端关闭无需确认。 Shell pane 或 mission shell 会在 shell 退出时立即关闭。关闭终端 pane、tab 或 mission 抽屉会立即生效，即使命令仍在运行。归档运行中的聊天仍会先询问。(#1086, #1092)
+    - 更安静的滚动条与改进的浅色配色。 列表和侧栏的滚动条仅在悬停、滚动或拖动时出现，随后很快隐藏。终端滚动条保持不变。Runner Light 的界面表面经过改进，Rosé Pine Dawn 使用 Runner 的暖色终端背景。(#1086)
+    - Mission 收件箱通知等待 Idle 后投递。 收件箱通知现在只在成员处于 Idle 时投递，轮次进行中发送的消息不会再停留在输入框中未提交。草稿阻塞现在会在你最后一次按键十分钟后结束。断开连接的客户端遗留的输入法文本会被清除。(#1046)
+    问题修复
+    - Windows 上 Claude Code hook 不再超时。 Runner 为 Claude Code、Copilot 和 Antigravity 设置的状态 hook 超时时间从 2 秒延长到 10 秒。Windows 上 shell 启动较慢时，不再出现红色的 "UserPromptSubmit hook … timed out after 2s" 错误，状态更新也不会丢失。(#1081)
+    - 远程访问会要求新主机设置 PIN。 新主机登录后，其 Settings 窗口会要求设置 PIN，并在设置完成前保留设置行。CLI 登录会提示同样的下一步。选择已暂停或离线的电脑时，现在会显示 Offline 对话框，而不是看起来像 PIN 错误。超时或中继错误后，已输入的 PIN 会保留一次以便重试。(#1044)
+    - 额外的 Claude Code 账号复用主账号设置。 共享主账号配置的账号现在也会链接其 settings.json，因此会以主账号的 effort 和设置启动，其 mission 会话也不会再在启动时卡住。在 Windows 上，该链接需要开启开发者模式；未开启时，Runner 会像以前一样合并设置。(#1074)
+    - Windows 上 Claude Code 的回答标记不再显示为蓝色 emoji。 ⏺、⏸、⏹ 等单列终端符号现在使用 Segoe UI Symbol 以文本形式绘制，而不是彩色 emoji 字体。这个问题主要出现在 Windows 电脑查看 Mac 上运行的 Claude Code 会话时。宽 emoji 仍保留彩色。(#1064)
+    - Codex 回滚后不再卡住收件箱投递。 中断并回滚 Codex 后，清空输入框即可解除 Drafting 阻塞。当 Codex 的 hook 报告轮次已结束时，会提供 Submit / clear。(#1018)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.19.0
+ReleaseTime: 2026-10-31T11:02:01.0000000Z
