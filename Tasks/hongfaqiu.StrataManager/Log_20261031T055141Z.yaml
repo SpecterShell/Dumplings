@@ -1,0 +1,22 @@
+Version: 0.2.32
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.32/Strata.Manager_0.2.32_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Engines on Windows no longer inherit a low disk priority: when Manager was started from a low-priority program such as an editor or an AI coding-agent terminal, the background service and every engine it started kept a low I/O priority (and sometimes a below-normal CPU class); upstream #4733 measured model reads about 15 times slower and generation 14% slower. The background service now restores its own I/O priority to normal and a low or below-normal CPU class to normal at start, and sets the same on each engine and service while it is still suspended; a higher priority set by the user is kept. A failure is only logged and never stops a start. macOS and Linux are unchanged.
+    - Importing existing models no longer treats unrecognised new models as Qwen3.8: any GGUF whose name was not recognised but carried a supported quantization was guessed into a Qwen3.8-Flash-Next family and marked installable, for example the coming DeepSeek-V4.1-Flash-1017 GGUF and Qwen 4 Next. The name must now follow the community model list's rules (GSQ-RCO for the GSQ-RCO families, Flash-Next for Qwen3.8, 35B-A3B for Qwen3.6), and the model architecture in the first shard's GGUF header is checked too. Anything unrecognised or with another architecture is not installable and says it needs upstream support first. Official file names and supported families are unaffected.
+    - A failed engine trial start keeps the end of the error: only the first 300 characters of the last line were kept, so a long path could push the real error out. The last 1000 characters of the output (several lines) are kept now, cut on a character boundary.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Windows 上引擎不再继承低读盘优先级：从编辑器、AI 编程助手终端等低优先级程序里启动 Manager 时，后台和它拉起的引擎会照搬低 I/O 优先级（CPU 也可能是「低于正常」），上游 #4733 实测读模型慢约 15 倍、生成速度掉 14%。现在后台启动时把自己的 I/O 优先级恢复为正常、CPU 优先级从「低/低于正常」恢复为正常，每个引擎和服务在挂起启动时也再设一次；用户自己调高的优先级不动。设置失败只记日志，不影响启动。macOS、Linux 不变。
+    - 导入已有模型时不再把认不出的新模型当成 Qwen3.8：此前文件名认不出的 GGUF 只要量化名对得上，就会被猜成 Qwen3.8-Flash-Next 系列并标为「可安装」，例如即将发布的 DeepSeek-V4.1-Flash-1017 GGUF 和 Qwen 4 Next。现在文件名须和社区模型列表用同样的规则（GSQ-RCO 系列要带 GSQ-RCO，Qwen3.8 系列要带 Flash-Next，Qwen3.6 要带 35B-A3B），并再核对第一个分片 GGUF 头里的模型架构；认不出或架构不符的标为不可安装，提示「需等上游支持」。官方文件名和已支持的系列不受影响。
+    - 引擎试启动失败时保留报错的末尾：此前只取最后一行的前 300 个字，长路径会把真正的错误挤掉。现在保留输出末尾 1000 个字（多行），按字符截断。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.32
+ReleaseTime: 2026-10-31T05:38:42.0000000Z
