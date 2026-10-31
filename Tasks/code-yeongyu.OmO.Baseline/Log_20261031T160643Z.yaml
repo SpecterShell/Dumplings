@@ -1,0 +1,882 @@
+Version: 5.1.54
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.54/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    5.1.53 and 5.1.52 were not published; their changes, listed under 5.1.53 and 5.1.52 below, ship in this release.
+    The programming skill's Go scaffolder writes LF files on every platform. A checkout that converts line endings (Windows with autocrlf) no longer leaks CRLF into the project it generates; the templates are pinned to LF in .gitattributes and normalised on read. (#11991)
+    The programming skill's Python, Rust, and Go project scaffolders run on Bun, so Rust and Go users no longer install uv and typer just to start a project. bun run scripts/python/new-project.ts, scripts/python/new-script.ts, scripts/rust/new-project.ts, and scripts/go/new-project.ts replace the old uv run ... .py commands and produce the same files. A missing uv or cargo now ends with a clear message and exit code 1, and a missing go still writes a fallback go.mod. (#11970)
+    The programming skill routes every test file to a testing reference that carries the four-question authoring gate and the junk-test classes. Writing, reshaping, or deleting a test now loads references/testing/README.md (Given/When/Then, the mock ladder, determinism, the prompt-test rule, and a "test your test" mutation step) and references/testing/junk-classes.md (the one table of junk classes, retention bar, and R/F/C/D marks that the gate reviewer applies), so a test that would be deleted in review is a test the skill stops you from writing. (#11967)
+    Fixed
+    - The release check for the macOS keychain helper accepts a correctly signed helper again: it ignores the /* exists */ notes codesign prints in the designated requirement, and still rejects a different identifier or team (#11980). (#11981)
+    - 82c1bb9a34 docs(release): note that 5.1.53 and 5.1.52 ship in 5.1.54
+    - c4312cd8bd Merge pull request #11991 from code-yeongyu/fix/go-scaffolder-crlf-11990
+    - 27f46b9a1b docs(changelog): fragment for #11991
+    - 4583ba1812 fix(programming): the go scaffolder writes LF on a CRLF checkout
+    - c7cfbc1c4b Merge pull request #11967 from code-yeongyu/test-rules/programming-testing-refs
+    - b3660e554c Merge pull request #11981 from code-yeongyu/fix/keychain-helper-annotated-requirement
+    - d08cbb9d59 Merge pull request #11970 from code-yeongyu/test-rules/scripts-bun-ts
+    - 99927cbd8e test(qa): refresh Linux E21-E24 for the programming skill description (#11967)
+    - 0772cc77df docs(changes): fragment for #11981
+    - bb23b08327 fix(release): accept codesign's annotated designated requirement for the keychain helper
+    - 35a550978a Merge origin/dev (5.1.53 tag point) into test-rules/programming-testing-refs
+    - 543f135ac3 Merge pull request #11966 from code-yeongyu/release/v5.1.53-source-state
+    - fd32e3a9e4 docs(release): keep the released 5.1.52 section intact in the 5.1.53 notes
+    - a39b521a83 docs(programming): fold the #11967 review notes
+    - 82f448f54f docs(changelog): fragment for #11970
+    - ae696dccae feat(programming): scaffolders run on Bun in strict TypeScript, Python originals removed
+    - 2e3d995f9e docs(changelog): fragment for #11967
+    - 3dff02ace8 docs(programming): route test files to a testing reference carrying the authoring gate and junk classes
+    - 9e25ec3b6e docs(release): 5.1.53 notes: ship the unpublished 5.1.52 entries, keep telemetry lines neutral
+    - f34f5f130f Merge pull request #11894 from code-yeongyu/omo-batch-21
+    - 05c620a9f1 test(memory-sync): filter every renameSync spy in the boundary-lock tests to the pin dir
+    - c4c31449cb test(memory-sync): count only the pin publication renames in the boundary-lock test
+    - 3847a12b70 test(memory-sync): compare credential lock paths with the platform separator
+    - 4c0747143f batch #23: board #11713 @add0e91e61 (Fixes #11526; tier-1 needs a green test row)
+    - 808ac77b52 batch #23: canonical regen (linux docker, node 24 + bun 1.4.4) at cb0497aace
+    - cb0497aace batch #23: update #11919 to @263b371934 (per-host job widget author route; review FIX_FIRST fix)
+    - af5c78653f test(ultrawork): name the platform limit in the win32 SIGTERM cleanup test title
+    - ceb3670bb8 batch #23: fold car changelog fragments into 11894.md
+    - 4ec4c3b632 test(ultrawork): expect no grace overrun on Windows, where SIGTERM cannot be ignored
+    - cc698d4fff Merge remote-tracking branch 'origin/dev' into omo-batch-21
+    - df6524a444 Merge pull request #11888 from code-yeongyu/batch/memsync-coord-22
+    - 914484bf25 batch #23: canonical regen (linux docker, node 24 + bun 1.4.4) at b03f2ce7af
+    - b03f2ce7af batch #23: merge #22 (#11888 @46705a70a2) ahead of its dev merge (freeze order)
+    - 46705a70a2 chore(bundle): regenerate generated outputs for batch #22 after merging dev b89733622c
+    - 709c3cca1c test(account): drop non-null assertions the lint ratchet rejects
+    - 1f156e23d1 Merge remote-tracking branch 'origin/dev' into batch22
+    - 4f0070cac0 Merge commit 'refs/scratch/p9856' into omo-batch-21
+    - a25a4c0cfc Merge commit 'refs/scratch/p11919' into omo-batch-21
+    - 42dab0e2af Merge remote-tracking branch 'origin/dev' into omo-batch-21
+    - 6258a6e43c Merge pull request #11913 from code-yeongyu/fix/10901-packaged-reload-term-grace
+    - 6346fa466c test(release): stage the keychain helper in the trust-helper-missing fixture
+    - e22352b385 Merge remote-tracking branch 'origin/dev' into omo-batch-21
+    - 7fd54f6cda Merge pull request #11861 from code-yeongyu/feat/10762-helper-ship
+    - 5598284d0a test(qa): refresh Linux E21-E24 after computer skill #11710
+    - fec55ebb96 Merge pull request #11916 from code-yeongyu/fix/11604-reconcile-empty
+    - 4a77db15a1 batch #23: merge #11802 @4c346da515 (generated omo.js kept; batch regen follows)
+    - 58693229ae batch #23: merge #11809 @2dee9fbfde (generated kept; batch regen follows)
+    - 4acaf43900 Merge remote-tracking branch 'origin/dev' into fix/11604-reconcile-empty
+    - 4c346da515 Merge memsync/account-source (2dee9fbfde, #11832 recovery) into feat/memory-sync-rpc-g3
+    - 239f5aa3d6 batch #23: update #11783 to @c69712db31 (rpc-host-cancel-stop fixture fix; review CLEAR)
+    - 2dee9fbfde build(account): regenerate merged recovery bundles
+    - 8d20e1c0cc Merge corrupt credential recovery into account source
+    - 7bf502152a Merge remote-tracking branch 'origin/dev' into fix/10901-packaged-reload-term-grace
+    - 1a0a9aeaec chore(bundle): regenerate generated outputs for batch #22 after merging dev e9c5af30d9
+    - 1320e511e8 batch #23: merge #11748 @40d3d3374e (generated omo-memory-sync.js kept; batch regen follows)
+    - 0cf5c94f81 Merge remote-tracking branch 'origin/dev' into feat/10762-helper-ship
+    - 4faa8e6abb Merge remote-tracking branch 'origin/dev' into batch22
+    - e9c5af30d9 Merge pull request #11710 from code-yeongyu/feat/11462-cu-element-type
+    - 9a8112be95 batch #23: merge #11895 @80d8f40cca (delta review CLEAR)
+    - 1b6e3beb2e Merge pull request #11892 from code-yeongyu/cleanup-r3/omo-train-1
+    - 12bc5cfc37 Merge pull request #11867 from code-yeongyu/feat/10762-retention-followup-2
+    - 004b0af8fe chore(changelog): fold the batch #22 member fragments into 11888.md (fold-batch; credits kept)
+    - c4bb1b7b25 chore(bundle): regenerate generated outputs for batch #22
+    - 3d8d41a804 Merge origin/dev into feat/11462-cu-element-type and regenerate bundles
+    - c87e09e8f4 batch #22: merge #11754 @035432a84b (generated omo-memory-sync.js kept; batch regen follows)
+    - 901b461129 Merge #11878 into batch #22
+    - 6e0a970abd Merge #11826 into batch #22
+    - d3c5ee5fbb Merge #11785 into batch #22
+    - 1470656192 Merge #11801 into batch #22
+    - c751936f4e ci(native-binary-parity): build the engine trust helper the parity binary stages (#10762)
+    - bfee6fc72a Merge pull request #11844 from code-yeongyu/fix/11843-setup-detect-sqlite-fixture
+    - 54f9ad769d chore(changes): name the job widgets fragment after #11919
+    - 1850d32767 docs(changelog): assign stale-lock fixture fragment to PR 11916
+    - 661f9a6795 test(memory): derive stale-lock fixture deadlines from one clock sample
+    - 155065473b Drop stale knip baseline row for prelude test harness ELEMENT_SNAPSHOT
+    - be2c17bfea chore(bundle): raise omo.js budget for memsync RPC surface (+~20 KB)
+    - f1306e56e6 build(memory-sync): regenerate bundles after re-merging account-source 663a19eab9 (seoul canonical regen, patch sha256 8b00b93a)
+    - 11da4dfb9b merge memsync/account-source 663a19eab9 (fs boundary + export-alias audit fixes; generated omo.js from account-source, regen pending)
+    - 663a19eab9 build(memory): regenerate merged extension
+    - bf036b0469 test(config): resolve workspace export aliases
+    - 919185990f fix(memory): use resilient fs boundary
+    - b60c0743be chore(changelog): record packaged reload cleanup fix
+    - ed47bdb0f5 test(ultrawork): honor supervisor shutdown budget in reload cleanup
+    - 9ce2a2ac14 Merge remote-tracking branch 'origin/dev' into fix/desktop-sync-account-source-stacked
+    - f8bff1fd0b fix(memory-sync): route sync RPC claims through the memory fs boundary
+    - addd33992d Merge remote-tracking branch 'origin/dev' into feat/10762-retention-followup-2
+    - 6a450fc834 test(feedback): compare the stored sign-in after /bug with what the store wrote
+    - 3b4e0f6e8e Merge remote-tracking branch 'origin/dev' into feat/10762-helper-ship
+    - 5caa250159 chore(knip): export-check the engine trust helper smoke script (#10762)
+    - f522e65908 test(side-panel): use a glob name Windows can create in the GIT_GLOB_PATHSPECS diff test (#11815)
+    - 798095e02d test(memory): expect the platform join for an absent automount child (#11815)
+    - 30f7a52e0b Merge remote-tracking branch 'origin/dev' into cleanup-r3/omo-train-1
+    - f9fc25fc29 batch #22: merge #11739 @b15bda8fe9 (generated omo.js kept; batch regen follows)
+    - 80d8f40cca fix(computer): fold #11895 review: drop the stale knip row, avoid the 'omo version' command phrase, accurate engine-unavailable text
+    - 05453d1b63 test(computer-use): settle the blank-reason acquire plainly so Windows bun test stops wedging (#11815)
+    - 263d321850 build(memory-sync): regenerate bundles after syncing dev 46fb4db11a and account-source 98acaa57c4 (seoul canonical regen, patch sha256 0ac59689)
+    - 84a4e6cdec Merge pull request #11721 from code-yeongyu/feat/11465-cu-user-intervened
+    - 45f79f9cbc merge dev 46fb4db11a (PR2 merged)
+    - 62c3d5a1a5 merge memsync/account-source 98acaa57c4 (generated outputs from account-source; regen pending)
+    - 303ddc03fe merge #11807 follow-ups
+    - 5822bf01ea docs(changes): fold train fragments into 11892.md
+    - 46fb4db11a Merge pull request #11774 from code-yeongyu/memsync/genesis-enable
+    - 98acaa57c4 build(memory-sync): regenerate merged account bundles
+    - 4427506152 test(account): reconcile merged credential fixtures
+    - 7ee8623283 merge: sync account source with PR2 619ff62158
+    - 0f885fadf8 Merge pull request #11794 from code-yeongyu/fix/claim-receipt-bun-check-11792
+    - 11707309d9 batch #22: regenerate bundles (node 24 container, seoul) at 7c844bbfb8
+    - f30331b5bc batch #22: merge #11785 @a8fd6bda8a
+    - 7c844bbfb8 batch #21: merge #11580 @c236d816b5
+    - 813783eff5 batch #21: merge #11438 @c5bc1593b6
+    - a55d6ecb6f batch #21: merge #11832 @17ebb65a08
+    - 1a154f78fb batch #21: merge #11830 @846175a96f
+    - c64c553005 batch #21: merge #11826 @a0397ff8de
+    - 41c94d72a4 batch #21: merge #11801 @4baac8628d
+    - aef8867d63 batch #21: merge #11783 @1bb1078a51
+    - 56be585058 Merge #11880 (cleanup-r3/o-oc-rest-slop) into omo train-1
+    - 914631821e Merge #11877 (cleanup-r3/o-oc-hooks-tests) into omo train-1
+    - af559cd5d6 Merge #11876 (cleanup-r3/o-small-cores-tests) into omo train-1
+    - cbbc7eacbc Merge #11873 (cleanup-r3/o-oc-rest-tests) into omo train-1
+    - 03c925703a Merge #11872 (cleanup-r3/o-skills-script-slop) into omo train-1
+    - 619ff62158 build(memory-sync): regenerate bundles after merging dev d29fa11b77
+    - 25c42af44b Merge remote-tracking branch 'origin/dev' into fix/claim-receipt-bun-check-11792
+    - 3a489e5053 docs(changes): fragment for #11878
+    - 9375fcb538 docs(changes): record reasoning adapter type cleanup
+    - 08345d1504 Merge remote-tracking branch 'origin/dev' into local/pr2-fold
+    - c3eda8835a refactor(omo-opencode): reuse typed reasoning fallback entries
+    - d29fa11b77 Merge pull request #11842 from code-yeongyu/batch/memsync-coord-21
+    - c906c8cef0 test(opencode): consolidate hyperplan activation cases
+    - 5a6b665d74 test(utils): consolidate duration formatting examples
+    - 87d9602e91 docs(changelog): describe inferred type cleanup
+    - f057e17af1 refactor(script): trust inferred module types
+    - 585e6fd093 test(audit): consolidate agent display-name lookup cases
+    - 15d21d14d2 docs(changes): add the #11867 fragment (#10762)
+    - 5ddf9fc1aa Merge branch 'dev' into feat/10762-retention-followup-2
+    - 4db5bf1893 Merge pull request #11712 from code-yeongyu/feat/10762-retention-followup
+    - add0e91e61 Merge remote-tracking branch 'origin/dev' into fix/11526-parent-wake-unref-scope
+    - 50c3cd769e Merge pull request #11552 from code-yeongyu/feat/10762-diagnostics-record
+    - 33eaaaed3c docs(changes): add the #11861 fragment (#10762)
+    - 0346bb1da3 Merge origin/dev into feat/11462-cu-element-type and regenerate bundles
+    - 2de1e51f79 Merge branch 'dev' into feat/10762-helper-ship
+    - 1167941313 Merge pull request #11494 from code-yeongyu/feat/10762-macos-helper
+    - f03d9858cd Merge remote-tracking branch 'origin/dev' into resync-9856m
+    - d3af4eacf7 Merge origin/dev into feat/11465-cu-user-intervened
+    - 34759692fb chore(bundle): regenerate generated outputs for batch #21 after merging dev b4b95a1b5f
+    - 9484e2bc33 Merge remote-tracking branch 'origin/dev' into batch21
+    - b4b95a1b5f Merge pull request #11516 from code-yeongyu/feat/11461-cu-partial-delivery
+    - 40f7bbbbe2 Merge remote-tracking branch 'origin/dev' into HEAD
+    - c5bc1593b6 Merge remote-tracking branch 'origin/dev' into fix/10806-no-api-key-fallback
+    - d27252a5e5 test(memory-sync): match fs paths separator-agnostically in operation-boundaries
+    - afca867782 build(memory-sync): regenerate bundles after merging dev 9f1cf6b95c
+    - 0ec377681d Merge remote-tracking branch 'origin/dev' into fix/claim-receipt-bun-check-11792
+    - d1d486b267 Merge remote-tracking branch 'origin/dev' into local/pr2-fold
+    - efdedc2c7e Merge remote-tracking branch 'origin/dev' into HEAD
+    - c236d816b5 Merge remote-tracking branch 'origin/dev' into feat/11262-keychain-ci
+    - 92a286b5fc Merge remote-tracking branch 'origin/dev' into HEAD
+    - 9f1cf6b95c Merge pull request #11841 from code-yeongyu/release/v5.1.52-source-state
+    - 65ef3bcd8b Merge remote-tracking branch 'origin/dev' into fix/11526-parent-wake-unref-scope
+    - 9eaaedfb24 Merge pull request #11771 from code-yeongyu/chore/bun-typecheck-20261029
+    - 7ef2952e0e Merge pull request #11805 from code-yeongyu/test/telemetry-install-id-off
+    - cd1e26847e Merge branch 'dev' into feat/10762-macos-helper
+    - 3def64de05 Merge branch 'dev' into feat/10762-retention-followup
+    - 956cf10d2c Merge branch 'dev' into feat/10762-diagnostics-record
+    - 351c55c2bf Merge pull request #11786 from code-yeongyu/fix/omo-launcher-private-fds
+    - 691298296f Merge pull request #11779 from code-yeongyu/fix/omo-11777-liveness-clock
+    - f40298146a Merge pull request #11808 from code-yeongyu/fix/11804-overdue-abort-wait
+    - 9e6290f977 chore(bundle): regenerate after the service-auth export cleanup (batch #21)
+    - ae32036d4b Merge remote-tracking branch 'origin/dev' into HEAD
+    - 83312e2a0e test(knip): list external-projection.ts as a knip-forced unchecked entry (batch #21, #11559)
+    - a3e943a104 fix(service-auth): drop seven unused exports so knip:check passes on the batch #21 car
+    - 4e21cc8d44 Merge pull request #11816 from code-yeongyu/test/telemetry-install-id-adapters
+    - 9b45fabc38 test(eq-omo): re-record E21-E24 goldens for batch #21 (#11457 + cars)
+    - b2606ddfdf Merge remote-tracking branch 'origin/dev' into test/telemetry-install-id-off
+    - 7b1a1901e9 Merge origin/dev into chore/bun-typecheck-20261029
+    - 9200df74d9 Merge origin/dev into feat/11462-cu-element-type
+    - ab8e6224a1 test(omo-native): avoid sqlite setup for unavailable loader
+    - b298ec160c Merge origin/dev into fix/claim-receipt-bun-check-11792
+    - 64534b972d Merge origin/dev into memsync/genesis-enable after generated bundle conflicts
+    - 41a8e767ec chore(changelog): fold the batch #21 member fragments into 11842.md (fold-batch; contributor credits kept)
+    - 30b977b9d3 chore(bundle): regenerate generated outputs for batch #21
+    - 42ebf750f7 chore(changelog): #11457 entry out of the released 11555.md into its own fragment (folded into the #21 car fragment)
+    - 41f281eaa3 Re-apply omo#11457 in batch #21 (revert of ea9609dfff; LEAD ruling: moved from #20 to #21 with its EQ.omo E21 re-record)
+    - 5632a65deb chore(changelog): move #10119 entry from CHANGELOG.md into its fragment (batch #21)
+    - 98f9145872 Merge #11734 into batch #21
+    - 6381802f93 Merge #11699 into batch #21
+    - e1ba0fe0f8 Merge #11697 into batch #21
+    - 1080efedd5 Merge #11698 into batch #21
+    - 5bde534d20 Merge #11666 into batch #21
+    - 451b63b04f Merge #11421 into batch #21
+    - 90abe9331a Merge #8842 into batch #21
+    - 477b702596 Merge #10119 into batch #21
+    - a1c70b88bd Merge #10898 into batch #21
+    - 53263f5a9c Merge #11546 into batch #21
+    - 5b2861bdcb Merge #11559 into batch #21
+    - aeb7551428 Merge remote-tracking branch 'origin/dev' into HEAD
+    - abb81f2814 Merge pull request #11591 from code-yeongyu/fix/9050-sse-legacy-transport
+    - 0e000f54ed Merge remote-tracking branch 'origin/dev' into HEAD
+    - 5b7929a59d Merge origin/dev into feat/11461-cu-partial-delivery
+    - 846175a96f chore(knip): FEEDBACK_SECTION_IDS is now used (receipt knip-coverage fix)
+    - 17ebb65a08 chore(knip): InvalidCredentialState is now used (receipt knip-coverage fix)
+    - 8abe5f6bf5 Merge pull request #11837 from code-yeongyu/fix/11810-detect-probe-and-notice
+    - b23394fa31 Merge remote-tracking branch 'origin/dev' into fix/account-corrupt-11394
+    - 6d64adb2e0 Merge remote-tracking branch 'origin/dev' into fix/feedback-section-11396
+    - 3d3af24a9c Merge remote-tracking branch 'origin/dev' into feat/11262-keychain-ci
+    - 5ee01798be Merge pull request #11555 from code-yeongyu/batch/memsync-coord-20
+    - 7a8a34f328 Merge pull request #11813 from code-yeongyu/fix/9679-daemon-real-engine-await-exit
+    - 3a0fec36f5 docs(changes): log the omo-opencode change in the root changes.md (receipt changelog fix)
+    - 82842459ba Merge pull request #11766 from code-yeongyu/train/lsp-ts-lean-and-bun
+    - b09e18c0cb Merge branch 'dev' into feat/10762-macos-helper
+    - 2be8349526 Merge branch 'dev' into feat/10762-retention-followup
+    - 355b1477d9 Merge branch 'dev' into feat/10762-diagnostics-record
+    - 46a0e3d162 Merge pull request #11787 from code-yeongyu/feat/memory-private-fd-receiver
+    - 5f3653e742 Merge commit 'e76125585310b95b91177266f2469b21447d2f44' into HEAD
+    - e761255853 Merge pull request #11236 from code-yeongyu/fix/11206-oauth-issuer-binding
+    - 0b0c569dff Merge remote-tracking branch 'origin/dev' into HEAD
+    - c30c394b33 test(eq-omo): re-record EQ.omo linux-x64 goldens for batch #20 (#11458 memory expires, #11506 computer docs)
+    - c75b51faca fix(frontend): skip a leading XML declaration in the probe's prolog walk
+    - 6790e09730 Merge remote-tracking branch 'origin/dev' into b20
+    - 5d8e31aa0e Merge remote-tracking branch 'origin/dev' into test/telemetry-install-id-adapters
+    - 987b34a1ea Merge remote-tracking branch 'origin/dev' into test/telemetry-install-id-off
+    - ea9609dfff Revert omo#11457 from batch #20 (moves to batch #21 / 5.1.53 with its EQ.omo E21 re-record; LEAD ruling)
+    - 9dcec8ff0d Merge origin/dev into fix/claim-receipt-bun-check-11792
+    - 913a986e32 Merge origin/dev into train/lsp-ts-lean-and-bun
+    - 9bd2f9826f fix(frontend): place the detect probe by walking the document prolog
+    - 92333fd006 changes: add the #11837 fragment
+    - df67110c72 fix(frontend): keep the detect probe after the doctype and pin the capture notice
+    - 97ae220dcf Merge pull request #11820 from code-yeongyu/feat/11810-detect-sdk
+    - 4075159c63 Merge pull request #11798 from code-yeongyu/fix/11742-hermetic-git-auto-maintenance
+    - ba0c539b74 test(account): keep forget argument tables strictly typed
+    - ba5fc28b15 fix(account): reject malformed forget targets before deletion
+    - 8b29d08450 Merge origin/dev into chore/bun-typecheck-20261029
+    - e27ccaa4fa Merge remote-tracking branch 'origin/dev' into fix/9050-sse-legacy-transport
+    - 8c8fe6432b Merge remote-tracking branch 'origin/dev' into fix/11206-oauth-issuer-binding
+    - 5952f694af docs(changelog): record corrupt account recovery
+    - 2bb20553f7 Merge pull request #11828 from code-yeongyu/fix/eq-omo-e22-effective-model
+    - 9774af401b fix(account): recover corrupt credentials without weakening scoped forget
+    - 3d8372abf7 docs(changelog): record feedback refusal section fix
+    - c07f2b45de fix(feedback): preserve secret refusal section identifiers
+    - c77b50f2cc Merge remote-tracking branch 'origin/dev' into feat/10762-retention-followup
+    - 0a19610523 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - 620d1b2a9d Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 6f3310e249 Merge pull request #11800 from code-yeongyu/fix/10307-capture-test-startup
+    - 6914855bcf fix(frontend): register the detect SDK with knip, typecheck and the browser-tool scan
+    - 3b8987c9ec build(memory-sync): regenerate bundles after merging PR2 43c10f437b
+    - 0381821755 merge: PR2 memsync/genesis-enable at 43c10f437b
+    - a0397ff8de docs: add changelog fragment for #11826
+    - 1e0234ad49 fix(memory-core): settle the relaunched cache before asserting on the store dir in cache-persist tests
+    - d2577b1135 Merge origin/dev into memsync/genesis-enable
+    - 5c45127d32 fix(memory-sync): publish through the resilient fs boundary
+    - 568a0c6f67 Merge pull request #11795 from code-yeongyu/train/test-audit-r2
+    - 2e28f6b807 fix(frontend): fold the full-review LOWs on the detect SDK
+    - 2e6a875ff9 Merge remote-tracking branch 'origin/dev' into feat/11810-detect-sdk
+    - a59bc68c5a Merge pull request #11811 from code-yeongyu/feat/11810-impeccable-rules
+    - ab3970fd96 Merge remote-tracking branch 'origin/dev' into HEAD
+    - adb78f11c9 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 6499b7177c Merge remote-tracking branch 'origin/dev' into HEAD
+    - 8df7037053 fix(frontend): fold the detect SDK review LOWs
+    - 054b53786f changes: fold omo#11631's fragment into batch #20's single fragment
+    - 40292bb456 Merge remote-tracking branch 'origin/dev' into fix/11742-hermetic-git-auto-maintenance
+    - 4c4a0a4bf6 Merge remote-tracking branch 'origin/dev' into feat/11810-impeccable-rules
+    - b3a69bde90 Merge remote-tracking branch 'origin/dev' into fix/omo-launcher-private-fds
+    - d4daa01483 Merge remote-tracking branch 'origin/dev' into feat/memory-private-fd-receiver
+    - 72b149c821 Merge remote-tracking branch 'origin/dev' into train/test-audit-r2
+    - 8bd851f488 fix(frontend): keep the em dash out of detect source literals (check:copy)
+    - 390e24d623 changes: add the #11820 fragment
+    - 6448d67612 Merge remote-tracking branch 'origin/dev' into fix/9679-daemon-real-engine-await-exit
+    - f0e6149e23 Merge remote-tracking branch 'origin/dev' into fix/10307-capture-test-startup
+    - 5db2bb36a8 Merge origin/dev into fix/10806-no-api-key-fallback
+    - 39a282790e feat(frontend): port the Impeccable detector as a typed lint SDK
+    - 935e530940 Merge remote-tracking branch 'origin/dev' into test/telemetry-install-id-adapters
+    - 4f385e1f20 Merge remote-tracking branch 'origin/dev' into fix/9050-sse-legacy-transport
+    - 4c56ea2a6b Merge remote-tracking branch 'origin/dev' into fix/11206-oauth-issuer-binding
+    - 63312055f2 Merge remote-tracking branch 'origin/dev' into test/telemetry-install-id-off
+    - f4ea7990f9 test(telemetry): cover the remaining consent-off cases in the adapter install id checks
+    - 19952a1cd9 Merge pull request #11747 from code-yeongyu/memsync/genesis-builder
+    - b9abf995c9 test(telemetry): no install id file from the adapter senders while telemetry is off
+    - 365bf29c1d fix(frontend): make the template's overline rule a default, matching craft-floor
+    - bbff8fe693 Merge pull request #11707 from code-yeongyu/fix/omowright-pin-c06d203
+    - 7f3400b1be fix(frontend): name the type-scale roles and align the DESIGN.md template
+    - a0827a945b chore(changes): fold the train fragments into #11795
+    - 266795229f Merge remote-tracking branch 'origin/test-audit/r2-claude-compat-replays' into train/test-audit-r2
+    - 8a9de1410f Merge origin/dev into chore/bun-typecheck-20261029
+    - 7ba77b33b5 chore(changes): add the #11790 fragment for the removed re-export modules
+    - 1322f858da test(claude-compat): drop adapter copies of claude-code-compat-core loader tests
+    - bbe1bae959 chore(changes): add the #11789 fragment for the removed re-export modules
+    - 64f68bb809 test(skill-loader): drop adapter copies of skills-loader-core tests
+    - eacdf8b1f5 chore(changes): add the #11788 fragment for the removed re-export modules
+    - be07e78f90 docs(reference): drop the six utils shims removed in this PR from the shim inventory
+    - aaba4a553f test(shared): drop adapter copies of utils tests and their test-only shims
+    - 11a2a9087d chore(changes): add the #11775 fragment for the removed re-export modules
+    - 91a66d8240 fix(frontend): scope craft-floor absolutes to defaults the chosen route can override
+    - 6b57a1916f Merge dev ed2ae964ca into batch #20
+    - 5d305f367c Merge omo#11631 (fbbb648b75) into batch #20
+    - 618ecfc2b4 build(memory-sync): regenerate bundles after merging PR2 fd7a4a9ce9
+    - 10ae7c0c72 merge: PR2 memsync/genesis-enable at fd7a4a9ce9
+    - ed2ae964ca Merge pull request #11679 from code-yeongyu/p0/p0-06f-omo-fused-equivalence
+    - 73e7af195d Merge commit 'fca918f18e0f4e07579f0b587cd3377336d7d8ba' into memsync/genesis-enable
+    - fca918f18e Merge commit '7ca09abb660aef48504bc69ad68e374444d70800' into memsync/genesis-builder
+    - e152a0e196 test(memory-sync): refuse signing and sealing key rotations at the real CLI and desktop boundaries
+    - b2bba5850c test(memory-sync): reach the late-attachment close path and pin the per-process selection
+    - 34d5992647 changes: add the #11811 fragment
+    - 664d7f59c9 feat(frontend): add impeccable craft-floor rules to the frontend and visual-qa skills
+    - 4aed8ded82 Merge remote-tracking branch 'origin/dev' into feat/10762-retention-followup
+    - 249977ef17 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - 4513ba3ee9 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 6fef90651f test(omo-native): await real-engine children instead of killing them at 15 s
+    - 71be54f10f fix(memory): fence same-ownerId reconnects explicitly and give read() records their own kind (#11807)
+    - a1cf767c50 build(memory-sync): regenerate bundles after merging PR2 82b0b80a16
+    - 7ca09abb66 Merge pull request #11776 from code-yeongyu/docs/telemetry-shell-name-wording
+    - 78386c0c55 merge: PR2 memsync/genesis-enable at 82b0b80a16
+    - 08210b0595 build(memory-sync): regenerate bundles for the G3 coordinator composition
+    - a8fd6bda8a test(telemetry): normalize star re-export check
+    - 1fe06af148 test(telemetry-core): fold install-id opt-out cases into the owner test
+    - f022fe796f Merge remote-tracking branch 'origin/dev' into docs/telemetry-shell-name-wording
+    - 4baac8628d test(codex): pin that a dangling bin still repairs a Git marketplace
+    - f134eac112 Merge pull request #11716 from code-yeongyu/fix/11651-tree-kill
+    - 11eca55e62 test(telemetry-core): no install id file while telemetry is off
+    - 3ee88919f6 docs(changes): note owner-scoped memory sync RPC (#11802)
+    - 83b8881b78 docs(changes): add the changelog fragment for #11801
+    - 6333ee2c61 chore(opencode): drop exports and knip rows orphaned by the native prompt switch
+    - ea28431352 fix(codex): skip the cache manifest check for a Git marketplace
+    - 4ecc74657d refactor(memory-sync): drop the sync-engine barrel's unused HTTP factory exports
+    - 9822fe27c9 Merge #11774 head 82b0b80a16
+    - 762ae2a4c0 docs(changes): note the capture fixture fix (#11800)
+    - 33680d28b3 Merge commit '16d1dde45c268b8f1aa05df79baf65026177fc7f' into fix/memory-shown-since-11053
+    - b6262e2cc0 fix(omo-native): close unforwardable named sockets on the provisioned-runtime handoff (#11772)
+    - 091dec0cd6 Merge remote-tracking branch 'origin/dev' into resync-9856m
+    - 17d5ac415e docs(privacy): no retention period is set yet; deletion is on request
+    - f27051df4b test(desktop-macos): synchronize capture fixtures on readiness, not helper timing
+    - dec34be180 Merge account-source 4f49ddd158 (omo-native fixture fix)
+    - 16d1dde45c Merge pull request #11576 from code-yeongyu/docs/telemetry-privacy-notice
+    - 4f49ddd158 test(omo-native): give the stub credential stores the authoritative read
+    - ee6dbcb819 refactor(memory): export only the ceremony values G3 consumes from the sync-engine barrel (#11737)
+    - 5b5b147397 Merge remote-tracking branch 'origin/test-audit/r2-prose-pins' into train/test-audit-r2
+    - 02c6db79ff Merge remote-tracking branch 'origin/test-audit/r2-claude-compat-replays' into train/test-audit-r2
+    - c71962f79a Merge remote-tracking branch 'origin/test-audit/r2-team-state-mailbox' into train/test-audit-r2
+    - 4f952f0ac3 docs(changes): add the #11794 fragment
+    - 6c517853a4 Merge account-source 7f76e24a3f (rotation refusal cases)
+    - d7f17582fe fix(claim-receipt): count bun check as typecheck evidence (#11792)
+    - 7f76e24a3f test(memory-sync): refuse a signing or sealing key rotation under a captured authority
+    - c00f40a58d Merge account-source 54539706c5
+    - 54539706c5 test(memory-sync): drop the pre-ruling RED tests from the abandoned retirement prototype
+    - 4f94b56904 test(memory-sync): end the desktop engine fixture by lifecycle, never by a timer
+    - 57e3cd76c9 test(memory): drop the pre-ruling core RED cases the account-source merge re-carried (#11737)
+    - ba69ce2e58 Merge account-source fd547e0bd0 (G3 index composition)
+    - fd547e0bd0 fix(memory-sync): adopt the G3 coordinator line onto the PR2 account contract
+    - 4ec5fd739a fix(memory): key G3 operations by the descriptor incarnation (#11737)
+    - e5cb495fa7 merge: the G3 sync RPC coordinator line (f6745e6f94) for the index.ts composition
+    - f91999f9c5 test(claude-compat): drop adapter copies of claude-code-compat-core loader tests
+    - 81083f0be0 Merge account-source b8c3faa898 (selected source, host selection) for G3
+    - 94b01d6c07 test(memory): drop pre-ruling core RED cases now owned by #11774 and account-source (#11737)
+    - 2e0538f5b0 feat(memory): source enable origin, RP, user and genesis only from the captured descriptor (#11737)
+    - 84870e57c6 Merge commit 'fb16267f05b5bad61de75fad66cf43a68b572e81' into fix/memory-shown-since-11053
+    - 8a8f328a89 test(skill-loader): drop adapter copies of skills-loader-core tests
+    - b8c3faa898 fix(memory-sync): report a session Worker without a host bootstrap as host_bootstrap_absent
+    - e3b1aab6aa docs(changes): add the #11787 fragment
+    - 6a5e3b6517 docs(changes): add the #11786 fragment
+    - 82b0b80a16 fix(memory-sync): validate the genesis configuration before turning sync on
+    - 11ef86ccb8 test(memory-sync): pin that a refused genesis configuration leaves both switches off
+    - 8c59163284 test(telemetry): reject star re-exports in otlp opt-out
+    - d5462b4de4 feat(memory): receive the desktop private sync channel (#11750)
+    - 7ab11ca4df test(memory): reproduce the missing desktop private sync receiver (#11750)
+    - 67401c87f5 docs(reference): drop the six utils shims removed in this PR from the shim inventory
+    - fd47355548 test(lsp-tools-mcp): expect the builtin TypeScript defaults under a project initialization override (#11756)
+    - dc2f45d9f9 build(memory-sync): regenerate bundles on canonical Linux node 24 / bun 1.4.4
+    - c3a674b6c2 test(shared): drop adapter copies of utils tests and their test-only shims
+    - 18ab17ccd3 Merge #11761 (team-core lock worker lifetime) for the G3 claim primitive
+    - 3c70b427e5 Merge commit 'fb16267f05b5bad61de75fad66cf43a68b572e81' into fix/memory-sync-background-notice-11059
+    - a5ad96db96 test(memory): checkpoint G3 integration and leaf regression WIP (#11737)
+    - b8fd769335 test(memory): reproduce credential and dispatch retirement gaps (#11737)
+    - 964364195b test(memory): assert no signature after pairing retirement (#11737)
+    - f81bb74886 test(memory): reproduce retired pairing authority (#11737)
+    - 9b169fca86 feat(memory): checkpoint owner-scoped sync RPC coordinator
+    - 0d92c046a4 test(memory): specify G3 coordinator ownership
+    - 597eee7d1c feat(memory): carry the sync RPC contract and ceremony exports with their consumer (#11737)
+    - 79766d2476 test(team-core): keep the @omo_attach pane-option assertions; update the shim inventory
+    - dd0f0f1044 fix(memory-sync): keep the device-account sidecar free of the sync engine
+    - ac770c3c3e Merge remote-tracking branch 'origin/dev' into docs/telemetry-privacy-notice
+    - d760682bae docs(telemetry): say the shell name is cut from its path
+    - 3e26d6efe0 changes: add the #11776 fragment
+    - db0c870d85 docs(telemetry): describe the shell as its program name only
+    - 89b16c4611 docs(changelog): describe first-device memory sync enable
+    - 54623fba4e Merge dev fb16267f05 into batch #20 (union of TERM_PROGRAM/SHELL test pins; omo.js + install-local.mjs regenerated: node 24, bun 1.4.4, linux/amd64)
+    - 8642c6e95e feat(memory-sync): bind the desktop genesis bridge to each operation handle
+    - 76bf0255ab test(team-mode): drop adapter copies of team-core registry and layout tests
+    - 83498aa13e fix(memory-sync): bound the host selection by the attach bootstrap deadline
+    - 2696071676 chore(memory-sync): register spawned fixtures as knip entries and keep port schemas internal
+    - 5eee62f6c9 fix(memory-sync): hand each session Worker its own private port for the host selection
+    - 1414846cd7 feat(memory-sync): select once in the engine main thread and hand session Workers the outcome
+    - 7036831abb feat(memory-sync): select the desktop or CLI account source once from the private channel declaration
+    - 53db927f96 fix(memory-sync): authoritative credential transactions, legacy capture and desktop pin boundary
+    - 84fedfe920 wip(memory-sync): preserve account source and boundary work for restart
+    - b06858b258 test(memory-sync): expose missing operation-scoped CLI account
+    - 6ee539ce9c test(account): expose missing durable credential generations
+    - e3edb02674 test(memory-sync): expose missing desktop account port adoption
+    - 351b30233e merge: integrate team-core worker lock isolation (#11752, PR #11761 c65a876b8e)
+    - 2ae4efc462 docs(changes): fold the #11756 and #11758 fragments into the train fragment (#11766)
+    - e80ccc6192 Merge remote-tracking branch 'origin/dev' into fix/fix11679
+    - fb16267f05 Merge pull request #11579 from code-yeongyu/fix/telemetry-shell-name-only
+    - 5d64231f2a test(prompts): drop prose pins on category descriptions and ultrawork wording
+    - d794ca41c4 test(team-mode): drop adapter copies of team-core state-store and mailbox tests
+    - c27bd19604 refactor(memory-sync): leave the sync RPC contract and runtime ceremony exports to their consumer
+    - 02297be5bb refactor(memory-sync): bind the operation genesis bridge and main incarnation in the neutral account types
+    - ad0e7c3bac docs(changelog): record Bun type-check gates
+    - c0e4e0b74e test(memory-sync): pin the publication-first and EINTR cases of the locked pin boundary
+    - 65db4573ff fix(memory): rerun a stream event queued during a cycle only when it is still ahead
+    - 1005da9e05 chore(typecheck): use the pinned Bun checker
+    - 3af75816d3 Merge pull request #11741 from code-yeongyu/train/bhx-p0-omo-1b
+    - b2e0e65af5 test(memory): isolate the genesis bootstrap exact-keys and builder wraps-digest refusals
+    - a537f592aa fix(memory-sync): bind the sync wire fixtures to the loopback address the client dials
+    - ce502f9ada Merge #11758 (TypeScript LSP on the host Bun) into the train
+    - 15bc7c72e1 Merge #11756 (lean TypeScript LSP defaults) into the train
+    - 726a4b8086 fix(memory-sync): use one operation authority with account boundary
+    - cfa5094e0f wip(memory): preserve G3 authority and publication integration
+    - f3e2e93ece test(memory): specify observer and locked publication authority
+    - 56ce4d3598 refactor(memory-sync): publish harness-neutral account port types
+    - 0a0c959549 feat(memory): export account ceremony APIs for the sync sidecar (#11737)
+    - 6980ad9a27 feat(memory): define sync RPC and operation authority contracts (#11737)
+    - 5512e9d3dd build(memory): regenerate first-device sync bundles
+    - 65d10e1940 feat(memory): enable first-device sync durably
+    - 2fc8dcca0a test(memory): specify first-device enable flow
+    - 3d4363c421 test(memory): reproduce own-push echo rerun on a stream-connected device
+    - 563b4cde29 Merge dev f6060b50fd into batch #20
+    - 44d81ae9d1 fix(lsp-core): move only the builtin TypeScript command to Bun and fall back on unresolvable paths
+    - f6745e6f94 feat(memory): compose sync RPC with the selected account source
+    - ef4bc3f6c8 fix(lsp-core): give no builtin initialization to an entry with its own command
+    - 87d5ee870a feat(memory): checkpoint owner-scoped sync RPC coordinator
+    - 20f7353d8f fix(memory-sync): use one operation authority with account boundary
+    - e7dbcda023 fix(lsp-core): read process.versions bun through an index access for the vendored builds
+    - f0437cea4f refactor(memory-sync): publish harness-neutral account port types
+    - c65a876b8e docs(changelog): assign worker lock fix to PR 11761
+    - c63d49314f Merge reviewed worker lock dependency updates
+    - 8f33c0e53b build(team-core): regenerate worker lock consumers
+    - e463d13a7b docs(changes): note the TypeScript server on the host Bun (#11758)
+    - 3cfdb383e4 docs(memory): add the changelog fragment for the preserved sync failure age
+    - ee9e4f413c fix(keychain-helper): create the helper's output directory before building it
+    - 7deffa676f fix(lsp-core): run the TypeScript language server on the host Bun
+    - 7c6c589aaf docs(changes): note the lean TypeScript server defaults (#11756)
+    - 1873e564c5 fix(lsp-core): start the TypeScript server without the syntax server and typings installer
+    - 3ce810d81f refactor(team-core): exhaust lifetime message variants
+    - 50974991f3 feat(memory): export account ceremony APIs for the sync sidecar (#11737)
+    - 9bf682277f fix(team-core): solicit exact worker registration
+    - ad98e367ba test(memory): isolate genesis bootstrap rejection proofs
+    - a14cf6f81a feat(memory): define sync RPC and operation authority contracts (#11737)
+    - 99212f1617 docs(changelog): describe queued memory sync fix
+    - 2ebb222292 fix(test): the hermetic test home turns off git auto maintenance so no detached writer outlives a test (#11742)
+    - 4e18e8ee69 Merge worker lock dependency for G3 claims
+    - 633f421bd0 fix(team-core): fence lock owners by worker lifetime
+    - 4d281edeb4 test(memory): specify G3 coordinator ownership
+    - 0b31934496 docs(memory): add the changelog fragment for the background sync notice
+    - 4481bc3448 test(team-core): reproduce live worker lock theft
+    - f6060b50fd Merge pull request #11701 from code-yeongyu/fix/knip-next-route-segment-exports
+    - a9b38bbd28 Merge #11529 (P0-06b) head eacb9d41af into P0-06f stack
+    - d8f796c2fc Merge pull request #11703 from code-yeongyu/fix/11700-lsp-smoke-exit-event
+    - 6080aba03d docs(changelog): record genesis builder primitive
+    - 1901711bac Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 4990a9124f feat(memory): build signed genesis records
+    - c345811170 test(memory): reproduce credential and dispatch retirement gaps (#11737)
+    - d69db5fd1b test(memory): specify genesis construction proofs
+    - 7548ee1b3f Merge remote-tracking branch 'origin/dev' into feat/10762-retention-followup
+    - 9beeca3080 Merge PR #11510 (38ffa07def) into train/bhx-p0-omo-1b
+    - 1584ef2388 Merge PR #11508 (32b6e22dc9) into train/bhx-p0-omo-1b
+    - 7ee66f628b Merge PR #11507 (58dfdc7671) into train/bhx-p0-omo-1b
+    - 653876ffe0 Merge PR #11505 (83f22385e0) into train/bhx-p0-omo-1b
+    - 61fa1c421a Merge PR #11497 (e191529b92) into train/bhx-p0-omo-1b
+    - 3735e133e7 Merge PR #11529 (eacb9d41af) into train/bhx-p0-omo-1b
+    - 1048de9163 Merge PR #11489 (f26f19a895) into train/bhx-p0-omo-1b
+    - 088fa1e8fe Merge remote-tracking branch 'origin/dev' into fix/11651-tree-kill
+    - 875bc1b241 test(memory): assert no signature after pairing retirement (#11737)
+    - 4d1fa16561 Merge remote-tracking branch 'origin/dev' into fix/10806-no-api-key-fallback
+    - 002b8ba1f2 fix(omo-native): keep the diagnostics file error class module-private
+    - f267f497d7 test(memory): reproduce retired pairing authority (#11737)
+    - 60e2405300 fix(telemetry): fold #11734 review LOWs for per-install keys
+    - d812080110 Merge remote-tracking branch 'origin/dev' into fix/telemetry-shell-name-only
+    - b52afb1f9a fix(memory): announce unseen failures on activation
+    - 2278b0c747 fix(memory): honor queued sync after success
+    - d1b03db840 fix(memory): preserve shown sync failure history
+    - c61e1803b2 test(memory): reproduce queued successful sync
+    - 36cc240023 test(memory): reproduce unseen background sync failure
+    - 86e6687cc6 test(memory): reproduce shown failure history reset
+    - 18c29f06a9 feat(telemetry): register per-install collector ingest keys
+    - 12f31d9768 chore(bundle): batch #20 fixup on current dev: knip entries for #11493's test/support/input-calls.ts and #11217's omo-desktop-toolkit.js (+ its forced-unchecked row and packed-layout fixture), drop the now-used TOOLKITS_CONTEXT_KEY row, un-export four car helpers knip flags, drop machineIdPrefix (removed by #11572) from #11609's test, regenerated telemetry schemas and bundles (pinned bun 1.4.4, node 24 linux/amd64, fresh clone)
+    - 8c12be2b31 Merge pull request #11271 from code-yeongyu/fix/11247-cold-launch
+    - c96ca04d81 Merge pull request #11612 from code-yeongyu/test-speed/checkext-reuse
+    - a4e4411a3c Merge remote-tracking branch 'origin/dev' into p0/p0-06f-omo-fused-equivalence
+    - 60336b95b2 test(computer): the record's invariants cover the press check and process restarts
+    - 38ffa07def Merge remote-tracking branch 'origin/dev' into p0/p0-06h-audit-dir-char
+    - 32b6e22dc9 Merge remote-tracking branch 'origin/dev' into p0/p0-06d-lsp-dedup-reset
+    - 58dfdc7671 Merge remote-tracking branch 'origin/dev' into p0/p0-06g-foreground-lease-char
+    - 83f22385e0 Merge remote-tracking branch 'origin/dev' into p0/p0-06e-memory-session-binding
+    - e191529b92 Merge remote-tracking branch 'origin/dev' into p0/p0-06c-comment-checker-turn-reset
+    - f26f19a895 Merge remote-tracking branch 'origin/dev' into p0/p0-06a-task-runners-char
+    - 3f1a6a0f78 fix(computer): a read clears the user's record only once its reply is delivered
+    - 62924a4ad4 Merge remote-tracking branch 'origin/dev' into fix/knip-next-route-segment-exports
+    - 5f3366cdb4 Merge dev into batch #20 (take dev's generated outputs; regenerated in the next commit)
+    - 50fac26d2a chore(knip): list test-support/test-deadline.ts as a root entry
+    - a645f0f2c0 Merge remote-tracking branch 'origin/dev' into fix/11247-cold-launch
+    - 9243833964 Merge remote-tracking branch 'origin/dev' into fix/11526-parent-wake-unref-scope
+    - 31e6043c80 chore(knip): list the engine test helper input-calls.ts as an entry
+    - 261eed67cf Merge remote-tracking branch 'origin/dev' into fix/11700-lsp-smoke-exit-event
+    - 1e0f5e8084 chore(knip): list the lsp-daemon test helper bun-child.ts as an entry (#11700)
+    - c97b290474 fix(computer): the user's last press never moves backward in one drain
+    - 6bea85b342 fix(computer): admission reads nothing the input does not need (class sweep)
+    - 711c7376da fix(computer): stamp presses the bounded watch let go at the oldest press it kept
+    - c8c63cc8f7 Merge remote-tracking branch 'origin/dev' into feat/11262-keychain-ci
+    - acc07dfd8a Merge pull request #11573 from code-yeongyu/feat/11262-keychain-helper
+    - d585d2faad fix(computer): admit input unwatched when the backend has no user-input feed
+    - 3ad785ba62 fix(omo-native): report a kept newer-schema trust lease; prove the earlier boot-instant boundary (#10762)
+    - 72cd10195b test(desktop-engine): replay the ax.typeText fixture against the engine binary
+    - 568dc6dd7f Merge pull request #11615 from code-yeongyu/test/11604-stale-lock-diagnostics
+    - 3f0dd2ed4b Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 1750d885ed docs(changes): fragment for #11721
+    - c7609dd6cb Merge pull request #11495 from code-yeongyu/feat/10762-windows-helper
+    - 930ba63239 feat(computer): stop when the user steps into the app being driven
+    - bd45eb4b57 Merge pull request #11640 from code-yeongyu/fix/10735-script-test-host-assumptions
+    - 2f1eff40d4 Merge remote-tracking branch 'origin/dev' into fix/11651-tree-kill
+    - e15a3e6a14 Merge remote-tracking branch 'origin/dev' into feat/11465-cu-user-intervened
+    - d80fd5019d test(desktop): fold the review of #11710
+    - 5462302439 fix(keychain-ci): make the keychain helper build and release check knip entries
+    - 79b25d4191 Merge remote-tracking branch 'origin/feat/11262-keychain-helper' into feat/11262-keychain-ci
+    - 2e4ec07768 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 10631b004d fix(keychain-helper): export-check the keychain helper test support file
+    - 3a2b1757e6 fix(memory): clean up orphaned Windows child trees
+    - f4da9a42b7 Merge pull request #11633 from code-yeongyu/fix/11259-tmux-runner-hermetic-fixture
+    - 7bd0104f28 test(background-agent): scope the throwing unref to parent-wake timers (#11526)
+    - 421f6d6011 Merge pull request #11648 from code-yeongyu/fix/10911-npm-pack-exit
+    - 5833e5ec30 docs(changes): note the newer-schema trust lease fix (#11712)
+    - cdc54e14e6 docs(changes): add the fragment for #11710
+    - 12e8b02438 fix(omo-native): keep trust leases from a newer schema; prove retention edges (#10762)
+    - d223e65bfb Merge pull request #11553 from code-yeongyu/feat/10762-retention-sweep
+    - fb464a1fe0 feat(computer): el.type types into an element without taking focus
+    - 22124df018 feat(desktop-session): serve ax.typeText with the focus refusal, fake backend and conformance case
+    - 5b5fa276f7 feat(desktop-macos): type into an element by AX insertion or focus-confirmed keys
+    - a401fa1dbe feat(desktop-core): ax.typeText row with the element delivery contract
+    - 461e95dbd7 Merge origin/dev into feat/11462-cu-element-type (stacked on #11516 + #11506)
+    - 3c1c62a979 fix(memory): refuse buried headers and hint at body --- rules in update_description
+    - 1a5fee331c Merge pull request #11590 from code-yeongyu/fix/11558-omob-refresh-shared-tools
+    - 10c3a34110 fix(keychain-ci): keep the workflow step schema module-private
+    - 72a33a5053 fix(keychain-helper): export the signing constants where the release check first imports them
+    - f91932d319 Merge remote-tracking branch 'origin/dev' into test/11604-stale-lock-diagnostics
+    - 6aa8c442a4 fix(browser): pin omowright at the shared-connection release
+    - e386d6d945 Merge pull request #11479 from code-yeongyu/feat/11462-cu-text-range
+    - 1c2706b028 Merge remote-tracking branch 'origin/dev' into fix/10735-script-test-host-assumptions
+    - 81bb7ed5a6 Merge remote-tracking branch 'origin/feat/11262-keychain-helper' into feat/11262-keychain-ci
+    - 043d9ca32f Merge pull request #11637 from code-yeongyu/fix/11630-hermetic-teardown-own-hosts
+    - 2ede556958 fix(keychain-helper): keep the helper PR knip-clean on its own
+    - 958f50d11f test(lsp-daemon): run the aborted-ping bun child on its exit event; read the helper's real ceiling in the budget guard (#11700)
+    - 1f5144a110 Merge remote-tracking branch 'origin/dev' into fix/10911-npm-pack-exit
+    - b1684faf35 Merge remote-tracking branch 'origin/dev' into fix/11247-cold-launch
+    - a7f6aa255d Merge remote-tracking branch 'origin/dev' into feat/11262-keychain-helper
+    - b1c9ec1992 Merge pull request #11532 from code-yeongyu/feat/11465-cu-user-input-monitor
+    - 7d3a915f4e Merge remote-tracking branch 'origin/dev' into fix/11259-tmux-runner-hermetic-fixture
+    - 3528fb4f10 changes: fragment for #11700 test-clock fix
+    - 063d1bdd7f Merge remote-tracking branch 'origin/dev' into fix/knip-next-route-segment-exports
+    - f0ca540490 test(omo-native): export-check the shared trust certificate fixture
+    - f65ac8562d Merge remote-tracking branch 'origin/dev' into feat/10762-windows-helper
+    - 27d3a3afdf fix(knip): narrow the route-segment scope to routed Next.js page extensions
+    - f6825b3b27 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - dbd5644224 test(lsp-daemon): wait on the bun child's exit, not a fixed 10s clock (#11700)
+    - 7be7355aec Merge remote-tracking branch 'origin/dev' into fix/11630-hermetic-teardown-own-hosts
+    - 08fac7ad2a Merge remote-tracking branch 'origin/dev' into feat/10762-retention-sweep
+    - 22e81a5484 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - 35f026308b Merge remote-tracking branch 'origin/dev' into fix/11558-omob-refresh-shared-tools
+    - 82c8c520b3 Merge remote-tracking branch 'origin/dev' into feat/11462-cu-text-range
+    - f9305074e2 Merge remote-tracking branch 'origin/dev' into feat/11465-cu-user-input-monitor
+    - d6946eae57 docs(changes): changelog fragment for #11701
+    - 0e89b239f0 Merge remote-tracking branch 'origin/dev' into feat/11262-keychain-helper
+    - eef05661e0 Merge remote-tracking branch 'origin/dev' into fix/11558-omob-refresh-shared-tools
+    - fb1061daea docs(changelog): add fragment for #11699
+    - 4ced09afb9 Merge remote-tracking branch 'origin/dev' into feat/11465-cu-user-input-monitor
+    - 40132f360a Merge remote-tracking branch 'origin/dev' into feat/11462-cu-text-range
+    - 49845afa95 fix(memory): let update_description add frontmatter to a note that has none
+    - ba80d1524e Merge remote-tracking branch 'origin/dev' into fix/knip-next-route-segment-exports
+    - 89769b0a6f docs(changes): link models.json changelog fragment to PR #11698
+    - 6349913327 test(omo-native): export-check the shared trust certificate fixture
+    - 4e8a634851 docs(changes): link side panel pathspec fragment to PR #11697
+    - 5d69a25f60 fix(test): keep planted processes out of the removed dir and wait for their exit before removing it (#11630)
+    - a13b19bd4a Merge remote-tracking branch 'origin/dev' into fix/11206-oauth-issuer-binding
+    - c2cb58d600 Merge remote-tracking branch 'origin/dev' into feat/10762-windows-helper
+    - a1c653a45c Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 4405df88b9 Merge remote-tracking branch 'origin/dev' into feat/10762-retention-sweep
+    - c773b6e0c7 docs(telemetry): name the login shell exception in the never-sent lists
+    - 004f71b8f2 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - 50ead45539 docs(telemetry): complete the privacy notice and telemetry guide
+    - 3c7b92fb45 Merge remote-tracking branch 'origin/dev' into feat/10762-windows-helper
+    - fc29c199a7 test(opencode): compare the bundled prompt after the frame ref
+    - b69b932c5b Merge remote-tracking branch 'origin/dev' into feat/10762-retention-sweep
+    - 80ba28d75d Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - 2e383980e4 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 760490905e Merge remote-tracking branch 'origin/dev' into fix/10806-no-api-key-fallback
+    - b76993158e test(script): bind the cleanup-hook timeouts and close the absolute-path trace gap
+    - fc729fc62c fix(test): plant the teardown fixture with the runtime so it runs on Windows; drop two unused exports (#11630)
+    - 9afb810266 docs(changes): add fragment for #11666 (#11665)
+    - d828445a23 test(script): assert the cleanup hook creates no directories instead of counting /tmp
+    - dfe77a75e2 test(script): assert the cleanup hook creates no directories instead of counting /tmp
+    - db9180181d Merge remote-tracking branch 'origin/dev' into feat/11465-cu-user-input-monitor
+    - 77b0602c26 Merge remote-tracking branch 'origin/dev' into fix/11558-omob-refresh-shared-tools
+    - b36e51e705 Merge remote-tracking branch 'origin/dev' into feat/11462-cu-text-range
+    - 897694fad1 test(memory): cut stale-lock evidence by pass number and state only what is checked
+    - c36f75b628 Merge #11529 (P0-06b) head a8bea1524f into P0-06f stack
+    - 3e5bff7b42 fix(knip): recognise Next.js route-segment config exports of the web app
+    - a390aa1f43 Merge remote-tracking branch 'origin/dev' into fix/11247-cold-launch
+    - d099a5d255 fix(script): never create fallback temp dirs and detect stat by probing it
+    - f7d0c5b33c Merge remote-tracking branch 'origin/dev' into fix/11259-tmux-runner-hermetic-fixture
+    - 6fdb162951 fix(test): tell a finished host stop from the deadline in the teardown (#11630)
+    - ec57171f7e Merge remote-tracking branch 'origin/dev' into fix/telemetry-shell-name-only
+    - fce75690ab Merge remote-tracking branch 'origin/dev' into fix/9050-sse-legacy-transport
+    - 84b98ebbc3 fix(script): decide cleanup-hook log containment by directory identity
+    - 1c87f7c588 chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - 2696c317bb chore(knip): drop the stale usesCoordinateSafeImageSizing preExistingExports row
+    - 482f60e8c2 Merge #11529 (P0-06b) head 4c607e232f into P0-06f stack
+    - 8deddf92d9 Merge remote-tracking branch 'origin/dev' into fix/11630-hermetic-teardown-own-hosts
+    - 6694cf2f68 fix(test): report an unanswered host socket and keep the engine import out of the stop deadline (#11630)
+    - 7c1302ab1e test(memory): scope the stale-lock diagnosis to passes after the mark
+    - 73a12ee28b chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - c84993b49d chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - 2ea173d412 chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - 778a89b25c chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - f3ae322929 Merge origin/dev into p0/p0-06g-foreground-lease-char
+    - 0e0718a756 Merge remote-tracking branch 'origin/dev' into p0/p0-06c-comment-checker-turn-reset
+    - 87b39a124e Merge remote-tracking branch 'origin/dev' into p0/p0-06d-lsp-dedup-reset
+    - ef783bc309 Merge remote-tracking branch 'origin/dev' into p0/p0-06e-memory-session-binding
+    - a8bea1524f Merge branch 'p0/p0-06a-task-runners-char' into p0/p0-06b-computer-use-runtime-char
+    - 057a201751 Merge remote-tracking branch 'origin/dev' into p0/p0-06h-audit-dir-char
+    - 169e34ed4d fix(script): resolve cleanup-hook log paths physically; move changelog to a fragment
+    - 55680e7e21 test(memory): fold #11615 review LOWs into the stale-lock diagnosis
+    - d95775d5f0 chore(knip): name the pre-existing revalidate export of web /design layout after the dev merge
+    - 464caae974 Merge origin/dev into p0/p0-06a-task-runners-char
+    - dfe601043c test(omo-opencode): cover the tmux runner re-export, not a copy of tmux-core's suite
+    - 5cfdf26c80 fix(script): drop /tmp TMPDIR and PCRE git assumptions in script tests
+    - d227c02871 Merge remote-tracking branch 'origin/dev' into fix/telemetry-shell-name-only
+    - 8c66353218 fix(test): end-of-run teardown stops only this run's task hosts, within a deadline (#11630)
+    - 2677a89615 docs(changes): add the #11633 fragment
+    - 105216a1bd test(tmux-core): drive the runner fixture with the test runtime, not the host shell
+    - fbbb648b75 docs(changes): add the #11631 fragment for #11626
+    - a6d4836512 fix(release): verify the release against what the run built, not source text (#11262 RULING-77)
+    - fd2994c5a7 merge(dev): refresh feedback consent gate integration
+    - b7c00e924e Merge remote-tracking branch 'origin/dev' into feat/11465-cu-user-input-monitor
+    - 3099cf06a1 fix(release): keep the helper's mode on extraction under any umask (#11262)
+    - 82b187456e fix(release): embed the compiled runtime's keychain helper at execDir/omo-keychain (#11262 RULING-74)
+    - 0337309b84 ci(release): publish omo-runtime-capabilities.json with SHA256SUMS (#11262 RULING-74)
+    - a932c99bf3 Merge remote-tracking branch 'origin/dev' into fix/9050-sse-legacy-transport
+    - dcde9b444c chore(bundle): regenerate generated outputs for batch #20 (adds #11438, #11608, #11609; moves #11455)
+    - 14f6ba1e88 docs(changes): fold the #11438, #11608 and #11609 fragments into 11555
+    - 7fd0a95123 Merge #11609 into batch #20
+    - 0cac53d8a3 Merge #11608 into batch #20
+    - e49d8d89b1 Merge #11438 into batch #20
+    - 3e7a4d0228 Merge #11455 into batch #20
+    - 90ff420e6c test(memory): name the branch when the stale-lock test finds no final.json
+    - d4a4a3fe84 Merge remote-tracking branch 'origin/dev' into fix/11247-cold-launch
+    - 6c1addcc36 fix(opencode): keep the Sisyphus runtime-model swap working after the config hook rewrites prompt frames
+    - 8e02d625cf Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 06b7e81790 fix(omo-native): approve without a GUI answers locked; exact verb/key match; holder-scoped writes (#11262)
+    - d87da918e6 docs(changes): add the changelog fragment for #11609
+    - 8d92c465b4 docs(changes): add the changelog fragment for #11608
+    - ecc7af5ff7 feat(telemetry): tell users what is collected, where it goes and how to turn it off at install and first run
+    - b404da00df fix(mcp-client-core): bound the type "sse" connect by the SDK request budget
+    - 0b03f83a8e Merge remote-tracking branch 'origin/dev' into feat/11462-cu-text-range
+    - 4f0424fee6 test(omo-native): give the keychain-helper test hooks a native-build budget (#11262)
+    - c0d04316df fix(opencode): keep prompt frame context out of the model prompt and use one-line tool snippets
+    - 5744cd5681 fix(telemetry): map TERM_PROGRAM through a fixed allowlist
+    - 3c0178545f Merge origin/dev into fix/9851-opencode-catalog-prompt-parity
+    - c034aa43da Merge remote-tracking branch 'origin/dev' into feat/10762-retention-sweep
+    - 0bfd58f9e7 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - a4d00dc811 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 5725df31fe fix(release): remove the skip_platform restore temp dir; scope its tests' TMPDIR (#11580)
+    - c112c361c3 docs(changes): move the #11236 entry into a changes fragment
+    - 3e17330860 Merge remote-tracking branch 'origin/dev' into fix/628-cli-uncertain-recovers
+    - c13935d8bb docs(changes): add fragment for #11591
+    - dbfd6cac9a chore(bundle): regenerate service-auth outputs on the dev merge
+    - 09aab74e37 Merge remote-tracking branch 'origin/dev' into pr-11455
+    - adf4b15adb fix(mcp-client-core): use the legacy HTTP+SSE transport for type "sse" skill MCPs
+    - ed1fb8bf48 Merge remote-tracking branch 'origin/dev' into fix/11206-oauth-issuer-binding
+    - 21a2ce8fc8 test(omob): compile the refresh fixture's bun stand-in once per file (#11558)
+    - 25b0eda5af test(telemetry): pin SHELL in the payload contract tests and expect the program name
+    - 62dbb22c3b docs(changes): fragment for the keychain helper release lane (#11580)
+    - d4a7191a61 chore(changes): add fragment for #11579
+    - 40552545a0 fix(telemetry): send the login shell's name, never its path
+    - 1dba12b627 ci(release): build, sign and ship the keychain helper (#11262)
+    - ecf4cb91d8 feat(omo-native): signed keychain helper for the omo-cli sign-in item (#11262)
+    - a501afeb68 Merge remote-tracking branch 'origin/dev' into feat/10762-windows-helper
+    - 9b1621def2 Merge remote-tracking branch 'origin/dev' into feat/10762-diagnostics-record
+    - e857578e6a Merge remote-tracking branch 'origin/dev' into feat/10762-retention-sweep
+    - 421d8ad7dc Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - b894d96018 chore(bundle): regenerate generated outputs for batch #20 (after the member fixes; commits omo-desktop-toolkit.js)
+    - 6f5df64d42 test(memory): expect the .md-stripped name in the per-directory limit case
+    - 3563d67de8 Merge remote-tracking branch 'origin/dev' into fix/628-cli-uncertain-recovers
+    - d80df7a595 test(memory): expect the .md-stripped name in the per-directory limit case
+    - 78635c2cfc Merge remote-tracking branch 'origin/dev' into fix/628-cli-uncertain-recovers
+    - 65ca0cbf7b Merge remote-tracking branch 'origin/dev' into feat/11462-cu-text-range
+    - 1897d02469 docs(changes): add the #11559 fragment
+    - 8e97ee222d perf(memory): load the <external_projection> renderer lazily, out of omo.js
+    - 5f31ef2212 docs(changelog): 11556 fragment: cite the measured skill-scan numbers and the subscription-first default
+    - 4740972c93 Merge origin/dev into fix/628-cli-uncertain-recovers
+    - bcd0432d82 docs(changes): fold batch #20 fragments into 11555 and credit outside contributors
+    - 89c9cd5048 chore(bundle): regenerate generated outputs for batch #20
+    - 51036c9a74 ci(release): smoke the signed Darwin engine trust helper before upload (#10762)
+    - 5c1a2399e7 fix(omob): build the engine trust helper the payload now requires (#10762)
+    - 8b10b898df feat(omo-native): resolve the extracted engine trust helper path (#10762)
+    - 0d0bdd09da feat(release): build, sign and ship omo-engine-trust-helper in the compiled payload (#10762)
+    - abfc151da1 Merge #11298 into batch #20
+    - bcf3e7df85 Merge commit '8f83397923939e19a697e20533f8fbf28e8c9ccb' into feat/10762-helper-ship
+    - 806ebc9d4d Merge #11486 into batch #20
+    - 3563a03b6b chore(bundle): regenerate generated outputs for batch #20
+    - 267fa2ec39 Merge origin/dev into fix/11545-telemetry-home-automount (batch #19)
+    - 0cd6c3afdc Merge #11217 into batch #20
+    - 85ca66b309 Merge #11542 into batch #20
+    - f0890bf100 Merge #11533 into batch #20
+    - 0e9b2c5366 Merge #11522 into batch #20
+    - 470ba9a5b5 Merge #11506 into batch #20
+    - 7de1e74fa2 Merge #11493 into batch #20
+    - 14b9251138 Merge #11457 into batch #20
+    - 6a716cd1a3 Merge #11458 into batch #20
+    - c6124408ff Merge #11382 into batch #20
+    - cec9b481f9 Merge #11455 into batch #20
+    - 19781b75d3 Merge #11452 into batch #20
+    - 4aa6ab671c Merge origin/dev into feat/desktop-thread-toolkit-tools; changelog entry moved to changes/unreleased/11217.md
+    - e8e3b74b64 docs(changes): note the trust retention sweep (#11553)
+    - 7367a9752f feat(omo-native): trust generation retention sweep (#10762)
+    - 56934f9d67 fix(omo-native): accept the codes the merged importer modules emit, typed from their exports (#10762)
+    - 5f7765833a docs(changes): note the trust diagnostics record (#11552)
+    - cee2567335 feat(omo-native): trust diagnostics record, one append-mode write per launch (#10762)
+    - 8f83397923 test(omo-native): use neutral synthetic certificate subjects (#10762)
+    - f7adbd690a docs(changes): fragment for #11546
+    - ebe6fe6273 Merge remote-tracking branch 'origin/dev' into feat/10762-macos-helper
+    - 9670af7b7d fix(omo-native): match the Disallowed CTL with the importer's own rule, failing closed on unknown entry lengths (#10762)
+    - b4e695e133 test(omo-native): the runner's real Disallowed CTL must name public certificates of both disallowedHash forms (#10762)
+    - dea0c00954 docs: bind claim-receipt changelog to PR #11542
+    - b890993e63 test(desktop-macos): key the source guard by slash paths on every platform
+    - 02f3fafb2f test(omo-native): assert Crypt32's per-certificate Disallowed CTL answer, with its error code (#10762)
+    - a896040a72 fix(omo-native): match the Disallowed CTL through Crypt32's CertFindSubjectInCTL; drop the probe; check decoded chains (#10762)
+    - 3d472446c5 fix(claim-receipt): distinguish runner argv from command pairs
+    - 26a514868d test(omo-native): disallowedHash entries also name a certificate by the MD5 of its public key (#10762)
+    - 6555614a54 fix(memory): accept only real time zones after a clock time in a date run
+    - c3eb0f8dad fix(memory): keep names whose number after a date is a ticket, not a time
+    - 1863232f61 fix(memory): judge each name on its own before folding it as an id
+    - 9a89a37595 fix(desktop-macos): watch user input only with Accessibility trust
+    - d4e34567f3 feat(omo-native): match the Disallowed CTL's disallowedHash entries by certificate signature hash (#10762)
+    - f11d349c69 docs(changelog): bind thread refusal note to PR 11533
+    - 48fd090813 test(omo-native): Disallowed CTL disallowedHash matching on Crypt32, plus a temporary real-CTL measurement (#10762)
+    - 14df54c2ae fix(thread): preserve typed attachment refusal codes
+    - 5d4b8cbd6d docs(changes): note the macOS user-input watch
+    - f79c79e391 feat(desktop-macos): tag engine input and watch the user's own input per app
+    - 14e1c875ed test(omo-native): neutral subjects for synthetic trust certificates
+    - 095966e676 docs(changes): add the fragment for #11516
+    - 0f5d0f33b3 fix(desktop-macos): report maybe-delivered input as InputFailed, never BackgroundUnavailable
+    - 3df0a8410b docs(changes): add the fragment for #11506
+    - da47069d15 test(desktop-prelude): pin the computer docs bytes with the AxUnconfirmed rule
+    - b4ae2c948e test(desktop-core): conformance case for unanswered AX writes
+    - 3b760324f8 docs(changelog): bind facts recovery note to PR 11522
+    - 4b6cae6e9e refactor(omo-native): share the trust helper crate layout with the macOS helper (#10762)
+    - 435688c568 fix(memory): keep facts parking recovery current with dev
+    - 87d8a3808b Merge remote-tracking branch 'origin/dev' into resync-9856m
+    - 9e5aafef05 fix(memory): fold only unmistakable machine ids in <external_projection>
+    - 1e45b2cfa6 Merge origin/dev into fix/9851-opencode-catalog-prompt-parity
+    - ba8cf16c3b fix(memory): recover facts parking after a failed rename
+    - df7fbab7ec fix(omo-native): reject inconsistent helper chains; fold review r1 LOWs
+    - 3b334d41d8 test(omo-engine-trust-helper): split the strict-SSL regression; anchors-only asserts a candidate anchor
+    - 87f5e8c760 feat(omo-native): macOS intermediates use the BasicX509 chain step plus the EKU rule
+    - 2bd6d58812 test(omo-engine-trust-helper): option C tests for macOS intermediates (RED)
+    - 7c0ad547ca Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 03a89610cf test(omo-engine-trust-helper): isolate key usage; drop the unmeasurable D2 attempt
+    - cff42f5c0d feat(omo-native): Windows trust fact helper on Crypt32 (#10762)
+    - 50f3d07261 perf(memory): trim the expiry change's share of omo.js
+    - 4172f92f69 feat(desktop-macos): report AX requests with no reply as AxUnconfirmed
+    - d819eadb4a test(omo-engine-trust-helper): measure the custom-anchor SSL rejection
+    - 8732697512 test(omo-native): Windows trust helper adapter tests and strict fact decoder (#10762)
+    - 4a13c12b24 feat(omo-native): implement the macOS engine trust fact helper
+    - 2898cea8ff docs(changes): add fragment for #11486
+    - 5e616f9908 fix(memory): list every meaningful memory file name in <external_projection>
+    - 87f789cb09 feat(omo-native): macOS engine trust helper tests and fact decoder (RED for the helper)
+    - 97adc6328f docs(changes): add the fragment for #11493
+    - 7f81338fbe feat(desktop-core): add user-intervened, ax-unconfirmed and Space error codes
+    - 9c6501b171 docs(changes): add unreleased note for #11479
+    - a784550e29 feat(desktop-core): locate text ranges in UTF-16 for element selection
+    - 9018dedf16 docs(changelog): fragment for #11457
+    - ef1790998a docs(changelog): fragment for #11458
+    - f86447a5b9 fix(memory): accept the expires key in the memory pre-commit hook and rebuild bundles
+    - 772264d6fd docs(changes): fragment for #11455
+    - 41c1d35475 fix(model-core): default Kimi rungs to Kimi K3.1 Pro, keep K3 for providers without it (#11451)
+    - 3a0f68a53c Merge origin/dev into fix/9851-opencode-catalog-prompt-parity
+    - 971802ff05 fix(memory): stop projecting system files past their frontmatter expires instant
+    - ae657f2754 docs(changes): add the #11452 fragment
+    - 678c59d416 feat(config): accept model_pad.labels for the desktop model pad axes
+    - 2150eadf05 test(model-capabilities): make unchanged-catalog clock deterministic
+    - 4d0ed909a7 docs(changes): add the #11438 fragment
+    - 33951509c6 Merge origin/dev into fix/9851-opencode-catalog-prompt-parity
+    - bbf62b0c61 docs(changelog): bind feedback fragment to PR 11421
+    - 1664b5cc60 fix(feedback): honor native telemetry consent for report hashes
+    - 847c48c16e Merge upstream/dev into fix/8499-antigravity-gemini-pro-transform
+    - 729c8bcdde docs(changelog): note Windows reflection tree termination
+    - bbbd6b62f5 Merge origin/dev into feat/10782-spawned-by-every-child
+    - a009bec34c Merge origin/dev into fix/9851-opencode-catalog-prompt-parity
+    - 37a34fc18f Merge upstream/dev into fix/8499-antigravity-gemini-pro-transform
+    - 75aaa40e56 fix(account): isolate native recovery FFI behind runtime shim
+    - 53ceefc854 Merge remote-tracking branch 'origin/dev' into feat/desktop-thread-toolkit-tools
+    - f7465098c3 fix(opencode): restore interactive gating and show records for the Native toast
+    - 8d5fef459f perf(opencode): read session tool permissions once per session
+    - 4920b4fd3b test(opencode): pin Kimi K3.1 to the shared kimi-k3-1 preset
+    - 5beab78687 test(opencode): drop non-null assertions from prompt parity tests
+    - 8f3e61be18 Merge remote-tracking branch 'origin/dev' into resync-9856
+    - 36f3546143 fix(mcp): preserve OAuth discovery compatibility
+    - 81064eda78 fix(mcp): declare DCR application type
+    - cb5087de17 fix(mcp): bind stored OAuth credentials to issuer
+    - 1450ba28a4 fix(mcp): validate authorization response issuer
+    - 0cfc10a293 Merge upstream dev and preserve PR #10119 changelog
+    - 406eeb2f24 Merge remote-tracking branch 'origin/dev' into feat/desktop-thread-toolkit-tools
+    - 4a8cc61b14 Merge remote-tracking branch 'origin/dev' into lm-10898
+    - a039c05354 Merge remote-tracking branch 'origin/dev' into feat/desktop-thread-toolkit-tools
+    - 2556c496ba chore(changelog): link #11217
+    - 94ffd98320 Merge dev into the reviewed account recovery fold
+    - 889d734ce6 Merge dev into the reviewed account recovery fold
+    - d97178719c fix(account): make legacy uncertainty terminal and map recovery exits
+    - 53accba891 Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - e2b279ce13 Merge dev into the bounded account recovery fix
+    - 20d772631e Merge remote-tracking branch 'origin/dev' into fix/bw628-cli-core
+    - b3a43684d1 fix(account): bound refresh recovery to the original attempt
+    - 36c3e330ba Move #10119 changelog entry to Unreleased
+    - 7aa30d8a98 Merge upstream dev into fix/model-capabilities-write-if-changed
+    - 2ae9c49899 Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 37f00793ef Merge upstream dev into fix/model-capabilities-write-if-changed
+    - ec75c8b41b Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 6752f99116 Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 72ba4a2efa docs(account): state when a journaled refresh key is replaced (review)
+    - 50f8c173c1 fix(account): re-key a journaled attempt whose key is outside the 43..128 base64url contract (review)
+    - 5a0f5e1af9 fix(account): 256-bit idempotency keys, definite refusals end the uncertain state, clamp clock jumps (review)
+    - e1ac98909d fix(account): persist the refresh backoff before every send and honour Retry-After on a resend (review)
+    - dfc5315eaf docs(changelog): note the uncertain refresh recovery (#10898)
+    - fbb49fbeed fix(account): an uncertain session refresh recovers by retrying the same token and idempotency key
+    - 09512bda49 Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - eb61e8f409 Merge upstream dev into fix/model-capabilities-write-if-changed
+    - 3c63b59061 Merge dev into fix/model-capabilities-write-if-changed (mechanical changelog refresh)
+    - cded44d2ee Merge remote-tracking branch 'upstream/dev' into fix/8499-antigravity-gemini-pro-transform
+    - 76b7618b6c Merge remote-tracking branch 'upstream/dev' into fix/model-capabilities-write-if-changed
+    - ca6790b79e Merge remote-tracking branch 'upstream/dev' into fix/model-capabilities-write-if-changed
+    - 245fe7a2f9 Merge code-yeongyu/oh-my-openagent base into fix/model-capabilities-write-if-changed
+    - 0929ec36b0 Merge dev into PR #10119 and retain both changelog entries
+    - 5734e2788c Merge dev into PR #10119 and retain both changelog entries
+    - cbb99f513c Merge dev and retain model-cache changelog entry
+    - 15a8b384a9 docs(changelog): move the entry under Unreleased and link this PR
+    - 8063c1365d Merge remote-tracking branch 'origin/dev' into upd10119
+    - c793ad18ba fix(model-capabilities): rewrite the cache only when the catalog changed
+    - 3c11d8980c Merge remote-tracking branch 'origin/dev' into fix/9851-opencode-catalog-prompt-parity
+    - 53ac3a246e Merge remote-tracking branch 'origin/dev' into fix/9851-opencode-catalog-prompt-parity
+    - 186411dff1 fix(omo-opencode): degrade gracefully when the sessions API is unavailable in the system transform
+    - 5f97581db5 Merge dev and preserve both changelog entries
+    - bde300501c Merge current dev and validate session tool permissions
+    - b0585e7023 Merge dev and preserve OpenCode role and runtime tool context
+    - 9a7ec25e8d Merge origin/dev into shared Native prompt builders
+    - 4b096dacf8 test(opencode): verify composed dist prompts
+    - 7ff97ab50f Merge origin/dev into shared Native prompt builders
+    - f93f7ea0d1 feat(opencode): compose agents from shared Native prompt builders
+    - 93c37aa0b3 Merge remote-tracking branch 'origin/dev' into fix/9851-opencode-catalog-prompt-parity
+    - b3e8be034b Merge remote-tracking branch 'origin/dev' into fix/9851-opencode-catalog-prompt-parity
+    - 4e07b7a94a feat(omo-opencode,model-core,prompts-core): per-model prompt parity across every agent with variants
+    - bd38dcdb89 Merge remote-tracking branch 'origin/dev' into fix/9851-opencode-catalog-prompt-parity
+    - 8d837f566c fix(prompts-core): drop the runtime-package reference from the parity contract comment
+    - 89445f29e4 test(shared): scope legacy GPT-model scan to model selections
+    - 61ba0d2fbd chore(omo-opencode): drop dead nudge decision types and refresh stale atlas routing docs
+    - cd7807144e fix(prompts-core,model-core,omo-opencode): close review gaps on prompt parity + nudge hook
+    - be04081271 test(omo-opencode): pin GPT models to their dedicated Atlas prompt sources
+    - cd669ebb0b feat(prompts-core,omo-opencode): runtime prompt parity for the OpenCode plugin + every-launch OmO Native toast
+    - 90ccbf2f53 fix(model-core): keep antigravity-gemini-3.1-pro out of the -preview rewrite
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.54
+ReleaseTime: 2026-10-31T16:03:02.0000000Z
