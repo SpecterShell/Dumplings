@@ -1,0 +1,142 @@
+Version: 18.14.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.14.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - The soft steering signal a tool sees as toolCall.steeringSignal now aborts with the source of the queued message ("user", "irc", …) as its reason, so a tool can yield only to the sources it should (#17537)
+    Fixed
+    - Reject incomplete local compaction, turn-prefix, handoff, and branch summaries ending with stopReason: "length" instead of using truncated text as complete context. Omit incomplete display-only short summaries without discarding a completed full summary (#17499 by @Xytronix).
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Replaced isLoopGuardedModel with loopGuardLevel, which returns "off", "exact", or "semantic" from the model's thinking-loop-guard catalog rule
+    Added
+    - Added disableServerSideFallback to FactoryDroidOptions and SimpleStreamOptions: a Factory Droid request leaves out the server-side refusal fallback chain and fails, before any of its content is streamed, if another model answers it (#12229 by @Xytronix)
+    Changed
+    - DeepSeek and Grok models on Amazon Bedrock now get the same near-duplicate reasoning-loop checks as on other hosts
+    Fixed
+    - Fixed Claude turns failing with "Thinking loop detected" when summarized thinking repeated a progress line such as "Still writing the parser..."; Claude models no longer run the loop guard
+    - Fixed the loop guard discarding turns from other models whose reasoning summary repeats one status line a few times; whole-line repetition now has to cover about 1 KB before it counts as a loop
+    - Fixed per-request OpenAI-compatible headers being combined with differently cased model headers instead of overriding them (#17513 by @jchanghong023)
+    - Fixed a stalled Anthropic stream that keeps sending empty content deltas never timing out, because those deltas were treated as stream progress (#17484 by @jchanghong023)
+    - Fixed Anthropic-compatible endpoints that put a thinking signature on the streamed content block losing it, so replayed reasoning keeps its signed block (#17483 by @jchanghong023)
+    - Fixed AuthStorage.close() and replaceStore() losing a rotated OAuth refresh token when a refresh was still in flight, with or without durable refresh leases; the store now stays open until that token is saved, and new refreshes are refused (#17518)
+    - Fixed /usage showing Cursor's "Other Models" meter as an inflated dollar amount; it now shows the percentage Cursor reports, like Cursor Models (#17462 by @eggpeat)
+    - Fixed the omp auth-gateway Responses endpoint rejecting documented null values for temperature, top_p, output limits, reasoning, and reasoning summaries (#17466 by @Xytronix).
+    - Fixed provider HTTP errors printing the response body twice when the thrown error already carried it, including responses with a retry header (#17503 by @metaphoric-dev)
+    - Fixed Gemini tool calls through the omp auth-gateway chat-completions endpoint failing on the next turn: the gateway now returns each call's thought signature in extra_content and replays the one a client sends back (#17509 by @justdoGIT)
+    @oh-my-pi/pi-catalog
+    Breaking Changes
+    - Removed thinkingLoopGuard from compat records; thinking-loop-guard is now a catalog axis that applies on every host, with "semantic" for Gemini, DeepSeek, and Grok and "off" for Claude
+    Fixed
+    - Fixed GitHub Copilot Claude 5.x base models (claude-opus-5, claude-opus-5.5, claude-sonnet-5, claude-sonnet-5.5) reporting the 1M window of their -1m variants once the model list was read from cache; discovered limits now survive cached reads instead of reverting to bundled values (#17481)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added task.perCallModel (off by default, eval, on) so a task item or an eval agent()/workpool() call can run on one exact model the operator already names: a chat role from your own (non-project) settings, the selected agent's own model, or the parent's current model. Glob values (anthropic/*) never approve a model. task.perCallModelAllow narrows that list, task.maxEffort caps the worker's effort, and the worker never switches to another model. Project settings can only narrow this: they never turn it on or approve a model (#12229 by @Xytronix)
+    - Added Settings.reloadFromDisk({ includeParents: true }), which reloads the persisted settings behind an overlay while keeping the overlay's own overrides (#12229 by @Xytronix)
+    Changed
+    - model is now declared in every task schema: a task call, eval agent() or workpool() that passes a model the operator's configuration does not allow is refused with an error (#12229 by @Xytronix)
+    - Viewing a subagent or returning to the main session no longer posts a "Viewing agent …" / "Returned to main session" status (a popup in Tern); the status line and Tern's composer already show which agent is in view
+    - In a Tern pane, omp stats shows the dashboard in place of the block it runs in, with a Close button (or Esc, or Ctrl+C) that stops it and brings the terminal back, and /stats opens it in a browser block beside omp, instead of the system browser
+    - bash tool commands now see PI_TOOL_CALL_ID, the id of the call running them, so a script the agent runs can point at that call in the session transcript (#17489 by @will-bogusz)
+    - Native judgments with a configured fallback now move to it after a 3-second candidate deadline (configurable with judgment.attemptTimeoutMs) and briefly skip the timed-out route; without a configured fallback a slow judge is never cut off or replaced (#17465 by @Xytronix).
+    Fixed
+    - Fixed a ! or $ command run while the agent works floating over the composer in Tern, where expanding its output covered the conversation; it now sits at the end of the conversation
+    - Fixed out:// replies sent from an eval cell (tool.write to out://, or tool.bash with > out://) never appearing even though the write reported "Shown to the user."; they now draw as replies after the eval card, and are refused where nothing would show them (a backgrounded cell, a browser tab script)
+    - Fixed a write to out:// (such as out://baselines.md) drawing as a Write card with line numbers instead of a reply streaming as prose
+    - Fixed table charts drawing a ratio or speedup column as a series beside the timings it was computed from, which read as "719× less" against the baseline
+    - Fixed read of a directory hiding existing dist, build, node_modules, .git, and other dependency/build/cache subdirectories, which made them look absent (#17539)
+    - Fixed artifact writes reporting the staging-file cleanup error instead of the original short-write or publication failure (#17485 by @jchanghong023)
+    - Fixed MCP tool calls failing without reconnecting after DNS or socket-open errors (#17461 by @Xytronix).
+    - Fixed MCP connection timeouts and cancellation allowing a stdio server to start after the connection attempt had already failed. (#17512 by @jchanghong023)
+    - Fixed ACP updates and extension dialogs switching to an unadvertised session handle after a session reset, and a client reopening a continued conversation after a restart landing on the original session (#17517 by @jchanghong023)
+    - Fixed IRC coordination cards remaining visible when Hide Tool Activity is enabled, including live messages and replay (#17498 by @dannyboy-ai).
+    - Fixed a message you queue while the agent waits on ask sitting behind the unanswered dialog; the dialog now closes without cancelling the turn, while IRC messages and background completions leave it open (#17537).
+    - Fixed JS eval output() ignoring its documented offset, limit, query and format options and returning the raw read tool result; it now returns the selected text (or the format: "json" metadata) like Python's output() (#17455)
+    - Fixed session lookup losing readable project sessions when an unrelated project folder is unreadable (#17467 by @Xytronix).
+    - Fixed the advisor resending a byte-identical refused review before trying its model fallback when the review contained no primary reasoning to strip (#17473)
+    - Fixed read of a whole URL returning no content when the page's first line is over the 50 KB output budget, as on minified pages read with :raw; it now shows that line's first 50 KB (#17500 by @will-bogusz)
+    - Fixed an advisor whose usage-limited account kept being reported as switchable retrying the same capped account thousands of times; it now tries each sibling account at most once per provider per failing review, then falls back, waits, or pauses on the quota (#17472)
+    - Fixed LSP definition, type definition, implementation and reference results carrying a stray carriage return on every source context line from files with Windows (CRLF) line endings (#17549 by @JustasMasiulis)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed heuristic episodic facts storing word fragments (Drafting is active. → ctive), truncated multiword objects, or nothing for has an … sentences (#17511)
+    @oh-my-pi/pi-natives
+    Added
+    - Added listWorkspace({ pruneExcludedDirs: false }) to stop pruning standard dependency/build directory names; hidden directories such as .git also require hidden: true (#17539)
+    @oh-my-pi/omp-stats
+    Added
+    - Added setStatsCloseHandler: while a host sets one, the dashboard shows a Close button in its top bar and closes on Esc or Ctrl+C (with no text selected), for hosts that show it in place of their terminal
+    Fixed
+    - Fixed tool error rates counting skipped tool calls that were explicitly marked as not executed (#17463 by @Xytronix).
+    @oh-my-pi/pi-tui
+    Added
+    - Added assertModelSupportsEffortCeiling(), which throws when a model has no supported thinking effort at or below a task.maxEffort ceiling (#12229 by @Xytronix)
+    - Added iconButton(), quietButton() and segmentedTabs() to native/overlay, and disabled, busy and icon options to actionButton()
+    - Added nativeTail to Composer.setRuntimeChildren options: containers whose children continue the native surface's main after the transcript instead of riding in the dock
+    - Added isHighlightLanguage and createCodeFrameStyler for renderers that highlight source lines in their file's language (#17550 by @JustasMasiulis)
+    Changed
+    - Grep and read results with gaps between line runs now render in Tern as one code block that scrolls sideways as a whole, with … gap rows aligned in the line-number gutter
+    - Tern builds that draw the button kind get omp's buttons as real buttons (pointer cursor, accessible pressed/disabled state, a disabled button's tooltip says why) and segmented controls as tabs variant: "segmented"; older Tern builds keep the role-styled rows
+    - Source lines in Grep, AST Grep and Find results and LSP symbol names are syntax-highlighted in their file's language instead of drawn in one color; consecutive lines highlight together, so multi-line strings and comments keep their colors (#17550 by @JustasMasiulis)
+    Fixed
+    - Fixed table charts plotting a ratio column against the timings it divides (ratio 0.997 beside C++ (ms) drew as "719× less"): analyzeTable reads a column equal to the quotient of two others as restating them, written bare or as ×
+    - Fixed IRC coordination cards remaining visible when Hide Tool Activity is enabled, including incoming messages, automatic replies, relays, and workpool messages in live and replayed transcripts (#17498 by @dannyboy-ai).
+    - Fixed text after a nested color losing the outer color, such as the rest of the /mcp and /ssh hints after the highlighted command (Run /mcp list to see all configured servers.) falling back to the default text color instead of staying muted (#17521 by @JustasMasiulis)
+    - Fixed LSP definition, type definition and implementation results showing the raw Found 1 definition(s): text; the response now counts them (1 definition) and shows each location over its source lines, its own line marked like a grep match (#17549 by @JustasMasiulis)
+    - Fixed an LSP definition, type definition or implementation location whose path starts with whitespace being dropped, with its source lines shown under the previous location
+    - Fixed session tree user and assistant turns looking identical in themes whose accent and success colors match or nearly match (dark-terminal, dark-poimandres, light-poimandres): user rows are now bold, the assistant: label switches to the path color, and custom and advisor messages are muted (#17520 by @wolfiesch)
+    @oh-my-pi/pi-utils
+    Added
+    - Added oklabDistance, the perceptual distance between two hex colors (#17520)
+    @oh-my-pi/pi-wire
+    Added
+    - Added nums to code props (TspCodeProps): each line's number, so one block can show non-contiguous lines with … gap rows where the numbers jump.
+    - Added the TSP button kind (TspButtonProps: label, icon, keycaps, default/primary/quiet/danger variants, sm/md sizes, pressed, disabled with a reason, busy) and tabs variant: "segmented".
+    What's Changed
+    - fix(tui): tell session tree user turns from assistant turns beyond hue by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17520
+    - chore(coding-agent): remove SQLite files committed with the RPC test fixture by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17501
+    - fix(ai): accept nullable Responses request controls by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17466
+    - fix(advisor): bounded credential switches on repeated quota failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/17476
+    - fix(catalog): kept discovered rows on cached additive-catalog reads by @roboomp in https://github.com/can1357/oh-my-pi/pull/17482
+    - fix(ai): stop empty Anthropic deltas from renewing stream timeouts by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17484
+    - fix(coding-agent): preserve artifact write errors when cleanup fails by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17485
+    - feat(coding-agent): expose PI_TOOL_CALL_ID to bash commands by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17489
+    - fix(compaction): reject length-truncated summaries and handoffs by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17499
+    - fix(coding-agent): show the head of an over-budget first line on whole-URL reads by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17500
+    - fix(ai): print provider error bodies once by @metaphoric-dev in https://github.com/can1357/oh-my-pi/pull/17503
+    - fix(mcp): cancel pending stdio creation when connection ends by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17512
+    - fix(ai): honor case-insensitive per-request header overrides by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17513
+    - fix(mnemopi): kept whole words and phrases in episodic fact objects by @roboomp in https://github.com/can1357/oh-my-pi/pull/17516
+    - fix(acp): keep protocol session handles stable across resets by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17517
+    - fix(ai): drained in-flight oauth refresh before closing auth store by @roboomp in https://github.com/can1357/oh-my-pi/pull/17519
+    - fix(tui): keep a color applied over styled text after the inner styling ends by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/17521
+    - test(coding-agent): make three tests independent of HOME and the inline image budget's value by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17527
+    - fix(ask): interrupted pending dialogs for queued steering by @roboomp in https://github.com/can1357/oh-my-pi/pull/17541
+    - fix(coding-agent): listed build and dependency dirs in read directory output by @roboomp in https://github.com/can1357/oh-my-pi/pull/17543
+    - fix(lsp): render definition results as locations over their source by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/17549
+    - feat(tui): highlight search results and LSP symbols in their file's language by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/17550
+    - fix(coding-agent): honoured js eval output() offset/limit/query/format by @roboomp in https://github.com/can1357/oh-my-pi/pull/17460
+    - fix(mcp): retry DNS and socket-open failures by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17461
+    - fix(ai): show Cursor's Other Models meter as a percentage by @eggpeat in https://github.com/can1357/oh-my-pi/pull/17462
+    - fix(stats): exclude synthetic non-executions from tool errors by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17463
+    - fix(judgment): bound stalled native attempts and fail over by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17465
+    - fix(coding-agent): isolate unavailable session buckets by @Xytronix in https://github.com/can1357/oh-my-pi/pull/17467
+    - fix(advisor): skipped the no-op reasoning strip on refusals by @roboomp in https://github.com/can1357/oh-my-pi/pull/17475
+    - fix(ai): keep a thinking signature delivered on content_block_start by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/17483
+    - fix(tui): make IRC cards respect Hide Tool Activity by @dannyboy-ai in https://github.com/can1357/oh-my-pi/pull/17498
+    - fix(ai): keep Google thought signature in gateway by @justdoGIT in https://github.com/can1357/oh-my-pi/pull/17509
+    - feat(task,eval): per-call model selector limited to operator-configured models by @Xytronix in https://github.com/can1357/oh-my-pi/pull/12229
+    - docs: add Simplified Chinese README (README.zh-CN.md) by @bigHippoZz in https://github.com/can1357/oh-my-pi/pull/17480
+    New Contributors
+    - @metaphoric-dev made their first contribution in https://github.com/can1357/oh-my-pi/pull/17503
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.14.1...v18.14.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.14.2
+ReleaseTime: 2026-10-31T17:56:02.0000000Z
