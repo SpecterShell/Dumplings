@@ -1,0 +1,23 @@
+Version: 1.15.12
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.12/vpn-parser-1.15.12-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.12 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.12！本版支持系统代理免停秒级热切（0 重启内核、零断流）、根治模式切换后刷新跳回关闭与竞态问题，并全面调优高延迟海外节点连通性体验：
+    ⚡ 系统代理免停秒级热切（0 重启内核、零断流）
+    - 无感秒级开关：运行中开启或关闭系统代理不再重启内核进程，仅通过 WinINET 注册表原子操作与系统广播即时生效（5~10ms），所有已建立连接零中断。
+    - 状态即时联动：开关状态与底栏、状态卡毫秒级双向同步，避免无谓的内核重置开销。
+    🛡 根治开关跳回与刷新关闭（P0 竞态消除）
+    - 消除保存竞态：修复 ProxyConfigSaved 回调中提前触发 reload_proxy() 导致内存中旧模式反向覆盖 UI 的严重竞态缺陷。现在仅在热切换或应用完成后同步配置，杜绝开关拨动后反弹跳回。
+    - 仪表盘开关键防抖：底栏模式开关增加忙状态拦截守卫，防止连续快速点击造成并发任务冲突。
+    🌐 海外高延迟节点连通性验证调优
+    - 延长时间预算：将后台连通性验证超时从 3s 提升至 6s，并加入握手重试保护，有效解决 300ms+ 海外高延迟节点因初始握手未完误入降级/失败状态的问题。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.12
+ReleaseTime: 2026-10-31T21:20:54.0000000Z
