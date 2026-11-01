@@ -1,0 +1,28 @@
+Version: 0.0.6
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: rtex-x86_64-pc-windows-msvc\bin\rtex.exe
+  InstallerUrl: https://github.com/HenryXiaoYang/realtime-tex/releases/download/v0.0.6/rtex-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you @Steve-Li-1998, @SDDKKK and @leo1oel for the fixes, and @ACG-j for the security and robustness reports!
+    Fixed
+    - Live editing keeps going. Errors disappear once a compile of the fixed source succeeds, and a paragraph that crashed the live engine (often a half-typed command) goes live again when you edit it. (#11, #12) Typing a paragraph with no text (only a \label, \vspace or \noindent) no longer stops live edits until the engine restarts. (#13, #16)
+    - Run-in headings (\paragraph, \subparagraph, IEEEtran's \subsubsection) and the paragraphs after them are live. The IEEEtran corpus paper now has 27 of 27 units live. (#14, #15, #17)
+    - Main files in a subfolder (cv/sop/sop.tex) read \input, figures, \graphicspath and \bibliography{../../references} from their own folder, like latexmk -cd. Documents that read another document's .aux (\externaldocument) find it. (#18, realtime-tex-vsc-plugin#6)
+    - float package. Documents that load float no longer report "Unknown float option" for every figure and table. (realtime-tex-vsc-plugin#8)
+    - Broken preambles. A preamble that ends before \begin{document} (a \stop, a half-typed preamble) no longer restarts the engine every second, and the full compile reports the failure instead of showing the old pages. (realtime-tex-vsc-plugin#10)
+    - Runaway compiles. A compile that never ends is stopped after 5 minutes (pass_timeout) and reported as failed; one killed by a signal (CPU limit, out of memory) is reported as failed too. (#22)
+    - rtex serve input checks. An edit whose range falls inside a UTF-8 character, runs backwards or goes past the end gets an error reply instead of crashing the server. set_document refuses new files outside the project. (#25, #26)
+    Other
+    - lopdf 0.42 (from 0.36), which fixes a stack overflow on deeply nested PDF objects (RUSTSEC-2026-0187). (#24)
+    - The embedding docs now say that rtex is not a sandbox for untrusted documents. (#23)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/HenryXiaoYang/realtime-tex/releases/tag/v0.0.6
+ReleaseTime: 2026-11-01T06:30:50.0000000Z
