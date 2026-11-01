@@ -1,0 +1,106 @@
+Version: 0.29.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.29.0/solidcraft-0.29.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.29.0/solidcraft-0.29.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.29.0/solidcraft-0.29.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Designs saved in 0.29.0 use format 46 and don't open in 0.28.x or older.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    New
+    - Interface follows your system language on first start. With no language saved yet, SolidCraft starts in the system's language: the OS locale on the desktop and the browser's languages in the web app, matched by exact tag first (such as pt-BR), then by base language (de-AT takes German), then English. A new System choice at the top of Preferences' language list is the default and keeps following the system. A language you picked earlier stays as it is (#10183).
+    - Sketch Offset keeps its corners joined. Offsetting a chain whose corners only meet in position, such as separate lines and arcs held by Coincident constraints or ends within 0.0001 mm, offsets it as one chain: each new corner is where the two offset curves meet, trimmed where they overlap and extended where they fall short, in the preview too. An offset circle from a dimensioned circle no longer reports a degree of freedom (#10089, #8858, #9573).
+    - Joints under each component, and show or hide many Browser rows in one drag. Each component placement in the Browser has a Joints folder listing the joints that attach it, with the placement each one joins it to; the rows click, show and hide, open and right-click like the joint's own. Pressing on a row's eye and dragging over other rows' eyes gives them all the first row's new state, as one undo step. F2 renames a clicked Browser group (#9404, #9681, #10013).
+    - Measure starts with your selection. Opening Measure with one or two vertices, edges or faces selected fills its inputs and shows the result right away. Its distance label and X, Y and Z labels can be dragged off the part, keeping a thin leader to what they measure; a double-click puts a label back (#10234, #9395).
+    - Freehand lasso selection: a new option, off by default. With Lasso on in the Select panel, a drag from empty space draws a freehand loop and selects what is wholly inside it, in a sketch and on the model, following the selection filter and Shift/Ctrl adding (#10185).
+    - Point-to-point Align on chosen axes: Align can move a body along only the world axes you choose, such as Z alone, leaving the other coordinates as they are (#10015).
+    - Edit Joint shows both sides and can pick them again, keeping the joint's type, limits, drive and expressions, in one undo step (#9692).
+    - Sketch Chamfer takes several corners at once, as Fillet does, with the same sizes and one undo step (#8998).
+    - Sketch Fillet and Chamfer on two lines that don't meet: a line that stops short is extended and a line that runs past is cut back to where they meet, then the corner is rounded or cut. A radius of half a side now rounds both its corners, the usual way to draw a slot, and a corner held by Coincident takes a fillet when a dimension measures to it (#8426, #8238, #7778).
+    - Paste sketch geometry into another design: sketch curves copied or cut in one design paste into a sketch in another open design, with the constraints and dimensions among them, in one undo step (#9675).
+    - Line tool to tangent arc and back: a new option, off by default (Preferences › Sketch › Rest on a line's last point to switch to a tangent arc). Hold the pointer still on the chain's last point and the next click ends a tangent arc; the same gesture goes back to lines (#9553).
+    - Equation curves in lengths: an equation curve's variable can carry its range's unit, so a formula over a length range reads as the math does ("Variable has the range's unit" in the dialog) (#9549).
+    - Expressions in rectangles and center circles: rectangle corners and a center circle's radius or diameter can be expressions that follow their parameters (#10251).
+    - Gruvbox Light and Gruvbox Dark replace the six Gruvbox cards, each with a Contrast choice of Soft, Standard or Hard; a saved Gruvbox choice carries over to its family and contrast (#10292).
+    - Theme options: a theme can offer options, listed under the active theme in Preferences, starting with Opacity, and can color its panels and the 3D view background per ribbon tab, with a fade between tabs (Tab colors). Theme file authors get options, overlays and requires in the format (#9805, #9807, #9808).
+    - Keep work open across design tabs: a new option, off by default (Keep dialogs and tools open when switching designs). Each design tab then keeps its open dialog with what was picked and typed, its sketch tool and its toolbar tab (#9656).
+    - Turn to isometric for Extrude: two new options, off by default (Turn the view to isometric when Extrude opens, and Go back to the earlier view when Extrude closes) (#9948).
+    - Fit the model after a navigator view change: a new option, off by default, makes a view cube face, corner or arrow and an axis gizmo tip center the model and fit it from one distance; a new Home and Fit size setting sets how much of the view the model fills (default 100 %) (#10092).
+    - Invert the view cube rotation arrows: a new option, off by default, makes the arrows swing the camera the way they point (#10286).
+    - NX mouse mapping: a new navigation preset with middle-drag orbit, Shift+middle pan, Ctrl+middle zoom and a middle double-click to fit (#10156).
+    - Make a part active by sketching on its face: a new option, off by default (Preferences › Sketch › Sketching on a part's face makes that part active) (#10216).
+    - Keep the shape of dark parts: a new option, off by default, in Preferences › Graphics, shades the view in linear light with a soft sky fill, so dark faces keep a gradient instead of turning black (#9028).
+    - Linux: the desktop's own title bar: set SOLIDCRAFT_TITLEBAR=system, or "titlebar": "system" in graphics.json, to open the window with the desktop's title bar and buttons; without it nothing changes (#9263).
+    - Color picker: every color field's popover has step buttons beside its number fields, H, S and V fields, and a row of the 12 most recent colors (#9398).
+    - Assembly mass properties: assembly.mass_properties gives the mass, center of mass and inertia of every occurrence and rigid group (#9717).
+    - Ribbon tooltips for every command: every command on the ribbon now has its help text, from Sketch to Surface, Sheet Metal, Plastic, Inspect and Construct (#9069, #9847, #9868).
+    Improved
+    - Ribbon click ends the running sketch tool: a second click on the lit ribbon button of the sketch tool in use ends it, so clicks in the view select again. Turn off Preferences › Sketch › Clicking the running tool's button ends it to have the click start the tool again (#10263).
+    - Alignment guides from end points and corners: while a drawing tool waits for a point, hovering a line or arc end, a rectangle corner or a free point shows the same dotted guide as a center or midpoint. Turn off Alignment guides from end points and corners while drawing to keep only centers and midpoints (#9673).
+    - Live viewport details: the details card of an active analysis or of Section edits its settings in one standard card, with its key, readout and actions. Turn off Live viewport details to keep the read-only analysis keys and the Section dialog (#8614).
+    - Preferences has twelve pages under four headings, with General above them, a profile switcher pinned to the page list and an In profile tag on the profile pages; the settings themselves are unchanged (#9907).
+    - Settings are saved as soon as they change, not only every 30 seconds and at a normal close, so a crash or a forced close no longer brings back old settings; changes not yet applied in Preferences don't reach the settings file, and Show tool at cursor survives a restart (#9711, #9831, #10049).
+    - Sketch snapping and drawing: a rectangle corner snaps to the crossing of two infinite construction lines beyond their end points, 3-Point Circle keeps its snapped clicks as constraints, a center rectangle's center lines up with the axes when dragged, Project gives its new curves the selected line type, and the polygon's Radius and Sides boxes stay clear of the preview (#10285, #9922, #10087, #10009, #10199).
+    - Sketch dimensions: a driven dimension that nothing fixes any more takes a value again on a double-click, and dimension edits work with tangent caps on offsets (#10023, #9494).
+    - Edit dialogs show a stored number with its unit, such as "2 mm" for a fillet radius, in Fillet, Chamfer, Shell, Draft, Offset Face, Revolve, Pipe, Thread and more (#8697).
+    - Edit Sketch on the ribbon edits the selected sketch, or offers the design's sketches, instead of a parameter error (#9829).
+    - Delete with nothing selected asks you to select something instead of showing a parameter error (#9114).
+    - Delete in a rolled-back history builds the later history once when nothing breaks, and the delete reuses what its check computed (#9972, #10090).
+    - Exploded View is grayed out, with the reason, until the design has two components (#9659).
+    - Pattern and Mirror dialogs explain Object Type and say why a clicked sketch isn't taken (#10097).
+    - Insert SVG says why a drawing has nothing to import, such as a file that holds only an embedded picture (#9652).
+    - Update Links: linked designs that changed while the tab was away come back as one undo step, and a linked design changed while the assembly was closed is read again when it opens (#9753, #9872).
+    - Properties on a large assembly measures much faster, shows its progress and stops when closed (#8730).
+    - Large designs: each command costs less outside the geometry, the History builds its rows once per change and draws only the visible ones, the unsaved-changes check runs once per change, a save's backup is a hard link instead of a copy, and Browser hover stays fast with many hidden joints (#9615, #9616, #9617, #9823).
+    - Navigation: wheel and trackpad gestures go on under a value box on the model, touchpad orbit and pan work while a tool's field has focus, Continuous orbit turns about the Orbit around point, and the 3D mouse turns a rolled or upside-down view the way the cap is pushed (#10073, #10253, #9690, #10262).
+    - View: the grid fades between levels while zooming instead of popping, the ground grid stays put in grazing views, and the origin point hides behind bodies as the axes and planes do (#9608, #10031, #10103).
+    - Sketch panel follows Dialog buttons at the top (#9884).
+    - Buttons respond to hover and press in the theme's colors (#5331).
+    - Selecting a feature lights its faces even after a later edit renamed them (#9848).
+    - Report a bug: its window can be dragged by its title (#9934).
+    - Save As renames the design after the new file, including a sample (#10036).
+    - Graphics card: the chosen card is used, or Preferences says when it couldn't be (#9252).
+    - BOM: with Sub-parts in their part's row on, an inseparable part lists its purchased parts under its row (#9794).
+    - Parameter CSV import keeps multiline comments and accepts a file with a byte order mark (#9772).
+    - Shortcuts typed as text are normalized and checked, so ctrl+shift+t is Ctrl+Shift+T, and a shortcut recorded from a Preferences search result takes the key (#9800, #10058).
+    - Render: the GPU path tracer is set up only when the GPU image method is chosen, so Raster preview no longer uses gigabytes on some Vulkan drivers (#9668).
+    - Assistant: each API agent can have its own reasoning effort, an added agent can be edited, a new tab keeps the agent's sign-in, an installed agent that can't start says so and how to reinstall it, and switching models no longer shows "Method not found" for agents that keep their own model (#10259, #9653, #9669, #9655, #10022).
+    - Agent chat: an agent continues after it creates or opens a design, and its system note reaches agents beyond the Claude adapter, such as Codex and Antigravity (#9980, #9818).
+    - MCP server: batch and execute take an expect of volume, bodies and bounding box and flag a mismatch, a new check_parameters tool tries parameter values and puts the design back, measure has a short summary form, body_topology can list only cylinders, and the server's instructions say how to plan, build and verify (#9904, #9910, #9853, #9903).
+    - Scripting: select.set takes a face or edge from a point or an index alone, document.inspect in the app reports undo, redo and the path, timeline commands prefer an exact feature name, default assembly names skip names in use, and an exported script reports omitted print faces (#10191, #9632, #9748, #9898, #10235).
+    Fixed
+    - Sketch: a drag no longer shrinks a line to a point or throws points far from the sketch, a value that would collapse a line or circle is refused, Extend treats only an end on a circle as held, Break refuses an offset's curves as Trim and Extend do, held solves that can't succeed give up sooner, conflict messages no longer name a missing id, and copying drawn 3D sketch curves works (#9728, #8600, #9837, #9773, #8645, #10208, #9859, #10146).
+    - Face attachments: a sketch or offset plane on a face that a joined body split, such as a lid's underside resting on a case's rim, can attach to it again (#9670).
+    - Extrude with every body hidden stays New Body instead of turning to Cut (#9920).
+    - Bodies: Delete removes the body you selected after a rename, a renamed body stays visible when it takes a deleted body's hidden name, a pasted placement's body renames by its Browser name, and renaming a cut-off frame piece keeps the name on that piece after a rebuild (#9789, #10175, #10026, #10132).
+    - Browser: a sketch hidden and shown before an Extrude still hides once the Extrude uses it, and a click just past a feature's name selects it instead of opening its sketch (#9971, #10213).
+    - Construction planes, axes and points hide with their component's placement (#9791).
+    - Feature editor closes when its feature is removed, for example by Undo (#10027).
+    - Move editor shows the angles a move was made with (#9803).
+    - Edit Text disables Bold when the font has no bold face (#9958).
+    - Circular Pattern no longer shows two fields active at once (#10078).
+    - Parameters: hovering a parameter's name shows one tooltip, with the rename hint, instead of two (#10309).
+    - Zebra: flat faces keep one stripe color while the view turns (#9761).
+    - View corner Cancel cancels an unfinished tool before the sketch (#9584).
+    - Sketch pane stays still at 125 % display scaling (#9598).
+    - Assistant: the agent list and the boxes under the switcher keep the panel's margin (#10179).
+    - Sleep: a window that wakes black recovers its ribbon and panels (#8952).
+    - joint.drive stores nothing for a suppressed joint and says what was asked; inspect.interference refuses an unknown body name, and appearance commands take a placed copy's name; an MCP batch step with an unknown key is refused (#9862, #9856, #7865).
+    Translations
+    German, French and Spanish catch up with the catalog, and Czech, Hungarian, Italian, Dutch, Romanian, Swedish, Turkish, Traditional Chinese, Malay, Indonesian, Galician, Norwegian Bokmål, Bosnian, Croatian, Serbian, Russian, Danish and Ukrainian gain the new strings, the toolbar's command help included. Arabic wording is clearer in several places.
+    Compatibility
+    0.29.0 writes design file format 46 (0.28.x wrote 45). Format 46 adds Align on chosen axes, equation curve variables with their range's unit, and linked design file digests. 0.29.0 opens every earlier design, but 0.28.x and earlier can't open a design saved by 0.29.0. Drawing files (.scdwg) are format 1. macOS builds are now made on macOS 15 and still run on macOS 11 and later (#9804).
+    Thanks
+    Thanks to 38 contributors.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.29.0
+ReleaseTime: 2026-11-01T00:21:27.0000000Z
