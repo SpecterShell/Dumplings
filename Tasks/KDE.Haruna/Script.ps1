@@ -20,7 +20,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = (Invoke-RestMethod -Uri 'https://apps.kde.org/haruna/index.xml').Where({ $_.title.Contains($this.CurrentState.RealVersion) }, 'First')
+      $Object2 = (Invoke-RestMethod -Uri 'https://apps.kde.org/haruna/index.xml').Where({ $_.title.Contains($this.CurrentState.Version) }, 'First')
 
       if ($Object2) {
         # ReleaseNotes (en-US)
