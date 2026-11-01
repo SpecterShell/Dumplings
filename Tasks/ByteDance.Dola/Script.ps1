@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.data.settings.saman_update_address.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = Join-Uri $Object1.data.settings.saman_update_address.win_x64_url "../$($this.CurrentState.Version)/Dola_installer_$($this.CurrentState.Version).exe"
+  InstallerUrl = "https://www.dola.com/download-desktop/cdn_obj/cici_pc/$($this.CurrentState.Version)/Dola_installer_$($this.CurrentState.Version).exe"
 }
 
 switch -Regex ($this.Check()) {
