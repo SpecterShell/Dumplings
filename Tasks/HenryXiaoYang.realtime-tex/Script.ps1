@@ -6,11 +6,10 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 # Installer — the archive root folder carries the version, so the nested path changes with every release
 $Asset = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name.Contains('x86_64') -and $_.name -match 'windows' -and $_.name -match 'msvc' }, 'First')[0]
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerType        = 'zip'
-  NestedInstallerType  = 'portable'
-  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "$($Asset.name | Split-Path -LeafBase)\bin\rtex.exe" })
-  InstallerUrl         = $Asset.browser_download_url | ConvertTo-UnescapedUri
+  Architecture        = 'x64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'portable'
+  InstallerUrl        = $Asset.browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -48,6 +47,11 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+    $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.Name -eq 'rtex.exe' }, 'First')[0].FullName.Replace('/', '\') })
+    $ZipFile.Dispose()
 
     $this.Print()
     $this.Write()
