@@ -28,6 +28,8 @@ For dynamic validation, inspect the corresponding product registration under `HK
 
 Evaluate elevation separately from scope. `$Info.ElevationRequirement` is `elevationRequired` only when the parser finds an explicit launch condition, effective Chromium enterprise product-tag and silent-command evidence, a scheduled restart-as-admin action, or the exact early InstallShield context-action layout observed to stop quiet non-elevated installation. Inspect every item in `$Info.ElevationRequirementEvidence`; `Confidence: Explicit` comes from authored behavior, while `Confidence: Observed` identifies a source-backed vendor layout whose practical effect was confirmed in VM testing.
 
+Keep that parser result as runtime evidence. Do not author `elevationRequired` on a direct or ZIP-contained MSI/WiX entry. WinGet's MSI launch can fail when that value requests `runas` on the MSI itself, as described in [Dumplings issue #148](https://github.com/SpecterShell/Dumplings/issues/148). The manifest optimizer removes it. See the shared [elevation field policy](../../../../author-winget-manifest/references/manifest/defaults-and-return-codes.md#elevationrequirement) for authoring rules.
+
 Do not infer `ElevationRequirement` from `ALLUSERS=1`, `Scope: machine`, writes to HKLM/Program Files, services, drivers, no-impersonate deferred actions, or `AllowsInstallWithoutElevation: false` alone. Windows Installer defines a clear Summary Information Word Count bit 3 only as "elevated privileges can be required," not proof that the current package rejects a non-elevated launch.
 
 Known distinct layouts include:
@@ -41,9 +43,9 @@ If the parser returns no elevation requirement but immediate custom actions run 
 
 Do not use `ElevationRequirement: elevatesSelf` merely because `/passive` displays a UAC prompt. The elevated continuation must complete unattended from the original standard-user invocation. Current VM observations:
 
-- `CatoNetworks.CatoClient`, `Cribl.CriblEdge`, and the nested MSIs from `DisplayLink.GraphicsDriver` request elevation under `/passive` but still fail afterward. They succeed when `msiexec` is launched from an already elevated shell. Use `elevationRequired`.
+- `CatoNetworks.CatoClient`, `Cribl.CriblEdge`, and the nested MSIs from `DisplayLink.GraphicsDriver` request elevation under `/passive` but still fail afterward. They succeed when `msiexec` is launched from an already elevated shell. Record this requirement without setting the unsupported MSI manifest value.
 - `CrisisGo.CrisisGo` requests elevation under `/passive`, then opens an interactive InstallShield window. Advertise only `interactive` and `silent`; overriding `SilentWithProgress` with the quiet command is a defensive fallback, not evidence that progress mode is supported.
-- `Cisco.NetworkRecordingPlayer` and `PaloAltoNetworks.PrismaAccessBrowser` request elevation under `/passive` and complete after it is accepted. Their `/quiet` invocations still require an already elevated caller, so use `elevationRequired`, not `elevatesSelf`.
+- `Cisco.NetworkRecordingPlayer` and `PaloAltoNetworks.PrismaAccessBrowser` request elevation under `/passive` and complete after it is accepted. Their `/quiet` invocations still require an already elevated caller. Keep that limitation in the validation evidence rather than setting `elevationRequired` on the MSI entry.
 
 These are version-specific dynamic observations. Revalidate when the MSI's custom actions or project type change.
 
@@ -78,4 +80,4 @@ Current Chrome enterprise MSI fixtures are untagged, retain the default `needsAd
 
 Current Prisma Access Browser fixtures contain an embedded updater tagged `needsadmin=Prefers`, but the outer MSI's `DigitalSignature` stream has no non-empty Omaha tag. Raw whole-file string scanning would incorrectly treat the embedded tag as the MSI's `TAGSTRING`. The parser deliberately does not do that. The MSI command retains its authored default `needsAdmin=True`, while a vendor custom action appends plain `--silent` only when `UILevel=2`. Consequently, `/quiet` requires an already elevated MSI context and can fail in its immediate tag-extraction path, while `/passive` leaves the nested updater non-silent and may display UAC. This explains the observed difference without treating the product name as a parser rule.
 
-During VM validation, record which process owns the UAC prompt and the last MSI action reached in a verbose log. A prompt from `msiexec.exe` before deferred execution, a prompt from the nested updater, and a prompt followed by an unattended failure are different behaviors. Use `elevationRequired` unless the original standard-user invocation completes unattended after elevation. A UAC dialog by itself is not evidence for `elevatesSelf`.
+During VM validation, record which process owns the UAC prompt and the last MSI action reached in a verbose log. A prompt from `msiexec.exe` before deferred execution, a prompt from the nested updater, and a prompt followed by an unattended failure are different behaviors. Do not copy a runtime pre-elevation requirement into the unsupported MSI manifest value. A UAC dialog by itself is not evidence for `elevatesSelf`.

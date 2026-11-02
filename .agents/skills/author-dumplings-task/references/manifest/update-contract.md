@@ -120,7 +120,7 @@ Parser metadata refreshes these authored fields when they already exist and the 
 - MSIX/AppX identity, signature, minimum OS, platform, and capability fields
 - an existing non-package `MinimumOSVersion` when the parser proves it
 
-The updater may remove redundant `AppsAndFeaturesEntries.InstallerType` and structurally empty values. It does not infer or rewrite `Scope`, `ElevationRequirement`, `Protocols`, `FileExtensions`, `Dependencies`, locale `PackageName`, or locale `Publisher`. Those remain author-controlled because one artifact cannot safely prove every scope, dependency, first-run association, or localized identity.
+The updater may remove redundant `AppsAndFeaturesEntries.InstallerType` and structurally empty values. It also removes `ElevationRequirement: elevationRequired` from effective MSI/WiX routes, including ZIP-contained MSI/WiX, under the [current elevation policy](../../../author-winget-manifest/references/manifest/defaults-and-return-codes.md#elevationrequirement). Other elevation values, EXE-wrapper requirements, `Scope`, `Protocols`, `FileExtensions`, `Dependencies`, locale `PackageName`, and locale `Publisher` remain author-controlled.
 
 The parser also does not add every absent optional field. Author the desired manifest shape first. Subsequent task runs keep parser-owned fields current.
 
@@ -195,3 +195,5 @@ Before applying locale entries, the updater removes old `ReleaseNotes`. A task m
 ## Post-Processing
 
 After installer and locale updates, `Optimize-WinGetManifest` removes redundant common `InstallerLocale`, ProductCode, InstallerType, normalized name, and publisher values where allowed. Serialization then moves common installer values to manifest level, preserves installer-level overrides, sorts fields, and emits the fixed current headers. Offline validation runs before dry output or submission.
+
+For packages already in the reference repository, [existing-package PR updates](../../../author-winget-manifest/references/submission/existing-packages.md) can reuse a trusted unmerged version with `WinGetExistingPackageAction: UpdatePullRequest`. The default remains normal new-PR submission. A PR can add one version and remove one older published version, but cannot modify unrelated published files.

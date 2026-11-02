@@ -51,6 +51,8 @@ Dumplings retries the final branch comparison before creating a PR. A comparison
 
 If the package has no reference manifests yet, submission fails by default. The opt-in [pending-package workflow](pending-packages.md) can use a trusted open PR as the template, update that PR in place, or create a separate PR. Review its trust, permission, and concurrency rules before enabling it.
 
+For an existing package, [existing-package PR updates](existing-packages.md) provide `WinGetExistingPackageAction: UpdatePullRequest`. The selected PR may add one version and remove one older published version. The default remains `NewPullRequest`.
+
 ## Common Blocking Issues
 
 Check for these before opening or updating a PR:
@@ -96,7 +98,7 @@ After submission, a GitHub App reports validation directly in the PR's **Checks*
 
 Follow [Validation logs and check results](validation-logs.md) to download the current operation's artifacts. Record each relevant check's status and conclusion, not just the completion check or labels. The catalog stage also checks ARP version-range overlaps, declared dependency availability and minimum versions, and removal safety. Local schema validation cannot reproduce the live catalog.
 
-Installation validation starts as a standard, non-elevated user. Reproduce the exact switches and elevation route in the [VM workflow](../../../analyze-winget-installer/references/workflows/vm-validation.md). Set `ElevationRequirement: elevationRequired` only when that route requires explicit pre-elevation. Machine scope or a writable `Program Files` target alone does not prove it, and package updates must not add it automatically.
+Installation validation starts as a standard, non-elevated user. Reproduce the exact switches and elevation route in the [VM workflow](../../../analyze-winget-installer/references/workflows/vm-validation.md). For EXE routes, set `ElevationRequirement: elevationRequired` only when explicit pre-elevation is required. Omit that value for direct or ZIP-contained MSI/WiX routes under the current [elevation field policy](../manifest/defaults-and-return-codes.md#elevationrequirement). Machine scope alone does not prove an elevation requirement.
 
 When feedback is required, the current repository policy adds `No-Recent-Activity` after five days and closes the PR after three more days without activity. For eligible PRs, ask at most two active moderators and avoid pinging community moderators for administrator-only labels. Moderators can request a fresh validation with `@wingetbot run`. Agents should not comment or trigger reruns without user authorization. See [Moderation](https://github.com/microsoft/winget-pkgs/blob/master/doc/Moderation.md) and the [failure guide](https://github.com/microsoft/winget-pkgs/blob/master/doc/ValidationFailureGuide.md).
 

@@ -96,7 +96,7 @@ Some installers require an elevated caller to start installation but exit silent
 
 Observe whether setup starts, a UAC prompt appears, or the process exits without installing. Record the launch context, command line, screenshots, logs, exit code, and installed-state comparison. A quick exit, even with code `0`, does not prove success or an elevation requirement. Check for a continuing child installer before concluding that nothing happened. If Computer Use cannot operate the guest desktop, ask the user to perform the observed launch and leave the result unverified until evidence is available.
 
-Restore the checkpoint and repeat with the same artifact, requested scope, and silent switches from an explicitly elevated shell. When the unelevated case cannot start installation and the elevated case completes unattended, add `ElevationRequirement: elevationRequired` to the affected manifest entry. Apply it only to the validated scope and route. Follow the [elevation field rules](../../../author-winget-manifest/references/manifest/defaults-and-return-codes.md#elevationrequirement) for placement and other behaviors.
+Restore the checkpoint and repeat with the same artifact, requested scope, and silent switches from an explicitly elevated shell. When the unelevated case cannot start installation and the elevated case completes unattended, record the pre-elevation requirement for that scope and route. EXE entries can use `ElevationRequirement: elevationRequired`; direct and ZIP-contained MSI/WiX entries must omit that value under the current [elevation field policy](../../../author-winget-manifest/references/manifest/defaults-and-return-codes.md#elevationrequirement).
 
 ### Require and inspect installer logs
 

@@ -4,7 +4,7 @@
 
 Normal submission requires reference manifests in the configured local checkout or origin repository. If a new package's PR is still awaiting review, opt in to the pending-package fallback. Keep this disabled for ordinary packages and use a narrow, explicitly reviewed author allowlist.
 
-The fallback runs only when no reference version exists. A confirmed remote HTTP 404 can trigger it; authentication errors, rate limits, and transport failures do not count as a missing package. Existing packages keep their current reference and submission policy.
+The fallback runs only when no reference version exists. A confirmed remote HTTP 404 can trigger it; authentication errors, rate limits, and transport failures do not count as a missing package. Existing packages have separate [PR update settings](existing-packages.md).
 
 ## Configuration
 
@@ -76,7 +76,7 @@ Review `Outputs/WinGet`, the selected reference, installer and locale mappings, 
 
 ## Existing-package PR references
 
-Overriding PRs for a package already present in the reference repository is outside this fallback. Such PRs can remove or modify versions. A future workflow should distinguish additions, replacements, and removals, require a separate trust policy, and preview the exact file delta before editing a reviewed branch. Do not enable the missing-package fallback as a substitute for those checks.
+Use [existing-package PR updates](existing-packages.md) for packages already present in the reference repository. Their separate action and trusted-user list support one added version and an optional complete older-version removal. PRs modifying published files remain ineligible. The missing-package fallback stays addition-only.
 
 ## Implementation and API references
 
