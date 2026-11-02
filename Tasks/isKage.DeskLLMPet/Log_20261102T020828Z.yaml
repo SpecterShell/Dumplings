@@ -1,0 +1,25 @@
+Version: 1.1.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/isKage/desk-llm-pet/releases/download/v1.1.1/DeskLLMPet.Setup.1.1.1.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🐾 DeskLLMPet v1.1.1
+    发布日期：2026-11-02 ｜ 对比 v1.1.0 的完整变更
+    这一版是两个社区贡献的修复，没有新增功能，建议所有用户升级：Windows 高 DPI 缩放下拖动桌宠会越来越大的问题，以及右键菜单偶尔跳到屏幕左上角的问题。
+    🐛 修复
+    - 🪟 Windows 非整数 DPI 缩放下拖动桌宠尺寸累积增大（#1 / #2，感谢 @fine259）
+      150% 等缩放下，拖动时复用系统取整后的实际窗口尺寸会产生累积误差，拖几次宠物就明显膨胀。现在每次移动都按 scale/crop 重新计算尺寸，连续 200 次移动后窗口仍保持原尺寸。
+    - 🖱 右键菜单跳到屏幕左上角（#4，感谢 @kudoumakoto6523-design）
+      首次展示后菜单锚点被清空，迟到的尺寸回报或 250ms 兜底定时器会把菜单定位到 (0,0)。现在保留本次打开的锚点，只有尺寸真正变化时才重新贴回鼠标位置。
+    🧪 工程化
+    - 新增 scripts/check-menu-anchor.js 回归测试并接入 npm run check（反向验证：还原修复后测试会失败）。
+    - 新增 GitHub Actions：PR 自动执行 npm run check；推送 v* tag 自动构建 macOS / Windows 安装包并发布 Release。
+    - 新增 CONTRIBUTING.md 与 Issue / PR 模板。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/isKage/desk-llm-pet/releases/tag/v1.1.1
+ReleaseTime: 2026-11-02T01:46:36.0000000Z
