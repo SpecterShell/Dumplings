@@ -1,12 +1,5 @@
-$Object1 = Invoke-RestMethod -Uri 'https://rdc.adobe.io/reader/products?lang=mui&site=otherversions&os=Windows%2011&api_key=dc-get-adobereader-cdn'
-$Object2 = $Object1.products.reader.Where({ $_.displayName.Contains('32bit') }, 'First')[0]
-$Object3 = Invoke-RestMethod -Uri 'https://rdc.adobe.io/reader/downloadUrl' -Body @{
-  name    = $Object2.displayName
-  os      = 'Windows 11'
-  site    = 'enterprise'
-  lang    = 'mui'
-  api_key = 'dc-get-adobereader-cdn'
-}
+$Object1 = Invoke-RestMethod -Uri 'https://rdc.adobe.io/adm/actionList?installerName=readerdc_mui_a_install.exe&defaultInstallerName=readerdc_mui&os=windows' -Headers @{ 'X-API-Key' = 'dc-rdc-adm-client' }
+$Object2 = $Object1.productList.Where({ $_.title -eq 'Adobe Acrobat Reader' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object2.version
@@ -14,7 +7,7 @@ $this.CurrentState.Version = $Object2.version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object3.downloadURL
+  InstallerUrl = $Object2.downloadUrl
 }
 
 switch -Regex ($this.Check()) {
