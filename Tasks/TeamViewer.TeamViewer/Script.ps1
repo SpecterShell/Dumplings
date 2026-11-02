@@ -26,26 +26,27 @@ $this.CurrentState.Installer += [ordered]@{
   NestedInstallerType = 'wix'
   InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version)_x64.zip"
 }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture        = 'arm64'
+  InstallerType       = 'zip'
+  NestedInstallerType = 'wix'
+  InstallerUrl        = "https://download.teamviewer.com/download/version_$($this.CurrentState.Version.Split('.')[0])x/update/Update_msi_$($this.CurrentState.Version)_arm64.zip"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/en/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
+      $ReleaseNotes = @()
+      if ($Object2.changelog.features.html) { $ReleaseNotes += "New Features`n$($Object2.changelog.features.html | ConvertFrom-Html | Get-TextContent)" }
+      if ($Object2.changelog.improvements.html) { $ReleaseNotes += "Improvements`n$($Object2.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)" }
+      if ($Object2.changelog.bugfixes.html) { $ReleaseNotes += "Bugfixes`n$($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)" }
       # ReleaseNotes (en-US)
       $Task.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = @"
-New Features
-$($Object2.changelog.features.html | ConvertFrom-Html | Get-TextContent)
-
-Improvements
-$($Object2.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
-
-Bugfixes
-$($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
-"@ | Format-Text
+        Value  = $ReleaseNotes | Join-String -Separator "`n`n" | Format-Text
       }
     } catch {
       $_ | Out-Host
@@ -55,20 +56,15 @@ $($Object2.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
     try {
       $Object3 = curl -fsSLA $DumplingsInternetExplorerUserAgent "https://whatsnew.teamviewer.com/de/whatsnew/teamviewer-client/$($this.CurrentState.Version.Replace('.', '-'))/full.json" | Join-String -Separator "`n" | ConvertFrom-Json
 
+      $ReleaseNotesDE = @()
+      if ($Object3.changelog.features.html) { $ReleaseNotesDE += "Neue Funktionen`n$($Object3.changelog.features.html | ConvertFrom-Html | Get-TextContent)" }
+      if ($Object3.changelog.improvements.html) { $ReleaseNotesDE += "Verbesserungen`n$($Object3.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)" }
+      if ($Object3.changelog.bugfixes.html) { $ReleaseNotesDE += "Fehlerkorrekturen`n$($Object3.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)" }
       # ReleaseNotes (de-DE)
       $Task.CurrentState.Locale += [ordered]@{
         Locale = 'de-DE'
         Key    = 'ReleaseNotes'
-        Value  = @"
-New Features
-$($Object3.changelog.features.html | ConvertFrom-Html | Get-TextContent)
-
-Improvements
-$($Object3.changelog.improvements.html | ConvertFrom-Html | Get-TextContent)
-
-Bugfixes
-$($Object3.changelog.bugfixes.html | ConvertFrom-Html | Get-TextContent)
-"@ | Format-Text
+        Value  = $ReleaseNotesDE | Join-String -Separator "`n`n" | Format-Text
       }
     } catch {
       $_ | Out-Host
