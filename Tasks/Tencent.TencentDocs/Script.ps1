@@ -1,55 +1,31 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://docs.qq.com/api/packageupgrade/update_manual').result.update_info | ConvertFrom-Json
-
-if ([string]::IsNullOrWhiteSpace($Object1.version)) {
-  $this.Log('The API returned an invalid response', 'Warning')
-  return
-}
+$Object1 = Invoke-RestMethod -Uri 'https://docs.qq.com/rainbow/config.v2.ConfigService/PullConfigReq' -Method Post -Body (
+  @{
+    pull_item = @{
+      app_id  = 'e4099bf9-f579-4233-9a15-6625a48bcb56'
+      group   = 'Prod.Common.AutoUpdate'
+      envName = 'Default'
+    }
+  } | ConvertTo-Json -Compress
+) -ContentType 'application/json'
+$Object2 = $Object1.config.items.Where({ $_.group -eq 'Prod.Common.AutoUpdate' })[0].key_values.Where({ $_.key -eq 'app.yaml' }, 'First')[0].value | ConvertFrom-Yaml
 
 # Version
-$this.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object2.channelMap.'30001'
 
-$Prefix = "https://desktop.docs.qq.com/update/release/$($this.CurrentState.Version)/"
-
-# Installer (x86)
-$Object2 = Invoke-RestMethod -Uri "${Prefix}latest-win32-ia32.yml" | ConvertFrom-Yaml
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Prefix + $Object2.files[0].url
-}
-
-# Installer (x64)
-$Object3 = Invoke-RestMethod -Uri "${Prefix}latest-win32-x64.yml" | ConvertFrom-Yaml
+# Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Prefix + $Object3.files[0].url
+  InstallerUrl = 'https://docs.qq.com/api/package/get?channel_id=30001&version_id=latest&package_name=TencentDocs-x86_64.exe'
+  # InstallerUrl = "https://docs.qq.com/api/package/get?channel_id=30001&version_id=$($this.CurrentState.Version)&package_name=TencentDocs-x86_64.exe"
 }
-
-# Installer (arm64)
-# $Object4 = Invoke-RestMethod -Uri "${Prefix}latest-win32-arm64.yml" | ConvertFrom-Yaml
-# $this.CurrentState.Installer += [ordered]@{
-#   Architecture = 'arm64'
-#   InstallerUrl = $Prefix + $Object4.files[0].url
-# }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = 'https://docs.qq.com/api/package/get?channel_id=30001&version_id=latest&package_name=TencentDocs-arm64.exe'
+  # InstallerUrl = "https://docs.qq.com/api/package/get?channel_id=30001&version_id=$($this.CurrentState.Version)&package_name=TencentDocs-arm64.exe"
+}
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
-    try {
-      $ReleaseNotesContent = $Object1.update_info.Split("`n`n")[0] | Split-LineEndings
-
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesContent[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesContent | Select-Object -Skip 2 | Format-Text
-      }
-    } catch {
-      $_ | Out-Host
-      $this.Log($_, 'Warning')
-    }
-
     $this.Print()
     $this.Write()
   }
