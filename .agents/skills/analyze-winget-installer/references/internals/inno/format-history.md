@@ -35,6 +35,7 @@ The identity determines a coordinated set of layouts. It should not be reduced t
 | 6.5 | offset table v2 and signed 64-bit offsets | structures can address installers beyond 4 GiB safely |
 | 6.7 | 64-bit compressed-block sizes | setup metadata blocks move beyond 32-bit stored-size framing |
 | 7.0 | structure ID `7.0.0.3` | current metadata records and encryption framing |
+| 7.1.1 | structure ID `7.1.1` | removes the unused `BaseFilename` header string and shifts later string fields |
 
 This table is a map. It does not replace the exact descriptor associated with one `SetupID`.
 

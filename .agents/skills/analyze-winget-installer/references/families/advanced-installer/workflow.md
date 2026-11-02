@@ -49,6 +49,8 @@ The outer `$Info` object does not project nested MSI ARP fields. Read `ProductCo
 
 `ArchitectureSelectionMode: FixedPath` means the bootstrapper does not branch by host architecture. The same base path may contain an x86, x64, or ARM64 MSI, so do not infer architecture from the EXE stub or filename. For example, `FxSound.FxSound` uses one `AllPlatforms` EXE containing x86 and x64 MSIs and a separate fixed-path EXE containing `fxsound.arm64.msi`.
 
+The `-Architecture` parameter selects a target-host branch. It does not require the MSI database's platform to equal that host. An x86 MSI can run on an x64 or ARM64 host, so the parser accepts that combination and retains `PackageArchitecture: x86`.
+
 If `GeneralOptions` defines `MainAppURL`, the runtime takes that download path before the embedded branch. The parser reports `SelectionMethod: MainAppUrl` and does not substitute an unrelated embedded MSI.
 
 If `$Info.PlatformPayloadSelection` is present, the wrapper chooses an MSIX/AppX payload on Windows versions at or above `MinimumWindowsVersion` and the legacy MSI otherwise. Inspect `ModernPayloads`, `PackageFullName`, and `PackageFamilyName`, then analyze both nested packages. Do not let the legacy MSI alone overwrite existing ProductCode or installed-state metadata for this media type.

@@ -208,6 +208,10 @@ For current Unicode structures, ordinary `String` bytes are UTF-16LE. `AnsiStrin
 
 No per-record length wraps the whole record. A reader must know the exact string counts and fixed-tail size for that `SetupID`.
 
+Inno 7.1.1 serializes 38 ordinary setup-header strings followed by four AnsiStrings. Earlier `7.0.0.3` media has 39 ordinary strings. The removed field is the unused `BaseFilename` at zero-based index 12. `UninstallDisplayName` moves from 14 to 13, `CreateUninstallRegKey` from 24 to 23, `Uninstallable` from 25 to 24, and the two architecture expressions from 30/31 to 29/30. The packed header tail and entry counts retain their earlier layout.
+
+Inno 7 registry records have nine strings and a 30-byte fixed tail. After the 20-byte version fields come a four-byte root, two-byte permission index, one-byte value type, one-byte bitness, and two-byte options. Run records have 14 strings, ending with `OnLog`, and a 28-byte fixed tail containing versions, `ShowCmd`, wait mode, bitness, and options. Omitting either bitness byte misaligns the next record even when product metadata was read correctly.
+
 ## Compressed block 1 order
 
 Current compiler order is:

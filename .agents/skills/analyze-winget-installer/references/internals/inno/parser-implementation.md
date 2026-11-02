@@ -34,7 +34,7 @@ edition and character mode
 `-- executable call-transform route
 ```
 
-This avoids version-threshold parsing. The catalog currently covers the layouts recorded by innounp from 1.3.21 through 6.7 and the official 7.0 structure. My Inno Setup Extensions and ResTools have explicit routes. ISX remains identifiable but unsupported without a complete structure specification.
+This avoids version-threshold parsing. The catalog currently covers the layouts recorded by innounp from 1.3.21 through 6.7, the official `7.0.0.3` structure, and the `7.1.1` header revision. Header field indexes belong to the selected schema, including ARP directives and architecture expressions. My Inno Setup Extensions and ResTools have explicit routes. ISX remains identifiable but unsupported without a complete structure specification.
 
 ## Required validation
 
