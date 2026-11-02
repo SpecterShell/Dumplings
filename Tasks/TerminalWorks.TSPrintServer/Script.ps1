@@ -3,7 +3,7 @@ $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[@id="serverBinaryUrl"]').Attributes['href'].Value
+  InstallerUrl = Join-Uri $Prefix $Object1.SelectSingleNode('//a[@class="tsd-btn" and contains(@href, ".exe") and contains(@href, "TSPrint_server")]').Attributes['href'].Value
 }
 
 # Version

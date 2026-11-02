@@ -1,31 +1,17 @@
 $Prefix = 'https://www.terminalworks.com/remote-desktop-printing/downloads'
 $Object1 = Invoke-WebRequest -Uri $Prefix | ConvertFrom-Html
 
-# EXE
-$Object2 = $Object1.SelectSingleNode('//option[contains(text(), "Windows EXE")]')
-$VersionEXE = $Object2.Attributes['version'].Value
-
-# MSI
-$Object3 = $Object1.SelectSingleNode('//option[contains(text(), "Windows MSI")]')
-$VersionMSI = $Object3.Attributes['version'].Value
-
-if ($VersionEXE -ne $VersionMSI) {
-  $this.Log("EXE version: ${VersionEXE}")
-  $this.Log("MSI version: ${VersionMSI}")
-  throw 'Inconsistent versions detected'
-}
-
 # Version
-$this.CurrentState.Version = $VersionEXE
+$this.CurrentState.Version = [regex]::Match($Object1.SelectSingleNode('//h4[contains(@class, "tsd-h4") and contains(., "TSPrint Client")]/span[contains(@class, "tsd-v")]').InnerText, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'inno'
-  InstallerUrl  = Join-Uri $Prefix $Object2.Attributes['value'].Value
+  InstallerUrl  = Join-Uri $Prefix $Object1.SelectSingleNode('//input[@name="tsd-win" and @value="exe"]').Attributes['data-url'].Value
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'msi'
-  InstallerUrl  = Join-Uri $Prefix $Object3.Attributes['value'].Value
+  InstallerUrl  = Join-Uri $Prefix $Object1.SelectSingleNode('//input[@name="tsd-win" and @value="msi"]').Attributes['data-url'].Value
 }
 
 switch -Regex ($this.Check()) {
