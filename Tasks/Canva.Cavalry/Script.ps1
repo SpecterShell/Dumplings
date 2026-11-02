@@ -32,16 +32,16 @@ function Get-ReleaseNotes {
         if ($Node.InnerText -match 'Release date: (\d{1,2}[a-zA-Z]+\W+[a-zA-Z]+\W+20\d{2})') {
           # ReleaseTime
           $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
-          $Matches[1],
-          [string[]]@(
-            "d'st' MMMM yyyy",
-            "d'nd' MMMM yyyy",
-            "d'rd' MMMM yyyy",
-            "d'th' MMMM yyyy"
-          ),
-          (Get-Culture -Name 'en-US'),
-          [System.Globalization.DateTimeStyles]::None
-        ).ToString('yyyy-MM-dd')
+            $Matches[1],
+            [string[]]@(
+              "d'st' MMMM yyyy",
+              "d'nd' MMMM yyyy",
+              "d'rd' MMMM yyyy",
+              "d'th' MMMM yyyy"
+            ),
+            (Get-Culture -Name 'en-US'),
+            [System.Globalization.DateTimeStyles]::None
+          ).ToString('yyyy-MM-dd')
         } else {
           $Node
         }
@@ -61,15 +61,12 @@ function Get-ReleaseNotes {
   }
 }
 
-$Prefix = 'https://cavalry.studio/en/'
-$Object1 = Invoke-WebRequest -Uri $Prefix
-
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href | ConvertTo-Https
+  InstallerType = 'wix'
+  InstallerUrl  = 'https://cavalry.studio/downloads/latest/Cavalry.msi'
 }
 
-$Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
-$ETag = $Object2.Headers.ETag[0]
+$ETag = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.ETag[0]
 
 # Case 0: Force submit the manifest
 if ($Global:DumplingsPreference.Contains('Force')) {
