@@ -17,37 +17,6 @@ switch -Regex ($this.Check()) {
         Key   = 'ReleaseNotesUrl'
         Value = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_Sales-History_$($this.CurrentState.Version)_en.pdf"
       }
-
-      # Documentations
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'Documentations'
-        Value = @(
-          [ordered]@{
-            DocumentLabel = 'User Guide'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_$($this.CurrentState.Version)_Manual_en.pdf"
-          }
-          [ordered]@{
-            DocumentLabel = 'Editions'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_$($this.CurrentState.Version)_Editions_en.pdf"
-          }
-        )
-      }
-
-      # Documentations (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'Documentations'
-        Value  = @(
-          [ordered]@{
-            DocumentLabel = '用户指南'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_$($this.CurrentState.Version)_Manual_en.pdf"
-          }
-          [ordered]@{
-            DocumentLabel = '版本'
-            DocumentUrl   = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_$($this.CurrentState.Version)_Editions_en.pdf"
-          }
-        )
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
