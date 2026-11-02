@@ -1,11 +1,12 @@
-$Object1 = Invoke-RestMethod -Uri 'https://agents.craft.do/electron/latest/latest.yml' | ConvertFrom-Yaml
+$Prefix = 'https://luki-prod-us-east-1-web.s3.amazonaws.com/windows-app/'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
 # Version
 $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri "https://agents.craft.do/electron/$($this.CurrentState.Version)/" $Object1.files[0].url
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
 switch -Regex ($this.Check()) {
