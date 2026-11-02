@@ -1,12 +1,7 @@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/CKopoer/BiliSail/releases/latest'
 
-$BuildInfo = Invoke-RestMethod -Uri $Object1.assets.Where({ $_.name.EndsWith('.build-info.json') -and $_.name.Contains('windows-x64') }, 'First')[0].browser_download_url
-
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
-
-# RealVersion
-$this.CurrentState.RealVersion = $BuildInfo.windowsMsiVersion
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -47,6 +42,10 @@ switch -Regex ($this.Check()) {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     $this.Print()
     $this.Write()
