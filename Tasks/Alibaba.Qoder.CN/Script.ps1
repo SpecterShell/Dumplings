@@ -32,6 +32,25 @@ switch -Regex ($this.Check()) {
       $this.Log($_, 'Warning')
     }
 
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://docs.qoder.cn/product-overview/qoder-update-log' | ConvertFrom-Html
+
+      $ReleaseNotesCNTitleNode = $Object2.SelectSingleNode("//div[contains(./div[last()]/text(), 'Qoder $($this.CurrentState.Version)')]")
+      if ($ReleaseNotesCNTitleNode) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesCNTitleNode.SelectSingleNode('./following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }

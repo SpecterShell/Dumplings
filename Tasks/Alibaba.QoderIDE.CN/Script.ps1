@@ -37,6 +37,25 @@ switch -Regex ($this.Check()) {
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
+    try {
+      $Object2 = Invoke-WebRequest -Uri 'https://docs.qoder.cn/product-overview/qoder-cn-ide-update-log' | ConvertFrom-Html
+
+      $ReleaseNotesCNTitleNode = $Object2.SelectSingleNode("//div[contains(./div[last()]/text(), '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesCNTitleNode) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesCNTitleNode.SelectSingleNode('./following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
     $this.Print()
     $this.Write()
   }
