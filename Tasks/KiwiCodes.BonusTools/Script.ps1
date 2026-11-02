@@ -4,7 +4,7 @@ $Object1 = Invoke-WebRequest -Uri 'https://bonustools.kiwicodes.com/public/relea
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x86'
   InstallerType = 'msi'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'KiwiCodesBonusTools' } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'BonusTools' } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 # Version
