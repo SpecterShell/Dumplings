@@ -94,7 +94,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'http://royqh.net/redpandacpp/blog/'
+        Value  = 'https://royqh.net/redpandacpp/blog/'
       }
 
       $Object4 = Invoke-RestMethod -Uri 'https://gitee.com/royqh1979/redpandacpp/raw/public/blog/index.xml'
