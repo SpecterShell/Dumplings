@@ -1,0 +1,93 @@
+Version: 0.30.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.30.1/solidcraft-0.30.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.30.1/solidcraft-0.30.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.30.1/solidcraft-0.30.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The browser version shows a design again instead of a black screen (#11107). This patch release also has security fixes for agent chat, lock files and API keys, and a new Render workspace layout. Designs saved in 0.30.1 use format 48 and don't open in 0.30.0 or older.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    Browser version
+    - The browser version shows a design again instead of a black screen. A shader that the desktop app accepted was refused by browsers, so the 3D view drew nothing. It affected the browser version of 0.30.0, and solidcraft.io/app already has the fix. Reported by @Hogligan and @alepiro, @SignalSpirit found the console error, and @austin62jake fixed it (#11107).
+    Security fixes
+    - Agent chat asks more often. Agent chat answers an agent's permission question by itself only when the whole title is an exact tool name of the chat's own server, named the way the Claude adapter names it (mcp__solidcraft-app__batch), and the request's kind is other or not given. It used to go by the word "solidcraft" anywhere in the title, so a command line or a file path could match. Every other question now goes through your permission mode and remembered answers, and otherwise appears in the panel. The permission modes and their default are unchanged.
+      - With the Claude adapter, nothing changes.
+      - Goose users get questions they didn't get before, because Goose words these titles as solidcraft-app: …. OpenCode users probably do too.
+      - A SolidCraft MCP server you added to your agent yourself, named solidcraft, now asks.
+      - Recent Codex and Gemini adapters mostly send titles without the word, so they were already asking.
+      - Always allow and Allow everything work for all of these. The title formats come from reading the adapters' source, not from running them against live agents, and Copilot, Grok and Antigravity weren't checked. If their titles differ, you get a question in the panel. Reported by @froglemonade2 and @SchallerJe (#10955).
+    - Lock files are written and read without following links. A design's lock file (.~<name>.lock) belongs beside the design, so writing one refuses anything at that path that isn't a regular file, and reading one takes only a regular file. A failed lock write still doesn't stop a design from opening, and saving a design through a link works as before. Reported by @froglemonade2 (#10951).
+    - API key URLs are read the way the HTTP client reads them. A key goes only over HTTPS, or over plain HTTP to this computer, and the check could disagree with the client about where a URL's host ends. Over plain HTTP the host must now be exactly localhost, 127.0.0.1 or [::1], with at most a valid port. HTTPS URLs, the presets, and the usual Ollama and LM Studio URLs behave as before. A local URL with a user name (http://user@localhost/v1), an empty port (http://localhost:/v1) or an invalid port no longer gets the key. Reported by @froglemonade2 (#10953).
+    Control channel fixes
+    - Control channel: a new connection has five seconds to show its token, so a client that connects and says nothing no longer holds one of the 16 connection seats. Once the token is accepted, a client can idle as long as it likes. solidcraft-cli mcp --connect no longer holds a connection open before its first call, and older CLIs still work because they retry on a new connection. Reported by @overprivileged (#10961).
+    - Control token file on Windows: in a folder chosen with SOLIDCRAFT_CONTROL_DIR, an icacls run that times out now counts as a failure: the empty file is removed, no token is written, and clients need SOLIDCRAFT_CONTROL_TOKEN. The default folder behaves as before. A real icacls timeout hasn't been run on Windows; the tests cover the decision and the cleanup. Reported by @CamWight (#10958).
+    Changed
+    - Render workspace: one editor per Browser selection. This replaces the Render studio panel, which is gone. With nothing selected the Inspector shows Scene, and a body, face or component shows Appearance. Environment, Lighting, a single light, a shot, Output, Sampling, Effects, Check and Wear each open their own editor. Interactive rendering, results, comparison and All shots are all still there (#8000).
+    - Undo, Redo and the History bar with a feature editor open: they now cancel the open editor first, then step, instead of leaving OK and Cancel refusing with "the design changed while the feature editor was open". Reopen the editor to continue (#10786).
+    - Move with bodies in differently turned frames: a single move of, say, a root body and an inserted part now adds one Move feature per frame (Move1, Move2) in one undo step, and each body moves the way you asked (#9683).
+    - Save and Save As refuse a name that opens as another kind of file, such as part.step or part.stl. The message says to save as .sc, or to use Export. Nothing is written, and the design stays unsaved. .sc, the legacy design extensions, .json, and any other or no extension save as before (#9752).
+    - sign(0) in a parameter expression is now 0, not 1. Other inputs are unchanged, but a design that relies on sign of exactly zero will evaluate differently (#10996).
+    - Holes on cones and tori drill along the face's exact normal instead of a nearby facet's. On the cone in the report, the hole had leaned 2.56° sideways, so a hole like that changes slightly when the design rebuilds (#10885).
+    - Parameter replies: in scripts and MCP, value now means millimeters (degrees for angles) in every reply from parameters.add, parameters.change and parameters.list. parameters.list used to report a user parameter in its own unit, and parameters.add and parameters.change used to report angles in radians, so a script that reads these should be checked. Reported numbers are rounded to 12 significant digits, so 29.999999999999996 reads 30 (#10812).
+    New
+    - Inch fasteners in Insert Part: ASME hex cap screws and hex nuts and ANSI SAE and USS plain washers, sizes 1/4 to 1, UNC and UNF. A new Unit system list sits above Type and opens on Metric. Inch parts have no cosmetic threads yet (#10335).
+    - Tangent Plane lines up with a reference plane, at an angle. The dialog has an optional Reference plane, and an Angle field once one is picked. The plane follows the reference when it changes. Without a reference nothing changes (#9002).
+    - Sheet metal folds cross slanted and curved edges: a fold can cross a panel's outer edges on the base or a flange, in lines, arcs, conics or splines, and the DXF keeps those curves as curves (#10922).
+    - Perforation bounded by a sketch: in scripts and MCP, sheet.perforate takes an optional sketch and profiles, so holes go only inside that outline. The Perforate dialog has no outline input yet (#10754).
+    - Circular pattern axis origin takes length expressions in scripts and MCP, and the copies follow them when a parameter changes. Editing the pattern in its dialog keeps the expressions (#10855).
+    - Create Components from Bodies has a dialog, with body picking, Select All, Cancel and OK. The menu command used to fail with an error (#10919).
+    - Move/Copy with Create Copy on a component copies the component instead of copying its bodies into the active component. With the selection filter on components, a click in the view picks the component (#9930).
+    Improved
+    - New Sketch grid preview: a plane selected in the view shows the grid on it before you press New Sketch, until you deselect it (#10900).
+    - Preferences › General has a new layout: rounded profile cards, a search box in the title bar, and one profile card at the bottom of the sidebar. The settings and their defaults are the same (#10295).
+    - Dimension value box: one typed before its target keeps a 30 px gap from the pointer, and at the view's edge it opens on the pointer's other side, so it doesn't cover what you're about to pick (#11073).
+    - Rounded rectangle corners take parameter expressions in scripts and MCP, as the other rectangles do (#10956).
+    - Hole warnings: a hole that cuts nothing now warns the hole removes no material (or 1 of 2 holes remove no material), and one that takes a whole body warns the hole removes all of Body1. The hole is still kept (#10836).
+    - Construction axes and points follow Move: one built on a body goes with that body when Move moves or turns it. One that also reads something fixed keeps its place, and construction planes are unchanged (#10212).
+    - Joints: a second planar joint between two parts now moves its part into place when a half turn closes the loop, instead of staying a conflict. A typed joint that closes a loop starts from where its parts are (#10371, #10336).
+    - Section details card: every row shows, and the numbers read like the pill, such as 15.00 mm and (0.707, 0.707, 0) (#10799).
+    - Sketch Intersect: an intersection curve between picked faces spans their whole surface, not only the piece under the pick (#9107).
+    - Language: a system set to Traditional Chinese, including macOS's zh-Hant-TW, Hong Kong and Macao, opens in Traditional Chinese instead of Simplified on a first start (#10307).
+    - Faster assemblies and sections: dragging a part with mirrored copies no longer meshes them on every frame, tilting a Section Analysis rebuilds its outline index once instead of on every frame, and cosmetic tap markings look for their cylinder only in nearby bodies (#10101, #10373, #10303).
+    - Security policy: it now says what counts as a security issue and what to file as a normal bug (#10946). Pull requests now need to explain themselves and show their pictures (#11188).
+    Fixed
+    - Edit Sketch: finishing a sketch edit is one Undo step, so one Undo no longer hides later bodies while leaving the sketch changes in place (#10791).
+    - Feature editors: a section, an analysis or a selection change while an editor is open leaves OK and Cancel working (#10822).
+    - Edit Hole opens on the face where the hole is now, so OK works after a parameter moved that face (#10860).
+    - Extrude: a Cut To the far side of a curved wall, such as the inside of a tube from outside it, takes the wall instead of removing nothing or failing (#8634).
+    - Sketch: a circle you drew on a projected point survives when the projection rebuilds, and trimming a line that offsets are built from leaves those offsets and their distances alone. Trimming the middle of an arc keeps its endpoint tangency on the right piece, an angular dimension no longer tilts a horizontal or vertical infinite reference line, and Sketch Offset outside a dog bone meets correctly in both notches (#5537, #10391, #10853, #11117, #11000).
+    - OBJ export: a curved body is welded as STL and 3MF are, so the file opens again as a closed body (#9213).
+    - Timeline folders: editing a feature inside a folder no longer leaves a bad entry, and designs that already have such entries open again instead of being refused as damaged (#9393).
+    - Ambient occlusion: no streaks on the preview in an empty design and no grain on hollow bodies (#9335).
+    - Assistant: when an external agent ignores Stop, it's disconnected after five seconds, its tool cards stop spinning, a notice says how to reconnect, and queued messages stay queued. Copy, Cut and Paste in the transcript stay in the chat instead of also acting on the selected body (#10916, #10576).
+    - Sheet metal: an edge flange picked on one segment of a stepped outline spans that segment, not the base face's whole length (#11046).
+    - Move to Component: a sketch on a face inside the moved part goes along, instead of the move being refused (#11072).
+    - Extrude: with the Preferences to turn the view to isometric and go back afterward both on, Extrude started from an open sketch goes back to the view you clicked it in (#11035).
+    - Inline rename: a refused name keeps the editor open, so what you typed isn't lost (#10952).
+    - Project: the refusal for something already projected no longer ends in a dangling "of" when the reference names no body (#10859).
+    - Preferences: typing a Settings Profile name stays in its field instead of going into the search box (#9568).
+    - Edit Hole on a Single hole: a second face pick replaces the place, instead of the row reading "2 selected" and the hole silently staying where it was (#10797).
+    - Sketch Break: breaking a dimensioned line no longer skews it, because its length becomes the distance between its old ends. A cut with no length left is dropped instead of adding a zero-length line (#6834).
+    - Mirror and rectangular pattern: a copy of a join feature on a hollow part keeps its bottom slice instead of silently losing it (#7994).
+    - Convert to Sheet Metal takes back a tray made with SolidCraft's own sheet metal, exported and inserted again (#7580).
+    - solidcraft-cli mcp removes its own empty scratch folder when it exits (#7929).
+    - AppImage: it refreshes the icon cache and writes the icon's full path, for panels such as Linux Mint Cinnamon that showed only a thin strip. This hasn't been confirmed on Mint yet (#10858).
+    - view.pick: skips edges and vertices in the removed half of a Section Analysis, as the mouse picker does (#10712).
+    Translations
+    Russian gains 20 messages, and its "Close draft" button now means the report draft rather than draft analysis. An Arabic profile label now matches the labels beside it (#9445, #9387, #10927).
+    Compatibility
+    0.30.1 writes design file format 48 (0.30.0 wrote 47). Format 48 adds a circular pattern origin that holds expressions, a perforation outline from a sketch, and a tangent plane's reference and angle. 0.30.1 opens every earlier design, but 0.30.0 and earlier can't open a design saved by 0.30.1. Drawing files (.scdwg) are format 1.
+    Thanks
+    Thanks to 32 contributors.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.30.1
+ReleaseTime: 2026-11-02T17:21:52.0000000Z
