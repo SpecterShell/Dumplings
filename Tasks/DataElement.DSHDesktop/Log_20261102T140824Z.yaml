@@ -1,0 +1,59 @@
+Version: 0.13.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dataelement/dsh-desktop/releases/download/v0.13.1/dsh-desktop-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    中文 | English
+    本版本升级 Harness 与 Electron，新增原生侧边栏浏览器试用能力，并集中修复启动、导入、Windows 安装和界面体验问题。
+    新增功能
+    - 侧边栏浏览器：新增基于租约管理的原生 WebView 浏览器试用能力，支持在桌面侧边栏中使用网页。
+    - 模型设置：自动识别发现模型的能力，并支持自定义模型；更新弹窗支持 Markdown 日志渲染。
+    - 公文模板：重建公文模板字体资源，降低字体合规风险，并调整模板处理逻辑以避免误删其他模板的表格。
+    体验优化
+    - 更新提示：更新条跟随 Desktop 浅色或深色主题，避免悬停时文字与背景对比不足。
+    - 启动界面：统一启动遮挡页动画位置，减少显示不一致。
+    - 工作台：将会话创建限制在工作台操作中，避免从其他入口误建会话。
+    - 版本发布：简化手动发布输入，并改进飞书评审反馈与更新说明生成流程。
+    问题修复
+    - 启动与迁移：忽略已被新文档替代的启动失败；遇到插件重复注册旧迁移预设时，自动停用冲突项；普通运行时依赖保留在共享依赖树中，避免迁移失败。
+    - 会话导入：导入后检查会话日志引用的附件对象；发现缺失时在导入进度中报告具体会话，避免问题被误报为模型传输故障。
+    - 文件预览：打开文件路径时正确处理并转发行号。
+    - Windows 安装与进程：改进安装失败提示和重试流程，修复低完整性目录安装及目录重命名问题；保留 Node 子进程 Promise 接口的原生行为。
+    - 窗口与权限：主窗口标题显示应用名；允许可信 Harness 来源申请麦克风权限，并对齐 macOS 权限与签名配置。
+    - 市场来源：应用经过 Desktop 外壳时保留可信来源信息。
+    - 更新弹窗：修复浅色主题下悬停文字难以辨认的问题。
+    其他变更
+    - 运行时与依赖：适配 Harness 0.2.2，并升级 Electron 至 44.7.0；同步更新相关兼容补丁和依赖。
+    - Windows 发布：改进安装器权限级别和错误处理，为内置 Python 与 Office Runtime 可执行文件签名，并并行运行 Windows 单元测试。
+    - 发布自动化：支持使用已有签名产物恢复发布；新增针对待补充反馈问题的自动关闭流程。
+
+    This release upgrades Harness and Electron, introduces a trial native sidebar browser, and addresses startup, import, Windows installation, and interface issues.
+    Features
+    - Sidebar Browser: Adds a trial native WebView browser managed by leases, making web browsing available in the desktop sidebar.
+    - Model Settings: Infers capabilities for discovered models and supports custom models; update notes can now render Markdown.
+    - Government Documents: Rebuilds government-document font assets to reduce compliance risk and limits table handling to avoid deleting tables from unrelated templates.
+    Improvements
+    - Update Indicator: Follows the Desktop light or dark theme, keeping hover text legible against its background.
+    - Startup Screen: Aligns the boot-cover animation for a more consistent presentation.
+    - Workbenches: Restricts session creation to workbench actions, preventing sessions from being created through unrelated entry points.
+    - Release Workflow: Simplifies manual release inputs and improves Feishu review feedback and release-note generation.
+    Bug Fixes
+    - Startup & Migration: Ignores startup failures from superseded documents; automatically disables a migrated preset when a plugin registers the same preset; keeps ordinary runtime dependencies in the shared dependency tree to prevent migration failures.
+    - Session Import: Audits imported session logs for missing attachment objects and reports affected sessions in import progress instead of surfacing misleading model transport errors.
+    - File Preview: Preserves line numbers when opening file paths.
+    - Windows Installer & Processes: Improves installer failure messages and retries, fixes installation in low-integrity directories and directory rename failures, and preserves Node’s native child-process Promise behavior.
+    - Window & Permissions: Uses the application name in the main window title; allows microphone access from trusted Harness origins and aligns macOS permissions with upstream signing requirements.
+    - Market Origin: Preserves trusted origin information through the Desktop shell.
+    - Update Popup: Fixes hover text that was hard to read in the light theme.
+    Chores
+    - Runtime & Dependencies: Adapts to Harness 0.2.2 and upgrades Electron to 44.7.0, with corresponding compatibility patches and dependency updates.
+    - Windows Release: Improves installer execution level and error handling, signs bundled Python and Office Runtime executables, and parallelizes Windows unit tests.
+    - Release Automation: Supports publication recovery using existing signed artifacts and adds automatic closure for opted-in issues awaiting requested feedback.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dataelement/dsh-desktop/releases/tag/v0.13.1
+ReleaseTime: 2026-11-02T13:49:27.0000000Z
