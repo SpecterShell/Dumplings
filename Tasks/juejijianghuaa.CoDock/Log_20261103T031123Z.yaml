@@ -1,0 +1,27 @@
+Version: 0.6.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.6.4/CoDock-Setup-0.6.4-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.4 (2026-11-02)
+    这一版让关键词搜索能翻到底：结果按会话分页，命中密集的会话不再把其它会话挤出去。
+    新功能
+    - 关键词搜索按会话分页，侧栏可以「加载更多」：原来搜索的条数上限计的是命中的消息，
+      一个会话命中几十条就能把结果占满，侧栏默认 60 条命中之后的会话永远看不到，界面上也没有
+      任何提示。现在先按会话排序取一页（相关度模式取会话里最相关的那条，短词模式取最新命中时间），
+      再给这一页的会话取片段，每页 20 个会话，桌面侧栏与手机端末尾都有「加载更多」；「还有 N 条
+      命中」按会话的真实命中总数计算。
+    - codock_search_history 支持 offset 翻页：带不带 query 都能翻，limit 统一按会话计；
+      输出在还有下一页时直接给出下一个 offset，每个会话标出命中总数，短词退化为按时间排序时
+      也会写明。
+    - 命中片段更长：片段从约 16 个字符放宽到 64，能看到命中词前后的上下文，不再只剩命中词本身。
+    调整
+    - codock_search_history 去掉 project 参数。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.6.4
+ReleaseTime: 2026-11-03T02:25:53.0000000Z
