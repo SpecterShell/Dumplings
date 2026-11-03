@@ -2,7 +2,7 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Chevey339/kelivo/
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'setup' -and $_.name -notmatch 'NoImpeller' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 # Version
