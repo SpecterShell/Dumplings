@@ -65,8 +65,8 @@ if (@(@($VersionX86, $VersionX64, $VersionARM64) | Sort-Object -Unique).Count -g
 
 if ($this.CurrentState.Installer[0].InstallerUrl -notmatch '(\d+(?:\.\d+)+)') { throw 'Failed to parse main version from InstallerUrl' }
 
-# Version
-$this.CurrentState.Version = "$($Matches[1])-nightly.$VersionX64"
+# Preserve the published four-part version and nightly date format.
+$this.CurrentState.Version = "$($Matches[1]).0-nightly$VersionX64"
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
