@@ -1,0 +1,145 @@
+Version: 6000.6.8f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/237b6593792b/Windows64EditorInstaller/UnitySetup64-6000.6.8f1.exe
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/237b6593792b/WindowsArm64EditorInstaller/UnitySetupArm64-6000.6.8f1.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.6.8
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.6.8f1
+    - Android: Back gesture/button closes the app after returning from background when "Run In Background" and "Predictive Back Support" are enabled (UUM-159613)
+    - Asset - Database: Silent crash when launching a project from an external drive with exFAT formatting (UUM-156738)
+    - Audio Authoring: Crash with multiple stack traces when the main thread resumes after a USB audio output device is disconnected and reconnected (UUM-158166)
+    - Editor Installers: [macOS] Player libraries are code signed with bespoke entitlements (UUM-156884)
+    - Multiplayer FPS/Third Person Templates: "contains a TextureImporter object at version 4, below the supported minimum (10)" warnings are thrown when creating a project from the Multiplayer Third Person Gameplay template (UUM-156317)
+    - Native Editor Application Lifecycle: [WinEditor] Play Mode framerate drops significantly when moving the mouse cursor with high polling rate (UUM-142550)
+    - Scripting Runtime: AssetBundle MonoBehaviour shows as missing script in standalone Player when its assembly is loaded at runtime with Assembly.Load (UUM-159333)
+    - Serialization: Crash on UnityEngine.Serialization.SerializationBackendManagedCommands:ExecuteV2WriteStream when using typeof(T) in ISerializationCallbackReceiver.OnBeforeSerialize() of a struct (UUM-155957)
+    - Shader System: Player stops responding permanently when scenes are repeatedly switched with SceneManager.LoadSceneAsync (UUM-156125)
+    - SRP Foundation: RenderPass related Android errors are logged in Logcat and Console when physically rotating the device (UUM-157974)
+    - uGUI Controls: Crash on HierarchyGameObjectHandler::AddOrUpdateNodeTransformCallback when having Colliders on parent and child GameObjects and removing a Layout Group Component from the parent (UUM-157935)
+    6000.6.8f1 Release Notes
+    Improvements
+    - Animation: Improved the Animation Preview Model picker to preselect the model currently in use.
+    API Changes
+    - iOS: Added: Added iPhone 18 Pro, iPhone 18 Pro Max and iPhone Duo device generation enums and screen cutouts.
+    Changes
+    - GI: Bake Reflection Probes no longer bakes Custom reflection probes, because it replaced their cubemap with a generated one. To bake a Custom probe, use the Bake button in its Inspector. (UUM-141083)
+    - GI: Lightmapping.BakeReflectionProbe now returns false and logs an error for Realtime reflection probes instead of writing a cubemap. (UUM-141083)
+    Fixes
+    - 2D: Fixed a Mesh leaking every time a ShadowCaster2D was destroyed, which grew without limit for casters with no shape source. (UUM-152591)
+    - 2D: Fixed a NullReferenceException when a Light 2D created from a script is set to Freeform without a shape path. (UUM-154810)
+    - 2D: Fixed an issue where a Point Light 2D lost its cookie sprite when a project saved in Unity 6.0 or 6.3 was opened in a newer version. (UUM-156931)
+    - 2D: Fixed instanced sprite rendering producing incorrect results when a custom MaterialPropertyBlock is applied to a SpriteRenderer. (UUM-147992)
+    - 2D: Fixed shadows from a Shadow Caster 2D that uses a Collider 2D (for example a Tilemap Collider 2D) as its casting source flickering in the Scene and Game views. (UUM-147033)
+    - AI: Fixed the order of the two portal points returned for a NavMesh link, so that the first one is on the left and the second on the right also for a path that leaves the link. This applies to the results of NavWorld.GetPortalPoints and NavMeshQuery.GetPortalPoints. (UUM-152707)
+    - Android: Fixed a crash when calling AnimatorController.CreateNewStateMachineBehaviour with a null MonoScript. It now throws an ArgumentNullException instead. (UUM-150813)
+    - Android: Fixed a false-positive Java heap leak failure in the Android player-unloading integration test by excluding first-reload warmup from the baseline. (UUM-150246)
+    - Android: Fixed an issue on OpenGL where Unity's render thread would attach/detach to the JVM multiple times in a frame, causing unnecessary allocations. (UUM-155309)
+    - Android: Fixed Android native libraries having a GNU_RELRO segment that was not aligned to 16 KB. libc++_shared.so will stay unaligned until the next NDK update. (UUM-156603)
+    - Android: Fixed system bars not hiding automatically on Android 11 when using GameActivity and System Bars Behavior is set to "Show Transient Bars By Swipe". (UUM-155415)
+    - Android: Fixed WebCamTexture taking several seconds to resume after the app regains focus or another app releases the camera, for example in split-screen mode. (UUM-155066)
+    - Animation: Fixed a crash in HumanTrait.GetParentBone and HumanTrait.RequiredBone when passing an out-of-range bone index. These methods now throw ArgumentOutOfRangeException instead. (UUM-150938)
+    - Animation: Fixed a crash when calling AnimationPlayableOutput.SetSortingOrder on an invalid/default AnimationPlayableOutput. It now throws a NullReferenceException instead. (UUM-150941)
+    - Animation: Fixed a crash where providing a default/invalid AnimationPlayableOutput to AnimationPlayableOutputExtensions.SetAnimationStreamSource, would cause a crash. (UUM-150939)
+    - Animation: Fixed the Select Game Object window not appearing when selecting Other... from the Animation Preview Model dropdown a second time. (UUM-148566)
+    - Animation: Fixed the Select Game Object window not appearing when selecting Other... from the Animation Preview Model dropdown a second time. (UUM-148566)
+    - Asset Import: Fixed default presets for importers provided by a built-in module, such as SVGImporter, no longer being applied after restarting the project. (UUM-146265)
+    - Asset Import: Fixed the Linux Editor sometimes exiting while importing crunch-compressed textures, with "crn_threading_pthreads.cpp(194): Failure: semaphore: sem_wait() or sem_timedwait() failed" in the log. The crunch compressor treated an interrupted wait as a fatal error; it now retries the wait. (UUM-150055)
+    - Build Pipeline: Fixed builds added to the build history while the Build Analysis window was closed not appearing in the build list when the window was opened.
+    - Build Pipeline: Fixed the Build Analysis inspector reopening on asset selection after being closed. (UUM-154999)
+    - Build Pipeline: Fixed the build count in the Build Analysis window footer not following the search filter. The footer now shows the number of matching builds while searching, and shows the build limit count only from 70% of the limit. (UUM-150885)
+    - Build System: Don't hang the Editor when a previous bee_backend is still running. (UUM-142773)
+    - DX12: Fixed errors being thrown when an empty texture is displayed in the Editor while using the Direct3D12 graphics API. (UUM-144444)
+    - DX12: Fixed IUnityGraphicsD3D12::GetNextFrameFenceValue() returning a fence value that could complete before the commands a native plugin recorded into Unity's current command list when graphics jobs are enabled. (UUM-156768)
+    - DX12: Handle out of memory on very large texture creations. (UUM-157106)
+    - DX12: The Editor no longer crashes with an out-of-memory failure or a GPU device reset when a single repaint renders a scene with extreme per-frame draw volume. Direct3D 12 now submits GPU work mid-frame once more than 1 GiB of upload scratch memory has accumulated; the threshold can be changed, or set to 0 to disable it, with the d3d12-scratch-flush-threshold boot config parameter. The first time a mid-frame flush runs, the Editor or Player log names that parameter. (UUM-93272)
+    - Editor: Fixed a Linux-only Editor crash during domain reload when a Menu.menuChanged handler adds menu items. (UUM-149839)
+    - Editor: Fixed hover events not firing when moving between adjacent links. (UUM-156714)
+    - Editor: Fixed layout properties preview inspector window to use the same calculations as runtime layout. (UUM-154313)
+    - Editor: Fixed the Game view rendering into its own render target, and the Editor becoming unresponsive, after the back buffer MSAA sample count changed. (UUM-146735)
+    - Editor: Fixed the new Hierarchy not showing any game objects when entering an Avatar Configuration Stage. (UUM-155256)
+    - Editor: Fixed UI elements with a non-zero Z position disappearing in the Scene view when the camera gets close to them. (UUM-142311)
+    - Editor: Windows: Fixed a crash on Windows when the Editor ran in batch mode and could not create its main window. (UUM-153339)
+    - Editor: [Android] Display an error informing users of the reason a device went offline during apk installation on Unity 6.6. (UUM-151550)
+    - Entities Graphics: Fixed instances in a subscene not rendering in the Player after another subscene that uses the same meshes and materials was unloaded. (UUM-124966)
+    - GI: Fixed a bug where reflection probes sometimes would not be re-baked when baking lighting, if only URP-specific settings were modified. (UUM-133949)
+    - GI: Fixed Adaptive Probe Volumes placing probes as if the scene had no geometry when baking with Vulkan on AMD GPUs. (UUM-137732)
+    - GI: Fixed an "Unknown reflection probe mode" error when baking reflection probes in a scene with Realtime reflection probes. (UUM-141083)
+    - Graph Toolkit: Fixed a NullReferenceException thrown when setting the Title, Subtitle, Tooltip, DefaultColor or FillAmount of a Node created from script before setting its Position. (UUM-150194)
+    - Graph Toolkit: Fixed an issue where converting a List or Array variable node to a constant reset its values. (UUM-139307)
+    - Graph Toolkit: Fixed the Graph Inspector's Narrow the Selection list showing internal type names such as VariableDeclarationBase instead of user-facing names such as Variable. (UUM-154274)
+    - Graphics: Fixed an issue where a Line Renderer or Trail Renderer using a 2D sprite material became invisible after turning off Preview in the Animation window or after calling Renderer.SetPropertyBlock. (UUM-156620)
+    - Graphics: Texture2D.ReadPixels and ScreenCapture could return stale data on AMD GPUs with Vulkan when graphics jobs were enabled and the GPU was busy. (UUM-149529)
+    - IL2CPP: Fixed a C++ compile error when user code calls RuntimeHelpers.InitializeArray with a field handle that does not come directly from an ldtoken. (UUM-154626)
+    - IL2CPP: Fixed a security vulnerability (CVE-2026-111497) in the Brotli decoder used by System.IO.Compression.BrotliStream and BrotliDecoder, where decoding untrusted data could allow remote code execution.
+    - IL2CPP: Fixed issue were Type.IsAssignableFrom would throw a TypeInitializationException when called on a class whose static constructor had thrown. (UUM-156129)
+    - IL2CPP: Fixed P/Invoke on Linux Players prepending the Player folder to an absolute DllImport library path, which hid the real path and load error in the resulting exception. (UUM-155034)
+    - IMGUI: Fixed IMGUI text fields, such as Transform values in the Inspector, sometimes showing another value's text (for example 0 and 1 swapped) while a window was being resized. (UUM-147879)
+    - Kernel: Windows standalone players crashed immediately on startup on CPUs without SSE4.2 support. (UUM-155744)
+    - License: Bump ProxyHelper version to allow running on case-sensitive filesystem. (UUM-155895)
+    - License: Fixed the license error dialog looping on Retry and close when two Editors of the same version required incompatible Licensing Client versions. (UUM-153121)
+    - Linux: Fixed a crash on Linux when running without an initialized video subsystem, such as in batch mode with -nographics or without a display. (UUM-156559)
+    - Linux: Fixed a crash on Linux when the Editor was launched with -nographics but without -batchmode; the Editor now reports the invalid arguments and exits with code 1. (UUM-154576)
+    - Mono: Fixed a security vulnerability (CVE-2026-111497) in the Brotli decoder used by System.IO.Compression.BrotliStream and BrotliDecoder, where decoding untrusted data could allow remote code execution.
+    - Networking: Reject TLS connections to servers using the compromised eMudhra certificates. (UUM-158231)
+    - Package Manager: Fixed a security vulnerability (CVE-2026-111497) that could allow remote code execution by updating the Node.js runtime used by the Package Manager to v24.22.1.
+    - Physics: An "Incremental broadphase integrity check failed" exception thrown every step after enabling PhysicsStep.IncrementalStaticBroadphase in a world that was first simulated with no rigid bodies, and missing collisions and incremental broadphase integrity check failures after toggling PhysicsStep.IncrementalStaticBroadphase or IncrementalDynamicBroadphase off and on again at runtime. (UUM-155824)
+    - Physics: Fixed an issue where Joint components wouldn't cause newly connected Rigidbody components to re-evaluate their contacts. So flags such as "enable collisions" could take effect. (UUM-156450)
+    - Physics 2D: Fixed "PhysicsAABB.CastRay" returning an incorrect fraction when "maxFraction" is below 1, and "PhysicsAABB.center" and "PhysicsAABB.extents" warnings naming the wrong member. (UUM-156920)
+    - Physics 2D: Fixed "PhysicsHandle.AsWorld" so that it throws an exception for an invalid world instead of returning a handle reported as a pool handle. (UUM-156920)
+    - Physics 2D: Fixed "PhysicsLayers" so that "GetLayerMask" includes every layer sharing a name, "GetLayerName" returns an empty string for an unnamed layer, and null or out-of-range arguments throw exceptions that name the correct parameter. (UUM-156920)
+    - Physics 2D: Fixed "PhysicsMask" so that a "LayerMask" including layer 31 no longer sets the upper 32 bits, "AreBitsSet" returns false for an empty mask, a default "ResetBitIterator" includes bit 0, and shift counts outside 0 to 63 throw an exception. (UUM-156920)
+    - Physics 2D: Fixed "PhysicsRotate" so that converting to a "Quaternion" no longer doubles the angle, "isNormalized" no longer logs a warning for a rotation that is not normalized, "ToString" labels the angle as degrees, and "Normalized" warnings name the correct method. (UUM-157163)
+    - Physics 2D: Fixed "PhysicsTransform" validation warnings naming the wrong method. (UUM-156920)
+    - Project Browser: Fixed an issue where pasting copied sub-assets into a folder overwrote existing assets with the same name and broke references to them. (UUM-121005)
+    - Scene/Game View: Fixed an issue where moving a GameObject far from the origin with the Move tool made its handle disappear and logged an invalid localPosition (NaN) error. (UUM-146738)
+    - Scripting: Fixed an Editor crash with the error "Size overflow in allocator" when JsonUtility parsed a string longer than 536,870,911 characters. (UUM-156359)
+    - Scripting: Fixed an issue where cancelling an Awaitable.NextFrameAsync or Awaitable.EndOfFrameAsync awaitable during a frame update could make an unrelated Awaitable complete early with a default result. (UUM-156357)
+    - Scripting: Fixed AppDomain.CurrentDomain.BaseDirectory returning the path of the application executable instead of the folder that contains it. (UUM-155647)
+    - Scripting: Optimize GetSelectionCount object validation in SceneInspector. (UUM-155038)
+    - Shaders: Fixed a crash when executing a RenderingCommandBuffer with a SetKeyword on a null or destroyed material. (UUM-157105)
+    - Shaders: Fixed a rare crash when doing a build. (UUM-148715)
+    - Shaders: Fixed default-created LocalKeyword and LocalKeywordSpace field access crashing the Editor. (UUM-156424)
+    - Shaders: Material.mainTexture will return null if the main texture is not present instead of logging an error in the console. (UUM-103940)
+    - SRP Core: Fixed exceptions thrown in the Inspector when adding a Light Anchor component while no Game View is open. (UUM-153999)
+    - Terrain: Fixed terrain painting being lost without any message when a new TerrainData was saved with AssetDatabase.CreateAsset after its terrain layers were assigned. A warning now explains the loss and how to avoid it. (UUM-155877)
+    - Terrain: Fixed the Edit Tree, Edit Detail Mesh and Edit Grass Texture windows applying changes to a different prototype when another prototype was removed while the window was open. (UUM-155483)
+    - Terrain: Fixed trees placed above or below the Terrain surface moving onto it when SetHeights, SyncHeightmap, a height brush, painting holes or changing the Terrain size modified another part of the Terrain. (UUM-137127)
+    - TextMeshPro: Fixed the caret not moving past an emoji with the arrow keys, and Backspace and Delete removing only half of an emoji, in a TextMeshPro Input Field with Content Type set to Password. (UUM-155145)
+    - UI Toolkit: Fixed a bound Vector4Field overwriting the W value of other selected objects when X, Y or Z was edited with multiple objects selected. (UUM-157590)
+    - UI Toolkit: Fixed an AnimationCurve UXML attribute losing its value after saving when a key had a very large value. (UUM-156823)
+    - UI Toolkit: Fixed an issue where a 3D-rotated element inside a 3D-rotated GroupTransform rendered at the wrong height on screen-space panels and in Editor windows, and did not match the area that responds to the pointer. (UUM-151206)
+    - UI Toolkit: Fixed an issue where out-of-range filter and backdrop-filter values were clamped without a Console warning, and UI Builder's Inspector displayed the unclamped value. (UUM-152766)
+    - UI Toolkit: Fixed artifacts around letters when text uses a Font Asset with a small atlas padding and a zero or negative outline width. (UUM-146020)
+    - UI Toolkit: Fixed AssetReference variables in UI Builder taking the asset type of another variable that was previously shown in the same list position. (UUM-140515)
+    - UI Toolkit: Fixed custom backdrop filters that blend their output showing content from other elements and flickering. (UUM-155789)
+    - UI Toolkit: Fixed solid and gradient fills missing from VectorImages saved with Painter2D.SaveToVectorImage on WebGL 2 and on some OpenGL ES 3.0 devices, and an ArgumentOutOfRangeException when a solid fill or stroke was painted before a texture fill. (UUM-155233)
+    - UI Toolkit: Fixed the invert and contrast filters producing colors that were too bright on translucent pixels, such as after opacity in a backdrop-filter chain or on the anti-aliased edges of filtered elements. (UUM-155804)
+    - UI Toolkit: Fixed TreeView and ListView items sometimes staying invisible after expanding the last item or resizing the view while scrolled to the bottom. (UUM-140392)
+    - UI Toolkit: Fixed UI Builder adding a duplicate attribute to Attribute Overrides when editing an override on an element whose name contains a space, which made the UXML file invalid. (UUM-149755)
+    - UI Toolkit: Fixed UI Toolkit panels not receiving pointer events after a script reload in Play mode when the scene has an EventSystem. (UUM-156105)
+    - Unity Physics: Broadphase.Tree.Clone() now allocates node storage that is sized to its capacity rather than the source tree's Length. This fixes an OutOfRange error that may be observed when a full multi-threaded broadphase rebuild is performed on a densely-packed, cloned world. (UUM-157069)
+    - URP: Fixed a bug where URP attempts to use a stripped variant when using deferred rendering with additional light shadows disabled, but shadowmasks enabled. (UUM-153600)
+    - URP: Fixed the deprecated LightingPhysicallyBased overload ignoring the surface normal and using the specular highlights toggle as the view direction. (UUM-149002)
+    - VFX Graph: Fixed a GPU crash or corrupted rendering with sorted Visual Effect Graph outputs when some instances of an effect were outside a camera's view, especially with several cameras. (UUM-149758)
+    - XR: Fixed SubsystemWithProvider.Start not throwing an ArgumentNullException when called after the subsystem was destroyed, which restarted the destroyed provider. (UUM-151411)
+    Package changes in 6000.6.8f1
+    Packages updated
+    - com.unity.services.wire: 1.6.0 to 1.6.1
+    - com.unity.services.multiplayer: 2.4.0 to 2.4.1
+ReleaseTime: 2026-11-03T16:15:27.2050000Z
