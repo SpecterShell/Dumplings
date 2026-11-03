@@ -1,0 +1,36 @@
+Version: 0.12.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Inginnng/EditHere/releases/download/v0.12.5/EditHere-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This update is about two things you meet every day: whether the annotated image you copy stays sharp, and whether the app stays up on macOS. The interface also gains Traditional Chinese.
+    - Annotated copies keep their pixels: wide screenshots are exported at their original size, and the annotation sidebar, text, numbering and spacing scale with the image so they stay aligned (#42). New annotation previews are lossless PNG; JPEG previews saved earlier still open.
+    - JSON attachments take the first comment as their name: the exported JSON and its image are named after the first comment, so a folder of feedback points straight at the problem (#38).
+    - Traditional Chinese interface: the interface language list now offers 繁體中文 next to Simplified Chinese and English, thanks to the contribution in #43. With "Follow system", the script your system writes in decides between the two Chinese interfaces.
+    - Fix macOS menu bar exits and stray captures: clicking the menu bar icon no longer closes the app, including keyboard and trackpad events that are not mouse clicks; moving the pointer across the menu no longer starts a capture; and a scrolling capture no longer crashes when a window closes or a page changes while it runs (#11, #41, #44).
+    - Manual scrolling capture no longer reports a false timeout: when frames arrive slowly during continuous scrolling (a slow machine or a remote desktop, for example), the capture is no longer interrupted by a "capture timed out" notice; a genuinely missing frame callback still reports as before.
+    - Stricter local communication and in-app updates: the desktop app now checks a per-run credential and the operating-system identity of local callers from the CLI and the connector, so another program cannot impersonate them; in-app updates only accept an installer signed by a trusted publisher whose certificate fingerprint matches (#8). No publisher certificate is configured for this version, so checking for updates opens the download page and you install it yourself.
+    - Connector 0.2.1: the connector and its Skills now share one delivery version, and the docs cover reaching a local EditHere from a remote SSH session by passing files back and forth (#34).
+    The feedback-minimal-4 feedback format, project format, CLI and Skill contracts are unchanged, and so is installing or updating.
+    Packages include the Windows installer and portable ZIP, universal macOS DMG, Linux AppImage, offline Web and Web Agent editions. Install or extract the complete package, keeping its runtime libraries and plugins.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新集中在两件日常的事：复制出去的批注图是否清楚，以及在 macOS 上程序是否稳。界面同时加入繁體中文。
+    - 复制带批注的图片不再被压缩：宽图按原始像素导出，左侧批注栏、字号、编号与间距随原图同比例放大，放大后仍与原图对齐（#42）。新生成的标注预览改用无损 PNG，此前保存的 JPEG 预览仍可正常打开。
+    - JSON 附件按第一条批注命名：导出的 JSON 与配套图片以第一条批注意见作为文件名，在文件夹里一眼就能找到对应的问题（#38）。
+    - 新增繁體中文界面：界面语言在简体中文、English 之外增加繁體中文，感谢 #43 的贡献。选择「跟随系统」时，按系统使用的汉字字形自动选择简繁体。
+    - 修复 macOS 菜单栏相关的退出与误触：点击菜单栏图标（包括键盘、触控板等非鼠标事件）不再退出；鼠标滑过菜单时不再误触截图；长截图过程中关闭窗口或切换页面导致的闪退也已修复（#11、#41、#44）。
+    - 手动长截图不再误报超时：连续滚动时如果画面采集变慢（例如在较慢的机器或远程桌面上），不会再被误报「画面采集超时」而中断；回调确实丢失时仍会照常提示。
+    - 本地通信与程序内更新更严格：桌面程序与命令行、连接器之间的本地通信增加每轮随机凭据与操作系统身份核验，其他程序无法冒充调用；程序内更新只接受可信发布者签名、且证书指纹匹配的安装包（#8）。当前版本尚未配置发布者证书，因此在程序内检查到新版本时会打开下载页，由你手动下载安装。
+    - 连接器更新到 0.2.1：连接器与配套 Skills 的交付标识统一；补充在远程 SSH 环境中通过文件往返使用本地 EditHere 的步骤（#34）。
+    反馈格式 feedback-minimal-4、工程格式与 CLI、Skill 契约保持不变，安装与更新方式也不变。
+    提供 Windows 安装器与免安装 ZIP、macOS 通用 DMG、Linux AppImage，以及离线 Web 与 Web Agent 包。请完整安装或解压，保留随包运行库及插件。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Inginnng/EditHere/releases/tag/v0.12.5
+ReleaseTime: 2026-11-03T11:04:15.0000000Z
