@@ -24,7 +24,9 @@ Task values override global preferences. An explicit empty trusted-user list doe
 
 The selector accepts one added manifest version of the exact package. That version must be newer than the latest version in the configured reference repository. The PR may also remove one older published version. Every file in that older version must be removed, including all localizations. A base-tree comparison verifies the complete removal.
 
-Modified published files, renames, unrelated changes, multiple additions, multiple removed versions, drafts, closed PRs, and merged PRs are ineligible. An identifier migration uses normal new-PR submission. Keep the reference checkout or fork synchronized before running the task.
+GitHub may report files moved between version directories as renames. Dumplings treats each rename as an addition at the new path and a removal at the old path. Both paths must belong to the same package and pass the complete-version checks above. This also applies when only some files are reported as renames.
+
+Modified published files, unrelated changes, multiple additions, multiple removed versions, drafts, closed PRs, and merged PRs are ineligible. An identifier migration uses normal new-PR submission. Keep the reference checkout or fork synchronized before running the task.
 
 The highest eligible manifest version wins, followed by PR update time and PR number for ties. A generated version below the selected version is rejected. Incomplete search results and failed searches are errors. Rejected candidates are logged, and a search with no eligible reference uses the normal submission path.
 
