@@ -1,0 +1,39 @@
+Version: 6.0.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.1.exe
+  ProductCode: '{16FC80BD-D527-4367-AE41-596E3A11D5E0}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon x86
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+- Architecture: x64
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.1.exe
+  ProductCode: '{51F09579-0085-4BA1-843F-304139B88486}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon x64
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+- Architecture: arm64
+  InstallerUrl: https://dl.duosecurity.com/duo-win-login-6.0.1.exe
+  ProductCode: '{6689DBE2-231A-4177-8284-53768F6663C6}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Duo Authentication for Windows Logon ARM64
+    UpgradeCode: '{0ADC7F12-7F01-4BE3-A88A-7C6630C6AE25}'
+    InstallerType: wix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Encrypts the Duo secret key (SKey) in HKLM\Software\Duo Security\DuoCredProv at the next Duo login or unlock after installation.
+      - The encrypted secret key is machine-specific and doesn't work on a different system. If Duo can't decrypt the SKey value, it blocks all Windows logins regardless of the fail mode setting.
+    - Improves installation reliability by verifying that core components installed successfully.
+    - Improves login performance on shared or multi-user systems with a large number of stored user profiles. Previously, Duo checked the trusted session status of every stored profile, which could delay login.
+    - Ends "Remember me" trusted sessions when a user changes their password at the Windows login screen, when an administrator renames a user's account, or when an administrator configures the system to use a different Duo application. Existing trusted sessions require one new two-factor authentication after you upgrade to 6.0.1.
+    - Removes a legacy, unsupported configuration path that could cause Duo to unexpectedly skip interactive authentication in certain conditions.
+    - Improves handling of offline access authentication factor updates so that administrator changes apply more consistently.
+    - Applies offline access attempt and lockout limits consistently across all offline login paths.
+    - Writes diagnostic logs collected during product upgrades to a protected location and automatically deletes them after the upgrade completes.
+    - Corrects an issue that could allow offline access enrollment to complete without the user first completing two-factor authentication.
+RealVersion: 6.0.1.4655
+ReleaseTime: 2026-11-03
