@@ -1,0 +1,38 @@
+Version: 0.19.3.20261104.0624
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.19.3/Runner-Setup-0.19.3.20261104.0624-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.3 is a feature release for macOS, Windows and Linux on top of 0.19.2.
+    New
+    - Chats follow the missions they start. When an agent in a chat starts a mission, Runner links the mission to that chat and types a short [runner] line into it when the mission needs you, fails or settles, so the agent no longer has to watch the mission's feed. The sidebar groups linked missions under their chat in Projects and Active; drag a mission onto a chat to link it, or out of the group to unlink it. From the CLI, runner mission link and runner mission unlink change the link, and runner mission start --no-report links without the reports. (#748)
+    - Use any installed monospace font in the terminal. Settings → Terminal → Font family is now a searchable list of the bundled font and every monospace font installed on your computer. A saved SF Mono, Fira Code or Monaco now loads as that font instead of Menlo. If a chosen font is uninstalled, the terminal falls back to the bundled font and the setting shows it as Not installed. (#931)
+    Bug fixes
+    - An agent's runner commands reach the Runner that started it. If your shell's startup files put another Runner build's runner first on the PATH, as some agent installers do, an agent such as Codex could send its commands to that build: a development build's chat started missions in the installed Runner. Commands now always reach the Runner that spawned the session. (#1149)
+    - Claude Code chats and missions in a new folder no longer stop at the folder-trust prompt. Runner now records the folder as trusted for the account the session uses before Claude Code starts, so a mission's goal is delivered without anyone accepting the prompt. (#1067)
+    - Runner no longer quits at launch when runnerd drops while the first window opens. The window opens anyway and registers with runnerd when it reconnects. (#1115)
+    - The new-tab launcher can be closed after you close the active tab. Its ×, the sidebar row's ×, ⌘W and Esc were unavailable while other tabs were still open; they now return to the tab you viewed most recently. (#1146)
+    - Changing a role's runtime keeps its permission mode. runner role update <role> --runtime <runtime> left the old runtime's permission flags in the role, so every chat from it stopped at once with "The PTY exited with code 1". The flags are now rewritten for the new runtime, and runner role update <role> --permission <mode> repairs a role that was already affected. (#1155)
+    - A Windows computer reliably saves paired devices in Remote access. A device's kind and last-seen time could stay unsaved while another program, such as a virus scanner, held the file open. (#1143)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.3 是 macOS、Windows 和 Linux 上基于 0.19.2 的功能版本。
+    新功能
+    - 聊天会跟进它启动的 mission。 聊天中的 agent 启动 mission 后，Runner 会把这个 mission 关联到该聊天，并在 mission 需要你处理、失败或进入稳定状态时，向聊天中输入一行简短的 [runner] 提示，agent 不再需要自己盯着 mission 的动态。侧栏的 Projects 和 Active 视图会把关联的 mission 归到对应聊天下；把 mission 拖到聊天上即可关联，拖出分组即可取消关联。在 CLI 中，可用 runner mission link 和 runner mission unlink 修改关联，runner mission start --no-report 只关联而不发送提示。(#748)
+    - 终端可以使用任意已安装的等宽字体。 Settings → Terminal → Font family 现在是一个可搜索的列表，包含内置字体和电脑上安装的所有等宽字体。之前保存的 SF Mono、Fira Code 或 Monaco 现在会按原字体加载，而不再变成 Menlo。如果所选字体被卸载，终端会改用内置字体，该设置会显示 Not installed。(#931)
+    问题修复
+    - agent 的 runner 命令会发往启动它的 Runner。 如果 shell 的启动文件把另一个 Runner 构建的 runner 放在 PATH 最前面（一些 agent 安装程序会这样做），Codex 等 agent 的命令可能会发往那个构建：开发构建中的聊天会在已安装的 Runner 里启动 mission。现在命令总会发往启动该会话的 Runner。(#1149)
+    - 新文件夹中的 Claude Code 聊天和 mission 不再卡在文件夹信任提示。 Runner 现在会在 Claude Code 启动前，为会话所用的账号把该文件夹记为已信任，mission 的目标无需有人确认提示即可送达。(#1067)
+    - runnerd 在首个窗口打开时断开，Runner 不再在启动时退出。 窗口照常打开，并在 runnerd 重新连接后完成注册。(#1115)
+    - 关闭当前 tab 后，新 tab 启动器可以关闭。 之前在仍有其他 tab 打开时，启动器页面的 ×、侧栏条目的 ×、⌘W 和 Esc 都不可用；现在它们会回到你最近查看的 tab。(#1146)
+    - 修改 role 的 runtime 会保留其权限模式。 runner role update <role> --runtime <runtime> 之前会把旧 runtime 的权限参数留在 role 中，导致由它启动的每个聊天都立即停止并提示 "The PTY exited with code 1"。现在这些参数会按新 runtime 重写，runner role update <role> --permission <mode> 也能修复已受影响的 role。(#1155)
+    - Windows 电脑会可靠地保存 Remote access 中已配对的设备。 当其他程序（例如杀毒软件）占用该文件时，设备类型和最后在线时间之前可能无法保存。(#1143)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.19.3
+ReleaseTime: 2026-11-04T06:42:56.0000000Z
