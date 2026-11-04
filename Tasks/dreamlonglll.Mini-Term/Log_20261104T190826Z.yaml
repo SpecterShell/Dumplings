@@ -1,0 +1,31 @@
+Version: 1.13.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.13.27/Mini-Term_1.13.27_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - 终端里能点网址了：按住 Ctrl（macOS ⌘）悬停普通 http / https 网址或 OSC 8 超链接出下划线，单击用默认浏览器打开。OSC 8 链接悬停时显示真实目标，防止显示文字伪装；http / https 以外的目标一律不打开
+    - 在指定目录内搜索：文件树目录右键「在此目录搜索内容」，只搜这个目录，弹窗上显示范围，一键回到全项目（本地与 WSL 项目）
+    - 项目切换器能搜已开终端：Ctrl+Shift+P 输入关键词时同时列出所有已开终端，显示项目、面板、Agent 与状态灯，回车跨项目跳回原终端。有查询时项目行按匹配度排序，空查询不变
+    - 删除历史会话：AI 历史面板右键「删除会话」直接删除磁盘上的原始记录，确认框列出每条路径，能确认正在运行的会话会被拦下。Claude / Codex 覆盖本机、WSL 与 SSH 远程，Grok / pi 只覆盖本机（#89）
+    - 关闭终端可不再确认：确认框里勾「不再询问」即可，设置里能改回来（#90）
+    - 终端中文字体：「终端」设置可单独指定中文字体，英文、数字与列宽仍由终端字体决定（#91）
+    - Kitty 图片协议（实验性，默认关闭）：设环境变量 MT_ENABLE_KITTY_GRAPHICS=1 后，pi 能在终端里显示图片。只支持静态 PNG，Windows 上要求随包的 ConPTY 生效，WSL 与 SSH 未覆盖；高 DPI 下还没有真机验证。不设这个变量时一切照旧
+    修复
+    - 程序开始同步输出后没发结束标记（崩溃、ssh 断线）时，终端画面一直不动、打字也不回显的问题，现在约 1 秒内自动恢复
+    - 快速切换历史会话时，旧请求迟到导致「标题是 B、正文是 A」，以及错误提示和正文同屏
+    - 中文输入法候选窗偶发偏到输入框右侧（#88）
+    - 设置页输入框未失焦就关窗时丢失输入内容
+    - 关闭免确认时连点关闭按钮误关相邻终端
+    体验
+    - 终端查找结果达到 1000 条上限时，不再反复重算整个回滚区，持续输出时开销更低
+    - 超长的动态标题以省略号收尾，看得出被截断过
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.13.27
+ReleaseTime: 2026-11-04T18:44:20.0000000Z
