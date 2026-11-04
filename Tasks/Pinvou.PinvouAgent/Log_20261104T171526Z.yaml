@@ -1,0 +1,125 @@
+Version: 0.10.17
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.17/pinvou-agent_0.10.17-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.17 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. 会话读取 MCP 服务器新增 create_session 工具（#657）：模型（有人值守或无人值守）可创建新的普通聊天会话，必填 from_session 审计来源，可选规范化工作区路径、已保存的模型、标题，以及作为新会话首回合投递的 first_message。请求经与应用自动化同族的 spool 机制流转，由应用侧 watcher 通过面板同款 PoolCreator 管线创建会话，并以摘要绑定的结果 marker 应答——重试安全，重放只会得到 payload_mismatch 而不会重复创建。工具受 tool_features.session-creation 门控：关闭时隐藏工具并暂停 watcher（fail-closed，设置文件损坏也会暂停）。无人值守投递的首回合带隔离 shield（11 个具名工具）；四条审计写入点全部路由到私有 ledger 根，被审计模型无法篡改自己的溯源；from_session 必须真实存在于会话存储，否则永久隔离。创建时的首回合模式解析与面板「新建聊天」完全一致（工作档 Plan 默认，否则 Yolo）。
+    2. 连接 CLI 连接器（飞书 / 企业微信 / 钉钉 / tmeet）即启用其技能（#741）：无论是工具商店卡片还是 pinvou connectors connect，连接手势即视为用户显式同意，lark-*/wecom-* 等技能当场进入会话索引并在输入框渲染为开启——不再出现「连接成功但技能一直关闭、要去工具列表找到不易察觉的开关」的情况。机制上 disabled_bundles.json 新增 connect_granted 授予集与操作令牌：授予从未初始化 scope 的 DenyAll 展开中扣除，使「先连接、后初始化」的新环境也即刻可用；技能物化失败时补偿性撤销授予并恢复被抬升的默认关闭行，任何情况下不存在 fail-open 窗口。用户显式裁决（输入框关闭、历史遗留禁用）在任何状态下粘滞：启动回填不覆盖、CLI 重连与 apply-skills 不抬升；GUI 与 CLI 走同一门控，连接成功文案改为「默认启用」。Pack/MCP/技能安装与 ima 保持默认关闭注册。
+    3. pinvou monitor 暴露 vLLM 队列与诊断（#795）：Backend 行新增 queue=运行中/等待中 请求数、diag=<诊断码>、notice=<码>，是无人值守操作员唯一的监控面；JSON 快照同步新增结构化的 num_requests_running / num_requests_waiting、diagnostic 与 notices 字段供脚本消费。数据来自用户自建 vLLM 的 /metrics：数据并行服务器现在对所有同名 series 求和（此前取第一个 series，只会报告 engine 0）；离线时必有机器字段诊断（code/http_status/transport/endpoint），错误文本绝不进入快照，URL 中的 token 无法泄漏；/metrics 响应超 16 MiB 拒绝缓冲。
+    4. 助手回复「重新生成」按钮（#789）：仅最新一回合显示，点击即把该回合的用户消息经既有编辑重发通道重新发送；同一波带来输入框一键清除草稿按钮、清空输入时放弃挂起的语音转写结果、以及代码页输入框高度自适应。附件回合与空文本失败回合不提供重试；只读多智能体镜像没有此写路径。
+    问题修复
+    1. 手机远程控制全链路审计修复（#802）：此前手机可访问的工作区通道（预览/搜索/列表/diff，含 $HOME 本身）完全没有凭据策略，.env、.aws、.git/config、gcloud/Azure、sudoers/shadow 备份族等凭据文件可进入模型上下文，且存在无辜命名符号链接、:(literal) 目录递归 diff、worktree 文件/目录交换、staged 重命名目的地等多条绕过路径；一条认证后的深嵌套或非法 WebSocket 帧可让整个 relay 崩溃（send/receive 双侧各自有未捕获异常）；瞬时拒绝被缓存为终态导致 client_request_id 重放投毒；注销/终态注册拒绝被无限重试；空闲约 2.5 分钟租约被清、手机已暂存附件丢失；点击一次「启用访问」即永久锁存主机文件夹授权。现统一组件/前缀/后缀三张凭据路径黑名单并在字面与规范化路径双腿检查（macOS ASCII 折叠、/private 别名），send/receive 双侧崩溃守卫只终止肇事连接，重放缓存折叠为可验证的 settle 入口，endpoint_not_found 可自愈，30 秒 liveness 看门狗 + 投机重连不再闪烁横幅；授权拆分为独立开关并新增「允许文件夹访问」状态行与一键撤销（web_access_revoke_host_workspace，主 WebView 门控），无需迁移重置。
+    2. 普通模式文件任务交付产物、三种模式行为边界对齐（#799）：此前普通模式的文件类任务常常「完成但无交付」——present_artifact 仅在产出 html/图片等单文件作品时才被调用，且指引存在规则加载范围错觉；现在普通模式下用户请求生成或修改的最终文件（含很短、纯数值、编辑既有文件、保存在附加根目录）都会经 present_artifact 交付为产物卡并完成文件存在/非空校验，内部中间文件仍不调用；计划/代码模式指引改为跟随实际可用的工具与权限（代码模式保持排除 presenter、无人值守拒绝交互式工具、咨询仍为直接回答）；运行时规则加载器保留主根/祖先链，并注入显式指引要求编辑前按目标路径逐目录搜索 AGENTS.md（附加根用自己的规则链，深于根的规则不会因已供根规则而遗漏）。
+    3. codex-acp 死运行时回收与崩溃预算（#786）：修复运行时死亡后会话一直被钉住直到重启应用的问题——传输 EOF 现将代际判死，意外退出计入每会话崩溃预算：首次崩溃立即重启、第二次起延迟 250ms、第三次起自动重建暂停至最旧崩溃离开 60 秒窗口、复用存活满 2 分钟清除预算，损坏安装不再把每次 UI 访问变成紧密 respawn 循环。同时：安装器失败/超时在 Drop 时树杀并回收组内存活者；会话代理存储九个表改为 persist-before-publish（序列化→fsync→原子重命名→发布，失败回滚）；cancel_requested 成为同步 flush 的 journal 事件并带 turn id，重启后孤儿 turn 结算为 Interrupted；权限/引导卡片按代际盖章、死代际帧被拒绝。
+    4. 子进程输出捕获有界化（#784）：修复两个缺陷——后台化的子孙进程持有管道写端时，按时退出的子进程会以成功状态报告空/不完整输出；失控子进程可经无界 read_to_end 耗尽内存。现 stdout/stderr 改为临时文件捕获（每流上限 4 MiB，溢出无条件终止整棵进程树并追加截断标记，绝不把截断输出冒充完整输出），output_with_timeout 使子进程成为 Unix 进程组长以让溢出树终止覆盖子孙；超时/溢出错误携带捕获输出细节（≤4000 字符）取代静态文案。checkpoint 的大规模清单改为 git diff --output 私有流式读取，不经捕获上限。行为变化：超过 4 MiB 的合法单流输出现在报错。
+    5. 手机 relay 通用加固（#781）：此前一条超限 WebSocket 帧或畸形 Host 头可让整个 relay 以 exit 1 崩溃；代理 IP 环境变量里的非 IP 项被静默保留、空白值静默清空信任集，攻击者可选的 XFF 最终项成为限流键与客户端 IP；SIGINT/SIGTERM 无优雅关闭；撤销失败/状态加载等日志可能泄漏端点 id 或状态文件路径。现 parseIpSet fail-closed（proxy_ip_configuration_invalid 并指名变量），clientIp 只取最右 XFF 项（4096 字符上限），重复 v 键与 >128 层嵌套帧在 JSON.parse 前拒绝，信号处理幂等同步终止全部客户端后 exit 0，所有启动/状态/撤销失败只打印固定 [relay-error] 行（仅 errno）；预解析扫描器修到全形状线性（整体约 3% 开销），加入 5 秒策略关闭排空截止与 IP 规范化匹配。不触碰控制器、注册、遥测功能。
+    6. 监控 TTFT/TPS 改用引擎权威计时（#816）：此前监控面板在事件转发路径上用墙钟自测 TTFT/TPS，把引擎→宿主的事件分发延迟也算进模型延迟，导致 TTFT 偏高、TPS 偏低；引擎 TurnUsage 携带的权威 first_token_ms/request_ms 在常规构建中一直被丢弃。现在按模型调用只累计完整的 (first_token_ms, request_ms) 对：TTFT 取本轮第一个完整对，生成窗口与该调用的输出 token 同源累加，TPS 因此是跨多次模型调用的真实平均（修复了无工具续写轮 TPS 被高估约 N 倍的问题）；半对永不存储，两套时钟绝不混用，引擎未上报时整组回退墙钟。
+    7. 深度守卫误拒修复与模型侧指引缺口补齐（#815）：多代理深度守卫钩子此前匹配任意嵌套的 "path" JSON 键，结构化计划载荷里的普通路径字段会被误拒绝；现改为仅匹配字符串值的 "source_path" 键，嵌套出现仍拒绝、保持 fail-closed。同时修订模型侧指引：纠正 lark-calendar +meeting 的视频会议取回路由与 wecomcli-meeting 的错误等价说法，lark-shared 新增 CLI 未安装/未登录处理与集中限流准则（按 retry_after_seconds 退避、约 3 次封顶），wecom 联系人/文档/文档管理三个包补齐「业务失败处理」小节；aux 会话指令解释尾随 # userselect: 选引块；work/bound 两路工作环境节按真实线格式说明 <context_update>。bundle 版本槽升至 0.36 以触发技能树与钩子文件的启动刷新。
+    8. 依赖安全修复（#827、#824）：calamine 0.37 受 RUSTSEC-2026-0436 影响——CFB/OLE2 解析器对畸形 .xls/.xlsb 输入 panic 与无界分配（仅 DoS、无内存不安全，可经公共 reader API 由攻击者供给的文件触发），三锁统一收敛到 0.38.0，畸形电子表格文件现在报错而非崩溃；0.37 的 zip ^9 / quick-xml ^0.42 收紧全部延续，新增截断 CFB 扇区回归测试。crates.io 撤回的 async-executor 1.14.0（撤回有 soundness 依据）更新到 1.14.1——修复 Waker 在 Executor::drop 期间触发的 use-after-free（对 Linux 目标图生效）。
+    9. markdown 回退清洗词表 Unicode 折叠对齐（#813）：两条渲染链路各持有一份应逐字节相同的危险标签清洗词表，但桥接回退链路声明为 gi 而主渲染器为 giu——缺 u 旗标时 i 只做 ASCII 大小写折叠，<ſcript>（U+017F）、含开尔文符号 U+212A 的 <link> 等折叠形态在回退链路上原样通过。已将回退旗标对齐为 giu，并新增守卫测试断言两份词表（含旗标）逐字节同构。DOMPurify 仍会剥离未知元素，故这是纵深防御的链路间分歧而非独立 XSS。
+    10. <context_update> 运行时消息不再渲染为用户气泡（#782）：引擎在固定提示头于轮间漂移时向会话历史追加 <context_update>…</context_update> 的用户角色消息，此前这些运行时消息在实时事件与转录重载后渲染成用户气泡，还可能泄入自动生成的会话标题。现按块级判定仅当持久化用户消息的所有非空文本块都是已知运行时元数据才整体隐藏，显示文本剥离已知内部块但模型上下文保留原块；自动标题改为选第一条能产出可见正文的消息。
+    11. 嵌套按钮键盘守卫（#778）：工具卡折叠头、工件列表行、浏览器标签条等 role="button" 行内嵌的真实 <button>（shell 任务取消、工件「定位文件夹」、标签关闭）此前被行级按键处理无条件拦截，从键盘完全无法使用；悬停才显示的按钮键盘聚焦时也不可见。现增加 target !== currentTarget 早退守卫，悬停按钮叠加 group-focus-within 显示，折叠头 aria-expanded 与 chevron 改用与可见内容一致的状态。
+    12. 企业微信开发者文档主机放行（#779）：群机器人工具的「查看官方文档」按钮自 #301 以来一直静默失效——i18n 文案指向 developer.work.weixin.qq.com，但外部 URL 白名单从未收录该主机，请求被硬拒且错误成为未处理的 Promise 拒绝、用户无任何提示。现白名单新增该主机前缀（仿冒域名仍拒绝），前端给文档按钮接上错误提示。
+    性能优化
+    1. 浏览器视图懒加载与 web 入口拆分（#787）：启动体积审计发现浏览器面板图被静态打进主入口（懒加载路由改造后落地的 browser 功能从未进入懒加载表）。现在 browser 视图加入懒加载路由并在两条激活路径预取（dock 打开时把 chunk 拉取藏进 Rust 调用往返、导航点按时预取），原生表面协调器提取为独立急加载模块。实测：桌面主入口 502,952 B → 484,660 B，web 主入口 506,357 B → 127,605 B；懒加载在 chunk 获取失败时显示边界回退/错误卡片而非阻塞应用根。
+    内部改进
+    1. CodeWhale 底座消费公共维护批次（#805）：gitlink 6e1ee88ee → f1eb10efc（pinjou3-clean 头），消费两个公开 squash：#114（perf/T2）在 TUI 内对流式工具输入解析做未变后缀复用——无模型可见文本、公共签名或依赖变化；#125（T3）把 7 个发现/技能引导面（skill-index Usage、subagent ## Skills 头、mcp-discovery 步骤、MCP_REGISTRY_FIRST_INSTRUCTION、shell 引导、registry_sync 结果提示、worker handle_read 提示）统一为「宿主声明入口优先 → 可用时 tool_search → 一次按名直调（被拒即止）→ schema 回执不是执行（许可一次重试）→ 不可用/被拒即停」的有界探测学说，load_skill 改为精确名优先，捆绑的 mcp-discovery 技能资产刷新（marker 11→12，用户自定义字节保留）。8 个 T3 措辞指纹重 pin 并新增 4 个指纹；两 squash 均不触及 fork 的 Cargo.toml/lock，父仓两个 Cargo.lock 不变。
+    2. 全仓注释与文档审计（#808）：抽取 34,644 个注释单元逐一裁决，105 文件 181 处修复——删除指向已删符号/设计文档的死引用，纠正与代码矛盾的陈述（MSRV、dingtalk/tmeet 脱敏取舍、"4 JSONL stores"→5 等），修正 markdown 中被删脚本引用与过时清单。含一项行为相邻修正：BUNDLE_VERSION 0.34→0.35，使已连接安装且缓存「完整可见」的 dingtalk/飞书技能树在字节漂移时也能刷新到内嵌字节——此前技能树不参与指令哈希，已装用户永远收不到修订。
+    3. 对齐官方分支的清洁批次（#792）：清除注释、测试夹具与 NOTICE-dingtalk.md（312→35 行）中的真实内部会话 ID 等内部指涉，删除零引用的 WoSign 签名模板并把签名文档改写为厂商中立；README 连接器亮点行按实际后端目录重写、移除过度声明（三语同步）。新增只读 dingtalk-smoke.sh 并大幅加固 wecom-smoke.sh（贡献者诊断脚本）：二进制发现覆盖应用资产库路径、版本下限按锁值强制、每探针 30s 超时并升级 SIGKILL、输出经脱敏、按退出码判定。另将前端 installVoiceAsr() 调用改为可选链作纵深防御（该按钮在当前所有宿主上均不可达，无行为变化）。
+    4. 文档治理对齐（#793）：tool-governance.md 按 shipped 代码重推（PINVOU3_ALLOWED_TOOLS 28→32、PINVOU3_ALWAYS_LOADED_TOOLS 7→12、能力包默认策略逐条重推 file:line 引用）；windows-rust-ci.md 按 pr-check.yml 重新生成（19→72 个回归过滤器，机器比对 72/72 同序）；ADR 补「深度护栏启动预算」节；发布 4 篇通用闭源侧文档（chat-steer 恢复、workspace-rebind 恢复、system-prompt 架构现状节、麒麟 OS V11 适配踩坑记录）；新增文档锚点检查器。
+    5. 全仓死代码与死测试清扫（#807）：删除两条死生产链——无任何调用者的 web_access_relay_settings 命令族与零调用者的 TaskSelection::from_task_ids（含由此不可达的 gaia 计划守卫）；另删四个仅测试使用的前端符号、三个不可达子用例与 30 个严格被包含的重复测试及死测试助手（41 文件，+159/−618）。每个候选经对抗性变异验证，9 个「看似冗余」的候选被证伪并保留。
+    6. 连接器资产指纹与本地内存观测（#788、#790）：连接 CLI 连接器时，安装记录现在写入经哈希验证的二进制资产指纹（kind/name/version/sha256）——只有盘上二进制哈希与 lock 表匹配才落指纹，二进制缺失/不匹配时降级为无指纹记录，绝不把未实测的 sha256 写进存储。为常驻 ACP 运行时（codex / claude / kimi 适配器的子进程树）新增本地内存观测：每次空闲巡检采样各角色进程数与 RSS，180 样本滚动窗口计算 p95 与峰值，在显著变动或 15 分钟心跳时输出一行摘要到本地诊断日志（~/.pinvou3/logs/codex-acp.log），不上传任何数据、不采样命令行/环境变量/提示词/凭据，只观测不管控。
+    7. CI 门禁与安全供应链（#783、#794、#811、#820、#819、#806）：webpki-roots 根存储图建立 fail-closed 锁图守卫（三份 Cargo.lock 精确校验 pinned 版本+sha256+ 依赖边）+ cargo-deny 下限 + 决策记录，根存储移动从此无法静默落地（#783）。移植官方分支 CI 审计项：rust-test 三段式磁盘加固、commit-message 对 ref 创建/强推显式跳过范围校验、relay-test 不再排除草稿 PR、fork-guard 新增 3 个路由限制指纹（#794）。修复 runner 镜像刷新后 $HOME/.cargo 缺失导致追加配置失败的 CI 红（三平台同修，#811）；恢复 #811 移植时误删的 zram 层——它是 ~14.2GB rust-test 链接峰值的必要 OOM 防线，配套 130s 安装上限、dpkg 锁超时与顺流状态修复（#820）。非 UTF-8 队列名测试编译门从 unix 收窄到 linux（macOS APFS 在系统调用层拒绝非法 UTF-8 名字，测试前提在 macOS 不存在，#819）；loong64 发布策略测试套件在原生 macOS 自足运行（GNU 工具 shim + 极简 readelf，关闭一个假绿案例，#806）。
+    8. 恢复闭源侧回归测试 pin（#791、#757）：恢复官方 fork 携带、在社区回流中丢失的 13 项回归测试 pin——行为本仓已实现，仅测试网丢失：JS↔Rust 消息工具字节一致漂移 pin、后台会话草稿恢复隔离、股票行情 null 字段渲染、流式淡出模拟时钟边界、turn 错误展示三语契约、工具市场与设置页真实 Chrome 冒烟、Windows 安装器集成测试、NATIVE_CHAT_EVENTS 清单↔处理器 parity 等，无生产代码变更。保留已随 CodeWhale#118 落地的 fork 边界文档与恢复指纹（三文件 +44，255 条）。
+    9. 依赖例行维护（#800）：postcss-selector-parser 6.1.4 → 6.1.5（开发依赖，lockfile-only），修复平坦选择器线性时间解析，关闭 CPU 耗尽漏洞 CVE-2026-104844 / GHSA-rj75-hqrm-r3gf；6.x 线自此进入仅安全维护（为 Tailwind CSS 3 安装基保留）。
+    10. 可链 panic hook 与脱敏修复（#780）：computer-use 后台的载荷脱敏 panic hook 从裸 take_hook/set_hook 切换到可链接设计：互斥串行注册、进程钩子只装一次、按注册逆序分发、无主作用域回落先前钩子——消除注册窗口内其他线程的 panic 打到默认钩子打印未脱敏载荷、以及第二个消费者静默替换第一个作用域脱敏两个隐患；顺带修复 panic 摘要未解引用双重包装导致所有摘要恒记为 "non-string panic payload" 的真实缺陷。无公共 API 变化。
+    注意事项
+    - 手机远程控制（#802）：「允许文件夹访问」的撤销不限制已创建的主机绑定会话（仅作用于未来授权）；CLI code workspace diff 镜像尚未获得同等的目录拒绝/凭据黑名单（同信任面，待产品决策）；桌面入站帧上限放宽到 4 MiB−64 KiB；撤销期间 relay 故障会 fail-closed 阻塞 stop/rotate。
+    - 连接器技能默认启用（#741）：有意行为变化——CLI 连接器（飞书/企业微信/钉钉/tmeet）连接即默认启用其技能；从未同意过的旧版已连接群体（无 ledger 记录）会在首次升级后的首次启动时被授予启用；connect_granted 是全局集合，一个 scope 的关闭会移除其余未初始化 scope 的授予（fail-closed）；拆卸 + 重连会重新授予。
+    - create_session（#657）：创建无逐次确认弹窗（工具说明三语披露，审计 ledger 与审计日志是审查入口）；工作区校验现在拒绝 pinvou3 home 子树与卷根——面板创建和无头 agentic 绑定同样会拒绝以前接受的路径。
+    - 普通模式产物交付（#799）：presenter schema 为每个普通模式请求增加输入 token 成本（取决于 tokenizer 与序列化）；presenter 成功仅代表文件存在且非空，不证明内容正确或原生卡片可见。
+    - 子进程捕获上限（#784）：超过 4 MiB 的合法单流输出现在报错并终止进程树；错误消息文本变化，调用方应匹配锚点常量。
+    - 监控口径（#816、#795）：TTFT 现指「到首个思考 token 的时间」（与 vLLM 语义一致），推理模型的面板数值含义与旧墙钟口径不同；数据并行 vLLM 服务器的队列与活跃状态现在反映整个 fleet（此前只报告 engine 0）——单引擎服务器不受影响。
+    - 计划向导（#815）：暂不教 CRON/每月语法（待 #821）——期间 CRON 任务被 UI 编辑会静默改写为每周，请勿用 UI 编辑 CRON 任务。
+    - CodeWhale 底座（#805）：#125 改变模型可见的发现/技能调用引导文本（有界探测学说）；技能资产 marker 11→12，用户自定义字节保留。
+    - 依赖行为变化（#827）：畸形电子表格文件现在报错而非崩溃/OOM（错误路径替换崩溃路径）。
+    - 捆绑技能刷新（#808）：BUNDLE_VERSION 0.35 使已连接安装的 dingtalk/飞书技能树在字节漂移时也能刷新到内嵌字节。
+    - LoongArch64 安装包继续随发布提供（dpkg 架构 loong64，面向 UOS V25 / deepin 23/25 新世界系统）；平台降级面不变：本地嵌入不可用（知识库检索自动降级全文检索）、连接器与 Codex/Claude 原生运行时无按需安装器（PATH 已装二进制继续可用）。
+    - 官网页面版本同步可能滞后，v0.10.17 官网页面尚未更新，下载前请确认页面显示的版本。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 安装包与发布产物由版本 PR 合入 main 后触发的发布工作流构建，未在本地构建。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 03bb46a48 / Actions #41791375188（五平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 会话读取 MCP 服务器新增 create_session：模型可创建新聊天会话（必填审计来源、可选工作区/模型/标题/首回合消息），重试安全、受功能门控、无人值守首回合带隔离 shield。（#657）
+    - 连接 CLI 连接器（飞书/企业微信/钉钉/tmeet）即默认启用其技能：商店卡片与 CLI 同步，显式关闭粘滞，物化失败补偿性撤销、无 fail-open 窗口。（#741）
+    - pinvou monitor 暴露 vLLM 队列深度与结构化诊断/通知字段；数据并行服务器指标按 fleet 求和。（#795）
+    - 助手回复新增「重新生成」按钮（最新一回合），附输入框一键清空与语音转写放弃修复。（#789）
+    修复
+    - 手机远程控制全链路审计：工作区通道统一凭据路径黑名单、relay 双侧崩溃守卫、重放投毒修复、注册可自愈、文件夹授权可视化并可一键撤销。（#802）
+    - 普通模式文件任务经 present_artifact 交付产物卡并校验；计划/代码模式指引跟随实际工具与权限；规则加载显式按目标路径逐目录搜索 AGENTS.md。（#799）
+    - codex-acp 死运行时按崩溃预算回收（立即→250ms→暂停阶梯），安装失败树杀、存储 persist-before-publish、取消事件持久化、权限卡片按代际盖章。（#786）
+    - 子进程输出捕获改临时文件（每流 4 MiB 上限，溢出终止进程树），修复管道留守子孙导致「成功但空输出」与无界内存。（#784）
+    - 手机 relay：单帧/畸形 Host 不再击溃进程、代理 IP fail-closed、XFF 最右项归因、幂等优雅关闭、固定行错误日志。（#781）
+    - 监控 TTFT/TPS 改用引擎 TurnUsage 权威计时，修复 TTFT 偏高、TPS 偏低与多调用轮 TPS 高估。（#816）
+    - 深度守卫不再误拒结构化计划载荷的普通路径字段；lark/wecom 指引缺口补齐（bundle 0.36）。（#815）
+    - calamine 0.38 修复 RUSTSEC-2026-0436（畸形 .xls/.xlsb panic/OOM→报错）；async-executor 1.14.1 修复撤回版本中的 use-after-free。（#827、#824）
+    - markdown 回退清洗词表 Unicode 折叠对齐（gi→giu），折叠形态危险标签不再漏过回退链路。（#813）
+    - <context_update> 运行时消息不再渲染为用户气泡、不再泄入自动标题。（#782）
+    - 嵌套按钮键盘可用性修复（shell 取消/工件定位/标签关闭），悬停按钮聚焦可见。（#778）
+    - 企业微信「查看官方文档」按钮修复（白名单补 developer.work.weixin.qq.com，错误可见化）。（#779）
+    性能优化
+    - 浏览器面板图移出主入口（桌面 503 kB→485 kB），web 入口拆分（506 kB→128 kB），browser 视图懒加载+预取，chunk 失败有边界回退。（#787）
+    内部改进
+    - CodeWhale 底座消费 #114/#125：TUI 流式解析后缀复用；七个发现/技能引导面统一为有界探测学说，mcp-discovery 资产刷新。（#805）
+    - 全仓注释审计 181 处修复；BUNDLE_VERSION 0.35 使已装用户 dingtalk/飞书技能树可刷新。（#808）
+    - 对齐清洁批次：内部指涉清除、README 连接器声明重写、dingtalk/wecom 冒烟脚本新增加固。（#792）
+    - 文档治理对齐：工具治理计数重推、Windows CI 手册再生、4 篇恢复/架构文档发布。（#793）
+    - 死代码/死测试清扫（两条死生产链 + 30 个重复测试）；连接器资产指纹（哈希验证才落盘）；ACP 运行时本地内存观测（仅本地日志）。（#807、#788、#790）
+    - webpki-roots 锁图守卫、CI 磁盘/zram 加固与 runner 镜像适配、loong64 策略套件 macOS 自足、恢复 13 项闭源侧回归 pin、postcss-selector-parser CVE 修复、可链 panic hook。（#783、#794、#811、#820、#819、#806、#791、#757、#800、#780）
+    en-US
+    New Features
+    - The session-reader MCP server gains create_session: a model can start a new chat session with an audited requester claim, optional workspace/model/title/first message, safe retries, and a feature gate; unattended first turns carry an isolation shield. (#657)
+    - Connecting a CLI connector (feishu/wecom/dingtalk/tmeet) now enables its skills immediately on both the store card and the CLI, with explicit user verdicts sticky across boots, reconnects, and apply-skills runs. (#741)
+    - pinvou monitor surfaces vLLM queue depth plus structured diagnostics/notices; data-parallel server metrics are now fleet-summed. (#795)
+    - Assistant replies gain a regenerate button on the newest turn, plus a one-click composer clear and voice-result abandon fixes. (#789)
+    Fixes
+    - End-to-end audit of the phone remote control stack: a credential path policy on all workspace lanes, relay crash guards on both send and receive, replay-poisoning fixes, recoverable registration, and a visible, revocable folder-consent control. (#802)
+    - Ordinary-mode file tasks now finish with a verified artifact card via present_artifact; plan/code guidance follows the tools actually available; rule discovery explicitly searches AGENTS.md per directory toward the target. (#799)
+    - Dead ACP runtimes are reclaimed with a per-session crash budget (immediate → 250 ms → paused ladder), plus tree-kill on installer failure, persist-before-publish stores, durable cancel journaling, and generation-stamped permission cards. (#786)
+    - Subprocess output is captured into tempfiles with a 4 MiB per-stream bound, fixing empty-output-on-success from pipe-holding descendants and unbounded capture memory. (#784)
+    - The relay survives single-frame and malformed-Host crashes, parses proxy IPs fail-closed, attributes the rightmost XFF entry, shuts down idempotently, and logs fixed-line errors only. (#781)
+    - Monitor TTFT/TPS now consume the engine's authoritative TurnUsage timing, fixing overstated TTFT, understated TPS, and inflated multi-call turns. (#816)
+    - The multiagent depth guard no longer falsely denies ordinary path fields in structured plan payloads; lark/wecom guidance gaps closed (bundle 0.36). (#815)
+    - calamine 0.38 fixes RUSTSEC-2026-0436 (malformed .xls/.xlsb panic/OOM → errors); async-executor 1.14.1 fixes a use-after-free in the yanked 1.14.0. (#827, #824)
+    - The bridge-fallback sanitize regex flags align to giu, closing a Unicode case-folding divergence with the main renderer. (#813)
+    - Runtime <context_update> messages no longer render as user bubbles or leak into auto-generated titles. (#782)
+    - Nested buttons inside role="button" rows are keyboard-usable again, and hover-only buttons show on focus. (#778)
+    - The WeCom bot tool's "view official docs" button works again (allowlist + visible errors). (#779)
+    Performance
+    - The browser pane moved out of the main entry (desktop 503 kB → 485 kB) and the web entry was split (506 kB → 128 kB), with lazy-loading, prefetch, and error boundaries. (#787)
+    Internal improvements
+    - CodeWhale base consumes #114/#125: TUI streaming suffix reuse and a bounded-probe discovery/skill doctrine across seven model-visible surfaces. (#805)
+    - Repo-wide comment audit (181 fixes) plus a BUNDLE_VERSION bump to 0.35 so installed DingTalk/Lark skill trees refresh. (#808)
+    - Parity hygiene: internal referents scrubbed, README connector claims rewritten, new DingTalk smoke script and hardened WeCom counterpart. (#792)
+    - Docs governance: tool-governance counts re-derived, Windows CI runbook regenerated, four recovery/architecture docs published. (#793)
+    - Dead code/test sweep (two dead production chains, 30 duplicate tests); hash-verified connector asset pins; local-only ACP runtime memory sampling. (#807, #788, #790)
+    - webpki-roots lock-graph guard, CI disk/zram hardening and runner-image fixes, loong64 policy suite on stock macOS, thirteen restored regression pins, postcss-selector-parser CVE fix, chainable panic hooks. (#783, #794, #811, #820, #819, #806, #791, #757, #800, #780)
+    Full Changelog: https://github.com/Pinvou/pinvou-agent/compare/v0.10.16...v0.10.17
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.17
+ReleaseTime: 2026-11-04T17:04:45.0000000Z
