@@ -1,0 +1,59 @@
+Version: 0.42.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.0/codeg_0.42.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.0/codeg_0.42.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds CNB repository support and global system instruction editing, makes tasks awaiting your response easier to continue, and improves notifications and conversation history.
+    New
+    - CNB (cnb.cool) joins the supported code hosting platforms, with issue and merge request management, automatic issue processing, and task delivery through merge requests. (#1066, @abigmiu)
+    - Global system instructions can be viewed and edited directly in agent settings for supported agents such as Claude Code, Codex and OpenCode, making it easier to set preferences and working rules. (#1060, @ana52070)
+    - Channel and webhook notifications can be limited to top-level session completions and errors, reducing sub-agent notifications while keeping permission requests and questions visible.
+    Improved
+    - Tasks awaiting permission, an answer or plan approval now prioritize “Respond”, opening the conversation so you can handle the request and let the task continue.
+    - Webhook notifications include conversation, agent and parent-session details, making their source and delegation relationships easier to identify.
+    - Expandable steps in the execution timeline highlight on hover and keyboard focus, making it easier to see which step you are about to open.
+    - Self-updated Hermes 0.22.6 installations retain provider-grouped model selection and mode switching, with reasoning effort available alongside them.
+    - Updated Claude Code to claude-agent-acp 0.100.0 and CodeBuddy to 2.179.3.
+    Fixed
+    - OpenCode’s / menu once again lists the skills it loads, making them available in chat, automation and task editors.
+    - OpenCode’s default model lists in Settings correctly hide disabled models and providers. (#1079, @xyalter)
+    - DeepSeek Harness 0.2.x history correctly displays tool output, failures and cache-write usage, including conversations migrated from earlier versions. (#1086, @Cuinnchen)
+    - PowerShell in the built-in terminal and “Run on this computer” loads your profile, allowing fnm, conda, aliases and other environment customizations to work.
+    - Reopening a Pi conversation correctly restores its message history, fixing cases where the conversation appeared empty.
+    - Claude Code preserves the original conversation and explains why it cannot be restored, avoiding an unexpected switch to an empty session when it is held by a background task or its worktree cannot be reopened.
+    - Claude Code replies triggered by MCP prompt commands no longer appear twice in the conversation.
+    Thanks to @abigmiu, @ana52070, @xyalter and @Cuinnchen for contributing to this release, and to @grykom, @branll, @DaYePython and @ZhangSanMo for the reports and suggestions.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版新增 CNB 仓库支持和全局系统提示词编辑，让等待你回应的任务更容易继续，并改进消息通知与历史会话展示。
+    新增
+    - 新增腾讯 CNB（cnb.cool）支持，可管理 Issue 和合并请求、自动处理 Issue，并将任务成果交付为合并请求。（#1066，@abigmiu）
+    - 支持在智能体设置中直接查看和编辑全局系统提示词，适用于 Claude Code、Codex、OpenCode 等智能体，方便配置角色、回复偏好和工作规范。（#1060，@ana52070）
+    - 消息渠道和 Webhook 可仅推送主会话的完成与错误通知，减少子智能体的通知干扰，同时保留授权请求和提问提醒。
+    改进
+    - 等待授权、回答问题或审批计划的任务会优先显示「去回应」，点击即可打开会话处理请求，回应后任务会自动继续。
+    - Webhook 通知会附带会话、智能体及父会话信息，方便识别消息来源和委派关系。
+    - 执行过程中可展开的步骤会在鼠标悬停或键盘聚焦时高亮，更容易看清即将打开的步骤。
+    - 兼容自行升级的 Hermes 0.22.6，保留按供应商分组的模型选择和模式切换，并支持调整推理强度。
+    - Claude Code 适配器更新至 claude-agent-acp 0.100.0，CodeBuddy 更新至 2.179.3。
+    修复
+    - OpenCode 的 / 菜单恢复显示已加载的技能，可在聊天、自动化和任务编辑器中直接选用。
+    - OpenCode 设置中的默认模型列表会正确隐藏已禁用的模型和供应商。（#1079，@xyalter）
+    - DeepSeek Harness 0.2.x 的历史会话能正确显示工具输出、失败状态和缓存写入用量，从旧版迁移的会话也能正常查看。（#1086，@Cuinnchen）
+    - 内置终端和「在本机运行」会正确加载 PowerShell 个人配置，让 fnm、conda、命令别名等自定义环境正常生效。
+    - 重新打开 Pi 会话时可以正确恢复历史消息，修复部分会话记录显示为空的问题。
+    - Claude Code 无法恢复会话时会保留原会话并说明原因，避免因后台任务占用或工作树无法重新打开而误切到空白会话。
+    - Claude Code 使用 MCP 提示词命令时，同一轮对话不再重复显示。
+    感谢 @abigmiu、@ana52070、@xyalter 和 @Cuinnchen 为本次发布做出的贡献，也感谢 @grykom、@branll、@DaYePython 和 @ZhangSanMo 的问题反馈和功能建议。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.42.0
+ReleaseTime: 2026-11-03T23:31:19.0000000Z
