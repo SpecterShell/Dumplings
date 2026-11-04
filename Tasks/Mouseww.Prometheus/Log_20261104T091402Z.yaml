@@ -1,0 +1,26 @@
+Version: 0.28.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.28.0/Prometheus_0.28.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.28.0/Prometheus_0.28.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 自动压缩阈值可调：在「设置 → 对话 → 自动压缩上下文」开关下方，用滑块选择上下文填到多少比例时开始压缩（50%–95%，默认 80%）
+      - 越低越早压缩，越省上下文，但也更早丢掉细节
+      - 右侧实时显示百分比，「恢复默认」一键回到 80%
+    说明
+    - 阈值用百分比而不是 token 数，是因为不同模型的上下文窗口差很多（8k 到 1M），同一个 token 数在不同模型上含义完全不同；按比例设定，换模型时行为一致
+    - 改动即时生效，新建的对话按新阈值运行
+    - 模型的上下文窗口未知时会沿用原默认值，不做猜测——猜错会在错误的时机压缩，比不压缩更糟
+    - 阈值只存在 Prometheus 自己的配置里，不会改写你手工编辑过的 PI 配置文件
+    - 手改配置写入超出范围的值会被丢弃，回退到默认 80%
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.28.0
+ReleaseTime: 2026-11-04T09:05:09.0000000Z
