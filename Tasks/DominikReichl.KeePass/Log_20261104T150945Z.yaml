@@ -1,0 +1,61 @@
+Version: "2.62"
+Installer:
+- InstallerType: msi
+  InstallerUrl: https://sourceforge.net/projects/keepass/files/KeePass 2.x/2.62/KeePass-2.62.msi/download
+- InstallerType: inno
+  InstallerUrl: https://sourceforge.net/projects/keepass/files/KeePass 2.x/2.62/KeePass-2.62-Setup.exe/download
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://keepass.info/news/news_all.html
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://keepass.info/news/n261104_2.62.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features:
+    - Added XPath extension function 'kp:matches', which allows to test whether a string matches a regular expression in a search with an XPath expression.
+    - Added XPath extension function 'kp:string-compare', which allows to compare two strings lexicographically in a search with an XPath expression (this allows for example to find entries that have expired in a specific time period).
+    - Added support for opening URLs with LibreWolf and R3dfox in private mode.
+    - The {CLIPBOARD-SET:...} placeholder now starts the automatic clipboard clearing countdown (except when the text is empty).
+    - When closing a database, the search term in the 'Find' dialog is now removed (this can be disabled using the UIFlags bit 0x100000).
+    - After closing the attachment reimport dialog, the temporary file is now renamed before reading, overwriting and deleting it (this reduces the risk that the external application sees the random overwrite data, if it is still running).
+    - Added two help links in the placeholders/commands box of the auto-type association dialog.
+    - In the placeholders/commands box of the auto-type association dialog, the key modifiers are now linkified.
+    - For each item in a list view showing custom data (of a database, a group or an entry), the estimated size of the value in the process memory is now displayed.
+    - In HTML exports/printouts, page breaks in rows are now avoided, if possible.
+    - Added path validation for files extracted from a PLGX file.
+    - The supported operating system versions are now declared in the application manifest, which enables various Windows improvements.
+    - KPScript: added application manifest, which enables various Windows improvements, improves the activation of Windows common control theming, etc.
+    - KPScript: on Windows 11 24H2 ARM64 and later, KPScript now runs natively, too (i.e. without x64 emulation).
+    Improvements:
+    - Improved list view refresh performance.
+    - Improved reliability of the automatic clipboard clearing countdown.
+    - If the automatic clipboard clearing fails (e.g. when access to the clipboard is blocked while Windows is locked), KeePass now retries clearing it until succeeding.
+    - Unified clipboard access timeout.
+    - The quick search terms list is now also cleared when closing an inactive database.
+    - Improved behavior when closing the attachment reimport dialog immediately after exporting an attachment to a temporary file.
+    - Swapped the keyboard shortcuts Ctrl+D and Ctrl+K in the main entry list (such that Ctrl+D now duplicates the selected entries and Ctrl+K compares them).
+    - Changed the keyboard shortcut for duplicating an auto-type association in the entry dialog from Ctrl+K to Ctrl+D.
+    - Improved enumeration of immersive windows.
+    - Improved linkification in the placeholders/commands box of the auto-type association dialog.
+    - Improved custom font support in the auto-type association dialog.
+    - Unified behavior of the [Close] and [X] buttons of the database maintenance dialog.
+    - In the XML Replace dialog, the [OK] button is now disabled when the node selection XPath expression or the search text (if necessary) is empty.
+    - Enhanced Microsoft Edge uninstallation detection.
+    - Improved normalization of new-line sequences.
+    - Improved activation of Windows common control theming.
+    - The DPI awareness is now declared in the application manifest.
+    - Improved ARM64 compatibility declaration.
+    - Improved Windows version detection.
+    - When running on .NET < 4.7, the SSL 3 support is now disabled (when running on .NET 4.7 or higher, KeePass lets the operating system choose the supported/enabled protocols, and SSL 3 is disabled on most modern operating systems by default).
+    - Some PLGX error messages are now more detailed.
+    - Upgraded installer.
+    - Various UI text improvements.
+    - Various code optimizations.
+    - Minor other improvements.
+    Bugfixes:
+    - XML Replace does not create unnecessary history entries anymore.
+ReleaseTime: 2026-11-04T14:41:03.0000000Z
+RealVersion: 2.62.0
