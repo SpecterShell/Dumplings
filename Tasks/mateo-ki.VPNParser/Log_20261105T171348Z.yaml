@@ -1,0 +1,30 @@
+Version: 1.16.3
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.3/vpn-parser-1.16.3-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.3 发布说明 / Release Notes
+    🎉 VProxy v1.16.3 正式发布！本版本重点解决了内核管理更新检查与版本倒退误判问题，全面升级了 VP-Core 编译适配层，并正式锁定内置最新的 VP-Core v1.6.2 极速稳定版内核：
+    🛠️ 内核管理：检查更新直连隔离、Semver 严格比对与离线缓存透出
+    - 直连通道彻底隔离外部环境变量：
+      - 显式为直连探测客户端配置 .no_proxy()，避免受系统代理或历史失效环境变量污染；连接超时提升至 6 秒，保障弱网或直连丢包下的版本探测成功率；
+    - Semver 严格大小偏序比对：
+      - 引入规范的语义化版本（Semver）三段数字清洗与严格偏序比对，彻底根除当在线探测因网络中断降级读取旧缓存时反向将旧版本误当作“可更新”推荐的逻辑漏洞；
+    - 离线缓存透明化感知：
+      - 在“内核管理”抽屉与版本卡片中，对来源自本地快照的版本显式标注“（缓存）”或“（可更新 · 缓存）”，并在悬浮 Tooltip 中清晰解释离线状态，杜绝界面信息歧义。
+    ⚡ 代理编译器：VP-Core 编译适配升级与抗阻断加固
+    - 阻断性 ECH 配置彻底清洗：
+      - 针对大陆防火墙（GFW）对含 ECH（Encrypted Client Hello）扩展实施全网静默丢包的现状，在生成 VP-Core 运行时配置时自动剥离 ech 与 ech-opts，使原本卡死超时的海外优选节点恢复标准 TLS 1.3 极速握手，耗时从 10 秒超时骤降至 200ms 秒连；
+    - WebSocket 标准 User-Agent 标头自动补齐：
+      - 为所有 WebSocket 传输节点自动补齐标准 Chrome 浏览器标头，杜绝经 Cloudflare CDN 边缘节点时因缺少浏览器特征触发的 400 Bad Request 阻断。
+    📦 内核资产升级：全面锁定最新稳定版 VP-Core v1.6.2
+    - 官方内置锁定版本升级至 v1.6.2：
+      - 包含底层 WsStream::poll_write 异步分帧重发数据损坏根治、ECH 握手 2.5s 快速超时自愈、REJECT 规则静默 403 响应（彻底消除 502 Bad Gateway 报警）以及 DNS 直连解析查空平滑降级系统原生解析等全部高并发稳定性成果。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.3
+ReleaseTime: 2026-11-05T16:11:33.0000000Z
