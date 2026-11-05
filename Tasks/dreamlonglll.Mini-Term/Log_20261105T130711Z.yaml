@@ -1,0 +1,22 @@
+Version: 1.13.28
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.13.28/Mini-Term_1.13.28_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - Windows 上 Shift+Enter 能换行了：本地终端现在会把 Shift+Enter 和 Ctrl+J 的真实按键发给程序。OMP 和 Codex 里按 Shift+Enter 插入换行，不再直接提交；PowerShell 里按 Shift+Enter 进入多行续行（#93，感谢 @Clannad47）
+    - PowerShell 里按 Ctrl+J 后，接着输入的内容跑到上一行、执行顺序颠倒的问题
+    如果这两个键出现异常，可以设环境变量 MT_DISABLE_WIN32_INPUT_MODE=1 退回旧行为。
+    已知限制
+    - OMP 的 Ctrl+J 目前仍是提交，要等 OMP 上游调整，换行请先用 Shift+Enter
+    - Claude Code 和 pi 的 Shift+Enter 仍是提交，与之前相同，换行请用 Ctrl+J
+    - 在 Claude Code 或 pi 里用 Shift+Enter 提交时，Mini-Term 会把它当成换行：未开 hook 时这一回合可能没有完成通知，这条输入还可能和下一条合并显示。用 Enter 提交不受影响
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.13.28
+ReleaseTime: 2026-11-05T12:19:56.0000000Z
