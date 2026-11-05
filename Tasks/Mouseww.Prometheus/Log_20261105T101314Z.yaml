@@ -1,0 +1,24 @@
+Version: 0.29.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.29.1/Prometheus_0.29.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.29.1/Prometheus_0.29.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 懒加载更早的历史时，收起的步骤会全部展开：历史轮次经常以工具调用收尾，没有「最后一段正文」，旧折叠规则就把整轮当成没法收起。往上滚加载更早的对话时，工具步骤和思考过程突然铺开，会话高度猛涨
+      - 现在只要这一轮里有步骤，就收成「已完成 N 个步骤」
+      - 可见答案从整轮里最后一段正文取，不一定在最后一条消息上
+      - 失败 / 中断的一轮仍保持展开，错误不会被藏起来
+    - 流程画布右侧的连线会被裁掉：节点拖到默认画布外时，连线画在固定大小的 SVG 上，远侧节点后面的边看不见 → 画布随节点一起变大
+    说明
+    - 若你用的是桌面安装版，需要更新到本版本才生效；源码运行的话重新构建前端即可
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.29.1
+ReleaseTime: 2026-11-05T09:32:30.0000000Z
