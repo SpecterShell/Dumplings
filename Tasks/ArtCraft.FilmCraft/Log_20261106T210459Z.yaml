@@ -1,0 +1,125 @@
+Version: 0.18.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.18.0/filmcraft-0.18.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.18.0/filmcraft-0.18.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.18.0/filmcraft-0.18.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - web: check MP4 sample extent before allocating its buffer by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4102
+    - avi: hold child chunks to their container so lists cannot overlap by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4106
+    - security(dnx): cap decoded frame memory and reject repeated scan line indices by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4101
+    - security(apv): size the auxiliary alpha frame only after its tiles decode by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4109
+    - web: load only a same-origin http(s) app in the WebCodecs read-error harness by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4103
+    - captions: escape a TTML cue's unclosed '<' tail in one pass by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4105
+    - interchange: AAF top-level composition carries the registered Usage_TopLevel (#3986) by @JonRC in https://github.com/storytold/filmcraft/pull/3987
+    - Interchange export: saturate timecodes and PCM fields on hostile project values by @Lightningbulb2 in https://github.com/storytold/filmcraft/pull/4029
+    - interchange: EDL clips named only by clip name are missing, not made offline (#3997) by @JonRC in https://github.com/storytold/filmcraft/pull/4000
+    - interchange: EDL media relinked with Align Timecode lands on the file's own time (#3990) by @JonRC in https://github.com/storytold/filmcraft/pull/3996
+    - interchange: an OTIO item at a sample rate no longer sets the sequence rate (#4111) by @JonRC in https://github.com/storytold/filmcraft/pull/4112
+    - interchange: EDL and OMF export reports name the video tracks they leave out (#4132) by @JonRC in https://github.com/storytold/filmcraft/pull/4133
+    - engine: AAF/OMF export takes bitDepth as "24" too, and refuses anything but 16 or 24 (#4019) by @JonRC in https://github.com/storytold/filmcraft/pull/4020
+    - captions: TTML export writes the track language, import keeps it (#4025) by @JonRC in https://github.com/storytold/filmcraft/pull/4038
+    - Reject '+'-signed audio channel numbers in EDL import by @Silvertree2010 in https://github.com/storytold/filmcraft/pull/3935
+    - Only decode percent escapes made of hex digits in file URLs by @Silvertree2010 in https://github.com/storytold/filmcraft/pull/3936
+    - Strip leading BOM in WebVTT parse even without a signature by @Silvertree2010 in https://github.com/storytold/filmcraft/pull/3961
+    - Read TTS fractions with denominator 1 as "over one" by @Silvertree2010 in https://github.com/storytold/filmcraft/pull/3983
+    - Fix per-character Stroke and Stroke 2 appearance controls by @wweimao in https://github.com/storytold/filmcraft/pull/3938
+    - captions: SCC and MCC export name the characters they drop or replace (#4023) by @JonRC in https://github.com/storytold/filmcraft/pull/4036
+    - i18n(ru): translate the 64 strings the missing-translations report listed (#1674) by @rahul05ranjan in https://github.com/storytold/filmcraft/pull/3960
+    - i18n(zh-cn): translate the 41 strings the report listed as missing by @rahul05ranjan in https://github.com/storytold/filmcraft/pull/3964
+    - codecs: an MP4 edit rounded to the movie timescale keeps the last frame by @Agapenordev in https://github.com/storytold/filmcraft/pull/3994
+    - lumetri.presetThumbnails: write through the host and keep the grid to the presets by @Lightningbulb2 in https://github.com/storytold/filmcraft/pull/4030
+    - Name Apple Intermediate Codec and show why a clip is unreadable (part of #3646) by @scks1 in https://github.com/storytold/filmcraft/pull/4010
+    - cli: a missing project stops a save in place before it opens by @JonRC in https://github.com/storytold/filmcraft/pull/3946
+    - Import by a relative path: '..' climbs out of the document folder, and media paths are resolved once (#3998, #4001) by @JonRC in https://github.com/storytold/filmcraft/pull/4004
+    - essentialSound.set: ducking.against takes the type names setType takes by @JonRC in https://github.com/storytold/filmcraft/pull/4041
+    - engine: the Metadata panel's Out Point is the last frame kept (#4114) by @JonRC in https://github.com/storytold/filmcraft/pull/4117
+    - Image-sequence export reports the stills it wrote, not the path it was given by @JonRC in https://github.com/storytold/filmcraft/pull/4018
+    - engine: timeline.move reads a time object and names an entry it cannot use (#4113) by @JonRC in https://github.com/storytold/filmcraft/pull/4116
+    - #3948: Time interpolation applies when a clip's frame rate differs from the sequence's by @JonRC in https://github.com/storytold/filmcraft/pull/3949
+    - #626: undecodable H.264 shows the unreadable slate at any slice QP, not black by @JonRC in https://github.com/storytold/filmcraft/pull/3959
+    - media: say which colour values no tag gave (#4086) by @JonRC in https://github.com/storytold/filmcraft/pull/4089
+    - fix(render): an opaque 8-bit still becomes the canvas, not a region over a zero-filled one by @JonRC in https://github.com/storytold/filmcraft/pull/4070
+    - audio-dsp: the full-rate sync peak sets the polarity, not the coarse one (#4119) by @JonRC in https://github.com/storytold/filmcraft/pull/4120
+    - gpu: export draws Push transitions on the GPU by @ivanao92 in https://github.com/storytold/filmcraft/pull/4122
+    - fix(timeline): a marquee takes only the track rows its own pane shows (#2978) by @ivanao92 in https://github.com/storytold/filmcraft/pull/4118
+    - fix(#3653): Timeline clicking it brings the Program monitor to the front of its group by @Kathir-D in https://github.com/storytold/filmcraft/pull/4012
+    - fix(ui): Remove Attributes says that ticked attributes are removed (#3789) by @mpratsaki in https://github.com/storytold/filmcraft/pull/4003
+    - fix(ui): shortcuts need exactly their modifiers by @texjer in https://github.com/storytold/filmcraft/pull/4016
+    - gpu: the off-screen instance reads wgpu's flag variables (#4084) by @JonRC in https://github.com/storytold/filmcraft/pull/4087
+    - fix(timeline): the Mix row's level sets the Mix fader (#3765) by @mpratsaki in https://github.com/storytold/filmcraft/pull/3954
+    - macOS: keep AppKit's Touch Bar observers when AccessKit drops (no crash on quit) by @reedhewitt in https://github.com/storytold/filmcraft/pull/4002
+    - dng: budget SubIFD references before reading and queueing them by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4108
+    - security(edit): look up transcript track coverage by binary search by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4123
+    - project: bound the speaker index a transcript word may carry by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4140
+    - h264, hevc: refuse a decode call that starts an absurd number of pictures by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4231
+    - codecs: bound AVI window copying, packet reads, H.264 head collection and decoded-packet caches by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4228
+    - project: cut the speaker name copied into each derived transcript word by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4223
+    - text: lay out overlapping runs, visual runs and wrapped lines without rescanning by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4221
+    - codecs: cap the decoded samples a standalone file or Vorbis stream keeps in memory by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4203
+    - engine: do not keep opened sources in relink search results by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4198
+    - engine: merge imported presets through a name index by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4168
+    - captions: cap the CEA-708 text an MCC import retains by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4121
+    - h264: refuse slices that overlap macroblocks the picture already decoded by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4204
+    - dng: reject zero or over-16-bit sample depths before unpacking by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4192
+    - hevc: do not carry the previous segment's entry points into dependent slices by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4188
+    - render: bound subclip recursion in the preview cost estimate by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4186
+    - engine: leave unselected items' source graphics out of a selection export by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4183
+    - captions: bound caption outline dilation work by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4110
+    - mxf: resolve a source package's repeated track references once by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4212
+    - security(mcp): bound queued parse-error replies so unread output stalls input by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4115
+    - tts: look for a pause marker's closing bracket only a marker's length ahead by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4189
+    - flac: consume encoder batches by offset instead of draining per frame by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4190
+    - speech: validate the Whisper attention head count by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4195
+    - engine: keep a shortcut preset named "active" from replacing the active set by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4201
+    - media: bound still pixel count and YCbCr TIFF strips before allocating by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4214
+    - edit: search transcript phrases in one pass by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4224
+    - export: pick the cheaper resample axis order and refuse short sources in the 8-bit conversions by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4245
+    - logging: escape control characters in a log message so it stays one record by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4255
+    - render: cap Long Shadow and Glint lengths at the picture extent by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4200
+    - media: validate offline slate audio before allocating silence by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4199
+    - interchange: refuse repeated AAF storage ownership and bound weak paths, Bento names and FCP7 link lists by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4216
+    - Pass the Linux signing key to the release workflow by @dylanmtaylor in https://github.com/storytold/filmcraft/pull/4303
+    - ogg: stop reading when the packet list passes 256 MiB by @vangel76 in https://github.com/storytold/filmcraft/pull/4066
+    - render: turn display-rotated video on the GPU (#3467) by @TuroYT in https://github.com/storytold/filmcraft/pull/3484
+    - Preserve same-second autosave snapshots by @TheGalitube in https://github.com/storytold/filmcraft/pull/3844
+    - About: credits tables fit without side-scrolling and their columns resize by @FredApps in https://github.com/storytold/filmcraft/pull/4234
+    - docs: add a getting-started guide for fades and audio keyframes (#2973) by @Zaxaerith in https://github.com/storytold/filmcraft/pull/3090
+    - Drag and drop folders in project media by @cobyfromhtc in https://github.com/storytold/filmcraft/pull/2632
+    - Speed/Duration ▸ Maintain Audio Pitch time-stretches a clip's audio instead of resampling it by @txiki739 in https://github.com/storytold/filmcraft/pull/1684
+    - Import Premiere .prfpset files and add Presets folder context menu by @justdxvid in https://github.com/storytold/filmcraft/pull/2719
+    - #1221: H.264 High 10 and High 10 Intra export in the built-in encoder by @JordyUSA in https://github.com/storytold/filmcraft/pull/1580
+    - feat(web): a host bridge for embedding pages, ?host=parent and data-host="page" (#3341) by @helenkwok in https://github.com/storytold/filmcraft/pull/3343
+    - interchange: AAF/OMF audio tracks keep their names by @ondarrupeasu in https://github.com/storytold/filmcraft/pull/2845
+    - Monitor: full-screen Program monitor cinema mode (#3652) by @lilgar77 in https://github.com/storytold/filmcraft/pull/3708
+    - Timeline: a dragged transition snaps like a trimmed clip (#4328) by @ZIDAN44 in https://github.com/storytold/filmcraft/pull/4356
+    - render, gpu: adjustment layers composited on the GPU by @EduardoAndradeMachado in https://github.com/storytold/filmcraft/pull/3032
+    - Projects: Open Project asks to save unsaved changes first by @dotCooCoo in https://github.com/storytold/filmcraft/pull/1665
+    - Copy the shared house rules into AGENTS.md by @FredApps in https://github.com/storytold/filmcraft/pull/4370
+    New Contributors
+    - @Lightningbulb2 made their first contribution in https://github.com/storytold/filmcraft/pull/4029
+    - @wweimao made their first contribution in https://github.com/storytold/filmcraft/pull/3938
+    - @Agapenordev made their first contribution in https://github.com/storytold/filmcraft/pull/3994
+    - @scks1 made their first contribution in https://github.com/storytold/filmcraft/pull/4010
+    - @ivanao92 made their first contribution in https://github.com/storytold/filmcraft/pull/4122
+    - @reedhewitt made their first contribution in https://github.com/storytold/filmcraft/pull/4002
+    - @TuroYT made their first contribution in https://github.com/storytold/filmcraft/pull/3484
+    - @cobyfromhtc made their first contribution in https://github.com/storytold/filmcraft/pull/2632
+    - @helenkwok made their first contribution in https://github.com/storytold/filmcraft/pull/3343
+    - @ondarrupeasu made their first contribution in https://github.com/storytold/filmcraft/pull/2845
+    - @lilgar77 made their first contribution in https://github.com/storytold/filmcraft/pull/3708
+    - @ZIDAN44 made their first contribution in https://github.com/storytold/filmcraft/pull/4356
+    Full Changelog: https://github.com/storytold/filmcraft/compare/v0.17.1...v0.18.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/filmcraft/releases/tag/v0.18.0
+ReleaseTime: 2026-11-06T20:21:40.0000000Z
