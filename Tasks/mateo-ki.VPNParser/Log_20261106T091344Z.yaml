@@ -1,0 +1,40 @@
+Version: 1.16.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.4/vpn-parser-1.16.4-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.4 发布说明 / Release Notes
+    🎉 VProxy v1.16.4 正式发布！本版本重点加固了 macOS TUN 会话恢复与系统代理回滚机制 (PR #10)，引入了单调操作序号与请求所有权机制（Request Ownership），全面升级了 Mihomo 真实公私网 IP 嗅探保护 与 配置热重载事务安全：
+    🍎 macOS：TUN 真实端口探测、Native DNS 防泄露与会话恢复 (PR #10)
+    - 真实 TCP Listener 状态探测：
+      - 针对 macOS 普通用户非提权预检端口时因前序 root 内核残留套接字导致 bind 报错的痛点，重构为主动探测真实的 TCP listener 状态，杜绝虚假端口占用报错与重启失败；
+    - Native DNS 自动注册与防泄露：
+      - 最终 TUN 与 DNS 均开启时默认配置 tun.dns-mode: native，注册系统级临时解析器，防止接口范围的局域网 DNS 绕过 TUN，彻底解决“显式代理正常但 TUN 无法上网”问题；
+    - Privileged Helper IPC v2 会话保护：
+      - 引入基于 SessionId、单调请求序号与进程启动时刻（process_instance）校验的会话认证机制，防御 PID 复用与重放攻击，启动失败退出未确认时保留会话与快照供安全重试；
+    - 系统代理回滚事务加固：
+      - 精准捕获并保存 HTTP/HTTPS 双协议及原网络服务名；命令失败明确报错，只清理指向自身端口的协议项，不覆盖首次原快照。
+    ⚡ 代理调度：单调操作序号与请求所有权机制 (Request Ownership)
+    - 旧异步任务自动作废与取消：
+      - 为 Start、Stop、热重载与节点切换引入全局单调自增 reserve_request() 序号；连续操作时自动作废排队中的旧任务，杜绝晚到异步回调导致界面错乱或错误重新拉起旧内核的并发竞态 Bug；
+    - 专属启动失败通知生命周期：
+      - 引入 FailedProxyStartNotice，仅在新内核真正就绪时清除对应操作的报错提示，避免错误提示被意外冲掉或残留。
+    🎯 路由嗅探：Mihomo Fake-IP 嗅探恢复与真实 IP 保护
+    - 精准补集过滤（fake_ip_recovery_skip_destinations）：
+      - 仅对 198.18.0.0/15 与配置的 Fake-IP 段执行 SNI 嗅探恢复，真实 IPv4、IPv6 与本地局域网全部排除保护，彻底杜绝真实 CDN 节点 IP 在命中 DIRECT 时被强行篡改为域名并二次解析引发的媒体断流与重连死循环。
+    🛡️ 配置覆写：事务安全与沙箱校验
+    - 配置持久化与热重载串行事务锁定：
+      - 活动配置与待应用配置独立回滚，数据库写入与热重载实行串行事务锁定，UI 明确区分“已生效”与“重新连接后生效”；
+      - YAML 解析与 Rhai 脚本执行返回明确失败，Rhai 语法错误前置拦截禁止保存，保存期间锁定编辑器防止用户草稿丢失。
+    🚀 CI/CD 与多平台构建稳定性
+    - 全平台发布容灾与重试机制：
+      - GitHub Actions 跨平台 Release 资产轮询时间延长至 20 分钟，Windows 发布增加 5 次间隔重试机制，免疫 GitHub API 瞬时 500 波动；
+      - 优化订阅并发单测的时钟断言，完善无头模式（--no-default-features）编译，消除构建警告。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.4
+ReleaseTime: 2026-11-06T08:37:45.0000000Z
