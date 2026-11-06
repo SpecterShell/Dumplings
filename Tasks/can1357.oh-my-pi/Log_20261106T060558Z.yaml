@@ -1,0 +1,419 @@
+Version: 18.17.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.17.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added Agent.queuedMessageGate to filter queued messages before delivery and observe claimed messages returned undelivered.
+    - Added wireToolsFingerprint(), returning a hash of the tool specs sent with a request.
+    @oh-my-pi/pi-ai
+    Added
+    - Added opt-in standard Responses WebSockets for catalog-supported models, with incremental turns and automatic HTTP/SSE fallback; enable through OMP settings (#17354 by @TatsukiMeng)
+    - AuthStorage can now be constructed over an AuthStorageBackend instead of a credential store, so another thread's instance can serve every call
+    - Anthropic official-API sessions use message threads, sending only new messages per turn for faster first tokens; toggle with statefulResponses: false or PI_ANTHROPIC_MESSAGE_THREADS=0/1
+    - Added devin-cli (Devin CLI seat key) and devin-windsurf (Windsurf Enterprise sign-in) logins, both stored as a devin API key (#13637 by @pavel-kalmykov, #13288 by @pavel-kalmykov)
+    - Factory Droid Gemini 4 Argon requests now match Droid's request and conversation handling (#17861 by @will-bogusz)
+    Changed
+    - Changing the Codex ultrafast service tier now opens a connection for the selected tier, so requests route correctly
+    - Factory Droid requests and login now match the current Droid client
+    - Codex HTTP requests (turns, compaction, image generation, web search, model discovery) no longer send OpenAI-Beta: responses=experimental, matching the official Codex client
+    Fixed
+    - Fixed account switching stopping at rate-limited accounts; other eligible stored accounts are now tried first
+    - Fixed OpenRouter Decisions judges ignoring compat.openRouterRouting and compat.extraBody, including @provider pins (#18140)
+    - OAuth broker now validates residency, inference-region, and selected-organization metadata in uploaded credentials and remote snapshots
+    - Fixed Muse Code subscription sessions failing with 403 client_attestation_denied when tools were available (#17435, #17515 by @harshav167, continued in #18053 by @abilliontokens)
+    - Fixed xai-tts failing with 422 missing field language; language now defaults to auto (#17992 by @Mirceone)
+    - Fixed Codex WebSocket turns sending malformed incremental input after reconnects or onPayload edits, and prewarming busy sockets (#17809 by @xiangnan0811)
+    - API-key logins now store keys under the auth rule's store-as provider (#13637 by @pavel-kalmykov)
+    - Fixed openai-responses, Codex, and Muse Code continuations after an output limit cut a tool call, including reasoning-first models (#17847, #18189 by @mttzzz)
+    - Gemini and Vertex malformed-response finishes now report the correct stop reason and keep token usage; RPC prompt errors are reported as retryable
+    - Fixed reranking when Cohere-compatible responses omit the model field
+    - Reranking requests now send configured model headers, including custom Authorization
+    - Provider retries no longer retry responses explicitly marked non-retryable
+    @oh-my-pi/pi-catalog
+    Added
+    - Added tool-name-prefix compat axis for Responses hosts that reject certain tool names; Muse Code sets it to _ (#17435, #17515 by @harshav167, continued in #18053 by @abilliontokens)
+    - Added supports-message-threads compat axis (supportsMessageThreads), enabled for Claude 4.5+ on first-party Anthropic
+    - Added opt-in Responses WebSocket capability via OMP settings or SDK preferences, off by default (#17354 by @TatsukiMeng)
+    - Added Factory Droid Gemini 4 Argon on Global inference for accounts with the feature flag (#17861 by @will-bogusz)
+    - Added Factory Droid Muse Spark 1.3 (Global region, muse_spark_1_3 flag) with low to xhigh effort (#17862 by @will-bogusz)
+    Changed
+    - Updated Factory Droid client version reporting; improved tool-input streaming for Claude via Azure Foundry
+    Fixed
+    - Fixed newly published Azure models missing after catalog refresh (#18173, #18174 by @dunkpi)
+    - Fixed Factory Droid hiding models when the live-routing family default yields no usable upstream; explicit empty per-model routes still hide them (#17862 by @will-bogusz)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Bash commands, foreground and background, now show a live execution visualization in Raw or Python-like Pseudo view, with variable values and replay history; disable with display.shellVisualization (default on).
+    - grep and glob inside an ovnfs checkout ask the ovnfs daemon to search the checkout in-process, avoiding per-file mount round trips; the daemon and its mount come from ovnfs --json status when the ovnfs binary is found. They fall back to the native search when the daemon is unavailable or rejects the request, and cancelling the tool cancels the daemon's search. ovnfs with admin protocol 5 is required.
+    - Added skills.manualSkills glob patterns to hide skills from the model catalog while keeping them manually invocable (#18114 by @Shadorain)
+    - Added Keenable web search (web/keenable), using KEENABLE_API_KEY or a stored keenable credential, or a keyless public endpoint when explicitly selected (#17953 by @KGKallasmaa)
+    - web_search results list failed providers with reason and status code in details.failures (#18124 by @will-bogusz)
+    - Added opt-in background auto-update (update.auto, offered in setup) that installs new releases via your install method and runs them next launch; skipped on Nix, source checkouts, and Tern.
+    - omp update refuses to run while another update (including auto-update) is installing.
+    - Added none to edit.mode (and PI_EDIT_VARIANT) to remove the edit tool; bash stays available even if bash.enabled is off.
+    - Added default-off providers.openaiResponsesWebsockets to use WebSockets for supported standard Responses models (#17354 by @TatsukiMeng)
+    - Pinned sessions show a pin beside their title; /unpin [session id] unpins a session (#17848 by @SuperUserA)
+    - Extensions can draw tool calls and message/event blocks full, compact, or hidden via pi.registerTranscriptPresenter(), and redraw with ctx.ui.refreshTranscript(ids); enable with extensionRenderers.transcriptPresenters (default off) (#17960 by @materemias) (#17997 by @materemias)
+    - Consecutive compact transcript blocks render as tight rows without blank gaps; extension renderers opt in via isTranscriptBlockCompact() (#17997 by @materemias)
+    - Added a fullscreen link browser for links in scrollback: press Alt+O again (or Page Up) while link tags are shown (#16476 by @materemias)
+    - Added a cache status-line segment (full/nerd presets) showing whether the next message hits the prompt cache; Tern and /session show why not and how much is resent (#12677) (#17496 by @will-bogusz)
+    - ^ model tags accept a :level suffix (e.g. ^openai-codex/gpt-6-astra:high) to set the subagent's effort (overriding task.maxEffort), with completion of each model's supported levels (#17574 by @a-glapinski)
+    - Added the chillax magic keyword for brief, lowest-effort thinking on supported models; configure via magicKeywords.chillax
+    - Added tui.colorfulMarkdown (on by default): replies color headings by level, bold and italic text, inline code and table headers from the theme's palette; turn it off for the previous single heading color and plain bold/italic
+    - Added tui.motion (full/reduced/none), tui.spinnerInterval (0 = static) and tui.maxFps to control animation and repaint rate, also via --motion/--spinner-interval/--max-fps and PI_MOTION/PI_SPINNER_INTERVAL/PI_MAX_FPS; an explicit tui.spinnerInterval beats tui.motion, and keystroke echo keeps 30 fps (#14240 by @mccraigmccraig)
+    - Added omp zsh, omp bash and omp sh to run omp's built-in shell engine directly, passing all arguments through and exiting with the shell's status.
+    - omp zsh/omp bash keep shell history in your $HISTFILE, compatible with real zsh, including ! expansion, fc and history.
+    - omp zsh runs interactively like zsh (line editor, bindkey, completion, job control, prompt hooks, common modules), so oh-my-zsh and powerlevel10k configs start.
+    - RPC bash results report truncated output via elidedBytes/elidedLines and columnTruncated*/columnMax fields, decoded by the Go, Python and Rust SDKs (#17957 by @H4vC)
+    - Added pi.getShortcutConflict(chord) so extensions can check whether a key chord is free or who holds it (#17961 by @materemias)
+    - Exported unwrapHashlineHeaderPath from @oh-my-pi/pi-coding-agent to turn a [path#TAG] target into its plain path (#17961 by @materemias)
+    - devin-cli login imports Devin CLI credentials, so the devin provider no longer requires DEVIN_API_KEY (#13637 by @pavel-kalmykov)
+    - devin-windsurf login authenticates the devin provider with an existing Windsurf Enterprise account (#13288 by @pavel-kalmykov)
+    Changed
+    - ovnfs turns on by itself when its binary is found (ovnfs.path, else ovnfs on PATH): agents get the separate-checkout guidance, and isolated subagents use ovnfs checkouts when isolation.backend is auto
+    - Text Verbosity now defaults to low and applies to Codex too, matching the official Codex client: shorter answers that finish sooner; set textVerbosity to medium for the old length
+    - A cost cap set on the main thread now applies to running subagents immediately
+    - RPC wire protocol and task streaming have lower serialization overhead
+    - Local Whisper speech-to-text, Parakeet/Nemotron speech, and the local tiny model install their runtimes on first use, shrinking installs; first use needs network access
+    - wait with nothing new returns after 5s (backing off to 5m over repeated idle waits) instead of blocking up to 30 minutes, and nudges the agent toward other work
+    - wait returns jobs finishing within 1.5s of each other in one result
+    - Broadcasts and progress notes no longer cut short wait or interrupt bash/eval; a direct message still ends a wait and delivers every queued message
+    - wait for a reply gives up after 5 minutes (was 30) and returns at once if the other agent is waiting on the user
+    - In Tern, streamed assistant text and thinking are sent unpaced, cutting omp's CPU use; other terminals keep the smooth reveal
+    - Source-checkout sessions start faster; existing build stamps remain readable
+    - The agent's bash tool never touches your shell history or completion, and its zsh -i/bash -i skip .zshrc/.bashrc
+    - Embedded Bash follows Bash 5.3 semantics and preserves supported aliases
+    - CLI flags, session-only settings writes, and SDK overrides now outrank a setting's env var (PI_MOTION=none omp --motion full uses full motion); env vars still outrank settings files
+    - JS and Python tool aborts now report the original abort reason
+    - Many concurrent subagents now run in worker threads so they don't slow the TUI; new task.workerThreads caps workers (default 4; 0 keeps all on the main thread)
+    - Interactive startup reaches the first frame ~75ms sooner when skills are listed in the system prompt
+    - "What's New" release notes now appear just after the first frame; quitting before it keeps them for the next start
+    - Subagents can no longer broadcast (write agent://all fails, pointing to a direct agent://<id> message) and are no longer told to announce shared-file edits; the main agent can still broadcast
+    - Factory Droid Gemini 4 Argon sessions keep earlier turns intact across save and reload, with correct image clamping (#17861 by @will-bogusz)
+    Fixed
+    - On macOS, the browser tool's headless Chromium keeps background tabs at normal CPU priority, so on a busy machine tab.traceStart(), opening a second tab, and other calls into background tabs no longer stall or time out
+    - Subagents loading MCP tools (such as Kata's load_*) no longer change the main session's tools or system prompt
+    - Mounting an MCP tool mid-session on prefix-bound models no longer changes the eval tool description, and the mount notice now reaches the model
+    - Worker-thread subagents are faster: switching views on long transcripts no longer lags, wait no longer streams full transcripts, and they stall less on a busy main thread
+    - Streaming a large batch task call no longer slows quadratically (about 80 ms → 2 ms for a 200 KB call)
+    - computer from Eval now uses zoom for legible close-ups instead of cropping the downscaled screenshot (#18158 by @will-bogusz)
+    - Python eval @tool definitions with type annotations now register on Python 3.9 (#18143 by @Winston-Hsiao)
+    - read of an SEC EDGAR filing document or folder returns that document, not the company profile (#18150 by @will-bogusz)
+    - read of a Read the Docs page no longer returns another repository's linked file (#18162 by @will-bogusz)
+    - A browser click beside a direct tab.waitForDownload() now errors with a tab.run suggestion that actually catches the download (#17615) (#18155 by @will-bogusz)
+    - Browser open({ viewport }) now sizes relay tabs, app.cdp_url/app.path browsers, and headed Chromium on first open (#18160 by @will-bogusz)
+    - Discarded empty, reasoning-only, or length-stop turns still count billed usage in session totals and omp stats (#18178)
+    - /extensions shows the active ~/.agents skill when a higher-priority ~/.claude copy is not opted in (#18190)
+    - Tool results whose details contain a throwing getter no longer silently stop all later session saves (#18134 by @MonsieurBarti)
+    - write to a new ssh:// file no longer fails when the content ends with a read truncation notice (#18154 by @will-bogusz)
+    - find returns verified hits as partial results when its 20 s budget runs out instead of failing (#14809) (#18161 by @will-bogusz)
+    - Background bash completion notices name the command, so parallel jobs are distinguishable (#12607) (#18166 by @will-bogusz)
+    - LSP results stay current for open files edited outside OMP, and files unused for 5 minutes are closed in the language server (#18153 by @will-bogusz)
+    - Markdown edits no longer falsely warn that valid text (e.g. | a |||) fails to parse (#18151 by @will-bogusz)
+    - Bash arguments like "skill:// external command" reach external commands as written instead of failing with exit 126 (#18163 by @will-bogusz)
+    - Thin tool images are padded to the vision model's minimum size instead of causing a 400 (#18081)
+    - JSON query truncation notices report the 50KB read budget instead of the bytes shown (#18022 by @eggpeat)
+    - Extension links, renderers, and ctx.ui.getLinkClicksAvailable() now work on every launch, not only the first after an edit (#18116 by @materemias)
+    - Multi-line AST Grep captures show on one meta: row instead of splitting across rows (#18105 by @JustasMasiulis)
+    - Extension shortcuts now match regardless of modifier order or spelling: reserved chords stay ignored and the last-loaded duplicate wins (#17961 by @materemias)
+    - Building from source works again (#18074 by @Maziar123)
+    - ./c continue no longer reports "Nothing to resume" after /handoff, compaction, or a /skill:-started session
+    - omp bash and omp sh show a prompt when PS1 is unset
+    - display.cacheMissMarker now flags turns that re-send most of the conversation (e.g. after an idle gap), even when the system prompt block was cached
+    - A running session keeps its setting values when config.yml gains a value its omp version doesn't know, preserving tools and prompt cache
+    - Forcing a queued message with Enter now reliably resumes the agent
+    - Interrupting a Python eval cell blocked on top-level await cancels the cell and keeps the kernel and variables (#18115 by @Winston-Hsiao)
+    - Apostrophes in slash-command and prompt-template arguments (e.g. /fix the user's login bug) now reach $ARGUMENTS and $1, $2, … intact (#18008)
+    - Bash output: middle truncation no longer splits lines and reports accurate line ranges; silent success returns (no output, exit code 0) (#17957 by @H4vC)
+    - A new session's first frame always shows your configured default model and thinking level, not one from another session or folder
+    - System-prompt skill listings show the compressed routing hint instead of a truncated description when it fits 160 characters; previously skipped skills are recompressed
+    - Skill descriptions stop triggering background model requests once the session-tree cost cap is reached, and their spend counts toward the cap (#18016)
+    - The idle recap survives resume, restart, and transcript rebuilds, staying at the end until the conversation moves on (#18113 by @materemias)
+    - Chat sessions on a web (or other model-kind) role model no longer fall back to web/* search providers and fail with Unhandled API in mapOptionsForApi: web-search (#18056 by @haesol-shin)
+    - Grouped read rows naming a URL link the whole URL, not just its last path segment (#18071 by @iacore)
+    - A second ask note on a later single-select question no longer replaces the previous question's note (#17979)
+    - The first run of a compiled binary after install or upgrade no longer fails omp --smoke-test with SubagentCodeChangedError or keeps subagents on the main thread (#18060)
+    - Retrying an aborted turn keeps the unsent composer draft (#17977 by @Shadorain)
+    - The tts tool uses Grok Voice again instead of silently falling back to Kokoro, and sends language to xAI (auto-detected if omitted) (#17992 by @Mirceone)
+    - Windows bash output on non-UTF-8 code pages (CJK) no longer turns into mojibake after one invalid byte; the byte shows as � (#17947 by @H4vC)
+    - Hindsight no longer silently drops the last mental model (often User Preferences) from the prompt when over the render budget (#17548, #17955 by @harshaygadekar)
+    - Subagents woken by IRC, restored, revived, or rerun by a workpool keep their task.softRequestBudget guard; it and task.agentSoftRequestBudget resolve by agent name (e.g. scout), not task ID (#17988 by @sinhduc01, #18121 by @eggpeat)
+    - A focused subagent's blocked indicator follows its own approval mode, tool policies, and grants instead of the main session's
+    - Bash tool: exec >file, exec 2>/dev/null, or exec <file no longer redirects later commands in the session
+    - Bash tool: an EXIT trap fires once at the end of its command, not after every later command
+    - Bash tool: late output from a background job ((sleep 1; echo late) &) no longer appears in a later command's output
+    - Bash tool: env -i no longer passes non-shell-name variables (A-B=1), and X=v env -i/X=v env -u X no longer pass an exported outer X
+    - Bash tool: xargs reports a signal-killed command like GNU xargs: xargs: CMD: terminated by signal N, stopping with status 125
+    - macOS: starting a bash tool session no longer briefly sets umask to 022, which could give new files wrong permissions
+    - Bash tool: a shebang-less executable script run in the background from a FIFO (./script < fifo &) runs as bash instead of failing with Exec format error
+    - Subagents no longer hang in an async Python @tool call waiting on an asyncio.Lock held by another subagent's call
+    - Cancelling a subagent mid-call cancels its async Python @tool coroutine, releasing locks, and reports Python tool request was cancelled
+    - Agent Hub no longer shows a previous session's subagents after creating or switching sessions
+    - ast_grep and ast_edit detect languages for uppercase file extensions
+    - snapcompact no longer treats incompatible older archives as reductions
+    - computer window lookup and app opening work for app IDs, paths, and ~ paths, and survive Wayland permission timeouts
+    - Embedded headless Chrome no longer outlives its host process, and computer/browser lifecycle works in SDK embeddings and local test runs
+    - Out-of-credit provider errors now fail immediately instead of retrying for long periods; Retry works promptly once the account is funded.
+    - DeepSeek-style *** End and *** End Patch markers are no longer written into files or truncate later edits
+    - Composer prediction ghost text no longer vanishes when advisor messages arrive
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Development installs reuse fastembed’s ONNX Runtime instead of installing a duplicate native runtime.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Replaced parseShell() with RunTrace.present() and ShellVisualization.
+    Added
+    - Added RunTrace: command states, variable assignments, per-producer output, bounded replay, Raw/Pseudo presentation, and restoring persisted traces.
+    - Added obash --trace=PATH to write a JSON execution trace at exit; UnitCompiled events now include source node tables.
+    - Shell and executeShell now run pi-shell's Bash engine with Bash 5.3 semantics, including aliases containing pipelines, subshells, and separators.
+    - Native shell is faster across parsing, functions, expansion, redirections, arithmetic, loops, and external command startup.
+    - Sixel image output now uses a built-in encoder.
+    - Built-in ps -o accepts Apple's utime (alias putime) for user CPU time, instead of failing with unknown output format specifier 'utime'.
+    - Shell spawn benchmarks now report median and p99 latency.
+    Changed
+    - Built-in jq now reports errors as plain text with line:column locations.
+    - Work-profile flamegraphs are now static SVGs with hoverable titles.
+    - Built-in grep -r, rg, find and fd are faster on small and large trees and stream output to pipes in batches.
+    Fixed
+    - Fixed a crash on Linux when a zsh-mode sort or strftime/$langinfo named a locale that is not installed.
+    - Fixed env -i in the bash tool passing exported shell functions (BASH_FUNC_name%%) and non-environment shell variables to the command.
+    - Fixed $! in command substitutions, subshells and pipeline stages to name the parent's last background job, as in Bash (#18107 by @sjawhar)
+    - Fixed built-in local rsync output on a busy machine sometimes differing from rsync 3.5.1: --delete/info lines from subdirectories could print after the top-level names and the byte totals in sent … received …/--stats could be off by 4.
+    - Fixed Windows rsync treating a one-letter daemon host like h::module as a drive path (#18048 by @jchanghong023)
+    - Fixed git, its helpers and commit hooks started by omp reading the terminal, which could swallow keystrokes and leave Tern protocol text like _tsp;e;{"ev":"ack",…} in the composer; they no longer inherit the terminal or share its session.
+    - Fixed ssh started by the built-in rsync (and sort --compress-program) prompting on the user's terminal, e.g. host-key confirmations appearing after exit; they no longer share omp's terminal or session.
+    - Fixed history saves hanging when a stale lock cannot be removed.
+    - Fixed native addon startup on glibc 2.17–2.28, which lacks posix_spawn_file_actions_addchdir_np (#18046 by @jchanghong023)
+    - Fixed Windows rmdir accepting trailing-dot or trailing-space operands that could remove a different directory (#18047 by @jchanghong023)
+    - Fixed timeout, nohup, git and similar utilities inside shell functions skipping operands or running the function's arguments (#18030 by @sjawhar)
+    - Fixed native Windows commands not resolving executables via PATH/PATHEXT, and absolute paths being prefixed with the cwd (#18041 by @jchanghong023)
+    - Fixed minimized git stash pop and git status counting status lines and "Dropped" notices as untracked files (#18159 by @eggpeat)
+    - Fixed associative arrays slowing quadratically: 100,000 inserts and lookups drop from ~90 s to ~0.1 s.
+    - Fixed GTK3 Open/Save dialogs on Linux: ax() and element input work, and Wayland window lists include them (#18011 by @will-bogusz)
+    - capabilities() now reports input: false and inputPermission: "unavailable" on Wayland without a RemoteDesktop portal (e.g. sway); input fails immediately (#18012 by @will-bogusz)
+    - Fixed .bzl files being treated as Python instead of Starlark in ast-grep, astGrep, astEdit, and code summaries (#18145 by @eggpeat)
+    - Minimized rustfmt --check output now reports how many files need formatting instead of miscounting diff locations (#18147 by @will-bogusz)
+    - Minimized git diff, git show and diff -r now list binary files (as Bin), pure renames and mode-only changes (#18148 by @will-bogusz)
+    - Fixed Wayland el.type and el.press(keys) shifting the app's focus before refusing; they now refuse first (#17915 by @will-bogusz)
+    - Fixed Windows background drags in Tk apps reporting success while doing nothing; they now follow computer.backgroundFallback (#17913 by @will-bogusz)
+    - Built-in rsync now matches rsync 3.5.1 for unopenable --log-file errors; empty --log-file= logs to syslog (#17980 by @sjawhar)
+    - Fixed X11 takeover and raise() failing on a window previously targeted by background typing, e.g. under Openbox (#17910 by @will-bogusz)
+    - Fixed X11 background keys into Qt 5/6 apps silently doing nothing; they now use takeover, or refuse when computer.backgroundFallback is refuse (#17911 by @will-bogusz)
+    - Fixed Wayland doubleClick and click with count registering as a single click in KDE Plasma Qt apps (#17903 by @will-bogusz)
+    - Fixed press(), perform() and menu.select() failing on Linux in browsers, VS Code, LibreOffice and non-English locales; press() now toggles toggle/radio buttons (#17936 by @will-bogusz)
+    - Fixed computer.focusedWindow(), ax() and observe() on GNOME/KDE Wayland reading a shell surface instead of the focused app (#17922 by @will-bogusz)
+    - Fixed takeover keys into iPhone Mirroring and Screen Sharing leaving Fn held, dropping Shift and later letters (#17909 by @will-bogusz)
+    - An unanswered Wayland RemoteDesktop permission dialog now fails input with Timeout before the run deadline, sending nothing (#17932 by @will-bogusz)
+    - Fixed X11 takeover input stopping with Cancelled after you typed locally; Escape now stops computer use for the rest of the turn (#17912 by @will-bogusz)
+    - Fixed X11 background el.type/el.press raising the window and taking your keyboard; elements without GTK 3 focus now use takeover (#17921 by @will-bogusz)
+    @oh-my-pi/omptype
+    Breaking Changes
+    - fromJsonSchema returns an opaque whole-document validator (no .pick()/.props); format is annotation-only unless checked via formats; bad $ref throws invalid $ref/unresolved $ref.
+    Added
+    - Added fromJsonSchema(schema, { draft, schemas, formats }), validating JSON Schema draft 2020-12 and draft 7, including dynamic/remote refs and unevaluated keywords.
+    Changed
+    - Faster fromJsonSchema validation, including $ref-heavy schemas.
+    Fixed
+    - fromJsonSchema falls back to interpreted validation instead of throwing EvalError where generated code is forbidden.
+    @oh-my-pi/snapcompact
+    Fixed
+    - compact() now keeps image content from pre-16.1.0 archived histories in the dropped-history summary.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Frustration no longer counts agent-attributed messages as user messages; history is corrected on next sync (#18183).
+    - Sessions sync promptly while an omp stats dashboard page is open, without repeated page refreshes during full sync.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - MarkdownTheme.heading receives the heading depth (1–6) as a second argument; callers must pass it.
+    - Shell visualization uses the native presentation engine: shell node IDs are opaque strings, and native shell nodes receive presentation data, not raw execution traces.
+    - Replaced CustomEditor.modelMentionLabel with resolveModelMention (returns { label, selector }); collapseModelMentions takes the same callback; getModelMentionSuggestions returns ModelMentionCompletion.
+    - SetupHost must implement autoUpdate, canAutoUpdate() and saveAutoUpdate() for setup version 3's auto-update scene.
+    - Removed SPINNER_ADVANCE_MS in favor of the shared spinner clock; sharedSpinnerFrame is exported from spinner-clock.
+    - Removed formatMeta from render/render-utils.
+    - TranscriptContainer.nativeBlocks() and Composer.describeSurface() now require the frame's DescribeContext.
+    - GradientHighlightSpec.lightness now maps gradient position to lightness like hue instead of taking a fixed percentage.
+    Added
+    - Colorful Markdown, on by default (setMarkdownColorful): headings by level, bold/italic, inline code and table headers take distinct hues from the theme's terminal.ansi palette. MarkdownTheme gains optional strong, emphasis and tableHeader roles; Theme.ansiFg() paints a palette slot, falling back to the terminal's own palette.
+    - Bash cards show incremental Python-like pseudocode with a Raw toggle, failure marks and variable values; the inspector adds layers, split source and timestamp replay. Native hosts draw an inline segmented run box (shell = command, omp.tool.bash.output = output).
+    - VersionUpdate, WelcomeComponent.setVersionUpdate() and ComposerWelcomeUpdate.versionUpdate: the welcome banner shows background self-update progress, readiness or failure.
+    - newSessionThinkingLevel / resolveConfiguredThinkingLevel resolve a new session's starting thinking level; ComposerCache.writeStatus accepts { shared: false } to keep a project's status out of the any-project fallback.
+    - SettingItem.menu exposes a cycling row's choices as a menu opened by SettingsList.openSubmenuFor; Enter/Space still cycle.
+    - StatusLineComponent.setSessionPinned() / setPinnedSessionIds() / isSessionPinned() track pinned sessions; session_name shows the theme's pin icon for them (#17848 by @SuperUserA)
+    - Extension transcript presenters (setTranscriptPresenters, readTranscriptPresentation, TranscriptPresentationState in chat/transcript-presentation) draw tool cards and read entries full, compact or hidden (#17960 by @materemias)
+    - PresentedBlock applies transcript presenters to advisor, skill, execution, background-job, TTSR and other non-tool blocks; TtsrNotificationComponent.rules exposes its merged rules (#17997 by @materemias)
+    - LinkBrowserComponent (overlays/link-browser) browses a transcript fullscreen with stable link hint tags; LinkHints / viewportLinkTargets() share tagging with Composer; ChatTranscriptBuilder accepts textRenderers (#16476 by @materemias)
+    - cache status-line segment with warm/cold indicators, plus StatusLineSession.getPromptCacheStatus, icon.cacheWarm / icon.cacheCold, the omp.composer.cache fact and promptCacheBrief / promptCacheDetails helpers (#12677) (#17496 by @will-bogusz)
+    - ^ model mentions suggest supported effort levels after : and refresh as you type via optional AutocompleteProvider.trySyncModelMentionCompletion, so Tab accepts the current row (#17574 by @a-glapinski)
+    - Shared spinner clock (spinner-clock: setSpinnerInterval, sharedSpinnerFrame, spinnerTickDelay) ticks all spinners together; 0 makes them static (#14240 by @mccraigmccraig)
+    - Frame-rate ceiling (frame-rate: setMaxFps, minFrameIntervalMs) for rendering and animations; frames awaited by a keystroke keep 30 fps (#14240 by @mccraigmccraig)
+    - setMotionEffects (motion-effects) turns off decorative motion: status-line blink, brand fade, magic-keyword sweep and native fx spans (#14240 by @mccraigmccraig)
+    - CompactTranscriptBlock (chrome/transcript-container): consecutive blocks whose isTranscriptBlockCompact() is true render without blank rows between them, in terminal and native (TSP) surfaces (#17997 by @materemias)
+    Changed
+    - Ask cards drop per-question section headers; each question shows its id and flags inline ((db · 3 options)) (#18104 by @JustasMasiulis)
+    - Tab in the /usage Details view switches back to Overview (#17962 by @SuperUserA)
+    - LSP results use one header with request and counts, preview each reference's source line, and syntax-highlight previews and definition snippets (#18106 by @JustasMasiulis)
+    - Grep and AST Grep headers show the search scope after the pattern, errors show the tool title and pattern, and collapsed AST Grep drops meta: rows (#18105 by @JustasMasiulis)
+    - AST Edit's header shows the search scope; the proposed state and replacement counts move to the card's bottom border (#18105 by @JustasMasiulis)
+    - Centered sheets and dialogs on narrow native terminals fill the pane only once their content reaches half the screen height.
+    Fixed
+    - Tern acknowledgements and visibility reports no longer appear as text in the editor when they arrive during a paste, including through Windows ConPTY.
+    - The find card marks searches cut short by its 20 s budget as timed out (#18161 by @will-bogusz)
+    - Tern's classic renderer no longer leaves stale inline images over text while an answer streams or the pane resizes.
+    - The native composer's first frame shows the cached thinking/effort level instead of the plain model icon.
+    - Clicking a many-valued enum setting's popup on native settings pages now opens its menu.
+    - Ask notes no longer carry over between successive single-select questions (#17979)
+    - LSP references no longer render as diagnostics or hover cards when a line looks like a diagnostics summary or code fence (#18106 by @JustasMasiulis)
+    - The LSP diagnostics card lists diagnostics per file, counts every file, and reports server failures instead of No issues (#18106 by @JustasMasiulis)
+    - Closing an overlay that others opened over no longer makes them return focus to it (#16476)
+    - ASCII tree branches are two columns wide (|-, '-), so child rows align like Unicode trees (#18103 by @JustasMasiulis)
+    @oh-my-pi/pi-utils
+    Added
+    - Added getUpdateStateDir(), returning the auto-update state directory (~/.omp/update).
+    - Added logger.setLogForwarder() and logger.emitForeign() to forward log records across threads, preserving context and timestamps.
+    - Added expandTilde() to expand a leading ~ to the home directory.
+    Fixed
+    - Fixed spawn/exec timeouts never firing when the command's root exited before spawn() returned, which let a descendant holding stdout or stderr stall output reads until it exited.
+    - ptree commands with subreaper: true now reliably terminate all descendants on graceful shutdown.
+    - fatal() in a worker thread now reaches the parent's error listeners instead of only exiting with code 1.
+    - Fixed the terminal stderr guard leaking a copy of the terminal into processes spawned from native code.
+    @oh-my-pi/pi-wire
+    Added
+    - Added shell trace visualization: ShellTrace model and TSP shell kind for shell runs, node state, and layout.
+    - Code views gain score-based line shading, labeled collapsible folds with notes, tones, and hover cards, and an overview strip.
+    What's Changed
+    - feat(coding-agent): browse and pick extension links anywhere in the transcript by @materemias in https://github.com/can1357/oh-my-pi/pull/16476
+    - Feat/in session pin indicator by @SuperUserA in https://github.com/can1357/oh-my-pi/pull/17848
+    - feat(coding-agent,tui): let ^ model tags set a subagent's initial effort level by @a-glapinski in https://github.com/can1357/oh-my-pi/pull/17574
+    - fix(ai): replay full Codex input after websocket reconnect by @xiangnan0811 in https://github.com/can1357/oh-my-pi/pull/17809
+    - fix(shell): decode Windows ANSI output per program and per line by @H4vC in https://github.com/can1357/oh-my-pi/pull/17947
+    - fix(hindsight): reserve section overhead in mental models render budget (#17548) by @harshaygadekar in https://github.com/can1357/oh-my-pi/pull/17955
+    - feat(tui): toggle /usage views with Tab in both directions by @SuperUserA in https://github.com/can1357/oh-my-pi/pull/17962
+    - feat(ai): add catalog-gated WebSockets for standard Responses by @TatsukiMeng in https://github.com/can1357/oh-my-pi/pull/17354
+    - fix(coding-agent): keep the unsent composer draft on retry by @Shadorain in https://github.com/can1357/oh-my-pi/pull/17977
+    - fix(spotlight): address every hidden line and keep what the call asks for by @H4vC in https://github.com/can1357/oh-my-pi/pull/17957
+    - feat(coding-agent): show whether the next message reads the prompt cache by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17496
+    - feat(tui): motion controls — configurable spinner cadence, frame-rate ceiling, and a motion preset by @mccraigmccraig in https://github.com/can1357/oh-my-pi/pull/14240
+    - test(mcp): stop racing a fresh MCP fixture's start against 150/300 ms deadlines by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17857
+    - docs(coding-agent): restore the --models row in the CLI reference by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17881
+    - fix(snapcompact,coding-agent): count a legacy archive's frames as dropped, not replaced by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17883
+    - chore: clear three oxlint warnings and format two files main rejects by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17888
+    - fix(coding-agent): find app windows by application id or path by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17896
+    - fix(natives): pace Wayland multi-clicks so KDE Qt apps see double clicks by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17903
+    - fix(browser): exit a process-local headless Chrome when the process that launched it is killed by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17908
+    - fix(natives): stop takeover keys into iPhone Mirroring and Screen Sharing from leaving Fn held by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17909
+    - fix(natives): release the X11 virtual keyboard's focus before takeover activates its window by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17910
+    - fix(natives): refuse X11 background keys to Qt apps instead of reporting them sent by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17911
+    - fix(natives): keep X11 takeover keys running when the core keyboard switches source by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17912
+    - fix(natives): refuse background drags on Windows Tk windows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17913
+    - fix(natives): refuse Wayland element input before focusing the element by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17915
+    - fix(task): stop parked children from pinning the subagent that spawned them by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17916
+    - fix(natives): keep X11 background element typing from raising the element's window by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17921
+    - fix(natives): name the focused application window on Wayland, not an always-active shell frame by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17922
+    - fix(ai): honored x-should-retry false on the openai wire and provider retry by @roboomp in https://github.com/can1357/oh-my-pi/pull/17923
+    - fix(tui): link the URL of every read row in a group by @iacore in https://github.com/can1357/oh-my-pi/pull/17929
+    - fix(models): surfaced failed extension provider discovery in omp models by @roboomp in https://github.com/can1357/oh-my-pi/pull/17930
+    - fix(coding-agent): open ~ paths from the home folder in computer apps.open by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17931
+    - fix(natives): give up an unanswered Wayland RemoteDesktop dialog before the run ends by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17932
+    - fix(natives): match AT-SPI actions by their machine names by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17936
+    - fix(retry): surface an out-of-credit balance instead of sleeping its quota guess by @iacore in https://github.com/can1357/oh-my-pi/pull/17937
+    - fix(agent): emit queue changes after claim and delivery transitions by @xiaoyingv in https://github.com/can1357/oh-my-pi/pull/17939
+    - fix(tui): scoped agent hub roster to the current session tree by @roboomp in https://github.com/can1357/oh-my-pi/pull/17949
+    - style(pi-edit): format sloppy.rs as rustfmt wants it by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17952
+    - fix(pi-ast): recognise uppercase .R extension for R sources by @e-kotov in https://github.com/can1357/oh-my-pi/pull/17958
+    - fix(ai): send model headers on rerank requests by @breakwaterlabs in https://github.com/can1357/oh-my-pi/pull/17974
+    - fix(ai): accept rerank answers without a model field by @breakwaterlabs in https://github.com/can1357/oh-my-pi/pull/17975
+    - fix(builtins): reported an rsync --log-file that cannot be opened as rsync 3.5.1 does by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17980
+    - fix(ask): cleared answered-note target after annotation by @roboomp in https://github.com/can1357/oh-my-pi/pull/17984
+    - fix(coding-agent): preserve softRequestBudget across subagent wake, restore, and workpool by @sinhduc01 in https://github.com/can1357/oh-my-pi/pull/17988
+    - refactor(coding-agent): route todo edits made outside the todo tool through one session method by @Dangerboi in https://github.com/can1357/oh-my-pi/pull/17989
+    - fix(speech): send required language to xAI TTS by @Mirceone in https://github.com/can1357/oh-my-pi/pull/17992
+    - fix(skills): gated background compression by session cost cap by @roboomp in https://github.com/can1357/oh-my-pi/pull/18019
+    - feat(web-search): add Keenable search engine (web/keenable) by @KGKallasmaa in https://github.com/can1357/oh-my-pi/pull/17953
+    - fix(ai,catalog): restore Muse Code subscriptions, which fail every turn with 403 client_attestation_denied by @harshav167 in https://github.com/can1357/oh-my-pi/pull/17515
+    - Devin: adopt CLI credentials (credentials.toml) as a stored devin account by @pavel-kalmykov in https://github.com/can1357/oh-my-pi/pull/13637
+    - Devin (Windsurf Enterprise) login: devin-windsurf auth hook by @pavel-kalmykov in https://github.com/can1357/oh-my-pi/pull/13288
+    - feat(extensions): add getShortcutConflict and export unwrapHashlineHeaderPath by @materemias in https://github.com/can1357/oh-my-pi/pull/17961
+    - fix(tui): make ASCII tree branches two columns wide by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18103
+    - feat(tui): tag Ask questions instead of a section header per question by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18104
+    - feat(tui): put the search scope in Grep, AST Grep and AST Edit headers by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18105
+    - fix(coding-agent): keep the idle recap across transcript replays by @materemias in https://github.com/can1357/oh-my-pi/pull/18113
+    - feat(skills): add manual-only skill patterns by @Shadorain in https://github.com/can1357/oh-my-pi/pull/18114
+    - feat(tui): render LSP results under one header, with reference previews by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18106
+    - fix(coding-agent): load extensions that draw replies before the first frame by @materemias in https://github.com/can1357/oh-my-pi/pull/18116
+    - feat(ai,catalog): identify Factory Droid requests as droid 1.1.0 by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17885
+    - feat(catalog): add Muse Spark 1.3 to Factory Droid by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17862
+    - feat(ai,catalog,coding-agent): add Factory Droid Gemini 4 Argon with its request dialect by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17861
+    - feat(extensions): let extensions draw tool calls full, compact or hidden by @materemias in https://github.com/can1357/oh-my-pi/pull/17960
+    - feat(tui): present non-tool transcript blocks and pack compact rows by @materemias in https://github.com/can1357/oh-my-pi/pull/17997
+    - fix(natives): restore startup on older glibc by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/18046
+    - fix(builtins): reject Windows rmdir operands that normalize to another directory by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/18047
+    - test(thread): hold only the run's own turn in executor-routing's fake model by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18050
+    - fix(retry): skip model-kind roles when resolving the fallback chain key by @haesol-shin in https://github.com/can1357/oh-my-pi/pull/18056
+    - fix(coding-agent): ignored native addons in subagent code-skew check by @roboomp in https://github.com/can1357/oh-my-pi/pull/18065
+    - fix(tui): link a read row's whole URL by @iacore in https://github.com/can1357/oh-my-pi/pull/18071
+    - fix: synchronize source-install artifacts by @Maziar123 in https://github.com/can1357/oh-my-pi/pull/18074
+    - fix(coding-agent): pad narrow tool images to vision limits by @roboomp in https://github.com/can1357/oh-my-pi/pull/18083
+    - fix(shell): every subshell copies $! by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18107
+    - fix(coding-agent): keep the Python kernel alive when an awaiting cell is interrupted by @Winston-Hsiao in https://github.com/can1357/oh-my-pi/pull/18115
+    - fix(coding-agent): kept apostrophes literal in slash command args by @roboomp in https://github.com/can1357/oh-my-pi/pull/18009
+    - fix(natives): read GTK3 file dialogs as AT-SPI windows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18011
+    - fix(natives): report Wayland input unavailable when no RemoteDesktop portal exists by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18012
+    - fix(utils): keep the Linux subreaper alive through a graceful stop by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18018
+    - fix(read): report JSON query byte budget in truncation notices by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18022
+    - test(shell): avoid process-table scans while measuring spawn grace by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18024
+    - fix(shell): run a host callout's own operand inside a function body by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18030
+    - fix(shell): restore Windows PATH and PATHEXT command lookup by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/18041
+    - fix(builtins): recognize single-letter rsync daemon hosts on Windows by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/18048
+    - feat(coding-agent): record failed web search providers in tool details by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18124
+    - fix(ai): forwarded openrouter routing compat on decisions judges by @roboomp in https://github.com/can1357/oh-my-pi/pull/18142
+    - fix(coding-agent): register annotated Python eval tools on Python 3.9 by @Winston-Hsiao in https://github.com/can1357/oh-my-pi/pull/18143
+    - fix(pi-ast): map .bzl files to Starlark instead of Python by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18145
+    - fix(pi-shell): count files, not diff locations, in minimized rustfmt --check output by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18147
+    - fix(pi-shell): list binary and line-less files in minimized diff summaries by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18148
+    - fix(coding-agent): read SEC EDGAR filing documents instead of the company profile by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18150
+    - fix(lsp): sync open documents edited outside OMP before cross-file queries by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18153
+    - fix(coding-agent): create new ssh:// files from bounded read output by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18154
+    - fix(coding-agent): show browser agents how to wait for a download they start by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18155
+    - fix(tui-debug): run file entries with bun under the compiled omp binary by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18156
+    - fix(coding-agent): say the computer screenshot path holds the scaled frame by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18158
+    - fix(coding-agent): apply the open viewport on attached and visible browsers by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18160
+    - fix(find): return the hits verified before find's deadline by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18161
+    - fix(coding-agent): fetch Read the Docs raw source only from the page's own Edit link by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18162
+    - fix(shell): pass a scheme followed by words to external commands as written by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18163
+    - fix(coding-agent,tui): name the command in background job notices by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18166
+    - fix(catalog): retain runtime-resolved endpoints by @dunkpi in https://github.com/can1357/oh-my-pi/pull/18174
+    - fix(coding-agent): kept billed usage of durably discarded assistant turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/18180
+    - fix(stats): excluded agent-attributed frustration messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/18184
+    - fix(ai): restored cut responses tool calls on replay with required reasoning and wire names by @mttzzz in https://github.com/can1357/oh-my-pi/pull/18189
+    - fix(extensions): corrected disabled provider deduplication by @roboomp in https://github.com/can1357/oh-my-pi/pull/18192
+    - fix(task): preserve per-agent budgets on revive and restore by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18121
+    - fix(session): persist entries whose details hold a throwing getter by @MonsieurBarti in https://github.com/can1357/oh-my-pi/pull/18134
+    - test(tui): cover Tern terminal detection and Kitty placeholder support by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18199
+    - test(coding-agent): remove brittle cd-adoption options assertions by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18200
+    - test(factory-droid): cover Argon replay without content.role by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18202
+    - fix(coding-agent): scope MCP tools a session's call loads to that session by @H4vC in https://github.com/can1357/oh-my-pi/pull/18225
+    New Contributors
+    - @SuperUserA made their first contribution in https://github.com/can1357/oh-my-pi/pull/17848
+    - @TatsukiMeng made their first contribution in https://github.com/can1357/oh-my-pi/pull/17354
+    - @mccraigmccraig made their first contribution in https://github.com/can1357/oh-my-pi/pull/14240
+    - @xiaoyingv made their first contribution in https://github.com/can1357/oh-my-pi/pull/17939
+    - @e-kotov made their first contribution in https://github.com/can1357/oh-my-pi/pull/17958
+    - @breakwaterlabs made their first contribution in https://github.com/can1357/oh-my-pi/pull/17974
+    - @Dangerboi made their first contribution in https://github.com/can1357/oh-my-pi/pull/17989
+    - @Mirceone made their first contribution in https://github.com/can1357/oh-my-pi/pull/17992
+    - @KGKallasmaa made their first contribution in https://github.com/can1357/oh-my-pi/pull/17953
+    - @Winston-Hsiao made their first contribution in https://github.com/can1357/oh-my-pi/pull/18115
+    - @dunkpi made their first contribution in https://github.com/can1357/oh-my-pi/pull/18174
+    - @mttzzz made their first contribution in https://github.com/can1357/oh-my-pi/pull/18189
+    - @MonsieurBarti made their first contribution in https://github.com/can1357/oh-my-pi/pull/18134
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.16.0...v18.17.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.17.0
+ReleaseTime: 2026-11-06T05:12:54.0000000Z
