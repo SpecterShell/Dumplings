@@ -1,0 +1,32 @@
+Version: 0.16.20
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tashfeenahmed/freellmapi/releases/download/v0.16.20/FreeLLMAPI-Setup-0.16.20.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    FreeModel personal BYOK chat support
+    - Add FreeModel to provider selection and environment/key imports.
+    - Support text chat and streaming with strict model-identity checks, empty-response protection, and normal HTTP/backoff failover.
+    - Track the provider's shared account quota without inventing a monthly balance from rate-limit headers.
+    - Preserve signed catalog delivery: Premium receives new entries immediately; Free receives them after the existing 30-day window. No new model seeds bypass this gate.
+    FreeModel requires your own API key and Telegram verification. Its advertised
+    1M-token monthly allowance is shared across models. Keep its wallet unfunded
+    for free-only use; funded wallets can be charged after the allowance. Review
+    the provider terms before shared or commercial gateway use; this integration
+    does not establish permission for resale or a competing service.
+    The separate catalog update adds 29 tested FreeModel routes and 2 Kenari
+    routes, disables 7 retired routes without deleting them, and increases the
+    enabled catalog by 24. Text and streaming passed on all 29 FreeModel routes
+    through the shipped adapter; tools and vision are not advertised without tests.
+    Verification
+    - 22 focused FreeModel adapter tests and provider key-form coverage.
+    - Full server, CLI, and client regression suites; build, lint, and migration round trip.
+    - Signed-catalog shape/import/idempotency checks; unchanged day-0/day-29/day-30 gate.
+    Provider integration: https://github.com/tashfeenahmed/freellmapi/pull/1830
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.20
+ReleaseTime: 2026-11-06T00:36:40.0000000Z
