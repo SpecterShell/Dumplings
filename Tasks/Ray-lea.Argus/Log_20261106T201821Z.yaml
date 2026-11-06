@@ -1,0 +1,68 @@
+Version: 0.4.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ray-lea/Argus/releases/download/v0.4.0/Argus_0.4.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.0 migrates the application interface from Tauri, SolidJS and WebView2 to a native Rust + GPUI Kit stack, eliminating browser-engine overhead, rebuilding DirectX rendering and interaction, and optimizing high-refresh-rate animations, live charts, sampling updates and background resource usage. It also adds customizable process columns, disk health and SMART details, expanded Intel integrated graphics readings and new layout options. The Argus website is now live, along with an official update mirror.
+    Features
+    - Customizable process columns: Choose from 40 columns across six categories (General, CPU, Memory, Disk and I/O, Network, GPU), including dedicated and shared GPU memory, GPU engine, image name, virtual address space, peak working set, page faults and total I/O counters. Virtual address space and peak working set are shown per process. Right-click column headers to toggle columns continuously across category submenus, or use the two-column "Select columns" dialog to filter by category, search and reorder; dragging headers or selected columns reorders them live with smooth transitions; automatic widths reserve space by number format to prevent jitter, and manual widths are also saved. The Name column in the flat list and process tree views now matches the Apps view by showing the application name or file description first, with the executable name shown beside it or in the Image name column.
+    - Disk health and details: The disk Performance view adds an Overview / Details switch that reads NVMe, ATA/SATA, USB-SAT and SCSI/SAS device information on demand, showing health status, remaining life, temperatures and thresholds, power-on time and cycles, total bytes read and written, media and read/write error counters, PCIe link speed and SMART attributes, with manual refresh support. Serial numbers prefer the vendor identity reported by the protocol and are hidden by default.
+    - System overview and performance charts: Redesigned overview cards on the Processes page draw edge-to-edge curves that fade beneath the numbers on the left, mark the scale limit at the top and highlight the full card on hover, while adding CPU temperature, CPU power and GPU power readings. The CPU Overview page combines package and core power into a single "Power" reading (preferring package power, with the source shown on hover and both curves kept on the Details page); disk and network charts adjust their scales in fixed steps; compact sidebar preview charts draw secondary series as translucent solid lines for better legibility at small sizes.
+    - Intel integrated graphics: Expanded driver-reported temperature, clock, voltage and power readings, and added 10th Gen Core (Comet Lake S/H) integrated graphics temperature, clocks, shared memory clock, core VID, GT/media activity and power through kernel sensors (the IntelMCHBAR module) and RAPL PP1. Graphics slice clock gating is distinguished from active clocks, sub-watt power below 1 W is shown, and integrated graphics power is placed on the corresponding GPU page; valid RAPL power readings take precedence over zero values reported by Windows power counters. Values not provided by the hardware or driver remain unknown.
+    - Window and layout: Choose the default page opened on launch under Settings → Startup and tray; drag the right edge of the expanded side navigation to resize it (double-click to restore the default width); use the new "Show when a process is selected" details-pane mode to slide the pane out on selection and hide it when cleared; switching time ranges on the History page always shows the latest window up to the present; the minimum window size is now 1240×800 to keep the full layout intact, shrinking automatically when the primary display's work area is smaller.
+    - About page, release notes and official mirror: About is now a dedicated navigation page (Ctrl+8) with link cards for the Argus website and GitHub repository; a version badge on the left of the status bar opens the current version's release notes on click and copies the version on right-click; release notes are grouped by category with new features arranged in a two-column card grid; automatic updates try the official Argus mirror when GitHub cannot be reached before falling back to GitHub proxies, verifying installer and release-note signatures as before.
+    Performance
+    - Interface responsiveness and high-refresh animations: Reduced main-thread overhead from sampling updates, text measurement and repeated drawing, reused static chart backgrounds and composition layers, parallelized large chart texture rasterization across threads, and substantially reduced chart GPU usage when Hardware-accelerated GPU scheduling (HAGS) is off; page transitions, the details pane, list scrolling and column reordering animate at the display refresh rate, while multi-core grids and GPU engine charts resize in the same frame as the window.
+    - Page switching and background operation: Services, Startup and Connections lists are preloaded in the background after launch so they appear immediately on first visit; interface preferences are coalesced and written asynchronously in the background to eliminate page-switch pauses; pages without live charts skip repeated rebuilds on each sample to lower CPU usage; drawing stops while the window is minimized or hidden in the tray, reclaiming chart layer caches, expired icons and texture atlases as needed to reduce background memory and GPU memory overhead.
+    - Heavy load and low memory: Tray updates are coalesced on a dedicated thread to improve responsiveness when the system or shell is busy; when memory is tight, charts automatically shrink buffers and lower texture resolution to keep live curves running, restoring full quality once memory recovers; activating the window handles large obstructing topmost windows more effectively.
+    Fixes
+    - Per-process network traffic: Fixed readings staying at zero on some machines, and alternating zero readings or delayed updates at the 0.5-second refresh interval.
+    - Privileged service: Fixed unexpected service exits when clients disconnect before pipe attachment completes, and timeouts or false no-data results during frequent reads.
+    - Application names and icons: Fixed packaged (MSIX) apps showing executable file descriptions instead of the application names shown in Task Manager, and missing icons or file descriptions when device-path mappings are unavailable or processes deny access.
+    - Per-process GPU memory: Switched to resident GPU memory counters deduplicated per process and physical adapter to fix inflated or double-counted readings on some systems and drivers, and distinguished unavailable readings from zero usage.
+    - Intel integrated graphics power display: Fixed idle integrated graphics power repeatedly appearing and disappearing on the CPU Overview page.
+    - CPU virtualization status: Fixed Hyper-V hosts with hardware virtualization enabled still showing "Disabled".
+    - Administrator startup authorization: Fixed SID resolution failures when the user name matches the computer name, and improved detection of rebuilt copies of the same version.
+    - Memory use over long sessions: Deduplicated program icons by content, periodically evicted metadata cached for exited program paths, and bounded queued requests while metadata resolvers are busy, fixing steady memory growth when many short-lived programs run from new paths.
+    - External links: Opening external web links (website, repository, release page) now hands URLs directly to the system shell instead of spawning an intermediate Explorer process, removing browser launch delays.
+    Upgrading
+    - System requirements: Windows 10 22H2 (build 19045) or later, including Windows 11, x64 only, with a DirectX 11 capable graphics device and driver. The application interface no longer requires the WebView2 Runtime.
+    - Settings and history: Application settings and history files are retained. Upgrades from v0.3.3 or v0.3.4 retain separately saved interface preferences. When upgrading directly from v0.3.2 or earlier, interface preferences stored only in the old WebView2 cache, such as layout, row notes and pins, return to their defaults and need to be set again. Argus automatically cleans up its old WebView2 data in the background.
+    - Privileged service: This version updates the service protocol to version 10. Upgrading with the installer or in-app updater also updates the installed service and Task Manager replacement copies. After replacing the portable executable, select "Update service" under Settings → Permissions → Privileged service and complete the administrator prompt.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.0 将应用界面从 Tauri、SolidJS 与 WebView2 全面迁移至 Rust + GPUI Kit 原生技术栈，脱离浏览器内核开销，重做 DirectX 原生渲染与交互，并深度优化高刷新率动画、实时曲线绘制、列表采样刷新及后台常驻的资源占用。本版还新增自定义进程列、磁盘健康与 SMART 详情、更多 Intel 核显读数与窗口布局选项。Argus 官网现已上线并接入官方更新镜像。
+    新功能
+    - 自定义进程列：涵盖基本信息、CPU、内存、磁盘与 I/O、网络、GPU 六大类共 40 列，新增专用与共享 GPU 内存、GPU 引擎、映像名称、虚拟地址空间、工作集峰值、缺页计数及累计 I/O 等参数。虚拟地址空间与工作集峰值按单进程展示。表头右键菜单提供分类子菜单并支持连续勾选，“选择列”对话框支持分类筛选、搜索与双栏排序；拖动表头或已选列时实时换位并平滑让位；自动列宽按数值格式预留宽度以防跳动，也支持手动调整列宽。平铺列表与进程树视图的“名称”列与按应用视图一致，优先显示应用名称或文件描述，可执行文件名作为次级文字或通过“映像名称”列查看。
+    - 磁盘健康与详情：磁盘性能页新增“概览／详情”切换，按需单次读取 NVMe、ATA／SATA、USB-SAT 和 SCSI／SAS 设备信息，展示健康状况、剩余寿命、温度与阈值、通电时间与次数、读写总量、介质与读写错误统计、PCIe 链路及 SMART 属性，支持手动重新读取；序列号优先采用协议身份中的厂商序列号并默认隐藏。
+    - 系统概况与性能图表：重做进程页顶部概况带，曲线贴边铺满卡片并在左侧数字下方渐隐，顶部标出量程上限，悬停时整张卡片高亮；卡片新增 CPU 温度、CPU 功耗与 GPU 功耗。性能页的 CPU 概览将封装功耗与核心功耗合并为单一项“功耗”（优先显示封装功耗，悬停说明来源，详情页仍保留双曲线）；磁盘与网络图表按固定档位调整量程；侧栏设备预览等紧凑小图表的次要序列改用半透明实线，提升小尺寸下的辨识度。
+    - Intel 核显读数：扩展驱动提供的温度、频率、电压与功耗信息，并通过内核传感器（IntelMCHBAR 模块）与 RAPL PP1 补充第 10 代酷睿（Comet Lake S/H）核显的温度、频率、共享内存频率、核心 VID、GT／媒体活动率与功耗。区分图形切片停钟状态，支持显示低于 1 W 的亚瓦级功耗，并将核显功耗归入对应的 GPU 页；有效的 RAPL 功耗读数优先于 Windows 功耗计数器的零值，硬件与驱动未提供的项目保持未知。
+    - 窗口与界面布局：可在“设置 → 启动与后台”中选择启动时默认打开的页面；展开后的侧边导航栏支持拖动右边缘调整宽度（双击恢复默认）；详细信息面板新增“选中进程时显示”模式，选中进程即滑出、取消选中后自动收起；历史页切换时间范围后始终显示截至当前的最新时段；窗口最小尺寸调整为 1240×800 以保持完整布局，主屏幕可用区域不足时自动收缩适配。
+    - 关于页、更新内容与官方镜像：“关于”独立为导航页面（快捷键 Ctrl+8），新增 Argus 官网与 GitHub 仓库双链接卡片；状态栏左端显示版本徽标，单击可查看本版本更新内容，右键可复制版本号；更新内容按类别分组展示，新功能以双列卡片列出；自动更新在连接 GitHub 失败时优先尝试 Argus 官方镜像，再回退至加速代理，安装包与更新说明同样校验签名。
+    性能
+    - 界面响应与高刷动画：减少采样更新、文字测量与重复绘制的主线程开销，复用图表静态背景与合成图层，多线程并行绘制大尺寸曲线纹理，关闭硬件加速 GPU 计划（HAGS）时的图表 GPU 占用大幅下降；页面切换、详细信息面板、列表滚动与列重排动画按显示器刷新率流畅播放，窗口调整大小时多核网格与 GPU 引擎图同帧即时伸缩。
+    - 页面切换与后台常驻：启动后在后台预读服务、启动项与连接列表，首次进入页面直接显示；界面偏好改为后台异步合并写盘，消除切换页面时的停顿；停留在无实时图表的页面时跳过重复构建以降低 CPU 占用；窗口最小化或隐藏到托盘后停止绘制，并按需回收曲线图层缓存、过期图标与纹理图集，减少后台内存与显存开销。
+    - 繁忙与低内存环境：托盘更新由独立线程合并处理，优化高负载或外壳阻塞下的操作与采样响应；内存紧张时自动缩小图表缓冲、降低纹理精度以保留实时曲线，余量恢复后还原完整精度；增强激活窗口时应对大面积置顶遮挡的能力。
+    修复
+    - 进程网络流量：修复部分机器读数持续为零，以及 0.5 秒刷新间隔下读数交替归零或更新延迟的问题。
+    - 特权服务：修复客户端在管道接入前异常断开导致服务退出，以及高频读取时超时或误报无数据的问题。
+    - 应用名称与图标：修复应用包（MSIX）程序显示可执行文件描述而非系统任务管理器应用名称，以及设备路径映射缺失或进程拒绝打开时图标与文件说明缺失的问题。
+    - 进程显存：改用驻留计数并按进程与物理适配器去重，修正部分系统或驱动下显存读数偏高、重复累计的问题，并区分缺失读数与零用量。
+    - Intel 核显功耗显示：修复 CPU 概览中闲置核显功耗反复出现与消失的问题。
+    - CPU 虚拟化状态：修复已开启硬件虚拟化的 Hyper-V 宿主仍显示“未启用”的问题。
+    - 管理员启动授权：修复用户名与计算机名相同时 SID 解析失败导致的授权失败，并改进同版本重建副本的识别。
+    - 长时间运行的内存占用：对程序图标按内容去重并定期清理已退出程序的元数据缓存，限制解析器繁忙时的请求积压，修复频繁启动新路径程序后内存持续累积的问题。
+    - 外部链接：单击打开官网、仓库与发布页等外部网页时直接交由系统外壳处理，消除经由新建资源管理器进程中转的打开延迟。
+    升级提示
+    - 系统要求：Windows 10 22H2（内部版本 19045）及以上，含 Windows 11，仅支持 x64；需要支持 DirectX 11 的图形设备与驱动。应用界面不再依赖 WebView2 运行时。
+    - 设置与历史：应用设置与历史文件保留。从 v0.3.3／v0.3.4 升级可继承独立保存的界面偏好；从 v0.3.2 及更早版本直接升级时，仅保存在旧 WebView2 缓存中的界面偏好（如布局、行备注与置顶标记）恢复默认值，需要重新设置。新版会在后台自动清理 Argus 遗留的 WebView2 数据。
+    - 特权服务：本版将服务通信协议升级至第 10 版。安装版通过安装程序或应用内更新覆盖升级时，会同步更新已安装的服务与任务管理器替换副本；免安装版替换程序后，需在“设置 → 权限 → 特权服务”中单击“更新服务”并完成管理员确认。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ray-lea/Argus/releases/tag/v0.4.0
+ReleaseTime: 2026-11-06T19:19:55.0000000Z
