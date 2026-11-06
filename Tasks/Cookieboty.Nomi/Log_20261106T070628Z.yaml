@@ -1,0 +1,32 @@
+Version: 2.3.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Cookieboty/nomi-ai/releases/download/v2.3.1/Nomi-Setup-2.3.1.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Nomi· 诺米 2.3.1
+    远程 MCP 服务可以在浏览器里授权登录；官方角色的 Rive 动画以 2.5D 骨架重绑，动作更自然；会话正文字号可调，图片主题不再随模糊放大裁切；另修复了会话保存、后台任务、命令白名单和用量统计里的若干问题。 / Remote MCP servers can now be authorized in the browser; the official character's Rive animation is rebuilt on a 2.5D skeleton with more natural motion; conversation text size is adjustable and image themes no longer zoom or crop with blur; plus fixes for conversation saving, background tasks, the command allowlist and usage stats.
+    新功能 / New
+    - 远程（HTTP / SSE）MCP 服务支持在浏览器里 OAuth 授权，可填客户端 ID；凭据加密保存并自动续期，可以取消、清除或重新授权。手填了 Authorization 请求头的服务照旧 / Remote (HTTP / SSE) MCP servers can be authorized in the browser via OAuth, with an optional client ID; credentials are stored encrypted and refreshed automatically, and authorization can be cancelled, cleared or redone. Servers with a manual Authorization header work as before
+    - 设置 → 通用 → 外观新增「会话正文字号」，10–20px 可调（默认 14px），只改会话正文 / Settings → General → Appearance gains a conversation text size (10–20px, default 14px) that only affects message text
+    - 官方角色的 Rive 动画以 2.5D 骨架重绑：静止画面与原画一致，手能自然放到脸边和胸前、袖子跟着手臂走，眨眼和刘海摆动更细致，全部动作重做 / The official character's Rive animation is rebuilt on a 2.5D skeleton: the rest pose matches the original art, hands reach the face and chest naturally with sleeves following, blinks and bangs move in finer detail, and every motion was redone
+    改进 / Improvements
+    - 图片主题改为单层蒙版，模糊与不透明度只作用于蒙版，图片不再随模糊放大或裁切；新默认为模糊 0px、蒙版 50%（已有设置保留），预览与实际一致 / Image themes now use a single mask: blur and opacity apply to the mask only, so the picture no longer zooms or crops; new defaults are 0px blur and 50% mask (existing settings are kept), and the preview matches the real window
+    - Edit / Write 等文件编辑工具的内容和差异默认收起，长对话更流畅 / Content and diffs of file-editing tools (Edit, Write, …) are collapsed by default, keeping long conversations smooth
+    - 输入框里 Home / End 跳到当前行首尾，Shift 扩展选区，Ctrl / Command 跳到全文首尾 / In the input box, Home / End move to the start / end of the line, Shift extends the selection and Ctrl / Command jumps to the start / end of the text
+    修复 / Fixes
+    - 只报告思考状态、不输出思考内容的模型也会显示「正在思考」，回复开始或这一轮结束后不再一直显示思考中 / Models that report thinking without any text now show "Thinking", and the indicator no longer lingers after the reply starts or the turn ends
+    - 会话保存失败重写整份记录期间新发的消息不再丢失，重启后历史与界面一致 / Messages sent while a failed save rewrites the whole conversation are no longer lost, so history after a restart matches what you saw
+    - 删除会话时若一时写不进磁盘，重试会真正保存，被删的会话重启后不会再出现 / If deleting a conversation can't be written to disk at first, the retry actually saves it, so the deleted conversation doesn't come back after a restart
+    - 命令白名单按实际传给命令的参数检查危险选项，带引号的 -exec、--output 等不再凭已记住的规则直接执行 / The command allowlist checks dangerous options against the arguments actually passed, so quoted -exec, --output and similar no longer run under a remembered rule
+    - 两个后台任务同时准备时不会再抢到同一个编程助手标签 / Two background tasks starting at once no longer grab the same coding-assistant tab
+    - 委派用的工作副本里编程助手自己提交的改动，清理前会先留在 nomi/… 分支上，不再被当作没有成果删掉 / Commits a coding assistant made in a delegation work copy are kept on a nomi/… branch before cleanup instead of being deleted as no work
+    - 重新扫描约 2 个月前的 Codex / Claude 日志时不再重复计算调用数、token 和费用 / Rescanning Codex / Claude logs older than about two months no longer double-counts calls, tokens and cost
+    - 本地语音识别的临时录音文件只有当前用户可读，用完即删 / The temporary recording used by local speech recognition is readable only by the current user and deleted afterwards
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Cookieboty/nomi-ai/releases/tag/v2.3.1
+ReleaseTime: 2026-11-06T06:58:47.0000000Z
