@@ -1,0 +1,30 @@
+Version: 0.107.23
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.23/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.23/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    K-brain v0.107.23
+    本版从 main 的 f6ce490 构建，在 v0.107.22 的基础上让多选提问的回答以结构化的方式提交和保存。
+    新功能
+    - 多选提问的回答按选项提交（#168）：
+      - 回答 question 工具的多选问题时，客户端可以在 selected_labels 里直接列出选中的选项，不再需要把选项拼成一段文字。K-brain 会逐个核对：必须与问题的选项完全一致、不能重复；单选问题最多一个。不合规的回答返回 400，问题保持待回答，可以重新提交。
+      - 选中的选项加上用户在“其他”里输入的文字可以一起提交（selected_labels 加 custom: true，文字放在 selected_label）。
+      - 模型看到的是“选了哪些选项”，而不是把它们当成用户输入的文字；用户自己输入的部分仍会标明。question 工具里用户自己输入的回答，现在也会这样标明。
+      - 会话历史里，每次 question、AskUserQuestion 调用都带上 question_answers（和 question.resolved 的回答相同，重启后也在），客户端不必再从结果文本里拆分选项。
+      - /v1/health 新增 capabilities.question_selected_labels: 1。旧版后端会拒绝 selected_labels，客户端应先检查这个标志。
+      - 不使用 selected_labels 的旧客户端不受影响。
+    - kn 终端界面：多选问题的回答改为按选项提交，界面不变。
+    修复
+    - 修复沙箱 CI：新的 Linux runner 上 /bin/bwrap 和 /usr/bin/bwrap 是同一个文件，隐藏 bubblewrap 的步骤会失败；没装 bubblewrap 的机器上这一步也会中断（#169）。只影响 CI。
+    下载与校验
+    提供 macOS、Linux、Windows 的 x64/ARM64 CLI 与 computer helper；SHA256SUMS 用于校验下载文件。
+    完整变更
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.23
+ReleaseTime: 2026-11-06T15:06:00.0000000Z
