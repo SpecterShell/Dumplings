@@ -1,0 +1,26 @@
+Version: 0.0.7
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/HenryXiaoYang/realtime-tex/releases/download/v0.0.7/rtex-x86_64-pc-windows-msvc.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: rtex-0.0.7-x86_64-pc-windows-msvc\bin\rtex.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you @ACG-j for the rtex serve timeout flags and the math ownership work!
+    Added
+    - Math source ownership (opt-in). Set math_owner_attribute and rtex reports which math source each glyph and math field comes from, in math_owners display-list metadata (binary record 0x29). Empty fields, including empty unicode-math radical degrees, get zero-size anchors. Off by default; PDF output is unchanged. (#30, #31, #32)
+    - rtex serve --compile-timeout-ms and --pass-timeout-ms set the live-compile and background-pass timeouts. Defaults are unchanged. (#36)
+    Fixed
+    - Build files no longer fill your disk. The build directory links to the project's files instead of copying the main file's folder three times; on Windows without Developer Mode it uses junctions and hard links. A snapshot from an earlier version is replaced on the first pass. (realtime-tex-vsc-plugin#13, realtime-tex-vsc-plugin#15)
+    - Title pages. Documents whose \maketitle makes its own page (report, book, article[titlepage]) no longer restart the engine about every 0.4 s. (#37)
+    - Faster first live update. set_document applies only the bytes that differ, so opening a file no longer counts as a preamble edit. On a 300-page book the first live update comes after 8.1 s instead of 24.2 s.
+    Faster
+    - Background passes on long documents: on a 300-page book a layout after a one-character edit takes 4.8 s instead of 7.6 s, and the first layout 10.1 s instead of 16.4 s. Per-keystroke bookkeeping is cheaper too, and Linux saves a thread wake-up per live update. (#38)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/HenryXiaoYang/realtime-tex/releases/tag/v0.0.7
+ReleaseTime: 2026-11-06T13:48:49.0000000Z
