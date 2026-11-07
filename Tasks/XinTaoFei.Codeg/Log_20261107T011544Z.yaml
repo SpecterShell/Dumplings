@@ -1,0 +1,63 @@
+Version: 0.42.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.1/codeg_0.42.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.1/codeg_0.42.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release lets you handle related issues in one task, keeps background work running when you leave a conversation, improves Office previews, and updates multiple agents.
+    New
+    - Related issues can be selected across pages and handled in one task, with a single PR or merge request and a choice of which issues it closes when merged.
+    Improved
+    - Claude Code is updated to 2.1.318 with adapter 0.101.0, and new sessions default to Auto unless you have selected another permission mode.
+    - Claude Code’s idle context compaction appears directly in the conversation, including its summary, without needing to reopen the session.
+    - Updated Hermes Agent to 0.23.0, CodeBuddy to 2.181.0, Grok to 1.0.77, Kimi Code to 2.5.2, Cursor to 2026.11.05-86047df, Qoder to 1.1.84, the ZCode bridge to 0.82.1 and Command Code to 1.88.4.
+    Fixed
+    - Closing or switching conversation panes, or refreshing the web page, no longer unexpectedly stops background commands, Remote Control or running sub-agents.
+    - Office auto-preview reliably opens documents created or modified in the current turn, fixing unrelated templates opening, closed previews reappearing and occasional missed previews on Linux and Windows.
+    - Updating Grok through codeg now runs the updated version, and uninstalling it correctly removes its installed status.
+    - Kimi Code retains MCP execution environment and deferred tool-loading settings when codeg saves or syncs its configuration.
+    - Kimi Code tool cards restore their correct titles when calls finish, instead of continuing to show reconnection or sign-in messages.
+    - Qoder 1.1.84 keeps MCP tool cards and history displaying correctly, while codeg’s built-in tools such as questions continue without unnecessary permission requests.
+    - Cursor conversation history includes the new access-management and code-execution tool steps.
+    - The built-in browser no longer covers fullscreen tables or Mermaid diagrams opened from chat.
+    - Agent error messages retain the file paths needed to locate and fix configuration problems.
+    Note
+    - Claude Code’s Auto mode may refuse commands when an API gateway cannot support its permission checks, in which case you can switch to Manual.
+    - In Hermes 0.23.0, MCP servers configured in Hermes itself cannot connect when used alongside MCP servers injected by codeg.
+    - On Linux, Windows and some macOS setups, disconnecting the session that started Hermes’ shared background service may interrupt tasks running in other Hermes conversations.
+    Thanks to @Time-w (#1090), @HOMEFTW (#1091) and @monkeyDragonLiu (#1096) for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版支持将多个相关 Issue 合并为一个任务处理，修复会话页面关闭导致后台任务中断、Office 文档误弹出等问题，并更新多个智能体。
+    新增
+    - 支持跨页多选相关 Issue 并合并为一个任务处理，统一交付为 PR 或合并请求，并选择合并后关闭哪些 Issue。
+    改进
+    - Claude Code 更新至 2.1.318，适配器更新至 0.101.0，未指定其他权限模式时，新会话默认使用 Auto 模式。
+    - Claude Code 空闲时自动压缩上下文的结果会直接显示在会话中，无需重新打开即可查看压缩摘要。
+    - Hermes Agent 更新至 0.23.0，CodeBuddy 更新至 2.181.0，Grok 更新至 1.0.77，Kimi Code 更新至 2.5.2，Cursor 更新至 2026.11.05-86047df，Qoder 更新至 1.1.84，ZCode 桥接更新至 0.82.1，Command Code 更新至 1.88.4。
+    修复
+    - 关闭或切换会话面板、刷新网页时，后台命令、远程控制和正在运行的子智能体不再被意外中断。
+    - Office 自动预览准确识别智能体本轮创建或修改的文档，修复无关模板误打开、关闭后反复弹出及 Linux、Windows 下偶尔漏开预览的问题。
+    - 通过 codeg 更新 Grok 后会实际运行新版本，卸载后也会正确显示为未安装。
+    - 保存或同步 Kimi Code 的 MCP 配置时，会保留运行环境和工具延迟加载设置。
+    - Kimi Code 工具调用结束后会恢复正确的卡片标题，不再残留「重连中」或登录授权提示。
+    - Qoder 升级至 1.1.84 后，MCP 工具卡片和历史记录仍能正确显示，codeg 内置提问等工具也不会出现多余的授权请求。
+    - Cursor 历史会话能正确显示新增的权限管理和代码执行工具步骤。
+    - 打开聊天中的全屏表格或 Mermaid 图表时，内置浏览器页面不再遮挡内容。
+    - 智能体错误提示会保留相关文件路径，方便定位和修复配置问题。
+    注意
+    - Claude Code 的 Auto 模式在 API 网关无法支持其权限检查时可能拒绝执行命令，遇到这种情况可切换至 Manual 模式。
+    - Hermes 0.23.0 自身配置的 MCP 服务，在与 codeg 注入的 MCP 服务同时使用时暂时无法连接。
+    - 在 Linux、Windows 及部分 macOS 环境中，断开启动 Hermes 共享后台服务的会话，可能中断其他 Hermes 会话正在执行的任务。
+    感谢 @Time-w（#1090）、@HOMEFTW（#1091）和 @monkeyDragonLiu（#1096）的问题反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.42.1
+ReleaseTime: 2026-11-06T23:38:38.0000000Z
