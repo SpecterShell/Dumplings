@@ -8,7 +8,7 @@ $this.CurrentState.Installer += [ordered]@{
   Architecture        = 'x64'
   InstallerType       = 'zip'
   NestedInstallerType = 'portable'
-  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'x86_64' -and $_.name -match 'windows' -and $_.name -match 'msvc' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl        = $Object1.assets.Where({ $_.name.EndsWith('.zip') -and $_.name -match 'x86_64' -and $_.name -match 'windows' -and $_.name -match 'msvc' -and $_.name -match 'microclaw' -and $_.name -notmatch 'full' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
