@@ -1,0 +1,20 @@
+Version: 0.2.42
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.42/Strata.Manager_0.2.42_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - The three official NVFP4 packs (#214): the catalog adds Qwen3.8-Flash-Next (NVFP4) with NVFP4 and NVFP4-NVIDIA (128 GB each, engine 0.1.44+) and NVFP4-QAD (102.2 GB, engine 0.1.45+). NVFP4-QAD is converted once on this PC during install (about 20–40 minutes, about 110 GB more disk and PyTorch), and the disk check counts it. Offered on NVIDIA cards only; on AMD, Intel and Mac it is greyed out with the reason, and a forced install is refused before anything downloads. "Use an existing model" and "found downloaded models" recognize NVFP4 packs under <data folder>/models/<owner>--<repo> (a converted QAD too) and install them in place with --data-dir.
+    - Run configs from the upstream 0.2 app import (#214): a strata-*.json in %LOCALAPPDATA%\Strata\install (or a data folder the upstream settings remember) was discovered but failed to import with "the config does not belong to the selected install". The backend now finds it again itself at import and accepts it only for the install it belongs to; any other path from the UI is still refused.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 官方 NVFP4 三个包（#214）：目录新增 Qwen3.8-Flash-Next (NVFP4)，含 NVFP4、NVFP4-NVIDIA（各 128 GB，引擎 0.1.44+）和 NVFP4-QAD（102.2 GB，引擎 0.1.45+）。NVFP4-QAD 安装时会在本机转换一次（约 20–40 分钟，另需约 110 GB 和 PyTorch），磁盘检查已把这部分算进去。只在 NVIDIA 显卡上提供；AMD、Intel 和 Mac 上灰显并说明原因，强行安装也会在下载前被拒绝。「使用已有模型」和「发现已下载模型」能认出 <数据目录>/models/<owner>--<repo> 下的 NVFP4 包（含已转换的 QAD），用 --data-dir 原地安装。
+    - 上游 0.2 应用的运行配置可以导入了（#214）：放在 %LOCALAPPDATA%\Strata\install（或上游设置记住的数据目录）里的 strata-*.json 能被发现，但导入时会报「配置不属于所选安装，也不是已识别的本机运行配置」。现在后台会在导入时自己重新查找一遍，确认这份配置确实属于所选安装后才放行；界面传来的其它路径仍会被拒绝。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.42
+ReleaseTime: 2026-11-08T21:11:12.0000000Z
