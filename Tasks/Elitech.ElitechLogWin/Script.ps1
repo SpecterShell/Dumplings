@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.elitechus.com/pages/softwares' | ConvertFrom-Html
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.elitechus.com/pages/softwares' | Join-String -Separator "`n" | ConvertFrom-Html
 $Object2 = $Object1.SelectSingleNode('//div[contains(./h3, "ElitechLog(Win)")]')
 
 # Version
