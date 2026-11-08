@@ -1,0 +1,144 @@
+Version: 18.18.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.18.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Cursor exec frames keep tool-batch order: a file mutation (native StrReplace and Write, write, delete, pi_edit, pi_write) waits for the calls issued before it, and the calls issued after it wait until it lands, so a Shell sent in the same batch as a StrReplace no longer runs before the edit's write (#18434 by @KadirBerkpolat1)
+    - ChatGPT Pro Max (promax) counts as Pro for Codex account routing, so a blocked Pro account no longer wins over an open or pinned Pro Max account (#18399 by @serverinspector)
+    - Cursor Shell results no longer end with Timeout clamped to 3600s (requested 86400s; …): Cursor's 24 h hard_timeout is capped at the bash tool's 3600 s ceiling before it reaches the tool (#18433 by @KadirBerkpolat1)
+    - A 429 or 402 worded like a context overflow (Bedrock's "429 Too many tokens, please wait…") is treated as a rate limit, so it retries and walks the fallback chain instead of compacting (#18345 by @nick-maderight)
+    - auth-gateway stdio and serve no longer reject credentialless Apple on-device models (#18370)
+    @oh-my-pi/browser-relay
+    Changed
+    - The extension now requests scripting and access to all sites (Chrome lists "Read and change all your data on all websites"); it uses them only to empty another extension's frames in a tab omp is driving, when Chrome refuses it the debugger there (#16908 by @will-bogusz)
+    Fixed
+    - Fixed a password manager's inline autofill menu locking omp out of a tab it drives: the extension empties and hides such frames in that tab and retries the attach or command Chrome refused (#16908 by @will-bogusz)
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Corrected Devin SWE-2 Flash and SWE-2 Fast token pricing, and SWE-2's promotional rates and end time (#18332 by @eggpeat)
+    - DeepSeek V4.1 Flash ids spelled with a hyphen (deepseek-v4-1-flash-1017 on Mistral and Venice) keep image attachments instead of being stripped to text-only (#18405)
+    - compat.disabledThinking in models.yml now applies to anthropic-messages models, so a custom Anthropic provider can switch thinking off when Off is selected (#18412 by @farnoy)
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Rust SDK: BashCommand and ReadyEvent struct literals need exclude_from_context: None and supports_bash_exclude_from_context: None (#18206 by @andrebrait)
+    Added
+    - RPC bash accepts excludeFromContext: true to keep a run out of model context like terminal !!; runtimes advertise support with supportsBashExcludeFromContext in the ready frame, and the Python SDK exposes that frame as client.ready (#18206 by @andrebrait)
+    Changed
+    - Agent bash commands run with LANG/LC_ALL=C.UTF-8 on every platform instead of the inherited locale, so sort order, number formats and tool messages no longer vary by machine; a locale in the command's env or .envrc still wins, and ! commands keep yours
+    - omp's built-in shell (omp bash/omp zsh and the bash tool) parses scripts about a third faster, sources large function libraries about 20% faster, and re-runs a repeated eval or source without recompiling it.
+    - The computer tool's el.perform() takes any spelling of an action ax() lists (perform("open")), and computer.backgroundFallback: refuse refuses every spelling of a raise, open, context menu or popup press (#15282 by @will-bogusz)
+    - The computer tool no longer takes over your screen for a macOS win.drag across the text of a native text view, such as a TextEdit document; it selects that text in the background and returns the selection (#16223 by @will-bogusz)
+    Fixed
+    - A browser relay tab stays usable after a password manager's inline autofill menu opens in it; the call that opened the menu still fails once (reinstall the extension with omp browser-relay install and reload it) (#16908 by @will-bogusz)
+    - A %%bash cell in Python eval no longer prints its exit status (a stray 0) after the command's output; a failing cell reports %%bash: exit status N on stderr instead.
+    - Reusing an already running omp stats dashboard now exits successfully without stopping the existing server (#18443).
+    - A function defined inside a command substitution in a here-document body (cat <<E / $(f() { …; }; f) / E) no longer crashes the built-in shell.
+    - A Cursor tool call sent in the same batch as a native StrReplace or Write no longer runs before the edit is written, so a check right after an edit sees the new file (#18434 by @KadirBerkpolat1)
+    - Pinned sessions color their pin icon with the theme accent in the status line and the band composer's title instead of taking the title's color or dim style, matching the resume picker (#18401 by @SuperUserA)
+    - An ovnfs checkout stays recoverable with omp worktree clear when removing it fails, or when creating it fails after the daemon may already have it, instead of being forgotten (#18337 by @eggpeat)
+    - A retain call that fails midway no longer delivers part of itself to the Hindsight server while telling the model nothing was queued (#18440 by @eggpeat)
+    - A bash.patterns deny rule now blocks a command anywhere in a ;, |, || or && line even when an earlier prompt rule matches another part of it, and project settings can no longer override the operator's deny or prompt patterns with allow (#18349 by @asuffield)
+    - A subagent stopped by the session cost cap (--max-cost / session.maxCost) now reports the cap's refusal instead of "Subagent ended without a final message" (#18362)
+    - ERB templates open in ruby-lsp as erb, so valid templates no longer report dozens of bogus Ruby errors, and a diagnostics pull ruby-lsp answers with null no longer holds the call for its whole timeout (#18372 by @alphastorm)
+    - Mistral Vibe browser sign-in shows subscription billing in the status line and advisor spend instead of pay-as-you-go pricing (#18374)
+    - Native OpenAI compaction no longer waits for a Hindsight memory recall it cannot use; fallback summaries still recall memory (#18327)
+    - An eval wait() on jobs owned by a worker returns finished jobs and consumes their results instead of reporting them as running or delivering them again (#18363)
+    - /restart no longer drops running subagents: they go on with their interrupted turns in the relaunched process and deliver their results to the agent that spawned them, as omp --restore now also does after a normal quit
+    - A shell command nested hundreds of levels deep (subshells, groups, command substitutions) is now a syntax error in the built-in shell instead of crashing omp with a stack overflow.
+    - Eval wait() progress rows for agents spawned by one task call show each agent's own tool count, context, cost and activity instead of the first agent's (#18393)
+    - In the Pseudo shell visualization, an && chain keeps its and rows while it runs and after it finishes, instead of switching to literal && rows and a raw-bash tail when the output minimizer runs it one command at a time (#18408)
+    - Autoresearch update_notes calls can now append an idea with only append_idea, without passing a replacement body (#18439 by @eggpeat)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed recall scoring memories against vectors from a previous embedding model while a model-change rebuild was still running or had failed: dense search now only uses vectors stamped with the active model, falling back to lexical matching for memories awaiting re-embedding (#18442 by @eggpeat)
+    - Fixed model-change embedding rebuilds overwriting newer vectors for updated memories or recreating vectors for deleted memories (#18441 by @eggpeat)
+    @oh-my-pi/pi-natives
+    Added
+    - macOS ax() lines show what an element can do: (selected), (settable) on dates setValue can write, (readonly) on web text fields the page locks, actions= beyond its press, and names for unlabeled window buttons (#15282 by @will-bogusz)
+    Changed
+    - macOS ax() lines show 200 characters of a long label or value instead of 80, keep newlines as \n, and end a cut value with the call that reads it whole (#15282 by @will-bogusz)
+    - macOS ax() dates read in local time with their offset, the form setValue takes back, and axPerform runs a listed action in any case, with or without its AX prefix (#15282 by @will-bogusz)
+    - macOS background left drags across the text of one native text view, such as a TextEdit document, now select that text through accessibility, and drag resolves to { selection, focusReturn }; drags on web page text and links still throw BackgroundUnavailable (#16223 by @will-bogusz)
+    Fixed
+    - macOS ax() no longer marks every cell of a focused table or sidebar (focused); only the element holding the app's keyboard focus is (#15282 by @will-bogusz)
+    - macOS axPerform reports a followed Preview PDF link or an opened Finder item as unconfirmed instead of failed (#15282 by @will-bogusz)
+    - The embedded shell's comm merges in the same locale order as its sort, so comm on sort output under a UTF-8 locale no longer reports unsorted input and drops common lines
+    - An edit whose path is missing on disk no longer stalls the embedded shell and other native calls while it searches for the file, and a cancelled edit stops that search at once (#18386 by @sjawhar)
+    - macOS spellchecking (typo underlines, autocorrect, apple word completion) no longer leaks native memory for the life of the process (#18285 by @aleister1102)
+    - Fixed large brace expansions running as literal text or silently dropping words: expansions support up to 4,194,304 words and report an error above that limit (#18092 by @sjawhar)
+    @oh-my-pi/pi-tui
+    Added
+    - Grep headers syntax-highlight regex patterns, including incomplete patterns while a call streams, in terminal and native views (#18392 by @JustasMasiulis).
+    Changed
+    - Grep results for a single searched file no longer repeat 1 file after the match count; the header already names the file (#18422 by @JustasMasiulis).
+    Fixed
+    - Pinned sessions color their pin icon with the theme accent in the status line instead of the session title's color, matching the resume picker (#18401 by @SuperUserA)
+    - A saved bash trace the shell visualization can no longer restore (e.g. a tool_result hook rewrote its script) renders as plain command and output instead of crashing the TUI and every omp --resume of that session (#18338)
+    - Tables with near-equal large numeric columns no longer crash transcript rendering during chart analysis (#18343)
+    - A JPEG truncated before its end-of-image marker is rejected when read and omitted from the request, instead of failing the whole provider request with "unsupported image" (#18385 by @iwangjie)
+    - Desktop notifications use unique OSC 99 ids per omp process to avoid interfering with other omp processes (#18413 by @farnoy)
+    - updateNotesToolRenderer now renders update_notes calls that omit body (#18439 by @eggpeat)
+    - The copy overlay now offers fenced code blocks indented under list items, and splits code and quote blocks the same way the message renderer draws them (#18410 by @farnoy)
+    What's Changed
+    - fix(isolation): preserve ovnfs recovery records after cleanup failures by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18337
+    - fix(bash): enforce deny precedence across non-compound segments and operator authority by @asuffield in https://github.com/can1357/oh-my-pi/pull/18349
+    - fix(catalog): price Devin SWE-2 Flash separately from SWE-2 by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18332
+    - feat(tui): syntax-highlight grep header patterns by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18392
+    - feat(rpc): support excluding bash executions from model context by @andrebrait in https://github.com/can1357/oh-my-pi/pull/18206
+    - fix(natives): drain an autorelease pool around macOS spell-server calls by @aleister1102 in https://github.com/can1357/oh-my-pi/pull/18285
+    - fix(compaction): deferred unused native memory recall by @roboomp in https://github.com/can1357/oh-my-pi/pull/18330
+    - fix(tui): rendered unrestorable bash traces plainly instead of crashing by @roboomp in https://github.com/can1357/oh-my-pi/pull/18340
+    - fix(tui): prevent cyclic table compositions from crashing by @roboomp in https://github.com/can1357/oh-my-pi/pull/18344
+    - fix(ai): a 429 or 402 with token-cap wording is not context overflow by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/18345
+    - fix(task): reported cost-cap refusal as a capped subagent's error by @roboomp in https://github.com/can1357/oh-my-pi/pull/18364
+    - fix(eval): refreshed worker job snapshots during waits by @roboomp in https://github.com/can1357/oh-my-pi/pull/18365
+    - fix(ai): allowed keyless models through auth gateway by @roboomp in https://github.com/can1357/oh-my-pi/pull/18371
+    - fix(lsp): open .erb files as erb and end diagnostics waits on null pulls by @alphastorm in https://github.com/can1357/oh-my-pi/pull/18372
+    - fix(auth): classify mistral vibe login as subscription billing by @roboomp in https://github.com/can1357/oh-my-pi/pull/18378
+    - fix(tui): reject JPEGs truncated before their EOI marker by @iwangjie in https://github.com/can1357/oh-my-pi/pull/18385
+    - fix(natives): run the edit tool's missing-path recovery off the host scheduler by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18386
+    - fix(ai): treat ChatGPT Pro Max as Pro for Codex account routing by @serverinspector in https://github.com/can1357/oh-my-pi/pull/18399
+    - fix(tui): omit redundant 1 file count on single-file grep results by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18422
+    - fix(pi-shell): a function defined in a here-document body no longer crashes the shell by @H4vC in https://github.com/can1357/oh-my-pi/pull/18431
+    - perf(pi-shell): reuse compiled units of re-sourced commands and cut per-command sourcing costs by @H4vC in https://github.com/can1357/oh-my-pi/pull/18354
+    - refactor(pi-shell): add flat syntax tree module by @H4vC in https://github.com/can1357/oh-my-pi/pull/18355
+    - perf(pi-shell): parse and lower through a flat syntax tree with reused buffers by @H4vC in https://github.com/can1357/oh-my-pi/pull/18356
+    - fix(pi-shell): syntax JSON positions that differed from shfmt by @H4vC in https://github.com/can1357/oh-my-pi/pull/18367
+    - fix(pi-shell): a brace expansion over the limit fails instead of going literal by @H4vC in https://github.com/can1357/oh-my-pi/pull/18368
+    - fix(pi-shell): a command nested too deep is a syntax error, not a stack overflow by @H4vC in https://github.com/can1357/oh-my-pi/pull/18418
+    - perf(pi-shell): store syntax trees packed by @H4vC in https://github.com/can1357/oh-my-pi/pull/18419
+    - refactor(pi-shell): zsh parser builds on the scratch stack by @H4vC in https://github.com/can1357/oh-my-pi/pull/18420
+    - fix(eval): a %%bash cell no longer prints its exit status by @H4vC in https://github.com/can1357/oh-my-pi/pull/18444
+    - docs: sync zh-CN README and fix search backend count by @bigHippoZz in https://github.com/can1357/oh-my-pi/pull/18394
+    - fix(eval): showed each agent's own progress in wait() rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/18395
+    - fix(tui): color session pin indicator with theme accent by @SuperUserA in https://github.com/can1357/oh-my-pi/pull/18401
+    - fix(catalog): kept image input on hyphenated deepseek v4.1 flash ids by @roboomp in https://github.com/can1357/oh-my-pi/pull/18409
+    - fix(tui): copied fenced code blocks indented under list items by @farnoy in https://github.com/can1357/oh-my-pi/pull/18410
+    - fix(catalog): honored models.yml compat.disabledThinking on anthropic-message models by @farnoy in https://github.com/can1357/oh-my-pi/pull/18412
+    - fix(tui): kept OSC 99 notification ids unique across omp processes by @farnoy in https://github.com/can1357/oh-my-pi/pull/18413
+    - fix(shell): drew segmented && chains with pseudo and connectors by @roboomp in https://github.com/can1357/oh-my-pi/pull/18415
+    - fix(cursor): cap Shell's 24 h hard_timeout at the bash ceiling by @KadirBerkpolat1 in https://github.com/can1357/oh-my-pi/pull/18433
+    - fix(cursor): keep exec frames in tool-batch order by @KadirBerkpolat1 in https://github.com/can1357/oh-my-pi/pull/18434
+    - test(coding-agent): isolate fork-attribution test from real agent dir by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/18436
+    - fix(coding-agent): allow update_notes with only append_idea by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18439
+    - fix(hindsight): keep uncommitted retain batches out of drains by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18440
+    - fix(mnemopi): preserve newer embeddings when committing a rebuild by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18441
+    - fix(mnemopi): exclude stale-model vectors from dense recall by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18442
+    - fix(stats): correct reused dashboard exit status by @roboomp in https://github.com/can1357/oh-my-pi/pull/18446
+    - feat(natives): show what macOS ax() elements can do by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15282
+    - feat(natives): make a macOS background drag across native text an accessibility selection by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16223
+    - fix(browser-relay): keep a tab omp drives usable when a password manager's menu opens in it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16908
+    New Contributors
+    - @iwangjie made their first contribution in https://github.com/can1357/oh-my-pi/pull/18385
+    - @KadirBerkpolat1 made their first contribution in https://github.com/can1357/oh-my-pi/pull/18433
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.18.0...v18.18.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.18.1
+ReleaseTime: 2026-11-08T00:25:06.0000000Z
