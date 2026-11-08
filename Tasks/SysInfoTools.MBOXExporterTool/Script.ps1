@@ -6,10 +6,10 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.sysinfotools.com/mbox-exporter.php'
+$Object1 = Invoke-WebRequest -Uri 'https://www.sysinfotools.com/mbox-exporter.php' | ConvertFrom-Html
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.SelectSingleNode('//input[@id="download_link"]').Attributes['value'].Value
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
