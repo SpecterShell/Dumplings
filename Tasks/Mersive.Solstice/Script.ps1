@@ -1,10 +1,12 @@
+$Object1 = Invoke-WebRequest -Uri 'https://www.mersive.com/downloads'
+
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://www.mersive.com/files/41701/'
+  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'SolsticeClient' } catch {} }, 'First')[0].href
 }
 
 # Version
-$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
