@@ -1,7 +1,7 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/fosrl/windows/releases/latest'
+$Object1 = (Invoke-GitHubApi -Uri 'https://api.github.com/repos/fosrl/windows-linux/releases').Where({ -not $_.prerelease -and $_.tag_name -match '^windows-' }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^windows-' -replace '^v'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
