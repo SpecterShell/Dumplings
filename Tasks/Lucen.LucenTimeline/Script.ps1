@@ -1,8 +1,11 @@
 function Read-Installer {
   $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  $ZipFile = [System.IO.Compression.ZipFile]::OpenRead($InstallerFile)
+  $this.CurrentState.Installer[0]['NestedInstallerFiles'] = @([ordered]@{ RelativeFilePath = $ZipFile.Entries.Where({ $_.FullName.EndsWith('.msi') }, 'First')[0].FullName.Replace('/', '\') })
+  $ZipFile.Dispose()
   $InstallerFileExtracted = New-TempFolder
-  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'LucenTimeline.msi' | Out-Host
-  $InstallerFile2 = Join-Path $InstallerFileExtracted 'LucenTimeline.msi'
+  7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
+  $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Get-Item -Force | Select-Object -First 1
   # Version
   $this.CurrentState.Version = $InstallerFile2 | Read-ProductVersionFromMsi
   # InstallerSha256
@@ -83,7 +86,7 @@ switch -Regex ($this.Check()) {
     $this.Submit()
   }
   # Case 5: The ETag and the SHA256 have changed, but the version is not
-  Default {
+  default {
     $this.Log('The ETag and the SHA256 have changed, but the version is not', 'Info')
     $this.Config.IgnorePRCheck = $true
     $this.Print()
