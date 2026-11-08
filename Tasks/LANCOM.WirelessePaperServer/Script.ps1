@@ -1,8 +1,6 @@
-$Object1 = Invoke-WebRequest -Uri 'https://my.lancom-systems.com/downloads/'
-
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('Wireless-ePaper-Server') -and $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Global:DumplingsStorage.LANCOMDownloadPage.Links.Where({ try { $_.href.Contains('Wireless-ePaper-Server') -and $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -18,7 +16,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('RN') -and $_.href.Contains('Wireless-ePaper-Server') } catch {} }, 'First')[0].href
+        Value  = $Global:DumplingsStorage.LANCOMDownloadPage.Links.Where({ try { $_.href.EndsWith('.pdf') -and $_.href.Contains('RN') -and $_.href.Contains('Wireless-ePaper-Server') } catch {} }, 'First')[0].href
       }
     } catch {
       $_ | Out-Host
