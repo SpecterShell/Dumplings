@@ -1,0 +1,44 @@
+Version: 0.25.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.25.0/Belfry_0.25.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.25.0/Belfry_0.25.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v0.25.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 中英双语应用：设置中可选择简体中文、English 或跟随系统，切换后即时生效并保留偏好；日期、数字与货币按语言格式化。CLI 提示与 --help、原生通知和菜单、Agent 协作说明及 Windows 安装器也支持中英。
+    - 真实投递阶段：协作面板区分已受理、排队中、正在提交、已提交到终端、提交结果不确定与投递已取消，并单独显示 Agent 的完成或失败结果。房间消息也显示各成员的排队或不确定状态。
+    - 不确定投递的人工处理：可定位目标终端核对，再确认已提交或放弃任务；核对期间状态变化会要求重新检查。应用不会自动重复粘贴，不把放弃视为此前从未提交。
+    - 日志与崩溃诊断：本地日志按天滚动并限制总量，记录后端崩溃与前端异常，支持导出脱敏诊断；崩溃页提供复制诊断和重新加载入口。
+    - 房间历史浏览：加载更早历史时保留阅读位置；房间信息显示历史大小与备份说明，未知或无法解析的记录提供可读兜底。待回复入口支持查看原文和按消息编号回复。
+    改进
+    - 任务与待投递记录落盘：重启后保留任务编号，待投递任务按批准与队列规则恢复；已提交任务不自动重投，提交结果不确定时保留状态等待核对。
+    - 房间启动：日常启动从快照恢复当前任务、消息与未完成事项，不再读取整份历史账本；旧格式首次升级时迁移历史。原文持续保留到删除房间，长期保存前可备份应用数据目录。
+    - 内容安全策略（CSP）：应用窗口限制内容来源，保留终端、WebGL、插件面板、媒体播放与网页预览功能。
+    - 发布校验和：发布附带 SHA256SUMS.txt，公开前核对安装包与更新资产；中英文安装手册提供 certutil / shasum 核对步骤。
+    修复
+    - 修复房间切换和轮询迟到响应覆盖当前内容的问题；草稿与附件按房间保存，发送期间的新输入保留，操作失败持续显示并可重试。
+    - 修复后台、流程页或未读到消息时误标已读的问题，并改善最小窗口下发送、回复与任务操作的可达性。
+    - 房间状态与历史写入同成同败，保存失败不再出现幽灵通知；早期待回复在超过最近消息窗口并重启后仍可处理，未知历史记录不再因压缩而丢失。
+    - 插件设置按最终文件字节数校验容量，超限保留原文件；超时或取消后清理子孙进程，避免残留任务继续运行。
+    - CLI 通信限制等待时间与响应长度，wait --timeout 在服务端不回包时也能按截止时间结束；超时只结束等待，不表示任务已经完成。
+    升级提示
+    - 房间数据升级为新格式，首次启动会把已有房间历史迁移一次（历史较多时需要几秒）。升级后旧版本应用无法再写入房间数据，降级前请先备份应用数据目录。
+    - 首次启动默认跟随系统语言；系统不是中文时界面为英文，可在「设置 → 外观」改回简体中文。
+    - 升级后请重开 Agent 会话，让协作命令和协作说明使用新版本；仍在运行的旧后台服务需要重启一次。
+    - Windows 安装包仍未签名，SmartScreen 提示时选择「更多信息 → 仍要运行」，并可用随版本发布的 SHA256SUMS.txt 核对安装包。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#0250---2026-11-09
+ReleaseTime: 2026-11-09T08:53:12.0000000Z
