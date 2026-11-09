@@ -1,0 +1,45 @@
+Version: 0.9.43
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.43/Varin-0.9.43-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.43/Varin-0.9.43-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.43 adds control over when collaboration messages and file exchanges reach an Agent, improves recipient selection, and fixes desktop authentication and chat layout issues.
+    Collaboration
+    - Choose whether a message reaches an Agent at its next model request or after its current run finishes. Pending messages can be sent immediately or withdrawn.
+    - Queue file exchanges until the receiving Agent finishes its current run. Queued exchanges retain the selected file versions, and the collaboration panel shows their participants, files and delivery state.
+    - Browse recipients in a scrolling list that automatically loads more members. Subtasks appear first, the main Agent remains selectable, and multiple recipients can be selected together. Load failures offer an inline retry.
+    Desktop and chat
+    - Fix a local desktop authentication path that could cause a 401 error when switching between Varin, Workbench and IDE or loading extension surfaces.
+    - Allow explicitly enabled LAN access without requiring a UI password. Password protection remains configurable, and clearing the password no longer turns LAN access off.
+    - Fix a recursive layout-update path in the chat virtual list that could trigger React error #185 with empty or collapsed rows. Preserve hidden-list measurements and existing scrolling and disclosure animations.
+    Builds and releases
+    - Separate platform-specific CI preparation and checks, and let container releases resume from previously built images while repeating qualification and smoke checks.
+    Desktop packages cover Windows x64/ARM64, Linux x64/ARM64 and macOS Apple Silicon. The signed Android APK connects to an existing Varin Host. Standard and toolbelt Docker images are published through the container release workflow.
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.43 支持选择协作消息与文件交换的交付时机，优化收件人选择，并修复桌面鉴权和聊天布局问题。
+    协作
+    - 发送消息时可选择「立即补充」或「本轮结束后」：前者在接收方下一次模型请求时带入，后者等待它当前整个任务回合结束。尚未处理的消息可以立即发送或撤回。
+    - 文件交换支持等待接收方当前回合结束后再应用。排队时固定本次选中的文件版本，协作面板可查看双方身份、文件和交付状态。
+    - 收件人改为可滚动、自动加载更多成员的列表。子任务优先排列，主 Agent 仍然可选，也可以一起多选；加载失败时可在列表内重试。
+    桌面与聊天
+    - 修复在 Varin、工作台和 IDE 之间切换，或加载扩展界面时，可能因本地桌面鉴权路径错误而出现的 401。
+    - 用户明确开启局域网访问后，可自行决定是否设置 UI 密码；清空密码也会保留已开启的局域网访问。
+    - 修复聊天虚拟列表在空行或折叠行下反复测量、更新布局，可能触发 React #185 崩溃的一条路径。保留隐藏列表的已测量高度，以及现有滚动和展开收起动效。
+    构建与发布
+    - 拆分各平台的 CI 准备与检查；容器发布可复用此前已构建的镜像继续执行，并重新完成资格检查与启动验收。
+    桌面安装包覆盖 Windows x64/ARM64、Linux x64/ARM64 和 macOS Apple Silicon；签名 Android APK 连接已有的 Varin Host 使用。标准环境与 toolbelt 环境的 Docker 镜像由容器发布流程交付。
+    完整改动
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.43
+ReleaseTime: 2026-11-09T15:52:33.0000000Z
