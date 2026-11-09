@@ -1,0 +1,26 @@
+Version: 0.2.43
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.43/Strata.Manager_0.2.43_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Unified effective engine arguments and user_args synchronization: upstream serve/server.py merges user_args over args at every start. Advanced settings, concurrency, and control vectors now read effective values across user_args; manual edits, quick calibration, speed fixes, and restart tuning candidates synchronize or clear conflicting flags in user_args and refresh args_written while preserving unknown flags, model paths, repeated options, and multi-value options. Hand-set --spec / --draft-conf values are recorded in user_args so DFlash2 honours them as well.
+    - Strata 0.2.12 drafting plan integration and DFlash2 concurrency rules: DFlash2 status now queries strata.py drafting plan --config ... --output jsonl (with --no-split unless all-cards split is configured) and recognizes q4_0-selq4.pack plus both 0.2.12 tuned packs (strata1.q4_0-selq4.pack 0.34 GB and strata1.q4_0-bf16sel.pack 0.52 GB) in the filename fallback. When a stock pack is on disk and a tuned update applies, an "Update to tuned DFlash2" action stays available, and the confirmation dialog displays the plan's actual source (Strata signed update feed or Hugging Face) and size. Concurrency hints follow engine 0.1.57+: explicitly choosing DFlash2 on CUDA/HIP/SYCL keeps concurrent request slots, while Auto and Metal still switch to MTP for multiple requests and --pipeline-windows still blocks DFlash2.
+    - Friendly explanation for session snapshot invalid K/V extent errors: when saving a session snapshot without MTP loaded (such as DFlash2-only runs) returns HTTP 500 conversation snapshot: invalid K/V extent (upstream #5153), Manager explains that the snapshot was not saved and suggests switching Drafting to MTP and restarting, without disabling the Save button, and warns before restoring that the last save did not succeed.
+    - Engine rollback compatibility and retention notes: the automatic cleanup setting now notes that only the current version + 1 previous version are kept (protecting running or referenced versions, without guaranteeing earlier versions permanently across multiple updates); the crash rollback card, installed-runtime switch dialog, and downgrade dialog check the model's minEngine from the configuration and MODEL_CATALOG (such as engine 0.1.57+ for Unsloth Dynamic v3.1) and warn only when the target older engine is incompatible; and the recalibration notice points to Runtime environment for switching or rolling back versions if a newer engine is slower.
+    - Recognize Windows Smart App Control blocks (WinError 4551): when Windows 11 Smart App Control or an application control policy blocks strata-vision.exe or the main engine (upstream #5619), startup diagnostics show a dedicated explanation and point to Windows Security › App & browser control to turn Smart App Control off, or wait for a signed build, without suggesting an engine rollback.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 统一参数有效值与 user_args 覆盖同步：上游 serve/server.py 启动时将 user_args 合并到 args 之上。现在高级设置表、并发与控制向量按合并后的有效值读取展示；手动修改启动参数、应用快速校准、一键提速或调优重启候选时，同步更新或清除 user_args 里的同名覆盖项并按上游语义刷新 args_written，同时完整保留未知参数、模型路径、重复参数和多值选项。手设 --spec / --draft-conf 会同步记录到 user_args，使 DFlash2 推测解码也能识别手动窗口与置信度设置。
+    - 接入 Strata 0.2.12 drafting plan 与 DFlash2 并发规则：状态检查接入 strata.py drafting plan --config ... --output jsonl（未启全卡 split 时带 --no-split），并在文件名回退检测中补充 q4_0-selq4.pack 与两份 0.2.12 微调包（strata1.q4_0-selq4.pack 0.34 GB、strata1.q4_0-bf16sel.pack 0.52 GB）。已有旧版 stock pack 但可获取微调更新时会保留「更新微调版 DFlash2」入口，下载确认弹窗按实际计划展示来源（Strata 签名更新源或 Hugging Face）与体积。并发提示对齐引擎 0.1.57+ 规则：CUDA/HIP/SYCL 手选 DFlash2 支持保留多并发槽，Auto 与 Metal 多并发仍改用 MTP，--pipeline-windows 仍阻挡 DFlash2。
+    - 会话快照 invalid K/V extent 报错说明：当未加载 MTP（如仅启用 DFlash2）导致保存会话快照返回 HTTP 500 conversation snapshot: invalid K/V extent（上游 #5153）时，明确提示本次快照未保存成功并建议在「预测（投机解码）」中改用 MTP 重启后再试，不禁用保存按钮；同时记录本次保存失败并在点击「恢复会话」前给出提醒。
+    - 引擎回退与版本切换补充模型兼容性与保留规则说明：在自动清理开关旁说明仅保留当前版本 + 1 个旧版本（运行中或被配置引用的版本受保护，多次更新后不保证更早版本长期保留）；在启动故障回退卡、已安装版本切换弹窗与降级确认弹窗中，按配置与 MODEL_CATALOG 检查当前模型最低引擎版本（如 Unsloth Dynamic v3.1 需引擎 0.1.57+），仅在目标旧版本不兼容时显示提醒；并在升级后重新校准提示中补充可到「运行环境」切换或回退版本的指引。
+    - 识别 Windows 智能应用控制拦截（WinError 4551）：当 Windows 11 智能应用控制或应用程序控制策略拦截 strata-vision.exe 或主引擎（上游 #5619）时，启动诊断给出专用说明，并提示到「Windows 安全中心 › 应用和浏览器控制」关闭智能应用控制，或等待已签名版本；不误导去做引擎回退。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.43
+ReleaseTime: 2026-11-09T06:04:17.0000000Z
