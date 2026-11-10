@@ -1,0 +1,74 @@
+Version: v0.4.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/1lck/viff/releases/download/v0.4.5/viff-v0.4.5-windows-amd64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.5 makes the commit scope explicit, makes long diff lines easier to reach, and groups multiple workspace repositories in the Project panel; the app icon also gets a rounded white plate.
+    Highlights
+    This release puts the actual commit scope in the Commit panel, adds a visible bottom scroll bar for long diff lines, and lets the Project panel list and switch every repository in the workspace; Windows also gets the rounded white app plate.
+    ✨ New features
+    - The Project panel shows a Workspace root when the workspace has several repositories, lists each repository's branch and change summary, and switches to a repository when its row is clicked.
+    - Side-by-side and unified diffs get a bottom horizontal scroll bar for long lines; both panes share the offset, and the bar stays hidden when nothing overflows.
+    - The Commit panel offers Stage Selected when checked files are not staged, staging only those checked files while leaving already-staged content untouched.
+    ⚡ Improvements
+    - The Commit panel always states that a commit includes only staged files, so checking files no longer leaves the commit scope implicit.
+    - The app icon is now a rounded white plate with transparent corners, regenerated from PNG through ICNS and multi-size ICO for a better fit among Windows icons.
+    🛠 Fixes
+    - Checking an unstaged file no longer leaves Commit disabled without an explanation; the panel shows the reason and the Stage Selected action.
+    - Commit and Push now explains that a remote must be added first when the repository has none.
+    - Horizontal offsets are clamped again after diff panes are resized or folded.
+    Upgrade instructions
+    - Upgrading from v0.4.4: the settings file format is unchanged, so existing settings keep working.
+    - macOS: choose the Apple Silicon or Intel DMG, quit the old version, open the DMG, and replace Viff.app in Applications.
+    - Windows: quit the old version and run the x64 installer.
+    - Windows portable: extract the archive, enter its directory, and run viff.exe without installing.
+    - Debian/Ubuntu: run sudo apt install ./viff-v0.4.5-linux-amd64.deb.
+    - Linux portable: extract the archive, enter its directory, and run ./viff after installing the required system libraries.
+    - Install Git separately on PATH, and check the release guide for Linux dependencies.
+    Compatibility and known issues
+    - macOS requires version 13 or later; Linux needs a working graphical session, rendering backend, and the system libraries listed in the release guide.
+    - The Project panel's multi-repository grouping is navigation and switching only: inactive repositories do not load their file trees, their summaries are cached, and cross-repository commit or push is still unavailable.
+    - After the icon change, Windows Explorer may keep showing a cached old icon until the app is reinstalled or the icon cache is refreshed.
+    - The macOS app is ad-hoc signed without Developer ID signing or notarization; the Windows installer is not Authenticode signed, so the system may show a security prompt.
+    - Remote repositories remain read-only observation, and the in-app editing, conflict acceptance, terminal, and external-opening limits are the same as v0.4.4.
+    Install only files from the project release page after checking their checksums; verify the source if the operating system blocks them.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.5 让提交范围更清楚、长行 diff 更容易阅读，并让 Project 面板可以聚合工作区里的多个仓库；应用图标也改成了圆角白底。
+    重点更新
+    这一版把“勾选、暂存、提交”的范围直接写在提交面板里，长行 diff 有了可见的底部滚动条，多仓库工作区也能在 Project 面板里总览和切换；Windows 桌面图标同时换成了圆角白底。
+    ✨ 新功能
+    - Project 面板在工作区包含多个仓库时显示 Workspace 根节点，列出各仓库的分支与改动摘要，点击非活动仓库即可切换。
+    - 并排与统一 diff 的底部新增横向滚动条，长行可以直接拖动查看，并排视图两栏保持同步，没有超长行时自动隐藏。
+    - Commit 面板在勾选文件尚未暂存时显示 Stage Selected，点击只暂存这些勾选文件，已暂存但未勾选的内容保持不变。
+    ⚡ 改进
+    - Commit 面板常驻说明“Commit staged files only”，勾选文件时不再让用户猜测提交范围。
+    - 应用图标改为带透明四角的圆角白底，并重新生成 PNG、ICNS 与多尺寸 ICO，Windows 桌面和任务栏中的观感更接近系统图标。
+    🛠 修复
+    - 勾选未暂存文件后 Commit 不再静默保持禁用而没有解释，面板会显示原因和 Stage Selected 入口。
+    - 未配置远端时 Commit and Push 会提示需要先添加远端。
+    - 收起或调整 diff 面板宽度后，横向偏移会重新限制在有效范围内。
+    升级说明
+    - 从 v0.4.4 升级：设置文件格式未变，现有配置继续可用。
+    - macOS：按机型选择 Apple Silicon 或 Intel 的 DMG，退出旧版后打开 DMG，将 Viff.app 拖入“应用程序”并替换旧版。
+    - Windows：退出旧版后运行 x64 安装器。
+    - Windows 便携包：解压后进入新目录执行 viff.exe，不写入安装信息。
+    - Debian/Ubuntu：执行 sudo apt install ./viff-v0.4.5-linux-amd64.deb。
+    - Linux 便携包：解压后进入新目录执行 ./viff，并自行安装所需系统库。
+    - Git 需单独安装并加入 PATH，Linux 系统库要求见发布指南。
+    兼容性与已知问题
+    - macOS 要求 13 或更高版本；Linux 需要可用的图形会话、渲染后端和发布指南中列出的系统库。
+    - Project 面板的多仓库分组只负责导航与切换：非活动仓库不加载文件树，状态来自缓存，仍不提供跨仓库提交或推送。
+    - 更新图标后，Windows 资源管理器可能继续显示缓存中的旧图标；重新安装或刷新图标缓存后即可看到新图标。
+    - macOS 应用使用 ad-hoc 签名，未经 Developer ID 签名或公证；Windows 安装器未经 Authenticode 签名，系统可能显示安全提示。
+    - 远程仓库仍是只读观察模式，应用内编辑、冲突接受、终端与外部打开等限制与 v0.4.4 相同。
+    仅安装来自项目发布页且已核对校验值的文件；如遇系统拦截，请先确认来源。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/1lck/viff/releases/tag/v0.4.5
+ReleaseTime: 2026-11-10T04:38:51.0000000Z
