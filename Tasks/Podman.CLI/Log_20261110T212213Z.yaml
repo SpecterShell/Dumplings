@@ -1,0 +1,123 @@
+Version: 6.2.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/podman-container-tools/podman/releases/download/v6.2.0/podman-installer-windows-amd64.msi
+- Architecture: arm64
+  InstallerUrl: https://github.com/podman-container-tools/podman/releases/download/v6.2.0/podman-installer-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security
+    - Addresses CVE-2026-121885, untrusted image labels could be used to trick podman auto-update into restarting incorrect systemd units GHSA-55rm-rwr7-q2wr.
+    - Addresses CVE-2026-111361, malicious containers images could be able to bypass Digest and Signature validation GHSA-pggw-qqjf-6cxw.
+    - Addresses CVE-2026-123876, default seccomp profile socket deny rule could be bypass by a malicious container.
+    Features
+    - The podman push command now supports a new option, --platform, which selects and pushes a single platform-specific manifest instead of the entire list.
+    - The podman kube play command now supports a new option, --validate, which determines how unrecognized YAML fields are handled (#18332).
+    - The podman kube play command now supports a new option, --label, to set labels on created containers, pods, volumes, and secrets (#26450).
+    - The podman kube play command can now create multiple pods if more than 1 replica is requested by a deployment using the new --multiple-pods option (#26769).
+    - The podman kube play --build command now supports building images from subdirectories of the main context directory (#28148).
+    - Quadlet .container files now support a new key, Umask, to set the default umask for the created container (#25278).
+    - All Quadlet files now support a new key, SetMountsDependency, configuring whether the generated unit will use RequiresMountsFor, WantsMountsFor, or no dependency at all on required source paths (#29946).
+    - The podman farm list command now supports two new options, --quiet, which will print only the names of active farms, and --noheading, which omits column headers from the output.
+    - The podman artifact ls command now supports two new options, --format=json, which will output machine-readable JSON, and --quiet, which prints only artifact digests.
+    - The podman create command now supports a new option, --passwd, to add entries to /etc/passwd in the container (this has previously been available with podman run).
+    - The podman info command now includes detailed information on the features supported by OCI runtimes.
+    - The podman events --filter command now supports a new filter, network=, to filter to events pertaining to a specific network (#29387).
+    - The podman auto-update command has been enabled on the remote Podman client.
+    - The StartInterval field in image healthcheck configuration is now respected, allowing images to configure startup healthchecks (#27724).
+    - The podman image scp command now supports two new options, --compression-format and --compression-level, to compress data during transfer (#23192).
+    - The podman auto-update command now supports a new option, --filter, to selectively update only containers that match the given filters.
+    - The podman ps --sort command now allows sorting by pod.
+    - The podman ps --filter command now supports a new filter, status!, which matches containers not in the given state (#21398).
+    Changes
+    - Podman now requires Go v1.26 or higher to build.
+    - The Podman machine WSL provider now has native systemd support, existing machines continue to be supported for now with our old custom systemd setup. We require at least WSL version 2.5.1 now, although we recommend using at least 2.7.5 for proper nftables networking support.
+    - The podman kube play command now uses the securityContext.seccompProfile fields in Kubernetes YAML for Seccomp configuration. Support for the existing annotation-based configuration of Seccomp is now deprecated, and will be removed with Podman 7.0.
+    - The podman inspect command on containers now includes three new fields, DNSNames (containing all names the container can be accessed via), IsInitCtr (whether the container is an init container), and InitContainerType (what type of init container this is, if it is one) (#29811).
+    - The podman inspect command on containers now only includes user-added DNS aliases in the Aliases field, which previously displayed all DNS aliases, improving Docker compatibility.
+    - The podman inspect command on containers now properly populates the ConsoleSize field for running containers (#28368).
+    - Systemd units created by Podman healthchecks are now named much more clearly (libpod-healthcheck-$CONTAINERID-$randsuffix.service) (#29373).
+    - Signal proxying is now enabled for attached podman exec commands. As such, killing a podman exec command with Control-C or similar should now also kill the processes started in the container (similar to how podman run already works) (#19486).
+    - The deprecated --cpu-rt-period and --cpu-rt-runtime options for podman create, podman run, podman update, and podman container clone are now hidden and undocumented. They have not been functional since the removal of cgroups v1 support and will be removed entirely in Podman v7.
+    - The --health-startup-interval option to podman create, podman run, and podman update has a new alias, --health-start-interval.
+    - When a startup healthcheck interval is specified, but no startup healthcheck command, the standard healthcheck command will be used instead.
+    - When using the journald event driver, timestamps are no longer included in logged events, as journald includes a timestamp already (#29835).
+    - Quadlet can now create template instances from instance-specific drop-in directories without requiring an explicit instance file or symlink (#27636).
+    Bugfixes
+    - Fixed a bug where passing an empty file to the --ignorefile option to podman build would cause the .dockerignore or .containerignore file in the context directory to be used, instead of not using an ignorefile at all (#25147).
+    - Fixed a bug where the Pod= key in Quadlet .container files did not expand the %N specifier (#29108).
+    - Fixed a bug where containers created with --userns=auto would report having a private user namespace in podman inspect after they started, but not when they were first created.
+    - Fixed a bug where logging was configured too late in the Podman init process to print errors from parsing configuration files (#25362).
+    - Fixed a bug where the podman system prune --build command could fail if a build container was removed while it was running.
+    - Fixed a bug where copy events from podman machine cp were not properly displayed by the remote Podman client.
+    - Fixed a bug where the podman farm build --tag command would fail if given a tag including a colon (#25039).
+    - Fixed a bug where the podman machine init --image command would fail when given a read-only disk image.
+    - Fixed a bug where the podman machine start and podman machine init --now commands could hang on Windows systems using the Hyper-V provider if the VM failed to start (#29455).
+    - Fixed a bug where the podman machine start command on Windows (both Hyper-V and WSL providers) would sometimes fail due to leftover processes from previous machines (#29474).
+    - Fixed a bug where the podman machine start command could hang indefinitely if the VM failed to start properly (#29880).
+    - Fixed a bug where the podman machine start command could create a VM that cannot be connected to on Windows if the host was shut down or restarted when the VM was running (#29971).
+    - Fixed a bug where the podman machine init command on Windows when using the Hyper-V provider did not correctly detach the file server process, causing VMs to lose access to host shares when the console that ran podman machine init closed (#29573).
+    - Fixed a bug where the podman kube play command incorrectly handled emptyDir volumes with medium: Memory, causing them to not be shared between containers in the pod and to ignore the sizeLimit parameter (#29555).
+    - Fixed a bug where the remote Podman client's podman kube play command incorrectly handled authentication credentials in API requests.
+    - Fixed a bug where volumes created by the podman volume import command would not adjust their permissions on being mounted into a container (#25442).
+    - Fixed a bug where the podman build command could leak temporary directories if a build failed (#22642).
+    - Fixed a bug where containers created with --userns=keep-id would use an image-specified user instead of forcing the same UID/GID in use on the host (#29600).
+    - Fixed a bug where the remote Podman client could not function when connecting over SSH to a server which does not support the direct-streamlocal channel type (#27814).
+    - Fixed a bug where the remote Podman client's podman push, podman artifact push, and podman manifest push commands would push an unsigned image instead of failing when the --sign-by or --sign-by-sigstore-private-key options were used.
+    - Fixed a bug where creating a container with --userns=auto that had overlay volume mounts would fail (#28758).
+    - Fixed a bug where volume subpaths including a = character in the path were handled incorrectly.
+    - Fixed a bug where the remote Podman client was unable to add subjects to artifacts with the podman manifest annotate --subject and podman manifest add --artifact subject commands.
+    - Fixed a bug where the remote Podman client's podman manifest add --artifact command could hang under some circumstances.
+    - Fixed a bug where the podman manifest annotate --os-features command did not properly save the OS features in the manifest.
+    - Fixed a bug where the remote Podman client's podman image prune --filter did not correctly handle filters with values including the = character.
+    - Fixed a bug where Quadlet .volume units did not recreate the volume if it was removed in Podman (#27862).
+    - Fixed a bug where containers with a failing startup healthcheck would not immediately transition to unhealthy when the startup period ended.
+    - Fixed a bug where containers started with --sdnotify=healthy and a HealthStartPeriod longer than the unit's TimeoutStartSec could be automatically killed by systemd if the healthcheck took an extended period to become healthy (#27290).
+    - Fixed a bug where the --pids-limit=0 argument to podman run and podman create was incorrectly setting a process limit, instead of removing the limit, when the runc OCI runtime was in use (#29826).
+    - Fixed a bug where Quadlet did not search the parent directory of symlinked unit files for drop-in configuration files, which broke using Quadlets defined by root as a rootless user if drop-in overrides were in use (#29821).
+    - Fixed a bug where the podman ps and podman pod ps commands would fail when the --format argument was used with a format string including .Label (#29831).
+    - Fixed a bug where the podman cp command did not respect volume subpaths when copying into a mounted named or image volumes in a container that is not running (#29840 and #29857).
+    - Fixed a bug where volume plugins were initialized when they were not required, which could cause early-boot containers started by Quadlet to error on missing plugins that the container was not actually using (#28110).
+    - Fixed a bug where the podman export command, when run by a rootless user on a container created with --userns=keep-id, would create an archive with incorrect UIDs and GIDs (#29856).
+    - Fixed a bug where the podman system service command would fail to start when run as a systemd unit and autostarted at the same time as other Podman units (#29964).
+    - Fixed a bug where the podman events command would return incomplete output when using the file events backend and --until specified with a time in the past (#29579).
+    - Fixed a bug where the podman update command allowed setting a startup healthcheck on a container without a normal healthcheck.
+    - Fixed a bug where the remote Podman client's podman secret rm command would fail when given an ambiguous name that could match multiple possible secrets.
+    - Fixed a bug where the podman machine info command would report the default VM type and config/image directories, not those used by the current machine.
+    - Fixed a bug where the podman inspect command on containers did not include CheckpointLog after a failed container checkpoint (#25154).
+    API
+    - The Libpod API now features a new endpoint, POST /libpod/autoupdate, which automatically updates containers with the io.containers.autoupdate label.
+    - The Compat API now features a new endpoint, GET /distribution/{name}/json, which inspects an image on a registry (#17726).
+    - The Compat Create endpoint for Containers now supports a new field, HostConfig.Mounts.TmpfsOptions.Options, to set additional options for tmpfs mounts.
+    - The Compat Create endpoint for Containers now allows a full Seccomp profile to be passed in the HostConfig.SecurityOpt field (instead of a path to a file containing a profile), improving Docker compatibility (#27710).
+    - The Compat Push endpoint for Images now supports a new query parameter, platform, to push only a single platform-specific manifest instead of the entire list.
+    - The Compat Info endpoint now includes the status of active OCI runtimes.
+    - Fixed a bug where the Libpod Create endpoint for Containers required that the auto userns mode also specify full UID/GID mappings for the created container.
+    - Fixed a bug where the Compat Create endpoint for Containers would incorrectly adjust mode when setting tmpfs size.
+    - Fixed a bug where the Compat Create endpoint for Containers would incorrectly treat a healthcheck of {} as the user explicitly requesting no healthcheck, instead of using the image's healthcheck as Docker does (#29467).
+    - Fixed a bug where the Compat Inspect endpoint for Secrets allowed the showsecret query parameter, which should be restricted to Libpod API requests only (#29570).
+    - Fixed a bug where the Compat Inspect endpoint for Images included the Created field even when it was empty.
+    - Fixed a bug where the Compat List and Inspect endpoints for Networks did not include IPRange in the returned IPAMConfig (#28378).
+    - Fixed a bug where the Compat List endpoint for Containers would error when passed a filter including container statuses supported by Docker but not Podman (dead and restarting) (#28904).
+    - Fixed a bug where the Compat Stats endpoint for Containers could panic on containers with a memory reservation, but no memory limit, set (#29627).
+    - Fixed a bug where the Compat Stats endpoint for Containers incorrectly populated system_cpu_usage and percpu_stats when not streaming (#28761, #24730, #25709, #29912).
+    - Fixed a bug where the Compat Info endpoint reported an incorrect cgroup manager when running rootless with the cgroupfs cgroup manager (#27824).
+    - Fixed a bug where the Compat and Libpod Attach endpoints for Containers would, when doing a logs-only (stream=0 and logs=1) attach, incorrectly reinitialize the container, changing its exit code and status (#29664).
+    - Fixed a bug where the Compat and Libpod Update endpoints would incorrectly clear a container's restart policy when it was omitted from the request (#29790).
+    - Fixed a bug where the Compat and Libpod Start endpoints for Exec sessions would return an error when trying to start an exec session with no standard streams attached without specifying Detach=true.
+    - Fixed a bug where the Libpod Generate Kube endpoint returned the wrong content type (#29674).
+    - Numerous fixes to the API's Swagger documentation have been made to ensure it accurately documents the REST API.
+    Misc
+    - Fixed a number of low-level resource leaks in various parts of Podman.
+    - Waiting for gvproxy to start when starting a podman machine VM now uses a notification socket, instead of polling, improving reliability and startup time.
+    - Updated documentation for the --image-volume option to podman create and podman run to remove the deprecated bind option and add the new default, anonymous, which was not shown as a valid option. Using the deprecated bind option now prints a warning.
+    - Updated Buildah to v1.46.0
+    - Updated Common to v0.70.0
+    - Updated Image to v5.42.1
+    - Updated Storage to v1.64.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/podman-container-tools/podman/releases/tag/v6.2.0
+ReleaseTime: 2026-11-10T20:01:54.0000000Z
