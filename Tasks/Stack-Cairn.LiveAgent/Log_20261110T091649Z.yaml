@@ -1,0 +1,36 @@
+Version: 2.0.17
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.17/LiveAgent-v2.0.17-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.17/LiveAgent-v2.0.17-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    LiveAgent v2.0.17
+    内置 K-brain v0.107.30（#1280）。
+    问题修复
+    - 启动界面不再无限卡住（#1276）：升级或迁移数据目录后，启动时如果本地服务（K-brain）没有响应，以前会一直停在只有图标和进度条的界面上，没有任何提示和按钮。
+      - 读取设置超过 20 秒，界面会说明情况并提供「重启本地服务」，点击后会换一个新的本地服务进程重新加载；
+      - 历史记录迁移超过 15 秒没有进展，可以选择「跳过，进入应用」（迁移继续在后台进行）或「重启本地服务并重试」；
+      - 迁移的每一步都有时间限制，超时的步骤会在下次启动时重试，不会卡住启动。
+    - 迁移数据目录更可靠（#1276）：
+      - 复制期间不会再有重连把本地服务在旧目录上重新拉起，避免迁移后丢失这段时间写入的数据；
+      - 跳过数据目录里的 socket、管道等特殊文件，以前遇到管道时复制会永久卡住；
+      - 扫描旧版会话改为在后台线程进行，不再冻住窗口。
+    - kn 终端里运行的会话实时同步到 LiveAgent（#1278）：以前在 kn 里开始的新会话，要等回合结束十几秒后才出现在会话列表里，已经打开的会话也不会刷新。
+      - 现在几秒内就会出现在列表里，运行期间显示转圈；
+      - 已打开的对话会随 kn 的进度依次显示用户消息、工具调用和最终回答；
+      - 运行期间输入框会提示「正在 kn 中运行」并暂时禁止发送，回合结束后恢复。
+    内置 K-brain 的变化
+    - 会话同步与防止丢消息（K-brain#192）：kn 在回合进行中就保存进度，backend 几秒内就能发现变化；同一会话同时只允许一个进程运行回合，在 LiveAgent 和 kn 同时操作同一会话时不会再互相覆盖消息。
+    - 置顶、归档在回合运行中也能使用（K-brain#190，随 v0.107.29 发布）。
+    详见 K-brain v0.107.29、v0.107.30 发布说明。
+    完整变更：https://github.com/Stack-Cairn/LiveAgent/compare/v2.0.16...v2.0.17
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.17
+ReleaseTime: 2026-11-10T08:55:38.0000000Z
