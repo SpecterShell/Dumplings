@@ -1,0 +1,115 @@
+Version: 18.18.8
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.18.8/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed concurrent OAuth requests rejected as claude_code_version_too_old failing instead of retrying with the required version (#18651)
+    - Chat Completions gateway requests preserve explicit tool strict-mode choices, so Codex tools can omit optional arguments when callers set strict: false (#18672 by @0xeb).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Muse Ember (muse-ember-1.0) on Meta Model API and Muse Code with the minimal–max reasoning effort ladder and its >200K long-context pricing
+    - Added Gemini 4 Carbon pricing on the Gemini API, Vertex AI, Google Antigravity, and Cursor ($2 input / $0.10 cached / $10 output per 1M tokens through 2026-11-30, then $4 / $0.20 / $20), instead of showing $0 (#18734 by @eggpeat)
+    Fixed
+    - Fixed regenerating the catalog marking 18 reasoning models as non-reasoning when NanoGPT's <id>:thinking sibling row had larger limits (#18673, #18728)
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - curl -fsSL https://omp.sh/install | sh and install.ps1 now install the standalone binary by default, even when bun is present, so installs get delta updates; pass --source/-Source for a bun package install
+    - Ask forms can attach notes to selected options; those notes accompany the answers separately from submitted form values (#18779 by @Shadorain)
+    Fixed
+    - Claude auto-redeem now spends a full saved reset on an account blocked by its weekly limit when the reset also clears the Fable cap; such resets were treated as Fable-only and skipped while Fable usage had room (#18801)
+    - Fixed agents showing as idle in the Agent Hub while still running after a failed streaming edit preview (edit.streamingAbort) auto-recovered the turn (#18790 by @H4vC)
+    - A browser call on a tab that is not open now says to open it with await browser.open({ name }) (Python: await browser.open(name=…)) and the url and app it was opened with, instead of pointing at the removed action:"open" (#18739 by @will-bogusz)
+    - Fixed computer.window({ app }) and computer.windows({ app }) matching similarly named apps when the exact app name has an open window, such as Google Chrome alongside Google Chrome for Testing (#18744 by @will-bogusz)
+    - In Tern, browser role/ selectors keep input roles and names under Turkish and Azeri locales (#18658 by @will-bogusz)
+    - Chrome role/RootWebArea waits with visible return the document instead of failing, and hidden waits keep waiting (#18658 by @will-bogusz)
+    - An omp -p or other omp that your session's bash tool or eval cell starts inside Tern or cmux no longer picks Tern or cmux from the pane it inherited, so its browser tabs stop floating over your pane (#18773 by @will-bogusz)
+    - Browser relay connections sharing a tab no longer lose cross-site frames when another connection disables auto-attachment on its page; automatic children detach locally when their last armed page leaves, while explicitly attached frame subtrees remain usable after opting out (#18657 by @will-bogusz)
+    - Browser agents now say when a step can't be done through the page, instead of patching the page with scripts and reporting the step as done (#18761 by @will-bogusz)
+    - An extension's assistant_message rewrite now reaches the next Codex Responses request: same-model native replay used to resend the captured original text while the transcript showed the rewritten one (#18312)
+    - MCP reconnects and tool-list refreshes now keep extension-deactivated tools inactive while enabling newly discovered tools (#18678).
+    - Exiting after aborting a bash command now waits for its TERM-resistant foreground processes to be killed (#18669).
+    - An edit touching several files that anchors lines no read displayed now reveals those lines for every file in one rejection, so the identical resend applies instead of being rejected again for the next file (#18742 by @MaisonnatM)
+    - omp auth-gateway stdio now serves judge, image, speech, embedding, rerank and video models: /v1/models lists them, and /v1/systemone answers typesafe/jev-* or @judge instead of 404, or 422 from a chat model (#18740 by @andyhite)
+    - omp auth-gateway stdio no longer cuts its last responses off at 128 KiB when its input ends before a slow reader has read them (#18740 by @andyhite)
+    - omp --session <id> --restore restores that session, as omp --restore --session <id> does, instead of opening the session picker: a bare --restore keeps a session --session or --resume already named (#18685 by @AdamDureyAtWillship)
+    - The legacy Pi virtual module now builds in an npm install that keeps the bundled Pi packages nested: it is anchored to the installed package, so its imports resolve through that package's own dependency graph (#15208, #18733 by @yuzu-octopus)
+    - User-level agents, commands, and other ~/.omp/agent config (including agents saved from the agents hub) now follow PI_CODING_AGENT_DIR, matching where omp agents unpack writes (#18684)
+    - Fixed grep and glob treating a ; list that starts with an internal URL and includes a local path, such as artifact://1;notes.txt, as one address; each listed target is now searched (#18714 by @eggpeat)
+    - Isolated tasks that edit a file whose name contains spaces now commit that file, including in a nested git repository, instead of leaving it unstaged or committing a different file that shares part of the name (#18715 by @eggpeat)
+    - A disposed or switched session now releases every persistent shell it owns, including the ones a surface keeps under a name of its own (/loop conditions), instead of holding one native shell per surface for the life of the process (#18717 by @eggpeat)
+    @oh-my-pi/collab-web
+    Changed
+    - Ask result cards render saved notes beneath their matching selected answers (#18779 by @Shadorain)
+    @oh-my-pi/pi-natives
+    Changed
+    - macOS keys, typing and held keys for a window now go to a sheet attached to it that holds keyboard focus, such as an Open sheet or Finder's Go to Folder, as macOS sends them, instead of throwing InvalidTarget and naming the sheet; so do keys for a control of that sheet, which reports the window under it as its own (#18675 by @will-bogusz)
+    - Computer input no longer fails with InputBusy the moment another omp session's call holds the desktop, such as an apps.open waiting for its window: it waits up to 5 seconds for that call to finish, on macOS, Linux and Windows (#18746 by @will-bogusz)
+    Fixed
+    - Fixed a crash when parsing Markdown with very deeply nested lists or block quotes, such as a line of several hundred - markers, which made editing such files kill the process (#18707)
+    - Fixed the shell's git builtin on Windows with bash.gitGuard (or smart git) on failing every allowed command with exit 127 (…\Git\cmd\git: No such file or directory); it now runs git.exe (#18722)
+    - Computer element searches accept native role names, spaced role names such as text field, and radiobutton for macOS radio controls without changing printed accessibility roles (#18745 by @will-bogusz)
+    - Fixed macOS background input and takeover refusing every call, with nothing sent, while Finder is in front with its focus on the desktop and a Finder window open; Finder gets its front status back with its focus left on the desktop (#18680 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Changed
+    - Ask forms support notes on options: n on radio/checkbox rows and Alt+n on select menus (app.ask.note), with selected notes shown alongside submitted answers and notes on unchosen options marked as drafts (#18779 by @Shadorain)
+    Fixed
+    - Ask form textareas edited from Tern now restart the inactivity timeout instead of submitting mid-edit
+    - Fixed a picture in an ask form staying painted on screen after the form closed (#18693 by @jaredlyon)
+    - Fixed terminal Device Attributes replies (such as ^[[?64;1;2;4;6;17;18;21;22c) leaking into the shell prompt on exit (#18662 by @asuffield)
+    @oh-my-pi/pi-utils
+    Removed
+    - Removed getConfigAgentDirName(); use getAgentDir(), which also honors PI_CODING_AGENT_DIR (#18684)
+    What's Changed
+    - fix(natives): send macOS keys for a window to the sheet focused on it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18675
+    - fix(bash): release session-owned namespaced shells by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18717
+    - fix(ai,coding-agent): deliver assistant_message rewrites through Codex native replay by @holny in https://github.com/can1357/oh-my-pi/pull/18720
+    - fix(pi-shell): launched git.exe from the guarded git builtin on windows by @roboomp in https://github.com/can1357/oh-my-pi/pull/18726
+    - fix(catalog): stop NanoGPT :thinking siblings from flipping reasoning models by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18728
+    - fix(coding-agent): resolve bundled Pi packages from the installed dependency graph by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18733
+    - fix(catalog): collapse Gemini 4 Carbon thinking tiers and add pricing by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18734
+    - fix(browser): point calls on a tab that is not open at browser.open() by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18739
+    - fix(coding-agent): serve non-chat models and full responses from auth-gateway stdio by @andyhite in https://github.com/can1357/oh-my-pi/pull/18740
+    - fix(edit): reveal every file's unseen lines in one seen-line rejection by @MaisonnatM in https://github.com/can1357/oh-my-pi/pull/18742
+    - fix(coding-agent): prefer exact app names when selecting windows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18744
+    - fix(natives): accept aliases in computer role searches by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18745
+    - fix(natives): wait for another session's input lock before failing InputBusy by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18746
+    - fix(browser): have agents report a step the page cannot do instead of faking it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18761
+    - docs(lsp): corrected isLinter type-intelligence routing docs by @roboomp in https://github.com/can1357/oh-my-pi/pull/18765
+    - fix(catalog): show Factory Droid's Gemini 4 Argon credit promotion by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18767
+    - fix(catalog): show list prices for Factory Droid Fable 5.1, GLM 5.2 Fast and Muse Spark Open by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18768
+    - fix(coding-agent): keep a child omp's browser tabs out of its parent's Tern pane and cmux workspace by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18773
+    - fix(ai,agent): add logger.warn to empty catch blocks by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18654
+    - fix(browser-relay): keep a shared child frame attached when one connection turns auto-attach off by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18657
+    - fix(coding-agent): preserve role selectors across locales and document waits by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18658
+    - fix(tui): gate exit DA1 drain sentinel on active TSP session by @asuffield in https://github.com/can1357/oh-my-pi/pull/18662
+    - fix(ai): retry every concurrent request rejected as too old by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18667
+    - fix(coding-agent): wait for aborted bash cleanup before exit by @roboomp in https://github.com/can1357/oh-my-pi/pull/18671
+    - fix(ai): preserve tool strict mode at the Chat Completions gateway by @0xeb in https://github.com/can1357/oh-my-pi/pull/18672
+    - fix(coding-agent): preserve mcp selection across refreshes by @roboomp in https://github.com/can1357/oh-my-pi/pull/18679
+    - fix(natives): restore Finder with its desktop focus after macOS background input by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18680
+    - fix(cli): a bare --restore keeps the session --session already named by @AdamDureyAtWillship in https://github.com/can1357/oh-my-pi/pull/18685
+    - fix(coding-agent): resolved user config dirs from PI_CODING_AGENT_DIR by @roboomp in https://github.com/can1357/oh-my-pi/pull/18687
+    - fix(tui): delete ask form pictures when the form closes by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/18693
+    - perf(tui): reuse TranscriptContainer live-entry wrappers across per-frame readers by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18705
+    - fix(natives): bumped tree-sitter-md to 0.5.4 to stop deep-nesting crash by @roboomp in https://github.com/can1357/oh-my-pi/pull/18710
+    - fix(grep): split mixed internal URL and local path lists by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18714
+    - fix(task): preserve spaces when collecting nested patch paths by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18715
+    - fix(ask): restore per-option notes in HTML form dialogs by @Shadorain in https://github.com/can1357/oh-my-pi/pull/18779
+    - fix(session): keep recovered runs reported as running after a late settle by @H4vC in https://github.com/can1357/oh-my-pi/pull/18790
+    - fix(ai): heal Claude blocks when the account has no running 5-hour window by @baekjosh in https://github.com/can1357/oh-my-pi/pull/18801
+    - feat(coding-agent): add publish tool for hosted pages and claude.ai artifacts by @H4vC in https://github.com/can1357/oh-my-pi/pull/18806
+    New Contributors
+    - @0xeb made their first contribution in https://github.com/can1357/oh-my-pi/pull/18672
+    - @AdamDureyAtWillship made their first contribution in https://github.com/can1357/oh-my-pi/pull/18685
+    - @baekjosh made their first contribution in https://github.com/can1357/oh-my-pi/pull/18801
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.18.7...v18.18.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.18.8
+ReleaseTime: 2026-11-11T03:31:40.0000000Z
