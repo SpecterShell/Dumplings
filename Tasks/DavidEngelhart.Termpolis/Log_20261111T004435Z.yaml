@@ -1,0 +1,20 @@
+Version: 1.59.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/codedev-david/termpolis/releases/download/v1.59.0/Termpolis.Setup.1.59.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fresh session is offered before Claude compacts, not only after
+    Claude rereads the whole conversation on every turn, so a long session gets more expensive with each message. Termpolis already measures this on your own traffic (Token Savings ▸ session depth). Until now, the Fresh session button showed up only after Claude had compacted, by which point the most expensive turns were already paid for.
+    What's new
+    - An earlier offer. When a terminal's conversation gets long enough that a fresh session would cut the cost per turn by at least half, measured on your own sessions, the pane header says so: "Long session. A fresh one saves 55% a turn." with a Fresh session button. On typical traffic this happens at around 100 messages, well before compaction.
+    - Same safe handoff. Fresh session works as before. Claude writes a short handoff note into Termpolis memory, quits, and a new session starts from that note. If Claude doesn't print the note's id, nothing is quit. Nothing is typed until the OS reports that Claude has exited.
+    - Dismiss means not now. Close the offer with ×. It comes back only after the conversation reaches the next depth band, when the saving is bigger.
+    - Also for a Claude you started yourself. Typing claude in a Termpolis terminal now gets the offer too, both before and after compaction. The fresh session keeps the flags you started it with, such as --dangerously-skip-permissions. A prompt you type into Claude that happens to start with the word "claude" doesn't replace them. A Claude started with an inline account prefix (CLAUDE_CONFIG_DIR=… claude) gets no offer, because a retyped claude would start on a different account.
+    The offer needs evidence. It stays hidden until your own sessions have produced enough samples at both the shallow and the deep length, and it never shows for a subagent's requests or for a failed request.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/codedev-david/termpolis/releases/tag/v1.59.0
+ReleaseTime: 2026-11-10T23:30:01.0000000Z
