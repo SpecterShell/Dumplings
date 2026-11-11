@@ -1,0 +1,340 @@
+Version: 0.4.11
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Oleafly/Oleafly/releases/download/v0.4.11/Oleafly_0.4.11_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Oleafly/Oleafly/releases/download/v0.4.11/Oleafly_0.4.11_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new in 0.4.11
+    Thanks
+    - Matt Van Horn (@mvanhorn): catching that tlmgr
+      can refuse an install and still exit with a success code (#401).
+    - Teng Qin (@palmtenor): reported the clash
+      between documents in one folder (#389), wrote the first fix and its tests
+      (#395), and asked for a PDF in the project folder that stays up to date
+      (#418).
+    - Jack Wu (@a-green-hand-jack): asked
+      for Antigravity CLI as a built-in agent and worked out the catalog entry it
+      needs (#402).
+    - zemelua (@zemelua): traced the Typst failure on
+      Windows to the file address Oleafly sends Tinymist, and proved it with a
+      standalone run of the server (#414).
+    - Angelk90 (@Angelk90): tried the Intel build
+      and reported Korean text missing from a PDF, a dead-end "latexmk was not
+      found" error, a log you couldn't clear and no way to use iTerm, which led to
+      the install, compile and export fixes in this release (#372).
+    - Masum (@masumeee): asked for a way to turn
+      off thinking for local models (#381).
+    - guangle cao (@cgl-sd): reported that OpenCode
+      failed as a custom provider and that agents at the end of the picker were out
+      of reach, and asked for buttons to turn every model on or off (#385).
+    - Minyang Bao (@CherryYang05): asked for a
+      separate font for Chinese, Japanese and Korean text, and for downloaded font
+      packs that work by name (#392, #393).
+    - MaverickJohn026 (@MaverickJohn026):
+      asked for download mirrors you can choose, and reported the managed TinyTeX
+      refusing every package install (#396, #397).
+    - Marlon Luís de Col (@marlondecol): asked to
+      use a TeX distribution installed in any folder (#416).
+    Added
+    - The Save button in the PDF preview now opens a menu with a one-line "Sync PDF
+      on compiles" toggle. With it on, a PDF named after your project title is
+      refreshed in the project folder after each successful compile, whatever the
+      source file is called. It's a normal project file, so cloud sync and
+      checkpoints pick it up. If you rename the project, sync moves to a new file
+      and the old one stays as it is. Oleafly won't overwrite a file it didn't make,
+      fast compiles leave the PDF alone, and a shared project keeps this copy on
+      your computer (#418).
+    - Save a PDF from any checkpoint without restoring the project. Open a
+      checkpoint's files and choose Save PDF (#418).
+    - Antigravity CLI is now a built-in agent. Oleafly runs agy acp from your own
+      install, and you sign in with your Google account through agy acp --login.
+      Pick its Gemini model, thinking level and mode in the assistant. It needs agy
+      1.5.0 or newer. With an older agy, Oleafly tells you to run agy update
+      instead of failing to start. Research tasks stay off for it until a test run
+      passes (#402).
+    - The Tools can use a connected CLI agent. Image to LaTeX, Image to Typst, the
+      equation tools and scanned PDFs now list Claude Code, Codex and other
+      connected agents, so they run on your own sign-in with no API key. Claude Code
+      runs with its tools off and other agents in a read-only mode, and an agent
+      with no such mode isn't listed (#306).
+    - Without an API key, Paper Review, inline edits, Fix with AI, template
+      generation and the citation scan's ranking now use the CLI agent picked as
+      the model for Tools. Ask AI, Generators and the selection menu hand off to
+      the assistant you're using, and Oleafly's assistant passes them to a
+      connected CLI agent when it has no provider (#306).
+    - The compile log has a Clear button, in the main window and the preview
+      window (#372).
+    - Settings > Terminal can open folders in an external terminal: Terminal or
+      iTerm on macOS, Windows Terminal, PowerShell or Command Prompt on Windows, and
+      your desktop's terminal on Linux. The built-in terminal stays the default
+      (#372).
+    - TinyTeX downloads can be cancelled, pick up where they stopped, and try a
+      second source when GitHub fails. Settings > Engines shows which TeX
+      distribution compiles, with an Update button when the managed TinyTeX is older
+      than the one this version expects.
+    - Settings > Downloads has a Sources tab. By default downloads come from
+      Oleafly's mirror and fall back to the original host. You can pick Original
+      hosts instead, or put your own mirror in front of both, such as a university
+      or lab copy. This covers TinyTeX, Typst and Tinymist, font packs and the
+      Tectonic bundle, in the app and in oleafly. Every file is still checked
+      against the checksum the app ships with, so a mirror can make a download
+      faster but can't change it. The same tab sets the TeX package repository
+      that tlmgr uses. The TinyTeX Oleafly installs uses the nearest CTAN mirror
+      unless you set one (#396).
+    - TeX installed in a folder Oleafly doesn't look in can be used for compiles.
+      In Settings > Engines > LaTeX, click Choose a TeX folder under Manage TeX
+      distributions and pick the folder with latexmk in it or the TeX Live year
+      folder above it (#416).
+    - Local models can skip thinking. For an Ollama or Lemonade model that thinks
+      before it answers, the effort menu next to the model picker now has None. Pick
+      it and the model answers without the thinking step, which is much faster on
+      simple requests. Ollama models that always think, such as Qwen3 Thinking,
+      don't offer None, since they would think anyway. A Lemonade provider added
+      before this version needs one press of Refresh on its model list in
+      Settings > AI (#381).
+    - Each provider's model list has Enable all and Disable all buttons. Turn off
+      a long list in one click, then switch back on the few models you use (#385).
+    - A CJK font setting in Settings > Appearance > Editor sets the font for
+      Chinese, Japanese and Korean characters. Latin text stays in the Editor font,
+      so a coding font and PingFang SC or Microsoft YaHei work side by side. On
+      macOS, PingFang now shows in the font lists (#392).
+    - Downloaded Lato, PT Sans and PT Serif now work by name. Typst projects find
+      them the way they find the Typst font packs. For LaTeX, Add to project in
+      Settings > Downloads copies a font into the project's fonts folder with a
+      small .fontspec file, so \setmainfont{PT Serif} works without options, and
+      the project still compiles on other computers (#393).
+    Fixed
+    - A ready CLI agent no longer shows "Run claude auth login in your terminal,
+      then reconnect" under Next step. That line was fixed text, so signing in could
+      never clear it (#306).
+    - The agent check now spots a signed-out Claude Code, which it used to call
+      ready because Claude Code opens a session before it checks the login (#306).
+    - Format document, go to definition, rename and the other Typst language
+      features work on Windows. Oleafly passed the project folder to Tinymist in
+      Windows' \\?\ long-path form, which Tinymist can't read, so it crashed at
+      startup. The fix covers folders on network shares and mapped drives too, and
+      TexLab gets the same corrected addresses (#414).
+    - Errors and warnings from Tinymist now show up when the project's folder path
+      has characters such as &, + or @ in it. They reached Oleafly on every
+      platform and were dropped.
+    - Typst errors and warnings follow your typing on Windows. Oleafly named the
+      main document to Tinymist in the \\?\ path form, which Tinymist took for a
+      different file from the one open in the editor. It checked the saved copy
+      instead, so a new error showed up only after the file was saved, and
+      sometimes not at all.
+    - Typst errors that are already in a file show up when you open the project.
+      If the project changed while Tinymist was still starting, Oleafly forgot it
+      had asked for them and stayed waiting until your next edit.
+    - When a language server stops, the app log keeps the end of what it printed,
+      so a crash report shows the reason.
+    - Fenced code in Markdown stays a code block in the visual editor. Typing in
+      a block, or saving a file the editor had to rewrite, turned the fence into
+      lines of inline code, which dropped the language and broke Mermaid diagrams.
+      Blocks now open as code blocks, keep their whole info string and blank lines,
+      and start from ``` as you type. Tab indents inside a block.
+    - Package installs work again on the TinyTeX that Oleafly manages. Its tlmgr
+      falls behind the live repository within weeks of each release and then refuses
+      every install, so Oleafly now updates tlmgr and repeats the install. On a
+      system TeX Live or your own TinyTeX, the error keeps tlmgr's message and tells
+      you to run tlmgr update --self, even when tlmgr exits with a success code
+      (#397).
+    - A compile that loses text now tells you. TeX skips characters its font can't
+      show and still reports success, so a Chinese, Japanese or Korean document
+      could come out with its text gone. You now get a notice, the compile log lists
+      the missing characters, and it gives a setup for each script using fonts
+      already in the built-in engine. A project using CJKutf8 or CJK, which only
+      work on pdfLaTeX, is offered that switch. oleaflyc build prints the same
+      warning.
+    - A remote research run that had only just started could show as lost. The
+      status check read the run's process file twice, and the file could appear
+      between the two reads. It now reads the file once.
+    - Choosing pdfLaTeX, XeLaTeX or another latexmk compiler with no TeX installed
+      now offers to install TinyTeX right there, when you switch and when you
+      compile, instead of ending in an English-only error (#372).
+    - MiKTeX without Perl, a TeX install without latexmk, and a missing compiler or
+      Biber are detected and named, with what to install. TeX and Perl are also found
+      on your login shell's PATH and, on Windows, through the registry.
+    - Compiling again after a failed latexmk run really runs it again. It used to do
+      nothing and lose the PDF and log, and after a package install it showed the
+      old error.
+    - Missing font metrics, .fd, .bst and babel language files and TikZ libraries
+      now get the install offer too. On Debian, Ubuntu and Fedora TeX Live, Oleafly
+      no longer offers installs that can't work and points to apt or dnf instead.
+      When the TeX Live repository moves to a new year, installs use the archive for
+      your release.
+    - upLaTeX and pLaTeX on TinyTeX can install Japanese support from the error.
+    - On the built-in engine, [T1]{fontenc} documents keep their text, Times,
+      Helvetica, Palatino and similar fonts use TeX Gyre instead of Latin Modern,
+      \pdfoutput=1 works, and a bundled font asked for by family name gets its
+      file name in the error.
+    - First compiles download packages in bulk, and the time limit follows download
+      progress instead of stopping at five minutes. A mirror failure falls back to
+      the upstream bundle even with a warm cache, and offline compiles say which
+      package needs a download.
+    - minted, glossaries, nomencl and makeindex output, a shipped .bbl, and .bib
+      edits on the built-in engine now reach the PDF. A main file in a subfolder
+      finds the files beside it.
+    - Markdown to PDF picks fonts for the scripts in your document, accepts SVG,
+      GIF, WebP and other images, uses the bibliography you declared, and no longer
+      fails a good compile because a log line contains "error".
+    - LaTeX exports keep their figures, Beamer frames become separate PowerPoint
+      slides, EPUB shows math, and Markdown exports keep the title and author. When
+      pandoc drops content, the export says so. Typst exports keep text inside
+      layout elements and images in LaTeX, and PNG and SVG export works on Typst
+      0.11.
+    - Export as PDF saves the PDF on screen and warns when it is stale. Export page
+      as PNG uses the current page.
+    - Typst warns when characters show as placeholder boxes. Font pack downloads
+      have timeouts and a second source, and a half-finished pack never joins a
+      compile.
+    - Quarto no longer deletes a hand-written .tex, .typ or .log beside a notebook,
+      and a notebook in a subfolder writes its output beside it. PDF output works on
+      older TeX Live, and a missing Python, R or Jupyter says what to install.
+    - On Windows, TinyTeX installs on profiles with non-ASCII names, XeLaTeX finds
+      its fonts, and installs retry when antivirus holds a file. On Linux, TinyTeX
+      checks for Perl before the download, and TeX tools no longer inherit the
+      AppImage's libraries.
+    - AI and MCP compiles return the reason when a compile is queued or fails, and a
+      stuck figure compile can be stopped.
+    - Compile and export errors, including LaTeX error explanations, are
+      translated.
+    - Papers kept side by side in one folder no longer clash (#389). A LaTeX file
+      with its own \documentclass now counts as a separate document, along with
+      the files it pulls in through \input, \include or \subfile. If
+      manuscript.tex sits next to manuscript_v1.tex or a latexdiff output,
+      its labels stop showing "defined 3 times", and theorems, glossary entries and
+      macros behave the same way. Go to definition, find references, rename,
+      completion, Preflight and oleafly check now stay inside the document you are
+      working in, and the agent's project map judges each unresolved reference by
+      its own document. A \ref to a label that only another document defines shows
+      as undefined, which is what the compile says too.
+      Files no document includes yet can still see every label, and a project with
+      one document works as it did.
+    - \input{intro.v2} finds intro.v2.tex, and \input{intro} no longer reports
+      two matches when intro.md sits beside intro.tex.
+    - \lstinline{code} written with braces no longer shows an unclosed command
+      error, and labels or includes after it on the same line are read again.
+    - Renaming a macro that is redefined no longer writes the new name twice into
+      the same spot.
+    - Renaming \newtheorem{theorem} or \def\d now changes the name, not the
+      command around it, which used to turn \newtheorem into \newlemma.
+    - A rename can no longer overwrite a whole theorem environment with the new
+      name while the language server is running.
+    - Renaming an environment or theorem now changes \end{...}, every
+      \renewenvironment and \RenewDocumentEnvironment of that name, and a
+      shared counter such as \newtheorem{lem}[thm]{L} along with it, from
+      whichever of those places you start. Before, the rename left some of them
+      behind and the document stopped compiling.
+    - \vpageref, \vrefrange, \fullref, \Cpageref and \Cpagerefrange now
+      count as references, so renaming the label updates them. Spell check and the
+      word count also skip the keys of \fullref, \vrefrange and
+      \vpagerefrange.
+    - With the language server running, a theorem you use without a label no longer
+      shows as defined twice, and Go to definition jumps straight to its
+      \newtheorem.
+    - A \label or macro definition inside a comment or verbatim text no longer
+      shows up as real when the language server is running.
+    - Grammar and spell checks no longer skip the rest of a line after
+      \lstinline*code*.
+    - The outline now shows headings with the macros of the open document, not those
+      of another revision in the folder.
+    - Include links, figures, the word count, the project map and oleaflyc now look
+      for a file in the same order as the compile: the folder LaTeX runs in, then the
+      project root. Before, a file of the same name next to the main document could
+      open or count in place of the one that was compiled.
+    - \input shown in verbatim text no longer counts as an include, so the word
+      count, the project map and file links leave that file out.
+    - \input{café} now finds a file whose name is stored in the other Unicode form,
+      which macOS can do. Preflight no longer says it is missing, and the word count
+      includes it.
+    - The word count now includes a file named from the project root inside a
+      subfolder, such as \input{chapters/two} in chapters/one.tex. Before, those
+      words were left out.
+    - Compile tagged and verify works on Windows. LuaLaTeX got the build folder in
+      Windows' \\?\ form, wrote the .aux through it and couldn't read it back,
+      so every tagged compile stopped at \end{document} and said the PDF changed
+      while Oleafly was reading it.
+    - A tagged compile that stops on a missing file, such as tagpdf-base.sty on
+      TinyTeX, now offers to install it as a normal compile does, and runs the
+      tagged compile again afterwards. This works in Tectonic projects too, since a
+      tagged compile always uses the system LuaLaTeX.
+    - pdfLaTeX, XeLaTeX and LuaLaTeX compile with TinyTeX when your Windows user
+      folder has a name such as Jörg or 张三. latexmk got a garbled build folder
+      and stopped with "Problem making path". It now gets the folder's short name,
+      and a drive without short names gets a clear message instead.
+    - A CLI agent whose check finds it signed out now shows Signed out instead of
+      Ready, and a CLI agent that starts no longer lists "Install it using the
+      agent's instructions" as its next step.
+    - When no TeX distribution is found, the engine picker names only the ones for
+      your system, instead of MacTeX on Windows or MiKTeX on macOS.
+    - Opening a folder with a single document Oleafly isn't sure about now says the
+      folder has one document, not more than one.
+    - oleafly check --json names the project folder without Windows' \\?\
+      prefix.
+    - biblatex projects compile on ARM64 Linux. ARM builds shipped a placeholder that
+      always failed in place of Biber, so any biblatex project on the default engine
+      stopped with no PDF. They now include a working Biber 2.17.
+    - The ARM64 Linux app and command line tool start on Debian 12 and Ubuntu 22.04.
+      They used to install there and then stop at launch with GLIBC_2.39 not found.
+    - The Linux .deb and .rpm install next to your distribution's Pandoc. They
+      used to refuse to install, or stop Pandoc from installing, because both claimed
+      /usr/bin/pandoc. Oleafly's Tectonic, Pandoc and Typst now live in
+      /usr/libexec/oleafly.
+    - Typst compiles in the x86_64 AppImage. Packaging damaged the bundled Typst, so
+      it crashed as soon as it started.
+    - When Biber fails, the compile log says why. It used to show a general failure
+      with the reason buried in the raw output. It now names a missing system library
+      and suggests \usepackage[backend=bibtex]{biblatex} as a way to build without
+      Biber. The .rpm also recommends the two libraries Biber needs on Fedora.
+    - Accessible export no longer breaks the build on the bundled engine. The
+      \DocumentMetadata line it adds now sits inside a version check, so LaTeX
+      older than November 2025 skips it and builds the document untagged. Before,
+      the bundled engine stopped with an error, and TeX Live 2025 as first
+      released wrote a PDF that claimed PDF/UA-2 with no tags. Preflight now says
+      when a build skipped tagging and which LaTeX it ran.
+    - The managed TinyTeX install works on Windows again. Since 0.4.9 it stopped
+      after the download with "TinyTeX archive member manifest does not match the
+      reviewed release", although the downloaded archive was complete and
+      correct. The check now reads member names exactly as the archive stores
+      them.
+    - On Linux, the AppImage shows the Oleafly icon in the taskbar, dock and window
+      list. On X11 desktops such as Cinnamon, the window icon was too large, so GTK
+      dropped it. Wayland desktops such as GNOME only take an app's icon from the
+      applications menu, so the AppImage now adds itself to that menu when it
+      starts, unless an installed package or another tool already has. If you
+      delete that entry, it stays deleted. The icon you pick under App icon in
+      Settings > Appearance now changes the taskbar and menu icon on Linux too.
+    - On Linux, text in the PDF preview no longer gets orange and blue edges when
+      the desktop uses subpixel font smoothing, such as Rgba antialiasing in
+      Cinnamon. It made the text look as if it had no antialiasing. The preview now
+      draws PDF text in grayscale whatever the desktop setting.
+    - OpenCode Go works as a custom provider. OpenCode Go refuses any request
+      that has no session ID, so the tool check failed for every model on it and
+      marked the model Blocked, even with a valid key. Oleafly now sends each
+      chat's ID to OpenCode Zen and Go, and to no other provider. OpenCode models
+      that need their reasoning sent back, like DeepSeek, Kimi and GLM, now get
+      it, and models blocked this way get checked again (#385).
+    - The agent picker scrolls with a mouse wheel. When the assistant panel was
+      too narrow for every agent, the ones past the edge, like a custom agent at
+      the end, could only be reached with a trackpad. The selected agent now
+      scrolls into view too (#385).
+    Security
+    - Compiling with the bundled Tectonic engine could run code from the project,
+      even with shell-escape off. Tectonic ran any tectonic-biber file it found in
+      the project folder, and a document could reach Perl inside Biber through its
+      bibliography settings. Tectonic now starts outside the project, and the Biber
+      that Oleafly ships treats those settings as plain text. Biber also stops
+      reading biber.conf during a compile.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Oleafly/Oleafly/releases/tag/v0.4.11
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Oleafly/Oleafly/releases/tag/v0.4.11
+ReleaseTime: 2026-11-08T00:18:17.0000000Z
