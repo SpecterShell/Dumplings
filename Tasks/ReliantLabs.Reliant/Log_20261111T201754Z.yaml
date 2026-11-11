@@ -1,0 +1,128 @@
+Version: 1.15.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.15.0-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.15.0-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    21 new features, 14 fixes and 11 other changes
+    Every pull request merged since v1.14.0, grouped by its conventional-commit type.
+    Added
+    - worktreereclaim: an Inbox approval delivered by the server removes the approved worktree; approvals.json alone never does #2559
+    - web: org members page, invitations, accept-invite and create organization #2501
+    - orgs: projects, chats, saved workflows, triggers and runs belong to one org, and the org boundary is enforced #2537
+    - console: tighten the Overview and Dashboards, one field style for every input #2568
+    - desktop: sidebar update button, and a Check for Updates menu item that always answers #2561
+    - dashboards: standard dashboards show as built-ins, not templates #2499
+    - daemon: remove and reclone of a checkout are durable operations the machine acknowledges #2549
+    - sdk: an inbox item kind for worktrees marked to be reclaimed (protos, PR A) #2581
+    - web: people × environments permission grid in Settings › Members #2583
+    - sdk: Trigger.paused_reason, why Reliant paused a trigger itself (protos, PR A) #2585
+    - web: navigate explicit Data and Identity subjects #2382
+    - worktrees: the daemon places, reports and honours a reclaim tombstone #2579
+    - web: lists, the user stream and machine pickers follow the active org #2586
+    - web: name each dashboard panel's read with Forge-Panel #2150
+    - worktrees: reclaim in two phases: mark a quiet worktree, reclaim it a day later only if nothing contradicted the mark #2580
+    - triggers: pause a trigger whose creator left its org (creator_left_org) instead of failing every firing #2587
+    - sdk: org_id on ListArchivedChats, SearchChats and ListInbox requests (protos, PR A) #2589
+    - console: Dashboards is a compact dashboard browser; a brighter console text ramp #2596
+    - console: a top-level Users page for who can sign in to each environment #2594
+    - worktrees: under disk pressure a reclaim mark needs an hour of quiet and stands an hour #2598
+    - workflows: a run waiting on a provider no longer counts against concurrency.max_running #2602
+    Changed
+    - remove unreachable Go packages and dead code #2566
+    - db: drop chat_updates and messages indexes nothing reads (~2.3 GB) #2564
+    - deps: pin sdk/go to #2537's squash commit on main #2575
+    - web: a chat switch sends its stream before rendering the cached transcript #2572
+    - web: lift the catch-up overlay the frame the timeline is usable; time mobile chat opens #2565
+    - privacy: draft help text for cookieless visitor counting on hosted apps #2577
+    - chat: materialize the chat snapshot's update heads in chat_update_heads #2569
+    - pin: forge de8e6d23 for coherent root command compatibility #2512
+    - add a Connect action to Settings → Integrations #2582
+    - worktreereclaim: remove the flaky sandbox-init ledger test (#2590) #2591
+    - workflows: pin that an unattended give-up runs on_failure and a driver-pinned reviewer falls back #2606
+    Fixed
+    - db: prod keeps 20 idle connections warm, as #2172 intended #2563
+    - demo: subtract the demo's chrome, repeated copy and auto-opening tips; make the tour spotlight robust #2567
+    - dev: make the local merge gate and host-dependent tests work on macOS #2574
+    - reliant main is green again after #2559, #2567 and #2537 (optional Sender guard, journey e2e follows the demo polish, two org-era tests) #2576
+    - worktreereclaim: never retire a worktree that was used after it was archived #2571
+    - worktrees: count usage-limit waits and daemon-seen path use as worktree activity #2578
+    - credsandbox: the sandbox init dies with the process that started it #2560
+    - workflow: opt out of configured skill catalog per call #2519
+    - demo: one coherent sample dataset for the public demo #2573
+    - pdfutil: PDF reads no longer panic where pdfcpu cannot write its config dir #2588
+    - web: transport tests build requests with context values, as Connect does (#2586's org stage reads them) #2593
+    - deps: Go toolchain 1.27.4 for GO-2026-6859 #2600
+    - ci: exempt unreachable docker/docker advisories GO-2026-4883/4887 from vuln-scan #2603
+    - deps: web vite 7.3.8, zod 4.6.7, source-map-js 1.2.2 for high npm advisories #2604
+    What's Changed
+    📦 Other Changes
+    - fix(db): prod keeps 20 idle connections warm, as #2172 intended by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2563
+    - feat(worktreereclaim): an Inbox approval delivered by the server removes the approved worktree; approvals.json alone never does by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2559
+    - feat(web): org members page, invitations, accept-invite and create organization by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2501
+    - chore: remove unreachable Go packages and dead code by @nunoo in https://github.com/reliant-labs/reliant/pull/2566
+    - fix(demo): subtract the demo's chrome, repeated copy and auto-opening tips; make the tour spotlight robust by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2567
+    - feat(orgs): projects, chats, saved workflows, triggers and runs belong to one org, and the org boundary is enforced by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2537
+    - feat(console): tighten the Overview and Dashboards, one field style for every input by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2568
+    - fix(dev): make the local merge gate and host-dependent tests work on macOS by @nunoo in https://github.com/reliant-labs/reliant/pull/2574
+    - fix: reliant main is green again after #2559, #2567 and #2537 (optional Sender guard, journey e2e follows the demo polish, two org-era tests) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2576
+    - feat(desktop): sidebar update button, and a Check for Updates menu item that always answers by @nunoo in https://github.com/reliant-labs/reliant/pull/2561
+    - perf(db): drop chat_updates and messages indexes nothing reads (~2.3 GB) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2564
+    - feat(dashboards): standard dashboards show as built-ins, not templates by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2499
+    - fix(worktreereclaim): never retire a worktree that was used after it was archived by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2571
+    - chore(deps): pin sdk/go to #2537's squash commit on main by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2575
+    - feat(daemon): remove and reclone of a checkout are durable operations the machine acknowledges by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2549
+    - perf(web): a chat switch sends its stream before rendering the cached transcript by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2572
+    - perf(web): lift the catch-up overlay the frame the timeline is usable; time mobile chat opens by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2565
+    - fix(worktrees): count usage-limit waits and daemon-seen path use as worktree activity by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2578
+    - docs(privacy): draft help text for cookieless visitor counting (DRAFT, legal review) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2577
+    - fix(credsandbox): the sandbox init dies with the process that started it by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2560
+    - perf(chat): materialize the chat snapshot's update heads in chat_update_heads by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2569
+    - fix(workflow): opt out of configured skill catalog per call by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2519
+    - feat(sdk): an inbox item kind for worktrees marked to be reclaimed (protos, PR A) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2581
+    - chore(pin): forge de8e6d23 for coherent root command compatibility by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2512
+    - settings: add a Connect action to Settings → Integrations by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2582
+    - feat(web): people × environments permission grid in Settings › Members by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2583
+    - feat(web): navigate explicit Data and Identity subjects by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2382
+    - feat(sdk): Trigger.paused_reason, why Reliant paused a trigger itself (protos, PR A) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2585
+    - feat(worktrees): the daemon places, reports and honours a reclaim tombstone by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2579
+    - feat(web): lists, the user stream and machine pickers follow the active org by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2586
+    - fix(demo): one coherent sample dataset for the public demo by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2573
+    - feat(web): name each dashboard panel's read with Forge-Panel by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2150
+    - feat(worktrees): reclaim in two phases: mark a quiet worktree, reclaim it a day later only if nothing contradicted the mark by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2580
+    - fix(pdfutil): PDF reads no longer panic where pdfcpu cannot write its config dir by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2588
+    - feat(triggers): pause a trigger whose creator left its org (creator_left_org) instead of failing every firing by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2587
+    - feat(sdk): org_id on ListArchivedChats, SearchChats and ListInbox requests (protos, PR A) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2589
+    - test(worktreereclaim): remove the flaky sandbox-init ledger test (#2590) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2591
+    - fix(web): transport tests build requests with context values (reliant main red, #2586) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2593
+    - feat(console): Dashboards is a compact dashboard browser; a brighter console text ramp by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2596
+    - feat(console): a top-level Users page for who can sign in to each environment by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2594
+    - feat(worktrees): under disk pressure a reclaim mark needs an hour of quiet and stands an hour by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2598
+    - fix(deps): Go toolchain 1.27.4 for GO-2026-6859 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2600
+    - fix(ci): exempt unreachable docker/docker advisories GO-2026-4883/4887 from vuln-scan by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2603
+    - feat(workflows): a run waiting on a provider no longer counts against concurrency.max_running by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2602
+    - fix(deps): web vite 7.3.8, zod 4.6.7, source-map-js 1.2.2 for high npm advisories by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2604
+    - test(workflows): pin that an unattended give-up runs on_failure and a driver-pinned reviewer falls back by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2606
+    - feat(orgs): archived chats, chat search and the inbox list one org when it is named by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2595
+    - chore: release v1.15.0 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2608
+    - fix(demo): the toured trace sits at the top of the traces view at every hour (reliant main red) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2607
+    - feat(web): label releases recorded by CI, version-only records, no promote for them by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2592
+    - revert: feat(web) label releases recorded by CI (#2592) — it vendors an unmerged control-plane contract by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2611
+    - feat(observability): Sessions shows each frontend's live replay state by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2481
+    - feat(web): one sign-in session across app.* and forge.* via a .reliantlabs.io cookie (AUTH_COOKIE_DOMAIN) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2356
+    - fix(daemonruntime): re-render a pinned forge's cached guide when what it describes changes by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2605
+    - test(tools_daemon): wait on events, not the wall clock by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2613
+    Full Changelog: https://github.com/reliant-labs/reliant/compare/v1.14.0...v1.15.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases/tag/v1.15.0
+ReleaseTime: 2026-11-11T20:10:47.0000000Z
