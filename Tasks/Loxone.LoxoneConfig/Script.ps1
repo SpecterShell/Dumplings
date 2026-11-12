@@ -19,7 +19,7 @@ switch -Regex ($this.Check()) {
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.loxone.com/enen/support/changelog-config/' | ConvertFrom-Html
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.loxone.com/enen/support/changelog-config/' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'et_pb_toggle_title') and contains(text(), '$($this.CurrentState.Version -replace '0+(?!\.|$)')')]")
       if ($ReleaseNotesTitleNode) {
