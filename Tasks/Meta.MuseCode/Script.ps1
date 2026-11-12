@@ -3,7 +3,6 @@ $Object2 = Invoke-RestMethod -Uri $Object1.manifest_url
 
 # Version
 $this.CurrentState.Version = $Object1.version
-$this.CurrentState.Version = '1.4.13'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
