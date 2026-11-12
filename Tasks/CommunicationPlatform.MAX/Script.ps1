@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.enclosure.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.enclosure.url
+  InstallerUrl = $Object1.enclosure.url.Replace('//download2.max.ru/','//download.max.ru/')
 }
 
 switch -Regex ($this.Check()) {
