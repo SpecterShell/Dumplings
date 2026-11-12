@@ -1,0 +1,161 @@
+Version: 2026.11.0+203
+Installer:
+- InstallerUrl: https://download1.rstudio.org/electron/windows/RStudio-2026.11.0-203.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    RStudio
+    - (#12622): RStudio Desktop now warns when a project asks for a different version of R than the one running (as recorded in its renv lockfile, or in the project file), and offers to switch to it. A version that is not installed is installed first, via rig, in a background job, using the copy of rig bundled with RStudio. When the renv library of a project is empty, RStudio offers to run renv::restore(). The check can be disabled in Global Options > Packages.
+    - (#19166): Web hyperlink previews now show an Open in Browser icon alongside the URL.
+    - (#19114): Save Plot as Image can now compress TIFF images (with LZW, the default, or ZIP, each with or without a predictor where R supports it) and choose the quality of JPEG images. TIFFs were previously uncompressed, e.g. 36 MB for a 7 x 5 in plot saved at 600 DPI, and are now typically under 1 MB.
+    - (#19142): Reduced the work that blocks session startup: automatic Python discovery for reticulate now runs in the background, R and Quarto installation details are cached between launches, and SQL and Stan support loads on first use.
+    - (#2846): The editor gutter now marks lines that were added, changed, or removed since they were last staged or committed, for files in a Git repository. The markers update as you type; clicking one shows the previous version of those lines and offers to revert the change, and Tools > Version Control gains Next Change, Previous Change, and Revert Change at Cursor. The markers can be disabled in Global Options > Git/SVN.
+    - (#19208): Tools > Version Control > Show Changes Side by Side shows the version of the current file last staged or committed beside the document, read-only, with the changes between them highlighted on both sides, unchanged lines kept level, and scrolling in step. The document stays editable, and the comparison follows as you type.
+    Posit Workbench
+    - (rstudio-pro#8379) Adds the vscode-enforced-settings option in /etc/rstudio/profiles, which enforces VS Code session settings that users and extensions cannot change, globally or per user or group.
+    - (rstudio-pro#12066) The Workbench API version method is available on every license tier, including Basic, and user API tokens can now be created on every tier.
+    - (rstudio-pro#10333) Added favorite projects. Star a project in the preview homepage’s Projects list to keep it at the top.
+    - (rstudio-pro#13133) Adds identity federation with Posit Connect.
+    - (rstudio-pro#13133) Adds Posit Assistant support for the Posit Connect LLM gateway.
+    - (rstudio-pro#12635) Adds Posit Assistant support for Amazon Bedrock through the Posit Connect LLM gateway.
+    - (rstudio-pro#12748, rstudio/launcher#1728) Sessions on Kubernetes clusters that support image volumes get their Workbench session components from a read-only image volume instead of copying them into the Pod at startup, substantially reducing session launch time. No configuration is required: Workbench uses image volumes when the Job Launcher reports the cluster supports them. To override detection, set supports-image-volumes in launcher.kubernetes.conf.
+    - (rstudio-pro#12620) New Prometheus metric pwb_www_thread_pool_wait_seconds_max shows the longest dispatch delay a periodic probe observed waiting for one of rserver’s worker threads over the last minute, so an undersized www-thread-pool-size can be detected from monitoring rather than inferred from slow requests.
+    - (rstudio-pro#11708) Adds Workbench-managed Git credentials in VS Code and Positron Pro sessions.
+    - (rstudio-pro#13201) Reduced network activity between the browser and Workbench when the tab is hidden, the session has quit, or the user has logged out. Synchronized logged out / logged back in detection across all open tabs/windows.
+    - (rstudio-pro#13392) The homepage can ask users to confirm before launching a session without managed credentials. Administrators set the default with managed-credentials-launch-warning. Users can change it in Settings.
+    - (rstudio-pro#13391) The credential tiles in the New Session dialog now show a label that says what a click does: Sign in, Select or Selected. The Launch button shows the logos of the credentials that are selected for the session.
+    - (rstudio-pro#13337) Deploy in the Admin UI now warns when a Job Launcher setting takes effect only after the plugin restarts, or when another configuration reload is already running.
+    - (rstudio-pro#13241) Large Positron Pro and VS Code browser assets are now cached to the browser before the first session launches, so new Positron and VS Code sessions start faster.
+    - (rstudio/launcher#1776) Kubernetes plugin: the plugin creates a job’s Service when it creates the Job, instead of after the pod starts running, so new jobs usually reach the network sooner.
+    - (rstudio/launcher#1724) The Job Launcher reloads logging-dir, enable-debug-logging, and job-expiry-hours at runtime through POST /config/reload or SIGHUP, without restarting plugins. The new GET /config/reload/status endpoint reports the most recent reload.
+    - (rstudio/launcher#1724) The launcher and its plugins write last-known-good .active copies of their reloadable config artifacts after each successful reload.
+    - (rstudio/launcher#1767) When a Local plugin session exits with code 137 and the Job Launcher does not stop or kill it, its status shows “Terminated by system (possibly out of memory)”.
+    Fixed
+    RStudio
+    - (#19360): Fixed an issue where RStudio installed the GitHub Copilot SDK’s native binaries for every platform rather than just its own, adding roughly 500-600 MB to the installed size.
+    - (#19298): Fixed an issue where editor commands such as Comment/Uncomment Lines, Reformat Selection, Rename in Scope, Insert Chunk, folding, and scope navigation acted on the original view instead of the focused one in a split editor. Text inserted or replaced with rstudioapi (e.g. insertText(), selectionSet()) now also goes to the focused view, matching the selection that getActiveDocumentContext() reports. In the second view, Escape now interrupts R, Ctrl+Up/Down move between functions, and Enter continues comments, as in the original view. Rename in Scope also works again in Visual Mode code chunks.
+    - (#19298): Fixed an issue where using Expand Selection caused editors opened afterwards in the session to respond to each other’s focus and editing events; in a split editor, this sent editor commands to the wrong view.
+    - (#19298): Fixed an issue where reverting a document, reloading it after a change on disk, or saving it with trailing whitespace stripping moved the cursor of a split editor’s second view to the end of the document, and where focusing that view didn’t check for changes made to the file on disk.
+    - (#19201): Fixed an issue where ending a column zoom (e.g. Zoom Sidebar) with Show All Panes, or by showing a pane the zoom had hidden, could leave the Source and Console column collapsed, or leave the sidebar shut. The columns now return to their widths from before the zoom.
+    - (#19319): Fixed an issue where DataCite search results in the Visual Mode Insert Citation dialog were listed newest-first rather than by relevance to the search terms.
+    - (#18490): Fixed an issue where running a chunk in a freshly opened Visual Mode document scrolled the editor to the top and back before any chunk had been clicked or edited.
+    - (#19294): Fixed an issue where the Visual Mode Insert Emoji and Insert Unicode popups closed on their own a few seconds after the editor was first focused, even while a search term was still being typed.
+    - (#14985): Fixed an issue where opening a folder without a .Rproj file from File > Open Project failed with an unclear error in RStudio Server and when RStudio Desktop uses the web-based file dialogs; the folder now opens as a project, creating its .Rproj file as the native file dialogs do.
+    - (#12375): Fixed an issue where debugSource() failed with attempt to set an attribute on NULL (a deprecation warning on older R) when options(keep.source = FALSE) was set, and with subscript out of bounds on an empty or comment-only file. The file is now parsed with source references regardless of that option, so breakpoints set in it are hit; the option itself is left unchanged. Functions the file defines no longer keep the injected breakpoint calls once it has run, wherever the file stored them, including when it stopped with an error; the statements that defined them are no longer re-run during cleanup.
+    - (#19236): Fixed an issue where R code run from the event loop while the console was idle (e.g. shiny::runApp() scheduled with later::later()) left RStudio unresponsive and uninterruptible until it returned. The session now keeps serving requests while such code runs, shows R as busy, and can be interrupted.
+    - (#19297): Fixed an issue where GitHub Copilot or Posit AI suggestions could be discarded after R had been busy for a while, even though they had already arrived.
+    - (#19299): Fixed an issue where GitHub Copilot or Posit AI could stop working for the rest of the session when it was slow to start, and where its suggestions could time out before it had a chance to respond, such as while R was busy. Checking status, signing in or out, and showing diagnostics now tell you when the assistant isn’t running or didn’t respond.
+    - (#19202): Fixed an issue where a tab in the sidebar that shows itself while another pane is zoomed (e.g. Help after ?mean) stayed hidden, instead of taking over the zoom, when the sidebar had been shown after RStudio started.
+    - (#19234): Fixed an issue where, with the interface in a language other than English, a pane that shows itself while another pane is zoomed (e.g. Plots after a new plot) could fail to take over the zoom.
+    - (#19240): The “RStudio has reduced background file operations” console notice is no longer printed again each time a suspended session is resumed or R is restarted; it is printed once per project session, and again when a restart first turns the reduction on.
+    - (#19168): RStudio now installs requested dependencies together in renv projects, allowing renv to resolve dependencies and use parallel installation even when individual package installation is enabled.
+    - (#19165): Improved vertical alignment of text buttons in the Packages toolbar and search fields on Windows.
+    - (#19167): The package tables in renv Snapshot and Restore dialogs now follow the dark theme.
+    - (#19117): Inline data frame output in R Markdown and Quarto documents, and the Data Viewer, now display runs of spaces in cell values as-is instead of collapsing them to a single space; the Data Viewer also shows embedded newlines and tabs escaped (\n, \t) rather than as a space.
+    - (#19198): Fixed an issue where loading matplotlib via reticulate failed with TypeError: use() got an unexpected keyword argument 'warn' on matplotlib 3.3 through 3.8 when a non-Agg backend was configured (e.g. via MPLBACKEND), which could also prevent TensorFlow and Keras from initializing in RStudio.
+    - (#19185): Fixed an issue where pressing Return on a comment line near the bottom of the editor, with “Continue comments on new lines” enabled, jumped the editor so the cursor sat near the top of the viewport instead of scrolling by one line. Shift+Return in the same configuration now scrolls the new line into view too.
+    - (#19189): Fixed an issue where, on R < 4.6, delayed bindings in the base environment were reported as plain values (and so were forced by the Environment pane when listing package:base).
+    - (#19082): Fixed an issue where console output slowed down, and the IDE could become unresponsive, as the console scrollback filled up – most visibly when output alternated between stdout and stderr (e.g. message() and cat() in a loop).
+    - (#19080): Fixed an issue where the console could stall for many seconds while large amounts of stderr output with no colon in it (e.g. gert’s git_clone() progress) arrived.
+    - (#19214): Fixed an issue where the Packages pane could show a stale package list (e.g. a blank Package Manager metadata column for a just-installed package) when two package-list refreshes overlapped.
+    - (#19184): Fixed an issue where commands that show a pane (e.g. View > Panes > Show Files) did nothing when the pane’s column had been dragged shut with a column splitter; the column now reopens.
+    - (#17196): “Run All Chunks Above”, “Run All Chunks Below”, and “Run All” now run Python chunks, and switch the console between R and Python as needed, when chunk output is sent to the console rather than shown inline.
+    - (#19059): RStudio is now compatible with (and can build against) OpenSSL 4.x.
+    - (#19079): RStudio can now be built against a system Boost that was compiled as C++20 (e.g. with GCC 16, whose default is C++20): the build uses the compiler’s default C++ standard when that is newer than the required minimum, and a newer standard can also be requested explicitly with -DCMAKE_CXX_STANDARD=20.
+    - (#17215): Fixed an issue where color previews in the editor shifted the cursor and bracket highlighting to the right at fractional zoom levels or display scaling.
+    - (#19054): Fixed an issue where saving a document could clear its spelling and diagnostic markers; the R Markdown toolbar now also picks up output format changes when autosave is enabled.
+    - (#19056): Fixed an issue where R diagnostics were very slow for large documents when the document or the working directory was on a slow filesystem (e.g. a network drive, or a Windows drive mounted within WSL), as the filesystem was consulted for every function call in the document.
+    - (#19130): Fixed an issue where the R session could hang (Linux) or crash (macOS) when the Environment pane listed Python objects while reticulate was reporting the session’s first Python error, e.g. as the Python REPL started.
+    - (#19136): Fixed an issue where RStudio Desktop on Linux with Wayland (e.g. Ubuntu with GNOME) started in a small window, marked as maximized, when it was last closed maximized; and where restoring a maximized window could make it a little smaller each time.
+    - (#19137): Fixed an issue where a maximized RStudio Desktop window on Linux with Wayland (e.g. Ubuntu with GNOME) could shrink to just its title bar after the system woke from sleep.
+    - (#19138): Fixed an issue where the Import Dataset preview showed a row-number column, and assigning it a type failed with “attempt to use zero-length variable name”. The column-type menu also now opens after a column’s type has been changed, and columns are wide enough for their type labels.
+    - (#19222): Fixed an issue where, after changing the help font size in Global Options > Appearance and clicking Apply, a later change to the editor or help font size in the same dialog could be lost.
+    - (#13204): In the Pastel On Dark theme, the current match of Find in the editor is now highlighted in amber; the theme’s selection colour was too faint against its background to pick a match out by.
+    - (#19086): Fixed an issue where running rstudio <file> in the Terminal pane on Debian started a second instance of RStudio Desktop instead of opening the file in the source editor.
+    - (#19270): Fixed an issue where, with a project open, the Code > Editing tab of Global Options scrolled on Linux distributions that use Noto Sans as the interface font (e.g. Fedora and Rocky Linux 10).
+    - (#19272): [Accessibility] Fixed an issue where turning screen reader support on or off in RStudio Server, from the Help > Accessibility menu, its keyboard shortcut, or Global Options, could lose source edits that had not yet been saved to the server. Pending edits are now saved before the page reloads, including for other Global Options changes that reload the page, such as the editor font.
+    - (#19228): [Accessibility] RStudio keyboard shortcuts such as F6, Ctrl+2 and Ctrl+Shift+2 now work while focus is in Posit Assistant, including when it’s popped out (requires an updated Posit Assistant).
+    - (#19191): [Accessibility] Focus Next Pane (F6) and Focus Previous Pane (Shift+F6) now reach the sidebar when it is showing, and skip it when it is hidden; F6 no longer gets stuck on the bottom-right pane.
+    - (#19183): [Accessibility] Focus Next Pane (F6) and Focus Previous Pane (Shift+F6) no longer switch the Console pane to its Console tab; the selected tab, such as Terminal, stays selected and gets focus.
+    - (#19326): [Accessibility] The Keyboard Shortcut Quick Reference (Help > Keyboard Shortcuts Help) and the Vim shortcut reference (:help) now open in a modal dialog that works with screen readers and the keyboard, instead of an overlay that closed on any keypress. Shortcuts are listed under a heading and in a table for each group, screen readers hear key names spelled out rather than the macOS key symbols, and on macOS a legend names those symbols. The reference now also lists basic editing, Console, completion, and Git pane keys, and the View group.
+    - (#19181): [Accessibility] Columns hidden by a zoom command (e.g. Zoom Left / Center Column, Zoom Console, Zoom Sidebar), or dragged shut with a column splitter, are now inert: screen readers no longer find their panes, and Tab and clicks no longer reach their controls. When a zoom hides the pane that has keyboard focus, focus moves into the zoomed pane; when a splitter drag or a window resize shuts the column that has focus, focus moves to the widest remaining column.
+    - (#19172): [Accessibility] The fade at the left edge of a scrolled path in the Files pane and file dialogs is now marked as decorative. It is also now shown only while the path is scrolled, at the visible left edge, so it no longer covers the first folder (e.g. after focus moves to it) or blocks clicks on it.
+    - (#19134): [Accessibility] Modal dialogs no longer wrap keyboard focus from the last control back to the first (or from the first to the last with Shift+Tab). As with native browser dialogs, Tab past either end moves focus to the browser’s own controls, or to the host page when RStudio is embedded in another page; the rest of the IDE remains unreachable while a dialog is open.
+    - (#18494): [Accessibility] Menu checkmarks and the checkboxes in the Git and SVN changelists now follow the colors of the active Windows contrast theme. Previously menu checkmarks were nearly invisible under a contrast theme with a black background.
+    - (#19315): [Accessibility] The file list in web-based file dialogs (e.g. Open File, Choose Directory) now shows a focus indicator when reached with the keyboard. When no file is selected, the first item is marked as focused and announced by screen readers, without being selected. Choose Directory now opens with focus on its folder list, and Open File no longer briefly moves focus to the file list before the File name box.
+    - (#19207): [Accessibility] The History pane’s lists are now named (“Console History”, “Console History Search Results”, “Console History Context”), and its search-results and context views are inert when not shown, so Tab no longer reaches their hidden Back and Done buttons. Switching between these views no longer slides them when Reduce user interface animations is on. The History, Markers, and Find in Files lists are now exposed to screen readers as listboxes, so moving or extending the selection with the arrow keys while the list has focus announces the current item and whether it is selected; file names and timestamps that head a group of items are read as the items’ descriptions.
+    - (#19244): [Accessibility] In the Connections pane, the icon-only columns of the connection list have hidden header text (“Type”, “Explore”), connection type and object type icons have alt text, and pressing Enter on a table in the object browser opens it in the data viewer, as clicking its View table icon does. In the object browser tree, nested items are grouped under their parent item and the expand/collapse arrows are hidden from screen readers, which already announce whether an item is expanded.
+    - (#19349): [Accessibility] Links on the Help pane home page are now at least 24 pixels tall, meeting the WCAG 2.2 minimum target size.
+    - (#19335): [Accessibility] The Engine and Kernel drop-downs in the New Quarto Document dialog now have accessible names, taken from their visible captions. Clicking a caption now focuses its drop-down.
+    - (#19266): [Accessibility] The About dialog now opens with focus on the product name at the top of its content, rather than on the OK button after it, and no longer reads all of its content as the dialog’s description. The logo is marked as decorative, so VoiceOver no longer announces it as “clickable”, and the hidden “opens in new window” hint is read only as a description of the trademark and license links instead of as a separate item.
+    - (#19328): [Accessibility] Screen readers now announce the checkboxes in the Git pane, the Review Changes window, and the SVN commit dialog as checkboxes named for their file (e.g. “Stage R/foo.R”), with their state: checked, not checked, or mixed for a partially staged file. The file status icons in those lists are now read by their description (e.g. “Modified”), which was previously only a tooltip; the tooltips for untracked and conflicted files now read “Untracked” and “Unmerged” rather than “Untracked/Untracked” and “Unmerged/Unmerged”. The lists themselves are named “Changed files”, or “Files to commit” in the SVN commit dialog.
+    - (#19313): [Accessibility] The drop-down button next to Install in the Build pane now has an accessible name and tooltip (“Install options”).
+    - (#19264): [Accessibility] In the Packages pane, the menu button at the right end of the toolbar is now named “Pane options”, and the checkbox and icon columns of the package list have header text that only screen readers see (“Loaded”, “Help”, “Browse”, “Remove”).
+    - (#19337): [Accessibility] The plot in the Plots pane now has alt text giving its position in the plot history (e.g. “Plot 2 of 5”), followed by the plot’s own alt text when it has one (e.g. set with ggplot2’s labs(alt = ...)). Screen readers also announce this text when a new plot is drawn or the Plots pane switches to another plot. The announcement can be turned off in Global Options > Accessibility.
+    - (#19170): [Accessibility] Sortable column headers (in the Files pane, Git and SVN changelists, Environment grid view, and the Keyboard Shortcuts and Addins dialogs) are now exposed to screen readers as column headers that report their sort direction, with the sort control as a button inside the header. The Files pane’s file-type column header is now named “File type”.
+    - (#19173): [Accessibility] Tables that keep their header fixed while the body scrolls (the Files, Environment grid view, Packages and Connections panes, the object explorer, and the Modify Keyboard Shortcuts, Browse Addins, renv and Packrat dialogs) are now exposed to screen readers as one table, so moving through a cell announces its column header.
+    - (#19223): [Accessibility] Added accessible names to several Global Options controls that were missing them.
+    - (#19176): [Accessibility] The icon before editor status bar messages, such as “Copilot: No completions available.”, now has alt text naming the message type (“Information”, “Warning”, or “Error”). The loading spinner shown while a notebook renders is marked as decorative.
+    - (#19199): [Accessibility] When the user interface language is set to French, the page’s language (lang) is now French too, so screen readers read the interface with a French voice.
+    - (#19252): [Accessibility] The project trust dialog (“Do you trust this project?” / “This project is restricted”) now has an accessible name, its title, which is also marked as a heading; its explanation is read as the dialog’s description.
+    - (#19146): [Accessibility] The RStudio logo in the RStudio Server header now has alt text (“RStudio”, or “Posit Workbench” when it links to the Workbench home page), so screen readers no longer find the banner landmark empty.
+    - (#19151): [Accessibility] Pane splitters now report their position to screen readers (aria-valuenow), as a percentage from the left or top edge, and update it as the panes are resized.
+    - (#19169): [Accessibility] The Files pane’s checkbox column header is no longer empty: it now has text that only screen readers see (“Selected”).
+    - (#19156): [Accessibility] The Files pane’s select-all checkbox now carries its accessible name (“Select all files”) itself, rather than through an aria-label on its <label>, where ARIA does not permit it.
+    - (#19251): [Accessibility] Modal dialogs, including message and confirmation boxes, now set aria-modal="true", so assistive technology and accessibility checkers recognize them as modal.
+    - (#19139): [Accessibility] The page-wide application role has been removed, so the banner and main landmarks are no longer nested inside it.
+    - (#19141): [Accessibility] The separator after the Posit Assistant button in the main toolbar is now marked as decorative, so screen readers skip it.
+    - (#15320): [Accessibility] Accessibility checkers no longer report duplicate element ids from the R and Python logos in the Console pane title.
+    Posit Workbench
+    - (rstudio-pro#6065) Fixed users having to sign in again to start a session on a load-balanced node that restarted or joined after they signed in, when auth-pam-sessions-use-password is enabled.
+    - (rstudio-pro#13420) Added missing dependencies to the installation package metadata.
+    - (rstudio-pro#9423) Projects with no recorded last-used time no longer appear at the top of the homepage project list; they now sort below recently used projects, and newly created projects record a last-used time right away.
+    - (rstudio-pro#10296) Fixed the new session dialog showing an empty Environment section when an administrator hides the CPU and memory inputs or there is nothing else to configure.
+    - (rstudio-pro#13201) Fixed new VS Code and Positron sessions taking up to 60 seconds to load in Firefox while a browser tab for an exited VS Code or Positron session was still open.
+    - (rstudio-pro#13298) Signing in to Snowflake with Default Role from the New Session dialog now selects the signed-in role, so new sessions get Snowflake credentials without a second click.
+    - (rstudio-pro#12209) Large downloads from launcher, remote, load-balanced, and plain (non-launcher) RStudio sessions, and the AgentsView UI’s own assets, now begin reaching the browser immediately instead of being held whole in server memory.
+    - (rstudio-pro#9671) Fixed rstudio-server active-sessions and rstudio-server node-status printing a text header before their JSON output, which prevented piping the output directly into jq or other JSON tools.
+    - (rstudio-pro#12785) Removing a shared project from the homepage no longer hides it from Shared with Me in the Open Project dialog or the project menu, or breaks its project sharing link. Reopening the project returns it to the homepage.
+    - (rstudio-pro#12803) Fixed an issue where a [DEFAULT] section in an INI config file was hidden from the Configuration Manager and removed on save. Databricks, Snowflake, and custom OAuth integrations defined under a [DEFAULT] header in databricks.conf, snowflake.conf, or oauth-clients.conf are no longer ignored.
+    - (rstudio-pro#13391) Fixed new sessions started from the New Session dialog leaving out the selected credentials when a session had already been launched or resumed from the same page, until a credential was changed. A selected credential that is signed out is no longer sent with a new session, and no longer keeps Launch disabled.
+    - (rstudio-pro#13321) Fixes Workbench silently ignoring settings when a numeric setting in /etc/rstudio/profiles has a non-numeric value. Workbench reports an error that names the invalid setting instead.
+    - (rstudio-pro#13330) Fixes problem where Snowflake managed credentials in VS Code/Positron could require an extra page refresh till they worked.
+    - (rstudio-workbench-vscode-ext#531) Fixed a problem where changing Snowflake managed credentials in VS Code/Positron would not be seen by the Snowflake extension.
+    - (rstudio-pro#12041) Fixed error handling and edge cases with a user’s session limit.
+    - (rstudio-pro#12866) Fixed home directory permissions when using session-use-file-storage=0 with create-container-user=1.
+    - (rstudio-pro#11953) VS Code and Positron Pro sessions opened from the Workbench homepage no longer reset to their default layout, settings, and prompts, and no longer overwrite the saved copy on the server, when the browser loses its stored session data without a sign out.
+    - (rstudio-pro#11953) The Current and Preview homepages no longer clear VS Code and Positron Pro browser data when a background request is rejected or redirected. The data is cleared only on sign out or when the sign-in session ends.
+    - (rstudio-pro#11953) Workspace trust in VS Code and Positron Pro sessions is no longer dropped from the saved browser state after 30 days.
+    - (rstudio/launcher#1704) Fixes the Slurm plugin returning HTTP 500 for rejected requests. Invalid account, time limit, or other request settings return HTTP 400 with the Slurm reason. An unreachable controller returns HTTP 503.
+    Deprecated / Removed
+    RStudio
+    - (#19041): Removed the “What’s New” window from RStudio Desktop, along with its Help > What’s New command, its preference, and the RSTUDIO_DISABLE_WHATS_NEW environment variable. Use Help > Release Notes to see what changed in a release.
+    - RStudio Desktop on macOS now requires macOS 13 (Ventura) or later; macOS 12 (Monterey) is no longer supported.
+    Upgrade Instructions
+    Posit Workbench
+    - Workbench fails to start, or rejects a reload, when a numeric setting in /etc/rstudio/profiles has a non-numeric value. Check rserver.log after upgrading.
+    - Workbench no longer reads the previously undocumented ai-providers-<name>-enabled, ai-providers-<name>-models-allow, and ai-providers-<name>-models-deny settings in /etc/rstudio/profiles. If you set them, they no longer restrict the providers or models available to Posit Assistant, and rserver.log reports each one as an unrecognized option. To keep these restrictions, set enabled and models.allow or models.deny for each provider in the providers.json file that ai-providers-enforced points to. See AI Provider Admin Controls for details.
+    - (rstudio/launcher#1776) Kubernetes plugin: custom service.tpl templates that reference fields unknown at pod creation, such as host, render differently because the plugin creates the Service earlier. Set service-creation-mode=job-running to restore the earlier behavior.
+    Dependencies
+    - Chronicle 1.6.0
+    - Copilot Language Server 1.555.7
+    - Electron 44.10.0
+    - GWT 2.13.1
+    - Job Launcher Service 2.30.0
+    - Node.js 24.22.1 (GitHub Copilot, Posit Assistant)
+    - PWB Code Server 2026.11-b3253, Code OSS 1.134.0
+    - Posit Assistant for RStudio 1.10.0
+    - Quarto 1.10.19
+    - RStudio Desktop now bundles rig 0.11.0 for discovering and installing R.
+    - RStudio Desktop on macOS no longer bundles unused gettext and SQLite libraries, and RStudio Desktop Pro no longer requires the PostgreSQL client library (libpq) or Kerberos on macOS and Linux
+    - Updated OpenSSL on Windows from 3.1.4 to 3.5.9
+    - Updated OpenSSL on macOS from 3.6.3 to 3.5.9, the long-term support release
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/#rstudio-2026.11.0
+ReleaseTime: 2026-11-12
