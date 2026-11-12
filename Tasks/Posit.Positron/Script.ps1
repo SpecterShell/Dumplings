@@ -66,7 +66,7 @@ switch -Regex ($this.Check()) {
 
       if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./h2[text()='Release Notes' or text()='Release highlights' or text()='Highlights']")
+        $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./*[(self::h2 or self::h3) and (text()='Release Notes' or text()='Release highlights' or text()='Highlights')]")
         if ($ReleaseNotesTitleNode) {
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
           # ReleaseNotes (en-US)
