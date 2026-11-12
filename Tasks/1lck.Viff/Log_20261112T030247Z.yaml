@@ -1,0 +1,72 @@
+Version: v0.4.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/1lck/viff/releases/download/v0.4.6/viff-v0.4.6-windows-amd64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.6 makes committing and conflict handling more direct: checked files can be committed from the working tree without staging first, and the conflict result pane is now editable; opening and refreshing large LFS repositories no longer waits for a file listing.
+    Highlights
+    This release joins "checked files are the commit scope" and "edit the conflict result in place" into one step, makes LFS file statistics run on demand, and gives the Project and Commit panels one shared width.
+    ✨ New features
+    - Checking files in Changes now enables Commit or Commit and Push directly: their current working-tree content is committed, already-staged content in unchecked files stays staged, and modifications, deletions, untracked files, and staged renames all work in one commit.
+    - The middle Result pane of a conflict tab is editable: Accept Ours / Theirs / Both edits only the buffer as an undoable change, ⌘S writes it to disk, and Mark as Resolved remains an explicit user action.
+    ⚡ Improvements
+    - LFS managed-file counts are now on demand: opening a repository and ordinary refreshes show the working-tree state first, and clicking the LFS marker or Git tool window's "Refresh LFS Statistics" lists the files and reports the last count time, staleness, or failure.
+    - The Commit panel always states the commit scope (checked files, unstaged content, unchecked staged content, partial staging) and asks for confirmation when a checked file has both staged and unstaged changes.
+    - Coalesced refresh requests keep their metadata scope, so a large repository triggers fewer consecutive full refreshes.
+    🛠 Fixes
+    - The left splitter no longer jumps when switching between the Project and Commit tabs; the two panel widths in older settings migrate to one shared width.
+    - Hovering a truncated reference label or its +N fold in the Log shows the complete local branch, remote branch, and tag names.
+    Upgrade instructions
+    - Upgrading from v0.4.5: the settings file migrates on load, folding projectPanelWidth / commitPanelWidth into leftPanelWidth; the first save writes only the new field, and older versions fall back to their own defaults if you downgrade.
+    - macOS: choose the Apple Silicon or Intel DMG, quit the old version, open the DMG, and replace Viff.app in Applications.
+    - Windows: quit the old version and run the x64 installer.
+    - Windows portable: extract the archive, enter its directory, and run viff.exe without installing.
+    - Debian/Ubuntu: run sudo apt install ./viff-v0.4.6-linux-amd64.deb.
+    - Linux portable: extract the archive, enter its directory, and run ./viff after installing the required system libraries.
+    - Install Git separately on PATH, and check the release guide for Linux dependencies.
+    Compatibility and known issues
+    - LFS file counts reflect the last explicit count only; when HEAD or staged content changes, the previous number stays with a stale marker until the LFS marker or the menu action is used again.
+    - Checked-file commits are unavailable during a merge or cherry-pick; clicking a row also checks it, so previewing a diff narrows the commit scope; submodules, sparse-checkout, and split index have no separate handling.
+    - The conflict result pane does not yet offer a base-ancestor pane or one-click application of non-conflicting changes; a successful save rebuilds the view and clears the result pane's undo history and caret position.
+    - macOS requires version 13 or later; Linux needs a working graphical session, rendering backend, and the system libraries listed in the release guide.
+    - The macOS app is ad-hoc signed without Developer ID signing or notarization; the Windows installer is not Authenticode signed, so the system may show a security prompt; remote repositories remain read-only observation.
+    - Install only files from the project release page after checking their checksums; verify the source if the operating system blocks them.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.6 让提交与冲突处理更直接：勾选文件即可提交工作树内容，冲突结果栏可以直接编辑；大型 LFS 仓库的打开与刷新也不再等待文件枚举。
+    重点更新
+    这一版把“勾选文件就是提交范围”和“在冲突页签里直接修改结果”连成一步，同时把 LFS 文件统计改成按需执行，并统一了左侧 Project 与 Commit 面板的宽度。
+    ✨ 新功能
+    - 在 Changes 里勾选文件后可以直接 Commit 或 Commit and Push：提交的是这些文件当前的工作树内容，未勾选但已暂存的内容保持不变，修改、删除、未跟踪文件和已暂存的改名都能一次提交。
+    - 冲突页签中间的 Result 栏可以直接输入和编辑：逐块 Accept Ours / Theirs / Both 只修改结果栏且可撤销，⌘S 保存后才写入磁盘，Mark as Resolved 仍由用户显式确认。
+    ⚡ 改进
+    - LFS 受管文件数量改为按需统计：打开仓库和普通刷新先显示工作树状态，点击状态栏的 LFS 标记或 Git 工具窗口的「更新 LFS 统计」才枚举文件，并显示上次统计时间、过期或失败状态。
+    - 提交面板会常驻说明本次提交范围（勾选数量、未暂存、未勾选但已暂存、部分暂存），勾选文件同时存在已暂存与未暂存改动时提交前会二次确认。
+    - 合并同时到达的刷新请求时保留请求范围，减少大型仓库连续触发完整刷新。
+    🛠 修复
+    - 切换 Project 与 Commit 页签时左侧分隔线不再横移，旧设置中的两个面板宽度会迁移为一个共享宽度。
+    - Log 的引用标签被截断或折叠为 +N 时，悬停即可看到完整的本地分支、远端分支与标签名称。
+    升级说明
+    - 从 v0.4.5 升级：设置文件会在加载时迁移，旧的 projectPanelWidth / commitPanelWidth 合并为 leftPanelWidth；升级后第一次保存只写新字段，降级到旧版本时两个面板回到各自的默认宽度。
+    - macOS：按机型选择 Apple Silicon 或 Intel 的 DMG，退出旧版后打开 DMG，将 Viff.app 拖入“应用程序”并替换旧版。
+    - Windows：退出旧版后运行 x64 安装器。
+    - Windows 便携包：解压后进入新目录执行 viff.exe，不写入安装信息。
+    - Debian/Ubuntu：执行 sudo apt install ./viff-v0.4.6-linux-amd64.deb。
+    - Linux 便携包：解压后进入新目录执行 ./viff，并自行安装所需系统库。
+    - Git 需单独安装并加入 PATH，Linux 系统库要求见发布指南。
+    兼容性与已知问题
+    - LFS 文件数量只反映上次主动统计的结果；HEAD 或暂存内容变化后保留上次数字并标记过期，需要重新点击 LFS 标记或菜单项统计。
+    - 勾选提交在 merge 与 cherry-pick 进行中不可用；单击文件行也会勾选该行，因此预览 diff 会缩小提交范围；子模块、sparse-checkout 与 split index 未单独适配。
+    - 冲突结果栏暂不提供 Base 共同祖先栏与一键应用非冲突改动；保存成功后会重建视图，结果栏的撤销历史与光标位置随之清空。
+    - macOS 要求 13 或更高版本；Linux 需要可用的图形会话、渲染后端和发布指南中列出的系统库。
+    - macOS 应用使用 ad-hoc 签名，未经 Developer ID 签名或公证；Windows 安装器未经 Authenticode 签名，系统可能显示安全提示；远程仓库仍是只读观察模式。
+    - 仅安装来自项目发布页且已核对校验值的文件；如遇系统拦截，请先确认来源。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/1lck/viff/releases/tag/v0.4.6
+ReleaseTime: 2026-11-12T02:48:35.0000000Z
