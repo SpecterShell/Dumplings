@@ -16,14 +16,14 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      $ReleaseNotesDocument = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesDocument.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
-      }
+      # $ReleaseNotesDocument = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+      # $ReleaseNotesNodes = for ($Node = $ReleaseNotesDocument.ChildNodes[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) { $Node }
+      # # ReleaseNotes (en-US)
+      # $this.CurrentState.Locale += [ordered]@{
+      #   Locale = 'en-US'
+      #   Key    = 'ReleaseNotes'
+      #   Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+      # }
 
       # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
@@ -38,6 +38,18 @@ switch -Regex ($this.Check()) {
 
     try {
       $Object2 = Invoke-RestMethod -Uri ($Object1.assets.Where({ $_.name -eq 'latest.json' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri)
+
+      $ReleaseNotesObject = [regex]::Match($Object2.notes, '<!--\s*en\s*-->\s*\r?\n(?<Notes>(.|\r?\n)*?)(?=<!--)').Groups['Notes'].Value
+      if ($ReleaseNotesObject) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesObject | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
 
       $ReleaseNotesCNObject = [regex]::Match($Object2.notes, '<!--\s*zh\s*-->\s*\r?\n(?<Notes>(.|\r?\n)*?)(?=<!--)').Groups['Notes'].Value
       if ($ReleaseNotesCNObject) {
