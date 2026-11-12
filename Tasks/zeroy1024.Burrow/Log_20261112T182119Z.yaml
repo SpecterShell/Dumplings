@@ -1,0 +1,55 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zeroy1024/Burrow/releases/download/v0.1.9/burrow-setup-0.1.9-amd64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zeroy1024/Burrow/releases/download/v0.1.9/burrow-setup-0.1.9-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Burrow 0.1.9 adds in-app updates and stops compressing Windows executables with UPX.
+    Changes
+    - Add in-app updates. Burrow checks GitHub Releases in the background, shows the release notes, and installs updates signed with the project's update key. Settings → About → Software update has a manual check, the automatic-check switch, the update channel, a system-proxy switch, and an optional GitHub mirror URL. The app menu has Check for Updates….
+    - Choose an update channel: Stable receives stable releases only, Preview receives both previews and stable releases. Preview is the default while the project publishes previews only.
+    - Updates can go through the system proxy or connect directly. A GitHub mirror URL is prefixed to GitHub download URLs; downloads are still verified with the public key built into the app.
+    - Windows executables are no longer compressed with UPX. Installers and installed files are larger.
+    - Add CHANGELOG.md with every version since 0.1.2. The release workflow now signs update files and uploads installers, update archives, manifests, and SHA256SUMS to a draft release.
+    Upgrade notes
+    Versions 0.1.8 and earlier have no updater: install 0.1.9 manually once. From 0.1.9 on, later versions arrive through the app. The Preview channel finds the newest release through the GitHub API, which a download mirror does not proxy.
+    Validation
+    - Commit checks passed for release commit 79202ec, including Go race tests and vet, license and secret checks, formatting and localization checks, Linux compilation, and Windows dual-architecture compilation.
+    - Packaging passed for macOS ARM64 and both Windows architectures: installer and DMG content checks, update manifests matching the tag and their archives, and the generated checksums. The macOS job was first cancelled because no hosted ARM64 runner was available, and passed when re-run. Downloaded attachments matched SHA256SUMS, and the DMG passed hdiutil verify.
+    - A local development build launched without errors.
+    Preview limitations
+    - In-app updating has not been exercised end to end: checking, downloading, replacing the app, and relaunching need a later version to update to, and have not been run on any platform. The Settings group and the update window have not had visual acceptance.
+    - Native Windows installation, upgrade, and uninstallation have not been performed in this release cycle, including the first installers built without UPX.
+    - macOS uses the project's fixed self-signed identity, without Apple Developer ID signing or notarization. Windows installers are unsigned. See platform support and known limitations.
+    Full changelog · Release source 79202ec
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Burrow 0.1.9 新增应用内更新，并停止对 Windows 可执行文件使用 UPX 压缩。
+    本次更新
+    - 新增应用内更新。Burrow 在后台检查 GitHub Release，展示更新说明，并安装由项目更新密钥签名的更新。设置 → 关于 → 软件更新提供手动检查、自动检查开关、更新渠道、系统代理开关和可选的 GitHub 镜像地址；应用菜单新增检查更新…。
+    - 可选择更新渠道：正式版只接收正式发布，预览版同时接收预览和正式发布。项目目前只发布预览版，默认渠道为预览版。
+    - 更新可使用系统代理或直接连接。GitHub 镜像地址作为前缀加在 GitHub 下载地址之前；下载内容仍按应用内置公钥校验。
+    - Windows 可执行文件不再使用 UPX 压缩，安装程序和安装后的文件体积增大。
+    - 新增 CHANGELOG.md，补齐 0.1.2 以来的各版本。发布工作流现在会签名更新文件，并将安装程序、更新归档、清单和 SHA256SUMS 上传到 Release 草稿。
+    升级说明
+    0.1.8 及更早版本没有更新器，需要手动安装一次 0.1.9；此后的版本可通过应用内更新获取。预览版渠道通过 GitHub API 查询最新版本，下载镜像不代理该接口。
+    验证情况
+    - 发布提交 79202ec 的提交检查已通过，包括 Go 竞态检测测试与 vet、许可与秘密扫描、格式与本地化检查、Linux 编译以及 Windows 双架构编译。
+    - macOS ARM64 与 Windows 双架构的打包已通过：安装程序与 DMG 内容校验、更新清单与标签及归档一致性核对，以及摘要生成。macOS 任务首次因未分配到托管 ARM64 runner 被取消，重跑后通过。下载的附件与 SHA256SUMS 一致，DMG 通过 hdiutil verify。
+    - 本地开发版启动无报错。
+    预览版限制
+    - 应用内更新尚未端到端验证：检查、下载、替换应用和重启需要有更新的版本可供升级，目前未在任何平台实际运行；设置分组和更新窗口未做视觉验收。
+    - 本轮未进行 Windows 原生安装、升级和卸载，包括首次不使用 UPX 构建的安装程序。
+    - macOS 使用项目固定的自签名身份，尚无 Apple Developer ID 签名或公证。Windows 安装程序未签名。详见平台支持和已知限制。
+    完整变更 · 版本源码 79202ec
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zeroy1024/Burrow/releases/tag/v0.1.9
+ReleaseTime: 2026-11-12T17:27:57.0000000Z
