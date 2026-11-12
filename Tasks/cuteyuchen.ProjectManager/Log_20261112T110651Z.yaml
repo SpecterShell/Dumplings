@@ -1,0 +1,21 @@
+Version: 1.7.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cuteyuchen/project-manager/releases/download/v1.7.5/Project.Manager_1.7.5_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v1.7.5 - 2026-11-12
+    修复
+    - 修复首次打开软件时偶发不显示 Git 模块的问题：仓库探测失败（git 尚未可用、启动期进程创建失败）不再被当成“不是仓库”永久缓存，改为标记未确认并自动退避重试，探测恢复后 Git 页签自动出现；同时限制启动期并发探测数量，从托盘恢复时补探测。
+    - 修复打包等命令结束后控制台自动跳到另一个运行中命令窗口的问题；当前命令结束（成功或失败）后停留在原页签，只有用户新启动命令或当前页签失效时才切换。
+    - 修复“最近使用”等筛选状态下项目层级无法折叠的问题：手动折叠现在优先于筛选命中祖先链的自动展开；切换筛选条件或退出筛选时重置折叠记录。
+    - 修复 AI 生成提交信息时切换页签或项目后“生成中”状态丢失的问题：生成状态与取消令牌改由 git store 按项目持有，切回来仍显示进行中，也不会重复发起请求。
+    新功能
+    - AI 生成提交信息支持取消：生成过程中按钮变为“取消生成”，点击即中止请求且不回填结果。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cuteyuchen/project-manager/releases/tag/v1.7.5
+ReleaseTime: 2026-11-12T10:36:24.0000000Z
