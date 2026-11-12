@@ -1,0 +1,51 @@
+Version: 0.1.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zeroy1024/Burrow/releases/download/v0.1.7/burrow-setup-0.1.7-amd64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zeroy1024/Burrow/releases/download/v0.1.7/burrow-setup-0.1.7-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Burrow 0.1.7 is a developer preview update focused on live MCP activity, server monitoring, and longer SSH commands.
+    Changes
+    - Add read-only AI session tabs that show each access key's commands, streamed stdout/stderr, file operations, and results. Closed tabs can be reopened from the audit details or tray panel.
+    - Collect monitoring samples for each SSH connection with a connected terminal even when the status panel is closed. Pane footers show latency, CPU, memory, and network rates where supported.
+    - Fix AI session cards after a failed transfer is retried: the original card now follows queued, running, and final states and clears the previous error.
+    - Increase the default MCP ssh_exec timeout to 300 seconds, with a maximum of 1800 seconds (30 minutes). Update the enclosing tool and HTTP response deadlines and the tool's parameter description.
+    - Remove retired Gitea workflows and unused code; GitHub Actions provides checks and release packaging.
+    Validation
+    - Commit checks passed on the release commit, including existing race tests, vet, secret scans, resource checks, and Linux/Windows compilation.
+    - Packaging and content checks passed for macOS ARM64 and both Windows architectures. Downloaded installers matched their CI SHA-256 checksums.
+    - Local release-source and Git-history secret scans passed.
+    Preview limitations
+    - macOS uses the project's fixed self-signed identity, without Apple Developer ID signing or notarization. Windows installers are unsigned and use UPX compression.
+    - Native installation, upgrade, uninstallation, AI session visual acceptance, and a full 30-minute MCP command have not been tested in this release cycle. Existing tests and build checks do not establish those results.
+    - See platform support and known limitations.
+    Full changelog · Release source 1278ba9
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Burrow 0.1.7 是开发预览更新，主要改进 MCP 实时操作展示、服务器监控和长时间 SSH 命令执行。
+    本次更新
+    - 新增只读 AI 会话选项卡，展示各访问密钥执行的命令、实时 stdout/stderr、文件操作和结果。关闭后可从审计详情或托盘面板重新打开。
+    - 每个具有已连接终端的 SSH 连接持续采集监控，关闭状态面板后仍保留采样。窗格页脚按服务端支持情况显示延迟、CPU、内存和网络速率。
+    - 修复传输失败后重试时 AI 会话卡片停留在旧状态的问题：原卡片会同步排队、运行及最终状态，并清除上次错误。
+    - MCP ssh_exec 默认超时提高到 300 秒，最高支持 1800 秒（30 分钟），同步调整外层工具调用、HTTP 响应期限及参数说明。
+    - 移除已停用的 Gitea 工作流与无用代码，由 GitHub Actions 提供检查和发布打包。
+    验证情况
+    - 发布提交的提交检查通过，包含已有 race 测试、vet、秘密扫描、资源检查和 Linux/Windows 编译。
+    - macOS ARM64 与 Windows 双架构均通过打包与内容校验，下载的安装包与 CI 提供的 SHA-256 一致。
+    - 本地发布源码快照和 Git 历史的秘密扫描通过。
+    预览版限制
+    - macOS 使用项目固定的自签名身份，尚无 Apple Developer ID 签名或公证。Windows 安装程序未签名，使用 UPX 压缩。
+    - 本轮未进行安装包的原生安装、升级、卸载、AI 会话视觉验收或完整 30 分钟 MCP 命令实跑。已有测试及构建检查不能替代这些验证。
+    - 详见平台支持和已知限制。
+    完整变更 · 版本源码 1278ba9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zeroy1024/Burrow/releases/tag/v0.1.7
+ReleaseTime: 2026-11-12T08:59:02.0000000Z

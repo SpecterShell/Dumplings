@@ -1,0 +1,65 @@
+Version: 0.1.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.3/vibex-0.1.3-windows-x86_64-nsis.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.3/vibex-0.1.3-windows-aarch64-nsis.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🚀 Highlights
+    - The Windows installer no longer replaces a long user Path: installing Vibex used to write only the install directory when the existing user Path was longer than NSIS could hold. The edit now runs through a small helper that reads the value at its real length, preserves its type, and never writes after a failed read.
+    - Pairing starts with the built-in relay: the dialog leads with an entry that needs no address. Local network and Tailscale follow; Direct HTTPS and the self-hosted relay move behind Other ways.
+    - Local pages open in the embedded browser: double-clicking an HTML file now previews the page with its stylesheets, scripts and images intact, served from a loopback origin confined to that file's directory.
+    - SSH runtimes reconnect cleanly: switching back to a parked instance reuses its live tunnel instead of spawning a second ssh -L, and a rebuilt tunnel is probed until it is actually ready.
+    🌐 Remote access and Relay
+    - The built-in relay is now the first pairing option and is the only one that needs no input. The official origin lives in vibex-core and is never rendered, so it cannot be mistyped or mistaken for a configurable endpoint. The entry reports a live relay only while the runtime actually serves that origin.
+    - Every surface that shows an address now leaves the built-in origin out: desktop relay rows, the mobile picker and the TUI route name the connection instead of printing a URL the reader cannot change.
+    - The relay charges websocket handshakes and room registrations to the client address. Behind a loopback reverse proxy it uses the right-most X-Forwarded-For entry; otherwise it uses the peer address. The tracking table is bounded and pruned after two idle windows, and /api/info reports the effective limits so operators can see them.
+    🖥 Desktop
+    - One window per runtime home: opening Vibex again now asks the running shell to come forward and exits, instead of opening a second window that lands on desktop_runtime_home_locked. The lock and activation endpoint are scoped to the runtime home, so preview, RC and stable installations do not contend with each other.
+    - Settings navigation at short heights: the group list now scrolls beneath the fixed search field, so every section stays reachable in a short window. Reopening Settings resets the column to the top instead of restoring the offset from the previous visit.
+    - Embedded browser previews: the file tree, file search and Open In → Embedded browser all open local pages in the panel, as do web links in a rendered document or a conversation. Each directory gets a loopback server with a per-server token; path traversal, dotfiles, backslashes and symlinks that leave the directory are refused, and a server stops when its last tab closes. A restored layout serves the same file again instead of pointing at a dead port.
+    - Agent previews keep their existing boundary: browser_preview_open still requires one-off approval and serves a single approved file, so approving a file never exposes its directory.
+    🛠 Skills and Marketplace
+    - Installing a Skill from a whole-repository source no longer fails at the old 16 MiB bundle ceiling. The download bound is now 128 MiB, the file-count bound 16384, and the extracted-size bound 64 MiB; the extracted bound still limits decompression bombs.
+    - A repository that exceeds the download bound now reports its own error code and repository name instead of surfacing the catalog's generic market_response_too_large under an unrelated search box.
+    🪟 Windows installer
+    - Previous installers read HKCU\Environment\Path with ReadRegStr, which stores at most 1023 characters. A longer Path read as an empty string, and the installer treated that as “no Path” and wrote only $INSTDIR, replacing every entry the user had.
+    - The installer and uninstaller now delegate the edit to vibex-installer-env.exe. It asks the registry for the exact byte length, reads the whole value, matches whole entries case-insensitively, preserves REG_SZ versus REG_EXPAND_SZ, and fails without writing when the value cannot be read. The uninstaller removes only entries that name the install directory.
+    - If an earlier release already replaced your user Path, this update cannot reconstruct the missing entries. Restore them from a backup (for example reg export HKCU\Environment taken before installing) or re-add the directories manually. 0.1.3 prevents the loss from happening again.
+    ⬆️ Upgrading
+    Install 0.1.3 over 0.1.2 as usual: sessions, workspaces, Provider configuration, Skills and remote hosts carry over. On Windows, a user Path longer than 1023 characters is now preserved and the install directory is appended normally.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 核心亮点
+    - Windows 安装包不再覆盖过长的用户 Path： 旧版安装器在用户 Path 超过 NSIS 上限时只写入安装目录，导致原有条目全部丢失。现在改由一个小工具按注册表里的真实长度读取、保留原值类型，并在读取失败时拒绝写入。
+    - 配对默认使用内置中继： 配对对话框第一项就是无需填写地址的内置中继；局域网和 Tailscale 排在后面，直连 HTTPS 与自建中继收进 其他方式。
+    - 本地网页在嵌入式浏览器中打开： 双击 HTML 文件即可预览页面，样式、脚本和图片都能正常加载；页面由限制在该文件目录内的回环地址提供。
+    - SSH 运行时重连更可靠： 切回已挂起的实例会复用仍然可用的隧道，不再重复启动 ssh -L；重建隧道后会等待端口真正就绪再继续。
+    🌐 远程访问与 Relay
+    - 内置中继成为配对的第一个选项，也是唯一不需要填写地址的选项。官方地址固定在 vibex-core 中且不会展示，用户不会误输，也不会把它当成可配置的端点。只有运行时确实在提供该地址时，这一项才显示为中继在线。
+    - 所有展示地址的界面都不再显示官方地址：桌面端的中继行、移动端的选择器和 TUI 都改为显示连接名称或路由名称，而不是一个用户无法修改的 URL。
+    - Relay 按客户端地址限制 WebSocket 握手和房间创建。经过回环反向代理时取 X-Forwarded-For 最右侧的地址，否则取对端地址。记录表有容量上限，并在两个空闲窗口后清理；/api/info 会报告实际生效的限制，方便运维核对。
+    🖥 桌面体验
+    - 一个运行时目录只开一个窗口： 再次打开 Vibex 会请求正在运行的窗口前置并立即退出，不再打开第二个窗口然后停在 desktop_runtime_home_locked 错误页。锁和激活端点按运行时目录隔离，Preview、RC 和 Stable 不会互相干扰。
+    - 矮窗口下的设置导航： 分组列表现在可以在固定搜索框下方滚动，窗口再矮也能到达每个分组；重新打开设置会回到顶部，而不是沿用上次的滚动位置。
+    - 嵌入式浏览器预览： 文件树、文件搜索和 打开方式 → 嵌入式浏览器 都能在面板里打开本地页面，文档或对话中的网页链接也一样。每个目录使用一个带独立令牌的回环服务；路径穿越、点文件、反斜杠以及指向目录外的符号链接都会被拒绝，最后一个标签页关闭后服务停止。恢复布局时会重新提供同一个文件，而不是跳转到上次运行留下的失效端口。
+    - Agent 预览的边界保持不变：browser_preview_open 仍然需要单次批准，并且只提供被批准的那一个文件，批准文件不会顺带开放它所在的目录。
+    🛠 技能与市场
+    - 从整仓库来源安装 Skill 时，不再被旧的 16 MiB 下载上限卡住。下载上限提高到 128 MiB，文件数上限为 16384，解压总量上限为 64 MiB；解压上限仍然用于限制解压炸弹。
+    - 超过下载上限的仓库现在会报告自己的错误码和仓库名，不再把目录接口的 market_response_too_large 显示在与搜索无关的位置。
+    🪟 Windows 安装包
+    - 旧安装器用 ReadRegStr 读取 HKCU\Environment\Path，最多只能存 1023 个字符。更长的 Path 会被读成空字符串，安装器便把它当成“用户没有 Path”，只写入 $INSTDIR，覆盖了用户原有的所有条目。
+    - 安装器和卸载器现在把这项修改交给 vibex-installer-env.exe：先向注册表询问真实字节长度，再完整读取，按完整条目大小写不敏感匹配，保留 REG_SZ / REG_EXPAND_SZ 类型；读取失败就报错退出，一个字节都不写。卸载时只删除指向安装目录的条目。
+    - 如果旧版本已经覆盖了你的用户 Path，本次更新无法自动恢复丢失的条目。 请从安装前的备份（例如 reg export HKCU\Environment）恢复，或手动把目录加回去。0.1.3 保证以后不再发生同样的问题。
+    ⬆️ 升级
+    按正常方式用 0.1.3 覆盖 0.1.2 即可：会话、工作区、Provider 配置、Skills 与远程主机都会保留。Windows 上超过 1023 个字符的用户 Path 现在会被完整保留，并在末尾追加安装目录。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/vibex-ai/vibex/releases/tag/v0.1.3
+ReleaseTime: 2026-11-11T17:47:38.0000000Z
