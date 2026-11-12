@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/mateo-ki/vpn-parser/releases/latest'
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/mateo-ki/vproxy/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
