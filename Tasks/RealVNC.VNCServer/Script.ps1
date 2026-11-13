@@ -1,8 +1,4 @@
-$Object1 = Use-PlaywrightPage -Stealth -Headless {
-  param($Page)
-  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.realvnc.com/en/connect/download/vnc/'
-  Read-PlaywrightPageContent -Page $Page
-} | ConvertFrom-Html
+$Object1 = (Invoke-PlaywrightFetch -Uri 'https://www.realvnc.com/en/connect/download/vnc/' -Headless -Stealth -SolveCloudflare -WaitSelector 'xpath=//option[contains(@data-file, "-msi.zip")]').Content | ConvertFrom-Html
 
 $InstallerUrl = $Object1.SelectSingleNode('//option[contains(@data-file, "-msi.zip")]').Attributes['data-file'].Value
 
@@ -11,20 +7,11 @@ $this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})')
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
-  InstallerUrl         = $InstallerUrl
-  NestedInstallerFiles = @(
-    [ordered]@{
-      RelativeFilePath = "VNC-Server-$($this.CurrentState.Version)-Windows-en-32bit.msi"
-    }
-  )
-}
-$this.CurrentState.Installer += [ordered]@{
   Architecture         = 'x64'
   InstallerUrl         = $InstallerUrl
   NestedInstallerFiles = @(
     [ordered]@{
-      RelativeFilePath = "VNC-Server-$($this.CurrentState.Version)-Windows-en-64bit.msi"
+      RelativeFilePath = "VNC-Server-$($this.CurrentState.Version)-Windows-64bit.msi"
     }
   )
 }
@@ -34,7 +21,7 @@ switch -Regex ($this.Check()) {
     $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     $InstallerFileExtracted = New-TempFolder
     7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Out-Host
-    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath
+    $InstallerFile2 = Join-Path $InstallerFileExtracted $this.CurrentState.Installer[0].NestedInstallerFiles[0].RelativeFilePath | Get-Item
     # RealVersion
     $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi
     Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
