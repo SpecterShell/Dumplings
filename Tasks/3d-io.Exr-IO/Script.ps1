@@ -1,9 +1,10 @@
 # $Object1 = Invoke-RestMethod -Uri 'https://www.exr-io.com/UpdateCheck.php'
-$Object1 = Invoke-WebRequest -Uri 'https://www.exr-io.com/'
+$Prefix = 'https://www.exr-io.com/'
+$Object1 = Invoke-WebRequest -Uri $Prefix
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
