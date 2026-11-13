@@ -1,6 +1,6 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.lightkey.io/post/lightkey-s-step-by-step-installation-guide'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.lightkey.io/post/lightkey-s-step-by-step-installation-guide' -Headless -Stealth -SolveCloudflare -MaximumRetryCount 2 | Get-EmbeddedLinks
 
-$InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('business') } catch {} }, 'First')[0].href
+$InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('business') } catch {} }, 'First')[0].href
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
