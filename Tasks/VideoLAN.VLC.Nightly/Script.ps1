@@ -68,6 +68,9 @@ if ($this.CurrentState.Installer[0].InstallerUrl -notmatch '(\d+(?:\.\d+)+)') { 
 # Version
 $this.CurrentState.Version = "$($Matches[1])-nightly.$VersionX64"
 
+# RealVersion
+$this.CurrentState.RealVersion = $Matches[1]
+
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     foreach ($Installer in $this.CurrentState.Installer) {
