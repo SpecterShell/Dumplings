@@ -21,9 +21,8 @@ $Object2 = Invoke-RestMethod -Uri 'https://update.googleapis.com/service/update2
 '@
 
 if ($Object1.response.app.updatecheck.manifest.version -ne $Object2.response.app.updatecheck.manifest.version) {
-  $this.Log("x64 version: $($Object1.response.app.updatecheck.manifest.version)")
-  $this.Log("arm64 version: $($Object2.response.app.updatecheck.manifest.version)")
-  throw 'Inconsistent versions detected'
+  $this.Log("Inconsistent versions: x64: $($Object1.response.app.updatecheck.manifest.version), arm64: $($Object2.response.app.updatecheck.manifest.version)", 'Error')
+  return
 }
 
 # Version
