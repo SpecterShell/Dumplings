@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.clevertouch.com/clevershare2g'
+$Object1 = Invoke-WebRequest -Uri 'https://www.clevertouch.com/us/products/clever-software-solutions/clevershare/clevershare2g'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
