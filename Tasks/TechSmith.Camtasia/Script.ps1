@@ -3,7 +3,7 @@ $Object1 = Invoke-RestMethod -Uri 'https://updater.techsmith.com/TSCUpdate_deplo
   <soap:Body>
     <CheckForUpdates xmlns="http://localhost/TSCUpdater">
       <product>Camtasia</product>
-      <currentVersion>$($this.Status.Contains('New') ? '26.1.1' : $this.LastState.Version)</currentVersion>
+      <currentVersion>$($this.Status.Contains('New') ? '27.0.0' : $this.LastState.Version)</currentVersion>
       <language>ENU</language>
       <os>10.0.22000.0</os>
       <dotNet>4.8.9037</dotNet>
@@ -62,11 +62,9 @@ switch -Regex ($this.Check()) {
 
     $this.Print()
     $this.Write()
-  }
-  'Changed|Updated' {
     $this.Message()
   }
-  'Updated' {
+  'New|Updated' {
     $this.Submit()
   }
 }
