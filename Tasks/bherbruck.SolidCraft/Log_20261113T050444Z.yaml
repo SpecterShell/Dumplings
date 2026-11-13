@@ -1,0 +1,99 @@
+Version: 0.41.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.41.0/solidcraft-0.41.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.41.0/solidcraft-0.41.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.41.0/solidcraft-0.41.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.41.0 brings the first version of plugins, makes fillets and STEP imports hold up on real parts, keeps sheet-metal folds from shattering into strips, and adds Blender-style trackpad input and a Constrain dialog for assemblies.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · Discord · issues.
+    0.41.0 is a minor release: it adds new features and writes a new design file format (see Compatibility). It goes out as a pre-release first.
+    New
+    - Plugins, first version. SolidCraft can run sandboxed WebAssembly plugins. A plugin works only through SolidCraft's own commands, the same ones scripts and AI agents use, and only with the permissions you grant. It has no network access, and fuel and memory limits stop a runaway plugin. One plugin run is one undo step. The plugin API is craft:plugin@0.1.0. This first version is experimental (#15112).
+    - Install a plugin from its .zip with Install plugin… in Preferences › Plugins or the Plugins menu. It shows what the plugin asks for before installing (#15644).
+    - A Plugins menu runs installed plugins; each one gets a dialog built from its parameters (#15673).
+    - The first plugin is out: SolidCraft Gears, an involute gear generator. Download its .zip from its releases and install it in Preferences › Plugins.
+    - Assemblies: a Constrain dialog. Pick a face, edge, point, plane or axis on each of two parts and place one against the other by a rule such as Mate, Flush or Distance. The dialog offers only the rules your picks fit, lists the constraints already between the two parts, and lets you edit, suppress or delete them (#15146).
+    - Split Face along closed shapes. A new Loops option joins a sketch's curves end to end, so a closed outline of lines and arcs splits the face along that outline only (#15225, #15252).
+    - Snap points everywhere. Construct Point, Axis and Plane, sketch tools, joints and the placement point of Box, Sphere and Torus take the centre, middle or end of an edge, face or sketch curve; construction follows it when the model changes (#11233, #11234, #11232, #11235).
+    - Blender-style trackpad input: in the Blender navigation preset, two fingers on a trackpad orbit and Shift + two fingers pan, as in Blender (#15188). A new opt-in setting lets you twist two fingers to turn the view about the up axis (#12737).
+    - GLB export keeps an assembly's structure: each component and occurrence is its own named, movable node (#15662).
+    - Sketch dimension text takes a size and colour preference (#14304).
+    - Reopening a STEP file reuses your earlier answer to "wrong way up?" instead of asking again (#8630).
+    - Spline tangent handles at every fit point of a spline (#6511).
+    - Joint symbols: an option on the Graphics page draws a badge for each joint type, which goes quiet once the joint's parts can't move (#10668).
+    - Threads: the ISO metric sizes that were missing, such as M3.5, M7, M33, M39 and M45 (#5128).
+    - Sheet metal: contour flanges accept tangent arcs (#15287).
+    - Split Body by a closed surface such as a sphere (#14214).
+    - One docking system for Design and Render. Panels dock the same way in both workspaces, and Preferences no longer offers a choice between docking systems. Saved panel layouts still work, the Classic layout is still available as an arrangement, and editors such as Extrude open as cards you can drag (#15184).
+    - Save shows its progress and can be cancelled until the file is replaced (#9560).
+    - Document tabs show the saved file name, and the window title shows the design and whether it has unsaved changes (#7298, #14833).
+    - The app shows that it is starting while it loads (#3444).
+    - Project dialog: double-click a sketch curve to select its whole chain, or drag a box or lasso over curves (#14978).
+    - Parameters: a length typed as 2,5 or 2 1/8 gets the design's unit (#15300).
+    Fixed
+    - Fillets and chamfers on real parts. A fillet or chamfer that runs through a sharp corner a few degrees off tangent, common where a sketch line runs into an arc, is mitred instead of failing with status 1001; 0.30.1 built these and 0.40 didn't (#15370). Fillet, chamfer, shell and edge selection now agree on one 2° angle for a tangent chain, so a near-smooth outline is rounded whole (#15445). A chamfer on the inside edge of a boss builds when it is wider than the flat face beside it (#15443, #15589), picks on several bodies work (#15488), and an edge saved under a face's old name is found again at its pick (#14959, #15476). Two-distance and distance-and-angle chamfers on an inside edge build when wider than the flat face beside them (#15590). When a fillet or chamfer does fail, it says why instead of "status 1001" (#15398).
+    - STEP import keeps faces it used to drop. A face that wraps round a cone or sphere, such as a dome or a countersink, is no longer left out when its seam would be too short or cross the face's edges (#15450). Cone faces whose edges touch the tip are bounded exactly, which fixes wrong faces and small volume errors on some files (#15303), and tiny rounds and balls smaller than the file's stated tolerance, such as 0.02 mm rounds on connector pins in a file with 0.1 mm tolerance, still import (#15501). A raised "Largest file to open" limit is honoured (#15498).
+    - STEP export: solids are no longer inside out. Exported solids had their faces pointing into the material, so other programs read a negative volume (#15175).
+    - Sheet metal: a fold across several tabs no longer explodes into hundreds of faces. Rounded corners and fillets stay single faces instead of becoming dozens of thin flat strips each (#15566). An Extrude Cut that passes a hair off a flange's corner builds (#15346), a flared wall folds with the rim already folded on its end (#15655), and a sharp (zero-radius) bend keeps only its outer face (#15288, #15365).
+    - Orbit turns about the model you see. The default orbit pivot is the point Home and Fit centre the model on, so the model turns in place right after Home instead of swinging off to the side when the Browser is open (#14667, #15462, #15582).
+    - Booleans: a join that fills a hollow completely gives a solid (#14733), and tangent faces at a shared edge join at any size (#15229).
+    - Designs saved in 0.30.1 with an inserted STEP file open with their parts in place and the right shape (#14211).
+    - Spherical revolve cuts no longer fail after a radius change (#15218).
+    - A loft whose end sections share a sketch is a solid with volume again; 0.40 measured it as "no mass" (#15266).
+    - A sketch outline whose arcs leave a line tangentially closes into a profile again (#15560).
+    - A sweep of a thin profile along a path with a sharp corner gives a valid solid (#15534).
+    - Booleans: a box edge cutting a small round part no longer loses the cut (#15587).
+    - Move: each ring turns the body about the axis it shows, also after another ring was turned (#13177).
+    - Moving bodies between components works again when nothing is behind the timeline marker (#14958).
+    Faster
+    - A small fillet on a large part no longer spends a minute checking for hollows behind its edge (#15312).
+    - Extruding a flat face with many holes takes time that grows linearly with the hole count, not quadratically (#15232).
+    - Large assemblies: moving the pointer uses about a third less CPU, since each frame skips work for what is off screen (#15595). A colour, appearance or visibility change no longer stalls the window for over 100 ms (#15573).
+    - Hovering faces while a dialog waits for a plane no longer meshes whole bodies on the window thread (#15494).
+    - After a STEP or IGES file opens, the "wrong way up?" check no longer freezes the window for up to 1.5 s (#15557).
+    - A flat pattern with many cut-outs cuts them all in one step (#15296).
+    Also in this release
+    - Agent commands: slow commands from an AI agent compute beside the window by default on new installs, so the window stays usable; existing settings keep their value (#15362). Each waiting agent command is a row in the operations panel you can cancel (#15381), and the agent's pointer stays on what it picked when you turn the view (#15361).
+    - Move can turn about a given origin or apply a rigid matrix (#12659).
+    - STL and 3MF export from scripts and agents can lay each body on its print face (#15205, #15495).
+    - Profiles: a circle drawn twice is one hole of the ring around it (#13002).
+    - A pattern of bodies keeps each source body's appearance and material (#12975).
+    - Revolving a line skew to the axis gives its exact surface, not a cone (#15209); an open profile revolved part way builds (#15264).
+    - Sweep, revolve and loft keep a ring a ring when no profile is named (#14433).
+    - Extrude: adjacent profiles that touch at a tangent merge without a slit (#14106); Through All uses the body's exact size (#15525).
+    - Local operations build on a face beside a round's tangent edge (#15138).
+    - Hole: reference edges are found on the right part where parts touch (#11910), and the "no longer on face" check uses the evaluated position (#15348).
+    - Sketch: a fillet between lines that already meet needs no end to move (#13025). A Point placed where two curves cross is anchored to both (#15626). Projected model vertices stay on their corners when the model changes (#15704). The "Tool at the cursor" icon no longer covers the snap hint (#15439).
+    - Surface Extend refuses a distance below the kernel's resolution instead of doing nothing (#13530). Sheet-metal contour curves are taken in chain order (#15364).
+    - Viewport: the face highlight stays on while you pan (#11886), and hovering an edge that is already picked thickens its highlight (#15522).
+    - The Render workspace opens while Isocurve Analysis is on (#15248).
+    - The 3D mouse picture shows the device, not your inversion setting (#15251).
+    - Web app: mouse buttons no longer stay held after a chord or a release outside the window (#15321), and Korean loads its own Hangul font (#15259).
+    - Linux: native Wayland on Hyprland, so fractional scaling matches the desktop (#10869).
+    - The CLI starts on Windows Server Core (#15308).
+    - Align says what X, Y and Z are for when a face, plane or frame is picked (#14163). The DXF export dialog says where the drawing's zero point is (#14869).
+    - Bold and medium interface text use the heavier weights beside a chosen font file (#12135), and checkbox grids use fewer columns when a translated label would be cut (#13093).
+    - Home keeps recent-design pictures in the per-user cache folder (#14484).
+    - Hole: UNC and UNF tap drills show in inches (#15684). Extrude from a sketch on a face, picked in the Browser, takes what was drawn (#15542).
+    - The documentation has command guides for Fillet and Offset Face (#15688, #15693).
+    - Ukrainian (#15532) and Arabic (#15541) translations.
+    Snap
+    The .snap packages for x86_64 and aarch64 are attached below. This build is also uploaded to the Snap Store's candidate channel.
+    Compatibility
+    0.41.0 writes design file format 55 (0.40.1 wrote 54). Format 55 records rounds by their definition, construction points, axes and planes from snap points, a Move's rotation origin, dragged spline tangent handles, Split Face along closed loops, names of projected model vertices in sketches, and plugin data. 0.41.0 reads every earlier format. Designs saved in 0.41.0 open in 0.40.0 and 0.40.1 with a warning about the newer format, and saving there keeps what that version can't read. A feature that uses something new is built the old way there or, if 0.40 can't read it, shows an error asking for an update. 0.30.1 and earlier refuse a design saved by 0.41.0.
+    Downloads
+    .exe, .msi and portable .zip for Windows; .dmg for macOS; .AppImage, .deb, .rpm, .flatpak, .snap, .tar.gz and Arch packages for Linux; a .tar.gz for FreeBSD; and solidcraft-web-0.41.0.zip, a static site to host yourself. Check them with sha256sum -c SHA256SUMS.txt --ignore-missing.
+    The macOS app is signed with a Developer ID and notarized. The Windows files are signed with a self-signed test certificate that Windows doesn't trust, so Windows may warn you. The other packages are unsigned.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.41.0
+ReleaseTime: 2026-11-13T04:19:07.0000000Z
