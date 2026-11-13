@@ -1,0 +1,67 @@
+Version: 0.16.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.16.0/Agentero_0.16.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.16.0/Agentero_0.16.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release improves PDF reading, translation, and annotation, and adds Vim keyboard navigation, Library multi-selection, and automatic institution-proxy detection. Cross-page selection, comment cards, zoom positioning, and cached-translation recovery are more stable.
+    Features
+    - Cross-page selection translation: Selections can span pages and be copied, highlighted, or translated in one action. Body selections skip headers, footers, figures, captions, standalone formulas, and references, and reopen with every page region intact. (#1081 by @ffy6511)
+    - Vim keyboard navigation: PDFs support Vim scrolling, paging, and numbered page jumps. Press F to label actions for buttons, menus, papers, and files in the current window. Vim navigation and hint labels can be toggled together in Settings. (#1058 by @Phil-Fan)
+    - Library multi-selection: Drag a marquee in the paper table to select multiple papers, then add them to chat, copy them to a folder, download missing PDFs, or move them to the trash. Copies receive independent directories and metadata without changing the originals. (#1063 by @fanrj3)
+    - Editable comment cards: PDF comment cards support Markdown editing and size themselves to their content. Annotation history supports grouped undo and redo. (ebe0c7b90 by @ffy6511; 75dc801be by @ffy6511)
+    - Temporary comment rail: The reading area no longer reserves blank space for comments. Pan the page to its edge to reveal the comment rail, which retracts when the pointer leaves. (f8c297851 by @Phil-Fan)
+    - Agent question cards: Questions from an agent now use a redesigned questionnaire card that makes prompts and choices easier to scan and select. (154cddacc by @Phil-Fan)
+    Improvements
+    - Preserved front matter: Full translation preserves front matter such as covers and tables of contents while skipping bibliographies. Find searches the visible translation, and a sound cue plays when translation finishes. (e1449532e by @ffy6511; 0dde4cd29 by @ffy6511)
+    - Zoom and page positioning: Trackpad zoom combines consecutive gestures and keeps the previewed page position across layout changes. Fit-width view keeps the page centered. (98c02e43a by @Phil-Fan; 72efa44a4 by @Phil-Fan)
+    - Institution proxy detection: Entering an institution proxy address automatically detects its gateway type, with the address shown first in Settings. (12753efce by @Phil-Fan)
+    - Wiki paper titles: Canonical PDFs from the paper library complete paper titles in Wiki pages. (404ad9948 by @ffy6511)
+    - In-app sound cues: Agent events can play in-app sounds, with the toggle located in Appearance settings. (a195230f4 by @Phil-Fan)
+    - Background tab resource use: Inactive, non-retained background tabs no longer run loading-skeleton animations, reducing idle workspace CPU use. (#1061 by @bet4it)
+    Fixes
+    - Section focus bounds: Section and paragraph jumps use their original layout regions, so section-title highlights no longer expand across both columns. (#1108 by @ffy6511)
+    - Translation cache recovery: Completed cached translations open directly, while incomplete caches are not completed automatically. Partial updates preserve translated pages and completed progress stays synchronized. (4cef86eea by @ffy6511; 7d38f09c7 by @ffy6511)
+    - Translation card state: A manually resized translation-card width is remembered while its height continues to follow the content. Closing an unpinned card also removes its temporary yellow highlight. (#1078 by @fanrj3)
+    - Selection and annotation stability: Text pages remain available while opening multiple PDFs, and the first selection no longer has a visible highlight delay. Reopening highlights restores annotation dates, and translation selections stay isolated between viewers. (#1081 by @ffy6511; 8296820cd by @ffy6511)
+    - Keyless self-hosted parsing: A self-hosted MinerU service can be saved, probed, and selected with only its Base URL, without entering a placeholder API key. (#1062 by @ttxl314)
+    - Translation failure feedback: Full-translation recovery is consolidated, partial-translation warnings stay collapsed, and protected captions can be recovered from missing translations. (d065490ee by @ffy6511; a6a8af4ea by @ffy6511)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.15.5...v0.16.0
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新加强了 PDF 阅读、翻译和批注体验，并新增 Vim 键盘导航、论文库多选和机构代理自动识别。跨页划词、评论卡片、缩放定位和缓存译文的恢复都更加稳定。
+    新功能
+    - 跨页划词翻译：选区可以跨越页面，并在一次操作中复制、高亮或翻译。正文拖选会跳过页眉页脚、图表、图注、独立公式和参考文献，重新打开后仍保留各页选区。（#1081 by @ffy6511）
+    - Vim 键盘导航：PDF 支持 Vim 滚动、翻页和指定页跳转；按 F 可在当前窗口为按钮、菜单、论文和文件显示操作标签。设置中可统一开关 Vim 导航与标签提示。（#1058 by @Phil-Fan）
+    - 论文库多选：在论文表格中拖出选框即可多选，并批量加入对话、复制到文件夹、下载缺失 PDF 或移入回收站。副本拥有独立目录与元数据，不改变原论文。（#1063 by @fanrj3）
+    - 评论卡片编辑：PDF 评论卡片支持 Markdown 编辑，并按内容调整高度。批注历史支持分组撤销和重做。（ebe0c7b90 by @ffy6511；75dc801be by @ffy6511）
+    - 评论栏临时展开：阅读区域不再为评论栏预留空白；将页面平移到边缘即可临时查看评论，鼠标离开后自动收回。（f8c297851 by @Phil-Fan）
+    - Agent 提问卡片：Agent 向用户确认信息时使用重新设计的问卷卡片，问题和选项更易浏览与选择。（154cddacc by @Phil-Fan）
+    改进
+    - 全文翻译保留前置内容：全文翻译保留封面、目录等前置区域，并跳过参考文献。查找栏可以搜索当前可见译文，翻译完成后给出提示音。（e1449532e by @ffy6511；0dde4cd29 by @ffy6511）
+    - 缩放与页面定位：触控板缩放会合并连续手势，并在布局切换后保持预览中的页面位置。适应页宽时页面保持居中。（98c02e43a by @Phil-Fan；72efa44a4 by @Phil-Fan）
+    - 机构代理识别：填写机构代理地址后自动识别网关类型，并在设置中优先展示地址。（12753efce by @Phil-Fan）
+    - Wiki 论文标题：使用论文库中的规范 PDF 补全 Wiki 里的论文标题。（404ad9948 by @ffy6511）
+    - 应用内提示音：Agent 事件可以播放应用内提示音，开关位于外观设置中。（a195230f4 by @Phil-Fan）
+    - 后台标签资源占用：未激活且未保活的后台标签不再运行加载骨架动画，降低工作区空闲时的 CPU 占用。（#1061 by @bet4it）
+    修复
+    - 章节定位范围：章节与段落跳转使用版面中的原始区域，章节标题不再被扩成横跨双栏的高亮。（#1108 by @ffy6511）
+    - 翻译缓存与恢复：已完成的缓存译文可直接打开，不完整缓存不会被自动补译。部分更新保留已译页面，完成进度保持同步。（4cef86eea by @ffy6511；7d38f09c7 by @ffy6511）
+    - 翻译卡片状态：拖动调整过的翻译卡宽度会被记住，高度仍随内容变化。关闭未固定的卡片后，临时黄色高亮一并消失。（#1078 by @fanrj3）
+    - 划词与批注稳定性：连续打开多篇 PDF 时保留文字页，首次框选不再明显延迟。重新打开高亮会恢复批注日期，多个阅读器中的翻译选区彼此隔离。（#1081 by @ffy6511；8296820cd by @ffy6511）
+    - 无密钥自建解析服务：自建 MinerU 只需 Base URL 即可保存、探测并出现在解析引擎列表中，不再要求填写占位 API Key。（#1062 by @ttxl314）
+    - 翻译失败提示：全文翻译失败后的恢复流程更集中，部分翻译警告默认收起，缺失译文中的受保护图注可以恢复。（d065490ee by @ffy6511；a6a8af4ea by @ffy6511）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.16.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.16.0
+ReleaseTime: 2026-11-13T01:14:46.0000000Z
