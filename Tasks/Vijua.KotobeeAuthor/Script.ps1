@@ -1,7 +1,8 @@
-$Object1 = Invoke-RestMethod -Uri 'https://admin.kotobee.com/releases/author/releases.json'
+$Object1 = Invoke-RestMethod -Uri 'https://files.kotobee.com/author/releases/releases.json'
+$Release = $Object1.releases[-1]
 
 # Version
-$this.CurrentState.Version = $Object1[-1].ver
+$this.CurrentState.Version = $Release.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
@@ -17,29 +18,29 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1[-1].date.Split(',')[-1] -replace '\bSept\b', 'Sep' | Get-Date -AsUTC # Strip off day of week from the date string as it may be incorrect
+      $this.CurrentState.ReleaseTime = $Release.date | Get-Date -AsUTC
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
     try {
-      $Object2 = Invoke-RestMethod -Uri "https://admin.kotobee.com/releases/author/$($this.CurrentState.Version)/release.json"
-
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object2.releaseNotes
+      if (-not [string]::IsNullOrWhiteSpace($Release.notes)) {
+        # ReleaseNotesUrl (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Release.notes
+        }
       }
 
-      $Object3 = Invoke-WebRequest -Uri $Object2.updateUrl | ConvertFrom-Html
-
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $Object3 | Get-TextContent | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Release.description)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Release.description
+        }
       }
     } catch {
       $_ | Out-Host
