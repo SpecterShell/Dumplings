@@ -1,0 +1,29 @@
+Version: 1.8.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cuteyuchen/project-manager/releases/download/v1.8.0/Project.Manager_1.8.0_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v1.8.0 - 2026-11-13
+    修复
+    - 修复项目列表面板「Git 改动」「健康异常」计数偏小的问题：计数改为覆盖整棵项目树（含子项目），与筛选命中结果一致；「运行中」按项目自身会话统计，避免父项目聚合子项目被重复计数。
+    - 健康扫描中的 Git 改动判定与列表徽标统一口径，仅统计工作区未提交改动（M/A/D），仅领先/落后远端不再被算作「Git 改动」。
+    - 修复快速管理弹窗里切到 Git「提交历史」后，点「进入完整工作区」却落在「文件状态」的问题：Git 子页签改由 git store 按项目保存，弹窗与完整工作区共享同一份选择。
+    - 修复 Git 检测失败被当成「未初始化 Git」吞掉的问题：新增 git_check_failed 问题码，git 进程未启动（PATH 未就绪、外置盘未挂载）不再伪装成健康项目。
+    - 修复 Windows 下运行器输出乱码：cmd 报错和 JDK 8 / Maven 输出是 GBK，之前按 UTF-8 解码导致「命令不存在」变成一串 ``；现在按行先试 UTF-8，失败回退 GBK。
+    新功能
+    - Java 项目新增「安装依赖」预设命令：Maven 执行 mvn install -DskipTests，Gradle 执行 gradle build -x test；老项目读取 data.json 或刷新时会自动补上，无需删了重加。
+    - Maven 聚合工程自动识别唯一带 spring-boot-maven-plugin 的模块，「启动服务」改为 mvn -pl <module> spring-boot:run，不再对着根 pom 执行导致 “No plugin found for prefix 'spring-boot'”。
+    - 运行 Java 构建命令前预检 JDK / Maven / Gradle 与 Wrapper：缺失时直接提示「缺少 JDK 8（配置 JAVA_HOME）、Maven（加入 PATH）」并写入控制台，不再只显示 exit 1。
+    优化
+    - 「健康异常」更名为「环境异常」并收窄判定口径：只统计影响可用性的问题（路径缺失、Git 检测失败、包管理器 / Node 环境不可用）；Git 未提交改动属于工作区状态，仅计入「Git 改动」，不再重复计入异常，项目卡片圆点同步改为同一口径。
+    - Windows 发布产物新增免安装便携版 project-manager_<version>_x64-portable.zip：解压即用、不写注册表、不产生卸载项，更新时覆盖 exe 即可。本地可用 npm run build:portable 生成，发布流水线会与 NSIS 安装包一起上传到 GitHub Release。
+    - 便携版的应用内检查更新改为“下载新版压缩包 → 退出应用 → 覆盖 exe”，不再调用 NSIS 安装器（避免免安装版本被安装成普通版本）；设置页会标注当前为便携版并说明更新方式。
+    - 提交日历的「提交详情」弹窗改为左右分栏：左侧按时间列出当天全部提交（项目、时间、短哈希、标题）概览，点击任意一条即可切换右侧详情，避免关闭弹窗再逐条打开。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cuteyuchen/project-manager/releases/tag/v1.8.0
+ReleaseTime: 2026-11-13T09:43:02.0000000Z
