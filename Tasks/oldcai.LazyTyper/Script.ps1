@@ -1,7 +1,9 @@
-$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/oldcai/LazyTyper-releases/releases/latest'
+# The publisher publishes one release per platform, so releases/latest may point at a non-Windows release. Pick the latest stable -windows release instead.
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/oldcai/LazyTyper-releases/releases?per_page=100'
+$Object1 = $Object1.Where({ $_.tag_name.EndsWith('-windows') -and -not $_.prerelease -and -not $_.draft }, 'First')[0]
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+$this.CurrentState.Version = $Object1.tag_name -replace '^v' -replace '-windows$'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
