@@ -1,0 +1,65 @@
+Version: 0.9.46
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.46/Varin-0.9.46-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.46/Varin-0.9.46-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.46 reduces repeated work when opening conversations, updating the sidebar and displaying streamed replies. It also fixes older tool definitions blocking task recovery after an upgrade, improves scheduled tasks using native workspaces, and makes preparation failures easier to understand.
+    Conversation and streaming performance
+    - Read conversation state, history and related execution information together, and use independent database read connections so unrelated queries do not all wait behind the execution writer.
+    - Share one observation connection per Host. Conversation lists, categories, context views and usage displays react to the events they need; routine activity updates refresh affected conversations instead of repeatedly reloading the entire catalog.
+    - Append new history and coalesce streamed UI updates while reusing unchanged conversation rows and rendered content. Opening another view updates its observation interests without interrupting an existing reply stream.
+    - Send small Host/kernel messages directly and keep large transfers chunked, reducing transport overhead while retaining cancellation and control delivery.
+    - Fix HTTP backpressure handling so a temporarily busy connection queues subsequent progress and resumes on drain. A connection that can no longer keep up requests synchronization explicitly instead of silently dropping updates.
+    Resume work with current tools
+    - Ordinary queued and recovered work now prepares the current built-in tools and enabled extension directory. Tools added, changed or disabled since the previous execution no longer leave the task tied to an obsolete directory.
+    - Apply current definitions to subsequent execution while retaining each historical request's original tools, arguments and results. Recovery follows existing execution receipts without repeating completed operations to refresh a tool definition.
+    - Fix tool-free summary preparation and preserve the parent's observation of manually started context jobs, including their completion and failure.
+    Scheduled tasks and native workspaces
+    - Fix preparation of scheduled work against native workspace backends, including registered document/execution views whose IDs differ from their owning workspace. Preserve the selected branch and directory scope through local and managed preparation.
+    - Show which preparation stage failed, provide an explanation for recognized causes, and retain technical details in an expandable section alongside the existing retry action.
+    Reliability and maintenance
+    - Keep cached settings reads current after external writes, file replacement and directory creation. Unchanged files reuse their cached text; settings no longer retain directory watchers or background timers.
+    - Reduce repeated disk reads during trusted-device authentication and keep credential initialization behind the Host's startup admission, so refusing startup for an offline restore does not first create identity files.
+    - Preserve media references in conversation snapshots so image and file reads continue to resolve their original content.
+    - Update Hono and its Node adapter, keeping production and cloud-runtime dependency pins aligned.
+    - Add varin@astrmira.com to the project's contact information and desktop About page.
+    Desktop release targets cover Windows x64/ARM64, Linux x64/ARM64 and macOS Apple Silicon. The signed Android APK connects to an existing Varin Host. Standard and toolbelt Docker images use the container release workflow; optional local embedding components remain separate downloads.
+    Source deployments: rebuild the application and Rust kernel together, then restart the Host. Supported conversation stores upgrade automatically on opening; keep a backup before upgrading.
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.46 减少打开会话、更新侧栏和显示流式回复时的重复工作，修复升级后旧工具定义卡住任务恢复的问题，完善原生工作区上的定时任务，并让准备失败的原因更容易理解。
+    会话与流式响应性能
+    - 合并读取会话状态、历史与相关执行信息，并使用独立的数据库读取连接，减少无关查询排在执行写入后面等待的情况。
+    - 每个 Host 共用观察连接。会话列表、分类、上下文与用量视图按各自关心的事件更新；日常活动变化只刷新受影响的会话，减少反复重拉整个目录。
+    - 历史按新增内容追加，流式界面更新合并处理，并复用未变化的会话行和渲染内容。打开其他视图时直接调整观察范围，避免打断已有回复流。
+    - Host 与内核之间的小消息直接传输，大内容继续分块发送，减少传输开销，并保留取消与控制指令的传递。
+    - 修复 HTTP 连接暂时写满时的处理：后续进展先排队，连接恢复可写后继续发送；持续跟不上更新的连接明确请求重新同步，避免静默丢失进展。
+    恢复任务时使用当前工具
+    - 普通排队任务与恢复执行的任务重新准备当前内置工具和已启用的扩展目录。上次执行后新增、修改或禁用的工具，不再让任务困在过时的目录里。
+    - 后续执行使用当前定义，历史请求仍保留当时的工具、参数和结果。恢复沿用原有执行回执，不会为了更新工具定义而重复已经完成的操作。
+    - 修复无工具摘要任务的准备，并让父任务持续收到手动启动的上下文任务进展，包括完成与失败状态。
+    定时任务与原生工作区
+    - 修复原生工作区上的定时任务准备，包括文档视图或执行视图 ID 与所属工作区 ID 不同的情况。本地与托管准备都保留原先选中的分支和目录范围。
+    - 准备失败时显示具体阶段，为已识别的原因提供说明；技术详情可以展开查看，并保留原有重试入口。
+    稳定性与维护
+    - 设置缓存及时感知外部写入、文件替换和目录新建。未变化的文件复用缓存正文，设置读取不再长期持有目录监听器或后台定时器。
+    - 减少可信设备认证中的重复磁盘读取，并将凭据初始化放在 Host 启动准入之后，避免因离线恢复而拒绝启动时，提前创建身份文件。
+    - 会话快照保留媒体引用，让图片与文件读取继续对应原始内容。
+    - 更新 Hono 及其 Node 适配器，同步生产依赖与云端运行环境的固定版本。
+    - 在项目联系方式与桌面端“关于”页面加入 varin@astrmira.com。
+    桌面版发布目标覆盖 Windows x64/ARM64、Linux x64/ARM64 与 macOS Apple Silicon。签名 Android APK 用于连接已有的 Varin Host。标准版与 toolbelt Docker 镜像通过容器发布流程构建；可选的本地嵌入组件继续单独下载。
+    源码部署： 请一起重新构建应用与 Rust 内核，然后重启 Host。受支持的会话存储会在打开时自动升级，升级前建议保留备份。
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.46
+ReleaseTime: 2026-11-13T08:26:42.0000000Z
