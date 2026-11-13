@@ -7,7 +7,7 @@ $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'inno'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('_windows_amd64.exe') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('amd64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {
@@ -27,10 +27,45 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl
+      # ReleaseNotesUrl (en-US)
       $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://serverbox.lollipopkit.com/docs/zh/changelog/'
+      }
+
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[contains(@class, 'level-h2') and contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        # ReleaseNotes (zh-CN)
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('level-h2'); $Node = $Node.NextSibling) { $Node }
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+
+        # ReleaseNotesUrl (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + '#' + $ReleaseNotesTitleNode.SelectSingleNode('.//h2[@id]').Attributes['id'].Value
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
