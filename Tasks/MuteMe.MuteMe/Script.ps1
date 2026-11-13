@@ -7,17 +7,17 @@ $this.CurrentState.Version = $Object1.Version
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = "https://mutemedownloads.s3.us-east-2.amazonaws.com/main/$($this.CurrentState.Version)/MuteMe-Client-$($this.CurrentState.Version) Setup.exe"
+  InstallerUrl  = "https://muteme-releases.s3.us-east-1.amazonaws.com/releases/$($this.CurrentState.Version)/windows_64/MuteMe-Client-$($this.CurrentState.Version) Setup.exe"
 }
-$this.CurrentState.Installer += $Installer = [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'wix'
-  InstallerUrl  = "https://mutemedownloads.s3.us-east-2.amazonaws.com/main/$($this.CurrentState.Version)/MuteMe-Client.msi"
+  InstallerUrl  = "https://muteme-releases.s3.us-east-1.amazonaws.com/releases/$($this.CurrentState.Version)/windows_64/MuteMe-Client-$($this.CurrentState.Version).msi"
 }
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://muteme.com/pages/release-notes' | ConvertFrom-Html
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://muteme.com/pages/release-notes' | Join-String -Separator "`n" | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h3[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
