@@ -14,7 +14,7 @@ function Read-Installer {
 }
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://www.lucensoftware.com/website/content/download/install/latest/LucenTimelinePreExtracted.zip'
+  InstallerUrl = 'https://img.lucensoftware.com/website/content/download/install/latest/LucenTimelinePreExtracted.zip'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
