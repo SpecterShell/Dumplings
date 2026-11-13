@@ -18,6 +18,12 @@ if ($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult -is [st
   return
 }
 
+# A major upgrade (for example Snagit 2027) carries no DownloadLink because TechSmith does not distribute the next major version through this channel. It belongs in its own package.
+if (-not $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.PSObject.Properties['DownloadLink']) {
+  $this.Log("The updater offers a new major version $($Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion) without a download link, skip checking", 'Info')
+  return
+}
+
 # Version
 $this.CurrentState.Version = $Object1.Envelope.Body.CheckForUpdatesResponse.CheckForUpdatesResult.NextVersion
 
