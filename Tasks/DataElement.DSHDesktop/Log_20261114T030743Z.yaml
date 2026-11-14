@@ -1,0 +1,71 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dataelement/dsh-desktop/releases/download/v0.14.0/dsh-desktop-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    中文 | English
+    本版本升级至 Harness 0.2.2-rc.1 并切换到新的桌面壳，同时带来工作台安装与恢复、跨平台兼容性及多语言体验改进。
+    新增功能
+    - 桌面壳与 Harness：正式应用切换到移植后的新桌面壳，并接入 Harness 0.2.2-rc.1；Host 失败、关窗或页面丢失时沿用恢复流程，降低异常中断后的恢复成本。
+    - 工作台：支持会话引导创建、上传安装包和引导式安装，并提供安装授权、结果回执与失败诊断，让创建和安装流程更清晰。
+    - 共享收藏：恢复共享收藏入口，并以可折叠分区展示内容。
+    - 企业版入口：支持动态注入企业插件和按应用元数据识别企业版，并在 Windows 应用菜单中提供入口。
+    - 节日通知文档：新增脚本，可根据预设模板和 Profile 数据生成节日通知文档。
+    体验优化
+    - 界面语言：桌面日常界面支持八种语言，菜单、关于和更新界面跟随桌面语言；非中文工作台界面使用英文文案，目录选择器也会同步语言。
+    - 工作台与插件市场：市场改为展示普通推荐插件，并改进安装、注册和状态通知；切换到普通会话时自动关闭市场面板并清除恢复状态。
+    - 手机连接：优化手机配对和自动重连，避免重连时误启公网隧道；公网链接可用前不再显示局域网地址。
+    - 桌面交互：Windows 使用页面标题栏替代系统菜单栏，同时保留快捷键并避免开发模式启动死锁；菜单一致性也适配 UOS。
+    - 文档与文件预览：恢复安装包内的文档预览和消息模板；工作目录切换后仍能正确定位文件，无法预览的压缩包可在文件管理器中查看。
+    - Office 与演示文稿：补齐 Linux Office 运行时及 ASAR 资源解析，完善原生模板转换和预览支持。
+    - 启动环境：新桌面壳启动 Host 前读取登录 shell 环境，使从访达启动时也能使用用户 PATH；Windows 继续使用继承的注册表环境。
+    问题修复
+    - Windows 插件安装与 Profile：修复目录链接、Junction、重定向目录和短路径相关的插件校验、投影及升级复制问题，避免链接被误判为缺失或因权限错误导致升级失败。
+    - 工作台安装：修复安装脚本授权在 generation 中丢失、带空格路径引用失败及注册诊断不清晰等问题，并保留未完成的安装任务和失败详情。
+    - 启动恢复与维修会话：修复插件失败恢复页重复弹出、失败队列无法及时结束，以及维修会话被工作台或市场恢复状态覆盖的问题；兼容恢复会按未尝试过的版本升级，否则停用插件。
+    - 更新检查：版本索引改用应用默认网络栈，以支持系统代理；正式包在检查更新前会先初始化更新策略服务。
+    - 插件市场与元数据：修复元数据查询遇到服务器错误时不重试备用仓库的问题，并移除对系统 npm 的依赖。
+    - 导入与重启：修复缺少 Profile 时网页版数据导入失败；重启 Harness 时先显示等待页，配置修复重试成功后仍返回原应用地址。
+    - 开发启动与界面细节：修复缺少 runtime 环境变量时开发启动直接退出、Mac/Windows 侧边栏出现空白 Logo 行，以及关于对话框版本号间距异常等问题。
+    其他变更
+    - Linux 发布：增加 deb 打包、Sherpa 原生兼容补丁和验证探针，并明确 Linux 快捷键、账号与回退的平台边界。
+    - macOS 发布：为中间证书下载增加超时、重试和校验回退。
+    - 构建与 CI：更新 Harness 补丁及构建流程，增加 Windows 工作台安装检查，并让过期的 PR 检查自动取消。
+    - 文档：更新多语言 README、开发与发布说明、Office 和工作台文档，以及平台验收要求。
+
+    This release upgrades to Harness 0.2.2-rc.1 and adopts the new desktop shell, alongside improvements to workbench installation and recovery, cross-platform compatibility, and localization.
+    Features
+    - Desktop Shell & Harness: The packaged app now uses the migrated desktop shell with Harness 0.2.2-rc.1. Host failures, window closure, and lost pages follow existing recovery flows to make interruptions easier to recover from.
+    - Workbenches: Add session-guided creation, package upload and installation, installation authorization, result receipts, and clearer failure diagnostics.
+    - Shared Collection: Restore the shared collection entry with collapsible sections.
+    - Enterprise Edition: Support dynamic enterprise plugin injection and product identification from app metadata, and add an entry to the Windows application menu.
+    - Holiday Notice Documents: Add a script to generate holiday notice documents from a predefined template and Profile data.
+    Improvements
+    - Localization: Support eight languages across the desktop UI. Menus, About, and update views follow the desktop language; non-Chinese workbench locales use English copy, and directory pickers stay in sync.
+    - Workbenches & Plugin Market: Show regular recommended plugins in the market and improve installation, registration, and status notifications. Switching to a regular session now closes the market panel and clears recovery state.
+    - Mobile Pairing: Improve pairing and automatic reconnection to avoid starting a public tunnel during reconnects. Local network addresses are hidden until a public link is available.
+    - Desktop Interaction: Windows uses an in-page title bar instead of the native menu bar while preserving shortcuts and avoiding a development-mode startup deadlock. Menu behavior is also aligned on UOS.
+    - Documents & File Preview: Restore packaged document previews and message templates. File previews continue to resolve correctly after changing working directories, and unsupported archives can be opened in the file manager.
+    - Office & Presentations: Complete Linux Office runtime and ASAR resource resolution, with improved native template conversion and preview support.
+    - Startup Environment: The new shell reads the login shell environment before starting the Host, making the user's PATH available when launched from Finder; Windows continues to use the inherited registry environment.
+    Bug Fixes
+    - Windows Plugin Installation & Profiles: Fix plugin validation, projection, and upgrade-copy issues involving directory links, junctions, redirected directories, and short paths, preventing valid links from being treated as missing or upgrades from failing with permission errors.
+    - Workbench Installation: Fix generation-scoped script authorization, paths containing spaces in installation commands, and unclear registration diagnostics. Unfinished installation tasks and failure details are retained.
+    - Startup Recovery & Repair Sessions: Fix duplicate plugin recovery pages, failure queues that did not finish promptly, and repair sessions being overridden by workbench or market recovery state. Compatibility recovery now tries an untested version before disabling a plugin.
+    - Update Checks: Use the app's default network stack for version indexes to support system proxies, and initialize the update policy service before packaged-app checks.
+    - Plugin Market & Metadata: Retry metadata lookups against a fallback repository after server errors and remove the dependency on system npm.
+    - Import & Restart: Fix web data import when no Profile exists. Show a waiting page before restarting Harness and return to the original app address after a successful configuration repair retry.
+    - Startup & UI Details: Fix development startup exiting when runtime environment variables are missing, empty logo rows in the macOS and Windows sidebar, and extra spacing in the About version string.
+    Chores
+    - Linux Release: Add deb packaging, Sherpa native compatibility patches, and verification probes; document Linux shortcuts and platform boundaries for accounts and fallback behavior.
+    - macOS Release: Add timeout, retry, and validation fallback for intermediate certificate downloads.
+    - Build & CI: Update Harness patches and build workflows, add Windows workbench installation checks, and automatically cancel superseded PR checks.
+    - Documentation: Update multilingual READMEs, development and release guidance, Office and workbench documentation, and platform acceptance requirements.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dataelement/dsh-desktop/releases/tag/v0.14.0
+ReleaseTime: 2026-11-14T03:04:14.0000000Z
