@@ -26,12 +26,12 @@ $this.CurrentState.Installer += [ordered]@{
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'msix'
-  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msix'
+  InstallerUrl  = $InstallerUrl -replace '\.exe$', '.msix' -replace '-msix-converter'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'msix'
-  InstallerUrl  = $InstallerUrl.Replace('x64', 'arm64') -replace '\.exe$', '.msix'
+  InstallerUrl  = $InstallerUrl.Replace('x64', 'arm64') -replace '\.exe$', '.msix' -replace '-msix-converter'
 }
 
 switch -Regex ($this.Check()) {
