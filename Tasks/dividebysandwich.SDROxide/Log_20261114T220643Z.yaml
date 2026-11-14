@@ -1,0 +1,45 @@
+Version: 1.7.3
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dividebysandwich/sdroxide/releases/download/v1.7.3/sdroxide-v1.7.3-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - ELAD FDM-DUO: wide sample rates and a SPAN chip by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/857
+    - A more systematic order for some Display and System chips (no functional change) by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/859
+    - SPOTS: transmitter power (and a missing site) from Aoki's list, once it is imported by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/860
+    - NR menu: HUM and the SK post-filter are remembered per mode, like the NR engine by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/861
+    - VFO box: a clipboard (📋) for copy and paste of frequency and mode between radios by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/863
+    - New feature: PANO - a panorama for small-bandwidth radios (plus scanner adjustments) by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/864
+    - Fix build.rs to not require a rebuild on non-Windows platforms by @imorourke in https://github.com/dividebysandwich/sdroxide/pull/865
+    - New feature: PANO recorder - the full-band strip kept in a database and loaded back by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/868
+    - Multi-radio: panes, rows and connections survive a restart; radios on no row start off by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/869
+    - Full-band strip: S/N against the local noise floor, one PANO segment wide by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/871
+    - SDRplay (RSP1A and the others): ZERO IF / LOW IF - low IF by default up to 2 Msps, avoiding the artifacts at the centre by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/873
+    - NR menu: SK +dB - a boost behind the SK filter, where nothing else restores the level by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/874
+    - ELAD FDM-DUO: hear your own signal (MIC A / DIG A) and PTT improvements by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/875
+    - truSDX: a one-cable mode that mutes the radio's speaker (UA2) by @imorourke in https://github.com/dividebysandwich/sdroxide/pull/877 (#792)
+    - Settings → Radio: dragging a radio chip reorders the strip again by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/878
+    - TCI server: room for 512 IQ blocks between engine and hub, and a count of the ones dropped by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/879
+    Bug Fixes
+    - AtCHAT: received files go to the config directory instead of the working directory, which an MSI install cannot write to
+    - Windows: the MSI installs LICENSE-deepcw.txt, as the .zip already did
+    - ELAD FDM-DUO: a wide-rate load that fails half-way no longer leaves the radio out of stand-alone mode, and a radio released while keyed no longer refuses every later wide open until a restart
+    - Scanner: turning keeps only the queued candidates on the new side of the dial
+    - Remote: the TX Audio window's METERS, REC and LIVE work against a radio on a server - the client now streams its microphone while the test records or meters, where before the meters stayed dead and REC recorded silence (#809)
+    - SDRplay: when the API service refuses to open an RSPduo, the error names the modes it still offered (single tuner, dual tuner, master, slave) (#683)
+    - SDRplay: existing radio.json files get low IF by default too, not only new ones
+    - Multi-radio: a new remote tab no longer takes the id of a connection resting off a row
+    - ELAD FDM-DUO: MIC A and DIG A are offered only over the ELAD backend
+    - Full-band strip: a local-floor window wider than the row is clamped to it
+    - PANO recorder: the interval is capped at a week, and the database session is closed on drop and on error
+    Documentation
+    - README: an Acknowledgements section crediting fldigi, OnAir (DominoEX/THOR and MFSK) and OpenHamClock, which the source files already referred to (#867)
+    Full Changelog: https://github.com/dividebysandwich/sdroxide/compare/v1.7.2...v1.7.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dividebysandwich/sdroxide/releases/tag/v1.7.3
+ReleaseTime: 2026-11-14T20:48:27.0000000Z
