@@ -1,0 +1,36 @@
+Version: 1.0.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.6/Belfry_1.0.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.6/Belfry_1.0.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v1.0.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    改进
+    - 重做设置窗口与分区布局，统一外观、快捷键、会话状态、插件、备份、环境检查和关于页面；新增减少动效与紧凑侧栏偏好。
+    - 模型服务合并全局与项目路由，可直接连接 Agent 与服务，并通过管理入口新增、编辑和删除服务；兼容旧的项目 Provider 入口。
+    - 新增 Playwriter 浏览器插件源码、内置运行组件构建工具与回归测试，提供连接检查、帮助、执行和按会话重置工具。
+    - Codex 与 Claude Code 的会话状态统一使用 CLI 的原生终端状态报告（OSC 7501），保留空闲、处理中、等待权限或回答、完成与失败的区别。工作台、侧栏、房间、收件箱、通知和关闭提示使用同一份状态。
+    - 两种 Agent 无需安装状态 Hook；设置中可预览移除旧的 Belfry 状态 Hook。尚未收到原生报告的会话显示等待状态，自动投递继续排队。
+    修复
+    - 修复已安装插件列表末行的作用域菜单被裁剪、选项无法点击的问题。
+    - 修复会话已空闲但后续消息一直无法自动发送的问题。提示队列与协作收件箱在原生报告允许输入后投递，并在实际写入正文和回车前再次核对最新状态及粘贴模式。
+    - 保留用户草稿、输入法和粘贴占用；空闲报告不会清除未提交的输入。明确未写入的拒绝可重新排队，部分写入或提交结果不确定时暂停，避免重复发送。
+    - 原生状态在后台重连后继续保留；会话退出时仍接收最终完成或失败报告，终端查询应答不会因大段输入阻塞输出读取。
+    升级提示
+    - 更新应用后，请在任务结束时结束旧的后台 Agent 会话并重新启动（或重启电脑后重开会话），让后台使用新版本。未提供 OSC 7501 报告的旧 CLI 需要升级，自动投递会保持等待。
+    - 提供 macOS Apple Silicon / Intel 与 Windows 安装包、自动更新资产及 SHA256SUMS.txt。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#106---2026-11-14
+ReleaseTime: 2026-11-14T11:39:59.0000000Z
