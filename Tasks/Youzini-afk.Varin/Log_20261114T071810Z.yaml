@@ -1,0 +1,71 @@
+Version: 0.9.47
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.47/Varin-0.9.47-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.47/Varin-0.9.47-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.47 makes browsers independently connectable, adds native desktop queries and condition waits, and helps Bots notice work that has stopped making progress. It also improves follow-up editing, shows settings changes in conversation, and fixes scheduled-task model selection and execution preparation.
+    Connect the browser where you work
+    - Add a dedicated Browser settings page alongside Computer Use. Manage browsers on the current service or a connected device, set a service default, and choose a browser for an individual task. Viewing a browser in the workbench and assigning it to a task are separate actions.
+    - Configure multiple named CDP connections, including authentication headers and an optional shared file directory. Connection addresses and file paths are interpreted by the selected service, allowing the browser, frontend, Harness and workspace to run on different devices.
+    - Connect existing Chrome or Edge tabs through the browser extension, preserving their real sign-in state. Download the extension from settings, create a device pairing link, and explicitly share the tabs to use. The extension connects directly to the service without a native helper or a second credential system.
+    - Take over a shared page from either the workbench or extension, then let the task continue after a fresh observation. Closing the workbench leaves the original tab open; connection loss does not replay actions with uncertain results.
+    - Complete browser settings, connection dialogs, workbench labels and extension translations across the supported languages. Fix English entries overwriting Chinese messages, and include native language directories in extension downloads.
+    The extension currently requires loading the extracted directory through Chrome or Edge's developer mode. It supports direct HTTP(S) service connections; relay-only links and extension-based file transfer are not yet supported. CDP file transfer requires the service and browser to share the configured directory.
+    Desktop queries, state actions and condition waits
+    - Find controls by role, name, value and state, inspect selected properties, and read within an observed region. Native queries return compact results and preserve whether the underlying scope was completely searched.
+    - Set a checkbox or expansion state, select an item, and scroll an element into view when the desktop provider exposes those actions. Supported ordinary clicks can use the native control operation; explicit pointer and keyboard input remain available.
+    - Wait for a desktop condition through computer_await, using fresh observations from the original device. Waiting releases the input lane between samples, so it does not monopolize the desktop. Incomplete observations and a lost source window retain their actual meaning.
+    - Present desktop activity with the real action and target in conversation, with structured query and wait results available to inspect.
+    Help Bots keep track of ongoing work
+    - Notify the responsible Bot when running work has no new model request or tool call for 20 minutes by default. Change the interval or turn it off in chat settings. Each inactive period produces one reminder; actual new activity restarts the timer. Paused work, user waits and condition waits keep their existing states.
+    - Deliver execution interruptions and restart-recovery waits through the existing work-event path, including the recorded execution state. Expired reminders stop waking the Bot once the work resumes, ends or is cancelled. External Harnesses use the activity they actually report.
+    - Edit a follow-up's instruction, scheduled time or file condition from its existing management entry, keeping its source and delivery history. The right-hand attention view includes ordinary waits and opens their original conversation for management.
+    - Show returned before/after values, operation results and effective timing for settings changes directly in conversation, with a link to the corresponding settings page.
+    Scheduling and execution fixes
+    - Prefill new scheduled work with the opening native conversation's selected model and thinking level, while keeping both editable. Choosing existing work preserves its exact conversation and branch; editing a saved definition preserves its own selections.
+    - Preserve unspecified thinking and temperature options across the kernel boundary instead of turning them into explicit empty overrides.
+    - Fix execution preparation failing with ready composition differs from the rebound launch. Ready tool candidates now refresh against the current tool catalog when launch bindings change, retaining the original service until handover completes.
+    - Recover older ordinary tasks without requiring Bot ownership metadata that those tasks never had.
+    Desktop release targets cover Windows x64/ARM64, Linux x64/ARM64 and macOS Apple Silicon. The signed Android APK connects to an existing Varin Host. Standard and toolbelt Docker images use the container release workflow; optional local embedding components remain separate downloads.
+    Source deployments: rebuild the application and Rust kernel together, then restart the Host. Supported conversation stores upgrade automatically on opening; keep a backup before upgrading.
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.47 带来独立的浏览器连接、原生桌面查询与条件等待，让 Bot 能及时注意到长时间没有新动作的任务。同时完善等待事项编辑、聊天中的设置变更展示，并修复定时任务的模型选择和执行准备问题。
+    连接你实际使用的浏览器
+    - 在 Computer Use 旁加入独立的 浏览器 设置页。管理当前服务或已连接设备上的浏览器，设置服务默认浏览器，也可为单个任务指定浏览器。工作台中查看哪个浏览器，与让任务使用哪个浏览器分别选择。
+    - 支持多条具名 CDP 连接，可配置认证请求头与可选的共享文件目录。连接地址和文件路径由所选服务解释，让浏览器、前端、Harness 和工作区可以部署在不同设备。
+    - 通过浏览器扩展连接现用 Chrome 或 Edge 标签页，沿用真实的网页登录状态。在设置中下载扩展、生成设备配对链接，再主动分享需要交给任务的标签页。扩展直接连接服务，无需本地辅助程序或另一套凭据系统。
+    - 工作台和扩展均可接手页面，也可交还任务；交还后任务重新观察页面再继续。关闭工作台不会关闭原标签页，连接中断时也不会重放结果不明的操作。
+    - 补齐现有支持语言中的浏览器设置、连接弹窗、工作台标签与扩展文案。修复英文词条覆盖中文的问题，并让扩展下载包完整包含语言目录。
+    扩展目前需要在 Chrome 或 Edge 的开发者模式下加载解压后的目录，支持直接 HTTP(S) 服务连接，暂不支持仅提供中继的链接或扩展文件传输。通过 CDP 传输文件时，服务与浏览器需要共用所配置的目录。
+    桌面查询、状态操作与条件等待
+    - 按角色、名称、值和状态查找控件，读取指定属性，或在已观察区域内查询。原生查询返回紧凑结果，并明确底层范围是否已完整搜索。
+    - 在桌面提供方支持时，直接设置勾选、展开状态，选择项目或将元素滚入视野。普通点击可以使用控件的原生操作，明确指定的鼠标与键盘输入继续可用。
+    - 通过 computer_await 等待桌面条件，由原设备重新观察实际状态。两次采样之间释放输入通道，让等待中的任务不会独占桌面；观察不完整、原窗口消失等情况保留真实含义。
+    - 聊天过程展示实际桌面动作与目标，并可查看结构化的查询结果和等待结果。
+    让 Bot 及时掌握正在进行的工作
+    - 执行中的任务默认 20 分钟没有新的模型请求或工具调用时，提醒负责它的 Bot。可在聊天设置中调整时间或关闭。同一段无活动只提醒一次，有真实新动作后重新计时；暂停、等待用户和条件等待保留原状态。
+    - 执行意外中断、重启后等待恢复等情况，通过原有工作事件回到 Bot，并附上记录中的执行状态。任务恢复活动、结束或取消后，过时提醒不再唤醒 Bot。外部 Harness 按其实际提供的活动记录计时。
+    - 在原管理条目中修改等待事项的后续指令、触发时间或文件条件，保留来源与交付历史。右侧关注视图纳入普通等待，可直接进入原会话管理。
+    - 设置修改直接在聊天中展示实际返回的修改前后值、操作结果和生效时机，并提供对应设置页入口。
+    定时任务与执行修复
+    - 从原生会话创建定时任务时，预填当前所选模型和思考等级，仍可继续修改。选择已有任务时保留准确的会话与分支；编辑已保存的日程时保留日程自己的选择。
+    - 未指定的思考与温度选项在经过内核接口时继续保持未指定，避免变成显式的空覆盖值。
+    - 修复执行准备报错 ready composition differs from the rebound launch。启动绑定更新时，已就绪的工具候选基于当前工具目录重新准备，并保留原服务直到交接完成。
+    - 恢复旧普通任务时，不再要求这些任务原本就没有的 Bot 归属信息。
+    桌面版发布目标覆盖 Windows x64/ARM64、Linux x64/ARM64 与 macOS Apple Silicon。签名 Android APK 用于连接已有的 Varin Host。标准版与 toolbelt Docker 镜像通过容器发布流程构建；可选的本地嵌入组件继续单独下载。
+    源码部署： 请一起重新构建应用与 Rust 内核，然后重启 Host。受支持的会话存储会在打开时自动升级，升级前建议保留备份。
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.47
+ReleaseTime: 2026-11-14T06:35:09.0000000Z
