@@ -1,4 +1,4 @@
-$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/PBH-BTN/PeerBanHelper/releases/latest"
+$Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/PBH-BTN/PeerBanHelper/releases/latest'
 
 # Version
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
@@ -19,11 +19,19 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
+          if ($Node.InnerText -notmatch '部署教程|常见问题|如何设置下载器|论坛') { $Node }
+        }
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl (zh-CN)
