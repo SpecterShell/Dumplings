@@ -40,7 +40,7 @@ switch -Regex ($this.Check()) {
         param($Page)
 
         $null = Open-PlaywrightPage -Page $Page -Uri 'https://antigravity.google/changelog'
-        Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'version') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'description')]" -Optional -TimeoutMilliseconds 10000
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'rn-version-col') and contains(., '$($this.CurrentState.Version)')]/following-sibling::div[contains(@class, 'rn-card')]" -Optional -TimeoutMilliseconds 10000
       }
       $ReleaseNotesObject = if ($ReleaseNotesHtml) { $ReleaseNotesHtml | ConvertFrom-Html }
 
