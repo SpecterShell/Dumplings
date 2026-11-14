@@ -1,10 +1,14 @@
-# Version
-$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrl -Uri 'https://www.trikker.be/en/web-version-windows'), '(\d+(?:\.\d+)+)').Groups[1].Value
+$InstallerUrl = Get-RedirectedUrl -Uri 'https://www.trikker.be/en/web-version-windows'
 
-# Installer (versioned MSI, x86 package)
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+# Installer
 $this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://releases.trikker.be/Trikker_V$($this.CurrentState.Version).msi"
+  InstallerType        = 'zip'
+  NestedInstallerType  = 'msi'
+  NestedInstallerFiles = @([ordered]@{ RelativeFilePath = "Trikker_V$($this.CurrentState.Version).msi" })
+  InstallerUrl         = $InstallerUrl
 }
 
 switch -Regex ($this.Check()) {
@@ -14,7 +18,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = 'www.trikker.be/blog/news-2'
+        Value  = 'https://www.trikker.be/blog/news-2'
       }
 
       $Object2 = Invoke-RestMethod -Uri 'https://www.trikker.be/en/blog/news-2/feed'
