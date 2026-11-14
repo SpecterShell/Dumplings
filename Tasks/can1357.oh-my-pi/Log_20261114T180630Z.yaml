@@ -1,0 +1,250 @@
+Version: 18.20.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.20.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Corrected context cost estimates for requests that omit reasoning history, so billing estimates now include thinking text only when it is sent or reconstructed for a tool call.
+    @oh-my-pi/pi-ai
+    Added
+    - Added setUnpausedProviders() to @oh-my-pi/pi-ai/oauth, allowing applications to re-enable providers paused by authentication rules; loaded credential pools and extension logins recognize the change on their next read.
+    Changed
+    - Updated Vertex AI Gemini requests to use the v1beta1 API, restoring support for long Gemini responses.
+    - Improved Google Antigravity quota recovery so Gemini 4 Argon access can resume after quota or plan changes when shared Gemini capacity is available.
+    - Improved Amazon Bedrock region selection to honor a configured regional endpoint before falling back to us-east-1.
+    Fixed
+    - Fixed Gemini 4 responses that exceed a single output segment across Google, Vertex AI, Gemini CLI, and Antigravity, ensuring long responses continue generating and are delivered as one complete reply.
+    - Fixed Cursor conversations so hook-added prompt content remains in the current user message and conversation context is correctly preserved across turns.
+    - Fixed Amazon Bedrock streaming so malformed responses fail promptly and interrupted responses are retried rather than treated as complete.
+    - Fixed Claude account recovery when usage reports contain only one shared usage window.
+    - Fixed OpenRouter conversations with Kimi and DeepSeek so reasoning context is preserved when switching models.
+    - Fixed Xiaomi MiMo Token Plan authentication to use the correct regional endpoint, including for models loaded from bundled or cached configuration.
+    - Fixed Perplexity sign-in in the login flow and setup wizard, including email-code and browser-based SSO authentication.
+    - Stopped native judges from retrying gateway errors caused by exhausted upstream credentials while retaining retries for other transient 502 errors.
+    - Fixed simple completion and authenticated gateway chat routes so supported providers receive stop-sequence and frequency-penalty settings.
+    - Fixed Muse sessions after credential changes, key rotation, or idle resume so subsequent turns can continue normally.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Gemini 4 Hydrogen on Google Antigravity as a single model with selectable low, medium, high, and xhigh thinking levels, priced at $1.50/$7.50 per million tokens.
+    - Added Chutes provider support with live model discovery and /login chutes authentication using CHUTES_API_KEY.
+    Changed
+    - Paused Google Antigravity: login is no longer available and stored credentials are not used until the provider is re-enabled. Use GEMINI_API_KEY with Google AI Studio or the google-vertex provider instead (#18341).
+    - Updated Command Code model pricing and usage reporting to match the provider's current rates, including long-context pricing tiers for Claude Haiku 5.5, GPT-6.1 Sol and Terra, Grok 4.7, and Claude Sonnet 5.5.
+    - Increased the maximum output for Gemini 4 Argon, Carbon, and Hydrogen on the Gemini API and Vertex AI to 262,144 tokens, enabling substantially longer responses.
+    - Updated OpenCode Go Claude Haiku 5.5 to support thinking levels from low through max, including explicit thinking disablement.
+    - Updated Devin requests to identify as Devin CLI 3000.12.57, the current stable version.
+    Fixed
+    - Fixed Gemini 4 Argon on Command Code so image attachments are preserved and usage is billed correctly at $2 per million input tokens, $10 per million output tokens, and $0.10 per million cache-read tokens (#19125 by @wolfiesch).
+    - Fixed Factory Droid GPT-6 models failing on the next turn after changing the thinking level during Bedrock or Snowflake sessions (#19188 by @will-bogusz).
+    - Fixed OpenRouter model listings for workspace-restricted API keys so each key shows its correct allowed model roster and maintains an independent model cache (#19013 by @YibaiMeng).
+    - Fixed OpenCode Go Muse Spark tool-call turns losing encrypted reasoning between steps (#17748 by @nico2525nn).
+    - Fixed Vertex AI Gemini 3 and newer models rejecting replayed or cross-model tool calls that lack a thought signature (#17150 by @duck1eee).
+    - Fixed Cursor model listings omitting models available to the provider, including GLM 5.3 and Grok 4.7 (#18248 by @joseotaviorf).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added /commit to create commits containing only changes made by the agent or a selected subagent, while preserving other agents’ and the user’s work. The workflow is also available through the eval commit namespace, supports targeting repositories outside the session directory, handles binary and non-UTF-8 files, symlinks, file mode changes, and initial commits, and can optionally skip commit hooks with no_verify; use commit.enabled to disable it.
+    - Added auth.unpausedProviders (the Unpaused Providers setting) to re-enable paused providers such as Google Antigravity at your own risk while preserving their stored login state.
+    - Added configurable long-turn todo reminders through todo.midRunNudges, including options to disable reminders, limit them to two, or continue with increasing intervals.
+    - Pasting styled content into the composer now preserves Markdown formatting and places embedded images at their original positions, while code copied from editors remains plain text.
+    - Added the session_clear hook and extension event, emitted when /clear resets the current session context without changing its session ID.
+    - Added path-scoped Bash allow rules, project and configuration overlay precedence, and environment-variable controls through bash.allowedEnvVars and per-rule env settings.
+    - Subagents now preserve @upstream provider pinning when inheriting models.
+    - Added deletion of individual prompts from Ctrl+R history with the Delete key.
+    - Added --no-judge, --no-spotlight, and --offline options to restrict or disable auxiliary services outside the active model’s provider.
+    - Added per-rule TTSR repeatMode settings (once, after-gap, or always) to control reminder repetition.
+    - Bash approval prompts now show compound command segments individually and identify which segments are allowed or require approval.
+    - Todo done, drop, and rm operations now accept multiple tasks in a single request, including newline-, semicolon-, comma-, or space-separated input without splitting exact task-name matches.
+    - Todo status lines now display task counts when multiple targets are involved.
+    Changed
+    - /fork and fork-from-transcript now abort an active response and fork immediately.
+    - Reduced default grep output by showing only matching lines and limiting matches per file; configure grep.contextBefore and grep.contextAfter to include surrounding context.
+    - Changed the default spotlight.thinking level from low to med for deeper result analysis and improved ranking, at a higher request cost.
+    - When Spotlight is enabled, commonly reread source and issue or pull-request content is shown more completely before outlining, including support for additional source file types.
+    Fixed
+    - /loop now pauses after a provider error such as a rate limit instead of resubmitting the same prompt and attaching its @file mentions again (#19272).
+    - Resuming a session whose directory was deleted now continues in the current directory with a warning instead of failing.
+    - Model mentions and /switch completions now recover discovered models after provider discovery fails at startup, retrying discovery when needed.
+    - Background job results that arrive after an ACP prompt ends are now carried into the next prompt instead of starting an invisible turn.
+    - OpenAI server compaction failures now proceed to the next available compaction method instead of retrying server compaction on another model.
+    - Language servers now recognize edits made shortly after a file is created, including on macOS.
+    - Bash commands displayed in the Pseudo shell view now remain accurate while streaming through heredocs, substitutions, loops, continuations, arithmetic expressions, and background execution.
+    - Resuming a session or reviving a subagent after a retry fallback with a thinking suffix (e.g. :xhigh) now restores the primary model's own thinking level instead of keeping the fallback's (#19273).
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed guests retaining stale agents, tool cards, and working state after a failed rejoin; guests now reliably restore the current session state when reconnecting.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Changed lsTree() to return { path, mode } entries instead of bare paths; mode matches git ls-tree output (for example, 100755 or 120000).
+    Added
+    - Added noVerify to commitCreate() options to skip the pre-commit and commit-msg hooks, matching git commit --no-verify.
+    - Added optimistic concurrency and alternate-index support to commitCreate(), allowing commits to use a separate index and reject stale commits when HEAD has changed.
+    - Improved grep() and glob() performance for ovnfs checkouts by using the serving daemon when available while preserving native fallback behavior and existing streaming, filtering, and link-following options.
+    Changed
+    - Improved shell search across local and network filesystems: local searches avoid unexpectedly traversing network mounts, network-backed searches perform more directory operations concurrently, and fd supports parallel traversal together with ignore, pruning, depth, worker, and error-reporting options.
+    Fixed
+    - Fixed binary patches produced by diffText() and diffNoIndex(…, true) for non-UTF-8 text, such as Latin-1, so patches preserve the original bytes and apply correctly.
+    - Fixed SVG rendering when a generic font family refers to an unavailable font, preventing elements from disappearing.
+    - Fixed worktree add for source checkouts containing read-only files or directories, including cases where tracked directories are replaced by symlinks.
+    - Fixed cancelled and timed-out Shell.run calls so they terminate only jobs started by that invocation while preserving the shell session for later runs.
+    - Reduced memory usage when visualizing long multi-line shell commands.
+    - Fixed the shell cp builtin so symlink-following options work correctly with archive and directory-copy modes without disabling recursion or attribute preservation.
+    - Replaced built-in shell crashes on very long -a/-o chains in
+
+      and test expressions with a clear error for excessively deep expressions.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed Traces tab timing so background jobs show their actual completion times, including accurate idle periods and turn durations.
+    - Fixed per-model message counts on the Frustration page to include all answered messages.
+    - Improved dashboard responsiveness by keeping other pages and Live status available while Spotlight rebuilds.
+    - Fixed daily usage charts to group activity by the user's local calendar day instead of UTC.
+    @oh-my-pi/pi-tui
+    Added
+    - Added task counts to the Todo status line when work is assigned to multiple targets.
+    - Preserved pasted images when copying Composer drafts in Tern.
+    - Added the ability to delete the selected prompt from history by pressing Delete at the end of the Ctrl+R search field.
+    - Added distinct theming for Markdown links using registered extension schemes, with a muted fallback for themes that do not define the new color.
+    - Improved compound Bash command approval dialogs by distinguishing allowed and approval-required segments and opening at the first segment requiring approval.
+    - Added an optional Branch action to chat, including the b shortcut in the BTW history sheet.
+    Fixed
+    - Fixed asynchronous Bash commands switching from the interpreted shell view to the raw command line.
+    - Improved transcript rendering when switching to a subagent, resuming a session, or rebuilding a long transcript so the newest messages appear immediately.
+    - Fixed Markdown task lists displaying the wrong checkbox state for completed and open items.
+    - Fixed iTerm2 inserting terminal resize data into the composer when reporting in-band resizes.
+    - Improved working-row animation while waiting for tools or models on terminals without synchronized output, including tmux 3.6.
+    - Fixed expanded IRC tool cards to show complete soft-wrapped output and added an expand hint to collapsed cards containing hidden text.
+    - Fixed premature scrolling in the /resume session picker when navigating near the middle of the list.
+    @oh-my-pi/pi-utils
+    Added
+    - Added mixHex for blending two hexadecimal colors.
+    Fixed
+    - Improved extraction of Cloud Code Assist quota reset information, including compound durations and reset timestamps, to provide more accurate retry guidance.
+    What's Changed
+    - fix(natives): keep SVG text when a generic font family names an uninstalled font by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/18538
+    - fix(ai): continue Gemini 4 Hydrogen answers across 65,536-token output segments by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19081
+    - fix(vcs): make worktree add clones tolerate read-only entries copied from the source by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/18537
+    - fix(catalog): collapse Gemini 4 Hydrogen thinking tiers into one model by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19070
+    - fix(coding-agent): open annotate message picker as overlay by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/19145
+    - fix(coding-agent): hint the .jsonl path when a seance id belongs to another project by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19095
+    - fix(install): print a shell-specific command to add the install dir to PATH by @wescopeland in https://github.com/can1357/oh-my-pi/pull/19099
+    - fix(session): skipped the exit record for a session another process owns by @roboomp in https://github.com/can1357/oh-my-pi/pull/19104
+    - fix(coding-agent): use native separators for a configured mnemopi dbPath on Windows by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19106
+    - fix(pi-shell): POSIX errno numbers and texts off Unix by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19107
+    - fix(pi-shell): run the .exe that find -exec, xargs and env resolve on Windows by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19108
+    - fix(history): keep a search term's punctuated parts together by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/19111
+    - fix(acp): include background subagent spend in usage_update cost by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/19113
+    - fix(stats): count every answered message in the Frustration per-model table by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19114
+    - fix(stats): close Traces background jobs when they finish, so idle time and turn ends show by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19115
+    - fix(coding-agent): hang wrapped rows in the pinned TODO panel beneath their content by @chan1103 in https://github.com/can1357/oh-my-pi/pull/19117
+    - fix(stats,coding-agent): keep the stats dashboard answering while Spotlight rebuilds by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19118
+    - fix(ai): heal stale Antigravity Argon blocks when the quota summary has no Argon bucket by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/19123
+    - fix(catalog): sync Command Code rates to command-code@1.88.5 by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/19125
+    - fix(catalog): gave opencode-go haiku 5.5 anthropic's thinking ladder by @roboomp in https://github.com/can1357/oh-my-pi/pull/19129
+    - fix(coding-agent): honored PI_NO_TITLE when seeding plan session names by @roboomp in https://github.com/can1357/oh-my-pi/pull/19141
+    - fix(pi-shell): keep Windows drive roots in zsh/files paths by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19146
+    - fix(ai): keep the user prompt as Cursor's run message when context trails it by @anzhen-tech in https://github.com/can1357/oh-my-pi/pull/19156
+    - fix(ai): bound AWS event-stream framing before buffering by @Xytronix in https://github.com/can1357/oh-my-pi/pull/19031
+    - fix(web-search): close aborted and unconfirmed browser-fallback pages in the shared browser by @tuschla in https://github.com/can1357/oh-my-pi/pull/19058
+    - chore(fallow): exclude the current generated catalog by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19071
+    - fix(acp): kept the /session delete successor lazy by @roboomp in https://github.com/can1357/oh-my-pi/pull/19074
+    - fix(ai): heal Claude account-wide blocks from single-window usage reports when the reset matches by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/19090
+    - fix(coding-agent): limit @file mention hashline anchors to rows shown whole by @apoc in https://github.com/can1357/oh-my-pi/pull/19093
+    - fix(coding-agent): fail a click whose frame the page removed while the button was down by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19094
+    - docs(settings): computer.display defaults to active by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19096
+    - feat(tui): color extension links with a separate mdExtensionLink token by @materemias in https://github.com/can1357/oh-my-pi/pull/19167
+    - feat(ttsr): add per-rule repeatMode frontmatter by @Xytronix in https://github.com/can1357/oh-my-pi/pull/19163
+    - fix(catalog): keep Gemini 4 Hydrogen in one thinking rule so a regenerated catalog starts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19181
+    - feat(catalog): add Chutes provider by @Algowary in https://github.com/can1357/oh-my-pi/pull/18640
+    - fix(collab-web): retry a rejoin whose welcome fails to apply by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19182
+    - feat(wait): give a lone wait the top rung and tell the TUI agent to end its turn by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19122
+    - fix(tui): keep interpreted shell view for untraced bash results by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/19202
+    - fix(tui): paint a draining transcript backlog at its converged tail by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/19204
+    - feat(settings): support path-scoped object entries in bash.patterns and bashInterceptor.patterns by @asuffield in https://github.com/can1357/oh-my-pi/pull/18350
+    - feat(bash): support allowed leading env assignments in bash.patterns and strip env prefixes on restrictions by @asuffield in https://github.com/can1357/oh-my-pi/pull/18351
+    - feat(settings): prepend project and overlay bash pattern arrays onto global rules by @asuffield in https://github.com/can1357/oh-my-pi/pull/18352
+    - feat(coding-agent,tui): visually indicate covered vs prompted segments in compound bash approval prompts by @asuffield in https://github.com/can1357/oh-my-pi/pull/18749
+    - perf(tui): parse each diff line once and hoist diff regexes by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/19210
+    - fix(tui): kept the working-row shimmer moving on unsynchronized terminals by @nategriffin26 in https://github.com/can1357/oh-my-pi/pull/19032
+    - fix(coding-agent): restore /btw branch on Tern surfaces by @Clannad47 in https://github.com/can1357/oh-my-pi/pull/19135
+    - fix(coding-agent): dispatch xd:// devices called with an underscore-spelled prefix by @shgew in https://github.com/can1357/oh-my-pi/pull/19160
+    - fix(natives): collapse nested if in macOS menu rendering for clippy by @shgew in https://github.com/can1357/oh-my-pi/pull/19162
+    - fix(pi-shell): start zsh mkdir -p past a Windows drive root by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19169
+    - fix(pi-shell): map unmapped Win32 errors to EIO off Unix by @zhivko-kocev in https://github.com/can1357/oh-my-pi/pull/19170
+    - fix(task): preserve baseline commit when isolated agent forks from older parent by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/19174
+    - fix(models): skip ambiguous discovered model instead of whole provider by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/19175
+    - docs: sync zh-CN README with English README by @bigHippoZz in https://github.com/can1357/oh-my-pi/pull/19176
+    - fix(shell): keep a multi-line command's source on its first visualization row only by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/19177
+    - fix(catalog): identify Devin requests as CLI 3000.12.57 by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19180
+    - fix(catalog): keep GPT-6 effort changes off configuration_update on Factory Droid Bedrock and Snowflake by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19188
+    - fix(spotlight): preserve number literals in compacted dumps by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19189
+    - fix(task): report occupied context instead of billable token totals by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19190
+    - fix(tools): split URL-first search lists with globs and missing paths by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19193
+    - fix(secrets): advance empty Unicode matches by full code point by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19197
+    - fix(ai): preserve simple request stop sequences and frequency penalties by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19198
+    - fix(ai): notify response observers on Google streams by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19199
+    - fix(browser): close shared-browser targets over the root CDP connection by @tuschla in https://github.com/can1357/oh-my-pi/pull/19206
+    - fix(pi-shell): draw a streaming bash tail as it will continue by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/19212
+    - fix(builtins): keep cp -a and -d effects when link flags follow by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19215
+    - fix(catalog): collapse Gemini 4 SKUs on the gemini-cli discovery path by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19217
+    - fix(coding-agent): preserve cell source in linecache for inspect.getsource by @harshaygadekar in https://github.com/can1357/oh-my-pi/pull/19218
+    - fix(coding-agent): use short skill descriptions verbatim without compression by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19219
+    - fix(tui): show task-list checkboxes in rendered Markdown by @mottopanikeiku in https://github.com/can1357/oh-my-pi/pull/16557
+    - fix(coding-agent): keep the UTF-8 BOM when resolving conflict:// blocks by @mottopanikeiku in https://github.com/can1357/oh-my-pi/pull/16558
+    - fix(ai): fail Bedrock streams that end before messageStop by @mottopanikeiku in https://github.com/can1357/oh-my-pi/pull/16559
+    - fix(coding-agent): number every line of a cross-line grep match by @mottopanikeiku in https://github.com/can1357/oh-my-pi/pull/16563
+    - fix(coding-agent): release the previous session's eval kernels on session switch by @jorgoose in https://github.com/can1357/oh-my-pi/pull/16566
+    - fix(stats): group daily charts by the local calendar day by @GarrettShrop in https://github.com/can1357/oh-my-pi/pull/16605
+    - fix(ai): send Xiaomi Token Plan keys to the Token Plan host by @Komzpa in https://github.com/can1357/oh-my-pi/pull/16646
+    - fix(coding-agent): expand repeated @-import includes by @adi-IL in https://github.com/can1357/oh-my-pi/pull/16656
+    - fix(tui): stop DEC 2048 report fragments leaking into the composer by @demon-i386 in https://github.com/can1357/oh-my-pi/pull/16695
+    - fix(coding-agent): distinguish merged PRs in GitHub URL reads by @manjast in https://github.com/can1357/oh-my-pi/pull/17275
+    - fix(ai,utils): support Cloud Code Assist 'Individual quota reached' and compound 'Resets in' quota formats by @ironbabatekkral in https://github.com/can1357/oh-my-pi/pull/17327
+    - fix(coding-agent): ignore unknown models.yml input modalities instead of aborting by @jonasboos in https://github.com/can1357/oh-my-pi/pull/17419
+    - fix(task): serialized patch-mode isolation merge-back per repo by @roboomp in https://github.com/can1357/oh-my-pi/pull/18484
+    - fix(agent): stopped pricing thinking that filtered Responses routes never send by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18489
+    - fix(discovery): accept symlinked directories in extension walkers by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18492
+    - fix(shell): pinned a locale macOS can load for agent commands by @roboomp in https://github.com/can1357/oh-my-pi/pull/18543
+    - fix(ai): honor regional Bedrock baseUrl region by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/18573
+    - fix(session): rejected malformed handoff documents by @roboomp in https://github.com/can1357/oh-my-pi/pull/18574
+    - fix(coding-agent): truthful TTSR notice for non-interrupting prose rules by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18613
+    - fix(coding-agent): keep eval workpool()/judgeBatch() op from being overridden by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18614
+    - fix(ai): accept an email address at the Perplexity login-method prompt by @joswha in https://github.com/can1357/oh-my-pi/pull/18625
+    - fix(coding-agent): rescan the workspace tree after /move, /clear, and /new by @bigHippoZz in https://github.com/can1357/oh-my-pi/pull/18866
+    - fix(coding-agent): purge history and stats rows on session delete by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18877
+    - fix(coding-agent): walk fallback chain on text-only overflow when con… by @dagurval in https://github.com/can1357/oh-my-pi/pull/18889
+    - fix(tui): stop OSC 133 prompt marks from dropping program status mid-run by @robfeldmann in https://github.com/can1357/oh-my-pi/pull/18969
+    - docs(coding-agent): correct stale source-layout entries by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19076
+    - fix(judgment): skip judges behind a gateway with exhausted upstream credentials by @Xytronix in https://github.com/can1357/oh-my-pi/pull/19158
+    - fix(advisor): derive tool availability from each advisor grant by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19159
+    - feat(extensions): notify hooks after clearing session context by @SAKANA-MOONLIGHT in https://github.com/can1357/oh-my-pi/pull/17317
+    - fix(catalog): restore encrypted reasoning replay for OpenCode Go Muse Spark by @nico2525nn in https://github.com/can1357/oh-my-pi/pull/17748
+    - fix(pi-shell): a long [ x -a x … ] or test … -o … chain kills the shell process by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18498
+    - fix(tui): soft-wrap expanded IRC card bodies by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18648
+    - fix(catalog): do not display OpenRouter chat models prohibited by workspace guardrails by @YibaiMeng in https://github.com/can1357/oh-my-pi/pull/19013
+    - fix(catalog,ai): emit first-call thought-signature sentinel on Vertex Gemini 3+ by @duck1eee in https://github.com/can1357/oh-my-pi/pull/17150
+    - fix(todo): keep mid-run nudges alive with exponential backoff by @JhonMA82 in https://github.com/can1357/oh-my-pi/pull/18144
+    - fix(cursor): list AvailableModels roster without GetUsableModels gate by @joseotaviorf in https://github.com/can1357/oh-my-pi/pull/18248
+    - fix(tui): stop resume session picker from shifting list before cursor reaches bottom edge by @SuperUserA in https://github.com/can1357/oh-my-pi/pull/18604
+    New Contributors
+    - @zhivko-kocev made their first contribution in https://github.com/can1357/oh-my-pi/pull/19095
+    - @wescopeland made their first contribution in https://github.com/can1357/oh-my-pi/pull/19099
+    - @anzhen-tech made their first contribution in https://github.com/can1357/oh-my-pi/pull/19156
+    - @tuschla made their first contribution in https://github.com/can1357/oh-my-pi/pull/19058
+    - @Algowary made their first contribution in https://github.com/can1357/oh-my-pi/pull/18640
+    - @GarrettShrop made their first contribution in https://github.com/can1357/oh-my-pi/pull/16605
+    - @demon-i386 made their first contribution in https://github.com/can1357/oh-my-pi/pull/16695
+    - @manjast made their first contribution in https://github.com/can1357/oh-my-pi/pull/17275
+    - @ironbabatekkral made their first contribution in https://github.com/can1357/oh-my-pi/pull/17327
+    - @dagurval made their first contribution in https://github.com/can1357/oh-my-pi/pull/18889
+    - @nico2525nn made their first contribution in https://github.com/can1357/oh-my-pi/pull/17748
+    - @YibaiMeng made their first contribution in https://github.com/can1357/oh-my-pi/pull/19013
+    - @JhonMA82 made their first contribution in https://github.com/can1357/oh-my-pi/pull/18144
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.20.0...v18.20.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.20.1
+ReleaseTime: 2026-11-14T17:29:17.0000000Z
