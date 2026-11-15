@@ -1,0 +1,33 @@
+Version: 2.14.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/HyNetworks/hysteria/releases/download/app/v2.14.0/hysteria-windows-386.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/HyNetworks/hysteria/releases/download/app/v2.14.0/hysteria-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/HyNetworks/hysteria/releases/download/app/v2.14.0/hysteria-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Switched ACL to a new engine based on expr
+      - Rules are now expressions, set with acl.rules or acl.rulesFile. Besides the destination and protocol, they can match on the client's authentication ID and address, e.g. to route each user through a different outbound
+      - Added hysteria acl test to check which rule and outbound a request would use
+      - The legacy syntax (acl.file and acl.inline) still works. Legacy rules can be mixed into acl.rules, or converted with hysteria acl translate
+      - Fixed legacy port ranges starting at 0 (e.g. udp/0-100) matching every port
+    - Improved UDP forwarding performance by reducing per-packet overhead (about 30% more packets per second for small-packet upload)
+    - Updated quic-go to v0.65.0
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - ACL 改用基于 expr 的全新引擎
+      - 规则现在以表达式的形式编写，通过 acl.rules 或 acl.rulesFile 设置。除目标地址和协议外，还可以根据客户端的验证 ID 和地址进行匹配，例如让不同用户走不同出站
+      - 新增 hysteria acl test，用于测试某个请求会使用哪条规则和哪个出站
+      - 旧版语法（acl.file 和 acl.inline）仍然可以使用。旧版规则可以混用在 acl.rules 中，也可以用 hysteria acl translate 转换
+      - 修复旧版语法中从 0 开始的端口范围（例如 udp/0-100）会匹配所有端口的 bug
+    - 优化 UDP 转发的处理开销，提升性能（小包上传提升约 30%）
+    - quic-go 更新至 v0.65.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/HyNetworks/hysteria/releases/tag/app/v2.14.0
+ReleaseTime: 2026-11-15T01:17:25.0000000Z
