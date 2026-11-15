@@ -16,35 +16,45 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
-        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-        $Skip = $false
-        $SkippedHeadingLevel = 0
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
-          if ($Node.Name -match '^h([1-6])$') {
-            $HeadingLevel = [int]$Matches[1]
-            if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
-              $Skip = $Node.InnerText -match '安装'
-              if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
-            }
-          }
-          if (-not $Skip) { $Node }
-        }
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = 'https://github.com/ranger1112/flashnote/blob/HEAD/CHANGELOG.md'
+      }
+
+      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/ranger1112/flashnote/HEAD/CHANGELOG.md' | Convert-MarkdownToHtml
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h2[contains(., '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesTitleNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
-      } else {
-        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
-      }
 
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
+        # ReleaseNotesUrl (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $ReleaseNotesUrl + '#' + ($ReleaseNotesTitleNode.InnerText -replace '[^a-zA-Z0-9\-\s]+', '' -replace '\s+', '-').ToLower()
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
       $_ | Out-Host
