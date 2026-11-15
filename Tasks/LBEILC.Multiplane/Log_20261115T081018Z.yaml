@@ -1,0 +1,25 @@
+Version: 0.3.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/LBEILC/Multiplane/releases/download/v0.3.15/Multiplane-Setup-0.3.15-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Faster motion blur on moving frames, a frame time for shots, a hosted queue that survives a deleted job, and three fixes contributed by @liuyinchu. 0.3.14 was prepared on 2026-10-21 but not announced; its two fixes are included here. Both the renderer and the desktop app changed; an npm release follows.
+    Renderer
+    - Moving frames take fewer captures. With fast, standard and high, each frame used to capture the middle and one end of the shutter window before capturing its sample grid, so a moving frame with 4 samples took 6 captures. The still check now uses points of the starting grid itself: the two outermost times first, then the one nearest the frame time. A moving frame takes as many captures as samples, and a still frame still takes 3. On a 20-second 1080p clip from a real promo, render time dropped from 432 s to 343 s with identical sample counts. Frames whose only change happens in the outer eighth of the shutter window are now treated as still.
+    - SHOT.sampleContext.frameTime. The time of the output frame a sample belongs to: the same for every motion-blur sample of that frame, probes included, and unchanged when a cut shortens the window. Grain offsets, flicker and glitch patterns that change in discrete steps should take their time from SHOT.sampleContext?.frameTime ?? t: they then stay constant within the shutter, so two states are not blended into one frame and the sample count is not raised. Reading it does not trigger the full-grid recapture that reading motionBlur does.
+    - Settings locks are recovered safely. A process that exited while writing settings used to leave config.json.lock behind, and every later settings write timed out. The lock now records its owner and is recovered once that process is confirmed gone; a live or unverifiable owner is never evicted, and contention ends with the new config_locked code (exit code 3) (#6, thanks @liuyinchu).
+    - Resume notices a retargeted symlink. Checkpoints record the requested path as well as the resolved file, so an asset directory or project root that is a symlink and was pointed at different content after an interrupted render is refused with inputs_changed (#7, thanks @liuyinchu).
+    Desktop app
+    - A deleted job no longer stalls the hosted queue. If the directory of a running hosted job was removed (for example a job in a cleaned-up temporary folder), the app counted the job as busy forever and never started the next one. Such a job is now marked abandoned and the queue moves on. Records of finished hosted jobs are archived automatically, so the app no longer rereads hundreds of them twice a second.
+    - A hosted render that cannot start no longer blocks the queue. If its executor fails to start, the job ends as failed with internal_error (details.reason is hosted_launch_failed), multiplane wait receives the result, and the queue moves on (#8, thanks @liuyinchu).
+    Skill
+    - Instant changes inside a scene (a pressed button, a panel that collapses, an effect that starts at full strength, a caption swap) should be declared in cuts like any other hard cut; undeclared, the frame at that instant blends both states and is rendered with the maximum number of samples.
+    - When to use frameTime instead of t.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LBEILC/Multiplane/releases/tag/v0.3.15
+ReleaseTime: 2026-11-15T07:21:14.0000000Z
