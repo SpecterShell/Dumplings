@@ -18,7 +18,7 @@ switch -Regex ($this.Check()) {
       # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
         Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = "https://www.dosbox-staging.org/releases/release-notes/$($this.CurrentState.Version)/"
+        Value = $ReleaseNotesUrl = "https://www.dosbox-staging.org/download/release-notes/$($this.CurrentState.Version)/"
       }
     } catch {
       $_ | Out-Host
@@ -34,6 +34,9 @@ switch -Regex ($this.Check()) {
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[contains(text(), 'Summary')]")
       if ($ReleaseNotesTitleNode) {
+        # Remove anchor markers
+        $Object2.SelectNodes('//a[@class="headerlink"]').ForEach({ $_.Remove() })
+
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
