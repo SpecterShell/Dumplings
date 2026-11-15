@@ -1,0 +1,32 @@
+Version: 0.0.8
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/AlienTechSoftware/notecraft/releases/download/v0.0.8/notecraft-0.0.8-windows-x64.msi
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    NoteCraft 0.0.8 is an alpha release focused on making image-heavy and right-to-left notes more reliable, while improving the release and installation path.
+    Highlights
+    - Image resize handles are visible, functional, and persistent.
+    - Images can be selected and navigated with the caret and keyboard.
+    - Ctrl+V pastes images directly into a page.
+    - Arabic, Hebrew, Persian, and Urdu text receive improved caret, selection, and navigation behavior.
+    - Attachments are selected with a single click and opened with a double click.
+    - Windows and Linux packages include the generated HTML and CMGFM demo notebook, which identifies itself as version 0.0.8.
+    - CI now provides clearer quality gates and stronger release checks.
+    Installation notes
+    This is an alpha release. Keep backups of notebooks that matter to you. Windows packages may be unsigned and can trigger a SmartScreen warning. Linux packages should be tested on the target distribution; WSL is useful for building and smoke tests but does not reproduce every distribution package-manager transaction.
+    Known limitations
+    - macOS packaging scripts are prepared, but final Apple builds, signing, and notarization require macOS tooling.
+    - Performance profiling and dashboard work is deferred to a later release.
+    - Some lower-priority layout and first-launch issues remain documented in the 0.0.8 release folder.
+    Upgrade note
+    NoteCraft stores notebooks as ordinary folders. Installing 0.0.8 does not remove notebook data, but keeping a backup before an alpha upgrade is recommended.
+    Verification
+    The release candidate must pass cargo xtask ci. Packaging verification must confirm that the Windows and Linux artifacts contain both demo formats and that the packaged application reports version 0.0.8.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AlienTechSoftware/notecraft/releases/tag/v0.0.8
+ReleaseTime: 2026-11-02T21:54:45.0000000Z
