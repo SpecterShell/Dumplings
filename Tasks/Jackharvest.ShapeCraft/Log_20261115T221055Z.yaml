@@ -1,0 +1,42 @@
+Version: 0.9.3-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.9.3-alpha/shapecraft-0.9.3-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.9.3-alpha/shapecraft-0.9.3-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Offset Face no longer freezes the window on big parts or slow computers, and Windows on Arm gets its own download.
+    New
+    - Windows on Arm. Each release now has its own Arm64 download (MSI and portable zip) for Snapdragon and other Arm
+      laptops, so ShapeCraft runs natively instead of through emulation, and updates pick the Arm64 file. Thanks
+      @Hobbesdcc (#61).
+    Changed
+    - Offset Face works in the background when it takes a while. A quick offset lands at once as before; a long one
+      shows a small card with how long it has been working and Cancel, while the window keeps drawing (so the
+      desktop no longer says ShapeCraft is not responding). Its live preview is worked out in the background too and
+      gives up after 20 seconds instead of holding the window. Thanks @jan-tdy (#59, #52).
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    Mac: download the -macos-universal.dmg (Apple silicon and Intel). The two autoupdate-only
+    copies are the same file, there for copies of ShapeCraft up to 0.8.5 to update from.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows on Arm (Surface and other Snapdragon PCs): the -windows-arm64 MSI or portable zip, when present.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    iPhone (test build, iOS 17+, iPhone Duo included): sideload the -ios-arm64.ipa with AltStore,
+    Sideloadly or a similar tool, signed with your own Apple account (a free one re-signs every 7 days).
+    Or build it from source: docs/ios.md.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.9.3-alpha
+ReleaseTime: 2026-11-15T21:56:40.0000000Z
+RealVersion: 0.9.3

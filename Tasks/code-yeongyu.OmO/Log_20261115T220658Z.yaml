@@ -1,0 +1,201 @@
+Version: 5.1.72
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.72/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.72/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A thread send now reaches a session that is not running, on this device or on another of your devices, and starts it. It needs senpi 2026.11.15-2 or later (omo pins it), and device service 0.1.31 or later on both devices for a wake from another device. A reply to a sender on another device reads only that device's sessions instead of the whole account listing; a send to a live session that is paused or holds a Stop answers queued with waiting_on: { kind: "hold", device }; and waiting_on.kind in a thread_send result can be approval, hold or wake. (#13599)
+    Changed
+    - omo remote enable now sets the device up in one command after omo login. It installs the OmO device service when none runs, registers this omo's agent dir with it, turns remote sessions on, and installs and starts the always-on session host unit. If you signed in before the device service was installed, it also links that sign-in to the service, so omo login then omo remote enable leaves the device connected. Running it again changes nothing that is already in place (#13594). (#13602) (#13606)
+    - omo remote status also shows this device's own units as the service manager reports them: the session host unit (running, enabled, pinned host), the device service's unit, whether the cold-wake entry is in place, and the agent dir omo registers. With --json these are a local object beside the status fields (#13594). (#13602) (#13606)
+    - Thread gateway: waking a session that is not running is on (#13037). It runs on senpi 2026.11.15-2 or later (omo now pins it), the release whose session release drops a woken session's retained record. A message from another of your devices wakes a session here once both devices run device service 0.1.31 or later. The local omo daemon (omo daemon run, or the device service's cold-wake unit) registers this device's agent dir with the device service and takes deliveries as soon as it starts, with no session open. (#13599)
+    - Thread gateway: the operator daemon declares the delivery consumer as soon as it loads omo, with no session open (#13037 cold wake). omo daemon run sends the daemon it ensured senpi's warm, so a daemon the device service starts on demand can be handed deliveries before any session runs. A warm that is refused or unsupported prints one line and the run still exits 0. (#13596) (#13599)
+    - Thread gateway: the session wake loads from its own sidecar (extensions/omo-wake.js behind #omo-wake-runtime): the carrier, the delivery consumer and the device-service client never enter the main omo.js bundle, which carries only lazy shells; the ensured host's idle-exit setting is read inside the sidecar. (#13456) (#13599)
+    - Thread gateway: waking a session that is not running needs no setting (#13037). A thread_send from this machine to a session here that is not running now starts it by default, and the answer is queued with waiting_on: { kind: "wake" }. session_wake.same_device stays in the configuration schema only as an explicit opt-out (false), read for the target session's own project. The wake starts on senpi 2026.11.15-2 or later (senpi#6449), which omo now pins. (#13456) (#13599)
+    - Thread gateway: when no operator host is running, a session that is not running still starts (#13037). Before it opens the session, the carrier asks the engine's own host ensure --policy never, from omo's daemon launch spec, on the socket thread_create uses. A running host is reused whatever its build; one is started only when nothing answers. The ensured host runs with omo daemon's own host environment: the agent directory is named (OMO_AGENT_DIR) and the configured task.host_idle_exit_ms rides along (SENPI_RPC_HOST_IDLE_EXIT_MS) instead of the launch spec's default, and from a source tree the launch spec resolves to the plugin's tracked copy so the CLI is always handed a file that exists. (#13456) (#13599)
+    - Thread gateway: a delivery from another device is no longer gated on the device service's wake switch being told on. While this engine's delivery consumer is served (from its serving acknowledgement, before its startup pending sweep, so a remote row that sweep wakes is never told the gate is off), the carrier opens the session. The consumer serves on senpi 2026.11.15-2 or later with device service 0.1.31 or later, and it no longer reads the wake the service tells: the wake switch it tracked (wakeAllowed, the delivery.wake event) had no production reader left. (#13456) (#13599)
+    - The delivery consumer (design 5.4) runs beside the carrier. The engine minimum for a woken session, MIN_WAKE_ENGINE_VERSION (A8.1, senpi 2026.11.15-2, the release that drops a released session's retained record), gates the carrier as well. A device service older than 0.1.31 does not carry the delivery protocol, so on it the consumer serves nothing and does not ask again. (#13455) (#13599)
+    - The gateway store's schema moves to version 12: three nullable columns on deliveries and a unique index on the new ledger id. The first process on this release migrates the store; any process still on the previous build then reports the store's "schema too new" error on its thread tools and inbox drain until it restarts. (#13208) (#13279) (#13599)
+    - Thread gateway: once a build carrying this store ships, every gateway store open runs the schema step to version 13 (one new table, woken_sessions) and raises the store's user_version for good. An older build, or a rolled-back one, that shares the same agent directory then refuses to open that store with its "schema too new" error until it is upgraded again. (#13212) (#13279) (#13599)
+    - A reply to a message that came from another of your devices goes to the session on that device that sent it, whether you reply by its session id or by the name it gave. A session on another device, or on this one, that only carries the same id or name no longer receives the reply. (#13218, part of #13037) (#13599)
+    Fixed
+    - An omo engine on a device whose device service runs on a non-default --state-dir now registers with it: deviceServiceStateDir takes a non-empty absolute OMO_DEVICE_SERVICE_STATE_DIR, then the device-service.location.json discovery file beside the default dir, and only then ~/.omo/device-service (#13597). (#13598) (#13606)
+    - A remote worktree remove refused for an empty reflog now says reflogs may be off in the repository, instead of claiming they are: an expired or deleted reflog looks the same (#13542 follow-up). (#13546) (#13606)
+    - Thread gateway: the session wake keeps working after the session that started it ends (#13037). The carrier and the delivery consumer are one per agent directory for the whole process, but they used the first session's gateway store, which that session's shutdown closed, so every later wake in the process failed. The running wake now opens its own store for the life of the process. (#13596) (#13599)
+    - Thread gateway: the carrier re-checks the sender's peer admission at the moment of every open of a row from another device (#13456 review follow-up), so the retry and lease-takeover paths - which the accept-time check of the consumer and the before-turn check of the drain bracketed but nothing else covered - start nothing when the answer is refused or unknown. A lease takeover now consults the same allowance a wake does, ending its record when nothing queued allows the open; the runtime answers the carrier's admission ask on the live delivery port, so the startup pending sweep's own wakes are admitted too. (#13511) (#13599)
+    - Thread gateway: the session wake loads from its own sidecar (extensions/omo-wake.js behind #omo-wake-runtime): the carrier, the delivery consumer and the device-service client never enter the main omo.js bundle, which carries only lazy shells. (#13457) (#13599)
+    - Thread gateway: a consumer failure that changes kind (a device that answers nothing and then refuses the declaration) is warned again: the retry loop's one-warning rule is keyed on the failure itself, not on merely being down, and still stays silent while the same failure repeats. (#13457) (#13599)
+    - Thread gateway: the delivery consumer listens before it declares itself, so the records the device service hands it right after the acknowledgement are no longer dropped. It counts as serving from that acknowledgement, so a session it wakes during its own start is opened, not left switched off. (#13457) (#13599)
+    - Thread gateway: the delivery consumer is started again after it dies (#13457 review): a device service that answers nothing, refuses the declaration, or restarts under a served connection no longer leaves remote wake off for the engine's life. A failed start closes its port and reports itself, a connection that ends during the startup sweep leaves no stale serving consumer behind, and a connect failure the client reports is logged instead of dropped. (#13457) (#13599)
+    - Thread gateway: the wake switch the service tells (delivery.wake) has no reader since the carrier's gate moved to the consumer serving, so the consumer no longer tracks it. The conformance fakes the production-port test uses are now a package export of device-service-core instead of a deep path into its test tree. (#13457) (#13599)
+    - Thread gateway: a delivery id that the same device repeats after its 30-day receipt expired, while its row is still in the store, is answered from that row as deduplicated instead of failing with a raw unique-constraint error (the review of #13208). (#13212) (#13279) (#13599)
+    - Thread gateway: a session whose file header cannot be read, or names a session kind this build does not know, is never started or reopened unattended. It is refused like a child or worker session instead of being treated as an ordinary interactive one (#13037). (#13279) (#13599)
+    - When another device refuses to wake a session there that is not running, the reason its delivery consumer gives is shown only when it is a short machine code; any other reason is shown as unrecognised. (#13277, part of #13037) (#13599)
+    Added
+    - omo remote bootstrap and omo remote enable install and start one fixed, always-on per-user unit beside the OmO device service that runs the omo session host: the systemd user unit omo-session-host.service on Linux (enabled, restarted after every exit) and the LaunchAgent ai.omo.session-host on macOS (run at load, kept alive). It runs omo daemon run --pinned for the registered agent dir, and the device service's OMO_RELAYD_SERVICES table names it (entry "omo") as the only unit it may start for a cold wake. The table keeps its other entries, and the device service restarts only when the table changed. omo remote disable disables and removes both, and while remote sessions are off a bootstrap removes them instead of installing them (#13594). (#13595) (#13606)
+    - omo daemon run --pinned starts the operator host with no idle exit; a task host started from one of its sessions still idles out as usual (#13594). (#13595) (#13606)
+    - Device service client: the delivery-consumer requests of #13037 (deliveries.serve, delivery.answer, delivery.held, delivery.pending, delivery.drained, peer.admitted) and their events (delivery.inbound, delivery.holds, delivery.wake), in the shapes omo-relay-daemon #1076 ships, behind connectDeliveryConsumer in device-service-core. The conformance fixtures are copied in-tree from that release. (#13457) (#13599)
+    - Thread gateway: the engine's delivery consumer now connects to the device service through that client, so a delivery from another device for a session here that is not running is taken in, answered, and the session started. (#13457) (#13599)
+    - Thread gateway: the session wake now loads from its own sidecar, extensions/omo-wake.js behind #omo-wake-runtime: the carrier and its host connection, the delivery consumer and the device-service client never enter the main omo.js bundle, which carries only three lazy shells (the session-start start, a send's same-device wake, the control endpoint's admission ask); a sidecar that fails to load answers as if no wake exists. Measured 1,547,852 → 1,476,860 bytes on this branch; the byte ceiling in bundle-budget.json moves to 1,478,000 for it. (#13455) (#13599)
+    - Thread gateway: the session wake of #13037 now runs in production, but only on an engine at or above the wake engine minimum MIN_WAKE_ENGINE_VERSION (A8.1): the first engine release that drops a woken session's retained record (senpi#6449). Below it no carrier starts, and a thread_send naming a session that is not running answers as it did before the wake existed (queued_offline with reason: "wake_unavailable"). At or above it, every tui or rpc engine (never a task child, never under CI) starts one carrier per agent directory on its first session start: it opens the session by path on the operator host that thread_create opens on, sends the engine's wake, and hands it back quietly once it has finished; the answer is then queued with waiting_on: { kind: "wake" }. It still follows session_wake.same_device, read for the target session's own project, which stays off by default. (#13455) (#13599)
+    - Thread gateway: the carrier sweeps its woken rows on a timer only while the table holds a row (design A3.1.4: an empty table leaves no timer). (#13455) (#13599)
+    - Thread gateway: a session's own inbox drain admits nothing while a carrier is opening it (A3.1.5). It asks the device service whether a row's sending device is admitted before it takes in a delivery from another device (5.6). (#13455) (#13599)
+    - Thread gateway: the store can take in a delivery that another device's service attested for a session on this device that is not running (the intake row of #13037). The row is committed in the same transaction as a same-device delivery, keeps the sender's delivery id, text and display text, is rate-limited per sending device, and is admitted later under the engine's own ledger key, so the engine counts it once even if the same delivery also arrives live. A repeat of a delivery id from the same device is answered with the first answer. A reply to such a delivery continues its chain. (#13208) (#13279) (#13599)
+    - Thread gateway: the store keeps a record of each session a wake asked for or opened (#13037): one row with its state, a lease and a generation that fences every write, at most 4 such sessions past requested per agent directory, and a transient open failure that returns the row to requested with its attempts and the time of the next one (the third deletes it). A wake primitive resolves a durable id to its one session file, refuses child and worker sessions, ensures the host and sends one plain open_session frame (no attended, no permission preset). (#13212) (#13279) (#13599)
+    - Thread gateway: the pieces that will let a message from another of your signed-in devices reach a session that is not running on this device are the delivery consumer, the carrier that opens such a session in its own working directory and hands it back when its turn is done, and the pending sweep (#13037). (#13220) (#13279) (#13599)
+    - omo remote wake [on|off|default] reads or sets whether sessions on this device that are not running may be started by a message from your other signed-in devices; default follows the build's default, which is off. It needs device service 0.1.31 or later; on an older one the command sends nothing and says so. (#13257, part of #13037) (#13599)
+    - 71cc3ecf70 Merge pull request #13606 from code-yeongyu/chore/omo-5172-train
+    - 49d521db38 train(omo-5172): drop two stale sentences from the #13599 fragment (review L1, #13604)
+    - 3f5bbc72e1 chore(release): regenerate bundles at the omo-5172 train top after dev facd9fa7ea (#13599)
+    - b1107d3486 Merge remote-tracking branch 'origin/dev' into chore/omo-5172-train
+    - facd9fa7ea Merge pull request #13599 from code-yeongyu/train/13037-coldwake
+    - c0cc53d321 test(device-service,thread): two Windows-only reds in the cold-wake tests
+    - ffb1600914 test(device-service-core): run the POSIX discovery-file cases on a POSIX host only (a Windows temp path is not POSIX-absolute) (#13598 on Windows)
+    - d739c147e3 chore(release): regenerate bundles at the omo-5172 train top after dev v5.1.71
+    - 41d688506b Merge remote-tracking branch 'origin/dev' into chore/omo-5172-train
+    - bcfa13f1e6 train(omo-5172): export-check the remote CLI test kit as a knip entry (knip-entry-exports probe)
+    - 69c7cd55ed Merge remote-tracking branch 'origin/dev' into train/13037-coldwake
+    - d4922b00cf Merge pull request #13605 from code-yeongyu/release/v5.1.71-source-state
+    - 16a5f0e1d5 chore(bundle): raise the omo.js budget to the cold-wake train's measured size after merging dev
+    - 9c8654793e Merge remote-tracking branch 'origin/dev' into train/13037-coldwake
+    - 391210c0f0 train(omo-5172): fold the member fragments into 13606.md
+    - 9a94634f36 chore(release): regenerate bundles at the omo-5172 train top after dev b4c13ecd11 and #13546
+    - 77e8f0a74e Merge remote-tracking branch 'origin/pr-13546' into chore/omo-5172-train
+    - 19b82fbe4d Merge remote-tracking branch 'origin/dev' into chore/omo-5172-train
+    - 5aab1c373c chore(release): regenerate bundles at the omo-5172 train top (#13595, #13602, #13598)
+    - 5a62b274fb Merge remote-tracking branch 'origin/pr-13602' into chore/omo-5172-train
+    - d0caaea5be Merge feat/coldwake-session-host-unit (5171 port) into feat/coldwake-enable-one-command
+    - d3235303a6 Merge the omo 5171 train (d78e0c64) into feat/coldwake-enable-one-command
+    - f6eddba9e4 Merge the omo 5171 train (d78e0c64) into feat/coldwake-session-host-unit
+    - 9fead5a3ce Merge remote-tracking branch 'origin/pr-13598' into chore/omo-5172-train
+    - cb6c7dd492 Merge remote-tracking branch 'origin/feat/coldwake-session-host-unit' into feat/coldwake-enable-one-command
+    - debbc7ee22 fix(remote): uninstall drains a pinned host only when it removes the unit that started it (#13594)
+    - 9b3d6c336b test(remote): the remote-cli /bin/omo audit entry follows the harness move (#13594)
+    - 1c5711b2b7 Merge remote-tracking branch 'origin/feat/coldwake-session-host-unit' into feat/coldwake-enable-one-command
+    - 3aeb76e9a0 test(remote): categorize the session host unit test's /bin/omo paths; skip the POSIX mode check on Windows (#13594)
+    - 0e86229a60 style: format the #13037 stack files the repository formatter had not seen (hosted Lint)
+    - c25507665e docs(changes): the enable link in the #13602 fragment (#13594)
+    - 40d58da9cf feat(remote): omo remote enable links a sign-in the device service has not seen (#13594)
+    - 36c51913d3 fix(device-service): the daemon registers the agent dir that holds its own endpoint registry (#13037 cold wake)
+    - 7c3904c146 fix(thread,device-service-core,docs): the train review's H1, M1 and L1 (#13599 at a6453deea3)
+    - 64c5c46042 docs(changes): fragment for the one-command enable and the status readback (#13594)
+    - f546fc27b7 feat(remote): omo remote enable sets the device up in one command; status reads both units back (#13594)
+    - 84c4a7e7a6 fix(device-service): the operator daemon registers its agent dir when it loads omo (#13037 cold wake)
+    - 2b1a2f2969 fix(remote): uninstall drains the pinned host the session host unit started (#13594)
+    - c51b5f84dc docs(changes): describe the always-on session host unit and --pinned (#13594)
+    - 02ecb358fa feat(remote): make the session host unit always on and pin its host (#13594)
+    - a6453deea3 docs(changes): fold the #13037 train fragments into #13599 and state the switched-on wake
+    - 13d00b3f69 fix(thread,device-service-core): the train's integration fixes (#13037 cold wake)
+    - e25358b467 docs(changes): #13277 fragment names the wake refusal it covers (#13277 review LOW)
+    - 27ea2da1b6 Merge #13596 (feat/13037-host-consumer) into the #13037 cold-wake train
+    - ee29ffbcbf Merge #13511 (feat/13037-admission-recheck) into the #13037 cold-wake train
+    - 24347c3407 Merge #13457 (feat/13037-consumer-client) into the #13037 cold-wake train
+    - 15a2428c01 Merge #13456 (feat/13037-wake-default-on) into the #13037 cold-wake train
+    - afe3eb94ba Merge #13455 (feat/13037-wire) into the #13037 cold-wake train
+    - 144849e973 Merge #13279 (fix/13037-session-kind-closed) into the #13037 cold-wake train
+    - d0deb7636f fix(device-service-core): resolve the device-service state dir from env, then the discovery file, then the default (#13597)
+    - 85bff59b6a Merge #13277 (fix/13037-shown-reason-lows) into the #13037 cold-wake train
+    - acb0fd3e28 refactor(thread): the wake's process scope is required and the running wake hides its raw carrier (stack review LOWs)
+    - 38891e8a1d docs(changes): the fragment for #13596
+    - 27db871a69 fix(remote): declare SessionHostLaunch fields instead of parameter properties (erasableSyntaxOnly) (#13594)
+    - 54883934aa feat(thread): the operator daemon declares the delivery consumer when it starts (#13037 W4)
+    - b3c097b9f7 chore(remote): changelog fragment for the cold-wake unit; keep module-private names unexported (#13594)
+    - c0ed2c5318 feat(remote): install a fixed cold-wake unit for the omo session host (#13594)
+    - 8358c87033 Merge branch 'feat/13037-consumer-client' into feat/13037-admission-recheck
+    - dc1c9e7ee8 Merge branch 'feat/13037-wake-default-on' into feat/13037-consumer-client
+    - 9c704cbfdc test(thread): the wake-scope test holds every timer the wake runtime arms to the process scope
+    - 5beb48d96c fix(thread): a send's wake runs in the wake's process scope, not the sender's (#13456 review M1)
+    - a318f09498 Merge remote-tracking branch 'origin/feat/13037-consumer-client' into feat/13037-admission-recheck
+    - c0a7a0552a Merge branch 'feat/13037-wake-default-on' into feat/13037-consumer-client
+    - 0530893ca0 Merge branch 'feat/13037-wire' into feat/13037-wake-default-on
+    - 9252ffbbf6 fix(thread): capture the wake's process scope in omo.js, not the sidecar (#13457 review M1)
+    - 8f00201108 fix(thread): register the wake sidecar in every artifact and freshness gate (#13511 review M1)
+    - e3d9430ffe docs(changelog): fragment for the #13542 follow-up (#13546)
+    - c6beb247f5 fix(thread): the empty-reflog refusal says reflogs may be off, not that they are (#13542 review L1)
+    - 69bb19fcbb Merge branch 'w3' into feat/13037-admission-recheck
+    - feffba60b9 fix(thread): prove the in-flight-retry close and warn on changed failures (#13457 nits)
+    - 90a598ea28 Merge the lazy wake sidecar split into W3
+    - 2fe046bcd7 Merge the lazy wake sidecar split into W2
+    - ec22151981 feat(thread): split the session wake into a lazy sidecar (#13037)
+    - 7cb6d9bd21 Merge the round-2 W3 (4c22495857) into the admission re-check branch
+    - 4c22495857 fix(thread): silent consumer retries, a stop that closes the in-flight retry (#13457 delta review)
+    - f846debb43 Merge the #13455 delta fixes into W2 and fold the #13456 delta LOWs
+    - 6dfefeea6c fix(thread): sweep at the carrier's start and read same_device per session (#13455 delta review)
+    - 5406ebe56c fix(thread): the carrier re-checks peer admission on retry and lease takeover (#13456 review follow-up)
+    - 503ebd70b7 fix(thread): restart the delivery consumer and fold the #13457 review into W3
+    - a90eda0584 fix(thread): fold the #13456 review LOWs into the wake-default-on branch
+    - 3613a44ae9 Merge the #13455 review fixes of W1 (f9109ffbf0) into W2
+    - f9109ffbf0 fix(thread): hold the session wake to the engine minimum (#13455 review)
+    - 9b7826dc57 changes: fragment for #13457
+    - 7a6d433d94 Merge feat/13037-wake-default-on (fragment rename) into feat/13037-consumer-client
+    - dc960a727a changes: fragment for #13456
+    - ad5a524cb1 Merge feat/13037-wire (fragment rename) into feat/13037-wake-default-on
+    - d9b60977fc changes: fragment for #13455
+    - 8811f1718d feat(device-service,thread): the delivery consumer reaches the device service through device-service-core (#13037)
+    - 4bbf08b064 feat(thread): the carrier starts the operator host when none runs (#13037)
+    - d625c9a5b7 feat(thread): wire the session wake into production (#13037)
+    - 20c5eaab5e feat(thread): wake a session that is not running with no setting (#13037)
+    - a4352b96e3 Merge the first half of the #13037 train at f2c1f833a7 (integration base for the wiring PRs)
+    - c8f5e883d1 Merge the first half of the #13037 train (#13279 top) into the second half top
+    - 7b5f47facd Merge feat/13037-wake-verb into fix/13037-shown-reason-lows (adopted train)
+    - 834941729d changes: fragment for #13257
+    - eb6f16a382 Merge feat/13037-sender-half into feat/13037-wake-verb (adopted train)
+    - 2f27b75880 Merge fix/13037-reply-device into feat/13037-sender-half (adopted train)
+    - 8e7b7a38ab changes: fragment for #13218
+    - 59e0ff7413 Merge origin/dev into fix/13037-reply-device (adopted train)
+    - 6e14ef5ab6 docs(changes): the #13277 fragment names only the refusal reason the rule covers
+    - 558e065a06 test(thread): a code with a trailing newline is not a machine code
+    - d909837233 fix(thread): show a refusal reason only when it is a machine code
+    - c54200523d test(thread): a refusal reason is shown only when it is a machine code (RED)
+    - d957df0fe1 docs(changes): fragment for #13277
+    - e233152fc9 fix(thread): show a refusal reason in its own script: NFC, keep text marks and joiners, drop only defacing marks and hidden format characters, cap mark stacks, cut by grapheme
+    - 969b2d68d6 test(thread): a shown refusal reason keeps real text in every script and is cut by grapheme (RED)
+    - 57285a1bb3 style(thread): format the sender-half test
+    - 25c9ee119a fix(thread,device-service-core): a shown refusal reason keeps only readable text, cut by code point; both test minimums read null as unset
+    - 0069faa6d7 test(thread,device-service-core): a shown refusal reason keeps only readable text and is cut by code point; both test minimums read null as unset (RED)
+    - cdcd9890ee chore(thread): open the follow-up for the #13257 review's low findings
+    - 829427c83e fix(thread,omo-native,device-service-core): strip format characters from a refusal reason; state found-over-silent; name why omo remote wake cannot run. Placement only, no test: the wake members below setAttachControl, and the section 5.1 doc block back above wakeRefusal
+    - b045df1345 test(thread,omo-native): format characters stripped from a refusal reason; found over silent pinned; the two wake refusals name different causes (RED)
+    - 715fbd14db Merge remote-tracking branch 'origin/feat/13037-sender-half' into feat/13037-wake-verb
+    - b7fb207114 style(thread): format the sender-half test
+    - 5d036a27cb test(thread): the lookup adds no device reads of its own (compare with the send before the lookup existed)
+    - ff84413623 fix(thread): bound a receiving side's refusal reason to one short line
+    - e6c054fe90 fix(thread): decide the single probe from this connection before any device round; a failed round keeps today's answer; a client-side cap per device
+    - 963072548b test(thread): with the gates null a send to an unlisted id answers as before; the single probe has a client-side cap; a refusal reason is bounded (RED)
+    - bab127913e test(thread): A7.2.6 - the single probe's empty page is answered-none; only host_not_answering and unsupported are silent
+    - c7f803ac0c test(omo-native): type the verb test's output callbacks and format it
+    - eb9c21ebb2 fix(device-service-core,omo-native): the wake switch's export, response type, table rows and conformance fixtures; the verb test's sign-in stub
+    - cd6aa6bffc feat(omo-native,device-service-core): omo remote wake [on|off|default] over two client-library functions
+    - de7c4f8c39 test(omo-native,device-service-core): omo remote wake reads and sets the wake switch, gated per connection (RED)
+    - 33f3b576a0 test(thread): pin the local namesake case in reply-device by this device's listing count, not a store count that cannot move there
+    - 5f9da57458 chore(thread): drop the type import the reply-target move left unused
+    - 4856778ee7 test(thread): a local namesake gets no gateway delivery, counted at the store's enqueue
+    - 4bc9cf1cce Merge remote-tracking branch 'origin/fix/13037-reply-device' into feat/13037-sender-half
+    - f08ffad471 style(thread): format the reply-target test
+    - 358df176cd style(thread,device-service-core): format the sender-half change
+    - 5670bb8544 fix(thread): the wake feature is opt-in in the fakes as shipped; thread_create refuses only a probe-built ended row; split the round-trip counts
+    - caeec24103 refactor(thread): move the reply-target check into tools/reply-target.ts unchanged
+    - d1fdf67266 test(thread): pin the reply-target device check and that a local namesake receives nothing (RED)
+    - 98fb368a9b fix(thread): an unlisted alias holder becomes an ended row only when the wake path is available; changelog fragment
+    - 64007ee508 test(thread): count the same sends to a live session beside the woken ones
+    - 95d83d768c feat(thread): send to a session that is not running down the wake path and map its answers (5.1, 5.4)
+    - 394eac2a8c feat(thread): resolve a session another device holds but does not run (A4.3)
+    - 3861096335 feat(device-service-core): the wake mark, the wake target and the single-probe locate, each behind a null service-version gate
+    - bcca645e96 test(device-service-core): the wake gate reads welcome.service_version per connection, and an old client decodes a gate-version service (RED)
+    - 48c9e14099 test(thread): the sender half reaches a session on another device that is not running (RED)
+    - a9551c9cd8 fix(thread): decide a reply to another device before listing this one
+    - 13a7732dea style(thread): format the reply-device change
+    - 8bee6b886f fix(thread): type the reply resolve result and give the remote test sender its device
+    - ab73e2d8cd fix(thread): an approved reply resolves on the device its delivery came from
+    - e4302a5aac test(thread): an approved reply resolves on the device its delivery came from (RED)
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.72
+ReleaseTime: 2026-11-15T21:51:26.0000000Z
