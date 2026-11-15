@@ -1,0 +1,35 @@
+Version: 0.2.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/libracoder/kiri/releases/download/v0.2.1/Kiri-0.2.1-x86_64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/libracoder/kiri/releases/download/v0.2.1/Kiri-0.2.1-arm64.msi
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Pick your language from a short, searchable list. Type a name in any script, or "farsi", "castellano", "हिंदी". It's the first thing Kiri asks, also in Windows setup, and it's in Settings › Appearance.
+    - Kiri in 38 languages, with Arabic, its first right-to-left language, and Amharic, its first Ethiopian one.
+    - Pull from GitHub and Amazon ECR, signing in through each registry's own page.
+    - Select and copy a container's logs.
+    - A USB device that drops off and comes back is attached again. Devices Kiri waits for show as waiting, in the window and in kiri usb ls, and Stop waiting lets them go.
+    Fixed and improved
+    - Testcontainers works. Kiri reports a Docker engine version, so tools that check it start, and images run their own command when a client sends none. docker version shows Kiri's own version as the Kiri component.
+    - Start and Stop no longer race. Stopping Kiri right after starting it stops every container, and Stop with many containers takes seconds, not a minute or more.
+    - unless-stopped and always containers come back after Kiri is stopped and started again.
+    - A command that can't run exits as on Docker: 126, 127 or 255, with Docker's message.
+    - Mac: /etc paths work in bind mounts, and a linked folder follows its link, also after you point the link somewhere else and restart.
+    - Disconnecting a container from its networks works in any order, and the network can be removed after.
+    - A stop wins over a pending restart, and Docker hears a container is stopped only once it really is.
+    - The Linux VM card shows the engine's real state and fits the sidebar in every language.
+    - A language picked in Settings changes the whole window at once.
+    - "Port already allocated" names the program that has the port.
+    - Linux: stopping the engine removes its bridges and firewall rules.
+    - The terminal keeps the size you give it, and kiri on the PATH finds the VM's kernel.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/libracoder/kiri/releases/tag/v0.2.1
+ReleaseTime: 2026-11-15T08:32:02.0000000Z
