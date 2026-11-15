@@ -1,0 +1,39 @@
+Version: 0.13.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/chisomobanzi/Serpentine3D/releases/download/v0.13.0/Serpentine3D-Setup-x86_64.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    Serpentine3D 0.13.0 brings drawings in from AutoCAD and Rhino looking as they were drawn, makes dimensions and text real objects in the model, and lets a sheet's detail hide objects of its own.
+    Drawing exchange
+    - A DXF comes in looking as it was drawn. Layers bring their colour, lineweight, linetype and on, off, frozen or locked state; objects their own colour, lineweight and linetype where they override the layer; hatches their colour and background. Block references come in as their pieces, grouped so one click takes the lot, with nested and mirrored blocks opened up.
+    - DXF text comes in as editable text, keeping words, line breaks, height, font, turn and anchor, including Aligned, Fit, backwards and upside-down text.
+    - DXF and Rhino dimensions come in as dimensions that measure, at their file's real size, saying what they said in their own units. Dimensions inside blocks come in where the block puts them.
+    - A DXF comes in at its real size ($INSUNITS), can be cancelled part-way with the drawing left as it was, and a large one is one journal entry: 21,455 objects journal in 255 KB instead of 11 MB.
+    - A DXF export keeps colours and lineweights.
+    Dimensions and text in the model
+    - Linear dimensions in the model. dim places one on the construction plane, Auto or Aligned. Moved, turned or scaled, its number follows; mirrored, its text still reads. Properties edits text height, decimals, suffix, arrows or ticks, and typed text.
+    - Editable text is drawn filled, in every display mode, in details and in PDFs, and can sit on a background that hides what lies behind it. Picked text shows a dotted frame; a click anywhere inside picks it.
+    - One Text command. text places a note on a sheet and editable lettering in the model. textobject and textcurves still run it, so scripts and recovered sessions keep their text.
+    - Move, rotate, scale and copy keep what they move selected, and dragging text is smooth.
+    Hiding
+    - showselected brings back only the hidden objects you pick, with them on show while you choose.
+    - A detail can hide objects of its own: hideindetail, showindetail and showselectedindetail work inside a detail, as in Rhino. The detail leaves them out on screen, in the PDF and the DXF, and from picking.
+    Contributed by Jonas Pedrotti in #123, #124 and #142, with integration fixes and regression coverage; detail hiding in #163.
+    File format: a drawing with a model dimension, a detail's own hidden objects or a text background is saved as format 9 and needs 0.13.0 to open; 0.12.5 refuses it and says so. Every other drawing is saved as before.
+    Known limits: DXF leaders, points, polyface meshes, construction lines and 3D solids don't come in yet, and MTEXT isn't wrapped at its frame width.
+    Full changelog
+    Validation
+    - Linux full suite: 5,574 passed, 28 skipped; headless geometry/export smoke passed.
+    - Windows full suite: 5,557 passed, 45 skipped.
+    - Mac mini full suite (Apple Silicon, macOS 26.2): 5,555 passed, 37 skipped. The 8 failures and 2 errors are the known macOS ones (account connection, SpaceMouse, text/font and Make2D checks) that also fail on 0.12.5.
+    - DXF import checked against twelve drawings saved by AutoCAD and BricsCAD, each beside a reference rendering; Rhino 7 and 8 dimensions from McNeel's openNURBS examples come in measuring exactly what Rhino measured.
+    - AppImage: version 0.13.0, all 148 packaged files match the release source, packaged self-test passed. An end-to-end run in the packaged build passed 15 of 15 checks: a DXF and a Rhino file imported, the dimensions moved, a model dimension drawn, text on a background, a sheet whose detail hides objects, saved, reopened and printed. The 0.12.5 smoke's 17 live checks also passed, with plain and hatched drawings saved in their old formats.
+    - Windows installer and macOS disk image builds passed their packaged self-tests.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chisomobanzi/Serpentine3D/releases/tag/v0.13.0
+ReleaseTime: 2026-11-15T12:30:47.0000000Z
