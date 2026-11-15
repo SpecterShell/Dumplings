@@ -23,14 +23,14 @@ switch -Regex ($this.Check()) {
           if ($Node.Name -in @('h1', 'h2')) { $Skip = $Node.InnerText -match 'Download' }
           if (-not $Skip) { $Node }
         }
-        # ReleaseNotes (en-GB)
+        # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-GB'
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $this.Log("No ReleaseNotes (en-GB) for version $($this.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl (en-US)
