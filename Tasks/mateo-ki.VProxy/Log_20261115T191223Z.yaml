@@ -1,0 +1,22 @@
+Version: 1.16.14
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.14/vproxy-1.16.14-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.14 发布说明 / Release Notes
+    🎉 VProxy v1.16.14 补丁版本：修复 macOS 构建缺失（v1.16.13 未产出 mac 包的原因）与内核更新器三处缺陷，请 v1.16.13 用户直接升级本版。
+    🍎 macOS 构建修复
+    - v1.16.13 的 mac 包缺失真因：ProxyChild::Standard 改持 Box<Child>（large_enum_variant 优化）时，src/proxy/tests.rs 里一个 #[cfg(target_os = "macos")] 测试辅助函数的构造点漏包 Box——该代码 mac 才编译，Windows 门禁/全量测试从未覆盖，mac CI 一编译即 E0308（连续 4 次失败）；
+    - 修复后 macOS CI 连续两轮全绿；教训固化进 AGENTS.md：cfg 平台专属代码不受本地门禁覆盖，等价改写后必须全库 grep 同类构造点复核。
+    🔄 内核更新器三修（配合 VP-Core 1.7.8）
+    - 兜底常量停更半年：VPCORE_TAG v1.6.2 → v1.7.8（GitHub API 限流走兜底时会装回远 ancient 版本），三平台资产的 sha256 与字节数按官方 SHA256SUMS 实测校准；
+    - 失败不再谎报"已是最新"：在线检查失败（API 限流/网络受限）时如实提示"依据离线信息可能过期，请稍后重试"，不再让用户以为更新坏了；
+    - 事故复盘：v1.7.8 发布当日，用户更新走过期缓存装回了官方 v1.7.7——升级本版后更新链路指向正确的 v1.7.8 资产。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.14
+ReleaseTime: 2026-11-15T19:05:34.0000000Z
