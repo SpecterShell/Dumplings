@@ -22,9 +22,14 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match '中文'); $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -notmatch 'Highlights'
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -notmatch 'Highlights'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
             }
             if (-not $Skip) { $Node }
           }
@@ -36,9 +41,14 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr' -and -not ($Node.Name -match '^h\d$' -and $Node.InnerText -match 'English'); $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -notmatch '重点更新'
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -notmatch '重点更新'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
             }
             if (-not $Skip) { $Node }
           }

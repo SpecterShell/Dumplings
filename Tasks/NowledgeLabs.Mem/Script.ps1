@@ -19,8 +19,16 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $Skip = $true
+        # Allow the first heading to end the initial preamble skip.
+        $SkippedHeadingLevel = 6
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
-          if ($Node.Name -in @('h1', 'h2', 'h3')) { $Skip = $Node.InnerText -notmatch '^(Highlights|Improved|Fixed|Platform)$' }
+          if ($Node.Name -match '^h([1-6])$') {
+            $HeadingLevel = [int]$Matches[1]
+            if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+              $Skip = $Node.InnerText -notmatch '^(Highlights|Improved|Fixed|Platform)$'
+              if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+            }
+          }
           if (-not $Skip) { $Node }
         }
 

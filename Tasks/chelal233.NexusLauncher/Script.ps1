@@ -28,8 +28,15 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.SelectSingleNode('./following-sibling::*[1]').InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -eq 'h3') { $Skip = $Node.InnerText -match 'Downloads|Provenance' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match 'Downloads|Provenance'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (en-US)
@@ -40,8 +47,15 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -eq 'h3') { $Skip = $Node.InnerText -match '下载|来源' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '下载|来源'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (zh-CN)

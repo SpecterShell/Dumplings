@@ -28,9 +28,14 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1|./h2|./h3').Where({ $_.InnerText -match "[${CJK}]" }, 'First')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesTitleNode.Name, 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
             }
             if (-not $Skip) { $Node }
           }
@@ -42,9 +47,14 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'h2', $ReleaseNotesCNTitleNode.Name, 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
             }
             if (-not $Skip) { $Node }
           }
@@ -57,9 +67,14 @@ switch -Regex ($this.Check()) {
         } else {
           $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2', 'h3')) {
-              $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '安装|下载|Install|Downloads'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
             }
             if (-not $Skip) { $Node }
           }

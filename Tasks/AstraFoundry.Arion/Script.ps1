@@ -23,8 +23,15 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./hr')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0]; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2')) { $Skip = $Node.InnerText -match 'Install' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match 'Install'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (en-US)
@@ -35,8 +42,15 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -ne 'hr'; $Node = $Node.NextSibling) {
-            if ($Node.Name -in @('h1', 'h2')) { $Skip = $Node.InnerText -match '安装' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '安装'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (zh-CN)

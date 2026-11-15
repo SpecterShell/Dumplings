@@ -23,8 +23,15 @@ switch -Regex ($this.Check()) {
         $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h1[contains(., "中文")]')
         if ($ReleaseNotesTitleNode -and $ReleaseNotesCNTitleNode) {
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -eq 'h2') { $Skip = $Node.InnerText -match 'Downloads|Upgrading|Links' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match 'Downloads|Upgrading|Links'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (en-US)
@@ -35,8 +42,15 @@ switch -Regex ($this.Check()) {
           }
 
           $Skip = $false
+          $SkippedHeadingLevel = 0
           $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode[0].NextSibling; $Node -and $Node.Name -notin @('h1', 'hr'); $Node = $Node.NextSibling) {
-            if ($Node.Name -eq 'h2') { $Skip = $Node.InnerText -match '下载|升级说明|相关链接' }
+            if ($Node.Name -match '^h([1-6])$') {
+              $HeadingLevel = [int]$Matches[1]
+              if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+                $Skip = $Node.InnerText -match '下载|升级说明|相关链接'
+                if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+              }
+            }
             if (-not $Skip) { $Node }
           }
           # ReleaseNotes (zh-CN)

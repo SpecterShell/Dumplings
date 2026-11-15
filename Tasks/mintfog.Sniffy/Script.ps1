@@ -16,24 +16,28 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
-      $ReleaseNotesDocument = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-      $Skip = $false
-      $SkippedHeadingLevel = 0
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesDocument.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
-        if ($Node.Name -match '^h([1-6])$') {
-          $HeadingLevel = [int]$Matches[1]
-          if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
-            $Skip = $Node.InnerText -match '^\s*(下载|下载安装|相关文档|校验和)\s*$'
-            if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+      if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesDocument = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+        $Skip = $false
+        $SkippedHeadingLevel = 0
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesDocument.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
+          if ($Node.Name -match '^h([1-6])$') {
+            $HeadingLevel = [int]$Matches[1]
+            if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+              $Skip = $Node.InnerText -match '^\s*(下载|下载安装|相关文档|校验和)\s*$'
+              if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+            }
           }
+          if (-not $Skip -and $Node.Name -ne 'hr') { $Node }
         }
-        if (-not $Skip -and $Node.Name -ne 'hr') { $Node }
-      }
-      # ReleaseNotes (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
       # ReleaseNotesUrl (zh-CN)

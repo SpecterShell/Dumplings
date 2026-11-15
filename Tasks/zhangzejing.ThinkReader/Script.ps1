@@ -19,9 +19,14 @@ switch -Regex ($this.Check()) {
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
         $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $Skip = $false
+        $SkippedHeadingLevel = 0
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node; $Node = $Node.NextSibling) {
-          if ($Node.Name -in @('h1', 'h2')) {
-            $Skip = $Node.InnerText -match 'Validation|SHA-256|验证'
+          if ($Node.Name -match '^h([1-6])$') {
+            $HeadingLevel = [int]$Matches[1]
+            if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+              $Skip = $Node.InnerText -match 'Validation|SHA-256|验证'
+              if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+            }
           }
           if (-not $Skip -and -not ($Node.Name -eq 'table' -and $Node.InnerText -match 'SHA-256')) { $Node }
         }
