@@ -1,0 +1,26 @@
+Version: 0.4.38
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/certimate-go/certimate/releases/download/v0.4.38/certimate_v0.4.38_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  InstallerUrl: https://github.com/certimate-go/certimate/releases/download/v0.4.38/certimate_v0.4.38_windows_arm64.zip
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    🐛 修复 Bug
+    - 修复飞牛 fnOS 的 SSH 部署预设需要手动修改证书路径、部署后证书链不完整及面板有效期未更新的问题。预设现在可在系统只登记了一张证书时自动识别路径，并部署完整证书链。
+    - 修复 #1508：RFC 2136 的 DNS-01 验证现在会检查 TSIG Key 和 Secret 是否成对填写，避免因漏填其中一项而发送未签名的 DNS 更新。
+    - 修复 #1509：同一张证书部署到多个 UCloud 产品或重复部署时，因未能找到已上传的证书而导致部署失败的问题。
+    - 修复 #1510：部署证书到 AxisNow 时，证书列表接口返回字符串类型的 subscribed_total 导致解析失败的问题。
+    - 修复 #1518：部署证书到腾讯云点播（VOD）时，「根据证书自动匹配」现在只会向证书覆盖的域名部署，避免尝试为不匹配的域名绑定证书。
+    🛠 优化 & 其他改动
+    - 整理代码格式。
+
+    Comparing changes: https://github.com/certimate-go/certimate/compare/v0.4.37...v0.4.38, by @fudiwei, @inxen, @Kaiho1015, @usual2970
+- Key: ReleaseNotesUrl
+  Value: https://github.com/certimate-go/certimate/releases/tag/v0.4.38
+ReleaseTime: 2026-11-16T02:34:52.0000000Z
