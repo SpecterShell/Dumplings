@@ -1,0 +1,57 @@
+Version: 0.9.4-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.9.4-alpha/shapecraft-0.9.4-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.9.4-alpha/shapecraft-0.9.4-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Big boards come in with their colours, sketching on them is fast, and editing an early import no longer means
+    waiting for it all over again.
+    New
+    - Imports keep colours set on single faces. STEP files and .shapr projects that colour faces one by one (a PCB's
+      solder mask, pads and sockets) come in with those colours, any number of them per body, and STEP exports write
+      them back out. Thanks @chickey (#65).
+    - Offset Edge on a face's outline. Sketching on a face, pick edges of the body lying on the sketch and Offset
+      Edge them (Chain grows them to the whole outline); clicking the lit button of the running sketch tool puts it down
+      so you can pick. Double-clicking the body there now leaves the sketch with the body selected. Thanks
+      @chickey (#67).
+    - Windows on Arm download. The native Arm64 MSI and portable zip that missed 0.9.3 are in this release. Thanks
+      @Hobbesdcc (#61).
+    Changed
+    - Changing a History step only reruns that step and the ones after it. On a big import, changing a later
+      extrude went from about a minute (the whole file was read again) to a fraction of a second. Thanks
+      @chickey (#68).
+    - Sketching on a face of a big model is smooth, and the model stays solid while you sketch on it, its colours
+      softened, so a dark board doesn't vanish. Thanks @chickey (#67).
+    - Shell, Fillet and Chamfer work in the background with Cancel when they take a while, as Offset Face does, so
+      the window keeps drawing on a slow computer. Thanks @jan-tdy (#59).
+    Fixed
+    - .shapr import: closed walls stored as rim rings come in whole. A body whose wall lost a strip and turned
+      invalid now imports with the right volume and size. Thanks @pablohc (#63, #64).
+    - .shapr import: bodies sharing a name land in their own folders, and a hidden folder hides the bodies it holds,
+      not others. Thanks @pablohc (#66).
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    Mac: download the -macos-universal.dmg (Apple silicon and Intel). The two autoupdate-only
+    copies are the same file, there for copies of ShapeCraft up to 0.8.5 to update from.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows on Arm (Surface and other Snapdragon PCs): the -windows-arm64 MSI or portable zip, when present.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    iPhone (test build, iOS 17+, iPhone Duo included): sideload the -ios-arm64.ipa with AltStore,
+    Sideloadly or a similar tool, signed with your own Apple account (a free one re-signs every 7 days).
+    Or build it from source: docs/ios.md.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.9.4-alpha
+ReleaseTime: 2026-11-15T23:38:48.0000000Z
+RealVersion: 0.9.4
