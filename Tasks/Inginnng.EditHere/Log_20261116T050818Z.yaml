@@ -1,0 +1,26 @@
+Version: 0.13.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Inginnng/EditHere/releases/download/v0.13.5/EditHere-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.13.5 fixes scrolling capture stopping at startup with “Unable to exclude EditHere windows from scrolling capture” on macOS (#54).
+    - Window exclusion: shareable content now includes hidden windows. If EditHere is absent from the application list, the filter also checks window owners for its application handle.
+    - Capture fallback: if the system still omits the application, capture continues through the existing path that temporarily hides scrolling capture controls. Diagnostics record the filtering mode used.
+    - Error handling: disconnected displays, changed resolution, recording permission errors and capture failures still produce errors.
+    New regression cases cover first-frame capture without an application entry, application exclusion and error paths. Actual scrolling and stitching on the original macOS 27.0.1 device still require confirmation.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    0.13.5 修复 macOS 长截图开始时提示“无法从长截图中排除 EditHere 窗口”并返回选区的问题（#54）。
+    - 窗口排除：获取共享内容时包含隐藏窗口；应用列表没有 EditHere 时，尝试从窗口所属应用恢复排除过滤器。
+    - 继续采集：系统仍未提供自身应用条目时，使用已有的临时隐藏长截图控件路径读取画面，不再直接中断。诊断日志记录实际使用的过滤方式。
+    - 保留错误检查：屏幕断开、分辨率变化、缺少屏幕录制权限或采集失败时，仍提示对应错误。
+    新增自动化回归覆盖缺少应用条目时的首帧采集、应用排除和错误路径。macOS 27.0.1 原报告设备上的实际滚动与拼接效果仍待复测。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Inginnng/EditHere/releases/tag/v0.13.5
+ReleaseTime: 2026-11-16T04:25:02.0000000Z
