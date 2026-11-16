@@ -1,0 +1,20 @@
+Version: "9.69"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-969.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#969
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - File transfer:
+      - Fixed SFTP compatibility with some clients, including Apache SSHD; and some servers accessed through Another SFTP server mount points, including AIX and Diplomat MFT. Versions 9.67 and 9.68 could reject file transfer sessions because of unexpected protocol flags or permission bits.
+      - For mount points of type Another SFTP server, strengthened enforcement of the configured root directory when the destination server supports SFTP version 6, or supports the extension realpath-canon@bitvise.com. The SSH Server now logs a warning when this support is unavailable, and a non-empty root directory is configured.
+        When possible, restrict the account to the intended directories on the destination server. The mount point's root directory setting does not replace destination restrictions.
+      - For mount points of type Another SFTP server, improved reporting of outgoing SSH connection and SFTP channel failures. Logs now preserve the underlying cause instead of reporting only that the connection was lost.
+    - Control Panel and Settings:
+      - The Control Panel now provides a Recent errors or warnings viewer. Recent errors and warnings are now saved across SSH Server restarts, up to a limit.
+    - Port forwarding:
+      - Fixed support for Free-form S2C listening rules that replace a non-IP listening request with a configured IP address. Corrected help text for this rule type.
+ReleaseTime: 2026-11-16
