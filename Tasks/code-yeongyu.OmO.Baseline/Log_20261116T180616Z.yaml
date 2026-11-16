@@ -1,0 +1,809 @@
+Version: 5.1.73
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.73/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Remote session views stop receiving each streamed delta twice. open_session for a remote create, open, or fork now goes on the endpoint dialer (a fresh connection per call, closed once it settles), instead of sharing the long-lived connection the later session.attach rides on; opening on the shared connection had attached the host's delegated engine connection to the session as well, so the engine wrote every delta twice. A connection a caller lends is now named borrowed, so the CLI's one shared connection survives the open. (#13761, adopting #13075 by @surlymochan)
+    The first session on a newly enabled device now starts memory sync. Sync used to start before the memory repository existed, fail to write its space binding, log "memory sync failed to start" and never retry; it now waits for the repository and starts on its own once the first memory write creates it. (#13493, fixes #13486) (#13627)
+    Memory sync drops a replaced desktop account cleanly. When the desktop moved to another account without announcing a retirement, the engine opened the new account but left the old one half alive: it kept listening on the desktop channel and its open sync sessions did not end. The old account now ends as soon as the engine sees it is no longer current, which also ends its sessions. In a session Worker, an operation started just before the desktop retired its account can no longer hand back a handle from the old account. (#13334, follow-up to #13327 and #13329) (#13627)
+    OmO is ready to load on the tool side of a split session: its first-paint startup gate is declared for the agent-loop side, so the tool side never registers those handlers, and on the tool side deferred startup work runs right away instead of waiting for a paint that never comes; local sessions register exactly as before. (#12329) (#13627)
+    Computer use is ready for the tool side of a split session: foreground control is revoked, and the engine session ended, when the run of the session holding it ends or that session closes, through that session's own lifecycle instead of loop events; local sessions behave exactly as before. (#12328) (#13627)
+    Adds the executable proof that computer use returns one screenshot per tool call, under today's capture caps and unchanged across the tool side of a split session; no behavior change. (#12337) (#13627)
+    Computer use is ready for the tool side of a split session: there, foreground control follows the device's own exec setting (refused until exec is enabled on that device, then granted to any session without a per-session confirm); local sessions keep today's confirm exactly. (#12332) (#13627)
+    Computer use is ready for the tool side of a split session: sessions sharing one device take its foreground one at a time, and only the holder can release it; local sessions behave exactly as before. (#12339) (#13627)
+    Computer use is ready for the tool side of a split session: a missing OS permission (Screen Recording, Accessibility) raised there is reported to the session that owns the call, once per permission, without a session marker on that side; local sessions behave exactly as before. (#12450) (#13627)
+    Computer use v3: the result contract refuses a receipt under an unverified delivery and types refusal reasons. An ActionReport that carries a consumption receipt under not_delivered, delivered_unverified or unknown/unknown (#13147) is now refused, both when it is built and when it is parsed from the wire. A backend refusal's reason is the closed Reason type, so a mistyped reason is a compile error. (#13137)
+    - CI: a computer-use bench regression job compares the desktop bench against a base and fails on a p50 regression above 30%; it runs nightly against the newest release tag and on manual dispatch, not on pull requests. (#12876)
+    A question or approval a remote session asks now reaches every omo remote attach on it, not only the one that sent the prompt. The terminal UI shows the request and sends your answer back by its request id, as it already did for prompts you sent yourself, and dismisses it when another device answers it first. A secret input or a grant approval is still shown only on the terminal whose prompt raised it. A request already waiting when you attach, or raised while the relay link was down, is shown too, and one that was settled during a relay gap is dismissed after the reconnect (#13474). (#12750)
+    Changed
+    - The ulw-plan plan template and reference, ulw-execute's decomposition step, and the Codex edition's ulw-loop reference and plan agent no longer say "target 5-8 per wave; fewer than 3 means under-splitting". A wave is sized to the tasks that are independent of each other. (#13851)
+    - The mass-ulw skill's listing description now says a graph is sized to the request with one run per phase, matching the rewritten skill body; it no longer says each phase's stages are defined up front in one run. (#13848)
+    - ulw-loop no longer tells HEAVY goals to target 5-8 tasks per wave or treats fewer than 3 as under-splitting; a wave is sized to the tasks that are independent of each other. Mass research gives lead nodes the same handoff file and source tagging as harvest nodes, and both ulw-research editions make slice reducers conditional like the mass-ulw planning reference does. (#13847)
+    - mass-ulw now sizes the workflow graph to the request: a small graph by default, a verification node only when the final check is too long to run inline, per-item chains instead of a review node between waves, and mass research that starts from the angles the topic has instead of a 60-angle floor. The skill and its planning reference were rewritten and are about a quarter shorter. (#13834)
+    - Internal: the desktop service's fake engine and test harness are now the ./testing package export of senpi-desktop-service, and the computer-use tests in omo-senpi and senpi-desktop-tool import them from there instead of a relative path into its test tree. Nothing changes for users. (fixes #13614) (#13712)
+    - Memory sync: a test now covers a remote head that arrives on the stream while a sync cycle is running and is not applied by it, so the engine must run exactly one more cycle to pick it up; a lost wakeup there now fails the test. No behavior change. (#13656, fixes #11778)
+    - Remote sessions are now on by default. The moment omo login completes it switches them on for this device and says so in one line ("Remote is on for this device: other signed-in devices can reach it. Turn off: omo remote disable"), and every omo start keeps the device set up. omo remote disable turns them off and remembers that, so neither a later omo login nor an omo start turns them on again; omo remote enable turns them back on (#13594). (#13602) (#13627)
+    - device-service-core's local-API tests fail when omo starts sending a request type that has no reply row in the LA21 decoding test or that the conformance test owner still lists as unserved (#13491). (#13491)
+    - omo remote, the thread tools and the memory sync use the device service's own local-API client, vendored byte for byte from omo-relay-daemon (main after #1115, plus the read-side tolerance of omo-relay-daemon#1130), instead of a hand-edited copy; a guard test keeps that client and the connection factories behind the device-service layer (#13475). (#13475)
+    Fixed
+    - A fanout that fails as a whole (an unknown or ambiguous target, invalid options, a duplicate target under dedup: "reject") and a target that runs past timeoutMs get the same typed error, and a failed resultOf names the request instead of treating its op id as a device. (#13813)
+    - The shipped device account, device service, memory sync, wake, thread client and bunshin bundles, and the omo-ai launcher's sign-in module (omo login / logout / whoami), are rebuilt from their current sources, so the released plugin and launcher no longer lag the code merged into dev. (#13810)
+    - The shipped thread client and thread SDK bundles now carry the session-only model change from #13494, so switching a remote session's model no longer rewrites the target device's default model in the released build. (#13786)
+    - Memory: a contender recovering a lock from a dead owner no longer fails when that lock file is already gone by the time it removes it (seen on Windows, where memory reflection supervisors then failed admission). Any other removal error still surfaces. (#13745, fixes #11644)
+    - Device operations run through the bundled fleet SDK (bunshin in eval cells) now fail with a typed error, { code, message, next_action } like the thread tools, instead of an internal transport sentence. The message names the operation and the device, and the code tells a wrong argument (invalid_arguments) apart from an offline device (device_offline), a policy refusal (scope_denied) and a lost connection (transport_closed). The relay's own op-result codes pass through unchanged and carry uncertain when the device may have run the op. The "no transport" error and a failed connect now say what to do next. (#13744)
+    - Computer use on X11 no longer reports a background click, scroll, drag, typing or key chord as delivered when the target app drops synthetic input (GTK 3/4, Qt, LibreOffice, Chromium, Electron and Firefox apps whose window class names no toolkit, and xterm, whose allowSendEvents setting no other app can read). Background input now goes only to apps whose toolkit is known to accept it (Xt and Motif apps other than xterm, Tk); any other app is refused before anything is sent, with the element action and foreground delivery offered as the next step. (#13736, addresses #9109)
+    - On Windows, background keyboard input that holds Ctrl, Alt, Shift or Win while another key goes down is now refused with BackgroundUnavailable and nothing sent, instead of being reported delivered while the application received only the bare key. This covers key chords such as ctrl+k, bounded key and mouse holds with such keys, and a single character the keyboard layout types with Shift or AltGr (for example K, or @ on a German layout). Send it with delivery: "foreground" or use accessibility actions. (#13734, fixes #13297)
+    - On Linux, the computer tool's desktop.elementAt(x, y) now returns the element under the point, such as a GTK window's Press button, instead of the window's untitled root filler at every point. (#13732, fixes #13296)
+    - With real hit-test answers, the check that an element is not covered before an accessibility action now works on Linux too: another element of the same window across the target's centre refuses the action with occluded, as on macOS. The target's own descendants, such as a list row wider than the list's viewport, never count as covering it, on any platform where the backend can compare elements. (#13732)
+    - Memory that two devices already held as the same text, such as the default files every memory starts with, no longer appears twice after the devices start syncing one space. A device joining a space now merges its own copy of a file into the shared one line by line, keeping every line of both and the lines they share once. (#13730, fixes #13725)
+    - A launch spec that lists no extensions now gives its host the same runtime build id as omo host ensure predicts. The compiled binary still added its own plugin folder to that host's command line, so the two ids disagreed for such a spec. (#13729)
+    - Memory in a folder with no git remote, and memory from a session outside any project, now syncs between your signed-in devices through one account default space instead of staying on the device that wrote it. A repository that had its own per-device space moves to the account space once and sends its memory there. (#13726, fixes #13720)
+    - A host the compiled omo binary starts now reports the same runtime build id as the omo host ensure that started it. The binary added its own plugin folder to the host's command line on top of the launch spec, so with no spec, or with a copy of the spec, the host and the CLI disagreed: the desktop app judged its own engine a build mismatch and every handover's replacement host exited. (#13700)
+    - The omo-native trust test suites no longer fail when the test runner's TMPDIR is group-writable: each suite now runs with a private temporary directory the trust stage accepts (#13697). (#13698)
+    - omo remote open --model now sets the model on the session it just created even when its durable ID differs from its relay listing key. Send, model, interrupt, close and attach accept both the durable ID returned by open --json and <device>/<session>; the durable ID is the documented canonical identity. (#13666)
+    - omo remote now prints the credential store's own message when it cannot read your sign-in, such as the omo account forget hint for an invalid stored sign-in or the note that the OS credential store is locked or unreachable, instead of only the generic notice. (#13644, fixes #13638)
+    - omo remote wake --help now gives the switch's real default: waking is on unless you turn it off. It said "off unless turned on", which never matched the device service. (#13637)
+    - A session host start no longer times out when its supervisor or host child has to re-run the engine trust step: the re-run keeps the startup pipe the launcher reads, instead of losing it and reporting supervisor_bootstrap / host_bootstrap timeouts for a healthy host (#13622). (#13632)
+    - Thread gateway: the omo daemon registers this device's agent dir at start-up even when senpi reports its endpoint registry as a relative or unnormalized path. It falls back to the launcher's agent dir with one warning instead of registering nothing (#13604). (#13609) (#13627)
+    - Memory keeps working after an extension hot reload, for example when a watched SKILL.md changes (#13098). The reloaded extension no longer fails to register memory with session worker data "omo.memory-sync.v1" is already provided. (#13101) (#13627)
+    - omob dev builds bundle one senpi engine again: the build linked the source-built engine only at the root while omo-native, omo-senpi, senpi-task and omo-opencode kept the registry copy, so the trust hand-off was lost and every coordinated session host start timed out in supervisor_bootstrap (#13620). (#13621)
+    - thread_set_model, omo remote model and omo remote open --model changed the target device's default model along with the session's. The engine record now carries scope: "session", so only the addressed session switches models. thread_set_reasoning likewise no longer rewrites the level the device remembers for the model; it changes only that session's level. (#13494)
+    - A waiting omo remote send no longer reports its turn as interrupted because an earlier run in the same session was interrupted. (#13481)
+    - A waiting omo remote send no longer prints the turn's answer twice when the answer is both streamed and already stored in the transcript: the transcript read is not printed once the stream printed this turn's text. (#13481)
+    - A waiting omo remote send no longer prints an earlier identical message's answer as its own when that earlier run finished just before the send was answered: only a finish that follows this send's own prompt ends its wait. (#13481)
+    - A waiting omo remote send no longer prints an earlier identical message's answer when that earlier message carried no client message id (a send without --wait, text typed in the TUI), and a send whose interrupted turn was followed by a later message still prints its partial answer after the later turn's text. (#13481)
+    - A waiting omo remote send to an engine that stores no client message id prints a turn that finished before the send was answered and exits, instead of waiting until the session closes; an interrupted turn whose partial answer only partly streamed prints the rest of it. (#13481)
+    - A first waiting omo remote send into a session whose earlier identical message was typed in the TUI or sent without --wait no longer prints that earlier message's answer when the engine stores no client message id: a message already in the session before the send is never taken as the send's own (an identical message stored between the send starting and its prompt landing is still indistinguishable, oh-my-openagent#13580). (#13481)
+    - While OmO accounts are closed, omo logout --help and omo whoami --help print their own help and exit 0, as omo login --help does, instead of the login refusal; any other argument is still refused. (#13466, fixes #13461) (#13466)
+    - In the standalone omo binary, the kill guard's check (omo __kill-guard check ..., run by the guard before a kill, pkill or killall) now reaches the engine's judge instead of being read as a chat prompt, so the guard allows or refuses the signal as it does in the npm install. (#13460, fixes #13449) (#13460)
+    - thread_list and omo thread list now list threads on all of the account's devices in every call, not only with all_scope. An ended thread on another device shows as resumable instead of live. The result includes the account's devices: name, platform, kind, online state, last seen, thread count, and whether this listing reached them, so a device that did not answer is named instead of silently missing. omo thread list --json now prints that whole result as one object (threads, devices, remote_unavailable) instead of a bare array of threads, and the plain listing names each other device's thread's device and prints one line per device. (#13394, fixes #13392)
+    - Computer use v3 (fake backend): inject() now refuses a scripted failure whose code and reason have no row in the error table, the same check the scenario loader applies, instead of failing later. A capture whose extent is under one whole pixel (an empty size or region, or any length that scales to less than 1 px), or whose scale is zero or negative, or whose size or region is negative, now refuses CaptureFailed before allocating instead of returning a 0x0 frame or, for a negative size times a negative scale, a positive one. The fake's source guard now also bans environment reads, including a grouped use std::{...} import of the module (on one line or split across lines) and any path into it. (#13133) (#13120)
+    - cu-eval live runs now restore and tear down every task on every exit path, close the apps before deleting their scratch files, and list any restore step that failed in the row's restoreErrors. (#12849)
+    Added
+    - The relay transport re-vendored in #13744 also brought in new public surface: createRelayTransport takes retryUnreachableMs (how long a device whose describe failed is listed unsupported before it is asked again, default 30 s), and the transport it returns has uploadArtifact(bytes) and fetchArtifact, which carry pushTree / pullTree archives over the relay. (#13813)
+    - A new thread can be started with its model, thinking level, approval mode and first message in one step, on this device or on another of your devices: thread_create takes model, reasoning, permission_preset, prompt and delivery, and omo remote open takes --model, --thinking, --worktree (with --branch and --base) and --prompt. A model the device cannot run now refuses the create and leaves no session behind, instead of opening one on the default model; an agent can keep or narrow its own approval mode for the thread it creates, never widen it. (#13748)
+    - The session id omo remote open prints now works with every other omo remote verb right away. send, model, interrupt, close and attach accept the durable thread_id on its own (its device is found in the account listing) or as <device>/<session>, and a session opened a moment ago is no longer answered "no session". A thread created with a first message gets that message even before its device lists the new session. (#13748)
+    - An agent can be woken by a session on another device of your account: monitor({ type: "rpc", target: "<device>/<session>" }) reports its status changes and turn ends as they happen, and after a relay drop, a device-service restart or an engine restart it reports what changed meanwhile, once. <session> can be the thread id thread_list shows, an alias, or the session's key; <device>/* follows every session on that device. (#13743, #12719)
+    - thread_read takes wait_ms: for a thread on another device it first waits, up to that bound, until it sees the thread's turn end (not a momentary idle), then returns the transcript with how the wait ended (settled with the turn_id it saw end, timeout, cancelled or ended). (#13743, #13417)
+    - /remote inside the TUI: list this account's devices and sessions, open a session on another device, send it a message and see the reply, interrupt or close it, change its model, and turn remote on or off, without leaving OmO. A bare /remote walks you from a device to a session to what to do with it. /remote attach names the command to run in a new terminal. (#13741)
+    - Memory sync can now parse, derive and redact recovery-phrase keys: a 24-word BIP39 English encoding of 32 random bytes, keys derived with HKDF-SHA-256 bound to the account, and fixed test vectors. Nothing creates a phrase key yet; turning on sync with a recovery phrase lands in a later change. (#13330) (#13627)
+    - Memory sync can create a recovery-phrase first device: turning sync on takes a method (passkey or recovery phrase), shows a void notice that survives crashes when a shown phrase was not saved, and sends a sync capability header. Creating a phrase stays off behind a client flag and a service floor check until the service side is ready. (#13335) (#13627)
+    - Memory sync can recover with a recovery phrase and enroll, rotate or remove phrase keys from a member device; creating a phrase stays behind the client flag and service floor check. (#13336) (#13627)
+    - macOS live QA: a Chrome two-window typing scenario checks that background typing lands in the second window and leaves the first one untouched and key. (#12823) (#13627)
+    - macOS live QA: a dense-window observe scenario checks that a page with 5,000+ accessibility nodes returns a partial snapshot at the deadline, drills into a cut, and keeps the default skeleton within its token budget. (#12823) (#13627)
+    - The live macOS QA driver's --list flag prints every scenario name on any host. (#12823) (#13627)
+    - The live macOS QA driver's --dense-rows <n> flag sets how many rows the dense-window page renders (default 2,000). (#12823) (#13627)
+    - Desktop engine: a request size cap, a frame cap and an idle flush keep long sessions bounded (P12b). (#12807) (#13627)
+    - Computer use v3: spike SP-B ships a probe ledger that classifies the ten bunshin hosting gaps as closed, open with a plan row, or needing an installer change, and records which host owes each condition it cannot measure. No engine code changes and nothing user-visible changes. (#13156)
+    - Computer use v3: the SP-T spike probe for macOS lands under crates/omo-computer-backend-macos/probes/. It is a Bun probe with shell helpers and a ledger, and it asks which process TCC charges for the computer-use launcher, which client_type the grant records, whether a grant survives a generation swap and a rebuild, and which launchd session the launcher lands in. Every ledger row is still unmeasured, waiting for a macOS 26 host with a QA account and a person at its session. No engine code and nothing user-visible changes. (#13143)
+    - Computer use v3: the scriptable fake backend lands in omo-computer-backend-fake. It provides one scenario format with typed, JSON-pointer refusals for an unknown key, a non-object root, a dangling window and an error-code pair the table does not have; a recording sink that writes every OS-level side effect as one line; a fake clock driven only by OMO_COMPUTER_FAKE_CLOCK; timelines for loading indicators, observer events and user input; a fault FIFO whose refusals resolve through the COMPUTER_* table; and macos, x11, wayland and win32 personas. Every scenario field has a fixture and a null control. Nothing user-visible changes yet; the existing desktop engine is untouched. (#13120)
+    - A latency bench and the 7-task cu-eval for computer-use v2 (P13b). (#12849)
+    - 7fcf9db82c ci(publish): gate-reuse accepts a maintainer CI-basis receipt for the prepared release head (#13886)
+    - 402ffaaa31 Merge pull request #13800 from code-yeongyu/fix/12643-secret-service-none-bus
+    - aca6ed8280 Merge pull request #13848 from code-yeongyu/docs/13842-mass-ulw-listing-description
+    - 10a7e3692e Merge pull request #13832 from code-yeongyu/rt-u4/s3-on-dev
+    - 8b7fc88cd8 Merge pull request #13813 from code-yeongyu/fix/13406-review-lows
+    - 7b81414589 Merge pull request #13826 from code-yeongyu/fix/13484-parity-pair-test-code-only
+    - 7bc6f43333 Merge pull request #13730 from code-yeongyu/fix/memory-sync-adopt-history-less-13725
+    - 96ecdd62ae Merge pull request #13791 from code-yeongyu/rt-u4/13771-lows
+    - 9ed7fbc7a8 test(remote): S3 lists dev's two new thread surfaces (attach-pool.ts, remote-watch.ts) for U5
+    - ab6d027725 Merge remote-tracking branch 'origin/dev' into rt-u4/s3-on-dev
+    - 7e0c6da7a0 Merge pull request #13743 from code-yeongyu/feat/remote-session-wait
+    - b24d16770b test(remote): S3 holds the TUI's /remote (components/remote/tui) as a surface; imports between surface files are not the layer; the rule states its scope (#13832 review M1, L1, L2)
+    - 7e14985d44 Merge branch 'dev' into fix/13484-parity-pair-test-code-only
+    - 085b855736 Merge pull request #13852 from code-yeongyu/ci/pr-bots-review-lows
+    - db18c69ac3 Merge pull request #13843 from code-yeongyu/fix/13801-review-lows
+    - b0825e9929 test(eq): carry the mass-ulw listing sentence into the darwin-arm64 EQ.omo goldens
+    - fa6c467e67 test(eq): re-record the darwin-arm64 EQ.omo goldens at dev 9af8d30ba8 with a physical temp dir
+    - 871a80863d Merge pull request #13120 from code-yeongyu/feat/cu-v3-row14-fake-backend
+    - 5a7c887ab3 Merge pull request #13833 from code-yeongyu/ci/platform-red-writer-no-drop
+    - 97c5194a96 test(eq): carry the darwin-arm64 EQ.omo goldens to the merged computer.md skill digest
+    - d6a7e0deb7 test(eq): record the linux-x64 EQ.omo goldens for the mass-ulw listing description
+    - b69f5a2bd3 Merge remote-tracking branch 'origin/dev' into docs/13842-mass-ulw-listing-description
+    - 18e650b3f8 Merge remote-tracking branch 'origin/dev' into ci/platform-red-writer-no-drop
+    - 90a79b7694 chore(fmt): keep four generate-assets.ts outputs out of bun fmt (fmt:check red on dev b9be6e581e)
+    - 9af8d30ba8 Merge pull request #13851 from code-yeongyu/docs/13846-wave-size-floors
+    - d1f028ea87 ci(pr-bots): fold in the review LOWs from #13841 and #13845 (#13840)
+    - 1cf026a09a test(device-service-core): keep this PR's send patterns through the dev merge (the merge took dev's older sent-request-types.ts)
+    - 0160ca651a test(eq): record the darwin-arm64 EQ.omo goldens for the mass-ulw listing description
+    - b747ebbc32 Merge remote-tracking branch 'origin/dev' into local/13791-dev
+    - e96f0c2465 Merge pull request #13845 from code-yeongyu/ci/fold-pr-bots
+    - 577f3a478c Merge pull request #13841 from code-yeongyu/ci/bot-runs-per-pr-concurrency
+    - 0533b3786a Merge pull request #13771 from code-yeongyu/rt-u4/13491-lows
+    - b775c1e985 test(eq): re-record the darwin-arm64 EQ.omo goldens at dev 0543add10f
+    - 8b7d29c926 docs(mass-ulw): number harvest files by the node's index in the run
+    - 214e0d3764 Merge remote-tracking branch 'origin/dev' into docs/13846-wave-size-floors
+    - 5622d72c30 Merge pull request #13847 from code-yeongyu/docs/13834-review-lows
+    - 46bcd4eeba docs(changes): name the changelog fragment after #13851
+    - b8208c1e26 docs(changes): add the changelog fragment for #13850
+    - 5901f88a71 Merge origin/dev into fix/13801-review-lows
+    - 88f0eac9f0 Merge origin/dev (b9be6e581e, 5.1.73 #13627) into feat/remote-session-wait
+    - b82f67d480 docs(skills): size plan waves to the work in ulw-plan, ulw-execute and the Codex ulw-loop
+    - a9b332f3ba chore(memory-sync): regenerate the omo-memory-sync bundle for this PR's own delta
+    - 6430114195 test(device-service-core): the sent-request scan sorts its unscanned list, so the result does not depend on readdir order
+    - 22fa153e18 Merge origin/dev into fix/memory-sync-adopt-history-less-13725
+    - 885c2769a2 Merge remote-tracking branch 'origin/dev' into fix/13406-review-lows
+    - b9be6e581e Merge pull request #13627 from code-yeongyu/chore/omo-5173-train
+    - 24cb52cd2d docs(changes): add the changelog fragment for #13848
+    - 9decf4ffaa docs(mass-ulw): make the skill listing description match request-sized graphs
+    - 30283b84ec docs(changes): add the changelog fragment for #13847
+    - 160f150826 docs(skills): fold the #13834 review findings into mass-ulw, ulw-loop, ulw-research and frontend
+    - bf84999324 Merge dev 0543add10f (includes 5775869b93, #13801 G1 remote-import-guard fix) into row 14 (merge only)
+    - 0543add10f Merge pull request #13834 from code-yeongyu/docs/mass-ulw-request-sized-graphs
+    - afb4c34121 revert(remote): drop the remote-session-verbs.ts comment edit from this follow-up (#13843 review M1)
+    - ea718d2acc Revert the runtime-dependency-resolution.test.ts format fix; #13843 owns it
+    - def196b1ed chore(memory-sync): review LOWs on 7b073ca6
+    - 23b700c65f Merge remote-tracking branch 'origin/dev' into w135/omo-5173-train
+    - d579ab1835 chore(release): regenerate bundles on dev d9ccd6420d for 5.1.73
+    - bddac67a2f Merge remote-tracking branch 'origin/dev' into local/13771-dev
+    - fd4b11be6a Merge dev d9ccd6420d (wave 2: #13810 makes dev generated-clean) into row 14 (merge only)
+    - e6249a4990 Merge branch 'dev' into fix/13484-parity-pair-test-code-only
+    - ad6d439ef7 Merge remote-tracking branch 'origin/dev' into local/13832-dev
+    - 8d31716821 Merge remote-tracking branch 'origin/dev' into feat/remote-session-wait
+    - b321aa9e5c Merge origin/dev (d9ccd6420d, wave 2 #13810) into feat/remote-session-wait
+    - 2bd6f4bddc chore(remote): review LOWs of #13801 and #13761 (duplicate attach test, comment, dead const)
+    - b8a3e630b3 Merge pull request #13801 from code-yeongyu/fix/13761-remote-cli-dial
+    - 63c6babbf8 Merge remote-tracking branch 'origin/dev' into fix/13406-review-lows
+    - 1a7c81ecaf Merge origin/dev into chore/omo-5173-train
+    - d9ccd6420d Merge pull request #13810 from code-yeongyu/chore/regen-bundles-wave2
+    - 2ecce78060 docs(mass-ulw): describe start warnings without naming which ones exist
+    - cf0deedbf1 docs(changes): point the #13834 fragment at its own pull request
+    - 92d48de825 Merge remote-tracking branch 'origin/dev' into docs/mass-ulw-request-sized-graphs
+    - e0fe89ec61 docs(changes): name the changelog fragment after #13834
+    - 7d4d078c43 chore(bundle): set the omo.js budget from the remerged train-top regen (1,497,747 B + 4 KiB)
+    - ea791d561f ci(platform-red-tracker): no concurrency group can drop a red run's details (#13802)
+    - 70bb6cbbe4 chore(release): regenerate bundles on dev 050c1879cb for 5.1.73
+    - d84da7a654 docs(changes): add the changelog fragment for #13833
+    - 7b073ca6ce fix(memory-sync): drop a never-sent first batch when its key joins
+    - 2a3b6ca797 docs(skills): align ulw-execute, ulw-loop and ulw-research with request-sized mass-ulw graphs
+    - 6cbf0c6066 docs(mass-ulw): size the workflow graph to the request and make verification a check, not a node
+    - d5cb453479 Merge pull request #13811 from code-yeongyu/ci/pr-linux-only-13802
+    - 038c469558 Merge origin/dev into chore/omo-5173-train
+    - c731edd619 test(remote): S3 rows and S2 as on dev: the thread layout has not moved yet, so S2 keeps its rows and S3 lists dev's 15 surfaces (U5/U6 remove them)
+    - 7862411a3a Merge pull request #13809 from code-yeongyu/fix/localpath-test-isolation
+    - 89df41d1bf fix(rpc): match parity pair tests on the parsed TypeScript AST, not on scanned text (#13826 review L1-L3)
+    - 36667ee2d3 test(remote): G1 rule S3, the import boundary of #13414: surfaces reach the remote layer only through components/remote/index.ts
+    - f8a6b6cef8 Merge commit '4ebb1a250a44dd3a5b05617ea7f7d3d3177f3447^2' into rt-u4/13771-reworded
+    - 050c1879cb Merge pull request #13491 from code-yeongyu/test/device-service-core-13475-lows
+    - 5775869b93 test(remote): the attach pin test waits for its endpoint's removal and names what it proves (#13801 review M1, L1)
+    - c747b846e2 Merge pull request #12876 from code-yeongyu/cu-v2/task-38-on-e
+    - e202a3fcd5 Merge pull request #13732 from code-yeongyu/fix/is6-x11-hit-test
+    - c208512c15 fix(release): drop the dead raiser-only state filter and the duplicate #13482 release notes (review L1, L2)
+    - e47b5d59c2 Merge origin/dev (2bc17a2830) into feat/remote-session-wait
+    - 0978963546 Merge remote-tracking branch 'origin/dev' into chore/regen-bundles-wave2
+    - 94f3dcf04e fix(rpc): a pair test counts only where the record type appears in code, never inside a comment, a string or on $type (#13484 review L1)
+    - 216a9bf331 test(remote-import-guard): freeze the hand-browser-placement fixture's import() like its sibling fixture
+    - e60b3a798d test(device-service-core): knip export-checks sent-request-types.ts as an explicit entry instead of listing it unchecked (#13491 review M1)
+    - 2a028f70e8 Merge origin/dev into fix/13761-remote-cli-dial
+    - 6e1a29f13a Merge remote-tracking branch 'origin/dev' into fix/13406-review-lows
+    - 70e4e490c1 Merge pull request #13484 from code-yeongyu/docs/13478-rpc-relay-parity
+    - 1c122fcf99 Merge pull request #13734 from code-yeongyu/fix/is6-win-bg-chord-truth
+    - 2bc17a2830 Merge pull request #13807 from code-yeongyu/fix/omob-provision-race
+    - c3b41dff60 Merge pull request #13748 from code-yeongyu/rt/create-options-model-prompt
+    - ec3f9beec8 docs(changes): name the launcher sign-in module and bunshin bundle in #13810's fragment (review LOW)
+    - 6577e6e84b Merge pull request #13745 from code-yeongyu/fix/11644-stale-owner-enoent
+    - b1a9f01449 chore(bundles): regenerate bunshin-ts sdk after merging dev 17c48ba996
+    - 8d4fba2892 Merge remote-tracking branch 'origin/dev' into chore/regen-bundles-wave2
+    - 17c48ba996 Merge pull request #13736 from code-yeongyu/fix/is6-x11-bg-input-truth
+    - bbbc6edb9c Merge pull request #13806 from code-yeongyu/fix/thread-list-qa-message-on-dev
+    - 7972966fed fix(memory-sync): a joining file's adoption goes out in the same cycle
+    - 7c87052797 chore(release): regenerate bundles on dev e478744796 for 5.1.73
+    - 535173a7ae Merge remote-tracking branch 'origin/dev' into fix/13406-review-lows
+    - 08419497ee fix(guard): G1 lists remote-cli.ts's createDeviceServiceSessions; cu-eval imports the desktop SDK by a literal path
+    - 46706254d7 Merge pull request #13744 from code-yeongyu/fix/13406-typed-device-errors
+    - c4d13054bf test(device-service-core): the entry-export check imports through a non-literal path, so knip keeps export-checking the package entry
+    - 6f6e94f847 chore(knip): REMOTE_COMMAND_USAGE is file-local (dev #13412 left it exported and unused; knip:check red on dev 2e5a0215 too)
+    - 11d84d87d5 docs(changes): fragment for dev regen wave 2 (#13810)
+    - 8888fcf3c6 chore(bundles): regenerate every generated file on dev 2e5a0215a7 (regen wave 2)
+    - 9a637cba7f Merge origin/dev into rt/create-options-model-prompt (second)
+    - 1b7b429c0f chore(release): keep dev's changelog fragments on the 5.1.73 train
+    - 2e02d2c4dc Merge origin/dev (e478744796) into chore/omo-5173-train
+    - 291e0c3e26 Merge origin/dev into feat/remote-session-wait
+    - 2e5a0215a7 Merge pull request #13741 from code-yeongyu/feat/13412-remote-tui
+    - bd2f7250bb Merge branch 'dev' into docs/13478-rpc-relay-parity
+    - ea7631e0ce test(device-service-core): the spec-proto export pin also reads an export after a ; on the same line
+    - 504d4fbb9c test(device-service-core): the send scan reports every non-literal first argument (M1) and nested type arguments (L2); the spec-proto pin sees declare and export-list forms (L1)
+    - f9b1a7f324 fix(qa): held-then-exit's failure message counts the listing's threads (#13789 / #13394 review LOW)
+    - e478744796 Merge pull request #13786 from code-yeongyu/chore/regen-bundles-after-13494
+    - 75f073a162 Merge pull request #13789 from code-yeongyu/fix/thread-list-merged-devices-on-dev
+    - b8739edd73 Merge pull request #13143 from code-yeongyu/spike/cu-v3-row9-tcc
+    - 150cf33979 fix(omo-native): isolate concurrent executable provisioning (#13795)
+    - 193837882e Merge pull request #12750 from code-yeongyu/feat/remote-approvals
+    - c09a616319 fix: keep dev's probe-test records and type the thinking level as its literals after the dev merge
+    - a2f2868890 fix(omo-native): remote CLI attach uses the new DeviceServiceDial shape (dev typecheck red after #13761)
+    - 0bf8752ef8 test(remote): attach by durable ID borrows the CLI's connection and leaves it open (#13761)
+    - 4cb21d9036 fix(computer): recognise xterm by its /proc exe link too, so a renamed xterm is refused in the background (review LOW at c57bfd61a4)
+    - 16b6d03d6b test(computer): an xterm known only by its exe link must be refused in the background (review LOW at c57bfd61a4)
+    - 138d77a76b Merge pull request #13475 from code-yeongyu/feat/device-service-core-vendor-local-api
+    - 034c5890be Merge commit '43233d01a3d22ff92f83c3f66f98026a5ffaa8e6' into rt-u4/13491
+    - 9e7b4e15ab Merge pull request #13726 from code-yeongyu/fix/memory-sync-account-default-space-13720
+    - 80d5decdba test(device-service-core): spec-proto export pin covers every export form; the send scan reads typed request<...>() calls (#13771 LOWs)
+    - 8505581a17 Merge remote-tracking branch 'origin/dev' into chore/regen-bundles-after-13494
+    - 5b1e88fed8 Merge origin/dev into fix/thread-list-merged-devices
+    - e58ce21728 Merge pull request #13761 from code-yeongyu/adopt/12777-remote-view-double-delta
+    - 0b1843ad3b Merge origin/dev into rt/create-options-model-prompt
+    - c799c37b0f Merge remote-tracking branch 'origin/dev' into chore/regen-bundles-after-13494
+    - 43233d01a3 chore(device-service-core): re-pin the vendored local-API client to omo-relay-daemon main edd2ee49 (relay-daemon#1354 merged as a squash; bytes identical to 04288f85)
+    - a7de4fcc8e Merge pull request #13135 from code-yeongyu/fix/13099-guards-lstat-parent
+    - 7471c3da76 Reapply "chore(bundles): carry service-auth.generated.js here (settled with #13766)"
+    - 90a9f781a3 Merge pull request #13156 from code-yeongyu/spike/cu-v3-row11-bunshin
+    - c8b075451f Revert "chore(bundles): carry service-auth.generated.js here (settled with #13766)"
+    - 2c9de05152 chore(bundles): carry service-auth.generated.js here (settled with #13766)
+    - 3cc0c3a9eb fix(memory-sync): rewind only a true first capture, and recover a crashed rewind
+    - 996064c945 chore(bundles): leave service-auth.generated.js to #13766
+    - c50ceb268a docs(changes): fragment for the post-#13494 bundle regen (#13786)
+    - 41cdefb5d3 Merge commit '8327954099b6c4969f5afe2b4420eeb8cfd342d8' into rt-u4/13491-lows
+    - 43f443be65 Merge commit '8327954099b6c4969f5afe2b4420eeb8cfd342d8' into rt-u4/13491-lows
+    - 6bf353f78b Merge remote-tracking branch 'origin/fix/13406-typed-device-errors' into fix/13406-review-lows
+    - 8327954099 fix(device-service-core): re-vendor local-api at omo-relay-daemon 04288f85 (relay-daemon#1354): no Bun global, so the client runs under Node
+    - be1ef0beb8 Merge pull request #13494 from code-yeongyu/fix/thread-set-model-session-scope
+    - f261b92c2d Merge pull request #13729 from code-yeongyu/fix/13700-lows
+    - 67c3f2ee1c Merge pull request #13385 from code-yeongyu/t1x/test-audit-omo-2
+    - c57bfd61a4 test(computer): the xterm capture-click scenario clicks in the foreground (background is refused for xterm)
+    - c6de204c6e fix(remote): only run-content records show a run; handle watch rejections on both paths (#13743 review M1, L1)
+    - 945ec25fd4 test(remote): RED - idle-session records are not a run; a late watch rejection is handled (#13743 review at 89c5463)
+    - 0602e9ce93 Merge remote-tracking branch 'origin/dev' into cf-13135
+    - a32254ef2b chore(bundle): set the omo.js budget from the merge-result measurement (+7,946 B for /remote)
+    - 3dc66046e7 Merge pull request #13466 from code-yeongyu/fix/closed-auth-logout-whoami-help
+    - cbe1afb5c9 Merge pull request #13460 from code-yeongyu/fix/13449-compiled-kill-guard-dispatch
+    - 4c03fcc568 Merge pull request #13637 from code-yeongyu/fix/remote-wake-default-wording
+    - 3af4577c78 Merge pull request #13632 from code-yeongyu/fix/trust-exec-keeps-startup-pipe
+    - 8d6a1ac2b0 Merge pull request #13666 from code-yeongyu/fix/remote-open-model-session-id
+    - 2c4c023090 fix(computer): the fake backend builds its refusals from the typed Reason that dev #13137 introduced (Refusalnew takes a Reason; no .wire() at the call site; tests compare against Some(Reason...)); no behaviour change
+    - 568ef3cc5e Merge pull request #13656 from code-yeongyu/test/11778-mid-cycle-rerun
+    - b8c0ad6eb0 Merge pull request #13698 from code-yeongyu/fix/trust-tests-private-tmpdir
+    - ce7e624ee7 Merge pull request #13481 from code-yeongyu/fix/13272-stale-stop-reason
+    - c1a446a9ba Merge pull request #13712 from code-yeongyu/fix/13614-desktop-service-testing-export
+    - ef9ec6cdb7 fix(computer): refuse X11 background input to xterm, whose allowSendEvents no client can read (review LOW at 1878d94bbd)
+    - df093732d8 Merge dev (a6901c2ebc, with #13137 typed Reason and #13259) into row 14 (W2 D1: one more take of dev at row 14, merge only)
+    - fc17de8cc4 test(computer): xterm background input is refused whatever its visible resources say (review LOW, 1878d94bbd)
+    - 4a226a80f1 fix(device-service-core): re-pin the vendored local-API client to the relay daemon main 42078b7c; pin spec-proto.ts's exports (#13475 LOW)
+    - 228cb11305 fix(device-service-core): re-pin the vendored local-API client to omo-relay-daemon main 42078b7c; pin spec-proto.ts's exports (#13475 LOW)
+    - a6901c2ebc Merge pull request #13259 from code-yeongyu/ci/computer-live-macos-tier
+    - f1a6ccc888 fix(desktop): an unreadable parent never makes a descendant hit count as covering (#13296)
+    - 6446bbe8ee fix(remote): a record addressed by a durable id names the key its session is attached on
+    - 62235fe033 test(device-service-core): the sent-request scan reports bare request() calls too; the entry check says what it checks (#13491 LOWs)
+    - 3a91f3cbef fix(remote): any mid-run record shows a run; only status events override the baseline (#13743 review M1, L1)
+    - 24403f4933 test(remote): RED - a run that started before the wait attached is not settled by the quiet window (#13743 review M1)
+    - 55d1b6eda0 docs(changes): name holds and layout-shifted characters in the #13734 fragment
+    - b4398314b0 fix(computer): refuse a background mouse hold's modifier chord before mapping its point
+    - 7ec816b4d3 test(computer): a background mouse hold with ctrl+k is refused as a modifier chord, and modifier-only chords pass
+    - e7457dde98 fix(remote): a durable id whose locate fails keeps that failure, never unknown_session (review M1/L1 of 6ce7397)
+    - 3b8aa0497c fix(remote): start the wait deadline and abort before the attach; stop a watch that opens late (#13743 review M1, L1)
+    - 71fe91a37b test(remote): RED - a wait's deadline and abort cover the watch attach (#13743 review M1, L1)
+    - 3fbbc17e1a Merge pull request #13137 from code-yeongyu/fix/cu-v3-13118-contract-hardening
+    - b9ecc90511 fix(service-auth): the private-bus probe tests use a bus that cannot activate services (#12643)
+    - 6e56cb78ad test(service-auth): run the private-bus probes beside an activatable Secret Service that never answers (#12643)
+    - ff68e56aea chore(bundle): raise the omo.js budget for /remote in the TUI (+6.8 KB, #13412)
+    - 11ba0c9519 fix(remote): trim the wait_ms strings so omo.js stays inside its byte budget (#13743)
+    - 6ce7397be3 chore(bundle): raise the omo.js budget for thread_create's launch options (+4.0 KB)
+    - b383ba6f11 fix(remote): never send a durable id to session.attach; locate it first (relay-daemon#1350)
+    - 25e22cb6e3 docs(changelog): the #12777 fragment names #13761, which adopts #13075
+    - 920c16f177 chore(omo-native): regenerate the service auth bundle for the wait fix (#13743)
+    - 0b14d45bb7 Merge commit '83d42fed42d148abc46550ce8ed71c547860fffa' into rt-u4/13491
+    - 83d42fed42 test(script): the knip coverage floor stops counting the vendored local-API client (reviewed lowering)
+    - 786bbd9f1b build(remote): regenerate service-auth.generated.js for the borrowed CLI connection and the open_session dialer (#12777)
+    - d4fae1b810 style(thread): format the merged lookup-answers test fakes
+    - ddd7614f6a fix(thread): only open_session rides its own short-lived connection; every other endpoint record reuses the shared one (#12777)
+    - 6bd4dc05ac test(script): the shared-core guard allows omo's moved Windows exact-DACL writer by exact path
+    - 8ed7ba3306 Revert the service-auth.generated.js regen; the base fix lands in its own dev PR (#13484)
+    - 1a7cb5a7e7 fix(remote): thread_read wait_ms settles on an observed turn end; a snapshot idle is not one (#13417)
+    - 69cd9c77b3 test(remote): RED - a wait settles on an observed turn end, never on a snapshot's idle (#13417)
+    - dbc45b415e chore(service-auth): regenerate service-auth.generated.js; dev 3975913beb committed it stale against script/build-service-auth.ts
+    - 80a5e9b888 Merge dev into cu-v2/task-38-on-e
+    - 587f207165 Merge pull request #12849 from code-yeongyu/cu-v2/task-35-p13b-latency-bench-and-cu-eval-7-tasks-3
+    - 0571de8b25 fix(remote): every remote verb accepts the session id open printed (durable or listing, bare or device-qualified)
+    - f4c3a5313f fix(remote): stamp forwarded records with the monitor target label (#13743 live proof)
+    - 73336b4587 test(remote): RED - a monitored remote record carries the target label, not the engine's routing id (#13743 live proof)
+    - ec675da6ed fix(thread): a create's first prompt addresses the new remote session by the relay key its open named
+    - aa9d674a40 Merge #13475 head 3c38fd70 (dev + re-vendor at relay-daemon eda08c78) into #13491
+    - 3c38fd709c Merge origin/dev into feat/device-service-core-vendor-local-api: re-vendor local-api at omo-relay-daemon eda08c78 (relay-daemon#1345)
+    - 68d6294781 chore(changes): name the fragment by its PR (#13748)
+    - a6da1d8079 fix(omo-native): omo thread list --json prints threads, devices and remote_unavailable; the plain listing names each device (#13392)
+    - 8ab4ed76c8 test(omo-native): omo thread list prints the whole listing with the account's devices (#13392; RED)
+    - 30ff3e818e chore(omo-native): regenerate the service auth bundle (#13743)
+    - b152d6e2df fix(computer): the background key hold takes the same modifier refusal as the chord
+    - 36b2e4d880 test(remote): open --model owner tests follow the one-open contract (#13409)
+    - e9c9d28735 docs(changes): name the fragment after the PR's real number (#13745)
+    - 926b4eecc0 docs(changes): fragment for #13744
+    - 7c52f52267 feat(thread): create a thread with its model, reasoning, approval mode, worktree and first prompt in one call
+    - 57cc5c8ad1 docs(changes): remote wake and wait (#13743)
+    - d168af91cd test(thread): a non-open endpoint command rides the shared connection; only open_session dials its own (#12777)
+    - 3659b4eee4 Merge origin/dev into fix/12777-remote-view-double-delta
+    - 4dca6c02e9 docs(changes): /remote in the TUI (#13741)
+    - 1878d94bbd fix(computer): trust an X-Resource pid only when the server sees this engine under its own pid (review L2)
+    - 16429edf7e feat(remote): wake on and wait for a session on another device - watch v2, monitor rpc /, thread_read wait_ms (#12719, #13417)
+    - 34985e9931 test(remote): RED - watch v2, monitor rpc remote targets, thread_read wait_ms (#12719, #13417)
+    - e317d298ba test(computer): an X-Resource pid from another pid namespace must not be trusted (review L2)
+    - 7e1ed14e3c fix(computer): check the client of the window a background pointer event lands in, not only the top-level (review L3)
+    - 678d313e10 fix(remote): a dialog pending before the attach or across a relay gap is answerable from the attach (fixes #13474)
+    - 8700cf0892 fix(remote): the lazy surface passes the sessions device filter through
+    - 0de89fdddb test(remote): a one-device listing through the lazy surface stays one-device (RED)
+    - 8754256eeb fix(thread): thread_list degrades to local threads when this device's own id read fails or is empty (#13610)
+    - d4b7e785de fix(memory-sync): rewind an unsent first capture that meets the space's copy
+    - 61ef113018 fix(computer): resolve xterm allowSendEvents per Xrm for the target client, accepting only when every matching entry is true (review L1)
+    - f571da390c docs(rpc): --check fails on a broken pair-test row; a pair test must use its method as a record type (#13484 review L1, L2)
+    - 1c9fa67c72 Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - 32ef1612ea test(thread): thread_list when this device's own id read fails or is empty (#13394 review L1, L2; RED)
+    - b572386986 Merge origin/dev into fix/thread-list-merged-devices
+    - cd8c1caef4 test(computer): xterm allowSendEvents must follow Xrm for the target client (review L1)
+    - 2ea5aa7e6f fix(desktop): a target's own descendant never covers it in the occlusion check (#13296)
+    - cd01ad202b Merge branch 'dev' into docs/13478-rpc-relay-parity
+    - 69361aa445 Merge remote-tracking branch 'origin/dev' into fix/thread-set-model-session-scope
+    - 307bafaa0a test(service-auth): granted closed-device logins skip the post-login remote setup (a real device service was installed into the test HOME and recreated it after removal on macOS CI)
+    - fc47a5f681 test(desktop): compare the live hit with the target's own reported role
+    - edbc6406f5 fix(memory-core): treat ENOENT on the fenced unlink of a dead owner's lock as reclaimed (#11644)
+    - 448a66cbeb test(memory-core): a dead owner's lock that vanishes before the fenced unlink is still reclaimed (#11644)
+    - 32fe58b8c1 Merge dev 3975913beb into feat/cu-v3-row14-fake-backend (take dev once)
+    - 18d623db45 test(computer): name each toolkit family by its library; changelog fragment for #13736
+    - 83acd27aec fix(computer): read the last allowSendEvents setting from the back (clippy)
+    - c2aa14a7bd docs(changes): fragment for #13734
+    - e4d6fbf046 fix(computer): X11 background input is sent only to clients known to accept synthetic events (#9109)
+    - cf6b72e455 refactor(computer): return the modifier-chord refusal before resolving the focus window
+    - 5c7ec7b830 docs(changes): fragment for #13732
+    - ca7df9c9b3 fix(computer): refuse a Windows background chord that holds a modifier
+    - fe9f1f982a fix(desktop): X11 elementAt descends to the deepest element under the point (#13296)
+    - 2d2871c553 test(desktop): X11 elementAt must name the deepest element under the point (#13296)
+    - d7d15c1aed test(computer): a background modifier chord on Windows must be refused before anything is posted
+    - 8f709e2cd0 test(computer): X11 background input with an unknown receipt must not report delivered (#9109)
+    - ae9a9a7e8b Merge dev 3975913beb into ci/computer-live-macos-tier
+    - c047f62138 Merge remote-tracking branch 'origin/dev' into cf-13137
+    - 46bda809d6 Merge remote-tracking branch 'origin/dev' into cf-13135
+    - 0846fd8bbd docs(changes): fragment for #13730
+    - a7472f496c fix(memory-sync): a device joining a space adopts its history-less files insert-only
+    - 31d47d5650 chore(changes): fragment named for PR #13729
+    - 421b8f440e style(omo-native): format the new host runtime id tests
+    - 5336d94402 chore(changes): fragment for #13728
+    - 08fdc0f56e Merge remote-tracking branch 'origin/dev' into fix/13700-lows
+    - 3975913beb Merge pull request #13700 from code-yeongyu/fix/7604-compiled-host-launch-profile
+    - 13bd127575 fix(omo-native): a spec that lists no extensions keeps its host's id; cover every host command the wrapper gives a spec (#13700 review LOWs)
+    - ccb92f9b4e docs(changes): fragment for #13726
+    - 6f909940f2 fix(memory-sync): every unnamed remote-less memory syncs through one account default space
+    - 07cca166cc fix(service-auth): a test omo login never installs or links a device service on the suite's host (cli-roundtrip leaked a real launchd service on macOS CI); regenerate service-auth.generated.js
+    - 52fdce2a9e Merge dev into cu-v2/task-35-p13b-latency-bench-and-cu-eval-7-tasks-3
+    - 6047c76d36 fix(remote): skip the post-login device setup on Windows for 5.1.73
+    - 5a921fed57 chore(knip): export-check the trust suites' private-TMPDIR helper (#13698 CI)
+    - bf2c5c0e57 chore(changes): name the fragment after PR #13712
+    - 5ce3752b91 test(desktop-service): expose the fake engine and harness through a ./testing export (Fixes #13614)
+    - 818f408d55 test(omo-native): guard the launch-spec argument instead of asserting it
+    - 5359da06c8 test(omo-native): the private-TMPDIR helper judges ancestors with the product's namespace view (#13698 review L1)
+    - 095bf459e3 test(remote): the opt-out record's 0600 mode check applies on POSIX only (Windows has no mode bits; #13602 on Windows)
+    - 951c683622 chore(changes): name the fragment after its pull request (#13700)
+    - f2cde592c1 fix(omo-native): a host the compiled binary starts reports the CLI's runtime id
+    - a44c5bd506 docs(changes): trust suites run with a private TMPDIR (#13698)
+    - 6eb4bfadb1 test(omo-native): trust suites run with a private TMPDIR (#13697)
+    - e61752b04e Merge pull request #13644 from code-yeongyu/fix/13638-remote-account-error-lines
+    - 22a629e45d chore(release): regenerate bundles at the omo-5173 train top (dev d84b9c2411 + budget + quiet suppressed install)
+    - 9d2a7c8043 fix(remote): a suppressed device-service install leaves omo login quiet (#13602 follow-up)
+    - f79a7c382b Merge remote-tracking branch 'origin/dev' into chore/omo-5173-train
+    - 0af4ef3c9c test(memory-sync): take the rerun before any other await in the #11778 case (review LOW)
+    - d84b9c2411 Merge pull request #13630 from code-yeongyu/release/v5.1.72-source-state
+    - c342c71842 train(omo-5173): omo.js budget → 1,489,433 (train-top regen measures 1,485,337 B; measured + 4 KiB, lead rule)
+    - 9a492adb77 docs(changelog): record remote session ID contract fix (#13666)
+    - 33783d3fab fix(remote): accept durable session IDs across CLI verbs (#13010)
+    - 45a05f5dff train(omo-5173): sort the A3 knip rows, drop the now-used FIXTURES row, fix the stale ignoreFiles entry and row comments (review L1-L3), from t3fn
+    - 574112135b docs(changes): fragment for #13656
+    - d898650308 train(omo-5173): knip rows for the A3 phrase stack (fixture as entry; new barrel/exports listed), from t3fn (#13336 owner)
+    - c9798e9495 docs(changes): fragment for #13644
+    - 5e77f8c81b chore(release): regenerate bundles at the omo-5173 train top (22 members)
+    - c65eb8ea85 test(memory-sync): pin the rerun for a head advertised while a cycle runs (#11778)
+    - 3b81111f60 fix(omo-native): omo remote reports the account store's error lines on stderr (#13638)
+    - a630ef21c4 test(omo-native): the remote account read reports the store's error lines (#13638)
+    - e6c13ffddd fix(omo-native): the waiting launcher relays SIGUSR1; test private fds with the startup pipe (#13632 review L1, L2)
+    - 8e29220e4a docs(changes): the fragment for #13637
+    - 849e2fdd0d fix(omo-native): omo remote wake's usage gives the device service's real default (on)
+    - d722ec2f33 ci(desktop): print the missing-base error when no release tag resolves
+    - 8a7f8027be train(omo-5173): move #13334's changes-log block after the CHANGELOG text and drop its stale regeneration sentence (review H1, L1)
+    - a1e1fda54f train(omo-5173): drop #12779's lines from the fold (withdrawn per Q, no QuickJS computer-run)
+    - 5b3d2898e9 docs(changes): trust re-exec keeps the startup pipe (#13632)
+    - d5da11a25c fix(omo-native): a trust re-exec of a coordinated engine start keeps its startup pipe (#13622)
+    - def19acebb Revert "Merge remote-tracking branch 'origin/m-12779' into chore/omo-5173-train"
+    - edfb0851ba ci(desktop): run the bench nightly and on dispatch, not on every pull request
+    - 9b4c309100 train(omo-5173): fold the member fragments into 13627.md; drop the stale regeneration sentence from #13609's line (review L2, #13618)
+    - b2cc84d1a2 Merge remote-tracking branch 'origin/dev' into chore/omo-5173-train
+    - 84464fc8c4 Merge remote-tracking branch 'origin/m-12807' into chore/omo-5173-train
+    - 6abb0835b1 Merge remote-tracking branch 'origin/m-12823' into chore/omo-5173-train
+    - 4cbe4fe63b Merge remote-tracking branch 'origin/m-12849' into chore/omo-5173-train
+    - 8490d35c0f Merge remote-tracking branch 'origin/m-12779' into chore/omo-5173-train
+    - 42022b1664 Merge remote-tracking branch 'origin/m-10519' into chore/omo-5173-train
+    - ad1f2816b6 Merge remote-tracking branch 'origin/m-12450' into chore/omo-5173-train
+    - 5a07569fbd Merge remote-tracking branch 'origin/m-12339' into chore/omo-5173-train
+    - 90e3194a66 Merge remote-tracking branch 'origin/m-12332' into chore/omo-5173-train
+    - 60a6fc3e2e Merge remote-tracking branch 'origin/m-12337' into chore/omo-5173-train
+    - 641a1dbcf3 Merge remote-tracking branch 'origin/m-12328' into chore/omo-5173-train
+    - e10e54fbb2 Merge remote-tracking branch 'origin/m-12329' into chore/omo-5173-train
+    - e336118404 Merge remote-tracking branch 'origin/m-13101' into chore/omo-5173-train
+    - 8e2ab5f7f9 Merge remote-tracking branch 'origin/m-13334' into chore/omo-5173-train
+    - 3e987f4ac7 Merge remote-tracking branch 'origin/m-13493' into chore/omo-5173-train
+    - e23d79e696 Merge remote-tracking branch 'origin/m-13336' into chore/omo-5173-train
+    - 3e49d16bcb Merge remote-tracking branch 'origin/m-13335' into chore/omo-5173-train
+    - a517f21b04 Merge remote-tracking branch 'origin/m-13330' into chore/omo-5173-train
+    - ea9647659e Merge remote-tracking branch 'origin/m-13481' into chore/omo-5173-train
+    - 3be8e7d1cc Merge remote-tracking branch 'origin/m-13482' into chore/omo-5173-train
+    - 3382e5a226 Merge remote-tracking branch 'origin/m-12750' into chore/omo-5173-train
+    - 945abeac4e Merge remote-tracking branch 'origin/m-13609' into chore/omo-5173-train
+    - 38f318cf6f Merge remote-tracking branch 'origin/m-13602' into chore/omo-5173-train
+    - 1ecf6125f3 Merge remote-tracking branch 'origin/m-13621' into chore/omo-5173-train
+    - c52e5ee3ec fix(memory-sync): wait for the memory repo's first commit and stop re-reading the account while waiting (#13486)
+    - cac5ce192b Merge dev facd9fa7ea into cu-v2/task-33-p12b-resource-caps-and-idle-flush
+    - c57d2495a0 Merge dev facd9fa7ea into cu-v2/task-34-macos-live-qa-scenarios-chrome-two-windo
+    - 468351fc71 Merge dev facd9fa7ea into fix/docs-chromium-background-input
+    - e1c1a29b31 Merge dev facd9fa7ea into cu-v2/task-32-p5b-ii-computer-assert-host-bridge-insid
+    - 12989c371f Merge dev facd9fa7ea into cu-v2/task-35-p13b-latency-bench-and-cu-eval-7-tasks-3
+    - d41e5bc054 style: bun fmt the O14 files
+    - c7b9685f5d Merge dev facd9fa7ea into feat/o1d-computer-use-per-call-screenshot
+    - 169919eaa2 fix(device-service): the #13609 review LOWs
+    - 3fb668f0c8 Merge remote-tracking branch 'origin/dev' into fix/13098-memory-sync-provider-reload
+    - 4cf8cbafa3 test(memory): load account-runtime-loader generations through one typed helper
+    - f19272fdef Merge dev facd9fa7ea into feat/o14-loopless-composition
+    - 742ee97e03 Merge feat/a3-phrase-enable (restacked on dev facd9fa7ea) into feat/a3-phrase-recovery
+    - 28d748fc0c Merge feat/a3-phrase-parse-derive (7e801b9de0, dev facd9fa7ea) into feat/a3-phrase-enable
+    - eb79fd0b8a style: bun fmt the O1a files after merging dev
+    - 3560a10202 Merge dev facd9fa7ea into feat/o1a-computer-use-scope-revoke
+    - d921f312d7 style: bun fmt the O12 files after merging dev
+    - a53fae5519 style: bun fmt the O1c files after merging dev
+    - 7af60652c9 style: bun fmt the O1b files after merging dev
+    - 033e19eb60 Merge remote-tracking branch 'origin/dev' into fix/13325-rollover-lows
+    - ed7c5a624c style(memory-sync): format the device-session resolver (#13486)
+    - 7e801b9de0 Merge origin/dev (facd9fa7ea) into feat/a3-phrase-parse-derive
+    - 1ab85efcff Merge origin/dev into fix/memory-sync-first-session-repo
+    - 7f36912aa4 Merge dev facd9fa7ea into feat/o12-computer-use-hand-permission-report
+    - 8802e8dc65 Merge dev facd9fa7ea into feat/o1c-computer-use-foreground-lease
+    - a3705528fe Merge dev facd9fa7ea into feat/o1b-computer-use-device-exec-policy
+    - e1751c30df Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - 2fa57f61b8 docs(changes): the fragment for #13609
+    - 2509616fbd Merge remote-tracking branch 'origin/dev' into fix/13604-review-lows
+    - 6d337d46a2 fix(remote): disable's unsaved-choice notice says remote is off only when it is (#13594)
+    - ea342c7ad6 fix(remote): disable survives an opt-out it cannot save; a user-linked ~/.omo is honored (#13594)
+    - 8cefe72f32 fix(remote): write the opt-out record without following symlinks (#13594)
+    - 9698c0cf02 fix(remote): omo login enforces a recorded opt-out instead of only printing it (#13594)
+    - 7fb3e20637 fix(remote): disable records the opt-out even when the device service cannot be reached (#13594)
+    - 005949332a feat(remote): remote sessions on by default; omo login switches them on and says so (#13594)
+    - c1eb98c3d4 fix(device-service,changes): the #13599 review LOWs (#13604)
+    - 336d2ba60c docs(remote): state the true scope of the no-id guarantee (#13481 review LOW)
+    - 9ce5c6100a fix(remote): a waiting send never takes a prompt stored before it was sent as its own (#13481 delta)
+    - 81e33dc9ad fix(remote): an id-carrying send still prints a turn an engine without ids finished before the aim (#13481 review)
+    - b0b9a912e2 fix(remote): a send with an id owns only its own prompt, and an interrupted superseded send keeps its answer (#13481 review)
+    - 26bf15f94e Merge dev into feat/remote-approvals, and say what the dialog note really does
+    - 3105102079 test(attach): cover grantSelect and pendingQuestions through get_state (#13482 review LOW)
+    - 93ac3e6832 fix(attach): keep raiser-only frames out of the state the TUI reads (#13482 review)
+    - e948afe2bf fix(remote): an earlier run's settle never ends this send's wait (#13481 review)
+    - eb3ae5a9ae fix(attach): present the snapshot's pending dialogs and questions as mirror records (#13482 review)
+    - 98cfbc9f58 fix(attach): show a dialog already pending when an attach starts (#13482)
+    - af079a7413 fix(remote): a waiting send no longer prints the turn's answer twice (#13481)
+    - ec841f3f4b docs(changes): fragment for the device-service-core sent-request-type checks (#13491)
+    - 01bbe97ee4 test(omo-native): prove the agent is still alive; scope the dispatch comment to this route (#13449)
+    - 3cdfb839df docs(changes): name the fragment after PR #13494
+    - dad35e24fe test(device-service-core): compare the sent-type scan against the list with the wider type received (#13487)
+    - b52aaca9e2 fix(memory-sync): defer the first session's sync until the memory repository exists (#13486)
+    - 709748e6d4 docs(changes): fragment for scoped thread set_model (#9999999)
+    - c86ee46963 fix(thread): scope set_model to the session and reasoning to session-only
+    - ce1c21848a test(device-service-core): LA21 reply map exhaustive over the request types omo sends; unserved list drop-out check
+    - 76671b24ac docs(rpc): check curated pair tests and the rows file shape; mark local as not measured (#13484 review)
+    - 2fd3986fc5 fix(thread): one device.info read per thread_list; test titles name an absent field (#13394 review LOWs)
+    - 6c9bb0fe14 docs(rpc): generate a local-versus-relay parity table from the engine method table (#13478)
+    - 142bee6dd9 test(remote): a dialog raised before the attach or during a relay gap is shown (RED, #13474)
+    - d8f211d8da fix(remote): an earlier run's stop reason does not mark this send's run (#13272 review)
+    - 8f9a36241a device-service-core: re-pin local-api to omo-relay-daemon main 4ed58920
+    - 7d3686adce fix(service-auth): one closed-help map; user-facing fragment wording (#13466)
+    - 952e4b66b1 Merge origin/dev into feat/a3-phrase-parse-derive
+    - 234b584dfe test(device-service-core): LA21 matches the vendored client's defined reply fields
+    - 52e5525ce4 docs(changes): fragment for the vendored local-api client and guard G1 (#13475)
+    - 0e9c09f476 device-service-core: re-pin local-api to relay-daemon main + #1130; add remote import guard G1
+    - 0d065ee012 test(omo-native): run the refuse case on Linux and macOS (#13449)
+    - c67256c82f docs(changes): fragment for the closed logout/whoami --help fix (#13466)
+    - aeca522926 fix(service-auth): logout and whoami answer --help while accounts are closed (#13461)
+    - 2ffe162d93 Merge dev 83373dcbb5 into feat/cu-v3-row14-fake-backend
+    - 58d2f5c2f0 docs(changes): fragment for the compiled kill-guard dispatch fix (#13460)
+    - 3179eaba3c fix(omo-native): answer the kill guard's __kill-guard check before the compiled boot (#13449)
+    - 3ba81e706b refactor(device-service-core): vendor the relay-daemon local-api client byte for byte
+    - e38406bbe6 fix(thread): fold #13394 review LOWs; list this device in devices[]
+    - f60e254acc changes: fragment for #13394
+    - 0cabdf12ab fix(thread): merge other devices into every thread_list, report ended rows resumable, name devices and unanswered ones
+    - 726cab58d1 chore(knip): drop the stale pre-existing-unused row for derive.ts#x25519PublicKey
+    - 901fc947d1 fix(script): --residue names every removal path it cannot check, beside its other findings, and fails closed (review L1 of #13135)
+    - 453941aa2a test(script): RED - --residue reports every unreadable removal path beside its other findings, by its own classification (review L1 and L2 of #13135)
+    - 5691c83b24 test(omo-opencode): drop hooks/shared prompt-async-gate replays of the utils tests
+    - 711960b17c Merge commit '83373dcbb545ae2336e58abb46af028e9ad29a9e' into feat/remote-approvals
+    - 13b1bd01ad Merge branch 'a3-pr2a' into a3-pr2b
+    - 638868aeba fix(memory-core): fold the #13330 checker (format salt-inputs, async nonce refusal, zero keys on a failed derive)
+    - eef7bbde28 Merge branch 'a3-pr2a' into a3-pr2b
+    - 30a426adb7 Merge branch 'a3-pr1' into a3-pr2a
+    - 7f3471cd7f Merge branch 'a3-pr2a' into a3-pr2b
+    - a0a21f1dd6 chore(memory-core): re-pin the vendored phrase vectors to omo-service main after #1068 merged
+    - a3cb9cda78 Merge branch 'a3-pr2a' into a3-pr2b
+    - e52d8e7a96 test(memory-core): pin that an undelivered void notice stops enrollment before the client flag is read
+    - a5e0abab0f fix(memory-core): fold checker findings on #13336 (unverifiable acknowledge, fmt, lint)
+    - 96d8660c4a style(script): bun fmt the computer-v3 guards test (fmt:check on #13135)
+    - 080df28a6d Merge dev into fix/cu-v3-13118-contract-hardening (take dev, merge only)
+    - 8ed322ccfd Merge dev into fix/13099-guards-lstat-parent (take dev, merge only)
+    - 4fccde4fdd Merge dev 4a26ea1181 into ci/computer-live-macos-tier
+    - dbf96deb44 fix(computer): the fake's source guard reads grouped std imports across lines; the capture comment names which refusal halves are load-bearing
+    - 856b7329aa test(computer): the fake's source guard must catch a grouped env import split across lines
+    - 781dd7df0a Merge remote-tracking branch 'origin/dev' into omo-13120-take-dev
+    - 4b4b6eb4a7 fix(memory-core): fold LOWs on the service-refusal switch path (#13335 @ 9b1f3c9f, #13337 @ 6e726034)
+    - cb93057a80 Merge branch 'a3-pr2a' into a3-pr2b
+    - b9c13ac2d7 Merge branch 'a3-pr2a' into a3-pr2b
+    - 9b1f3c9fba test(memory-core): drive the admission-refusal row through the phrase bridge
+    - 4c886355f0 fix(memory-core): fold #13335 review LOWs (account switch only on an empty chain, admission refusal, test await)
+    - 91cabffeff Merge branch 'a3-pr2a' into a3-pr2b
+    - 9f9734a872 fix(memory-core): fold #13336 review (acknowledgeable enroll/rotate void, rotation id check, abortable bridge)
+    - 0125449afd Merge branch 'a3-pr2a' into a3-pr2b
+    - 75f47e1145 Merge commit 'b4f98dadf7863e6ac62cbff028c7365ec3845baa' into a3-13336
+    - b4f98dadf7 fix(memory-core): read the service floor from accepts_phrase_keys (omo-service #1070 rename)
+    - 7aff56268e Merge commit '364bbf7cced5d1b6494647b138158acf761a7a9d' into a3-pr2a
+    - 364bbf7cce refactor(memory-core): fold #13330 review LOWs (single rp_id, shared reserved prefix)
+    - 9950492e93 docs(changes): fragment for #13336
+    - 8027ad8f3b Merge remote-tracking branch 'origin/fix/13325-refusal-reads-signed-out' into fix/13325-rollover-lows
+    - 663531d97f Merge remote-tracking branch 'origin/fix/13325-account-rollover-live-channel' into fix/13325-rollover-lows
+    - 9e9325b2b9 feat(memory-core): phrase recovery, enrollment, rotation and removal (A3 part 2b)
+    - 3441e5de99 docs(changes): move the #13334 package-log entry into its fragment's changes-log block
+    - c4f043e42c docs(changes): fragment for #13335
+    - e76fee4e13 docs(changes): fragment for #13334
+    - 1ae227f121 style(memory-sync): bun fmt the rollover test (#13327 review LOWs)
+    - 71c0338cb5 Merge remote-tracking branch 'origin/feat/a3-phrase-parse-derive' into feat/memsync-phrase-genesis-core
+    - 6702c4c673 test(memory-core): leak canaries match whole words; old-member refusal read on the sync chain (A3 part 2a)
+    - b3b06aac5c fix(memory-sync): a replaced desktop account ends; a Worker begin that crosses a retirement owns nothing (#13327 review LOWs)
+    - 75fa8dc994 test(memory-sync): RED - refused describe is null on both threads, a replaced account ends, a begin crossing retirement owns nothing (#13327 review LOWs)
+    - ad2ee67d08 Merge remote-tracking branch 'origin/fix/13325-refusal-reads-signed-out' into fix/13325-rollover-lows
+    - 08ec33aa91 test(memory-core): use the canonical PHRASE_RECOVERY_RP_ID in phrase test support (knip)
+    - e4149fca23 feat(memory-core): recovery-phrase genesis in enable, with a durable void marker (A3 part 2a)
+    - 2cd0221b9f docs(changes): fragment for #13330
+    - 5e648627d2 feat(memory-core): parse, derive and redact recovery-phrase keys (A3 part 1)
+    - 2cf7e2d465 test(remote): an answer to a never-shown or settled dialog carries no uiRequestId (security review of #12750)
+    - bbafd8274e Merge remote-tracking branch 'origin/dev' into t5-13101
+    - 51a4e1b268 Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - 7edae09f57 Merge dev into ci/computer-live-macos-tier (take-dev, 97 behind; knip.jsonc keeps both sibling entry lines)
+    - 20c8781945 docs(computer): record the guest-label jobs of the macOS live tier as a drop for now
+    - 88db1cbdb3 ci(computer): owned macOS guest pool for the live tier (part 1)
+    - 58a7df355c Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - 4f85a441e3 test(eq): re-record linux-x64 E21-E24 baseline after merging dev 8b2916e152 (row 33, #12807)
+    - ad767f4485 Revert "test(eq): re-record linux-x64 E21-E24 after merging dev 8b2916e152 (skill digest)"
+    - de4952a356 style: apply bun fmt to files the dev merge left unformatted
+    - 71590d02e2 style: apply bun fmt to files the dev merge left unformatted
+    - 3f88fc35f5 row 38: merge base #12849 (fmt fold) so the stack carries its head
+    - 31eb4a8607 style: apply bun fmt to files the dev merge left unformatted
+    - 99fd1963c2 style: apply bun fmt to files the dev merge left unformatted
+    - 6843059b5b fix(computer): SP-T every exit value comes from EXIT, checked structurally; README documents --measure/--row exit codes
+    - 8c790ee0f3 test(computer): SP-T exit-code mutants for every form and README --measure/--row exit codes (RED)
+    - e44cf6dd44 fix(computer): SP-T tap lines must be JSON objects; README documents the --cleanup exit codes, checked against the code
+    - 4378bf09b5 test(computer): SP-T class-level self-test for non-object tap lines and README exit codes (RED)
+    - a3647cf375 test(computer): SP-B full --write regenerates; bunshinSrc and helper timeout hardened
+    - bdb3103cab fix(computer): SP-T reads a tap file only when complete, and --cleanup exits 1 on a failed receipt
+    - 1759ea2ae8 test(computer): SP-T class-level self-test for incomplete tap files and the --cleanup exit code (RED)
+    - b19c743af0 test(computer): SP-B probe proves findings only from returned values
+    - 6cc55f9eba fix(computer): SP-T unread tap files, reportless grant checks and failed cleanup reads are never negatives
+    - b5735ecd9a test(computer): SP-T self-test cases for unread tap files, reportless grant checks and cleanup that stops early (RED)
+    - bee80230f9 fix(computer): SP-T readers never turn a failed command into a negative (tccLog, tccDb, pgrep, helpers)
+    - f9152d792e test(computer): SP-T self-test cases for swallowed tccLog, tccDb and pgrep errors (RED)
+    - c7ef5296da test(computer): SP-B probe never turns an error into a verdict
+    - 4b38bd5d52 fix(computer): SP-T delta-review fixes - prompt-probe conditions, separate verify evidence, checked tccutil resets, route before person, QA-owned results dir, no eval in the GUI leg, bounded prompt poll and --self-test
+    - 340ce84b8a test(computer): SP-B probe measures each host-death watch alone and keeps verdicts in the repo
+    - a7cbf72c3d test(computer): sweep unknown/unknown receipts; fragment states the full rule (#13147)
+    - dbef14e26e docs(changes): fragment for #13156
+    - a16f1f8982 row 38: merge base #12849 (car 35) - keep its restore/teardown fix and run.mjs split with row 38's additions
+    - 18fdac8295 chore(changelog): align the #12849 fragment with its base branch (stack gate)
+    - 4b6ddb98b0 row 33: merge dev cabdb895e6
+    - 0a22fbd539 row 32: merge dev cabdb895e6
+    - 9a3c81a54f row 38: merge dev cabdb895e6
+    - be5ade71cf test(computer): run the SP-B probe as a knip entry
+    - 7726943a00 row 35: merge dev cabdb895e6
+    - 2d1295a494 fix(computer): refuse a receipt under unknown/unknown (LEAD ruling R13, #13147)
+    - 6187dd9d7b test(computer): a receipt under unknown/unknown is refused (RED, LEAD ruling R13, #13147)
+    - 93d305a6f9 test(computer): fold the #13137 delta-review nits; pin unknown/unknown receipts pending #13147
+    - ff923f8205 fix(computer): SP-T review fixes - person-gate and by-path launch of the tap, keep the T3 keychain off the search list, reset prompt rows in finally
+    - 7ddad082f8 docs(threat-model): the worker-crash run error reason is crashed, matching the code (pre-flight CI finding)
+    - 2fb19d192e fix(computer): capture refuses a non-positive scale or negative size before multiplying; the source guard catches grouped env imports
+    - 21ab5ba9f1 test(computer): RED - sub-pixel and negative-scale capture extents, grouped env imports in the source guard
+    - 78398b67fc docs(changes): fold #13133 into the #13120 fragment
+    - a049b460ee chore(changes): fragment for #13143
+    - cc95f96eeb test(computer): SP-T ledger rows await a macOS 26 host with a QA account
+    - a3df36a9e0 Merge pull request #13133 from code-yeongyu/fix/cu-v3-13121-fake-followups
+    - ce12ee0026 fix(memory): name the in-place update and restart remedy when an older omo build holds the provider (#13101 review LOW)
+    - 301b33f503 row 34: merge dev 29847d45c6
+    - bf434f1435 Merge origin/dev into fix/12777-remote-view-double-delta
+    - a48ab6873d test(computer): SP-T rows that need a person read WAITING-PERSON
+    - bb846f3550 test(computer): probe ledger for SP-T
+    - 474a2feb00 test(script): an unreadable removal path (ELOOP) is reported as a finding naming it (#13135 review LOW)
+    - 07fe926e4d Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row14-fake-backend
+    - c2b8990e8f test(computer): probe ledger for SP-B
+    - 4d99fae9dc row 33: merge dev 29847d45c6
+    - 9ff759e398 test(computer): landed-unit receipts stay under an uncertain partial report (LEAD ruling 2026-11-11, #13118)
+    - 49ce61b7a3 docs(changes): fragment for #13137
+    - cfa102703c docs(changes): #13133 fragment covers the empty-extent refusal
+    - e09b1c0612 test(computer): move the two new fake tests out of the ported-test module
+    - 5bbc9b3628 fix(computer): fake capture refuses a zero or negative extent, like a non-finite one
+    - 894fccc8fb test(computer): fake capture must refuse a zero or negative extent
+    - 17532e73ad fix(script): --residue treats a removal path under a file parent as absent (#13099 follow-up)
+    - 4923a763ec docs(changes): fragment for #13133
+    - a9d7bceeda fix(computer): type Refusal.reason with the closed Reason vocabulary (#13118)
+    - a141eb5b37 Merge remote-tracking branch 'origin/feat/cu-v3-row14-fake-backend' into fix/cu-v3-13121-fake-followups
+    - ceea65b550 test(computer): a refusal reason outside the closed vocabulary does not compile (RED, #13118)
+    - f6cfcd0b94 fix(computer): refuse a receipt under not_delivered or delivered_unverified (#13118)
+    - 0848acd960 fix(computer): the fake's source guard bans environment reads
+    - f0e0c4a757 test(computer): the fake's source guard must catch environment reads
+    - 8cef02f516 fix(computer): fake inject() refuses a fail pair with no error-table row, as the loader does
+    - 13a3b37e0e test(computer): a receipt under not_delivered or delivered_unverified is refused (RED, #13118)
+    - f0fb135141 test(computer): inject must refuse a fail pair with no error-table row
+    - eda4c5fb73 row 38: merge dev 04e22c0b6b (post bun-fmt)
+    - be48ad7d1c row 35: merge dev 04e22c0b6b (post bun-fmt)
+    - 832f58d7b7 row 34: merge dev 04e22c0b6b (post bun-fmt; car sources re-formatted)
+    - 10e2c94dea row 33: merge dev 04e22c0b6b (post bun-fmt; car sources re-formatted)
+    - a8bc42ef03 test(desktop-service): the bridged call-cap case is ended by the cap, not the 5 s run clock
+    - 55b9054e37 row 32: merge dev 04e22c0b6b (post bun-fmt; car sources re-formatted)
+    - f6a7f12069 Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - fb4689a3db fix(computer): refuse a non-finite fake capture and keep focus-record ids
+    - e183279e43 fix(ci): keep the attach test rig's privateDir unexported
+    - 86460083c5 Merge remote-tracking branch 'origin/dev' into feat/remote-approvals
+    - 81daf8160e fix(ci): export-check the attach dialog test rig and write the native-contract job summary
+    - 614b640865 test(computer): v2 values cover identity 101 and the full effects list; focus-read recording superseded by AC-70
+    - a577202f84 test(computer): the oversized-capture test reports only the frame size
+    - 3bc219ca91 fix(computer): fake capture refuses an over-cap composite before allocating
+    - 6a2dfbbf9e test(computer): ported parity lines cite tests that fail for the old behaviour
+    - 6f66e5dbd3 docs(changes): add the row 14 fragment
+    - 868372c47f Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row14-fake-backend
+    - 5c21dcf160 row 38: merge dev 8b2916e152
+    - 51dc257efb test(eq): re-record linux-x64 E21-E24 after merging dev 8b2916e152 (skill digest)
+    - 7407de76b7 row 33: merge dev 8b2916e152
+    - ef0eb90784 row 34: merge dev 8b2916e152
+    - b4e72190b4 row 34: merge dev ade9aa69f3
+    - 9e073b79fd row 33: merge dev ade9aa69f3
+    - 308944e388 Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row14-fake-backend
+    - d12cb4ed2f row 35: merge dev ade9aa69f3
+    - 626e994a73 row 35: merge dev c70f66f84a
+    - fb767bb14f refactor(computer): fake uses the core Refusal::bare and row(); drop the bare-reason workaround
+    - b7ae338a17 Merge branch 'feat/cu-v3-row13-core-contract' into feat/cu-v3-row14-fake-backend
+    - 832b596c97 feat(computer): fake refusals through the closed EngineCode table; unanswered AX writes are AxUnconfirmed
+    - 0aa2360599 Merge remote-tracking branch 'origin/dev' into fix/10519-assets
+    - 607b336676 Merge branch 'feat/cu-v3-row13-core-contract' into feat/cu-v3-row14-fake-backend
+    - 65ef2b374f Merge branch 'feat/cu-v3-row12-core-protocol' into feat/cu-v3-row14-fake-backend
+    - 6fdbd8cd92 chore(omo-native): regenerate the service-auth bundle for the attach dialog mirror
+    - 3ee57c1e38 test(computer): port the old fake-backend tests in the parity manifest; pin reference refusals
+    - 628d018a9b Merge branch 'feat/cu-v3-row12-core-protocol' into feat/cu-v3-row14-fake-backend
+    - c02049357c test(eq): re-record linux-x64 E21-E24 after merging dev 89deb5358e (skill digest)
+    - 39f016942b docs(changes): note remote dialogs for every attach (#12750)
+    - c4f1cb9d0c feat(remote): omo remote attach shows a dialog another client raised and answers it by uiRequestId (#12749)
+    - c58907b5fd test(remote): a viewer that did not raise a dialog sees and answers it in omo remote attach (RED)
+    - f05f27c358 row 32: merge dev 89deb5358e
+    - af80df8e68 docs(changelog): describe only the duplicate-delta fix in #13075 fragment
+    - 6d59090611 row 32: merge dev ff3097f21d
+    - a1658f2d9c fix(computer): fake scenario root must be an object; owe conformance_replay to row 28
+    - 71366a0dac chore(changelog): drop the #12737 fragment already shipped in v5.1.69 (train F)
+    - ebb6bc95dd docs(changes): note the memory hot-reload registration fix (#13101)
+    - c41cad1b96 row 34: merge dev 6dca74badd
+    - a393fd921d fix(memory): keep the memory-sync provider guard process-wide across hot reloads (#13098)
+    - 464782021f chore(computer): drop the re-deferred C1 leg line (row 12 owns it)
+    - 8456d3bcce row 33: merge dev 6dca74badd
+    - 558ee0479f feat(computer): v3 scriptable fake backend
+    - e0d44dd56f row 35: merge dev 6dca74badd
+    - a49f693894 test(computer): RED - v3 fake backend tests (signature stubs only)
+    - aca0e27b63 fix(cu-eval): restore and tear down live tasks on every exit path (#12849 review)
+    - 1f25d28042 row 32: merge dev 6dca74badd
+    - 90703680b0 fix(desktop-service): drop trailing undefined arguments at the sandbox boundary so quickjs matches vm (#12779 review)
+    - 60262c8e07 fix(remote): keep the CLI's shared device-service connection open across open_session
+    - 23085ff0cc row 35: merge dev c40c98690d
+    - dae30bf94c row 32: merge dev 17f633cb43
+    - fede5bea23 row 32: merge dev a68fc1b0dd
+    - b65429ca71 row 33: merge dev a68fc1b0dd
+    - b530e2b446 docs(changelog): fragment for #13075
+    - c5503548ea fix(thread): send remote open_session on a short-lived connection (#12777)
+    - 992c5e739d row 35: merge dev f177a773b1
+    - 28629ed003 row 33: merge dev e0fc0ff4f3
+    - c3490e68a8 row 38: merge dev e0fc0ff4f3
+    - 6edcd23bae row 38: merge dev def0749b63
+    - b28779965e row 34: merge dev def0749b63
+    - f318539887 row 32: merge dev def0749b63
+    - 7c37d1476c row 33: merge dev def0749b63
+    - 0b4887cbcc row 35: merge dev def0749b63
+    - 10afe96d1e chore(changes): drop 4 fragments the v5.1.66 release already consumed on dev
+    - 51ca5a1574 row 35: align 4 paths with the reviewed head 1e4cf94e56 (generated + goldens + fragment)
+    - 686a4e2684 row 35: regenerate bundles on the genuine dev base
+    - e8efe1005f test(eq): re-record linux-x64 E21-E24 after merging dev a96a51d8fc (skill digest)
+    - 97a4fafa65 fix(cu-eval): prove realStateUntouched with a sha256 digest, not a length (row 35)
+    - f9b30a000b fix(cu-eval): observe the oracle state before the teardown restores the surface (row 35)
+    - 8d7db3c534 docs(changes): name the fragment for #12849
+    - b8eb5160d0 fix(qa): route the cu-eval launcher and engine spawns through withTelemetryOptOut
+    - 3ff545d3d7 docs(changes): fragment for plan row 35 (placeholder number; renamed to the PR number once it exists)
+    - 00e5057d8e row 38: merge dev 5a582a49e1
+    - 01f4c8facc row 34: merge dev 5a582a49e1
+    - 9833415b9e test(eq): re-record linux-x64 E21-E24 after merging dev a96a51d8fc (skill digest)
+    - 0e5a6e85ee row 32: merge dev a96a51d8fc
+    - cd7b7715ac row 33: merge dev a96a51d8fc
+    - 1dbaf6c56e Merge remote-tracking branch 'origin/dev' into HEAD
+    - e131e1fb96 docs(changes): name the fragment for #12876
+    - 72c60057f4 row 38: merge row 35 80668d320c (fold + train E)
+    - 4da93248f8 row 38: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - d8226b55af row 33: regen generated bundles after train E merge
+    - 95cb26521c row 33: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - 4716a95884 row 32: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - 62a570efd9 row 34: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - 6de9a53a15 row 35: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - 0b406607d9 chore(regen): rebuild generated bundles for the row-32 review fold
+    - e337d08388 test(desktop-service): cover the remaining row-32 bridge cases (row 32)
+    - 87e2400bc2 fix(desktop-service): bridged errors carry code, engineRestarted and method into the quickjs body (row 32)
+    - c48e801abc docs(sandbox): threat model names resultSize and the per-run handle table (row 32)
+    - bcfdf3eafa fix(desktop-service): a bridged call that returns undefined reaches the quickjs body as undefined (row 32)
+    - a7b3c2669d fix(desktop-session): exempt v1 sessions from the frame cap, as the idle flush does (row 33)
+    - 66e50ebe43 fix(desktop-engine): answer request_too_large with the request's id so clients see it (row 33)
+    - 818e86dd15 fix(cu-eval): prove realStateUntouched with a sha256 digest, not a length (row 35)
+    - f27a4e67be fix(cu-eval): observe the oracle state before the teardown restores the surface (row 35)
+    - 224a8f217e docs(changes): name the fragment for #12807
+    - c1f39a495d docs(changes): name the fragment for #12779
+    - f353203501 docs(changes): add the row 38 fragment (new-PR placeholder)
+    - efc076c054 ci(desktop): computer-use bench regression workflow (path-gated, base vs head)
+    - 4886b06250 docs(changes): name the fragment for #12849
+    - 30e38b3738 docs(changes): fragment for P12b resource caps and idle flush
+    - 64ea701c7d feat(desktop-engine): request, frame and ref caps with idle flush
+    - 7d180ea9fc chore(regen): rebuild generated bundles on train E for P5b-ii
+    - 3749333b92 docs(changes): fragment for P5b-ii computer/assert host bridge
+    - aae2e9c5f2 fix(desktop-service): SANDBOX_MAX_HANDLES stays module-private
+    - 02b378c5bd feat(desktop-service): bridge computer and assert into the QuickJS run cell
+    - 7e43522b3e docs(changes): name the row 35 fragment with the new-PR placeholder
+    - 477675a756 row 35: take train E rename cbd44b9736
+    - 40fb3e8be9 fix(qa): declare the desktop sdk beside its sibling desktop packages (row 34)
+    - 1d5bc73694 Merge remote-tracking branch 'origin/dev' 8af3fae188 into the row 35 stack
+    - 8c8c28293b row 35: stack on train E 7314d7fc6f
+    - a50a256a67 Merge remote-tracking branch 'origin/dev' 8af3fae188 into the row 34 stack
+    - b99fe53692 Merge remote-tracking branch 'origin/dev' 1954eabe87 into the row 34 stack
+    - a0b97833c0 fix(qa): fold review nits on the macOS live scenarios (row 34)
+    - a63241e782 row 34: stack on #12737 c453e40928
+    - c54219ee05 row 34: stack on train E 7314d7fc6f
+    - 29157a555f Merge remote-tracking branch 'origin/dev' into cu-v2/task-35-p13b-latency-bench-and-cu-eval-7-tasks-3
+    - f865f21be1 docs(changes): name the fragment for #12823
+    - 9801654657 chore(knip): drop the computer-control-live-macos-scenarios rows now used by this car
+    - 712d113540 Merge remote-tracking branch 'origin/dev' into cu-v2/task-34-macos-live-qa-scenarios-chrome-two-windo
+    - bea1bb798c Merge remote-tracking branch 'origin/dev' into cu-v2/task-34-macos-live-qa-scenarios-chrome-two-windo
+    - bd69caea43 docs(computer-use): correct X11 refusal signature and macOS right-click coercion
+    - 49f6b88709 test(eq): re-record darwin-arm64 E21-E24 goldens for the moved skill digest
+    - 95371e8682 fix(desktop-macos): bound and classify priming's focus reads, log layer 1
+    - 974ba0e51b test(eq): re-record the EQ.omo linux goldens for the computer-use skill hash
+    - 005d9018d9 docs(changes): name the fragment for #12737
+    - 318f73ebd6 Merge remote-tracking branch 'origin/dev' into cu-v2/task-16-p7b-exact-window-key-priming-steps-1-6-8
+    - 797769c533 fix(qa): route the cu-eval launcher and engine spawns through withTelemetryOptOut
+    - 0abc2cf237 fix(qa): route the capture-consent probe and the off-Space scenario env through withTelemetryOptOut
+    - 40af05deae fix(qa): route the capture-consent probe and the off-Space scenario env through withTelemetryOptOut
+    - 83cc52e2a4 fix(qa): route the capture-consent probe and the off-Space scenario env through withTelemetryOptOut
+    - 0485d70601 docs(changes): fragment for plan row 35 (placeholder number; renamed to the PR number once it exists)
+    - fb142084d8 docs(changes): fragment for plan row 34 (placeholder number; renamed to the PR number once it exists)
+    - 7d0dcfa434 docs(changes): fragment for plan row 16 (placeholder number; renamed to the PR number once it exists)
+    - 5945057d9a docs(computer-use): add Windows/X11 platform scope, note macOS right-click refusal, and regenerate assets
+    - 0aee1df3a7 test(computer-use): update COMPUTER_DOCUMENTATION sha256 fixture for #10410
+    - be3d2a91be build(computer-use): sync staged plugin assets and remove duplicate shared skill
+    - c846a314ab docs(computer-use): document Chromium background input refusal (#10410)
+    - c732f00319 chore(bundle): regenerate O12 extension after the dev sync
+    - eff2db93d6 dev sync: merge dev f2a520fff5 into feat/o12-computer-use-hand-permission-report
+    - 0d0a023ebf chore(bundle): regenerate O12 extension after the #12598 dev sync
+    - 5e2fcd4bfa dev sync: merge dev efd4734e48 into feat/o12-computer-use-hand-permission-report
+    - 65ee58164d chore(bundle): regenerate O12 extension after dev sync
+    - 061ea8dac6 dev sync: merge dev b4e373cd0a into feat/o12-computer-use-hand-permission-report
+    - 29576a3980 Merge origin/dev into feat/o14-loopless-composition
+    - 8e85cfe874 Merge origin/dev into feat/o14-loopless-composition
+    - 9f9294692d test(audit): allowlist the hand-browser-placement child-process fixture (#12329)
+    - 16c00f3d44 Merge origin/dev into feat/o14-loopless-composition
+    - 366b1e9256 chore(bundle): regenerate O12 extension after dev sync
+    - e8cbee7ad2 Merge remote-tracking branch 'origin/dev' into feat/o12-computer-use-hand-permission-report
+    - 1b169b9402 chore(changes): fragment for #12450
+    - 1fd4562fd0 feat(computer-use): report OS-permission denials from a hand's execution scope (O12)
+    - 2dd0429c8c test(computer-use): OS-permission denials reported from a hand's execution scope (O12, RED)
+    - 83d12fdfd5 chore(changes): fragment for #12339
+    - 4b2b8ce568 chore(changes): fragment for #12337
+    - 91c3e2f9d9 test(desktop-service): fake engine screen marker that changes between captures (O1d, W3)
+    - 0253d5adfa test(computer-use): one screenshot per call survives the hand wire, under today's caps (O1d, RED)
+    - 85e620ba97 chore(changes): fragment for #12332
+    - 944d66c047 chore(changes): fragment for #12329
+    - 8007c7968a chore(changes): fragment for #12328
+    - 7bf1f3ab2b feat(computer-use): foreground lease keyed by (issuer, scope) for hand-placed sessions (O1c)
+    - 93b6d5f58a test(computer-use): one foreground lease between sessions on a device (O1c, RED)
+    - 816b21eeab feat(computer-use): device exec policy decides foreground control on a hand (O1b, C3(b))
+    - 9267973a37 test(computer-use): a hand's foreground control follows the device exec setting (O1b, RED)
+    - 5601b71001 feat(computer-use): revoke and close through the holding session's lifecycle source (O1a)
+    - 323ffbde1b test(computer-use): grant revocation follows the holding session's lifecycle, hand scopes included (O1a, RED)
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.73
+ReleaseTime: 2026-11-16T17:17:49.0000000Z
