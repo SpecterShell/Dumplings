@@ -1,0 +1,36 @@
+Version: 0.1.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/333-wg/pi-wm/releases/download/v0.1.26/Pi-Wm-0.1.26-Setup-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Pi-Wm v0.1.26：团队模型分配、工作台与提示词优化升级
+    发布版本：0.1.26。构建提交：5b746658e1b7e76e9d87fbbc69f03af8164cc3c8。
+    发布范围
+    本版本包含 Agent Teams、壁纸适配、提示词优化、用量统计、工作台加载及验证流程改动。排除本地生成的设计图片、临时文件、测试报告、会话与凭据。版本与锁文件同步为 0.1.26，不更新依赖版本。
+    验证记录
+    - Node.js 22.23.2 下 npm run check 通过：源码、前端、E2E、12 个工作区测试类型检查以及 8 套主题各 80 对基础配色对比检查。基础配色检查不代表任意壁纸下的文字对比保证。
+    - 14 个文件、187 项定向测试通过，覆盖团队模型门禁与恢复、切换与权限、轮询、辅助用量、优化器错误、验证策略和可观测指标。
+    - 22 项相关浏览器用例通过：团队创建、模型分配、回放、停止、阶段导航、深浅壁纸、手机布局，以及提示词优化、用量总览、运行评测与按需加载。阶段测试首次在手机通信页查找流程控件超时，补齐切回流程页的操作后通过，未削弱断言。
+    - 生产构建通过；改动文件 lint 无错误，保留 6 项既有警告以及主包超过 500 kB 的构建提示。
+    - Apple Silicon DMG/ZIP 构建完成，15,777 个运行时文件清单、路径预算、归档签名、原生 Node、Chromium/PDF/canvas/SQLite、包内 UI 和 PTY 校验通过；应用移出源码目录使用隔离配置验证，未替换本机安装。
+    - 新增手动候选构建工作流，在原生 Windows x64 和 Intel Mac 上构建并验收，只允许上传到版本及提交匹配的草稿 Release，不自动公开。
+    - Windows x64 原生构建与包内应用验收通过：UI、鉴权 API/WebSocket、原生 PTY、渲染器隔离、单实例、项目与主题保存、令牌轮换和正常退出；安装包 SHA-512、blockmap 与包内公开更新源校验通过。首次功能断言已通过，但临时程序清理遇到 EBUSY；保留原检查，仅重跑失败任务后完整通过。
+    - Intel Mac 原生构建及 DMG/ZIP、ad-hoc 签名、原生 Node、Chromium/PDF/canvas/SQLite、包内 UI 和 PTY 验收通过。首次在重启后显示欢迎页，未通过自动恢复断言；保留原代码、断言和超时，仅重跑失败任务后通过，首次失败日志已保留。
+    - Windows 与 Intel Mac 候选工作流 43814347951 第二次运行通过；首次失败不计为通过。
+    - 九个发布附件核验通过：GitHub SHA-256、Mac DMG/ZIP 与对应校验文件一致；下载的 Windows 安装包大小、SHA-512 与 latest.yml 一致，blockmap 覆盖完整安装包。Apple Silicon 本地文件及下载附件与 GitHub 摘要一致。
+    - Windows 安装包 SHA-256：3165d74c617586de0c4cc32556e00338c8549881d66399e932dad01bb073e6d3（249680076 字节）。
+    - 发布后确认 GitHub Latest 为 v0.1.26，正式版非草稿、非预发布；标签指向上述构建提交。九个公开附件再次核验通过，匿名下载 latest.yml 与已验收文件逐字节一致。本地核验记录保存在 test-results/release-0.1.26/assets.json，原始失败与重试日志保留在同目录。
+    已知限制与未执行检查
+    - 原有团队保留原执行方式，新建团队才默认进入模型分配流程。失败成员切换模型后仍需手动重试。
+    - 历史自由文本不会改写为推测进度；摘要不代替真实交付结果。透明工作区使用全局壁纸与主题设置，高强度复杂壁纸可能降低文字对比度。
+    - 不调用真实收费模型；验证使用隔离数据库和 Demo／脚本运行时。
+    - 按改动风险执行定向检查，不重复全仓库测试、完整 E2E、完整桌面回归或真实安装升级矩阵；本次未修改安装器、更新器及依赖版本。常规全仓库 CI 沿用既有发布策略跳过，采用本地定向检查和原生平台候选验收。
+    - Windows 未配置发布者签名；macOS 使用 ad-hoc 签名，未经 Apple Developer ID 签名与公证，系统可能拦截安装。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/333-wg/pi-wm/releases/tag/v0.1.26
+ReleaseTime: 2026-11-16T06:40:48.0000000Z
