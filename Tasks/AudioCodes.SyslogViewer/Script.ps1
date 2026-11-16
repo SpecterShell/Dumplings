@@ -4,10 +4,10 @@ $Object1 = Invoke-RestMethod -Uri 'http://redirect.audiocodes.com/install/syslog
 $this.CurrentState.Version = [regex]::Match($Object1, 'VERSION (\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup-32.exe'
-}
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture = 'x86'
+#   InstallerUrl = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup-32.exe'
+# }
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = 'https://tools.audiocodes.com/install/syslogViewer/syslogViewer-setup.exe'
