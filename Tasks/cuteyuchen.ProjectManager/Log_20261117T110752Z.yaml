@@ -1,0 +1,22 @@
+Version: 1.9.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cuteyuchen/project-manager/releases/download/v1.9.1/Project.Manager_1.9.1_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v1.9.1 - 2026-11-17
+    修复
+    - 修复设置页点击保存后仍显示「有未保存的更改」的问题：保存时的归一化会回写 AI 服务等字段，导致草稿与已保存设置不一致；现在保存后草稿重新同步为已保存值，提示立即消失。
+    新功能
+    - 设置页「更新设置」新增「支持项目」入口，一键跳转 GitHub 仓库点 Star。
+    - 新增 GitHub Star 引导弹窗：启动后提示「如果这个项目帮助到你了，请给我一个 Star，这将给我更新下去的动力」，点击跳转仓库页；关闭后永久不再显示。
+    优化
+    - AI 生成提交信息前先压缩暂存 diff：二进制文件（图片等）只保留文件清单，单个大文件（大 JSON、锁文件等）按预算截断，所有 patch 共享总预算，避免一次改动大量文件或大文件时请求体超过模型最大输入 token；文件清单始终完整，模型仍能据此覆盖全部改动。
+    - 模型上下文小于默认预算时（如 4k 上下文模型），识别上下文溢出报错并自动用更小预算重试一次，不再直接生成失败。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cuteyuchen/project-manager/releases/tag/v1.9.1
+ReleaseTime: 2026-11-17T10:22:28.0000000Z
