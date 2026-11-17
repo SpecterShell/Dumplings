@@ -1,0 +1,57 @@
+Version: 0.7.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.7.0/ovnfs_0.7.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.7.0/ovnfs_0.7.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    - 643faa0d8e5c5d00fd195bcadaf590e16a1d649d Delete status_test.go
+    - 1526f208715bf4d14e36b977eb09e1e8ab14f3c3 Merge PR #61: feat(status): report daemon build version (@J4ck1e2000)
+    - 1ef35e752521fd71ffea3d59f845a358cf2de5fb Merge PR #62: fix(overlay): retried failed memory spills and kept disk copies until a spill (@MonsieurBarti)
+    - a7ff5ee00c12f2e73b601f4b76a60a70a9a14f08 Merge PR #63: test(fuse): held the busy file in a child process (@MonsieurBarti)
+    - 93a9f0153f90741569b8cf51ffbcdd8ca4c3acc3 Merge PR #64: fix(export): failed closed when a node log write fails (@MonsieurBarti)
+    - 280bec4017d05a868282c9489356728c78bdbaa2 Merge PR #65: fix(export): resolved a handle from the listing its read returned (@MonsieurBarti)
+    - c5d4662ef406f45a2214a0ecb1e19c9d7e8fb503 Merge PR #68: fix(nfs): resumed an evicted READDIR continuation after its last name (@MonsieurBarti)
+    - 57835488e8b4c7ada7061d73b1207fa684fc0807 Merge PR #69: fix: waited for the state lock and made stop take the start lock (@MonsieurBarti)
+    - 94c8e0d465b5f6c967a504fab765612b0803325b Merge PR #70: fix(export): reported sidecar cleanup errors from rmdir and rename (@MonsieurBarti)
+    - 298ca6873a88cafbd2fe61478271685a15069f86 Merge PR #71: perf(checkout): opened persisted checkouts in parallel at load (@MonsieurBarti)
+    - 6aa22d16cf0e4efb6c498ee8a488769fbe8ef5d2 Merge PR #74: fix(export): kept handles of entries moved out of removed directories (@MonsieurBarti)
+    - 954e66fdaff119c45aac8e2aaf306b2810b4a932 Merge PR #76: fix(overlay): bounded daemon memory by loading upper and stored-layer indexes on demand (@tohumi)
+    - 8b9cfcb943ef4e80ff73d8ce62106a96a1d903f8 docs(overlay): listed the spill before a rename over an upper file
+    - 382c7e4963f079651cf0419ff01cef9827c9d36c feat(status): report daemon build version
+    - fc18858a29269fafddedc3c87e37140a27bab472 fix(admin): retried a temporary accept error instead of ending serve
+    - c0d6197460e205476ca434ea0c3726637b72cd35 fix(export): dropped strays of holders that died in cold subtrees
+    - 6be3871ec5425f5fd07ffc42c16fd6b07f796a2c fix(export): failed closed when a node log write fails
+    - 11655f7a6a4b9882f496cfd41d9bd30517966fa5 fix(export): kept handles of entries moved out of removed directories
+    - e284cbe9a8e16907aa32ee5642db2dcc56f57e47 fix(export): rechecked a refused read listing against its live directory
+    - da1bec4e5af82ef2fb21d10ccb8fade146467231 fix(export): reported sidecar cleanup errors from rmdir and rename
+    - 20ad5a81ef54d9f64419b00963b5df0379b7e94b fix(export): resolved a handle from the listing its directory read just returned
+    - 7897fe4f58798f6fd0d9c312d191df444aeaaf6f fix(nfs): resumed an evicted READDIR continuation after its last name
+    - 3b0db5c0cdfa7db4c73b17eb152e1ed81e200865 fix(overlay): answered UpperFile while the upper index is cold
+    - 488d8b8f701d12124622c39f2af46dc251d4ae06 fix(overlay): dropped idle stored-layer indexes
+    - 9101375f92a941bb8a1d425834f23b3e30c62fd4 fix(overlay): indexed layers from lstat metadata again on windows
+    - 93a6c1dc14e8a8d8f7f3629fa2d24a4ac4d6dcdb fix(overlay): kept the disk copy until a memory file replacing it spills
+    - c5885fb735c2b03ccdfa45effd3872ffe96ca6f4 fix(overlay): matched cold upper reads to indexed ones
+    - 5dda0673bcf0b6b1d6b2907b26ae3c845880df20 fix(overlay): read upper files without loading the upper index
+    - 73d4f6fd10e4c176f88f045dbbf624bab36ebbe6 fix(overlay): retried memory files whose write to disk failed
+    - 2550ccecced9b6e704b3fab361686d1cf109f876 fix(overlay): served upper metadata reads without whole-tree indexes
+    - 300dd9ac7d0be0913674d65e21e1eb70a7b2b6c3 fix: waited for the state lock and made stop take the start lock
+    - eaa43ffa2833350f10594f05ab536f924f1d84d4 perf(checkout): opened persisted checkouts in parallel at load
+    - 5b5fb3868992ef73341620ca79c2fe7e23c4fc0c perf(nfs): raised the readdir snapshot cache to 64 MiB
+    - fe32120c092e1551a7603e3178ab43f444b63b5b test(checkout): started the lock wait clock before arming the release
+    - fa9a342bacaf5a53c8a292f390dbab4822e95439 test(export): required orphans to resolve alike after any open
+    - 6db399e7fb185291049d458183aba0fe0eadbc4f test(fuse): held the busy file in a child process
+    - adc34fd3f8265d0081cef336ca2217b1113d3efc test(overlay): covered reads, handles and freezes with a cold index
+    - fc8ca85099fd93e169b336cb12b4c0d99febca26 test(status): restored the printStatus version contract test
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stencil-hq/ovnfs/releases/tag/v0.7.0
+ReleaseTime: 2026-11-16T23:49:37.0000000Z
