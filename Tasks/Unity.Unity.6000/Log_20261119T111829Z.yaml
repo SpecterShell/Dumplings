@@ -1,0 +1,119 @@
+Version: 6000.6.10f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/40e81493c67d/Windows64EditorInstaller/UnitySetup64-6000.6.10f1.exe
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/40e81493c67d/WindowsArm64EditorInstaller/UnitySetupArm64-6000.6.10f1.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.6.10
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.6/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.6.10f1
+    - Android: Back gesture/button closes the app after returning from background when "Run In Background" and "Predictive Back Support" are enabled (UUM-159613)
+    - Burst (Trunk): Burst native link fails with an "undefined symbol: strlen" error when building a Linux ARM64 dedicated server Player with IL2CPP (UUM-161029)
+    - Editor Installers: [macOS] Player libraries are code signed with bespoke entitlements (UUM-156884)
+    - Lighting: [Regression] IndexOutOfRangeException in UpdateCellStreaming and Editor crash after changing the active scene between Baking Sets (UUM-161251)
+    - Mecanim Animation: Crash on Animation::AnimationObjectDeletionCallback when destroying objects animated by a legacy Animation component after AddClip was called on it (UUM-161463)
+    - Mecanim Animation: Crash on UnityEngineAnimationSetBoundCurveFloatValue when sampling an AnimationClip that has a Transform curve with an empty property name (UUM-161382)
+    - Multiplayer FPS/Third Person Templates: "contains a TextureImporter object at version 4, below the supported minimum (10)" warnings are thrown when creating a project from the Multiplayer Third Person Gameplay template (UUM-156317)
+    - Multiplayer FPS/Third Person Templates: Crash on memcpy when entering Play mode in a project with Multiplayer FPS template (UUM-151778)
+    - Multiplayer FPS/Third Person Templates: Multiplayer FPS Template has a continuous error loop when first opened on Linux (UUM-148119)
+    - Native Editor Application Lifecycle: [WinEditor] Play Mode framerate drops significantly when moving the mouse cursor with high polling rate (UUM-142550)
+    - Scene Management: Crash on Object::IsPersistent when applying an override on a Prefab in a specific project (UUM-161458)
+    - Search: Search databases are leaked when calling SearchService.Request after domain reloads (UUM-161715)
+    - SRP Foundation: RenderPass related Android errors are logged in Logcat and Console when physically rotating the device (UUM-157974)
+    6000.6.10f1 Release Notes
+    Improvements
+    - URP: The Forward+ and Deferred+ rendering paths no longer process lights and reflection probes in screen areas that only their part beyond the far plane, or in front of an orthographic camera's near plane, reaches.
+    Changes
+    - Text: Updated FreeType to version 2.15.0, which adds support for mirrored Apple Color Emoji glyphs on macOS and slightly changes how text renders in the Hinted Smooth and OS Default font rendering modes.
+    - uGUI: Changed Content Size Fitter in Clamped mode to keep a size larger than the content on a Horizontal or Vertical Layout Group with Control Child Size off, instead of shrinking the group to fit its children. (UUM-159240)
+    Fixes
+    - 2D: Fixed Graphics.RenderSpriteInstanced drawing the Sprite's own texture instead of a _MainTex set in the MaterialPropertyBlock of RenderParams. (UUM-158701)
+    - 2D: Fixed Graphics.RenderSprite ignoring the MaterialPropertyBlock of RenderParams when a sprite mask interaction is set.
+    - Android: Bouncy Castle upgrade (from 1.70 to 1.86). New signing keys created by the Keystore Manager use 4096-bit RSA and a SHA256withRSA certificate, instead of 2048-bit RSA and SHA1withRSA. Existing keys are not changed. (UUM-156925)
+    - Android: Fixed a crash when an app is relaunched with FLAG_ACTIVITY_CLEAR_TASK while it is already running. (UUM-158675)
+    - Android: Raised the Android NDK API level to 26 to match the minimum API level. (UUM-160285)
+    - Android: Update OpenJDK from 17.0.18+8 to 17.0.21+9, to fix the compromised eMudhra intermediate certificates. (UUM-158390)
+    - Asset Bundles: Fixed an issue on Windows where an AudioClip failed to play, and errors were logged, after an AssetBundle was loaded again with AssetBundle.LoadFromStreamAsync once the Stream of the previous load was disposed. (UUM-158933)
+    - Asset Pipeline: Fixed a crash when an AssetModificationProcessor called AssetDatabase.Refresh from OnWillSaveAssets while the Editor wrote an asset's .meta file, for example during AssetDatabase.ForceReserializeAssets. (UUM-156706)
+    - Asset Pipeline: Fixed a virtual memory leak when closing UDS shared memory pools on macOS and Linux. (UUM-159913)
+    - Asset Pipeline: Fixed an issue where the Editor could crash when loading or force-reserializing a PlayerSettings asset saved by an old version of Unity. (UUM-138620)
+    - Burst: Fixed "Compilation was requested for method" Burst warnings appearing in the Console when a script has a compile error. (UUM-156119)
+    - Burst: Fixed an issue where Burst could kill the Editor on startup in Docker containers. (UUM-157990)
+    - DX12: Added validation to CopyTexture fix GPU crashes that happened mismatched fallback formats while baking lightmaps for entities graphics on Windows targeting Android. (UUM-150236)
+    - DX12: Fixed a crash on DirectX 12 when a large texture, such as a big dynamic font atlas, was updated many times in a single frame. (UUM-140070)
+    - Editor: Fix incorrectly reported min size value for flexible grid layout group (UUM-158391)
+    - Editor: Fixed a crash when opening Help > Report a Bug or exiting the Editor in a project with an EditorApplication.delayCall callback declared in a complex generic type. (UUM-122928)
+    - Editor: Fixed an issue with overlay resizing the wrong way while in column containers (UUM-137515)
+    - Editor: Fixed issue where filtered Scene View picking ignored BatchRendererGroup objects. (UUM-144180)
+    - Editor: fixed selecting UITK shaders generating console warnings on macOS (UUM-154299)
+    - Editor: Fixed the Editor sometimes crashing in ujob_execute_job on the CloudJob worker thread during a domain reload, and then hanging on the next domain reload. Analytics restarts during a domain reload, and its first queued job could depend on a job from before the restart. (UUM-158326)
+    - Editor: Mono: Fixed a crash in serializable generic structs that implement ISerializationCallbackReceiver and use their generic type parameter in a serialization callback.
+    - Editor: Prevent crashes in the Hierarchy when transforms have null game objects. (UUM-159210)
+    - Editor: Project Auditor: Fix conflicting read/write mesh advice. (UUM-143289)
+    - Editor: Updated included VCRedist to 14.51.36247 for the Windows Editor. (UUM-156578)
+    - Editor: Volume Profile Editor - Reset was invalidating the UI. Recreate the UI when needed. (UUM-150343)
+    - Engine Diagnostics: ANR reports are now attributed to the last session of the process that stopped responding. (UUM-157717)
+    - Engine Diagnostics: Fixed an issue where Engine Diagnostics events and exception reports did not report the scene that was active when they occurred, for example after the active scene changed through SceneManager.SetActiveScene or SceneManager.MergeScenes. (UUM-160686)
+    - Engine Diagnostics: Fixed Android apps reporting an extra session at launch, which ended the first session with an invalid timestamp. (UUM-157715)
+    - GI: Fixed probe occlusion that could bake incorrectly on macOS with the Unity Compute light baker. (UUM-160178)
+    - Graphics: Fixed a crash with occlusion culling in scenes with a very large number of occludees. (UUM-135920)
+    - Graphics: Fixed an assertion error logged to the Console when loading RenderDoc in the Editor with the Direct3D 12 graphics API. (UUM-115796)
+    - IL2CPP: Error messages for P/Invoke libraries that fail to load on iOS, Linux and macOS no longer list impossible paths, and on iOS an absolute library path's real load failure is reported first.
+    - IL2CPP: Fixed IL2CPP player builds failing with UnityLinker errors IL1009 and IL1040 when a plugin folder that contains player assemblies also contains an editor-only assembly with an assembly-level attribute from an assembly that is not part of the build. (UUM-158594)
+    - iOS: Fixed shader warmup on older devices (AppleFamily3 and earlier). (UUM-147933)
+    - Kernel: Fixed a rare crash in the Editor on Windows when freeing memory during Asset Database startup. (UUM-159502)
+    - Multiplayer: Fixed the Multiplayer Play Mode window and virtual players not working after Multiplayer Play Mode was disabled and re-enabled in Preferences. (UUM-153152)
+    - Networking: Unity Transport: Fix a stack corruption vulnerability in the WebSocket code. (UUM-160664)
+    - Networking: Unity Transport: Fix out-of-bound memory accesses after receiving an invalid handshake message. (UUM-160664)
+    - Physics: Fixed an issue where enabling Bake Convex Collision Mesh or Bake Triangle Collision Mesh in the Inspector for a Mesh asset was discarded after changing the selection. (UUM-160148)
+    - Profiler: Fixed an issue where the stats in the Rendering Profiler module details pane could not be selected or copied. (UUM-158903)
+    - Profiler: Fixed ProfilerRecorder.ToArray returning fewer samples than the recorder holds after it wrapped around its capacity. (UUM-159078)
+    - Scene Manager: SceneManager.GetSceneByLoadableSceneId no longer returns a valid Scene for a default/invalid LoadableSceneId (UUM-150020). (UUM-150020)
+    - Scripting: Fixed automatic statics cleanup silently stopping for an entire assembly when a static field of a disposable type had no initializer. (UUM-150516)
+    - Scripting: Fixed Object.Instantiate with InstantiateParameters accepting a persistent parent; it now logs an error and creates the object without a parent, like the other Instantiate overloads. (UUM-150465)
+    - Search: Fixed an "Unknown filter" error when using Search Same Property Value on a property stored in a [SerializeReference] field, such as Build Profile platform settings.
+    - Search: Fixed the Search window Inspector panel not updating when components of the selected GameObject are reordered, added or removed. (UUM-140368)
+    - Serialization: Fixed a crash when a scene GameObject was parented under a prefab loaded in a Player or from an AssetBundle, and Resources.UnloadUnusedAssets unloaded that prefab. (UUM-150465)
+    - Serialization: Fixed the serialization rules analyzer reporting a false UAC1001 warning for a non-serializable type used only as a generic type argument of a field that does not serialize it, such as a UnityEngine.Object reference. (UUM-159263)
+    - Shaders: Fixed an Editor crash when importing a shader file that ends with a #line directive. (UUM-159786)
+    - Text: Fixed a FreeType vulnerability (CVE-2026-23865) that could cause an out-of-bounds read when loading a malformed variable font. (UUM-140975)
+    - TextMeshPro: Fixed an issue where an unclosed rich text tag at the end of the text, such as <br, was parsed as a complete tag. (UUM-158156)
+    - uGUI: Fixed Vertical and Horizontal Layout Groups reporting a preferred size smaller than their largest child when Control Child Size is off. (UUM-159240)
+    - UI Toolkit: Fixed a NullReferenceException when importing an SVG file that contains a gradient with no color stops. (UUM-159742)
+    - UI Toolkit: Fixed a possible crash after a domain reload in scenes that contain a PanelRenderer component. (UUM-159835)
+    - UI Toolkit: Fixed ImmediateModeElement content being clipped or hidden in Editor windows and screen-space panels when a parent has a 3D rotation or a Z translation. (UUM-158344)
+    - UI Toolkit: Fixed SVG clip paths and masks with objectBoundingBox units being misplaced when the clipped element has a transform. (UUM-159735)
+    - UI Toolkit: Fixed SVG files imported as Vector Image with the Antialiased Arc Encodings tessellation mode appearing empty when using a clip path or mask with objectBoundingBox units. (UUM-159735)
+    - UI Toolkit: Fixed the TextMeshPro <material> rich text tag displaying as literal text when the material is not already loaded. (UUM-158921)
+    - UI Toolkit: Fixed TMP_Text.text returning stale text after repeated reads following SetText in player builds. (UUM-91834)
+    - URP: Fixed "Shader is not supported" log messages when post-processing shaders are stripped but not used (UUM-158025)
+    - URP: Fixed blocky gaps at the edges of spot lights in Forward+ and Deferred+ when the light is attached to the camera. (UUM-154016)
+    - URP: Fixed lights missing from parts of the screen with the Forward+ or Deferred+ rendering path for some spot light orientations and for spot lights close to the camera's near plane.
+    - URP: Fixed point and spot lights disappearing near screen edges and the camera near plane in Forward+ and Deferred+. (UUM-146356)
+    - URP: Fixed spot lights behind the camera losing the top of their lit area when using the Forward+ or Deferred+ rendering path. (UUM-159132)
+    - VFX Graph: Fixed Custom HLSL blocks and operators generating invalid shader code when the HLSL source starts with whitespace. (UUM-158603)
+    - XR: Fixed depth being submitted to the XR depth swapchain at the wrong scale (UUM-149514)
+    Package changes in 6000.6.10f1
+    Packages updated
+    - com.unity.localization: 1.5.13 to 1.5.14
+    - com.unity.ml-agents: 4.1.0 to 4.2.0
+    - com.unity.services.friends: 1.3.0 to 1.4.0
+    - com.unity.dt.app-ui: 2.3.0 to 2.3.1
+    - com.unity.cloud.draco: 5.5.0 to 5.6.0
+    - com.unity.behavior: 1.0.16 to 1.0.17
+    - com.unity.cloud.ktx: 3.7.1 to 3.8.0
+ReleaseTime: 2026-11-19T10:46:23.6190000Z
