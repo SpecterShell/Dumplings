@@ -1,0 +1,48 @@
+Version: 3.8.11
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/siyuan-note/siyuan/releases/download/v3.8.11/siyuan-3.8.11-win.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/siyuan-note/siyuan/releases/download/v3.8.11/siyuan-3.8.11-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Upgrade notice
+    Database formats
+    - Primary-key rich text (formats 15 and 16). Inline rich text saved in format 15 by earlier preview builds remains readable. Saving new block rich text in a primary key, including text with images, upgrades the database to at least format 16. Primary-key compatibility
+    - Inline images in ordinary text fields (format 17). Saving the first inline image in an ordinary text field upgrades that database to format 17. Text field compatibility
+    Simply opening a database does not trigger these upgrades. Version 3.8.10 supports database formats up to 14. A client can only open databases in formats it supports. Update every device that syncs or accesses the same data before using the new formats. Back up your workspace beforehand. To roll back, restore a complete pre-upgrade snapshot.
+    Other compatibility changes
+    - AI long-term memory. Restoring a workspace snapshot now rolls back both memory records and their revocation state. Restoring a snapshot from before a memory was forgotten can make it available again if it still passes the usual validity checks. Long-term memory
+    - Kernel API. JSON requests handled by API contracts have a 32 MiB body limit, with a 64 KiB limit for loginAuth. Requests exceeding these limits return code -1. API contracts
+    Overview
+    This release adds rich text and block editing in database primary keys, a built-in date picker, unified color editing, and plugin snapshot browsing and restoration.
+    Mind maps support custom node and connector styles and freeform connections between nodes. The standalone Markdown editor adds find and replace, while macOS gains offline Markdown Quick Look previews.
+    Watch the release overview: YouTube
+    Changelogs
+    Below are the detailed changes in this version.
+    Enhancement
+    - Support a built-in date picker and improve date and time editing
+    - Support unified color editing with HEX, RGB, and a native picker
+    - Support rich text and block editing in database primary keys
+    - Support offline Markdown Quick Look previews on macOS
+    - Support choosing whether to restore document reading positions
+    - Support browsing and restoring plugin snapshots
+    - Improve kernel process icon display on Linux
+    - Support separate entry icon controls for database primary keys and relation/rollup fields
+    - Support KDE system proxy detection on Linux
+    - Support per-node connector styles and shapes in mind maps
+    - Reduce document tree indentation to improve readability
+    - Support freeform mind map relationships with configurable paths and line patterns
+    - Support ignore rules for unused asset cleanup
+    - Preserve document context when following references to visible blocks
+    - Improve mobile bottom sheet dragging
+    - Support find and replace in the standalone Markdown editor
+    - Support expanding or collapsing grouped search results by default
+    Bugfix
+    - Automatic block collection continues after the database block is deleted
+    - Embedded local HTML attachments open in an external browser on iOS
+- Key: ReleaseNotesUrl
+  Value: https://github.com/siyuan-note/siyuan/releases/tag/v3.8.11
+ReleaseTime: 2026-11-19T15:00:54.0000000Z
