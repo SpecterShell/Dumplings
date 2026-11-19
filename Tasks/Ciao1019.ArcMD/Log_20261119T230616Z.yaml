@@ -1,0 +1,19 @@
+Version: 0.2.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ciao1019/ArcMD/releases/download/v0.2.4/arcmd-setup-0.2.4-amd64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release fixes unbounded memory accumulation when switching repeatedly across Markdown documents, sidebar hover previews, and Spaces (#33).
+    Memory and Resource Lifecycle Fixes
+    - Reclaim closed documents and decoded image bitmaps on switch (internal/app/app.go, internal/app/document.go, internal/app/opendocs.go, internal/app/split.go, internal/app/windows.go, internal/editor/images.go): Retire closed *document instances and evict non-resident entries from imgResolved and search.liveDocs whenever switching notes, closing split panes or secondary windows, reloading, or unpinning tabs so closed editors and multi-megabyte RGBA *ui.Bitmap buffers are immediately eligible for garbage collection (#33).
+    - Bounded async image decode concurrency and CPU pixel release (internal/app/document.go, internal/app/view.go): Cap concurrent background image decoders to 4 goroutines, abort queued or in-flight decodes as soon as a superseded document closes, and call Bitmap.ReleasePixels() after GPU texture upload on live windows so uncompressed RGBA/mipmap buffers do not remain duplicated in system RAM (#33).
+    - Bounded sidebar thumbnail LRU cache and scaled preview decoding (internal/app/preview.go, internal/app/document.go, internal/app/links.go): Bound preview.thumbs to an 8-entry LRU cache, drop transient open/... clones when previews close, decode sidebar thumbnail images via ui.DecodeBitmapScaled(data, 640) instead of full-resolution bitmaps, and read [[wiki-link]] hover previews directly from the search index / text extractor without allocating thumbnail editors (#33).
+    - Active Space session slot, whiteboard cache, and modal cleanup (internal/app/app.go, internal/app/whiteboard.go, internal/app/versions.go, internal/app/gitmerge.go): Clear the active Space's suspended session.doc reference upon returning to a Space, bound wbCache to 16 entries, and release retained document/diff state when the Version History, Git Changes, or 3-Way Merge modals close (#33).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ciao1019/ArcMD/releases/tag/v0.2.4
+ReleaseTime: 2026-11-19T22:07:06.0000000Z
