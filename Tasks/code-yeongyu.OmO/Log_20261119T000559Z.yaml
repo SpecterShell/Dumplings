@@ -1,0 +1,617 @@
+Version: 5.1.78
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.78/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.78/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Hephaestus on GPT-6.2 models sends one prompt instead of two: the GPT-6.2 core stands alone there, so the Hephaestus role is no longer appended after it. Other models keep the role, and switching models in a session drops or restores it. On a real request the system prompt goes from 9,211 to 4,300 tokens (o200k_base). The refusal-is-final rule is now stated once inside the model-core frame for every agent that carries it instead of at the end of the role, so it survives without the role and is never doubled by a model core that states it. (#14219, part of #14186) (#14225)
+    - No behaviour change: tests now pin which ended sessions a fuzzy handoff compares. A fuzzy handoff still compares only the ended sessions that could change its answer. Tests now prove the cut-off, and that a session left out never appears in the list an ambiguous handoff asks you to pick from. (#13190, follows #13141) (#14196)
+    - Thread tools in one process share a single endpoint enumeration per agent dir, instead of one per session, so a session that a delivery just started reuses a listing taken within the last 5 s. (#13236, part of #12989) (#14196)
+    - Every recovery hint in the thread tools now gives the eval-cell form beside the tool name (thread_list (tool.thread_list() in an eval cell)), the convention the thread tool descriptions already follow. A model that follows a hint no longer hits the "run it in an eval cell" redirect first. (#13240) (#14196)
+    - A thread tool call on an account with other devices reads the account's session list once instead of up to three times: overlapping reads share one listing round, and a round that ended under 2 s ago answers the next read (a create, open or session command lists again). The account list waits on every device, 0.5-2 s on a loaded fleet. (#13453) (#14196)
+    - thread_list rows carry a state (running, idle, inactive or archived) and the thread's model when known, instead of a per-thread live/alive flag; whether a device is reachable is on devices only. Archived threads are hidden unless a state filter asks for them (omo thread list --state), and a thread closed on this device stays listed as inactive instead of disappearing. status remains for now, derived from the state. (#13469, fixes #13403) (#14196)
+    - omo remote takes a device by the name its table prints. The session verbs (open, send, model, interrupt, close) accept a device's id, its name (compared as thread names are) or a unique id prefix, through the same resolver thread_create uses, and their output names the device by its id. A name two online devices share is refused with ambiguous_target, listing each candidate; a name only an offline device has is device_offline; a device nothing matches is not_found. (#13499, #13432) (#14196)
+    - The thread control port's setThinkingLevel no longer takes a scope argument that nothing read: both the local and the relay control always change only the addressed session's level (engine scope turn) since #13494. No behavior change. (#13500) (#13506) (#14196)
+    - Creating a thread on another of your devices (thread_create with device, omo remote open) is faster. The create used to make four round trips over the relay: it looked up the device's engine endpoint, opened the session, attached to it, and named it. Now it makes two. The endpoint is looked up once per device, nothing attaches to the new session, and the name goes straight to it. (#13889, part of #13404) (#14196)
+    - An omo session now reaches this device's device service over one connection instead of two: the thread tools' session commands share the connection their account reads already use, and closing the remote client ends it. (#13944) (#14196)
+    Fixed
+    - omo remote send that waits on a turn now settles inside a bound: --timeout <seconds> (1..600, default 120) answers a typed {kind:"timeout", waited_ms, ...} JSON value instead of hanging when the turn never settles; a session that ends before settling answers {kind:"session_ended", end} as one JSON value under --json (both were a silent hang or stderr-only), and the queued notice rides that same JSON value instead of being dropped (#13425). (#14213) (#14225)
+    - thread_create reopens a closed thread on another device again. It failed with EISDIR: the account listing names a session's working folder, never its session file, and that folder was sent to the other device as the file to open (a row with no path sent its working folder too). The reopen now opens the file the close was told by that device, or else asks the device which file carries the thread's id; a device that cannot say answers a typed refusal naming it (unsupported for an engine without the lookup, not_found, or ambiguous_target). A thread this device closed no longer lists as live while the listing catches up, and a reopen answers ok only once the reopened session can be reached, so the next tool call no longer answers not_resumable. (#14179, fixes #14170) (#14225)
+    - thread_send to a thread on another device that is not running answers at once instead of waiting about 60 seconds for unsupported (daemon_unavailable). The device holding it is asked first, whether or not this device can wake it there: a thread it holds no session file for is not_found (as the refused reopen says), one it runs is delivered to (also when it was reopened elsewhere since this device last listed it, under whatever key it runs under now), and one it only has on disk is woken when this device can wake it there, else not_resumable, naming the reopen as the next step. A device without the wake capability counts as unable to wake. (#14179, fixes #14184) (#14225)
+    - thread_send, thread_read and thread_create aimed at another device no longer wait past what an eval tool call allows: the command waits, wakes, creates and attaches of one call now share one 50 s budget, and a thread_read wait on another device leaves the read after it enough time to return the transcript. A message the relay accepted for the other device but whose answer was lost is reported as the new delivered_unconfirmed (it may have run: read the thread before sending again). (#14185) (#14225)
+    - thread_create (and omo remote open) on another device now opens the thread only on that device's own engine (the primary engine endpoint its device service names), never on the first endpoint listed. Before this, a thread could land on an owner shard or on another registered agent dir's older engine, which then refused every cross-device thread_send as unsupported (method_unclassified). When the device names no primary, because its own engine is not listed, the create now fails host_unavailable with reason no_primary_endpoint before anything opens, even if only one other endpoint is listed. The next action says to start or restart omo on that device, and to update the device service on both devices if that does not help (a device service older than 0.1.11 cannot name a primary; behind such a local service a device's lone endpoint is still used). (#14200, fixes #14195) (#14225)
+    - thread_send no longer answers not_found for a thread that thread_list shows live while the other device's service is restarting for an update, or when that device missed one account listing round. It now answers a retryable host_unavailable, so the sender can try again instead of treating the thread as gone. (#14174, fixes #14172; this entry was missing from the #14196 train's notes) (#14203) (#14225)
+    - A newer gateway store schema of an extension is no longer reported as the gateway's own schema with that extension's migration counts. (#14221) (#14225)
+    - When a thread created on another device cannot be named because this device is signed out, the warning now names this device's sign-in instead of telling you to update omo on that device. (#14221) (#14225)
+    - thread_create with an alias held by a thread on another device no longer opens a copy of that thread's session file on a third device as if it were the holder. (#14221) (#14225)
+    - The remote wake's engine minimum now also holds back a compiled omo or dev build when a caller sets a stricter minimum, and an omo prerelease no longer counts as its release. (#14221) (#14225)
+    - A reply's route and the listing it takes are decided from one read of this device's id, and a late endpoint listing no longer replaces a terminal's kind that another session's newer listing recorded. (#14221) (#14225)
+    - On Windows, a memory sync and a memory write starting together on a new device no longer fail with a held memory-write lock. Creating the memory repository there takes longer than the 5 s lock wait, so the second caller timed out. Callers in one process now wait for the one creation already running. (#14223, fixes #14188)
+    - Memory sync's root-change check no longer reports "unchanged" when the newest retired trust pin is corrupt, truncated or belongs to another account; it reports the check as skipped (PIN_UNREADABLE) instead of comparing against an older pin. A missing pin still falls back to the next older one. (#14218)
+    - Input sent over a session's RPC socket (prompt, steer or follow_up) now counts as typed input for the thread tools. A run it starts or joins never claims the input as a delivery it received: when the client reused the id of a real delivery that this session never received, thread_send was refused invalid_arguments (guard: "unknown_cause") or continued a chain the session was not part of. Such a send now starts a new causal chain, and a run the gateway started from a bound thread keeps that thread's chain (#12317). (#12318) (#14196)
+    - thread_create that opens an existing thread and passes the alias that thread already holds ({thread: X, alias: X}, or the thread's id with its own alias) now opens it and keeps the alias, instead of failing alias_taken with the thread itself named as the holder. An alias held by another thread is still alias_taken. (#12732) (#14175) (#14196)
+    - When another device refuses a thread_send or thread_handoff because the chain went past that device user's thread chain limit (threads.chainCountLimit), the tool now answers chain_count_limit, naming the device and the setting, instead of unsupported with advice to update omo on that device. A queued delivery to a session there that is not running maps a chain-limit refusal from that device's gateway store to the same code, with the chain count and the limit, and the receiving consumer now passes on the store's own refusal reason (for example sender_not_allowed) instead of the coarse code. (#12766) (#14196)
+    - A send to another device whose state read gets no answer can be retried right away. When the get_state read that a steer to another device starts with ends without an answer, thread_send now reports host_unavailable (nothing was sent there, retry is safe) instead of idempotency_uncertain, and a retry under the same idempotency_key reads the target again instead of replaying that failure; a send that fails before its record leaves this device keeps no receipt. (#12947, fixes #12925, part of #12879) (#14196)
+    - A delivery message without a valid id no longer inherits the previous sender's reply allowance. A session_control_delivery whose delivery_id is not a string is malformed: after a final answer it starts a new group with nobody approved, and while work is running it joins the work without adding a sender or changing the hop - it no longer passes as a turn the engine started (which kept the earlier group's allowance). The same-account bound of the reply allowance is stated where the rule runs (component.ts noteInput and the thread AGENTS.md), not only in the release notes. (#13134) (#14196)
+    - A thread named by its alias after a late sign-in is still answered when the rename fails, and says why. When the account is gone by the alias claim and the rename that names the new thread by the alias fails with an untyped error, thread_create now answers ok with the created thread and local_name_unavailable: "host_unavailable", instead of an error that did not name the thread. The error's message comes back as local_name_unavailable_reason, cut to 300 characters with an ellipsis, so a failure can be traced without a whole host reply filling the result. (#13185, follows #13179; folds #13283 and #13284) (#14196)
+    - A thread tool call no longer waits forever behind an endpoint enumeration (host status --all) that never answers: after 30 s the next call starts a fresh one and the stuck answer is dropped. (#13231, fixes #13009) (#14196)
+    - Text from another device prints escaped in the thread tools' output. A thread title, project path or refusal reason that another device sends is shown with its control, format and line-separator characters escaped (\u202e, \^[, ...) wherever thread_list, thread_read, thread_create and the control tools print it, including the candidates of an ambiguous name; nothing is deleted, and addressing a thread by its exact title still finds it. (#13305, #13304) (#14196)
+    - Thread tools: a command for a session that ended on another device since it was listed now fails with not_resumable ("the thread is not running on device X") instead of unsupported with advice to update omo on that device. (#13439) (#14196)
+    - Thread tools (thread_list, thread_read, thread_send, thread_create, ...) and omo thread no longer run host status --all on every call. They read the endpoint registry on disk instead, so a local thread_list that took about 9 s on a host with 50 endpoints answers in well under a second. (#13452) (#14196)
+    - Listing a thread endpoint that stopped answering reads its leftover session claims asynchronously, so an endpoint with many stale claims no longer blocks the engine's event loop while thread_list runs (fixes #13551, folded from #13573). (#13452) (#14196)
+    - A reply to a sender named by its device no longer goes through the relay when this device's own id cannot be read; the send is refused host_unavailable with the reason, and nothing is sent. (#13483, part of #13037) (#14196)
+    - A session that another device holds but does not run is reached through a probe only while this device's service can carry the wake; with the wake off, the answer stays not_found instead of an attach refusal. (#13483) (#14196)
+    - A wake whose connection drops after the request was written is reported uncertain, not refused, so it is never retried as if nothing ran. The list of local API codes that refuse before sending now lives once in device-service-core and is shared with the thread tools. (#13483) (#14196)
+    - When another device's service refuses a wake with free-form text, that text is no longer shown; the reason reads unrecognised, as it already did for the receiving consumer's refusals. (#13483, part of #13277) (#14196)
+    - thread_list drops the cached rows of a device the account no longer lists, so thread_create and thread_send answer not_found for that device's thread instead of addressing it; an offline device keeps its rows, and with no account device list the filter is a no-op. (#13539) (#14196)
+    - Listing a thread endpoint that stopped answering reads its leftover claims and the session files they name asynchronously and one at a time, so a host that died holding many sessions neither blocks the engine's event loop nor runs it out of file descriptors while thread_list runs. Endpoints are still listed together, so the files open at once are bounded by the number of endpoints, not by the number of stale claims. (#13581, fixes #13579 and #13584) (#14196)
+    - Cold wake: a message from another device now wakes sessions on installs of the compiled omo binary (the one-line installer) too. The wake checked the engine version in a form only npm installs report, so it stayed off on compiled installs (#13672). (#13673) (#14196)
+    - Cold wake: a message that arrives while the woken session is still being restored now runs once the restore settles. It no longer waits for you to open the session (#13708). (#13709) (#14196)
+    - thread_read with wait_ms on a thread on another device no longer settles early while the session retries after a provider error: the retry's auto_retry_start / auto_retry_end records now count as the run still going, so the wait ends on the retried run's turn (#13871). (#14196)
+    - An agent whose omo build is older than the one that last upgraded this machine's gateway store no longer gets an opaque internal_error from thread_send and the other thread tools (or omo thread send). The store is still refused, so nothing is read or written at a schema the build does not know, and the failure is now gateway_schema_too_new: it names the store's schema and the build's schema, and tells you to update omo with the exact command (omo update), then restart the session. (#13941, fixes #13927) (#14196)
+    - Thread tools: a call toward another device that this device cannot send because its own relay sign-in lapsed (sign_in_required, signed_out) now fails with host_unavailable asking to sign in on this device, instead of unsupported with advice to update omo on the other device. (#14015) (#14196)
+    - thread_read with a small max_bytes now returns the newest messages that fit, ending at the latest reply, on this device and on another one. Before, it filled the budget from the oldest message of the 60-message window, so a 1.5 KB read of a short thread returned only its preamble. next_cursor from such a read pages the older messages of the window. (#14176) (#14196)
+    - When the host refuses to close a thread, the thread_close refusal (unsupported) now names the engine's reason in its message, for example refused to close it (work_pending: an admitted delivery not yet written). Before, the message named only the reason code, so a caller could not tell a running turn, a bash command and an undelivered message apart. The engine side of the same bug, where an interrupted run left a delivery that kept every close refused, is fixed in code-yeongyu/senpi#6971. (#14178, fixes #14169) (#14196)
+    - Remote sessions: a session host unit written by an older omo (KeepAlive / Restart=always, naming an older ~/.omo/binary-runtime/<version>/omo) is brought to the launched runtime's run-once shape and program on the first launch of a newer runtime, keeping its own agent directory and PATH, never re-enabling a disabled unit and never blocking the launch; a refused ensure no longer respawns every 30 s. omo daemon run now says why the engine refused, on which socket and which host holds it. (#14194, fixes #14191)
+    - Codex edition recon agents: explorer and librarian bundled TOMLs default to gpt-6-luna at low on the fast service tier instead of the flagship gpt-6-astra, matching the cheap recon routing every other edition's model tables already pin (#8616). Untouched installs step down on the next sync through the model-receipt mechanism; a hand-set model or effort keeps surviving the move. The other ten roles keep Astra at their current efforts. (#14192, fixes #14189)
+    - Memory sync: when the newest retired trust pin cannot be read, the root-change check is reported as skipped instead of silently comparing against an older pin; the recovery-phrase terminal reader zeroes its buffer when released. (#14105, fixes #14098)
+    - Memory sync: a join, enable or passkey recovery that already pinned the account is no longer reported as failed when the follow-up root-change check cannot read the local retired pins. The check is reported as skipped instead of passing silently: omo sync enable prints it with the error code, the desktop's enable result carries an optional rootCheck: { kind: "skipped", reason } beside rootChanged, the in-app warning goes to the memory component's log rather than the terminal, and recovery emits sync.trust.root_check_skipped. (#13641, fixes #12382) (#14097)
+    - Memory sync: creating a recovery phrase now checks the sync service's own answer on whether it accepts recovery-phrase keys, read fresh through the signed-in session for every creation. Before this the host never wired that check, so a recovery phrase could not be created even where the service accepts one. A refused, absent, unreadable or signed-out answer still refuses before any words are shown or anything is written. (#13646, fixes #13631) (#14097)
+    - Memory sync works again after a recovery phrase is set up. The sync engine's requests (batches, objects, uploads, sync state and the event stream), the device-list read and the account reads now declare the client contract version and the recovery-phrase capability, as the account and pairing requests already did. Before this, the service refused every one of them with "client update required" for an account with a recovery phrase, so no device synced (#13691). (#13693) (#14097)
+    - Memory sync no longer stops for good when its first start fails. A start that fails (for example another omo process holding the account's credential lock past the 15 s wait) or gets stuck is retried on the same backoff as a waiting start, 15 s doubling to five minutes. A stuck start is named in the log, and the first successful start logs "memory sync started", so a log shows whether sync is running (#13701). (#13706) (#14097)
+    - Memory sync: a device that has turned sync on and joined the account now receives the account's memory without writing anything first. Its memory repository is created through the same first-write path a memory write uses, only for a joined device with sync on; a device that has not joined, a device with sync off and every read still create nothing. (#14096, fixes #14094) (#14097)
+    Added
+    - thread_archive { thread, archived? } archives or unarchives a thread on any device through the engine's session flag. (#13469, part of #13407) (#14196)
+    - Scripts can create, interrupt, close, rename and re-model threads through the thread SDK. createThreadSdk(...) from runtime/thread-sdk/sdk.js now has create, interrupt, close, rename and set_model. They take the same arguments as thread_create, thread_interrupt, thread_close, thread_rename and thread_set_model, run the same code, and answer the same data on this device or another device of the account. A script acts as itself, not as a session, so self answers caller_context_missing and a thread it creates records no creator session. (#13413) (#13495) (#14196)
+    - thread_list rows of a held thread carry the engine's activity (idle, running, awaiting_approval, queued or errored), error_code with errored, and turn_id when the engine reports them (senpi#6688). state folds them: queued and awaiting_approval are running, errored is idle; inactive and archived rows carry none. (#13504) (#14196)
+    - Memory sync can be turned off on one device. omo sync disable turns it off for the device it runs on: that device stops sending and receiving memory, memory already on it stays, and the account's other devices keep syncing. omo sync enable turns it on again without a new approval. An OmO session already running on that device stops syncing when its sync next reports a change, or at its next start, and a process that turns sync on again starts the engines it had stopped right away. For the desktop, the engine answers omo.memory.sync.disable with { kind: "off" } or a typed problem, and lists "disable" in omo.memory.sync.features; turning off from the desktop app needs an app release that carries the matching request. (#14121)
+    - The memory sync status can say how many memories changed while this device was offline: status.sync.appliedWhileOffline is the number of memories the catch-up updated after the device was away (OmO was closed, or sync could not reach the service), 0 when nothing changed, and absent when the latest changes arrived while it was online. (#14121)
+    - omo sync enable and omo sync recover can use a recovery phrase on the terminal itself: words appear only on the controlling terminal, never in output or logs, and the flow refuses under an agent harness, CI or without a terminal. Creating a phrase still needs the client flag, and the CLI asks the service whether it accepts phrase keys before each creation. (#13337) (#14097)
+    - dad45c2596 Merge pull request #14216 from code-yeongyu/p0/knip-landmines-oxlint
+    - 6e92b04238 Merge dev (post #14223, 34533082a3)
+    - 34533082a3 Merge pull request #14223 from code-yeongyu/fix/14188-windows-memsync-reds
+    - ae6ed98119 Merge pull request #14232 from code-yeongyu/p0/bwrap-repo-bind
+    - be86d18d91 Merge remote-tracking branch 'origin/dev' into fix/14188-windows-memsync-reds
+    - 073026c526 Merge dev (train 2, cca6ce3478)
+    - cca6ce3478 Merge pull request #14225 from code-yeongyu/release-train/omo-20261118-thread-train-2
+    - d33bf97c13 fix(lint-ratchet): minified bundle output never counts for the omo-testing rules (#14220)
+    - da3d63ecd1 wip: counting-side bundle exclusion
+    - 100e36c451 Merge current dev (train 1 baseline entries) into p0/knip-landmines-oxlint
+    - 5063dea580 wip: counting-side bundle exclusion
+    - 8c6f068759 chore(bundles): regenerate Set A once at the thread train 2 top
+    - d01b553fbb fix(train): train 1's thread tests hold on macOS and Windows
+    - cba38a2632 fix(train): format three files and make ENDPOINT_PRIMARY_MIN_SERVICE_VERSION module-private
+    - ff2e58df44 docs(changes): fold the thread train 2 members' fragments into 14225.md
+    - dd4a28a2c5 test(train): thread_send's view selection runs under the call's deadline (#14185 with #14221)
+    - ebec9db704 fix(train): #14185's endpoint waitMs test names the device's primary endpoint (#14200)
+    - 4695a6b414 Merge #14200 (7545d8c81ddba90bce76a58b9a6b59a1d7b86c55) into the thread train 2
+    - faf60f9158 Merge #14185 (773f1524e93a5264a3ecbc859516860910e7c6b2) into the thread train 2
+    - 673dd62559 Merge #14203 (b998d7230fc9f8b183ac82d6849deac0fee1c83a) into the thread train 2
+    - 6d20bdb8b4 Merge #14221 (38b87afb6da2062199d0995913cd59c4d319c9e0) into the thread train 2
+    - 564f215659 Merge #14179 (80c30d1b50592fd7a78a34a16aff5fcb483e2b58) into the thread train 2
+    - 50c7fc9301 Merge #14219 (709eab5b2ba8a34cf9fc914e248d2256099e8d1b) into the thread train 2
+    - f4a7cf7878 Merge #14213 (baffbae00864f6fcfe21e74cd6d5d610d6d3a102) into the thread train 2
+    - be84607fc6 Merge pull request #14218 from code-yeongyu/fix/a4-lows-14157-14150
+    - a26e974569 Merge dev 494d07f09b (#14194 landed); take dev's generated files, regenerate once
+    - 494d07f09b Merge pull request #14194 from code-yeongyu/fix/14191-session-host-unit-update
+    - 80c30d1b50 fix(thread): escape an engine's find_session refusal text; state the cannot-answer send path (#14179 review L10, L11)
+    - 8cd1494683 docs(changes): fragment for #14218
+    - 9b218ec23a test(memory): a failed repository creation rejects every joiner with its error and is retried (#14188)
+    - 773f1524e9 fix(thread): train 1's direct session command and the endpoint lookup share the call budget (#14130 review round 5)
+    - 7545d8c81d style(device-service-core): oxfmt markNotSent and engine-endpoint; markNotSent as if/else (#14200 review M)
+    - f5614b404d docs(changes): fragment for #14223
+    - 88abd619d7 fix(memory): concurrent first writes in one process share one repository creation (#14188)
+    - a6ce3b2c9e test(memory-core): the #13691 header audit compares POSIX paths on Windows (#14188)
+    - 791be7c4b5 Merge origin/dev (train 1, c796ea6cd6) into fix/14170-reopen-empty-path
+    - cd92c0c2c2 Merge origin/dev (train 1, c796ea6cd6) into fix/14195-remote-create-primary-endpoint
+    - 3b2e004d5d Merge origin/dev (train 1, c796ea6cd6) into fix/14130-cross-device-reply
+    - 709eab5b2b fix(omo-opencode): the frame context says when its role did not follow; the parity test names the rule agents (#14219 review L1, L3)
+    - 38b87afb6d docs(changes): fragment for the thread-sweep review LOWs (#14221)
+    - b526a4718f fix(thread): review LOWs of the thread-sweep train members
+    - c59794ba24 Merge dev (c796ea6cd6, thread train #14196) into #14194; regenerate Set A once
+    - 4684287b81 Merge dev c796ea6cd6 (thread train #14196 landed); take dev's generated files, regenerate once; trust-pin doc comment names what null means now (#14218 review LOW)
+    - 2459cb6611 docs(changes): fragment for #14219
+    - 41374aae74 Merge remote-tracking branch 'origin/dev' into fix/14186-hephaestus-gpt-6-2-single-prompt
+    - c796ea6cd6 Merge pull request #14196 from code-yeongyu/release-train/omo-20261118-thread-sweep-2
+    - 1175890d7f fix(omo-opencode): one Hephaestus prompt on GPT-6.2; the frame states the refusal rule once (#14186)
+    - 9a8a33fed5 chore(knip): the free-plan thread-tools QA driver is a run-by-path entry
+    - 5ece536d01 chore(knip): the landmines testing jsPlugin is an entry, loaded from script/lint-ratchet.oxlintrc.json
+    - b998d7230f Merge the train head 081c4a9915 into fix/thread-sweep-train-review-lows
+    - 081c4a9915 chore(lint): the ratchet baseline follows the train's regenerated bundles
+    - 215ca109b9 Merge pull request #14215 from code-yeongyu/p0/packed-stall-bound
+    - 253be43e7d Merge dev 00bfc75459 into the thread-sweep train top
+    - baffbae008 test(remote): a session that closes before settling answers session_ended JSON (#13425)
+    - cc56574f71 test(omo-native): bound packed-install steps on progress, not wall clock; stage installs inside the run root
+    - 00bfc75459 Merge pull request #14210 from code-yeongyu/p0/14201-fmt-reds
+    - f3edd05966 Merge pull request #14211 from code-yeongyu/p0/daemon-coldstart-pin
+    - 303e4e701d fix(remote): a waiting omo remote send settles typed inside --timeout (#13425)
+    - 94a7275fbe fix(remote): a non-release launch never refreshes the session host unit (#14194 delta review L1)
+    - 816b2b6646 chore(bundles): regenerate Set A after the #14201 hint fix
+    - 3845bccc80 chore(thread): format #14201's two files and register its QA driver (dev fmt:check and knip reds)
+    - 90951b5c91 fix(train): #14201's scope_denied hint names thread_list in its eval form (eval-cell-hints scan, #13240)
+    - 7b9c11b8f5 Merge current dev
+    - f15272681b test(omo-native): pin the real-engine sandbox cold start so a pinned runner host cannot make the idle shard persistent
+    - 20d2a2f868 fix(thread): keep the call budget out of the remote barrel; move it to components/call-budget (#14130)
+    - 40c67911f7 fix(remote): keep the G2 import rule and knip entry probe green (#14194 receipt test:2of3)
+    - 375afe67c6 fix(fmt): format the free-plan cross-workspace QA script and test left red by #14201
+    - 85dbf80ec9 test(omo-native): the reader error-path test reads a live directory descriptor, never a closed number (#14157 item 2)
+    - 08e585353f Merge pull request #14208 from code-yeongyu/landmines-testing-rules
+    - b5b4cd07e7 fix(memory-core): a corrupt newest retired pin skips the root check instead of reporting unchanged (#14157 item 1)
+    - d8b9bc779c chore(bundles): regenerate Set A after the dev 24db59b610 merge
+    - 85b3102e12 Merge origin/dev into fix/14130-cross-device-reply (resolve thread AGENTS.md: dev's addressing row, 43 codes)
+    - bda7c29c3b Merge dev 24db59b610 into the thread-sweep train top
+    - b0e6976cb4 feat(script): ratchet fixed sleeps and flake masking in tests (landmines port)
+    - 9cb7a3df87 fix(thread): reach the call budget through the remote barrel (#14130)
+    - 5f7c503f5c docs(changes): fragment for #14194
+    - 2b87ab01f0 fix(remote): open only on a named primary whenever the service can ask; a lone listed endpoint is not the device's own engine (#14195, live QA)
+    - 24db59b610 Merge pull request #14201 from code-yeongyu/fix/thread-same-device-plan-gate
+    - acd47810c2 chore(bundles): regenerate Set A after the thread_archive description fix
+    - e114a6f838 fix(remote): refresh only an older runtime's unit, keep its agent dir and PATH, never block or re-enable (#14194 review H1/M1/L1/L2)
+    - d526387098 fix(train): thread_archive's parameter description names thread_list in its eval form (eval-only-mentions, #13469 with #14038)
+    - ac134df02a fix(remote): an unlisted own engine answers no_primary_endpoint with its own remedy, not a retry (#14195 review M1, L1, L2)
+    - f003170664 test(thread): import ThreadHostSession from ./tools (the fixture does not re-export it, tsgo catches what bun erases)
+    - 553b102fb1 fix(thread): ask the holder before the wake path too, so a session it holds no file for fails fast (#14184, re-probe 3)
+    - 4b16f19503 docs(changes): release notes entry for #14174 (#14196 review L1)
+    - 2144c8d7b3 changes: 14200 fragment
+    - 03129426c6 fix(thread): a same-device thread in another workspace never answers as cross-device (#14199)
+    - f4eb21aa51 fix(remote): a remote create opens on the device's primary engine endpoint, never endpoints[0] (#14195)
+    - b8df656f31 docs(thread): AGENTS.md counts fifteen tools and eleven peer handlers (#14196 review L2)
+    - ed067cddfc chore(bundles): regenerate service-auth, bundle inputs and the three device extensions' input hash for #14191
+    - 43eb4912a8 fix(thread): a send to a reopened thread reaches the key it runs under now (#14179 review M1)
+    - 89d07eb45e fix(thread): a send after an online holder refused the reopen fails fast too (#14184, re-probe 2)
+    - 08ccd93dc5 fix(thread): size a create's wait after the dial and the lookup; budget the post-create locate (#14130 review round 3)
+    - 1c8777aefc Merge #13185 (2e52d5d62f31909543fe6912f95a5ebf36304fe3) into the thread-sweep train
+    - 8d6ffbfd73 Merge #13709 (52c1587920773dabdfe85c5e7591755c9d7fbb3d) into the thread-sweep train
+    - acb7950b08 Merge #13673 (e00772040e167517cae32ac899e5535b8f9a6fc6) into the thread-sweep train
+    - 773408d6ec Merge pull request #14192 from code-yeongyu/fix/14189-codex-recon-luna
+    - 9de75df155 docs(changes): fold the thread-sweep train members' fragments into 14196.md
+    - 7529f39fc6 Merge dev 0ed7c50777 into the thread-sweep train top
+    - f5cac52a9a fix(thread): a send asks the holder before refusing a closed thread as not resumable (#14179 review L4)
+    - c36658faaa chore(bundles): set omo.js budget to the thread-sweep train-top measurement + 4 KiB
+    - 0ed7c50777 Merge pull request #14099 from code-yeongyu/docs/14077-budget-history
+    - c341f21619 Merge remote-tracking branch 'origin/dev' into docs/14077-budget-history
+    - 211c3102af fix(omo-codex): name the changelog fragment for the PR and link #14192 (review M1)
+    - 7ddc2e1f61 chore(bundles): regenerate Set A once at the thread-sweep train top
+    - cbc82e88f7 Merge dev 5d290d8119 into the thread-sweep train top
+    - 0419990853 Merge #12766 (5c033045ae43ba102fd194efcad06e444fdecd08) into the thread-sweep train
+    - 5c033045ae fix(thread): a chain count limit that cannot be read fails open; format the chain_count_limit expectation (#12766 review M1, L2)
+    - 94befbc1b1 Merge #13305 (d2272d18d052a0cb0ba70bd6e416a36fafb4fe61) into the thread-sweep train
+    - 298a9e7697 fix(thread): a cross-device wait leaves the read its share; creates and attaches share the call budget (#14130 review round 2)
+    - a6f2cef40c fix(remote): bring a stale session host unit to the launched runtime and say why daemon run was refused (fixes #14191)
+    - 5d290d8119 Merge pull request #14121 from code-yeongyu/feat/14093-sync-disable-offline-count
+    - 139695dd5f fix(omo-codex): explorer and librarian recon agents run gpt-6-luna, not flagship Astra (#14189)
+    - 8615d296ad fix(train): #13539's removed-device alias refusal names the eval form (eval-cell-hints scan, #13240)
+    - 066c866f9d fix(train): #13944's sign-in holderTarget test passes the roster #13539 now requires
+    - a641405ac6 Merge dev d1b6d16aa9 (#14105 landed); take dev's generated files and regenerate once
+    - a600445df6 Merge #13539 (ab8b413937f33d437647781872efbf1f3e0c1c56) into the thread-sweep train
+    - 001d2835a2 Merge #12766 (516b546301c02c1c6e71ccb617b68c742c4b53b3) into the thread-sweep train
+    - 0892732671 fix(train): the enumeration-count wrapper binds the optional listing method instead of asserting it (lint ratchet)
+    - ab8b413937 fix(thread): an alias held on a removed device answers not_found without a relay probe (#13539 review L1)
+    - 516b546301 fix(thread): the queued intake applies the device\x27s threads.chainCountLimit (#12766 review L1)
+    - d1b6d16aa9 Merge pull request #14105 from code-yeongyu/fix/14098-a4-review-followups
+    - 99d4b339de fix(train): re-apply the old train's reconciliations that still hold (vendored dir, enumeration key, counts, hints, direct commands)
+    - 8746c6370b Merge #14178 (dec3b8142f3d96779ebefdeebb1fbe869f36e720) into the thread-sweep train
+    - 1a5cd87664 Merge #13539 (8f26c9d579ce82160255fa53b98c4290d349d887) into the thread-sweep train
+    - a892f8b328 Merge #13504 (8bd4b80ce24157d3dd4459f0076b177e76f6e42b) into the thread-sweep train
+    - 127b827c46 fix(train): thread_archive's remote row is printed escaped like thread_list (reconciles #13305 with #13469)
+    - 6d51dad757 Merge #13469 (c68d5d5bca1375d08cce29800d4cf23f79ed5927) into the thread-sweep train
+    - cda20f69a0 Merge #13453 (c543636d626c13dcecd54f37791c5ff2c6cfc93a) into the thread-sweep train
+    - c92e953cf4 Merge #13305 (d4d1c1a9680fea1e9c7f5d59b04a59a7fe5627d4) into the thread-sweep train
+    - a97d75fd98 Merge #13944 (8a797202a931ecd32fc0687feeb23a47a44bb707) into the thread-sweep train
+    - 66ea9f18a2 fix(thread): keep the call budget off background re-sends; bound wakes and attaches by it (#14130 review)
+    - 7b50278b8c Merge #13889 (30a145fe69ce04430bdc9a11f2774a16221bcbeb) into the thread-sweep train
+    - eb8a45f2ba Merge #13499 (cae97cf88cc28fda0631f47789fecacebe54127a) into the thread-sweep train
+    - 2ea88e8e3c Merge #13506 (09eabccee90aa1ccad95438f4c7cbb28db377602) into the thread-sweep train
+    - ed40fd1089 Merge #13495 (92ba788709540d25a8222b9e9d02d284d51ae8c7) into the thread-sweep train
+    - 2bf2a821bc fix(thread): never reopen a remote thread from its listed folder; send to a not-running one fails fast (#14170, #14184)
+    - baa21c380f Merge #14174 (e293d1afe1cbe8fa3f5b5b47f551c3199441ea2c) into the thread-sweep train
+    - 4f22e6e62f Merge #14176 (b2e89dd240a18cc9d2523cff0d5393d6126f2c77) into the thread-sweep train
+    - 37e13ce81b Merge #13941 (fdfbbfc7e4ae5dab07fc499c2618036793e604c4) into the thread-sweep train
+    - 21c90d385a Merge #12947 (ffb59dbf446783212f95813e70e5bc07517398af) into the thread-sweep train
+    - 5658270ccb Merge #12766 (409bf144d65277da82d9a6d0e9660bb48e934dde) into the thread-sweep train
+    - 072a564f4f Merge #14015 (cfa8f7799282dcbca47eb45751f0d544155fba70) into the thread-sweep train
+    - 0db77cfb43 Merge #13439 (89feda8f47cca10effea9d577afd7fe4c66f0def) into the thread-sweep train
+    - 410cadad20 Merge #13236 (475653024827089021d6bacdf3def6f4e607aa58) into the thread-sweep train
+    - 738bdd1913 Merge #13231 (848be2d0a645314279a9729cab11a0e94a52e233) into the thread-sweep train
+    - b7ed5ad407 Merge #13581 (ad4a129ed14316bc9c063ca14c0cb647abb100e2) into the thread-sweep train
+    - 0df8398c48 Merge #13452 (94f453ecb9667198e4ed0dacccddd4e75a375da2) into the thread-sweep train
+    - a7fa967c6c Merge #13240 (b872a77001774feb0ad6c638a88d863d7c32fe92) into the thread-sweep train
+    - 42441a0088 Merge #14175 (d0f20911c38e9b680584b4a05de04a281801a791) into the thread-sweep train
+    - b685ccdcca Merge #12318 (f328dd53bf2af25c2d834123cd43fa17fa37187e) into the thread-sweep train
+    - 04746cdd7c Merge #13134 (328318d42e04cf5643bbf051d7342dc232da8745) into the thread-sweep train
+    - 6dc8d507ad Merge #13190 (eaf612fd790cc2dd37a832ee490492bbdca2f96a) into the thread-sweep train
+    - f2a94879e4 Merge #13185 (9365b45589cd2a7961860d2f48a90feb40393271) into the thread-sweep train
+    - 8ed3406bfb Merge #13483 (6ca8e939642d1fadfb1e007ce752f863cf9703f6) into the thread-sweep train
+    - ba2ccfe924 Merge #13871 (95eefbc63207b0799a921b380ff0231283aa41c5) into the thread-sweep train
+    - f08c57f95f Merge #13709 (6e24f47bd78998c4324aa06c970fff909f1cc086) into the thread-sweep train
+    - 3aa7dbf944 Merge #13673 (fcff70efc934c054bdc02497556de426ac06acd1) into the thread-sweep train
+    - 8f26c9d579 Merge #13504 (8bd4b80ce24157d3dd4459f0076b177e76f6e42b) into fix/thread-list-removed-device
+    - 8bd4b80ce2 Merge #13469 (c68d5d5bca1375d08cce29800d4cf23f79ed5927) into feat/thread-activity-detail
+    - c68d5d5bca test(thread): thread-field covers thread_archive (#13469 review M1)
+    - 0cba06951d changes: fragment for #14185
+    - 64470283f8 fix(thread): a cross-device call settles typed inside the tool window (#14130)
+    - 452c915446 Merge dev 544c0a4351 (the A4 train landed); take dev's generated files and regenerate once
+    - 79108f66f0 Merge the A4 train top f47a794515 into the #14093 sync disable verb
+    - cae97cf88c fix(remote): share the device listing failure and type the resolver's refusal (#13432)
+    - 30a145fe69 Fall back to an attach when a direct session command is refused before sending
+    - a0b6e607b0 Merge dev 544c0a4351 (A4 train landed) into the #14098 follow-ups; take dev's generated files and regenerate once; record the A4 train's budget in the ledger (review LOW)
+    - 09eabccee9 Merge #13495 head 92ba7887 into fix/thread-reasoning-scope-param
+    - 92ba788709 fix(thread): keep rename out of the local remote verbs' graph
+    - 9026274493 Merge feat/thread-activity-detail (#13504, carrying #13469 review fixes) into fix/thread-list-removed-device
+    - edabc3c673 Merge feat/thread-state (#13469 review fixes) into feat/thread-activity-detail
+    - b17cb2f7a7 fix(thread): address review of thread state listing
+    - 544c0a4351 Merge pull request #14097 from code-yeongyu/a4-memsync-train
+    - 409bf144d6 fix(thread): answer chain_count_limit on the queued route too (#12766 review M1, L1)
+    - e293d1afe1 fix(thread): listing_incomplete only for a thread last listed on the missing device; service_restarting only while a process holds the state or an update is in flight (#14172 review M1, L1)
+    - a7e2efcc6f fix(thread): a removed device's cached rows are dropped on the ported design (#13505)
+    - dec3b8142f test(thread): prove the engine detail reaches thread_close's refusal; add the changes fragment
+    - d4d1c1a968 Merge dev into fix/13304-escape-remote-text
+    - 1d38946328 docs(changes): the change fragment for #14179 (#14170)
+    - df270a2912 fix(thread): reopen a closed thread on another device from its file, never an empty path (#14170)
+    - 27f1cfe79e Merge the dev port of #13504 (feat/thread-activity-detail) into fix/thread-list-removed-device
+    - 75650bd212 feat(thread): thread_list rows carry the engine's activity detail on the ported state rule (N3)
+    - 5503ff2fb7 fix(thread): name the engine's refusal detail in thread_close's unsupported answer
+    - fdfbbfc7e4 Merge origin/dev (9b94b6f3dd) into fix/thread-gateway-schema-refusal
+    - b2e89dd240 fix(thread): a budgeted thread_read ends at the newest message (#14173)
+    - ffb59dbf44 fix(remote): the remote client's send receipts release a probe that wrote nothing (#12925 on dev)
+    - 067759b7c0 Merge the dev port of #13469 (feat/thread-state) into feat/thread-activity-detail
+    - 8a797202a9 Merge dev into rt/13414-u5-l3
+    - ec236293f9 Merge dev into perf/remote-create-round-trips
+    - 4756530248 Merge origin/fix/13009-enumeration-deadline into perf/12989-shared-enumeration (stack base, ported)
+    - 1db0bc29fc train(a4): merge dev 9b94b6f3dd (dev's generated files, then ONE regen of the bundles); omo.js budget = this regen (1522653 B) + 4 KiB
+    - d48c17cc41 Merge remote-tracking branch 'origin/dev' into port-13469
+    - 6ad6cf3d90 feat(thread): thread state running/idle/inactive/archived, archived filter, thread_archive on dev's design
+    - 848be2d0a6 Merge origin/dev (v5.1.77) into fix/13009-enumeration-deadline
+    - c543636d62 Merge remote-tracking branch 'origin/dev' into perf/thread-listing-shared-round
+    - dc2d2ced7d Merge remote-tracking branch 'origin/dev' into port-13499
+    - 296a56bfbc Merge dev into fix/remote-device-resolver-13432
+    - ad4a129ed1 Merge origin/perf/thread-enumeration-registry into fix/13579-async-session-reads (stack base, ported)
+    - 3e47213740 test(thread): count the account listing read through listing() as well as sessions() (#14172)
+    - 94f453ecb9 Merge origin/dev (v5.1.77) into perf/thread-enumeration-registry
+    - d347076239 Merge origin/dev (9b94b6f3dd) into fix/12925-probe-uncertain
+    - f328dd53bf keep dev's generated files (train regenerates)
+    - 81990e54d6 changes(12318): describe the sender-based RPC input rule and what dev already covers
+    - 65d3ef3cd3 Merge remote-tracking branch origin/dev into fix/12317-rpc-input-thread-send-cause
+    - 23283b87aa test(thread): count a cross-device send's calls as dev's remote path makes them (#12989)
+    - 2ad9c575be fix(thread): carry the chain_count_limit refusal into remote/outcome.ts on dev
+    - 76128f265f fix(thread): answer host_unavailable, not not_found, while the device service restarts or a device misses the listing round (#14172)
+    - 9b94b6f3dd Merge pull request #14171 from code-yeongyu/release/v5.1.77-source-state
+    - a2fc8857dd Merge origin/dev (c49f1316c0) into fix/remote-chain-limit-refusal
+    - fc5b612725 Merge remote-tracking branch 'origin/feat/13413-thread-sdk-verbs' into port-13506
+    - 4d94301313 Merge dev into feat/13413-thread-sdk-verbs
+    - 95eefbc632 chore(build): keep dev's generated files (train regenerates)
+    - 52c1587920 chore(build): keep dev's generated files (train regenerates)
+    - e00772040e chore(build): keep dev's generated files (train regenerates)
+    - 6ca8e93964 chore(build): keep dev's generated files (train regenerates)
+    - d0f20911c3 keep dev's generated files (train regenerates)
+    - 328318d42e keep dev's generated files (train regenerates)
+    - eaf612fd79 keep dev's generated files (train regenerates)
+    - 2e52d5d62f keep dev's generated files (train regenerates)
+    - ac1988db85 fix(thread): port the #13037 stack review LOWs onto current dev (#13483)
+    - 4ea49b8ae1 Merge remote-tracking branch 'origin/dev' into port-13483
+    - 5eda2ec8cc Merge remote-tracking branch 'origin/fix/13009-enumeration-deadline' into port-13236
+    - 7b0b2f67b7 fix(thread): carry the sign-in remedy onto dev's account API; regenerate #14015's own bundle delta
+    - c0330860f3 Merge remote-tracking branch 'origin/dev' into port-13240
+    - 2c9a45b21d refactor(thread): one startGroup for the answered-group reset a malformed and a valid delivery share (#13134)
+    - 5f169af837 fix(thread): recovery hints give the eval form beside the tool name
+    - 30b23e008e Merge remote-tracking branch 'origin/dev' into port-13134
+    - da9cb80997 train(a4): merge dev c49f1316c0 (dev's generated files, then ONE regen of the bundles); omo.js budget = this regen (1522653 B) + 4 KiB
+    - 1182451f06 fix(thread): a remote wait counts auto-retry records as the run (#13871)
+    - 346f7d6ef3 Merge remote-tracking branch 'origin/dev' into port-13871
+    - c58cd4a0fa Merge remote-tracking branch 'origin/dev' into port-13231
+    - 1b0d954361 Merge remote-tracking branch 'origin/feat/13413-thread-sdk-verbs' into port-13506
+    - f6e05838a0 docs(changes): fold #13585 into #13581, drop the folded #13573 fragment; regenerate bundles
+    - 7e7eac12dc Merge dev into feat/13413-thread-sdk-verbs
+    - 57dbded59f perf(thread): share one account listing round on dev's device-service port
+    - 2eff7177b0 test(thread): read the flat handoff result and ThreadCandidate.thread in the #13141 floor tests
+    - 6e24f47bd7 chore(build): regenerate omo-wake.js on current dev for the carrier's queued-delivery keep (#13709)
+    - c222d5e7e9 Merge origin/dev (c49f1316c0) into fix/remote-sign-in-required-remedy
+    - d8a0005b76 Merge remote-tracking branch 'origin/dev' into feat/thread-state
+    - 27914e49ac fix(thread): carry #12641 onto plan-create.ts: reopening the alias holder by any address keeps its alias
+    - 49c87574d9 Merge remote-tracking branch 'origin/dev' into port-12732
+    - 814691d468 Merge #13452's ported head (origin/perf/thread-enumeration-registry, which carries dev) into #13581
+    - cfb1befa52 changelog: fragment for #13585
+    - aea0362f61 docs(thread): document the async dead-endpoint reader and scope 'one file at a time' to one endpoint (#13584)
+    - 6a13389e38 Merge remote-tracking branch 'origin/dev' into port-13190
+    - d29ef35d3a perf(thread): read reservation claims through readRecord; fold #13573 and #13777 into #13452
+    - 2d19f8ff32 fold #13283 and #13284 into #13185: one change note, tests on the flat thread_create result
+    - fcff70efc9 chore(build): regenerate omo-wake.js on current dev for the wake's compiled-version gate (#13673)
+    - c94881442c Merge remote-tracking branch 'origin/dev' into port-13453
+    - 0dc84ae56f Merge origin/dev into feat/evalonly-followup
+    - 25251b2ae4 test(thread): pin the code-point cut with an astral character at the cap
+    - 58fa332acf changes: unreleased note for #13284
+    - b40a8114a6 fix(thread): cap local_name_unavailable_reason and pin it to a real message
+    - 143a553081 changes: unreleased note for #13283
+    - 1c954062f0 fix(thread): keep the untyped rename error's message as local_name_unavailable_reason
+    - f821abed55 test(thread): also spy Bun.spawn and Bun.spawnSync, so a Bun-native spawn is counted too (#13777 review L1 @edeb4d41a8)
+    - 0d00b1244b test(thread): count spawns at the child_process seam, so a spawn the view does not wait for is caught too (#13777 review L1)
+    - e4dfcfca90 test(thread): enumeration cost counts registry reads and engine starts instead of timing the view (#13452 review L1)
+    - 2491ae3774 Merge remote-tracking branch 'origin/dev' into port-13452
+    - 78e18fbd4c Merge origin/dev (81872d2ae9) into fix/thread-remote-unknown-session-typed
+    - 7a592fd865 Merge remote-tracking branch 'origin/dev' into port-13185
+    - ae2dc84078 Merge remote-tracking branch 'origin/dev' into port-13709
+    - 617f8c4089 Merge remote-tracking branch 'origin/dev' into port-13673
+    - ee707d4c08 train(a4): merge dev d9da4772ca (dev's generated files, then ONE regen of the bundles); omo.js budget = this regen (1521511 B) + 4 KiB
+    - 869586c773 train(a4): merge dev 630a673483 (dev's generated files, then ONE regen of the bundles); omo.js budget = this regen (1521511 B) + 4 KiB
+    - ea869719e9 train(a4): merge dev d70210bde0 (dev's generated files, then ONE regen of the bundles); omo.js budget = this regen (1521511 B) + 4 KiB
+    - 57b2c4d04e train(a4): merge dev 99c6c01367; regenerate the bundles once at the top; omo.js budget = this regen (1511940 B) + 4 KiB
+    - 880faec065 chore(bundle): set the omo.js budget from the A4 train-top regen (1,510,940 B + 4 KiB)
+    - 68528f4b87 train(a4): drop two preExistingExports rows the train now uses; list the two path-loaded tty fixtures as knip-forced unchecked entries
+    - 882d9c52fc train(a4): the sync-start test clock spawns through node:child_process (package Bun.* audit)
+    - e6c3ec3781 train(a4): fold the member fragments into 14097.md (one fragment named for the train PR, every entry kept)
+    - 8f948fae1e test(omo-native): the destroy test reaches the armed EAGAIN retry before destroying (#14105 review L1)
+    - 24f4cc6b81 chore(build): regenerate bundles on the A4 train top
+    - 688ce3fcca Merge remote-tracking branch 'origin/a4-memsync-train' into fix/14098-a4-review-followups
+    - f47a794515 train: merge dev 451d76e2 (#14090, 5.1.76 release state) into the A4 train; regenerate the bundles once at the top
+    - e4fce0b27f train: merge dev 2c2a2405 (#14081, #14100, ...) into the A4 train; regenerate the bundles once at the top
+    - 4e5fcdae06 fix(memory): turning sync on again resumes the engines this process parked (#14093)
+    - 758f562023 docs(changelog): add the #14121 fragment (#14093)
+    - 570eea7462 build: regenerate generated bundles for the sync disable verb (#14093)
+    - 631d6f7f5e feat(memory-sync): report the memories updated while this device was offline (#14093)
+    - 0e36c88190 feat(memory-sync): turn sync off on this device over RPC and the CLI (#14093)
+    - 42e62d987d docs(changes): fragment for #14105
+    - 4fda2f830a fix(memory-sync): A4 review follow-ups: unreadable retired pin → skipped, reader test + buffer zeroing, stale comment (#14098)
+    - 9398f97df5 test(memory-sync): RED an unreadable newest retired pin reports the root check skipped (#14098)
+    - fd578e2266 train: run #13641's CLI root-check test through #13337's phrase enable (the CLI now always creates a phrase genesis)
+    - faf703da5f train: regenerate the bundles once at the top (rule 2026-11-12)
+    - f5bf93cc4c train: merge #14096 @37b1946cff
+    - 6e662ea695 train: merge #13706 @d52f82f63c
+    - f298d62bf1 train: merge #13337 @dce6eb9503
+    - 89f9d4ab0b train: merge #13646 @873fc6a3d8
+    - 9aaf8b255b train: merge #13641 @09a7374d11
+    - 0554b577b1 train: merge #13693 @1b8f7949dd
+    - 37b1946cff merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - d52f82f63c merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - dce6eb9503 merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - 873fc6a3d8 merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - 09a7374d11 merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - 1b8f7949dd merge dev; take dev's generated bundles (only the train top regenerates, rule 2026-11-12)
+    - d5b438bb89 docs(changes): fragment for #14096
+    - ba3627a552 fix(memory-sync): a joined, sync-on device creates its memory repository through the first-write seam (#14094)
+    - 780130364d test(memory-sync): RED a joined device that never writes gets its repository through the first-write seam (#14094)
+    - e0d1be8d54 fix(memory-sync): carry dev's deferral wake signal into the retried start (#13624 on #13706); regenerate bundles
+    - 47179e77b4 Merge remote-tracking branch 'origin/dev' into fix/sync-start-retry-a4
+    - 2f2dfe7eb8 fix(omo-native): read the phrase terminal without kqueue so darwin prompts no longer cancel at once; regenerate bundles
+    - 72d3d9586b Merge remote-tracking branch 'origin/dev' into feat/a3-phrase-cli-a4
+    - 5face1f1d2 build(memory-sync): regenerate bundles and add the changes fragment for #13646
+    - 2037d11c3c Merge remote-tracking branch 'origin/dev' into fix/13631-phrase-floor-wiring-a4
+    - 88e737628a fix(memory-sync): account devices (#14080) sends the contract headers through syncRequestHeaders (#13691 audit)
+    - d9656fa7c9 build(memory-sync): regenerate the bundles so the shipped engine, CLI and plugins send the contract headers (#13693)
+    - 8ea53e9d94 Merge remote-tracking branch 'origin/dev' into fix/sync-transport-contract-headers-a4
+    - 23ee214a44 Merge remote-tracking branch 'origin/dev' into fix/12382-retired-pin-notice-best-effort-a4
+    - 4e0d7242ea chore(build): regenerate bundles after merging dev
+    - f6b114fdfe chore(build): regenerate bundles after merging dev
+    - ca80c1370d Merge remote-tracking branch 'origin/dev' into oms/13889
+    - ec61cca44f Merge remote-tracking branch 'origin/dev' into oms/13941
+    - de2a807ed0 Merge branch 'dev' into fix/thread-remote-unknown-session-typed
+    - 6d7423343f Merge branch 'dev' into perf/thread-enumeration-registry
+    - 2e1eb0d335 fix(thread): a call this device cannot send because its relay sign-in lapsed asks to sign in, never to update omo
+    - a5ecc27914 test(thread): the relay-tool schema refusal test calls relay tools dev keeps (thread_bind was removed on dev)
+    - 61ae6abc0c Merge branch 'dev' into fix/thread-gateway-schema-refusal
+    - 1400bf4bcb test(remote): the remote code list carries the thread taxonomy's new gateway_schema_too_new (43 thread codes; exits 1)
+    - 7b6fa8fab0 docs(thread): the failure taxonomy has 43 codes (review LOW at 9ea539b)
+    - 4252910fb0 Merge branch 'dev' into perf/thread-enumeration-registry
+    - 7cd88562db Merge branch 'dev' into fix/thread-remote-unknown-session-typed
+    - 545ff22a57 chore(bundles): regenerate this PR's own bundle delta after the review fixes (#13944)
+    - c9a5d4b548 Merge remote-tracking branch 'origin/rt/13414-u5-tools' into rt/13414-u5-l3
+    - 5db1a2c848 chore(bundles): regenerate this PR's own bundle delta after the review fixes (#13944)
+    - 01b9997747 Merge remote-tracking branch 'origin/rt/13414-u5-tools' into rt/13414-u5-l3
+    - 554e40e769 Merge branch 'dev' into fix/thread-remote-unknown-session-typed
+    - c035773587 chore(bundles): regenerate this PR's own bundle delta after the review fixes (#13944)
+    - 5568ae453a Merge branch 'dev' into fix/thread-gateway-schema-refusal
+    - f80c6324c4 chore(bundles): regenerate this PR's own bundle delta (#13944)
+    - e3493a166b Merge remote-tracking branch 'origin/rt/13414-u5-tools' into rt/13414-u5-l3
+    - c87ebb4335 fix(thread): the schema refusal always names omo update; SENPI_BRAND is gone in the engine and absent in the omo thread CLI (review L1)
+    - 0897f26048 test(thread): RED - the schema refusal names omo update whatever SENPI_BRAND says; the relay tools answer it too (review L1, L2)
+    - 77341f1485 docs(changes): fragment for #13944
+    - 292d16234a docs(changes): changelog fragment for the gateway schema refusal (#13941)
+    - 40c73b389d test(omo-native): open no longer attaches after a located create (#13889 review H1)
+    - 5f73f3f5cf Merge branch 'dev' into perf/thread-enumeration-registry
+    - 6aa3231361 docs(changes): changelog fragment for the gateway schema refusal (#13938)
+    - 6b5c21c7be Merge branch 'dev' into perf/thread-enumeration-registry
+    - 6362e54b70 fix(thread): a gateway store a newer omo build migrated is refused as gateway_schema_too_new naming both schemas and the update command
+    - 152b658320 test(thread): RED - a gateway store a newer omo build migrated refuses thread_send as a typed, actionable error
+    - 3ac92c23cc chore(build): regenerate #13889's own bundle delta on the merged dev
+    - 55afce2316 Merge remote-tracking branch 'origin/dev' into perf/remote-create-round-trips-m2
+    - 1c65594f58 docs(changes): #13889 fragment names the port at its new path
+    - a474cd6ada chore(build): regenerate #13889's own bundle delta on the merged dev
+    - 8f75113ef5 Merge remote-tracking branch 'origin/dev' into perf/remote-create-round-trips
+    - 0c5cd67556 fix(thread): dial outside the direct send; drop its unreachable refusal branch (#13889 review L1)
+    - 5d80412f83 test(thread): a direct record whose connection fails is refused like the attach path (RED, #13889 review L1)
+    - 1f8a9fb417 style(thread): format the #13889 review test
+    - 2f5334e87a chore(build): regenerate omo-wake.js on dev 734a4d1e5a for the wake's compiled-version gate (#13673)
+    - 442d00e414 chore(build): regenerate the bundles the #13889 review fix moves; fragment names the resend rule
+    - 6c5b4b2f0e fix(thread): resend only on the unlisted-endpoint refusal of a kept key (#13889 review)
+    - 82501f50ac test(thread): a moved endpoint key, a failed open and a lost reply on the kept-key path (RED, #13889 review)
+    - 0212c72967 Merge remote-tracking branch 'origin/dev' into w135/13673
+    - 02dd9ddcf9 Merge branch 'dev' into perf/thread-enumeration-registry
+    - 139c668522 chore(build): regenerate omo-wake.js for the wake's compiled-version gate (#13673)
+    - 6635730855 chore(build): regenerate the bundles #13889 moves; changelog fragment
+    - fe94415222 Merge remote-tracking branch 'origin/dev' into perf/remote-create-round-trips
+    - 11d9702af0 perf(thread): a remote create crosses the relay twice, not four times
+    - e911bfab5b test(thread): count the relay round trips of a remote create (RED)
+    - f2de8ff1de Merge branch 'dev' into fix/thread-remote-unknown-session-typed
+    - 57fe70e13c Merge remote-tracking branch 'origin/dev' into w135/13673
+    - 4569cdc07b fix(remote): keep auto-retry records in run wait
+    - 1ea8bd3229 perf(thread): read a dead endpoint's reservation claims asynchronously on the listing path (#13452 review L1 @472a69a6b1)
+    - 50df80c6b2 test(thread): drop the prose assertion on next_action; the error code proves the behaviour (#13439 review L1)
+    - 29078fa1cb Merge branch 'dev' into perf/thread-enumeration-registry
+    - 6232967108 Merge branch 'dev' into fix/thread-remote-unknown-session-typed
+    - fd52d9f97d chore(thread): MIN_WAKE_OMO_VERSION is module-private (knip: unused export)
+    - 09c6ad3bc2 Merge chore/omo-5173-train (865fc58915) into fix/sync-start-retry
+    - cb8db4369d fix(memory-sync): every start pass settles by its deadline; replaced starts are counted per repo (#13706 review)
+    - fc08b2a2c8 fix(thread): the carrier's delivery grace counts from the latest refusal streak (#13709 review)
+    - 0111cb25af fix(thread): bound the carrier's keep for a queued delivery (#13709 review M1)
+    - 442db3ad98 fix(memory-sync): a replaced start never strands the repo without an engine
+    - af1c850dbd docs(changes): the fragment for #13709
+    - e0f6e0ea69 fix(thread): the carrier keeps a woken session whose release is refused for a queued delivery (#13708)
+    - 0302647629 docs(changes): note the retried sync start (#13706)
+    - 9c106753e2 fix(memory-sync): type the first retry from its delay only; keep the start-failed code private (#13701)
+    - cd782e155b fix(memory-sync): retry a failed or stuck sync start instead of stopping for good
+    - 4bc1bf3d6a test(memory-sync): send the sync contract headers from the tests' own probes
+    - 5a9b133f51 fix(omo-native): omo sync enable exits after a phrase genesis (#13696)
+    - b346cd88f9 Merge remote-tracking branch 'origin/chore/omo-5173-train' into fix/sync-transport-contract-headers
+    - 261f6e722c fix(memory-sync): every sync and account client goes through syncRequestHeaders; guard the floor at runtime
+    - c7d8110d96 docs(changes): note the sync contract headers fix (#13693)
+    - d858e27926 fix(memory-sync): send the contract headers on every sync request, the engine transport included
+    - f6cf91e38d fix(omo-native): the CLI reads the phrase service floor itself (#13631, CLI half)
+    - 9d89c477b7 docs(changes): the fragment for #13673
+    - 4bc2249011 fix(thread): the wake's engine gate accepts compiled omo and omob version stamps (#13672)
+    - 11119ec985 Merge feat/a3-phrase-recovery (742ee97e03, restacked on dev facd9fa7ea) into feat/a3-phrase-cli
+    - 36dcb5688d fix(memory-sync): report a skipped root-change check instead of writing to stderr (#12382 review)
+    - c76fef33ce changes: file the #12382 fragment under its PR, #13641
+    - c5bfae2738 test(memory-core): an enable that pinned still joins when the root-change notice cannot list retired pins (#12382)
+    - e5f5c2115b Merge origin/dev into fix/12382-retired-pin-notice-best-effort (generated bundles taken from dev)
+    - 243bea5920 Merge remote-tracking branch 'origin/dev' into perf/thread-enumeration-registry
+    - 0e9e4da47b changelog: fragment for #13581
+    - b0e15ae7be perf(thread): read a dead endpoint's session files off the event loop, one file at a time (#13579)
+    - 9bf6684224 changelog: fragment for #13573
+    - bdf5839bfa perf(thread): read reservation claims asynchronously on the dead-endpoint listing path (#13551)
+    - 174450aa79 fix(thread): local control derives running from threadState (#13504 review LOW)
+    - c3c3ecd18e fix(thread): close() ends the listing round it answered (#13453 review LOW)
+    - 510d62ad70 changes: fragment for #13539
+    - a903857b24 fix(thread): a removed device's cached rows are dropped (#13505)
+    - 4a1a1dc189 fix(thread): fold #13504 review LOWs; derive the activity union once
+    - af89583f1c Merge remote-tracking branch 'origin/dev' into perf/thread-listing-shared-round
+    - 778b3aff33 chore(knip): canonicalEndpointPath is used now, drop it from preExistingExports (#13452)
+    - ac7269d8dc Merge remote-tracking branch 'origin/dev' into fix/remote-device-resolver-13432
+    - 507ebc8347 perf(thread): move the #13037 reply routing and id lookup behind the thread client sidecar
+    - 1fe71c2152 docs(changes): name the fragment after PR #13506
+    - e275cd0ed4 Merge remote-tracking branch 'origin/feat/13413-thread-sdk-verbs' into fix/thread-reasoning-scope-param
+    - 607554d17e changes: name the thread SDK fragment after its PR (#13413)
+    - 1474a62023 changes: fragment for #13504
+    - ad419a5e60 fix(remote): refuse cross-tier device collisions; keep the listing wrapper spreadable; print the resolved id
+    - a4bfa56266 docs(changes): add the fragment for the scope parameter removal
+    - 055c8753dc fix(thread): drop the unused scope parameter of SessionControl.setThinkingLevel
+    - 98f657d119 feat(thread): thread_list rows carry the engine's activity detail (N3)
+    - e5c32747fa Merge remote-tracking branch 'origin/fix/thread-set-model-session-scope' into fix/thread-reasoning-scope-param
+    - d84a5e959a fix(remote): one device resolver for omo remote and the thread tools (id, name, unique prefix)
+    - 5c61d8b1eb feat(thread-sdk): add create, interrupt, close, rename and set_model verbs
+    - 18c3b23d35 fix(thread): a wake the device service refuses with free-form text shows unrecognised, never the text (#13277 review LOW)
+    - 7355ff8776 Merge commit '2fd3986fc5c43e4107dbc2329ec0bd48ba97b9c3' into feat/thread-state
+    - f1b053d862 changes: fragment for #13483
+    - 02ecf09415 docs(device-service-core): document control.session_wake.get/set in the local API contract (#13257 review LOW)
+    - 39ae8ea9a6 fix(device-service-core): a wake that fails after it was written is not marked not_sent; one refused-before-sending list (#13238 review LOW 2)
+    - f2e409afac fix(thread): one rule for a probe-built ended row: only while the wake can be carried (#13238 review LOW 1)
+    - 09e9b8be02 fix(thread): an unreadable device id refuses a device-named reply instead of routing it through the relay (#13218 review LOW)
+    - cf1298b1dd fix(thread): an offline device's cached rows never read running
+    - 9e880b96c8 changes: fragment for #13469
+    - 69616cca5e feat(thread): thread_list state/model, thread_archive, closed threads listed inactive
+    - 180dddf74f fix(thread): fence listing-changing commands against in-flight rounds (#13453 review)
+    - 472a69a6b1 fix(thread): list a dead endpoint's claimed sessions from its registry reservations (review M1, L2, L3)
+    - 5e7f6fcd57 changes: fragment for #13453
+    - 7a049c8191 changes: fragment for #13452
+    - e20680c237 perf(thread): share one account listing round across a thread op's reads
+    - a462fabcfb perf(thread): enumerate endpoints from the registry, never spawn host status --all per call
+    - b0fac7b172 changes: fragment for #13439
+    - 635646b39e fix(thread): a remote session that ended answers not_resumable, not "unsupported, update omo" (Fixes #13424)
+    - 8dc58c04b8 Merge branch 'a3-pr2b' into a3-pr3
+    - 3f1603d217 Merge branch 'a3-pr2b' into a3-pr3
+    - 30b6f0dc65 Merge branch 'a3-pr2b' into a3-pr3
+    - d72f71e225 fix(omo-native): fold the #13337 checker (format, typed outcome, close-once tty, refuse recover before the context, branch rows)
+    - cfee4abdd3 Merge branch 'a3-pr2b' into a3-pr3
+    - e6ac0bca11 Merge branch 'a3-pr2b' into a3-pr3
+    - 2b33085c98 Merge branch 'a3-pr2b' into a3-pr3
+    - c9427e4991 test(omo-native): the cancelled-notice test proves the notice was not acknowledged (#13337 @ 6e726034)
+    - 83be854866 Merge branch 'a3-pr2b' into a3-pr3
+    - 3416147470 Merge branch 'a3-pr2b' into a3-pr3
+    - b8b3d922a4 Merge branch 'a3-pr2b' into a3-pr3
+    - 6e7260346f fix(omo-native): fold #13337 review (hermetic recover test, recover coverage, terminal EOF, notice cancel, flake)
+    - 8b0add5a26 Merge branch 'a3-pr2b' into a3-pr3
+    - c11d6cfd5b Merge commit '75f47e1145c3f0852778d37413ebb63e7be1c82e' into a3-13337
+    - 7494e40635 docs(changes): fragment for #13337
+    - dcb62fb289 feat(omo-native): recovery-phrase enable and recover on the controlling terminal (A3 part 3)
+    - ef6db60c62 fix(thread,utils): escape another device's text at the thread tools' print sites (#13304)
+    - 7a8e7a5aed test(thread,utils): text from another device prints with control, format and separator characters escaped, and matches as received (RED, #13304)
+    - 978ba8be1c changes(13190): say the bundles are dev's copies here, regenerated at the train top
+    - 80d16c83ac changes(13185): say the bundles are dev's copies here, regenerated at the train top
+    - 4f986b4fa2 Merge remote-tracking branch 'origin/dev' into fix/13141-review-lows
+    - fa0f9cde90 Merge remote-tracking branch 'origin/dev' into fix/13179-review-lows
+    - 660549a1ca Merge origin/dev (10d8b1bc91) into fix/13056-reply-allowance-followups - generated files take dev's copy (regeneration only at the release commit)
+    - 2921794497 test(qa): re-record the EQ.omo goldens against the plugin built from this branch
+    - 415797f560 fix(thread): hints write calls the tools accept; the hint guard reads every thread file
+    - 2d0af2c34d fix(thread): time the enumeration deadline on a monotonic clock, keep newer kinds, key from the live env (#12989)
+    - 481f16ffd4 test(thread): pin the review follow-ups of #13231 and #13236 (monotonic deadline, stale kinds, per-call key, engine key)
+    - 8309a2c884 test(thread): count what one send to another device asks for, by name and by durable id (#12989)
+    - beeba73f90 test(qa): re-record the darwin-arm64 EQ.omo goldens (task tools eval-only)
+    - 492aa2fa04 docs(changes): add the fragment for #13240
+    - 66c12a0450 docs(changes): fragment for #13236
+    - 4f1a7c88c0 perf(thread): share one endpoint enumeration per agent dir across the process (#12989)
+    - c50c607214 test(thread): count enumerations per send and pin one shared enumeration per agent dir (#12989)
+    - 4a2c3f4815 test(thread): pass listTarget only the endpoint fields it takes (#13009)
+    - 3346fe51e8 fix(thread): abandon an endpoint enumeration that has not answered by its deadline (#13009)
+    - 0a124646e2 test(thread): pin the enumeration deadline and the send that never waits on it (#13009)
+    - 12844c78a4 fix(thread,task): every recovery hint names the eval cell; EQ keeps the first running snapshot
+    - e1382a2386 Merge origin/dev (87ab029c12) into fix/13056-reply-allowance-followups - generated files take dev's copy (regeneration only at the release commit)
+    - 5439123843 merge: dev 87ab029c12 into feat/evalonly-task-tools (generated files take dev's copy; bundles regenerate at the train top per the bundle order)
+    - 7384a7affc test(qa): E22 asserts the cell's printed child result, not the echoed prompt
+    - e831019211 Merge remote-tracking branch 'origin/dev' into fix/12925-probe-uncertain
+    - 64d6d5ee21 fix(task): fold the 55c2e23670 review - E22 delegates from an eval cell, every hint names the cell
+    - 6d81a2533d docs(changelog): fragment for #13190
+    - f9d8d63967 test(thread): pin the fuzzyContenders floor, the ended-row band and the ambiguous candidate list (#13141 review LOWs)
+    - 60dff4b5bf docs(thread): fuzzyContenders keeps every verdict but not the dropped rows in the candidate list (#13141 review LOW B)
+    - a11fff5fba docs(changes): changelog fragment for #13185
+    - a74879e097 fix(thread): an untyped rename failure after thread_create still names the created thread (#13179 review)
+    - 5e1825aa20 test(thread): cover the sign-in-at-claim rename on another device and an untyped rename failure (#13179 review)
+    - 33b486ce29 Merge remote-tracking branch 'origin/dev' into fix/12925-probe-uncertain
+    - 1ef2c4575d docs: the changes-log heading states the malformed-delivery rule with its condition (#13134 review LOW)
+    - 55c2e23670 fix(task): point leftover task hints at the eval cell and refresh linux EQ goldens
+    - 87470c09df docs(thread): the malformed-delivery rule is conditional - new group only after an answer, unchanged mid-run (#13134 review LOW)
+    - 59741872c0 chore(memory-sync): regenerate bundles for the best-effort root-change notice
+    - 05e9d82275 Merge origin/dev into fix/12382-retired-pin-notice-best-effort
+    - 9634206fdd Merge remote-tracking branch 'origin/dev' into fix/12925-probe-uncertain
+    - 5668a60dec fix(thread): a malformed delivery mid-run joins the work without changing the group; fragment named for the PR (#13134 review)
+    - 0d50b6de2b fix(thread): a malformed delivery starts work with nobody approved; state the same-account bound at the rule (#13056)
+    - c39d88ce4a build(plugin): regenerate bundles on dev 04e22c0b6b under node 24
+    - 7a175429be Merge origin/dev into feat/evalonly-task-tools (re-head for the LEAD's bundle-order slot; fmt-only source resolution)
+    - 9af81c927c build(plugin): regenerate bundles on dev 17f633cb43 under node 24
+    - 7bae2083a5 Merge origin/dev into feat/evalonly-task-tools (generated-only re-head for the LEAD's quiet-dev turn)
+    - 2e66f84b7f build(plugin): regenerate bundles on dev a96a51d8fc under node 24
+    - bc05ed53bf Merge origin/dev into feat/evalonly-task-tools (bundles regenerated next)
+    - 3baa043dc8 Merge feat/evalonly-thread-tools into feat/evalonly-task-tools (bundles rebuilt under node 24)
+    - a6ae8e0d26 Merge remote-tracking branch 'origin/dev' into fix/12925-probe-uncertain
+    - fc09806ed4 docs(changes): name the fragment for its PR (#12947)
+    - 59ff5ea41d chore(knip): toolReceiptRelease is a worker-only store op, ignored like its siblings (#12925)
+    - 783669d731 fix(thread): a get_state probe that ends uncertain is host_unavailable and leaves no receipt (#12925)
+    - d52fc74f7f build(plugin): bundles regenerated on the rebased stack
+    - 1c551fadd8 fix(task): eval-cell forms in model-facing text, ancestry fixture without eval, member task_send exposure tests (review #12915)
+    - 939004428d docs(changes): fragment for #12915
+    - 684f97ffbd qa(task): plugin-surface proves the task family eval-only on a real host; bundles regenerated
+    - 028c6c40a3 feat(task): the task tool family is eval-only, like bash (Q 2026-11-09)
+    - 210ee7737d chore(changes): add fragment for #12855
+    - f2c7b1833c fix(memory-core): a failed root-change notice never fails a join that already pinned
+    - 49aac39d11 Merge origin/dev (6d3ff3a566) into fix/remote-chain-limit-refusal
+    - e37056da21 Merge origin/dev (8af3fae188) into fix/remote-chain-limit-refusal
+    - 94a7ddf50a docs(changes): name the fragment after #12766
+    - 5eca462213 fix(thread): a remote chain_count_limit refusal answers chain_count_limit naming the device and its user's setting, not unsupported
+    - bce637c0c4 test(thread): a remote chain_count_limit refusal of thread_send is typed, not unsupported (RED)
+    - 796d02a752 docs(changes): fragment for #12732
+    - d2d82a198c docs(changes): fragment for #12318
+    - ed1c027ab6 fix(thread): claim a run's cause only for deliveries the gateway drain admitted (#12317)
+    - 3518dfcb0a test(thread): RPC prompt/steer/follow_up runs can thread_send (#12317)
+    Thank you to 1 community contributor:
+    - @YeongYU:
+      - fix(thread): a same-device thread in another workspace never answers as cross-device (#14199)
+      - test(thread): import ThreadHostSession from ./tools (the fixture does not re-export it, tsgo catches what bun erases)
+      - fix(fmt): format the free-plan cross-workspace QA script and test left red by #14201
+      - test(omo-native): pin the real-engine sandbox cold start so a pinned runner host cannot make the idle shard persistent
+      - test(omo-native): bound packed-install steps on progress, not wall clock; stage installs inside the run root
+      - chore(knip): the landmines testing jsPlugin is an entry, loaded from script/lint-ratchet.oxlintrc.json
+      - chore(knip): the free-plan thread-tools QA driver is a run-by-path entry
+      - wip: counting-side bundle exclusion
+      - wip: counting-side bundle exclusion
+      - fix(lint-ratchet): minified bundle output never counts for the omo-testing rules (#14220)
+    bun add -g omo-ai
+    Known issues
+    - thread_close on a session that still has queued messages closes it and drops those messages without reporting them. A fix is in progress (#14234). Read or wait for replies before closing a busy thread.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.78
+ReleaseTime: 2026-11-18T23:57:07.0000000Z
