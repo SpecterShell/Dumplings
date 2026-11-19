@@ -1,0 +1,152 @@
+Version: 2.38.0.0
+Installer:
+- InstallerUrl: https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit/releases/download/v2.38.0.0/LenovoLegionToolkitSetup-v2.38.0.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Support Our Work
+    This release marks another leap forward for Lenovo Legion Toolkit, representing hundreds of hours of reverse engineering, kernel and hardware investigation, refactoring, and community-driven polishing. Every feature in this update was designed with one principle in mind; giving you absolute, uncompromising control over your laptop's hardware, performance, and thermals without the bloat.
+    Maintaining and advancing a low-level hardware control suite alongside our daily responsibilities requires immense dedication. If Lenovo Legion Toolkit has enhanced your daily workflow, elevated your gaming performance, or solved persistent hardware annoyances for you, please consider supporting our development. Your support directly sustains this project and fuels ongoing research into new Lenovo hardware platforms.
+    Thank you for being part of our community and making this journey possible!
+    Release Highlights
+    - Software Disabler Diagnostics: Disabling now verifies the outcome and reports which services, processes, or restart bound services kept it from completing.
+    - GPU Voltage and Clock Accuracy: Voltage caps and clock offsets are applied through the V/F curve and read back from driver writable points, and the range queries no longer run on the UI thread.
+    - Power Button Light Control: Added a power button light with a brightness slider and a sync toggle with the keyboard backlight.
+    - Power & Battery Health: Added ThinkPad charge threshold support, fixed the Windows power mode overlay lag, and handled missing batteries safely.
+    - New Hardware Support: Added 83EY sensors, 15ALC, 83V9, 14IAP, 83Q6, 83RW, 83VK and an AMD iGPU variant, plus LampArray navigation on generation 10 and newer models.
+    - Fan Control & Sensors: Added multi-fan system sensor support, firmware fan table discovery, P-State clock pin modes and a rated TDP level, and GPU power offsets above 255 W.
+    - Keyboard & Lighting: Added descriptor based Spectrum detection, new Spectrum effects, and bindable Fn key combinations.
+    - Dashboard, OSD & Automation: Fixed the legacy dashboard refresh lifecycle, the panel OSD drift after display changes, wired ITS Mode changes into the automation processor, and extended the inactivity trigger timeouts.
+    Release Notes
+    New Features
+    - Added CPU temperature source selection for the OSD and Dashboard, with Auto, Package, Average, and Core Max options.
+    - Added a Dynamic refresh rate toggle to the Dashboard refresh rate card.
+    - Reworked the Dashboard refresh rate card into a collapsible list.
+    - Added a quick theme toggle to the title bar and restyled the header badges.
+    - Added a Buy Me a Coffee option next to GitHub Sponsors on the Donate page.
+    - Added incomplete disable reporting, so a disabler that could not fully disable its components shows the reason in Settings.
+    - Added a warning to the Spectrum keyboard page when another Lenovo app or its services are still running.
+    - Added the Power Button Light control with a brightness slider and a sync toggle with the keyboard backlight, gated on hardware support.
+    - Added Auto to the white keyboard backlight and derived its level count from the driver.
+    - Added a toggle to disable the ITS Mode auto recovery feature.
+    - Added battery charge threshold support for ThinkPads.
+    - Added Non-Gaming preset mappings.
+    - Added bindable Fn+F5/F6, Fn+F1/F2/F3/F12, Fn+I and Fn+K keys.
+    - Added bindable Fn+Home, Fn+End, Fn+PgUp and Fn+PgDn media keys.
+    - Added clock pin modes and a rated TDP level to the P-State control.
+    - Added Authenticode verification to both update download paths.
+    - Added a support indicator that links to the Donate page.
+    Hardware & Device Support
+    - Added 15ALC to the supported machine list.
+    - Added 83EY sensor support.
+    - Added support for Legion 7 15ASH11 (83V9).
+    - Added 14IAP to the support list.
+    - Added 83Q6 to Legion 5 machine types and the 24 zone keyboard list.
+    - Added 83RW and 83VK to the 24 zone keyboard machine types.
+    - Added support for a specific AMD iGPU variant.
+    - Fixed AMD CPU name stripping for processors with w/ and specific Radeon iGPU suffixes.
+    - Allowed LampArray keyboard navigation on supported generation 10 and newer models.
+    - Fixed the missing keyboard backlight page on 83VK.
+    - Fixed per key Spectrum keyboards showing the 1 zone control when the firmware reports no keyboard type.
+    - Fixed per key Spectrum keyboards keeping a stored ANSI layout instead of the detected ISO or JIS layout.
+    - Fixed rapid clicks on the Spectrum keyboard layout switch advancing only one step.
+    - Fixed Spectrum keyboard detection by matching the HID feature report length instead of the product ID family.
+    Power & Battery
+    - Fixed the Windows power mode overlay lagging behind power mode changes and consolidated its write.
+    - Fixed battery saver reporting and stopped publishing unsubscribed power messages.
+    - Fixed GodMode recovery running on battery and an abandoned GodMode being restored on a later resume.
+    - Fixed the charge threshold readback encoding, the set sequence leaving a partially applied state, and the slider using its default stop before the state was loaded.
+    - Preserved requested battery charging modes and reported verification failures.
+    - Handled unknown battery rates.
+    - Handled missing batteries with safe device probing and battery reads, hiding the battery page, Dashboard controls and sensors, and skipping battery percentage events, state checks and automation triggers when no battery is present.
+    GPU & Overclocking
+    - Applied clock offsets through the V/F curve and read them back from the driver writable points.
+    - Fixed V/F curve cap math against the driver live curve and aligned the offsets, ranges, and apply results.
+    - Decoupled voltage curve locking from undervolting and aligned the controls with the driver active table.
+    - Scoped the voltage cap readback to the graphics curve range.
+    - Moved the overclock range reads off the UI thread into a single driver call.
+    - Fixed GPU overclock settings being cleared when the dGPU is not powered or unavailable.
+    - Fixed the dGPU awake device being created on the wrong adapter and not recovering after a GPU power cycle.
+    - Fixed GPU preference misreading specific adapter values and silently failing to write.
+    - Added an NVAPI availability probe with bounded init retries, and skipped NVAPI capabilities when NVAPI is unavailable.
+    - Added an NVAPI fallback for GPU power target offsets above 255 W, and extended GPU power offsets through NVIDIA PCF with fixed Advanced offset resets.
+    - Propagated P-State write failures, serialized applies, and reported failed applies in a snackbar.
+    - Fixed the Fn + R refresh rate cycle restarting from the lowest rate when the current state is not in the list.
+    - Fixed the FMax toggle not restoring its saved state.
+    - Fixed AMD overclocking reset applying a zero FMax limit.
+    - Fixed PBO Scaler defaulting to 0 and freezing the BIOS.
+    - Fixed AMD Overclocking not raising an exception when PawnIO is missing, and removed duplicated enable toggle updates.
+    - Fixed the GPU card showing no data when reading the AMD iGPU failed.
+    - Fixed AMD iGPU misidentification causing discrete GPU selection to get stuck.
+    Fan Control & Sensors
+    - Added multi-fan system sensor support across the Dashboard, OSD and status window.
+    - Added firmware fan table discovery, clamped curve targets to the real speed range, and made fan speed writes unit-aware.
+    - Added minimum fan speed and write RPM in hundreds settings, with explanatory tooltips.
+    - Restored the EC fan curve when custom curve verification fails, and stopped discarding the custom fan curve when fan table verification fails.
+    - Fixed the FanTable target temperature display, system fan selection resetting when the sensor controller is unavailable, and fan curve rows showing the CPU sensor curve as a system fan.
+    - Fixed the fan curve tooltip reading the wrong temperature curve.
+    - Fixed sensor subscriptions during initialization and on window visibility changes, and improved the sensor group initialization time.
+    - Fixed sensor updates stopping after a read failure, and sensor update task completion races.
+    - Fixed the Hardware Sensors toggle clearing Dashboard and OSD settings and leaving a stale OSD and tray tooltip when re enabled.
+    - Fixed CPU temperature and voltage settings not being applied at startup, and matched the CPU temperature sensor names to LibreHardwareMonitor.
+    - Fixed GPU VRAM and RAM values shown in bytes instead of gigabytes, and moved GPU VRAM sensors to the Data sensor type.
+    - Fixed fan speed not showing until the OSD was started, and gated the fan max speed step on capability support.
+    - Renamed PCH to motherboard across the sensors pipeline, and removed the motherboard label override from the sensor dashboard.
+    - Changed the default sensor refresh interval to 2 seconds and disabled Dashboard sensor bar animations in software rendering and when system animations are off.
+    Keyboard & Lighting
+    - Added the Horse Race Lamp, Breath and Wave effects and aligned every Spectrum effect name with its label.
+    - Fixed an issue where 24 zone keyboards hid Spectrum effects the firmware renders.
+    - Fixed the Spectrum effect names and the swapped audio effect ids.
+    - Fixed a stack overflow when changing the LampArray flag, and unhandled exceptions and unnecessary HID queries in Spectrum preset callbacks.
+    OSD, Dashboard & Display
+    - Anchored the OSD position to the monitor work area.
+    - Fixed the OSD being restored clipped after a resolution change, drifting and clipping on display changes, leaving a gap when snapped to the left or right edge, and drifting to the center after a resolution or DPI change.
+    - Fixed the OSD separator colors, spacing and hairline rendering.
+    - Fixed the legacy dashboard refresh lifecycle and recovery, and the legacy dashboard sensor panel retrying unsupported sensors and duplicating refresh intervals.
+    - Fixed refresh rate and resolution changes on displays without source mode information.
+    - Fixed Dynamic Refresh Rate base frequency resolution, the blank refresh rate ComboBox, and restored exact frequency comparison in DRR pre-initialization.
+    Automation & Game Detection
+    - Wired ITS Mode changes into the automation processor.
+    - Prevented GameAutoListener deadlocks and race conditions, serialized the game running state transition, and contained trigger evaluation failures.
+    - Fixed ITS Mode trigger deserialization and defined ToString for every automation pipeline trigger.
+    - Filtered automation triggers by hardware support and battery presence, and extracted automation step support checks while preserving step order.
+    - Extended the inactivity trigger timeout options, and aligned its duration formatting.
+    Software Disablers
+    - Reworked the disablers to disable scheduled tasks, services, drivers, and autorun entries, close the remaining processes, and then verify the result.
+    - Reduced repeated service enumeration and replaced generic failures with the specific reason a disable stayed incomplete.
+    - Added autorun entry support and fixed Vantage disabling after logon.
+    - Scoped the Legion Zone and Legion Space disablers to their own components and drivers.
+    - Fixed a process handle leak in the Fn Keys disabler.
+    - Fixed a single failing service aborting the whole disable flow.
+    UI & UX
+    - Fixed minimize to tray not working with Minimize on Close, the maximized state being lost on restore, a stuck idle priority, and AMD title bar buttons.
+    - Fixed the God Mode UI freeze on save and exit and improved the experience when applying presets.
+    - Fixed Power Mode notification lag and the Extreme Mode notification crash, and reduced startup delay by skipping the power setting throttle.
+    - Fixed Power Mode notification and dependency synchronization on machines without God Mode.
+    - Fixed power mode and touchpad notifications appearing for changes made in the Dashboard page.
+    - Fixed the Discrete GPU management window cards not hiding their subtitles in compact mode.
+    - Reduced the page transition to a 100 ms fade and cached the decoded background image to stop re decoding it on every visual refresh.
+    - Fixed Check Instance persistence and spurious Quick Action dirty state.
+    - Fixed warranty and package dates being parsed with the system calendar and the days remaining label colour when expired.
+    - Fixed the ITS Mode card showing in the add window during debug runs and improved the ITS Mode driver path.
+    - Fixed CpuVoltageMode display names that referenced missing resources and simplified the hardware sensor settings.
+    - Reordered the Donate page authors to list active maintainers first.
+    Bug Fixes & Stability
+    - Fixed a crash when a disposed process is evicted from the game listener cache.
+    - Fixed a startup crash when the system theme listener failed to start.
+    - Fixed Script Console debug gating and corrected licenses, attributions, and argument documentation.
+    - Added Spectrum keyboard diagnostic logging and logged boot logo support check failures.
+    - Refactored the sensor controllers around fan table profiles and delegated the Hardware Sensors toggle to the feature.
+    Localization
+    - Added default localization strings for other languages.
+    - Updated translations across all supported languages via Crowdin.
+    - Added a Turkish translation of the README, removed unreferenced language keys and updated the translation credits.
+    Build & Infrastructure
+    - Updated System.Management to 10.0.13, moved DiskInfoToolkit storage types to the Devices namespace, and added Smart Fn Lock and driver call duration logging in debug builds.
+    - Fixed the dev release pipeline taking over reserved tags and failing when the version was free.
+    - Updated the README files, the documentation, the maintainer donate description and .gitignore.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LenovoLegionToolkit-Team/LenovoLegionToolkit/releases/tag/v2.38.0.0
+ReleaseTime: 2026-11-19T20:44:33.0000000Z
