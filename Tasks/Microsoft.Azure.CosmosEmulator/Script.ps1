@@ -9,11 +9,11 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/azure-databases-docs/HEAD/articles/cosmos-db/emulator-release-notes.md' | Convert-MarkdownToHtml
+      $Object2 = Invoke-WebRequest -Uri 'https://learn.microsoft.com/en-us/azure/cosmos-db/emulator-release-notes' | ConvertFrom-Html
 
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h3[contains(., '$($this.CurrentState.Version)')]")
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[(self::h2 or self::h3) and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h3'; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -notin @('h2', 'h3'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
