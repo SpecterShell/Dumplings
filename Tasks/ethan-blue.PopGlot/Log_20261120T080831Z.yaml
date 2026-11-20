@@ -1,0 +1,27 @@
+Version: 0.1.42
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/ethan-blue/PopGlot/releases/download/v0.1.42/PopGlot-v0.1.42-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ethan-blue/PopGlot/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 引擎生成参数：API 引擎可配置思考程度、模型上下文窗口和单次输出 token 预算；随引擎保存，不改动已有 API Key。
+    修复
+    - 长文请求过碎：AI 文字翻译不再固定每 800 字符发一次请求，改为根据引擎的上下文和输出预算规划，能容纳的原文整篇翻译，超过预算才顺序分段。
+    - 划词译文空间不足：按窗口高度限制原文与说明区域，长文默认使用更高的浮窗；原文、译文和说明可分别滚动，避免长原文挤占译文阅读区。
+    - 思考与译文预算冲突：思考预留纳入上下文规划和自适应输出；显式输出上限不再被额外加大，不可行的预算组合在发送前拒绝。
+    - 模型协议兼容：区分 OpenAI 推理参数、新旧 Claude 思考格式和 Gemini 思考级别；Gemini 3 不再强设低温度，思考片段不会混入可见译文。
+    - 参数变更后复用旧结果：生成参数纳入相关请求与缓存身份，调整参数后不再复用旧配置的结果。
+    - 长文排错说明过时：移除帮助中固定 6400 字符的旧限制说明，补充上下文、输出、思考预算和不完整结果的处理边界。
+    迁移
+    - 无需手动迁移。已有引擎默认保留自动思考与自适应输出预算，模型上下文由保守默认值规划；公共翻译和托管工具继续遵守各自服务的限制。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ethan-blue/PopGlot/blob/HEAD/CHANGELOG.md#0142---2026-11-17
+ReleaseTime: 2026-11-17T15:49:23.0000000Z
