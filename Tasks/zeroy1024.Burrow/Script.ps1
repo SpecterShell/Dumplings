@@ -70,7 +70,7 @@ switch -Regex ($this.Check()) {
           $this.CurrentState.Locale += [ordered]@{
             Locale = 'zh-CN'
             Key    = 'ReleaseNotes'
-            Value  = $ReleaseNotesCNNodes | Get-TextContent | Format-Text
+            Value  = $ReleaseNotesObject | Get-TextContent | Format-Text
           }
         }
       } else {
