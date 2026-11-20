@@ -1,0 +1,61 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.9/vibex-0.1.9-windows-x86_64-nsis.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.9/vibex-0.1.9-windows-aarch64-nsis.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🚀 What's new
+    - The composer and the run configuration are rebuilt: the composer starts as one line and opens smoothly as the draft grows, keeping the caret and the text in place. Schedule, the terminal and the usage readout moved to the footer. Thinking depth, conversation mode and the feature toggles moved into a column beside the model list; tuning a level keeps the panel open, and picking a model closes it.
+    - The timeline scrolls without moving the reader: every update used to re-measure the whole page and throw the reading position away. Appends and prepends now splice instead, so each row keeps its height and the reader keeps the row and the offset they were on.
+    - The desktop draws much faster: it runs on the new GPUI backend and GPUI Kit 0.10, and the timeline is a true virtual list. A streamed token repaints only the timeline or the sidebar it touched, and loading older history no longer rebuilds the turns below it.
+    - A session group is managed as a workspace: the group's name, live count and merge action moved to the title bar, every pane keeps its own session and scroll position, and the group row offers collapse, more and new session on hover.
+    - The transcript shows images directly: an image that was sent or opened is drawn as a thumbnail in its row — including captures from outside the workspace such as the system temp directory — and a click opens the full-window preview.
+    - The composer's height animates smoothly: the slim bar and the full box are one adaptive control, and its height eases over 180ms instead of flickering at the wrap boundary.
+    - Split panes each keep their own session: a pane no longer falls back to the placeholder when focus moves. Every pane always renders its active tab, and the focus ring shows where the keyboard is.
+    - The title-bar update panel works again: the update panel used to be culled by the title strip's overflow mask, so its button could not be clicked. Panels, menus and tooltips now respond normally.
+    - An SSH instance can reuse a runtime directory that already exists on the host: the SSH profile can point at an existing runtime home, which connects straight to a Vibex build already running on that machine; a scan refuses a directory that is in use, so nothing is adopted by accident.
+    - The desktop's proxy reaches a remote runtime: the proxy was not forwarded over SSH, so agent downloads failed on a host that needs it. It is now carried in the launcher's environment file.
+    - A remote session stays in step with the local authority: switching to a remote runtime could answer session_not_found. Session selection, history paging and token accounting now read the authority that is actually on screen.
+    - Large update packages download reliably: a big file on a slow link no longer dies halfway. The download resumes from its .part file and the assembled package is still verified against its size and hashes.
+    - Injected instructions no longer become session titles: a provider's prompt instructions used to pollute the session title. The title policy now refuses them, and a one-time repair rebuilds the rows that were already overwritten.
+    - A failed runtime switch says why: switching a model or an endpoint no longer reports a vague "configuration unavailable"; the specific error and the Agent's own refusal are shown.
+    ⬆️ Upgrading
+    How to upgrade: install 0.1.9 over the previous version. Sessions, workspaces, Provider configuration, Skills, remote hosts and drafts are all kept.
+    Notes:
+    1. Mobile: 0.1.9 does not include Android or iOS packages. The mobile client is still on the previous backend and returns once that port is finished; this release publishes the desktop packages, the headless server and the container images only.
+    2. Session titles: a one-time repair runs on first start and rebuilds titles that the system instructions had overwritten.
+    3. SSH profiles: if you connect over SSH, leave runtime home empty unless you need it (the managed directory keeps working); set it only to reach sessions owned by an existing runtime on that host.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 更新内容
+    - 输入框与运行配置全面改版： 输入框默认保持单行，随草稿内容平滑展开，光标与文本保持原位；定时发送、终端和用量统计移至页脚。思考深度、对话模式等配置移至模型列表旁侧栏，调整时面板保持打开，选中模型后自动关闭。
+    - 时间线滚动与阅读体验更流畅： 修复了过去会话更新时导致整页重新测量和丢弃阅读位置的问题，现在采用高效的追加和拼接方式，保留每行的高度与阅读者的当前视口位置。
+    - 桌面端界面渲染大幅加速： 桌面端升级至 GPUI 新后端与 GPUI Kit 0.10，时间线实现真正的虚拟列表渲染，流式输出时仅重绘时间线或侧栏对应区域，历史消息载入时不再重建下方已有内容。
+    - 会话分组改为工作区形式管理： 分组名称、实时数量和合并操作移至标题栏，每个分屏独立保留会话与滚动位置，分组行悬停时提供折叠、更多和新建会话等便捷操作。
+    - 聊天记录支持直接显示图片缩略图： 曾经发送或打开过的图片会在记录行中直接显示缩略图（包括系统临时目录等外部截图），点击即可打开全屏预览。
+    - 输入框高度动画更平滑： 窄栏与完整输入框合并为同一个自适应控件，高度在 180ms 内平滑缩放，避免了以往在换行边界来回闪烁的问题。
+    - 多窗口分屏各自保留独立会话： 分屏内容不再因焦点切换而自动变回占位符，每个分屏始终独立渲染其当前标签页，焦点环清晰指示当前键盘所在位置。
+    - 更新面板与标题栏交互修复： 修复了标题栏更新面板因裁剪遮罩导致无法点击的问题，确保弹窗、菜单与工具提示正常响应。
+    - 远程 SSH 实例支持复用主机运行时目录： SSH 配置现可指定已存在的 runtime home 目录，方便直接接入机器上已运行的 Vibex 构建，同时带有安全扫描防止误接管。
+    - 桌面端代理可正确访问远端运行时： 修复了 SSH 远端连接中代理未转发导致下载失败的问题，现已正确写入启动器环境文件。
+    - 远程会话状态与本地权威端同步： 修复了切换远程运行时可能导致 session_not_found 错误的问题，确保会话选择、历史分页和 token 统计准确无误。
+    - 大体积安装包下载更稳定： 修复了慢速网络下大文件下载容易中途断开的问题，支持通过 .part 文件进行断点续传与完整性校验。
+    - 修复系统指令被误作会话标题的问题： 修复了 provider 提示词指令污染会话标题的 Bug，并在首次启动时自动重建被覆盖的标题。
+    - 运行时切换失败时提供具体错误原因： 切换模型或端点报错时，不再笼统显示“配置不可用”，而是直接展示具体的错误详情与拒绝理由。
+    ⬆️ 升级指南
+    如何升级： 直接用 0.1.9 版本覆盖旧版本即可，您的会话、工作区、Provider 配置、Skills、远程主机和草稿均会被完整保留。
+    注意事项：
+    1. 移动端说明： 本次 0.1.9 版本不包含 Android 与 iOS 安装包（移动端仍在使用旧版后端，待移植完成后会重新恢复移动端构建），本次仅发布桌面端安装包、无头服务端和容器镜像。
+    2. 会话标题修复： 首次启动时会运行一次自动修复，重建被系统指令污染的会话标题。
+    3. SSH 远程配置： 如果您通过 SSH 连接远程主机，若无特殊需求，配置中的 runtime home 保持留空即可（继续使用受管目录）；只有需要接入主机上已有特定运行时会话时才需填写。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/vibex-ai/vibex/releases/tag/v0.1.9
+ReleaseTime: 2026-11-20T09:20:24.0000000Z
