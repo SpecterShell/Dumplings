@@ -1,0 +1,50 @@
+Version: 0.5.21
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.21/Snow-App-Setup-0.5.21.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - CodeMirror File Viewer: the read-only code view and the editor are rebuilt on CodeMirror 6, replacing the custom virtual scroller, textarea and large-file fallback; highlight, theme, search, review and fold logic is shared by both modes, code files open directly in edit mode while Markdown and SVG keep the preview.
+    - Cloudflare R2 Backup and Resumable Tasks: a shared object store abstraction lets the local directory and Cloudflare R2 backends reuse the same chunking, manifest, retention and restore logic; tasks write a journal so an interrupted run can be resumed or discarded on the next launch, with per-chunk progress, transfer speed and R2 connection testing.
+    - Backup Task Cancellation: running backup and cleanup tasks can be cancelled; a cancelled task is not resumed and its leftover chunks are reclaimed by the next task, while automatic backups treat cancellation as success and reschedule silently.
+    - IM Character Card: chat style settings gain a character card that can be written by hand or generated from the IM avatar with the advanced model of the selected API profile (streaming, cancellable), injected into the built-in system prompt in IM mode only.
+    Improvements
+    - Aborting a streaming turn now requires a double ESC: the first press arms a 2s confirmation window and the second aborts, applied to global and detached-window shortcuts.
+    - Same-tool group headers are redesigned with the tool name, call count, edit diff totals and the latest target; messages, tool groups and nodes share one entrance clock so animations no longer stack, and staggering only happens on manual expand.
+    - The info header also covers workflow node conversations, with a dedicated badge and icon plus the first user prompt hidden from the list but reachable through message navigation.
+    - The workflow canvas takes over wheel and pinch zoom only after a click, so hovering it no longer blocks chat scrolling.
+    - A failed sub-agent request ends the run directly instead of offering retry or give up, leaving the reason to the parent conversation.
+    Bug Fixes
+    - Lazy sidebar collapses settle through a timeout fallback when transitionend never fires, so rows no longer stay stuck on the loading placeholder.
+    - Backup list load failures are reported inline while other errors go to a toast without the Electron IPC prefix.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.20...v0.5.21
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.21
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - CodeMirror 文件查看器：只读代码视图与编辑模式改用 CodeMirror 6，替换自研虚拟滚动、textarea 与大型文件降级方案；高亮、主题、搜索、审查与折叠逻辑在两种模式间共用，代码文件直接以编辑模式打开，Markdown 与 SVG 保持预览。
+    - Cloudflare R2 备份与可恢复任务：新增统一的对象存储抽象，本地目录与 Cloudflare R2 后端共用分块、清单、保留与恢复逻辑；任务写入日志，中断后可在下次启动时恢复或丢弃，并显示分块进度与传输速度，支持 R2 连接测试。
+    - 备份任务取消：运行中的备份与清理任务可以取消，取消的任务不会被恢复，残留分块由下次任务回收；自动备份将取消视为成功并静默重排。
+    - IM 角色卡：聊天样式设置新增角色卡，可手动编写，也可用所选 API 配置文件的高级模型根据 IM 头像生成人设（流式输出、可取消）；仅在 IM 模式下注入内置系统提示词。
+    改进
+    - 中止流式回复改为双击 ESC：第一次按下开启 2 秒确认窗口，第二次才中止，全局与独立窗口快捷键一致。
+    - 同名工具分组标题重做，显示工具名、调用次数、编辑差异统计与最近目标；消息、工具组与节点共用入场时钟，动画不再堆叠，仅手动展开时错峰。
+    - 信息头扩展到工作流节点会话，带专用徽标与图标，并承载首个用户提示词（列表中隐藏，可通过消息导航访问）。
+    - 工作流画布需点击后才接管滚轮与捏合缩放，悬停不再阻断聊天滚动。
+    - 子代理请求失败直接结束本轮，不再提供重试 / 放弃流程，原因交由父会话呈现。
+    修复
+    - 侧边栏懒折叠在 transitionend 不触发时通过超时兜底完成，不再卡在加载占位。
+    - 备份列表加载失败改为内联提示，其余错误走 toast 并去掉 Electron IPC 前缀。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0521
+ReleaseTime: 2026-11-20T02:47:47.0000000Z

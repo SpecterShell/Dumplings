@@ -1,0 +1,38 @@
+Version: 0.20.2.20261120.0150
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.20.2/Runner-Setup-0.20.2.20261120.0150-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.20.2 is a feature release for macOS, Windows and Linux on top of 0.20.1. It brings git worktrees into the app, reads Codex's status from Codex's own terminal reports, and finishes the fix for remote control dropping and the app hanging.
+    New
+    - Git worktrees in the app. When you start a local chat, terminal or mission inside a Git repository, a Checkout control in the launcher's Location row lets you stay in the main checkout, pick an existing worktree, or choose New worktree… to create a linked worktree under .worktrees/ from a new branch and a base branch. In the sidebar's Projects view, a session in a linked worktree shows its branch on a second line; in Active, the branch replaces the subfolder. Archiving the last chat, tab or mission in a worktree Runner created offers Remove worktree in its confirmation, checked by default. A remote chat in a worktree shows the host's branch and base in Info. (#1213)
+    - Codex status comes from Codex itself. Runner now reads Codex's built-in status reports in chats and missions instead of installing status hooks, so Codex sessions show Approval needed, Answer needed, unread completion badges and Response failed. Codex's Status hooks switch is gone from Settings → Agents → Launch. Claude Code and pi chats with Status hooks off now also show waits, failures and unread completion badges from the agent's terminal status. Runner now requires Codex 0.164.0 or newer; an older Codex shows Update needed and is updated when you start it. (#1320)
+    Bug fixes
+    - Remote control no longer drops and hangs the app. 0.20.1 fixed one cause; this release fixes the rest. A slow or stuck remote channel no longer stalls the other channels or the connection, the background service no longer holds the database while it waits on a session, and the app's windows no longer wait on the service for routine refreshes. Runner also logs slow service steps and app stalls to help diagnose any that remain. (#1377)
+    - Remote control survives a trip to Settings. Opening this computer's Settings from a remote window and going back returns you to the same remote tab with terminal control intact. (#1385)
+    - ⌘W closes the focused mission drawer shell. In a mission's terminal drawer, ⌘W (Ctrl+Shift+W on Windows and Linux) now closes the focused shell tab, like its ×, instead of hiding the whole drawer. (#1398)
+    - Choosing a project always takes its folder. Picking a project in the launcher now starts in that project's folder even when the current folder is inside it, so a parent folder registered as a project no longer leaves you in one of its repositories. No project returns to your default working directory, or your home folder when that setting is blank. (#1392)
+    - Reordering remote projects in the sidebar. Dragging a project in a remote computer's sidebar now shows drop positions above and below each project, not only at the bottom. (#1395)
+    - Linux: softer window shadow. Floating windows on light desktops no longer show a hard gray edge where the shadow ends. (#1387)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.20.2 是 macOS、Windows 和 Linux 上基于 0.20.1 的功能版本：应用内支持 git worktree，Codex 状态改为读取 Codex 自身的终端状态报告，并完成了远程控制断开、应用卡死问题的修复。
+    新功能
+    - 应用内支持 git worktree。 在 Git 仓库中启动本地聊天、终端或 mission 时，启动器 Location 行会出现 Checkout 控件：可以留在主 checkout、选择已有 worktree，或选择 New worktree…，用新分支名和基准分支在 .worktrees/ 下创建关联 worktree。在侧边栏 Projects 视图中，位于关联 worktree 的会话会在第二行显示分支；在 Active 视图中，分支会替代子文件夹显示。归档 Runner 创建的 worktree 中最后一个聊天、标签页或 mission 时，确认对话框会提供 Remove worktree 选项，默认勾选。远程聊天位于 worktree 中时，Info 会显示主机上的分支和基准。 (#1213)
+    - Codex 状态直接来自 Codex。 Runner 现在在聊天和 mission 中读取 Codex 内置的状态报告，不再安装状态 hook，因此 Codex 会话也能显示 Approval needed、Answer needed、未读完成标记和 Response failed。Settings → Agents → Launch 中 Codex 的 Status hooks 开关已移除。关闭 Status hooks 的 Claude Code 和 pi 聊天，现在也会通过终端状态显示等待、失败和未读完成标记。Runner 现在要求 Codex 0.164.0 或更高版本；较旧的 Codex 会显示 Update needed，启动时会先自动更新。 (#1320)
+    问题修复
+    - 远程控制不再断开并卡死应用。 0.20.1 修复了其中一个原因，本版本修复了其余部分：一个缓慢或卡住的远程通道不再拖慢其他通道或整个连接；后台服务不再在等待会话时占用数据库；应用窗口的日常刷新也不再等待后台服务。Runner 还会记录较慢的服务步骤和应用卡顿，便于排查残留问题。 (#1377)
+    - 进入 Settings 再返回后保留远程控制。 在远程窗口中打开本机 Settings 再返回，会回到原来的远程标签页，并保留终端控制权。 (#1385)
+    - ⌘W 关闭当前聚焦的 mission 抽屉 shell。 在 mission 的终端抽屉中，⌘W（Windows 和 Linux 上为 Ctrl+Shift+W）现在会像点击 × 一样关闭当前聚焦的 shell 标签，而不是隐藏整个抽屉。 (#1398)
+    - 选择项目时总是使用项目文件夹。 在启动器中选择项目时，即使当前文件夹位于该项目内，也会从项目文件夹开始；因此被注册为项目的父文件夹不会再让你停留在它下面的某个仓库中。No project 会回到默认工作目录，若该设置为空则回到主目录。 (#1392)
+    - 在侧边栏中重新排序远程项目。 在远程电脑的侧边栏中拖动项目时，现在每个项目的上方和下方都会显示放置位置，而不只是在底部。 (#1395)
+    - Linux：窗口阴影更柔和。 在浅色桌面上，浮动窗口的阴影末端不再出现生硬的灰色边线。 (#1387)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.20.2
+ReleaseTime: 2026-11-20T02:54:48.0000000Z
