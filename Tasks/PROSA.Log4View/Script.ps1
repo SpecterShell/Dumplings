@@ -10,17 +10,25 @@ function Get-ReleaseNotes {
   try {
     $Object2 = Invoke-WebRequest -Uri 'https://www.log4view.com/download-en' | ConvertFrom-Html
 
-    $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='card-header' and contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
-    if ($ReleaseNotesTitleNode) {
+    if ($ReleaseNotesTitleNode = $Object2.SelectSingleNode("//main[@id='main-content']/section[@class='download-hero']//div[@class='download-meta' and contains(., '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'div' -and $Node.HasClass('card-header')); $Node = $Node.NextSibling) { $Node }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+        Value  = $ReleaseNotesTitleNode.SelectNodes('//main[@id="main-content"]/section[@class="r-section"]//div[@class="version-changes"]') | Get-TextContent | Format-Text
+      }
+    } elseif ($ReleaseNotesTitleNode = $Object2.SelectSingleNode("//main[@id='main-content']/section[contains(@class, 'structured-release-history')]//details[@class='version-history-entry' and contains(./summary, '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")) {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(20\d{2}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesTitleNode.SelectNodes('./div[@class="version-changes"]') | Get-TextContent | Format-Text
       }
     } else {
       $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
