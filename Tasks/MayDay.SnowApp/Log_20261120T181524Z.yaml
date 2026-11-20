@@ -1,0 +1,46 @@
+Version: 0.5.23
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.23/Snow-App-Setup-0.5.23.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - MCP OAuth Sign-In: remote HTTP MCP servers that challenge with 401/403 can now authorize through the standard MCP flow (protected-resource metadata discovery, dynamic client registration, PKCE authorization code with a local loopback callback and token exchange). Credentials are stored per server URL, bearer tokens are attached and refreshed automatically, and the MCP settings panel gains a sign-in action, status polling and an explicit OAuth toggle.
+    - Model Limit Resolution: context window and max output token limits are read from the channel model catalogs, fall back to the public llm-specs source when missing, and sync into the API profile when a model is selected.
+    - Character Card Toggle: the IM character card can be turned off without deleting it, keeping it out of the built-in system prompt.
+    Improvements
+    - The git panel split ratio is remembered across restarts and written only after a real drag.
+    - SSH directory icons are colored by connection status (muted when disconnected, green when connected or degraded) in directory rows, tree nodes, tooltips and the project grid.
+    - Non-current local directories use the closed layered folder icon, keeping the accent-blue open state for the active project.
+    Bug Fixes
+    - JSON Schema dialect meta keywords such as $schema are stripped from tool schemas, fixing Gemini 400 errors caused by MCP servers that publish draft/2020-12 schemas.
+    - Fixed the minimal transcript sticking to the bottom and jumping its position while streaming.
+    - In minimal mode the tool-run grouping boundary is pinned to the first message of the window, so loading older history no longer merges trailing tool runs into a new page and shifts the viewport.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.22...v0.5.23
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.23
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - MCP OAuth 登录：此前返回 401/403 的远程 HTTP MCP 服务器现在可按标准 MCP 授权流程登录（保护资源元数据发现、动态客户端注册、PKCE 授权码 + 本地回环回调、令牌交换）；凭据按服务器 URL 保存，Bearer 令牌自动附带与刷新，MCP 设置面板提供登录操作、状态轮询与显式 OAuth 开关。
+    - 模型上限自动解析：从渠道模型目录读取上下文窗口与最大输出 token，缺失时回退公开 llm-specs 源，选择模型时同步写入 API 档案。
+    - 角色卡开关：IM 角色卡可临时停用而不必删除，停用后不再注入内置系统提示词。
+    改进
+    - Git 面板分隔比例持久化保存（仅真实拖拽后写入），重启后保持原有高度。
+    - SSH 目录图标按连接状态着色（断开为灰色、已连接或降级为绿色），目录行、树节点、悬浮提示与项目网格保持一致。
+    - 非当前本地目录统一使用闭合多层文件夹图标，强调蓝的展开态只留给当前项目。
+    修复
+    - 工具 schema 会剥离 $schema 等 JSON Schema 方言元关键字，修复发布 draft/2020-12 schema 的 MCP 服务器导致 Gemini 返回 400 的问题。
+    - 修复极简模式下流式输出时贴底滚动失效与位置跳动的问题。
+    - 极简模式的工具分组边界固定为窗口首条消息，加载更早历史不再把尾部工具组合并进新分页并顶偏视口。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0523
+ReleaseTime: 2026-11-20T18:12:37.0000000Z
