@@ -5,8 +5,8 @@ $Prefix2 = 'https://filecdn.minimax.chat/public/minimax-agent-prod/release/'
 $Object2 = Invoke-RestMethod -Uri "${Prefix2}latest.yml" | ConvertFrom-Yaml
 
 if ($Object1.version -ne $Object2.version) {
-  $this.Log("x64 version: $($Object1.version)")
-  $this.Log("arm64 version: $($Object2.version)")
+  $this.Log("CN version: $($Object1.version)")
+  $this.Log("Global version: $($Object2.version)")
   throw 'Inconsistent versions detected'
 }
 
@@ -15,11 +15,22 @@ $this.CurrentState.Version = $Object1.version
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix1 $Object1.files[0].url
+  Architecture = 'x64'
+  InstallerUrl = Join-Uri $Prefix1 $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = Join-Uri $Prefix1 $Object1.files.Where({ $_.url.Contains('arm64') }, 'First')[0].url
 }
 $this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
-  InstallerUrl    = Join-Uri $Prefix2 $Object1.files[0].url
+  Architecture    = 'x64'
+  InstallerUrl    = Join-Uri $Prefix2 $Object1.files.Where({ $_.url.Contains('x64') }, 'First')[0].url
+}
+$this.CurrentState.Installer += [ordered]@{
+  InstallerLocale = 'zh-CN'
+  Architecture    = 'arm64'
+  InstallerUrl    = Join-Uri $Prefix2 $Object1.files.Where({ $_.url.Contains('arm64') }, 'First')[0].url
 }
 
 switch -Regex ($this.Check()) {
