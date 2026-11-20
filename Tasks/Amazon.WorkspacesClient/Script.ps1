@@ -14,21 +14,24 @@ switch -Regex ($this.Check()) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         $Object1.pubDate,
-        'ddd MMM d HH:mm:ss "PDT" yyyy',
+        [string[]]@(
+          'ddd MMM d HH:mm:ss "PDT" yyyy',
+          'ddd MMM d HH:mm:ss "PST" yyyy'
+        ),
         (Get-Culture -Name 'en-US')
       ) | ConvertTo-UtcDateTime -Id 'Pacific Standard Time'
-
-      # ReleaseNotesUrl
-      $this.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = $ReleaseNotesUrl = $Object1.releaseNotesLink
-      }
     } catch {
       $_ | Out-Host
       $this.Log($_, 'Warning')
     }
 
     try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $Object1.releaseNotesLink
+      }
+
       $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/html/body/ul/li/h2[contains(text(), '$($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
