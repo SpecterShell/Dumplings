@@ -1,0 +1,22 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ciao1019/ArcMD/releases/download/v0.2.5/arcmd-setup-0.2.5-amd64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds Sidebar Copy, Paste, and Duplicate for documents, folders, and multi-selections (#10, #39), streaming Responses & Chat Completions protocol support for Space Q&A (#23), crisp math formula rendering, content-aware expanding tables, narrow-window sidebar hysteresis, and an optional Autosave toggle (#32), plus targeted fixes for table row selection crashes (#34, #35) and literal plain-text clipboard copying.
+    Sidebar, Space Q&A, and Writing Workflow
+    - Sidebar Copy, Paste, and Duplicate (internal/vault/copy.go, internal/app/copy.go, internal/app/sidebar.go): Right-click or use ⌘C / ⌘V (Ctrl+C / Ctrl+V) in the sidebar to copy, paste, or duplicate documents, nested folders, multi-selections, and favorite tiles within or across Spaces. Duplicate enters inline rename and opens the copy focused in the body; cross-folder and cross-Space pastes preserve or rebase attachments and covers safely with one-click Undo via Trash (#10, #39, thanks to @tajiaoyezi).
+    - Streaming Responses and Chat Completions for Space Q&A (internal/agent/responses.go, internal/app/qasettings.go, cmd/arcmd/ask.go): Choose Automatic, Chat Completions, or Responses in Settings → AI Q&A or via arcmd ask -protocol. Automatic selects stateless streaming Responses for recognized reasoning models on OpenAI and OpenRouter while preserving pending tool-call results and encrypted reasoning replay (#23, thanks to @hyskr).
+    - Optional Autosave toggle with unsaved-changes guard (internal/prefs/prefs.go, internal/app/unsaved.go, internal/app/settings.go): Toggle background autosave in Settings → General → Writing or the command bar (⌘K). When disabled, edits remain in memory until explicitly saved (⌘S), and leaving or closing modified documents prompts Save / Don't Save / Cancel (#32).
+    Math Rendering, Tables, and Clipboard Fixes
+    - Crisp scaled math, wrapping equations, and content-aware tables (internal/editor/math.go, internal/tex/layout.go, internal/editor/virtualize.go, internal/app/app.go): Paint inline and display formulas directly at their target font size instead of raster-scaling pre-shaped glyphs, wrap long inline equations before shrinking, size table columns by natural content width and let wide formula tables expand past the standard prose column as the window widens, and add widening hysteresis so dragging a narrow window wider does not prematurely unfold the sidebar and squeeze the document (#32).
+    - Fix table row selection panic (internal/editor/table.go): Guard column-index access in the table toolbar so selecting a row whose index exceeds the column count no longer triggers an out-of-range panic (#34, #35, thanks to @Zzzt2003).
+    - Literal plain-text copy and cleaner Markdown escaping (internal/editor/clipboard.go, internal/editor/markdown.go): Copy literal characters without Markdown backslash escapes, backticks, or <p align=...> wrappers from table cells, inline code, and prose, and leave intraword underscores unescaped when exporting Markdown.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ciao1019/ArcMD/releases/tag/v0.2.5
+ReleaseTime: 2026-11-20T19:36:58.0000000Z
