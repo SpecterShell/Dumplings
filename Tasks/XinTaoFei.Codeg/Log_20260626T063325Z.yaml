@@ -1,0 +1,45 @@
+Version: 0.18.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.18.0/codeg_0.18.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.18.0/codeg_0.18.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(office): Office documents are now a first-class workflow — create, analyze, proofread, and edit .docx, .xlsx, and .pptx files through the bundled officecli toolset. A new welcome-page quick-actions panel (Coding and Office tabs) drops the matching skill invocation and a prompt template into the composer with one click.
+    - feat(office): Preview .docx/.xlsx/.pptx right in a file tab — the preview opens automatically and refreshes live as the agent edits, backed by a long-lived officecli watch server (reverse-proxied and capability-authenticated for web and server deployments).
+    - feat(settings): A new Office Tools settings page installs officecli and manages its document skills.
+    - feat(settings): The Experts and Office Tools pages now use a skill-by-agent matrix — toggle any (skill, agent) pair, enable or disable a skill across all agents or every skill for one agent, and apply bulk changes to selected agents at once.
+    - feat(chat): Expert skills now appear directly in the "/" and "$" slash menus alongside the agent's other commands, instead of in a separate submenu.
+    - feat(chat): Welcome-page quick actions now respect per-agent skill enablement — a skill that isn't enabled for the selected agent shows a lock badge and links you to where you can turn it on.
+    - feat(chat): The welcome composer is taller and its conversation column is wider for more comfortable first prompts.
+    - feat(acp): Agents that support it now restore historical sessions via session/resume (falling back to session/load, then session/new), so reopened conversations resume faithfully.
+    - fix(acp): npx-distributed agents now install their platform-specific native binaries even when npm is configured to omit optional dependencies, fixing a "native binary not found" launch failure (notably on Windows).
+    - fix(acp): Resumed Codex sessions now stay on the model provider configured in ~/.codex/config.toml, instead of being forced back to OpenAI's official endpoint.
+    - fix(chat): The composer stays fully focusable while the agent is still connecting.
+    - fix(chat): Truncated @-mention suggestions now reveal their full text on hover.
+    - chore(acp): Bundled agents updated — Claude Code 0.52.0, OpenCode 1.17.11, Cline 3.0.30, CodeBuddy 2.111.0, and Kimi Code 0.20.0.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(Office)：Office 文档成为一等工作流——通过内置的 officecli 工具集创建、分析、校对和编辑 .docx、.xlsx、.pptx 文件。新建会话欢迎页新增快捷操作面板（编码 / Office 两个标签），一键将对应技能调用与提示词模板填入输入框。
+    - 功能(Office)：可直接在文件标签页中预览 .docx/.xlsx/.pptx——预览会自动打开，并随智能体编辑实时刷新，底层由常驻的 officecli watch 服务支撑（Web 与服务器部署经反向代理转发并按能力鉴权）。
+    - 功能(设置)：新增「Office 工具」设置页，可安装 officecli 并管理其文档技能。
+    - 功能(设置)：「专家技能」与「Office 工具」设置页改用「技能 × 智能体」矩阵——可切换任意（技能，智能体）组合、对某个技能在所有智能体上批量启停、或对某个智能体启停其全部技能，并支持对所选智能体批量应用。
+    - 功能(聊天)：专家技能现在直接出现在「/」与「$」斜杠菜单中，与智能体的其他命令并列，不再单列子菜单。
+    - 功能(聊天)：欢迎页的快捷操作现在会遵循各智能体的技能启用状态——未对所选智能体启用的技能会显示锁定标记，并引导你前往可开启的位置。
+    - 功能(聊天)：欢迎页输入框更高、会话栏更宽，首次输入更从容。
+    - 功能(ACP)：支持的智能体现在通过 session/resume 恢复历史会话（依次回退到 session/load、session/new），重新打开的会话能忠实续接。
+    - 修复(ACP)：以 npx 分发的智能体现在即便 npm 被配置为忽略可选依赖，也会安装其平台原生二进制，修复「native binary not found」启动失败（Windows 上尤为明显）。
+    - 修复(ACP)：恢复的 Codex 会话现在会保持在 ~/.codex/config.toml 中配置的模型供应商上，不再被强制切回 OpenAI 官方接入点。
+    - 修复(聊天)：智能体仍在连接时，输入框依然可完全聚焦输入。
+    - 修复(聊天)：被截断的 @ 提及建议现在悬停即可显示完整文本。
+    - 更新(ACP)：内置智能体升级——Claude Code 0.52.0、OpenCode 1.17.11、Cline 3.0.30、CodeBuddy 2.111.0、Kimi Code 0.20.0。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.18.0
+ReleaseTime: 2026-06-26T05:45:30.0000000Z

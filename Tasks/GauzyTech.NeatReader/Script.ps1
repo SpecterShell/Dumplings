@@ -1,39 +1,41 @@
-# International
-$Object1 = Invoke-WebRequest -Uri 'https://www.neat-reader.com/download/start-download?target=windows' | ConvertFrom-Html
-$Version1 = $Object1.SelectSingleNode('/html/body/input[2]').Attributes['value'].Value.Trim()
+# # Global
+# $Object1 = Invoke-WebRequest -Uri 'https://www.neat-reader.com/download/start-download?target=windows' | ConvertFrom-Html
+# $Version1 = $Object1.SelectSingleNode('/html/body/input[2]').Attributes['value'].Value.Trim()
 
-# Chinese
+# China
 $Object2 = Invoke-WebRequest -Uri 'https://www.neat-reader.cn/downloads/windows' | ConvertFrom-Html
 $Version2 = [regex]::Match(
   $Object2.SelectSingleNode('/html/body/div[3]/div/div/p[3]').InnerText,
   '([\d\.]+)'
 ).Groups[1].Value
 
-if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
-}
+# if ($Version1 -ne $Version2) {
+#   $this.Log("Global version: ${Version1}")
+#   $this.Log("China version: ${Version2}")
+#   throw 'Inconsistent versions detected'
+# }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version2
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://neat-reader-release.oss-cn-hongkong.aliyuncs.com/NeatReader Setup ${Version1}.exe"
-}
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl = "https://neat-reader-release.oss-cn-hongkong.aliyuncs.com/NeatReader Setup ${Version1}.exe"
+# }
+$this.CurrentState.Installer += [ordered]@{
+  # InstallerLocale = 'zh-CN'
   InstallerUrl    = $Object2.SelectSingleNode('/html/body/div[3]/div/div/div[1]/a[1]').Attributes['href'].Value | ConvertTo-UnescapedUri
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

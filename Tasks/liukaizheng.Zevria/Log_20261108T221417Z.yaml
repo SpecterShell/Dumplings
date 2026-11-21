@@ -1,0 +1,40 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/liukaizheng/zevria/releases/download/v0.2.0/zevria-v0.2.0-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Source commit: 22d8972fac1d62c36424f2d1cf2b73681bddde78
+    Highlights
+    - Anthropic Messages support: use anthropic.messages alongside openai.responses, including streamed thinking, tool calls, token counting, prompt caching, and protocol-aware replay.
+    - More resilient provider connections: configurable connection/start/inactivity deadlines, quiet-stream warnings, bounded outage recovery, retry countdowns, and clearer failure reporting. Trusted local credential helpers can supply rotating API keys and refresh once after HTTP 401.
+    - Persistent Plan drafts: create, read, and atomically edit a stored draft before submitting it for approval. Drafts survive feedback, restart, and compaction; Markdown mirrors and bounded diffs make review easier.
+    - Background commands: start session-owned jobs, inspect incremental output with command_status, stop a process tree with command_terminate, and manage jobs through the TUI /jobs overlay. Completion notices arrive without polling, with guarded automatic follow-up when idle.
+    - Queued TUI follow-ups: press Ctrl+Enter while busy to queue prompts, images, /orchestrate requests, or skills. Queued items retain their selected mode and pause at approval, cancellation, or failure boundaries.
+    - Prompt-prefix preservation: compaction/model-conversion summaries retain active instructions and declarations; incremental tool declarations keep their existing order and append changes while execution permissions remain enforced locally.
+    - Cleaner session history: unused sessions no longer create empty transcripts. Interrupted Responses attempts can retain readable, display-only evidence without executing incomplete tool calls. Shell results now share compact formatting, durations, and consistent truncation markers.
+    - Added a repository Privacy Policy describing provider data flows and local storage/cleanup boundaries.
+    Experimental desktop — source-only
+    A macOS-native zevria-desktop application now shares the CLI's in-process host and engine. It includes a working-thread interface, tool output and diffs, Plan review, docked questions, readable provider-supplied thinking disclosures, and native Markdown math with source-faithful copying.
+    Desktop is not included in these downloads: there is no desktop binary or .app bundle. It remains a source-build preview and does not yet expose every CLI management or ensemble command.
+    Upgrade notes
+    - Back up saved histories before upgrading. Canonical message/call-ID serialization and some display protocols changed. Retired response-display records and worker display-v1 events have no automatic migration; affected histories may need the matching older binary or a fresh session. The optional ACP response-display extension is now v2.
+    - submit_plan now accepts {} and submits the stored draft unchanged. Markdown mirrors are outputs, not editable Plan inputs.
+    - Background processes stop when their session closes or is replaced and are not restored on resume. Queued follow-ups are memory-only and do not survive restart.
+    - Anthropic requires protocol-specific configuration, uses local compaction summaries, and does not support hosted web search or persisted abandoned-attempt recovery. Cross-profile/protocol conversion can drop opaque reasoning or historical thinking.
+    - Cache-prefix preservation does not guarantee cross-version byte identity, cache hits, or latency improvements. Workflow/guidance or tool-contract changes can invalidate prefixes.
+    - Source integrations: zevria-app is now zevria-host, and ResponsesRouter is now ProviderRouter. Select -p zevria or -p zevria-desktop explicitly with cargo run.
+    Downloads and platform scope
+    The three archives contain CLI executables only:
+    - Windows x64 (MSVC): zevria-v0.2.0-x86_64-pc-windows-msvc.zip
+    - Linux x64 (GNU / Ubuntu 22.04 build baseline): zevria-v0.2.0-x86_64-unknown-linux-gnu.tar.gz
+    - Apple Silicon macOS: zevria-v0.2.0-aarch64-apple-darwin.tar.gz
+    Verify the archive against SHA256SUMS before extraction. Executables are unsigned and unnotarized. RTK, Git for Windows Bash, WSL, and provider configuration are not bundled. Windows WSL mode requires a separate, same-version Linux installation; automated native checks do not establish real-machine WSL, clipboard, or interactive-terminal acceptance.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/liukaizheng/zevria/releases/tag/v0.2.0
+ReleaseTime: 2026-11-08T19:13:46.0000000Z

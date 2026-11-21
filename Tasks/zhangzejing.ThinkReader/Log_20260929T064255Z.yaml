@@ -1,0 +1,32 @@
+Version: 0.9.55
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zhangzejing/ThinkReader/releases/download/v0.9.55/ThinkReader-Setup-0.9.55-win_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ThinkReader 0.9.55 改进 Agent 阅读命令、目标论文选择和相关控件体验。
+    - /review = /browse + /annotation + /summary；/deep-review 使用 /deep-annotation。沿用原生会话和当前子命令方法，模型根据原文识别类型，修复旧分类 JSON 解析错误；摘要校验证据并保护用户修改。
+    - 新任务默认当前聚焦论文；运行中的任务保持原目标。支持显式路径/论文 ID，自然语言由模型选择目标，不明确时询问，不把缺失路径回退到旧论文。
+    - Profile 切页、切换模型时保持内容宽度；加载可用模型时在“模型”后显示转圈。
+    - 划词工具栏和选区右键菜单使用独立引号图标及“引用到 Agent”。引用动作不再显示阅读窗格开关的高亮、按下状态或关闭提示。
+    - MinerU 环境、Pipeline 和 VLM 命令行复制图标居中，修正设置页通用按钮内边距造成的偏移。
+    - 划词翻译默认整理 PDF 原文和译文的段内硬换行，中文连续排版、英文词间保留空格；保留空行分段和列表，由卡片宽度自然换行，不改写已有批注或手动编辑内容。
+    实际构建源码：0b1f9a85a494c495037e3139316dc1887d1551f5。111 项 Windows 完整回归、打包后端/桌面冒烟、隔离安装环境下 0.9.54 → 0.9.55 的真实应用内更新均通过；本机已覆盖安装并打开最终包。隔离升级使用独立 NSIS 身份和合成 Library，实际 App 载荷与候选一致。
+    相同原生阅读实现此前已用真实 Cursor CLI＋合成索引 PDF 验证自然语言 review 和路径 deep-review，均生成批注与摘要，旧目标新增批注为 0。本次 UI 修复没有重复调用真实服务。
+    Windows x64 二进制未签名；未做全新 Windows 系统、真实 MinerU、复杂真实论文、其他 Agent 运行时或 macOS 验收。本次不构建或发布 macOS。
+    SHA-256
+
+    | 文件                                          | SHA-256                                                          |
+    | --------------------------------------------- | ---------------------------------------------------------------- |
+    | latest.yml                                    | 64a1df5d2cd4d6ffa4001d818f2b23bcaa07015109cdfc4cb696a1281a0ec329 |
+    | ThinkReader-0.9.55-win_x64.exe                | f1e987fd2fc0d1be71ef549e242d4440a174a99a5d78a2aae2c8896490b60047 |
+    | ThinkReader-0.9.55-win_x64.zip                | 6caeb6422f67f2b12db436991eabad823c60770f15e270fe4ce4ea01aadd1b77 |
+    | ThinkReader-Setup-0.9.55-win_x64.exe          | 13b643855f9d15995c80229b5b22fbde850d497cb23f70fc7b1bebd10cd64acc |
+    | ThinkReader-Setup-0.9.55-win_x64.exe.blockmap | 01f14d9ed2942098539cbb48f12dbbdc834f318cb656f70ee46e7d3329b0efc2 |
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhangzejing/ThinkReader/releases/tag/v0.9.55
+ReleaseTime: 2026-09-29T05:13:04.0000000Z

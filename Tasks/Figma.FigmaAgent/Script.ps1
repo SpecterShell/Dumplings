@@ -1,21 +1,22 @@
-$Object = Invoke-RestMethod -Uri 'https://desktop.figma.com/agent/win/RELEASE.json'
+$Object1 = Invoke-RestMethod -Uri 'https://desktop.figma.com/agent/win/RELEASE.json'
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.url
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

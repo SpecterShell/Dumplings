@@ -1,0 +1,45 @@
+Version: 0.9.51
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.51/Varin-0.9.51-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.51/Varin-0.9.51-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.51 redesigns Settings, lets a native Varin Agent work across connected devices within one conversation, and adds lighter ways to deploy the desktop client and workspace resources.
+    Settings and device connections
+    - Settings opens as a dedicated view. Returning brings you back to the same conversation and editor. Model Roles shows which models handle secondary tasks, and Devices shows how clients, the current Varin service, and Agent resources are connected. #390
+    - Edit system prompts and memory by scope. Memory settings now group embedding and reranking separately, and you can download the local embedding model from its settings.
+    - Choose Smart approval for eligible tool calls. The configured approval model handles calls that have no matching rule and asks you when it needs a decision. Explicit rules still take priority.
+    Work across devices in one conversation
+    - Save frequently used folders and choose a default in Settings → Workspace. Below the composer, see the current device and project or folder. Conversations without a selected location can use the saved default.
+    - The native Varin Agent can find connected work locations, read or edit files, and run commands at a selected location with the permissions available there. It can use several locations in one run and change the default for the next run. File links and recovery retain the device and source where the work happened. #391
+    - Improve native workspace teardown. Windows confirms that the shared drive mapping is gone before refreshing Explorer. Linux and macOS clean up identifiable leftover mounts and remove empty mount directories after detach. macOS keeps internal volumes out of Finder’s normal device list.
+    Desktop and Docker deployment
+    - Keep using the full desktop edition to run Varin on this device, or choose Varin Light to connect to an existing Varin service. Both editions have separate installers.
+    - Use the standalone Docker Resource Node at ghcr.io/astrmira/varin-node to provide files and commands from another device. The default application image is ghcr.io/astrmira/varin, and the toolchain-equipped image is ghcr.io/astrmira/varin-toolbelt. Update any image overrides or pinned references that still point to the old namespace. Deployment guide
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.51 重做了设置界面。同一个 Varin Agent 会话可以使用多台设备上的工作区，桌面端和 Docker 也有了更轻的部署选择。
+    设置与设备连接
+    - 设置现在有独立页面，返回后可以继续刚才的对话和编辑工作。「模型分工」集中查看各项辅助工作由哪个模型负责，「设备」用一张连接图展示客户端、当前 Varin 服务和 Agent 可用的设备。 #390
+    - 系统提示词和记忆按全局、项目或对话管理。记忆设置把嵌入和重排分开，本地嵌入模型可以在对应位置直接下载。
+    - 权限设置新增「智能判断」。工具调用未命中已有规则时，适用的调用会交由权限判断模型处理，需要确认时再询问你。已有规则仍优先生效。
+    在同一个会话里跨设备工作
+    - 在 设置 → 工作区 保存常用目录并选择默认位置。输入框下方显示当前设备和项目或目录，未指定位置的会话可从默认位置开始。
+    - Varin Agent 可以在同一次运行中查找并使用多个已连接的工作位置，按各处已有的权限读写文件和运行命令，也可以为下一轮调整默认位置。文件链接和文件回退会定位到操作实际发生的设备和目录。 #391
+    - 完善原生工作区卸载。Windows 在确认共享盘符撤销后刷新资源管理器，Linux 和 macOS 清理能确认归属的残留挂载，卸载后移除空挂载目录。macOS 的内部卷默认从 Finder 的设备列表隐藏。
+    桌面端与 Docker 部署
+    - 需要在本机运行 Varin 服务时，继续使用完整版桌面端。已有 Varin 服务的设备可以安装 Varin Light，直接连接现有服务。两个版本分别提供安装包。
+    - Docker 新增独立的资源节点镜像 ghcr.io/astrmira/varin-node，可以把另一台机器上的文件和命令能力接入现有 Varin 服务。默认应用镜像为 ghcr.io/astrmira/varin，带开发工具链的镜像为 ghcr.io/astrmira/varin-toolbelt。手动指定过旧镜像地址的部署请更新镜像引用。 部署说明
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Astrmira/Varin/releases/tag/v0.9.51
+ReleaseTime: 2026-11-19T00:29:58.0000000Z

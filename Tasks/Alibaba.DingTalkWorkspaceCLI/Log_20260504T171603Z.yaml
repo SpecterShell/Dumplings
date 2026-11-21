@@ -1,0 +1,27 @@
+Version: 1.0.20
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/download/v1.0.20/dws-windows-amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/download/v1.0.20/dws-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Documentation polish and a login regression fix. No behaviour changes outside the login MCP refresh path.
+    Fixed
+    - Login no longer reuses stale clientId from an old MCP cache (#213) — dws login now unconditionally re-fetches the MCP descriptor, so a previously cached client id can't keep producing auth errors after the server rotates it.
+    Docs
+    - dws chat message list pagination (#218, fixes #195) — clarifies that nextCursor is opaque and must be passed back as --cursor exactly; warns against parsing or reusing it as an offset.
+    - dws contact search examples (#209) — switched from the removed --keyword flag to the current --query.
+    - dws todo help text (#205) — expanded field semantics so MCP wrappers generate accurate schemas.
+    - chat message send-by-bot and report create help (#217, #106, #107) — --robot-code / --title / --text now carry the (必填) marker; report create --contents documents the key=field_name requirement and rewrites examples as a template detail → create two-step pipeline.
+    - CHANGELOG backfill for 1.0.19 (#204).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/tag/v1.0.20
+ReleaseTime: 2026-05-04T16:28:41.0000000Z

@@ -1,0 +1,182 @@
+Version: dev-2026-09
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/odin-lang/Odin/releases/download/dev-2026-09/odin-windows-amd64-dev-2026-09.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Language Features
+    - Experimental: Inline asm templates for x86/x64, ARM and RISC-V in #7271, #7406 and #7465
+    - Documentation: https://odin-lang.org/docs/inline-asm/
+    - ``` and """ strings to declare multi-line string literals that normalize indentation up to the closing quotation marks.
+    New Compiler Improvements
+    - Use posix_spawnp instead of system() when invoking the linker in #7485
+    - Fix default linker timing label on non-Windows platforms in #7240
+    - Fix odin doc -doc-format aborting on any package that imports another package in #7242
+    - Fix bigint negative printing in #7243
+    - Fix constant transmute from unsigned to signed wrapping one value too many in #7244
+    - Handle #soa fixed compound literals for vars in #7239
+    - Validate floating-point array counts as integers in #7251
+    - Fix typo in enumerated array in #7252
+    - Make redeclaration diagnostics stable under threading in #7253
+    - Improve procedure group overload scoring in #7227
+    - Fix #7012 - a type isn't its own specialization in #7257
+    - Fixes swizzles on array elements in soa containers in #7259
+    - Fix Name Canonicalization Rotate Left typo in #7267
+    - Fix constant string16 carrying UTF-8, and inverted slice indices reaching substring in #7268
+    - Fixes chain indexing for array elements in #soa containers in #7270
+    - Fixes range loop over array elements in #soa containers in #7277
+    - Fix riscv64 ABI classification for padded, over-aligned, and pointer-bearing structs in #7282
+    - i386: Pass aggregate arguments by value on the stack in #7283
+    - i386: Return aggregates through the hidden pointer on System V targets in #7284
+    - Use enum value init expression instead of numeric value in doc format in #7289
+    - Remove dead simd_rem in #7269
+    - Fix duplicated name for temporary .ll files in #7291
+    - Don't clear the operand value on the simd success path in #7315
+    - Fix #7281, apply #max_field_align in #7314
+    - Add diagnostic for missing field name to type_field_bit_offset + type_field_bit_size in #7293
+    - Fix byte swap on untyped int-like untyped types in #7294
+    - Bound constant arguments before range-checking them in #7295
+    - type_is_comparable: false for an unspecialized polymorphic record in #7296
+    - Fix guards combining two required conditions with && in #7297
+    - Correct the endianness guard messages in #7301
+    - Make the three endianness predicates partition in #7307
+    - simd_extract_lsbs/simd_extract_msbs Reject a lane count that exceeds the bit_set limit in #7308
+    - Clarify type_has_shared_fields behavior in code doc in #7309
+    - Matrix: enforce the element limit on multiplication and on overflowing dimensions in #7310
+    - Hoist if stmt in enumerated_array in #7311
+    - Check enumerated array length in #7312
+    - check_matrix_type_hint: Require the element type and layout to match in #7313
+    - Fixes f32 to 64-bit int/uint conversion in #7319
+    - Fixes float to 128-bit int/uint conversion in #7321
+    - Classify amd64/arm64 aggregates from the source type in #7292
+    - Fix long → int64_t for win64 in #7324
+    - Fix bit_field intrinsic by @kalsprite in https://github.com/odin-lang/Odin/pull/7325
+    - Fix out of bounds for zero arg #load_directory in #7329
+    - Fix compilation error when using the fixed-point write procedure and -vet-unused in #7330
+    - Fix backend support for #unroll on [dynamic]T in #7337
+    - Fix bit_set upper endpoint representability check in #7340
+    - fix bit_set subset/superset constant folding in #7346
+    - Fix three faults in &~ constant folding in #7345
+    - Enforce the #simd construction rules and stop two crashes in #7344
+    - intrinsics.type_integer_to_unsigned(rune) returns f16 in #7343
+    - quaternion and complex nan cmp & accessors in #7342
+    - Improved stable sort, from insertion_sort to merge_rotate in #7349
+    - Set console codepage to utf-8 (on Windows), and restore old one on exit in #7351
+    - Reenables LLVMSetUnnamedAddress for global constants merging in #7333
+    - Range-check a constant passed to an #any_int parameter in #7360
+    - Add the missing break in add_min_dep_type_info in #7359
+    - riscv64: Read a flattened aggregate's members from their real offsets in #7334
+    - Fix eol diagnostic in #7358
+    - Fixes the %% operator in #7353
+    - Fix SIGBUS/segfault when compiling recursive #soa slice/dynamic array types in #7361
+    - ABI Conformance harness + fixes in #7327
+    - Fix c_va_start guard and c_va_arg format mismatch in #7367
+    - riscv64: use a slice for the coerce offsets + missed arm in riscv ABI in #7368
+    - Reject a built-in procedure assigned to in #7369
+    - Do not register map runtime dependencies under bedrock in #7371
+    - Range-check the constant abs folds in #7372
+    - Fix #7377 in #7378
+    - Let FreeBSD use default gb_copy_file path in #7381
+    - Add AVX-512 VNNI VPDPWSSD support to inline assembly in #7380
+    - A base prefix with only digit separators has no digits in #7370
+    - A bit_fìeld constant is range-checked only while it is untyped in #7385
+    - A self-referential bit_field hangs the compiler in #7390
+    - Codegen worker must not exit process with running siblings in #7391
+    - Multi-instruction asm template computed with one operand twice in #7393
+    - extend family emits mnemonic that doesn't exist in #7392
+    - Let compiler check error() fmt strings + fixes in #7395
+    - Peel union constant to its variant in #7396
+    - complex and quaternion take their type from their arguments in #7399
+    - A union constant in a ternary or builds an ill-typed phi #7397
+    - Implement fixes for constant unions in #7087
+    - Only reuse a compound literal's storage for a variable of its type in #7400
+    - Fix or_else diverging with single return value in #7394
+    - Remove the os.Error == 0 compatibility hack in #7403
+    - Restore the Did you want 'nil'? diagnostic everywhere in #7405
+    - Address printf format warning in #7404
+    - Better hints when assigning or comparing to 0 when it is not allowed in #7407
+    - Fix reordered compound literal comparison in #7409
+    - Fix compiler panic on a selector into #branch_location in #7415
+    - Fix compiler segfault on distinct of a type alias that cycles back in #7416
+    - Fix segfault comparing two foreign declarations of the same symbol in #7417
+    - Fix compiler segfault on a bare .. in a type position call in #7418
+    - Asm cast guard in #7437
+    - Reject asm operands in slots only a named hardware register can fill in #7431
+    - Diagnose in an asm template instead of aborting with SIGILL in #7434
+    - Fix -no-crt on Windows in #7426
+    - Fixes -o:size in #7440
+    - string_split_iterator fix in #7445
+    - Big endian bool cmp in #7448
+    - Fix min(T) % -1 kills the process with SIGFPE, at every hardware width in #7450
+    - Fix canonical names for types in procedure literals in #7439
+    - Inline asm templates - CFG based analysis in #7444
+    - Normalize bool cmp in #7449
+    - Reject a non-constant argument to an asm template's immediate in #7432
+    - Add missing i128le, i128be to endian switch in #7459
+    - Convert constants before narrowing to i64 in the remaining checker sites in #7460
+    - Delete dead code that crashed the checker on an asm template group with no parameters in #7435
+    - Fix a swizzle target in a multi-assignment reading an already-written source in #7458
+    - Broadcast a constant into every array level in #7457
+    - Give asm templates a documentation category instead of a blank header and a null %s in #7438
+    - Do not deduplicate cases in tagless switches in #7468
+    New Packages
+    - 
+    Package Improvements
+    - [core:unicode/utf8] Fix truncated text for grapheme clusters in #7003
+    - [core:thread] Clarify completed task handling in thread pools in #7247
+    - [core:simd] Fix grammar in #7203
+    - [core:bytes] Optimize index_any with a byte bitset in #7255
+    - [core:simd/arm] Implement simd arm neon table lookup in #7256
+    - [core:odin/tokenizer] Fix broken double-checked lock in init in #7258
+    - [core:sys/windows] Add UnregisterHotKey in #7264
+    - [core:odin/parser] Fix unparenthesized attributes missing end position in its AST node in #7265
+    - [vendor:box3d] Add Box3D support for WebAssembly in #7266
+    - [core:simd/arm] Fix simd arm neon table lookup on big endian in #7273
+    - [core:unicode/utf8] + [core:text/edit] Add text field to utf8.Grapheme, fix caret translation by grapheme in #7274
+    - [base:runtime] Fixes non_zero_append_elem_fixed_capacity_string in #7317
+    - [base:runtime] Adds the pop family of procedures for #soa arrays in #7290
+    - [core:simd/arm] Implement simd arm neon extended table lookup in #7275
+    - [core:simd/arm] Implement simd arm neon logical in #7332
+    - [core:encoding/hex] Add non-allocating decode_into_buffer in #7347
+    - [base:runtime] Fix #7262. Do not free the original block on a failed heap resize in #7328
+    - [core:os] Fix #7350 in #7352
+    - [core:mem] Keep Dynamic_Arena allocations aligned after reset in #7355
+    - [core:slice] Fix slice.get doing unnecessary bounds check in #7363
+    - [core:slice] Fix slice.simple_equal misbehaviour on empty slice with non-nil data in #7364
+    - [core:image/tga] Fix .alpha_add_if_missing for TGA in #7366
+    - [core:sys/windows] Fix FILE_NOTIFY_INFORMATION struct member casing in #7374
+    - [core:odin] Remove inline and no_inline keywords in #7375
+    - [core:sys/wasm/js] Support shared WebAssembly memory in browser APIs in #7272
+    - [core:container/handle_map] Nicer organization, fix broken test, add test in #7383
+    - [core:rexcode/x86] Merge tables in #7384
+    - [core:thread] An exiting worker must not leave published in #7388
+    - [core:rexcode] Improvements in #7362
+    - [core:image/jpeg] Fixed negative read bug in #7410
+    - [core:hash] Add murmur3 implementation in #7419
+    - [core:nbio] Fix use-after-free, spurious poll readiness, and double completion on Windows in #7401
+    - [vendor:raylib] Fixed typo in raylib.odin in #7451
+    - [core:os] Fix simple typo in process.odin in #7454
+    - [core:fmt] Fill left-justified field with spaces in #7461
+    - [core:sys/darwin/Foundation] Skip Cocoa import on iOS in #7424
+    - [vendor:libc-shim] Fix typo in sched.odin in #7456
+    - [core:fmt] Fix justified printing of 0 producing all spaces in #7463
+    - [core:unicode/utf8] Fix #5939 grapheme cluster width in #7462
+    - [core:debug/trace] Remove os, fmt, slice, and strconv imports in #7408
+    - [core:os] add device to File_Info by @laytan in https://github.com/odin-lang/Odin/pull/7466
+    - [core:odin/parser] Improve parsing field docs and comments in #7481
+    - [core:net] Use explicitly passed allocators in #7480
+    - [core:encoding/json] Fix leak of key and value of a malformed object in #7487
+    Miscellaneous
+    - Explicitly specify all required LLVM components on Linux build in #7338
+    - Remove faulty tests in #7446
+    - Remove -microarch:native from 3 Windows tests and tweak Win test runner in #7455
+    - Add regression test for #7336 in #7428
+    Full Changelog: https://github.com/odin-lang/Odin/compare/dev-2026-08...dev-2026-09
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/odin-lang/Odin/releases/tag/dev-2026-09
+ReleaseTime: 2026-09-01T18:02:25.0000000Z

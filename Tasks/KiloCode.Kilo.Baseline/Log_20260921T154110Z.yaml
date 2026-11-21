@@ -1,0 +1,42 @@
+Version: 7.7.6
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.6/kilo-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.7.6
+    Minor Changes
+    - #14054 3b6746c Thanks @vkeerthivikram! - Reintroduce automatic session cleanup in Settings > Checkpoints. Keep it off by default and apply the configured retention period across all projects and Kilo clients on the machine. Protect running sessions and sessions with a recent fork, confirm manual cleanup, and show live session-level progress with a spinner and processed, deleted, and failed counts. Avoid scanning unrelated session history and preserve progress when status updates are delayed.
+    - #14301 f03ebe3 - Create new Git projects and clone repositories directly from Agent Manager. Choose where projects are stored and attach them without changing the VS Code workspace. Adding a project or cloning a repository that is already present opens the existing project instead of creating a duplicate, and a repository whose checkout failed can still be attached.
+      Create empty, unsigned bootstrap commits without normal commit hooks, while preserving staged files and Git configuration.
+    - #14282 d0475a6 - Label prompts that Kilo sends on your behalf, such as worktree updates from base, expanded slash commands, and editor or terminal code actions, with a "Sent by Kilo" header. Long prompts collapse to their first paragraph with a "Show prompt" toggle to inspect the full text, and reverting or editing a turn restores the command instead of the full template.
+    - #14344 83d276a - Load older chats on demand in the session history with a "Load more" control instead of stopping at the 100 most recent. Paging works across the workspace and every worktree directory.
+    - #14346 65702ab - Preview session display settings with an automatic sample conversation that streams reasoning, tool progress, and an answer beside the controls.
+      Apply review-focused or compact display presets from settings, and use the same display defaults during onboarding.
+    - #14292 8c724ef - Show a clock status on Agent Manager tabs and worktrees when a session is waiting for a scheduled wakeup.
+    Patch Changes
+    - #13979 fbdbe11 Thanks @mardausdennis! - Pin Agent Manager session tabs. Right-click a session tab and choose Pin to move it to the front of the tab bar; pinned tabs keep that position across reloads, survive Close Others, and can be dragged among themselves. Unpin returns the tab to its normal spot.
+    - #14349 1030bdb - Focus the Changes diff viewport when the diff shortcut opens it or its reading content is clicked, show its complete focus border only while it owns reading focus, and restore the previous prompt or opener when it closes. Keep delayed prompt recovery from stealing diff focus, release diff focus on outside clicks, and route paste from non-editable areas to the prompt. Scroll a page with Shift+ArrowDown or Shift+ArrowUp when the diff viewport itself has focus and no text is selected.
+    - #14348 24898d5 - Stop session progress spinners when sessions finish in a background project, and recover their status after reconnecting.
+    - #14333 74717ee Thanks @hdcodedev! - Fix the chat prompt sending the wrong text after a collapsed paste chip is deleted.
+    - #14324 238aff2 Thanks @hdcodedev! - Anchor review comments to the right list item when a markdown file separates its list items with blank lines.
+    - #14322 f47c29d Thanks @BambinoSK! - Remember the unified/split choice in Kilo diff viewers. Toggling the style once persists it for future diff viewers.
+    - #14286 5bbad4c - Retry transient backend connection drops instead of surfacing a "terminated" error.
+    - #14343 9d81d4a - Translate session cleanup progress and error messages in all supported languages.
+    CLI
+    7.7.6
+    Patch Changes
+    - #13340 f3d6d09 Thanks @rakshith1928! - Fix auto-compaction triggering far below the configured context threshold. The threshold now applies to the context window shown in the UI and is anchored to provider-reported token usage plus newly added content, instead of an inflated estimate of the whole payload on models with separate input limits. New system prompts and tool schemas are counted even when a provider report is available, and cancelled responses or reports that omit input usage no longer leave later content uncounted. On models whose input limit is smaller than their context window, the reserved input safety buffer can still trigger compaction before a high configured percentage is reached.
+    - #14351 a7d1596 Thanks @jezdez! - Support encrypted reasoning from OpenAI models accessed through Amazon Bedrock.
+    - #14282 d0475a6 - Label prompts that Kilo sends on your behalf, such as worktree updates from base, expanded slash commands, and editor or terminal code actions, with a "Sent by Kilo" header. Long prompts collapse to their first paragraph with a "Show prompt" toggle to inspect the full text, and reverting or editing a turn restores the command instead of the full template.
+    - #14216 5c366fa Thanks @grandmaster451! - Stop MCP server requests from repeating once per second when the server answers the optional GET stream probe with a body that is not an event stream. The response is now reported as "no stream on this endpoint", which the MCP client treats as supported.
+    - #14345 02353b0 - Project skills, agents, commands, and instruction files that contain ${env:...} or ${file:...} placeholders now load instead of failing with an environment reference error. The placeholders stay literal there, while project JSON config still rejects them.
+    - #14283 18c0384 - Always include the saved plan file hint when switching from Plan to Code, and remove the vestigial KILO_EXPERIMENTAL_PLAN_MODE flag.
+    - #14335 be871f3 Thanks @sylwester-liljegren! - Report what semantic_search actually covered. It names the indexed root it searched, and an empty result now says whether the index was complete, still building, disabled, or failed, so a miss is no longer mistaken for code that does not exist.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.7.6
+ReleaseTime: 2026-09-21T12:36:58.0000000Z

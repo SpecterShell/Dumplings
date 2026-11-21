@@ -1,0 +1,30 @@
+Version: 2.2.10
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.2.10/nextcowork-2.2.10-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    生图一次多张：生成期逐格落位，产物卡不再被折叠
+    - generate_image 新增 n(1–4,默认 1):用户要「几个备选 / 几种风格」时一次调用出齐，而不是让模型连调四次 —— 四次调用是四张各自折叠的卡片，也没法并排挑。上限 MAX_IMAGE_COUNT 收在新文件 shared/domain/image-count.ts,工具 schema 的上限、桥的并发扇出、渲染层的占位格数三处共用：各写一个 4 的症状是上限改了一处而另两处没跟上 —— 模型要了 6 张、卡片只画 4 格占位，多出来的两张到了没地方放
+    - 桥(kernel/image-gen.ts)按张并发请求，不走上游 n 参数(代价是按张计费的张数 = 请求数，上限由 MAX_IMAGE_COUNT 卡住):每到手一张立刻经 onImage 回调 ToolProgress.image({ index, image },只推新到的这一张 —— 每张是几 MB 的 data URL,累计推送会让第 4 张到来时把前 3 张再过一遍 IPC)。index 是请求里的格子序号：并发完成顺序不定，第 3 格先到时它必须落在第 3 格，不是挤到第 1 格让后面的整体错位
+    - 多张部分失败：已到手的图留下(用户已经在卡片上看见它们了),结果带 failures 与 requested,卡片底部说一句「成功 3/4 张」;全失败才整体抛错。不这样的症状是模型宣布「画好了 4 张」而界面上只有 3 张，零报错
+    - 新增对话卡片 ImageGenDetail 与纯逻辑 image-gen-view.ts,覆盖同一张卡片的三个时刻：参数还在流先按 1 格占位(写到 n 再长成 N 格)→ 运行中按格子序号逐格把占位换成真图 → 跑完以落盘的 output.images 为准、失败格不再占位。抽成 .ts 是因为三者切换全靠事件到达顺序，盯屏幕复现不了；故意不从 output.content 的英文回执里反解失败张数 —— 那句话是写给模型的，张数差直接算
+    - 产物即回答的工具不再进过程折叠(isPinnedShape / presenterOf,判据是 presenter 的形态表，不按工具名写死):生图若按普通工具进过程段，会先被连续工具组自动收起、再被一轮收尾折进「用时」,表现为模型说「画好了」而界面上看不到图。流式 tool_use 块与已提交的 tool_call 两种来源都认(段 key 取 callId):只认前者的话，提交那一刻卡片会当着用户的面挪一次位置、灯箱与淡入状态全丢
+    - 进度文案写语言无关的 2/4 计数(主进程写死的句子切界面语言不会跟着变);分组行新增「生成了 次图片」;whimsy 补生图词条(出图中 / 显影中…);卡片加载光带用 --color-fg 的 7% 叠色，不新增颜色 token,深浅主题自然跟着走
+    - ToolProgress.image 易失、不进转录：tool_end 时清掉，落盘的仍是最终 output.images。只有内置生图工具会填它 —— 插件进度由 plugin/manager.ts 逐字段重建，伪造不出这一项
+    修复
+    DeepSeek 思考模式 400:上下文里的思考正文没有回传
+    - 症状：provider: The `reasoning_text` in the thinking mode must be passed back to the API——而界面上思考块好好的、转录也完整、本地全程零报错。DeepSeek 文档把这条写成硬校验：思考模式下带 tools 的请求，历史每一轮的推理正文都必须完整回传(连模型没调工具的那一轮也算),缺一条即 400
+    - 根因在 encode/openai-responses.ts:回传只认 opaque.item 且按协议键门控，而界面显示走的是另一条通道(part.text),两条互不校验。三种情况会「界面正常、上行为空」:流在 output_item.done 之前被打断(或网关不发 reasoning 的 done 事件)、会话中途换过模型/供应商导致协议键对不上、上游 item 经字段白名单过滤后没剩下正文
+    - 修复：拿不到本协议的 item、或回传物里没有任何上游读得动的正文时，用转录里的 part.text 合成/补全 content: [{ type: 'reasoning_text', … }](不编造 id、不搬 encrypted_content —— 那是上游签发给它自己的密文，换个服务商毫无意义)。有 summary / content 正文 / encrypted_content 的 item 一个字节不改：那条路径是官方 OpenAI 那侧验证过的，补一份 content 等于回传两份正文、输入 token 随之翻倍
+    - 已知边界：回传物只带 encrypted_content / summary 时不补 content(正是上面保护的那条路径),所以「官方 OpenAI 轮次之后切到 DeepSeek」这种组合仍可能只回传密文/摘要
+    测试
+    - 新增 22 项：生图 18 项(三时刻格子推导、逐张到达按序号落位、部分失败的占位与文案、pinned 段 key 不换、转录累加与 tool_end 清除、schema 上限与 n 钳位、桥的按张并发与 onImage);思考回传 4 项(foreign/缺失 opaque 的兜底、白名单过滤后补 content、有载体的 item 不被改写、空思考不合成),并断言编码不改写入参消息
+    - 删除误提交的重复测试文件 image.test 2.ts
+    - 已知红项照实记，并更正 v2.2.9 的一处归因：document-engine/provider-registry、plugin/document-rpc 两项是测试在库、源文件从未入库(git ls-files 查无此文件，导入即失败),document-scope 因引用前者连带 —— 补交源文件才能转绿，当时记作「依赖 helper 进程」不准确；session-mux、native-host 才是依赖本机 python 的环境项。两者均非本版引入，干净基线同样红
+    - 全量套件 6333 项通过(23 skipped),12 项失败全部落在上述已知红项；typecheck(node + web)与 lint 通过(0 error,4 个既有 any warning);上游协议套件 559 项全过
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.2.10
+ReleaseTime: 2026-09-27T17:15:33.0000000Z

@@ -1,0 +1,45 @@
+Version: 2.2.9
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.2.9/nextcowork-2.2.9-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    对话内生图 / 改图收口：模型必选、URL 入参、选择器只列文本模型
+    - 设置 › 模型 › 图片生成页脚新增两行：「对话生图」开关(AppSettings.imageGenerationEnabled)与「对话生图使用的模型」(AppSettings.imageModel 那一对)。必选、不设自动档：生成和改图共用这一个绑定，只用点名的那个模型，失败即失败 —— 原先「按 priority 逐家兜底」的行为已移除，跨家兜底的症状是「我明明点名了 A,画出来的却是 B 家的」,而两家计费不同。空字符串 = 没选过 = generate_image 工具整体不下发，不画一个注定失败的承诺
+    - 新增 kernel/image-gen.ts 桥(ImageGenBridge,形状同 scheduling / shells):供应商选择、密钥读取、/images/generations|edits 请求全在桥里，内核零 electron 可单测。单次调用 120 秒 deadline —— 生图比文本慢得多，但没有 deadline 的话一个不回包的上游会让工具调用永远挂着，用户只能整场对话重启
+    - generate_image 的 image 参数在 "latest"、工作区路径之外新增 http(s) 图片 URL:可下载且是图 → 落成 data URL 走改图；下载失败 / 不是图片 → 工具报错说清原因，绝不静默回落成文生图(模型说「改这张」而你给它画了张新的，是对话里最难发现的一种错)。"latest" 从后往前扫消息里的 image part 与工具结果的 output.images 两种来源 —— 模型看不到图的 dataRef,没法点名某张图，只能由我们替它认「刚才那张」
+    - 改图请求按序试三种形状：OpenAI 官方只收 multipart/form-data,xAI 明确只收 application/json,国内兼容网关两种都有 —— 只实现一种的症状是「换一家就改不了图」,而错误是一句读不出所以然的 400
+    - 拉取模型列表 / 客户端登录灌入模型时，生图模型自动落 modality: 'image'(isImageModelId,目录优先、名字启发式兜底):模型列表端点一律不报模态，目录只认得已收录的 ID,预览期/私有的生图 ID 落下来就是普通文本模型 —— 「图片生成」页看不见它，零报错。只钉新建的那支：用户在「编辑模型」里改回 text 是显式覆盖，重拉一次列表不许顶掉
+    - 目录补录：OpenAI gpt-image-1.5-mini、xAI grok-imagine-* 系列标上 modality: 'image'(xAI 全表原先一行图片模型都没有);xAI 图输出按 token 计价，不是按张
+    - 所有对话模型选择器只显示文本模型(输入框、通用页默认模型/默认子代理/AI 审核/目标判定/压缩模型、工作区默认模型、Hooks 面板):判据收口在 isChatModelAlias / modelOptions,图片模型出现在对话下拉里就是一个选了就废的选项。存量配置里已选中图片模型的，打开选择器时就地校正为第一个文本模型并 toast(useChatModelGuard,六个选择器唯一收口)—— 全局改写会在用户毫不知情时动他的配置，打开选择器那一刻他正在看这份配置，就地校正加提示是他唯一不会觉得「配置自己变了」的时机
+    - 图片生成页收 SettingsPageProps,开关与模型两行走主进程权威设置页的既有通道，不再自带镜像状态
+    上下文压缩：模型与思考强度可配置，三档来源
+    - 设置 › 通用 › Agent 新增「压缩上下文模型」与「压缩思考强度」两栏；工作区在圆环菜单里可覆盖(压缩模型三态：跟随全局 / 显式跟随会话 / 指定模型)。三档来源(工作区 > 全局 > 会话模型)收在 shared/domain/compaction-model.ts,自动压缩与手动 /compact 共用 kernel/compaction/binding.ts 一份解析 —— 各写一份的话，两条路径会分头演化，症状是「菜单里压出来的摘要和自动压出来的不是一个模型写的」,零报错
+    - 配置的压缩模型当前解析不到时静默回落会话模型(warn 一行，fellBack 记进边界让界面能说出来):用户配过的供应商会被删、别名会被改名，而那两件事和「此刻要不要压缩」毫无关系 —— 让一条过期配置把压缩打死，表现就是上下文一路涨到上游报超长。回落时模型和 providerId 一起换回会话那一对，只换别名会拼出「会话的别名 + 压缩那家的锁」,候选集为空，报一条指着无关供应商的错
+    - 正确性开关，不只是省钱开关：原先两条路径都硬编码 thinkingLevel: 'off',而 gpt-6-* 这类 effort 模型的 reasoningEfforts 不含 'none',thinking-adapter 直接抛「该模型不支持关闭推理」→ 不可重试 → 第一次就放弃 → 三次熔断后整个 run 不再压缩。实际下发前仍按压缩模型归一化(auxiliaryThinkingLevel,关不掉的降到最低可用档),所以这里选什么都不会让请求失败
+    - auxiliaryThinkingLevel 同时收口权限审核器、目标判定器、会话标题三处此前手写的「Off 优先，关不掉取最低档」逻辑 —— 四处共用一份，第五处不会抄错
+    - 压缩分割条显示实际写摘要的模型与档位，回落时加一句说明 —— 静默回落是刻意设计，但用户必须能知道「我配的那个模型这次没用上」,否则他只会觉得配置没生效。旧边界没有这个字段就一个字不画
+    - 圆环菜单两项的取值编解码抽在 views/chat/compact-choice.ts(哨兵值只活在下拉 value 里，落盘的是 null/空串；「跟随全局」写空串不写 undefined —— 工作区设置是浅合并，省略键清不掉旧值，「从指定模型改回跟随全局」会毫无反应)
+    终端 GPU 渲染，消 TUI 高频闪烁
+    - TerminalView 挂 @xterm/addon-webgl(xterm 升 6.1.0-beta.304):xterm 6 默认 DOM 渲染器逐字符改 DOM,codex / claude 这类全屏 TUI 每帧清屏重画，表现为整屏高频闪烁；WebGL 把重绘压到一次 canvas 绘制。上下文创建失败(无 GPU / 远程桌面 / 上下文数耗尽)与 GPU 重置两条路都回落 DOM 渲染器 —— 慢，但能跑，不能让渲染器选择权变成「终端打不开」
+    改动
+    - 「联网搜索」开关收窄为只管网页搜索与抓取(NETWORK_SWITCH_TOOLS:WebFetch / web_search):registry.snapshot({ network }) 与权限闸门 approveWith 读同一张名单，关掉时这两个工具连下发都不下发。原先「字段 || TOOLS_NEEDING_NETWORK 下限表」取或的设计是开关管所有出网工具时的产物；开关收窄后工具自报的 needsNetwork 只作事实描述，再取或就会把浏览器、生图、远程 MCP 重新拉回这道闸、和快照过滤分家 —— 分家的症状是「列表里没有，调用却放行」。生图有自己的开关(imageGenerationEnabled),它的出网对象是用户自己在设置里配的供应商，和对话请求本身同性质
+    - 工作区 window.open 处理：主应用地址先判、且与外链互斥 —— 原先外链判断排在最前且不返回，dev 下开发服务器地址同时命中两支，一个 window.open 会同时走系统浏览器和 action: 'allow',凭空多出一扇空白 Electron 窗口；devUrl !== '' 不是防御性判断，空串的 startsWith('') 恒为 true,会把任意外链都当成本应用地址
+    - Codex CLI 出站 UA 实测更新到 0.157.1(从 registry 拉平台包核对二进制字面量),client id 与 originator 未变
+    - 插件安装进度 → 文案/比例的换算抽成 install-progress.ts 共用一份：市场卡片上的进度按钮和安装弹窗底部那一条是同一次安装的两个显示位，各写一份的下场是改了一处另一处还报旧的。downloading 拿不到 Content-Length 时比例是 null(画斜纹：在动，但不知道还剩多少),不是 0(空槽：一点都没下来)
+    修复
+    - 点通知弹出一扇纯白空窗：通知唤回走 BrowserWindow.getAllWindows(),那里面还有每个插件一扇的隐藏宿主窗(show: false);主窗刚销毁的时刻取「第一扇没销毁的窗」拿到的正是它。showMainWindow 改在本注册表里找(只有主窗与 ⌥Space 快捷窗，已滤掉销毁的)
+    - ⌘R 重载的一瞬间点 Dock 会开出第二扇一模一样的主窗：注册表里「这扇窗还在不在」不能拿 windows 表来答 —— 它会被 send() 在帧死掉的那一刻顺手 forget,重载完 window:ready 才 register 回来，中间那个窗口答成「一扇都没有」。新增 liveWindows 表，只在窗口真销毁时移除；退出流程要关的窗口也改遍历它
+    - 权限审核器在 effort 模型上「为我批准」每一次都退回人工审批：审核请求硬发 'off' 被 thinking-adapter 拒、catch 后返回 unknown,用户只会觉得这个功能没生效；目标判定器同因，表现为每个回合末的判定全部 skipped、目标永远判不出来 —— 两处都改走 auxiliaryThinkingLevel
+    - 目标判定的输出额度随窗口夹紧：声明了极小上下文窗口的模型上，固定 1024 的 maxOutputTokens 本身就可能越界
+    测试
+    - 新增(生图，主线):桥 29 项(必选模型不跨家兜底、开关关与未选模型是两种错误话术、URL 下载失败报错不回落文生图、edits 三形状按序回落、120s deadline、mime 收窄四取值、SSRF 校验、available() 不读凭证);工具 13 项(latest 双来源回扫、工作区图魔数认 mime、URL 下载失败原因、isEnabled 随桥缺席消失);上游 3 项(resolveImageDataRef 重构后 data URL / ncw:// 行为零变化)
+    - 新增(压缩，12 项):三档来源优先级、配置模型解析不到回落会话模型且成对换、'inherit' 归一化到压缩模型可用档、手动 /compact 绑定与自动同源；圆环菜单取值编解码(三态往返、哨兵不落盘、成对写回不拼出「新别名 + 旧供应商」);渲染层分隔条模型名展示
+    - 新增(其余):对话模型守卫(chatModelCorrection 纯函数)、模型目录 image 行(gpt-image-1.5-mini、grok-imagine-*)、生图模型导入判定(isImageModelId 目录命中与名字启发式)、登录灌入/拉取列表自动识别(目录不认识的 ID 也能落 image 模态，存量不被顶掉)、设置合并(compactModel/imageModel 成对)、插件安装进度换算
+    - 已知红项照实记：document-engine / plugin document-rpc / provider-registry / session-mux 5 个文件依赖真实 helper 进程(或本机 python),无该环境的机器上仍红 —— 干净基线(改动全部 stash 后)同样失败，非本版引入
+    - 除上述 12 项：完整套件 6311 项通过(23 skipped);typecheck(node + web)与 lint 通过(0 error,4 个既有 any warning)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.2.9
+ReleaseTime: 2026-09-27T13:44:37.0000000Z

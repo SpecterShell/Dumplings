@@ -1,0 +1,77 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/kbkkb/APISwitch/releases/download/v0.3.2/APISwitch-Setup-v0.3.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ## 简体中文
+    【重磅新增 · 支持 Gemini 4 (Argon) 独立配额与限额查看】
+    - 首页账号卡片全面重构升级为「三栏独立配额监控面板」（Gemini 模型、Gemini 4 Argon、Claude & GPT 模型）。
+    - 深度打通 Google 官方配额核心端点（retrieveUserQuotaSummary），精准提取并实时解析 argon 额度桶：
+    - Gemini 4 专属 5 小时动态限额（5H）：清晰显示当前剩余可用百分比、高精度进度条与重置倒计时。
+    - Gemini 4 专属周基础限额（Weekly）：直观展示每周额度池水位与重置周期。
+      • 智能识别账号订阅等级与 Gemini 4 额度归属：
+    - 精准区分 Google 官方渠道的「正价订阅版（PRO）」与「体验专享版（EXP / 体验渠道获取）」。
+    - 针对正价订阅用户，完整激活并呈现专属的独立 Gemini 4 Argon 额度池；
+    - 针对体验/活动渠道账号，友好标明「与 Gemini 共享」或「无独立额度」，并在鼠标悬停 Tooltip 中提供详尽的权益说明与指引。
+      • 历史配额波动留痕：配额快照服务同步支持 gemini-argon-5h 与 gemini-argon-weekly 历史记录，额度消耗趋势一目了然。
+    【新增 · 扩展客户端用量监控 (Gemini CLI / StepCode / zcode / dsh)】
+    - 新增 Gemini CLI 本地聊天会话扫描入库（自动扫描并解析会话 JSON，支持百万级 Token 极速事务批量入库）。
+    - 新增 StepCode 本地会话扫描，修复 Token 统计口径偏差（精确匹配至输入/输出真实消耗）。
+    - 新增 zcode 与 dsh 客户端用量监控，修复 dsh 日志时间戳毫秒对齐与时序问题。
+    - 全客户端扫描与用量数据保留周期从 90 天大幅扩展至 400 天（完整覆盖一年以上历史数据）。
+    【新增 · 长周期快捷选项与 GitHub / Claude 风格方格热力图】
+    - 时间范围新增「半年」（180 天）与「一年」（365 天）快捷切换选项。
+    - 打造 GitHub / Claude 风格的贡献热力方格图（Contribution Heatmap Grid）：
+    - 7 行（周一至周日）按周严谨纵横排列，自动适配全屏与缩放。
+    - 顶部智能对齐月份刻度标签，左侧对齐「一 / 三 / 五」星期标识。
+    - 采用对数刻度（Log10）划分为 5 阶渐变靛紫热力色阶，避免单日突发大流量导致日常活跃度失真。
+    - 鼠标 Hover 实时 Tooltip 显示当日总用量、入/出 Token 及星期几。
+    - 点击方格即刻下钻：选中该日后，顶部汇总卡片、供应商下钻、客户端汇总、模型汇总及调用明细全量联动下钻，再次点击取消选择。
+      • 智能图表模式：≤ 31 天默认柱状图，> 31 天默认方格热力图；并在卡片右上角提供「柱状图 / 方格图」自由切换按钮与动态自适应图例（圆点 vs 热力阶梯块）。
+    【新增 · 应用更新多语言展示与弹窗双语切换】
+    - 更新弹窗（UpdateDialog）支持根据应用当前语言自动匹配并呈现对应语言的更新日志。
+    - 在更新弹窗的日志标题栏右侧加入 [中文] / [English] 快捷切换胶囊，支持实时无缝对照查看。
+    - 提供本地离线双语更新日志回退机制，全面消灭界面中的硬编码中文。
+    【架构优化与工程演进】
+    - 架构重构：引入 IUsageSource 接口与 UsageSourceRegistry 模块化注册机制，统一规范各客户端用量采集与增量读取。
+    - 统一 Release 编译与发布输出，清除冗余 Debug 缓存。
+
+    English
+    [Key Feature · Gemini 4 (Argon) Independent Quota & Limit Monitoring]
+    - Account cards overhauled with a Triple-Column Quota Panel (Gemini models, Gemini 4 Argon, and Claude & GPT models).
+    - Direct integration with Google Cloud Code quota endpoint (retrieveUserQuotaSummary) to extract and monitor the argon quota bucket:
+    - Gemini 4 Dedicated 5-Hour Dynamic Limit (5H): Displays remaining quota percentage, high-precision progress bar, and reset countdown.
+    - Gemini 4 Dedicated Weekly Base Quota: Real-time weekly pool status, consumption progress, and reset cycle.
+      • Subscription Tier & Quota Entitlement Awareness:
+    - Distinguishes official Paid Subscriptions ("PRO") from Promotional / Trial Quotas ("EXP").
+    - Paid subscription accounts unlock the full, dedicated Gemini 4 Argon quota pool;
+    - Promotional and trial accounts display "Shared with Gemini" or "No separate quota" with comprehensive hover tooltips explaining entitlements.
+      • Historical Quota Snapshot Tracking: Quota snapshot service records historical gemini-argon-5h and gemini-argon-weekly fluctuations over time.
+    [New · Expanded Client Usage Monitoring (Gemini CLI / StepCode / zcode / dsh)]
+    - Added Gemini CLI local session scanning and ingestion (automatically parses %TEMP%\gemini_chat_*.json with high-performance transactional bulk insertion for millions of tokens).
+    - Added StepCode local session scanning, correcting token measurement criteria to precisely reflect true input/output token consumption.
+    - Added zcode and dsh agent usage monitoring; resolved dsh timestamp millisecond alignment and chronological order issues.
+    - Extended session scanning and SQLite retention window from 90 days to 400 days (over 1 year of full historical coverage).
+    [New · Long-Range Quick Ranges & GitHub / Claude-Style Heatmap Grid]
+    - Added "6 Months" (180 days) and "1 Year" (365 days) quick range selection buttons.
+    - Introduced GitHub / Claude-style Contribution Heatmap Grid:
+    - 7 rows (Monday to Sunday) across weeks, adapting dynamically to window resizing.
+    - Aligned month labels along the top and "Mon / Wed / Fri" weekday indicators on the left.
+    - Logarithmic 5-tier indigo intensity coloring to prevent single high-volume spikes from washing out regular daily activity.
+    - Hover tooltip displaying date, weekday, total tokens, and input/output breakdown.
+    - Interactive drill-down: click any cell to filter the entire window (summary cards, providers, clients, models, and recent calls) to that day; click again to deselect.
+      • Adaptive chart mode: automatically defaults to Bar Chart for short ranges (\(\le 31\) days) and Heatmap Grid for long ranges (\(> 31\) days), with manual toggle buttons in the top-right header and dynamic legends.
+    [New · In-App Multilingual Update Dialog & Language Switching]
+    - Update dialog (UpdateDialog) automatically matches and renders release notes in the user's active application language (zh-CN / en-US).
+    - Added interactive [中文] / [English] language switch pills in the Changelog header for instant cross-language inspection.
+    - Offline bilingual fallback to local release notes when remote notes are omitted.
+    [Architecture & Engineering]
+    - Modularized usage scanning: introduced the IUsageSource interface and UsageSourceRegistry for clean multi-client expansion.
+    - Standardized Release outputs and removed unnecessary Debug caches.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kbkkb/APISwitch/releases/tag/v0.3.2
+ReleaseTime: 2026-10-16T08:18:47.0000000Z

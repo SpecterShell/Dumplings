@@ -1,0 +1,66 @@
+Version: 0.43.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.1/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.1/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.1/bicep-setup-win-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.43.1.21952
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - @retryOn decorator is now GA! (#19454)
+      Use the @retryOn decorator to retry a resource deployment if the deployment hits a specific error code. You can also specify how many times this retry should happen.
+      Example usage:
+      @retryOn(['ServerError'], 1)
+      resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
+        name: 'sql-server-name'
+        location: 'polandcentral'
+      }
+    - New like() and distinct() functions (#18990, #19167)
+      Example usage:
+      // outputs true if myInput contains 'Bar'
+      output wildcardMatch bool = like(myInput, '*Bar*')
+
+      // outputs [1, 2, 3]
+      output values string[] = distinct([1, 2, 2, 3, 1])
+    - Add use-recognized-resource-type linter rule to warn for unrecognized resource types in reference/list* functions (#19303)
+      The following code will emit a warning because 'Microsoft.Foo/bar' is not a recognized resource type:
+      output foo object = reference('Microsoft.Foo/bar', '2020-01-01')
+    - Add no-module-name linter rule to enforce omitting explicit module names (optional - off by default) (#19556)
+      The following code will emit a warning if enabled, because the module name property is no longer needed:
+      module foo 'foo.bicep' = {
+        name: 'foo'
+        params: { ... }
+      }
+    Features and Bug Fixes
+    - [BREAKING CHANGE] Block usage of custom domains for ACR (#19564)
+    - Bicep snapshot CLI commands:
+      - Include predicted outputs (#19379)
+      - Support management group id parameter (#19378)
+    - Deploy command: Allow location for non-RG scope deployments (#19330)
+    - Add description to module name property for improved IntelliSense (#19310)
+    - Fix duplicate errors for undefined types on resources (#19273)
+    - Bicepparam Improvements:
+      - Add missing import and extension top-level completions in .bicepparam files (#19448)
+      - extendable param files intellisense for shared bicepparam files (#19061)
+      - enable build-params evaluation of for-expressions in .bicepparam (#18949)
+    - MCP Server Improvements:
+      - Convert MCP GetAzResourceTypeSchema output to standard JSON Schema format (#19388)
+      - Extract Azure.Bicep.McpServer.Core library to enable building custom remote MCP servers (#19499)
+      - Add MCP Tools to support Extension Resource Types (#19453)
+    - Allow expressions in getSecret function (#19204)
+    - Theme vscode-elements widgets in visualizer ExportToolbar (#19557)
+    Community Contributions
+    - Update waitUntil feature description in docs (#19560) - thanks @brianveldman !
+    - Fix resource manager: Add condition for opened PRs from dependabot (#19311) - thanks @DragosDanielBoia !
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.43.1
+ReleaseTime: 2026-05-04T22:52:10.0000000Z

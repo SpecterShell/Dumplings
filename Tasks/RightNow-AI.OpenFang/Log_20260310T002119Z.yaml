@@ -1,0 +1,23 @@
+Version: 0.3.40
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.40/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.40/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fix OpenAI tool parameter type error (#481) + Fix Claude Code CLI driver
+    Tool schema fix (#481):
+    OpenAI and other providers require tool parameters to be a JSON object. When MCP servers or skill definitions provided input_schema as a JSON string, null, or other non-object type, it was passed through unchanged causing "Invalid type for tools[N].function.parameters: expected an object, but got a string instead." Now normalize_schema_for_provider() parses string schemas into JSON objects and falls back to a valid empty schema for any non-object type. 5 new tests.
+    Claude Code CLI driver fix:
+    The driver used env_clear() which wiped the entire environment, breaking the Node.js-based Claude CLI (missing NVM, SSL certs, proxy vars, etc.). Replaced with targeted env_remove() that only strips 21 known sensitive API keys from other providers while preserving the full runtime environment. Removed --dangerously-skip-permissions flag which required prior interactive acceptance. Error messages now show actionable instructions (e.g. "run claude auth") instead of generic "Check your API key."
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.40
+ReleaseTime: 2026-03-09T23:16:30.0000000Z

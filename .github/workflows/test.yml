@@ -1,0 +1,77 @@
+name: Test
+on:
+  workflow_dispatch:
+    inputs:
+      params:
+        description: Additional parameters passed to the script
+        required: false
+        type: string
+jobs:
+  build:
+    name: Build
+    runs-on: windows-2025
+    concurrency:
+      group: ${{ github.workflow }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: Dumplings
+          submodules: true
+      # - name: Checkout upstream winget-pkgs
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: microsoft/winget-pkgs
+      #     path: winget-pkgs
+      # - name: Install WinGet client
+      #   run: .\Modules\PackageModule\Utilities\InstallWinGet.ps1
+      #   working-directory: Dumplings
+      #   shell: powershell
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Pull latest changes from the remote repository
+        run: git pull
+        working-directory: Dumplings
+        shell: pwsh
+      - name: Setup PowerShell modules
+        uses: ./Dumplings/.github/actions/setup-powershell-modules
+        with:
+          cache-path: ${{ runner.temp }}\DumplingsPowerShellModules
+          cache-key: dumplings-pwsh-modules-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/PowerShellModules.psd1') }}
+      - name: Setup Playwright runtime
+        uses: ./Dumplings/.github/actions/setup-playwright-runtime
+        with:
+          cache-path: ${{ runner.temp }}\DumplingsPlaywrightRuntime
+          cache-key: dumplings-playwright-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/Modules/PackageModule/Assets/PlaywrightRuntime.psd1') }}
+      - name: Run tasks
+        run: .\Core\Index.ps1 ${{ github.event.inputs.params }}
+        working-directory: Dumplings
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_DUMPLINGS_TOKEN: ${{ secrets.GH_DUMPLINGS_TOKEN }}
+          DUMPLINGS_SECRET: ${{ secrets.DUMPLINGS_SECRET }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          MT_BOT_TOKEN: ${{ secrets.MT_BOT_TOKEN }}
+          MT_ROOM_ID: ${{ secrets.MT_ROOM_ID }}
+      - name: Commit and push local changes to the remote repository
+        run: |-
+          $Path = Join-Path $PWD 'Tasks'
+          if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git pull
+            git add $Path
+            git commit -m "${env:GITHUB_WORKFLOW}: Update states [${env:GITHUB_RUN_NUMBER}]"
+            git push
+          } else {
+            Write-Host -Object 'No changes to commit'
+          }
+        working-directory: Dumplings
+        shell: pwsh
+      - name: Get outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Outputs
+          path: ./Dumplings/Outputs/

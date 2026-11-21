@@ -1,0 +1,24 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/87.0/mkvtoolnix-32-bit-87.0-setup.exe
+- Architecture: x64
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/87.0/mkvtoolnix-64-bit-87.0-setup.exe
+  InstallerSha256: 69035A667D72236BC6D577D4B942B659FA195969BFF7850FAA460CAC28CAB70A
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features and enhancements
+    - mkvmerge: chapters: added support for specifying MPLS files with --chapters, too, not just as regular source files. The documentation stated this was possible already, but that wasn't actually the case. Implements/fixes #3735.
+    - MKVToolNix GUI: multiplexer: added a progress dialog that is shown during file identification.
+    - MKVToolNix GUI: jobs: the status bar now differentiates between numbers of warnings/errors that occurred in the current session and those that occurred before the current session. Implements #3732.
+
+    Bug fixes
+    - mkvmerge: AAC parser: LOAS/LATM streams: if the first AudioSpecificConfig element is not found within the first LOAS/LATM frame, mkvmerge will no longer discard the frames before it but defer parsing them until after it has found the AudioSpecificConfig element. Fixes #3727.
+    - MKVToolNix GUI: job queue: fixed the GUI crashing when re-ordering the jobs in the job queue. This regression was introduced while fixing #3720. Fixes #3729.
+
+    Build system changes
+    - The bundled fmt library was updated to v10.2.1.
+Version: "87.0"
+ReleaseTime: 2024-09-07
+RealVersion: 87.0.0

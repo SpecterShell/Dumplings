@@ -1,0 +1,184 @@
+Version: 17.0.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.0.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Improved error visibility in interactive clients by surfacing provider stream failures through the assistant message lifecycle, preventing silent loading spinners.
+    - Fixed an issue where Cursor provider contexts omitted host-supplied MCP tools from main and side-channel requests.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Automatically invalidate and rotate OAuth credentials when an "invalidated oauth token" error occurs.
+    - Fixed auth-broker snapshot validation rejecting API keys stored via the /login flow, restoring support for gateway/broker setups serving login-sourced keys on custom hosts.
+    - Fixed an issue where literal reasoning tags (e.g., <think>) inside Markdown code blocks or inline code were incorrectly treated as reasoning boundaries, which corrupted the rendered Markdown.
+    - Classified HTTP 402 and "balance exhausted" quota responses as persistent usage limits, enabling automatic rotation of multi-account requests to a sibling credential.
+    - Fixed kimi-code Anthropic-format requests ignoring custom provider base URLs.
+    - Fixed an issue where GPT-5.6 Codex Responses-Lite requests failed with an HTTP 400 error due to invalid tool_choice parameters after tools were rewritten, by automatically downgrading forced hosted choices to tool_choice: "auto" while preserving explicit tool-use constraints.
+    - Fixed Cursor streams prematurely reporting success before late CONNECT or gRPC terminal failures were observed, and resolved issues rejecting transport ends without a turnEnded signal.
+    @oh-my-pi/pi-catalog
+    Changed
+    - Increased the maximum output tokens (maxTokens) from 32,768 to 65,536 for Kimi K2.7-Code models on Fireworks.
+    Fixed
+    - Fixed a regression where the context window for openai-codex GPT-5.6 models (Luna, Sol, Terra) incorrectly fell back to 272,000 instead of preserving its 372,000 capacity.
+    - Fixed Umans PAYG models incorrectly displaying as "Free" in /models by correctly sourcing their published per-token rates.
+    - Fixed native moonshot/kimi-k3 capabilities and pricing, ensuring it correctly reflects its official pricing, 1M context window, image input support, reasoning capabilities, and 128k output token limit.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added native Warp CLI-agent events for rich session status, tool approvals, and completion notifications.
+    - Added support for ChatGPT/Codex subscriptions in the generate_image tool, allowing image generation without a metered OPENAI_API_KEY even when using other active models.
+    - Added an optional provider parameter to generate_image to override the global providers.image setting for a single request.
+    - Added OpenTelemetry log and metric export support alongside existing trace exports, enabling forwarding of centralized-logger events and GenAI-semconv metrics when configured.
+    - Enhanced retry.fallbackChains wildcards to support id-prefixed targets and keys, allowing more flexible model fallback routing across different providers.
+    - Added an opt-in per-project model role storage mode with global fallback from the model selector.
+    - Added per-advisor on/off toggle (enabled: false in WATCHDOG.yml): advisors stay in the roster but their runtime is never built — they show ○ in /advisor status rather than disappearing. Existing configs are backward-compatible (defaults to true when absent).
+    - Colored the status line's advisor ++ badge by roster health (green all running, yellow quota-exhausted, red failed, dim paused); per-advisor glyphs (●/○/✕) show in /advisor status.
+    - Added real provider quota display (usage percent, window, reset timer) to /advisor status and the /advisor configure preview.
+    Changed
+    - Changed Bash command timeouts to render with a warning (yellow) border instead of an error (red) border, while still indicating to the model that the command did not complete normally.
+    - Made the hashline seen-line guard opt-in and off by default via edit.enforceSeenLines, and improved handling of column-clipped lines so single-line edits on long lines apply without a full-width re-read.
+    - Changed bundled TTSR rules to warn without interrupting generation.
+    - Renamed the system prompt's project-context section wrapper from <context> to <repo-rules> to prevent collisions with the task tool's context parameter.
+    - Enriched /advisor status to show per-advisor status glyphs, model, spend breakdown, and quota window for every configured advisor (including disabled ones), replacing the previous single-advisor-only summary.
+    Fixed
+    - Fixed loading issues for linked legacy extensions importing DefaultPackageManager or linkedom.
+    - Fixed the advisor retrying terminal, non-retriable provider failures (e.g., blocked prompts), ensuring they fail immediately while transient failures still retry.
+    - Fixed an issue where reassigning the plan role model mid-planning did not take effect until the next plan-mode entry; it now applies at the next turn boundary.
+    - Added managed timer helpers (ctx.setInterval, ctx.setTimeout, ctx.clearTimer) to the extension context to prevent self-scheduled callbacks from throwing uncaught exceptions and crashing the session.
+    - Fixed /quit and /exit leaving stalled automatic title-generation requests alive during session teardown.
+    - Fixed startup.quiet still rendering the xdev: xd://: mounted status line when MCP tools connect.
+    - Fixed command errors in the hub tool when using a non-POSIX shell.
+    - Fixed xdev-routed checkpoint and rewind writes not tracking checkpoint state.
+    - Fixed the built-in advisor silently failing when its model routes through the Cursor provider by adding a Cursor execution bridge scoped to its granted tool set.
+    - Fixed the fullscreen plan-review overlay staying visible until the approved execution turn finished; it is now hidden as soon as execution begins.
+    - Fixed MCP tools repeatedly unmounting and remounting mid-session due to overlapping sanitized prefixes, and resolved stale tools remaining registered after disconnecting a server with special characters.
+    - Fixed the /usage show marker and TUI usage panel to display and preserve the active organization suffix (email (OrgName)) to distinguish between multiple credentials with the same email.
+    - Fixed Windows stdio MCP servers launched through .cmd or .bat shims failing with Transport closed by properly escaping arguments and spawning with windowsVerbatimArguments.
+    - Fixed a startup crash on Windows when running from a drive root (e.g., R:\).
+    - Fixed unknown __omp_worker_* CLI selectors exiting with code 0 instead of throwing an error.
+    - Fixed Plan Review capturing mouse drags as pointer events, which prevented native terminal text selection.
+    - Fixed orphaned TUI processes remaining alive after a fatal error and causing high resource consumption.
+    - Fixed approved-plan execution looping through filesystem searches when a model rewrites the required plan read path.
+    - Fixed Ask dialogs immediately accepting highlighted answers when they appear while the user is typing a space.
+    - Stopped post-compaction auto-continue from opening another primary turn after a terminal text answer with no queued work.
+    - Fixed the write approval gate misclassifying xd:// device writes as exec when the mounted tool declared a function-valued approval.
+    - Fixed custom LSP servers (such as roslyn-language-server) crashing when requesting unconfigured workspace configuration sections.
+    - Fixed late user-initiated bash results being recorded in whichever session or branch was active when execution finished; they now retain their originating transcript.
+    - Fixed Claude Code marketplace plugins with scope: "local" leaking skills, hooks, tools, commands, and MCP servers into unrelated projects.
+    - Fixed headless omp -p waiting indefinitely after a completed turn when final consolidation stalls.
+    - Fixed explicit-tool sessions bypassing xd:// presentation for ambient discoverable custom and MCP tools.
+    - Fixed providers.webSearch: kimi incorrectly sending Moonshot credentials instead of Kimi Code credentials.
+    - Fixed registerTool demoting essential built-in tools to discoverable when a re-registration omitted loadMode.
+    - Fixed the advisor skipping the next user instruction after auto-learn accepted and pruned a terminal empty assistant stop.
+    - Fixed built-in advisors retrying quota- or rate-limited providers instead of applying the matching retry.fallbackChains model chain.
+    - Updated model selector status messages to use role tags (SMOL, SLOW) instead of display names (Fast, Thinking) for consistency.
+    - Fixed Cursor models receiving only top-level tools by forwarding mounted xd:// devices through Cursor's request-context MCP catalog.
+    - Fixed Windows bash crashes when a piped command times out while flushing output.
+    - Fixed a race condition where hub/IRC send and ensureLive could inject into a subagent session during disposal.
+    - Migrated legacy nested/dotted configuration keys (dev.autoqa.consent and todo.reminders.max) to flat keys (dev.autoqaConsent and todo.remindersMax) on settings load.
+    - Fixed keyboard input dying after the first keypress when a custom tool module attaches a stdin consumer at import time.
+    - Fixed the alignment of the ask tool's custom-input dialog to start at column 0.
+    - Fixed advisor context maintenance undercounting the provider context by anchoring compaction decisions on provider-reported context usage.
+    - Fixed RPC mode (--mode rpc) crashing on non-JSON stdin lines; malformed lines are now reported as errors while the frame loop continues.
+    - Fixed local llama.cpp Qwen-family models not honoring the --thinking off flag.
+    - Documented the ultrathink, orchestrate, and workflowz magic keywords, including their effects, matching rules, and settings.
+    - Fixed /clear autocomplete selecting /autoresearch and updated /clear to start a new session as an alias for /new.
+    - Fixed /review aborting entirely when GitHub rejects a pull request's aggregate diff for exceeding the line limit by falling back to the paginated per-file endpoint.
+    - Fixed /q + Enter running /queue instead of /quit by adding an explicit q alias to /quit.
+    - Fixed Ctrl+L (app.display.reset) not refreshing the dark/light theme on certain terminals by issuing a background re-query before repainting.
+    - Fixed a failing advisor stalling the primary agent: the per-turn catch-up gate parked the primary for up to its full 30s budget while a broken advisor (unsupported model, dead endpoint, render bug) retried — and an advisor exception could abort the primary's turn-end outright. A failing advisor now releases parked waiters the moment its turn fails (before any async hook), refuses new parks until a turn succeeds, and the turn-end boundary isolates advisor exceptions completely; a failed render restores the delta cursor so nothing is lost when the advisor recovers.
+    - Fixed advisors retrying a permanently rejected request forever (e.g. invalid_request_error: model not supported with this account): unlike quota exhaustion — which pauses with a notice until an explicit reset — this class notified once and silently kept re-attempting every turn, re-building heavy context in a shared daemon. The runtime now hard-stops after a permanent rejection or three consecutive backlog-drop cycles, with a visible notice; an explicit reset (/new, config rebuild, restart) re-enables it. waitForCatchup resolves immediately while halted so the primary agent is never parked on a runtime that cannot drain.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed an issue where running uv run --extra <package> pytest bypassed native pytest minimization due to a wrapper parsing error.
+    - Fixed a bug where timed-out shell pipelines dropped captured output and could cause Windows hosts to terminate during teardown. (#5316)
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed the Recent Errors list to honor the selected dashboard time range before returning the newest 50 failures.
+    @oh-my-pi/pi-tui
+    Added
+    - Added a fullscreen overlay mouse-tracking opt-out to allow selection-first dialogs to preserve native terminal text selection.
+    - Added Terminal.refreshAppearance() to allow consumers to manually trigger a refresh of the detected dark/light terminal appearance without periodic polling.
+    Fixed
+    - Fixed an issue where pressing Enter to accept a mid-prompt /skill:<name> autocomplete would submit and clear the draft; it now correctly inserts the skill token and leaves the prompt open.
+    - Fixed Markdown rendering incorrectly turning local file paths containing www. or protocol sequences into HTTP links by requiring a valid GFM left boundary for autolinks.
+    - Fixed terminal resize behavior by restoring alternate-screen rendering during drag frames, preventing wrapped fragments from polluting native scrollback while preserving the overlay-exit flicker fix.
+    - Added optional right-border scrollbar to the Editor component (setScrollbarVisible): shows a thumb glyph on the right border when content overflows maxHeight, enabling scrollable multi-line editors (e.g. advisor instructions) without losing the submit hint off-screen.
+    @oh-my-pi/pi-utils
+    Added
+    - Added a structured log sink API (registerLogSink, LogEvent, LogLevel) to the centralized logger, enabling out-of-band consumers (such as OpenTelemetry) to receive log events without affecting local file or console logging.
+    Changed
+    - Bounded default ptree.ChildProcess stderr retention to a 32 KiB tail to prevent memory leaks in long-lived subprocesses. Full stderr capture must now be explicitly requested at spawn time using { stderr: "full" } on spawn or exec.
+    Fixed
+    - Fixed fatal cleanup failing to reach process.exit() when terminal stderr is revoked.
+    - Isolated rotating log files and audit state per process to prevent concurrent instances from racing during compression and rotation.
+    What's Changed
+    - fix(agent): surface provider stream failures by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/5538
+    - fix(tui): guard stdin against custom-tool import hijack (#5618) by @roboomp in https://github.com/can1357/oh-my-pi/pull/5744
+    - fix(discovery): isolate Claude local marketplace plugins by @roboomp in https://github.com/can1357/oh-my-pi/pull/5752
+    - fix(utils): bound default ptree stderr retention by @roboomp in https://github.com/can1357/oh-my-pi/pull/5761
+    - fix(web-search): scope Kimi search to Kimi Code credentials by @roboomp in https://github.com/can1357/oh-my-pi/pull/5763
+    - fix(codex): force tool_choice auto on responses-lite requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/5772
+    - feat(coding-agent): generate_image per-request provider + Codex-subscription images by @insodimension in https://github.com/can1357/oh-my-pi/pull/5321
+    - fix(tui): preserve drafts on skill autocomplete by @roboomp in https://github.com/can1357/oh-my-pi/pull/5414
+    - fix(rpc): tolerate malformed stdin lines instead of crashing by @roboomp in https://github.com/can1357/oh-my-pi/pull/5442
+    - fix(advisor): anchor context maintenance on provider usage by @roboomp in https://github.com/can1357/oh-my-pi/pull/5463
+    - fix(tui): align ask "Other" custom-input chrome to prompt gutter by @roboomp in https://github.com/can1357/oh-my-pi/pull/5475
+    - fix(cli): alias /clear to /new by @roboomp in https://github.com/can1357/oh-my-pi/pull/5486
+    - fix(review): fall back to per-file API when PR diff exceeds 20k lines by @roboomp in https://github.com/can1357/oh-my-pi/pull/5500
+    - feat(telemetry): support full OTel — log and metric export by @roboomp in https://github.com/can1357/oh-my-pi/pull/5507
+    - fix: render bash timeout with warning border instead of error by @oldschoola in https://github.com/can1357/oh-my-pi/pull/5546
+    - fix(tui): use role tag in model selector status messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/5586
+    - docs: document magic keywords by @roboomp in https://github.com/can1357/oh-my-pi/pull/5591
+    - feat(warp): emit native CLI-agent events by @metaphorics in https://github.com/can1357/oh-my-pi/pull/5592
+    - feat(coding-agent): support per-project model roles by @infernix in https://github.com/can1357/oh-my-pi/pull/5596
+    - fix(coding-agent): disable thinking on local llama.cpp Qwen models by @paralin in https://github.com/can1357/oh-my-pi/pull/5635
+    - fix(ai): wait for Cursor protocol end after turnEnded by @roboomp in https://github.com/can1357/oh-my-pi/pull/5636
+    - fix(registry): coordinate park/dispose with ensureLive and IRC delivery by @roboomp in https://github.com/can1357/oh-my-pi/pull/5637
+    - fix(coding-agent): migrate legacy nested autoqa/todo settings keys by @roboomp in https://github.com/can1357/oh-my-pi/pull/5641
+    - fix(cursor): expose xd devices and external MCP tools by @roboomp in https://github.com/can1357/oh-my-pi/pull/5651
+    - fix(tui): constrain GFM autolinks to a valid left boundary by @roboomp in https://github.com/can1357/oh-my-pi/pull/5656
+    - fix(plugins): restore legacy package manager and CJS loading by @roboomp in https://github.com/can1357/oh-my-pi/pull/5660
+    - fix(plan): reapply plan role model when reassigned mid-planning by @roboomp in https://github.com/can1357/oh-my-pi/pull/5662
+    - fix(extensions): isolate self-scheduled callbacks from killing the session by @roboomp in https://github.com/can1357/oh-my-pi/pull/5667
+    - fix(session): abort title generation during dispose by @roboomp in https://github.com/can1357/oh-my-pi/pull/5668
+    - fix(bash): drain piped output before timeout return by @roboomp in https://github.com/can1357/oh-my-pi/pull/5671
+    - fix(session): honor quiet startup for xdev mount notices by @roboomp in https://github.com/can1357/oh-my-pi/pull/5672
+    - fix(ai): keep literal think tags inside markdown code visible by @roboomp in https://github.com/can1357/oh-my-pi/pull/5673
+    - fix(tools): fix hub tools env selection by @Parsifa1 in https://github.com/can1357/oh-my-pi/pull/5682
+    - fix(session): recognize checkpoint and rewind through xdev write dispatch by @lyc-aon in https://github.com/can1357/oh-my-pi/pull/5683
+    - fix(cursor): wire advisor tools through the cursor exec bridge by @roboomp in https://github.com/can1357/oh-my-pi/pull/5686
+    - fix(tui): close plan review overlay before execution dispatch by @roboomp in https://github.com/can1357/oh-my-pi/pull/5689
+    - fix(mcp): match tool ownership by server name, not tool-name prefix by @korri123 in https://github.com/can1357/oh-my-pi/pull/5690
+    - fix(usage): org-qualified session marker for same-email accounts by @roboomp in https://github.com/can1357/oh-my-pi/pull/5692
+    - fix(shell): parse uv run --extra values by @GratefulDave in https://github.com/can1357/oh-my-pi/pull/5694
+    - fix(mcp): correct Windows cmd shim spawning by @roboomp in https://github.com/can1357/oh-my-pi/pull/5699
+    - fix(tui): preserve organization suffixes in usage panel by @roboomp in https://github.com/can1357/oh-my-pi/pull/5703
+    - fix(catalog): pinned gpt-5.6 codex context window to 372k by @roboomp in https://github.com/can1357/oh-my-pi/pull/5707
+    - fix(coding-agent/launch): handle EISDIR from realpath on drive roots by @roboomp in https://github.com/can1357/oh-my-pi/pull/5709
+    - fix(cli): error on unknown _omp_worker selectors by @roboomp in https://github.com/can1357/oh-my-pi/pull/5713
+    - fix(tui): preserve Plan Review text selection by @roboomp in https://github.com/can1357/oh-my-pi/pull/5714
+    - fix: bound fatal TUI teardown and isolate log rotation by @roboomp in https://github.com/can1357/oh-my-pi/pull/5718
+    - fix(read): recover approved plans from cwd aliases by @roboomp in https://github.com/can1357/oh-my-pi/pull/5719
+    - fix(tui): require Enter for single-select Ask answers by @roboomp in https://github.com/can1357/oh-my-pi/pull/5720
+    - fix(coding-agent): stop post-turn maintenance turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/5721
+    - fix(ai): classify 402/balance-exhausted quota errors as usage limits by @metaphorics in https://github.com/can1357/oh-my-pi/pull/5723
+    - fix(ai): honor custom kimi-code base URL in Anthropic format by @roboomp in https://github.com/can1357/oh-my-pi/pull/5724
+    - fix(write): evaluate function-valued xd:// device approvals by @roboomp in https://github.com/can1357/oh-my-pi/pull/5729
+    - fix(advisor): reconcile rewritten transcript prefixes by @roboomp in https://github.com/can1357/oh-my-pi/pull/5734
+    - fix(catalog): source Umans PAYG model pricing by @roboomp in https://github.com/can1357/oh-my-pi/pull/5735
+    - fix(lsp): return null for missing workspace configuration by @roboomp in https://github.com/can1357/oh-my-pi/pull/5746
+    - fix(session): retain bash ownership across session/branch transitions by @roboomp in https://github.com/can1357/oh-my-pi/pull/5747
+    - fix(advisor): apply configured fallback chains by @roboomp in https://github.com/can1357/oh-my-pi/pull/5748
+    - fix(cli): bound print-mode mnemopi teardown by @roboomp in https://github.com/can1357/oh-my-pi/pull/5754
+    - fix(catalog): correct moonshot/kimi-k3 pricing and reasoning transport by @roboomp in https://github.com/can1357/oh-my-pi/pull/5758
+    - fix(tools): keep essential built-ins top-level when re-registered without loadMode by @roboomp in https://github.com/can1357/oh-my-pi/pull/5768
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.0.1...v17.0.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.0.2
+ReleaseTime: 2026-07-17T06:27:10.0000000Z

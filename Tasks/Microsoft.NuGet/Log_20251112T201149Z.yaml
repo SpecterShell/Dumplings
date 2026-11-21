@@ -1,0 +1,205 @@
+Version: 7.0.0
+Installer:
+- InstallerUrl: https://dist.nuget.org/win-x86-commandline/v7.0.0/nuget.exe
+  AppsAndFeaturesEntries:
+  - DisplayName: NuGet CLI
+    DisplayVersion: 7.0.0.289
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Summary: What's New in 7.0.0
+    - Projects that target .NET 10 warn for vulnerabilities in transitive packages by defaulting to NuGetAuditMode=all #14161
+    - Package pruning is enabled for all projects targeting .NET 10 #14345
+    - Created the NuGet Model Context Protocol (MCP) Server, supported by .NET 10 SDK or later. NuGet's MCP is pre-installed in Visual Studio 2026, and installable in VS 17.14 and VS Code. The server is published on nuget.org as the NuGet.Mcp.Server package.
+    - Enable packing legacy PackageReference projects without the need for a package - #14046
+    - Deprecate SHA-1 usage in .NET 10 - #13814
+    - Details pane reflects Vulnerability Data from Audit Sources - #14554
+    - NuGet AuditSources support in the Package Manager UI - #13954
+    - Migrate NuGet's settings to the new Visual Studio Options window
+      - Migrate "Package sources" settings in Visual Studio Options - #14233
+      - Migrate "Package Source Mapping" settings in Visual Studio Options - #14234
+    - dotnet update package --vulnerable (Audit fix) - #13372
+    Breaking changes
+    - Add package ID validation during restore - #14407
+    - Project.json is no longer supported in 7.0. Visual Studio 2026 automatically migrated project.json projects to PackageReference
+    - Package pruning will lead to a one-time diff in packages lock file - #14272
+    - Pruning privatizes a direct references by apply PrivateAssets=all and IncludeAssets=none - #14196
+    - Raise an error for SHA-1 fingerprints usage in NuGet.exe sign, mssign commands - #13962
+    - Show an error when a non https source is used in a resource in a service index - #13364
+    SDK Breaking changes
+    - Project.json deprecation
+      - Remove project.json pack - #7931
+      - Remove project.json support - #7199
+      - Remove PackageSpec.Dependencies - #14446
+      - Clean up Package Spec redudant APIs - #6231
+    - Unused NuGet VS Extensibility APIs removed - #14403
+    - Remove all unused APIs marked as obsolete in NuGet.Frameworks, NuGet.Protocol, NuGet.Commands & NuGet.PackageManagement - #14395
+    - Remove obsolete APIs from NuGet.Common, NuGet.Configuration, NuGet.LibraryModel, NuGet.Packaging and NuGet.ProjectModel - #14393
+    - Block and remove code for unused restore implementations such as Standalone. - #14184
+    - Remove DotnetToolReference restore - #14183
+    Issues fixed in this release
+    NuGet SDK fixes
+    - Don't use reflection based deserialization in NuGet.Protocol - #14470
+    - JsonSerializerIsReflectionDisabled on update to Nuget.Protocols 6.13.1 in apps with JsonSerializerIsReflectionEnabledByDefault set to false - #14111
+    .NET CLI
+    - Enable CanShowDialog for .NET core Authentication Plugins - #14010
+    - "dotnet package update" modifies wrong project file (csproj) - #14585
+    - dotnet nuget verify should output package content hash - #14384
+    - dotnet package update should support --verbosity - #14319
+    - dotnet package update should support CPM and VersionOverride - #14318
+    - dotnet package update should support multiple packages - #14308
+    - dotnet package update should support package source mapping - #14307
+    - dotnet package update to a specific version - #14306
+    - dotnet package update initial version - #14305
+    - [Bug Bash][Unstable] An error “Attempted to divide by zero.” occurs when executing command “dotnet list [ProjectPath] package --vulnerable” - #14122
+    - [Feature]: dotnet list [project | solution] package does not work with solution filters - #11789
+    Package Manager UI in Visual Studio
+    - Convert Search Control to Fluent UI - #14469
+    - Use Fluent TextBox for Project PM UI Installed Version - #14466
+    - [Bug Bash] There is a tiny gap in the version drop-down list of PM UI - #11990
+    - [Bug Bash] The dropdown list of PM UI doesn’t distinguish the background color between selected-item and hover-on item - #10977
+    - [Bug Bash] Pressing the page-down button on the keyboard when focusing on ‘Version’ drop-down box with Tab key makes the box empty - #13605
+    - Dead Code: ActionsAndVersions View - #14464
+    Visual Studio options
+    - Decommission Legacy VS Options NuGet Settings - #14398
+    - When adding an http source in the options dialog, have the user click on a checkbox to more explicitly agree to AllowInsecureConnections being added - #14377
+    - Error needed in Package Sources settings for HTTP source without AllowInsecureConnections - #14367
+    - Improve validation of NuGet's settings in Visual Studio Options - #14359
+    - Show validation errors on NuGet options pages while typing - #14358
+    - [Bug Bash] [Unstable] The first removing of a source mapping from the ‘Package Source Mappings’ list in ‘Package Source Mapping’ dialog doesn’t work - #13520
+    - [Localization] The table title ‘Package Source Mapping’ in the ‘Options->NuGet Package Manager->Package Source Mapping’ page was not localized - #14550
+    - [Bug Bash] The offline package source cannot be enabled after disabling it from the ‘Machine-wide package sources’ source list previously in the ‘Options->NuGet Package Manager->Package Sources’ window - #13434
+    - [Bug Bash] The “source” column of the “Add New Package Source Mapping” dialog doesn’t have the minimum width set which makes it can be dragged out of sight - #13355
+    - [Bug Bash] The first reopening of Options dialog should bring back the default package source "Microsoft Visual Studio Offline Packages" in "package sources" list when all the sources were deleted previously - #13278
+    - [Bug Bash] Newly added package source mapping shouldn’t be case-sensitive in “Option->NuGet Package Manager->Package Source Mapping” window - #13210
+    - [Bug Bash] New added package source mapping will lost after switching back to the "Package Source Mapping" tab from other tab in “Option->NuGet Package Manager” window - #13150
+    - [Bug Bash] The “Remove” button should be disable when no package source mapping is selected in the “Package Source Mappings” list - #13115
+    - [CSY] Duplicated hotkeys show in “Options->NuGet Package Manager->Package Sources” dialog - #7822
+    - VS NuGet PMUI - Machine-wide package sources area should be vertically resize-able as well - #7560
+    - [Bug Bash] There will be a duplicated package source when modifying the name of source “Microsoft Visual Studio Offline Packages” - #13057
+    - [Bug Bash] The “Options->NuGet Package Manager->Package Sources” page is disabled after checking or unchecking the checkbox “Enabled” of any one of the package sources having duplicated sources - #14499
+    - Have to manually select pre-populated text on Add Package Source dialog - #14450
+    - VS should not delete Package Source attributes when Name is updated - #14370
+    Package Pruning
+    - Warning rollout for PrunePackageReference - #14126
+    - Missing audit warnings from "nuget install" when nuget.org is not a package source - #14096
+    - It's not possible to push to HTTP sources specified via command line - #14047
+    - Package pruning is enabled for all projects targeting .NET 10 including multi-targeted ones - #14345
+    - Move pruning enabled frameworks to the NuGet.targets - #14424
+    - Change _RestorePackagePruningDefault to RestorePackagePruningDefault - #14511
+    Restore
+    - dotnet restore/Visual Studio conflicting with .esproj + Nx project.json - #13512
+    - Improve NU1004 when pruning is used with locked mode - #14075
+    - Consider not writing NuGetToolVersion to generated MSBuild props files on Restore - #14355
+    - NuGet Restore fails if SQL Server Management Studio 21 is installed - #14349
+    - Remove NUGET_EXPERIMENTAL_USE_NJ_FOR_FILE_PARSING - #14257
+    - Remove RestoreTargetGraph.Name as it's redundant with restoreTargetGraph.TargetGraphName being the widely used version - #14529
+    - Remove RestoreArgs.LockFileVersion as it's functionality unused - #14524
+    - Remove NUGET_BULK_RESTORE_COORDINATION and NUGET_SOLUTION_CACHE_INITIALIZATION fallbacks - #14502
+    Dependency resolver
+    - New dependency resolver does not properly handle floating prerelease versions - #13833
+    - Reenable new algorithm resolution with lock files - #13800
+    Other
+    - Stop ilmerging pack - #13079
+    - Make NuGet.Client's Build.ps1 more friendly to GitHub Copilot in VSCode - #14453
+    - Generate identical [Content_Types].xml on repeated builds - #14357
+    - pack legacy csproj: include pack targets and tasks in VS build tools - #14520
+    - VS crashes when the only project in the solution is a project.json project - #14553
+    - review exception handling - #14440
+    - Improve perf by avoiding redundant dictionary lookups - #14432
+    - LockFileLibrary does not need to be mutable - #14385
+    List of commits in this release
+    Community contributions
+    Thank you to all the contributors who helped make this NuGet release awesome!
+    - SimonCropp
+      - 6720 remove redundant default constructors
+      - 6610 add "does not have a min version" to messages in GetNupkgInfo
+      - 6581 remove redundant dictionary lookups in MarkTransitiveOrigin
+      - 6596 enable nullability in PackageItemViewModelTests
+      - 6634 remove IFrameworkTargetable
+      - 6616 avoid redundant version parsing in PluginFindPackageByIdResource
+      - 6595 enable nullability in ReadmePreviewViewModelTests
+      - 6587 remove redundant dictionary lookup in ProcessUnrankedEntries
+      - 6598 enable nullability in EmbeddedResourcesCapabilityTests
+      - 6577 use fields instead of private properties
+      - 6622 remove un-used list in GetPackagesToBeReinstalled
+      - 6589 redundant null check for projectManagerService.GetMetadataAsync return value
+      - 6605 enable nullable in VSRestoreSettingsUtilityTests
+      - 6575 remove redundant dictionary lookup in CredentialServiceAdapter.GetCredentials
+      - 6601 enable nullabe in NuGetInstallCommandTest
+      - 6593 enable nullable in IProjectContextInfoExtensionsTests
+      - 6614 remove redundant lists in DependencyGraphFileRequestProvider
+      - 6625 remove un-used variables in PackageExtractor
+      - 6609 fix nullability in UnresolvedMessages
+      - 6608 remove un-used contextForGather
+      - 6628 remove redundant enumeration in CredentialsItem
+      - 6617 remove toolItems list instance in MSBuildRestoreUtility
+      - 6599 fix parameter nullability in Constructor_SetReportAbuseUrl_Initialize…
+      - 6604 enable nullable in LegacyPackageReferenceProjectTests
+      - 6631 remove DependencyGraphSpecRequestProvider.CollectReferences
+      - 6635 remove EnvDteProjectExtensions.PathComparer
+      - 6623 remove redundant GetManifestResourceNames in ManifestSchemaUtility
+      - 6619 remove unused packageID variable
+      - 6620 remove un-used variables in PackageManagerControl
+      - 6640 remove redundant exception handling
+      - 6637 remove PackageManagerControl.AddMigratorBar
+      - 6629 remove un-used HashSet instance in ResolverMetadataClient
+      - 6602 enable nullable in MSBuildUtilityTest
+      - 6641 remove redundant null condition in UpdateCommand.ExecuteCommandAsync
+      - 6683 remove redundant string alloc in GetTempFilePath
+      - 6626 remove un-used variables in SignedPackageArchiveIOUtility
+      - 6574 remove redundant dictionary lookup in CreatePackageSourceMappingDictionary
+      - 6594 enable nullability in InfiniteScrollListTests
+      - 6682 Use async delay in SafeReadAsync
+      - 6600 enable nullable in NuGetUpdateCommandTests
+      - 6606 enable nullable in VSNominationUtilitiesTests
+      - 6613 remove redundant type variable in GetExternalProject
+      - 6611 remove un-used solutionService instances
+      - 6643 remove MsBuildUtility.GetMsBuildPathInPathVar
+      - 6632 remove PackageSpecFactory.GetTargetFrameworkStrings
+      - 6573 avoid some allocation in ProjectFactory.ProcessDependencies
+      - 6588 remove dictionary lookups from GetPreviewResultsAsync
+      - 6597 fix nullability in PackageModelCreationTestHelper
+      - 6612 remove un-used list instances in NuGetPackageManager
+      - 6591 enable nullable in PackageSourceValidatorTests
+      - 6603 fix nullability in IVsProjectBuildProperties
+      - 6636 remove _project* fields from PackageReferenceProject
+      - 6630 remove un-used identity instance in LocalV3FindPackageByIdResource
+      - 6618 remove LoggerAdapter instance in NuGetPackageManager
+      - 6621 remove un-used projectsByUniqueName in SolutionUpToDateChecker
+      - 6624 remove un-used variables in PackageBuilder
+      - 6633 remove JsonPackageSpecReader DelimitedStringSeparators and VersionSeparators
+      - 6642 use cast instead of as and null check in CommandLineParser.AssignValue
+      - 6615 remove redundant list in GetPluginAsync
+      - 6627 remove un-used GetDirectoryName in MisplacedAssemblyOutsideLibRule
+      - 6578 remove redundant dictionary lookup in PrunePackageTree.PruneDowngrades
+      - 6576 remove redundant dictionary lookup in RecommenderPackageFeed
+    - baronfel
+      - 6554 Fix NuGet->SDK Codeflow
+      - 6514 Pin and stabilize the NuGetToolVersion property in the generated NuGet props files during restore.
+    - omajid
+      - 6500 Ensure stable order of entries in Content_Types.xml
+      - 6507 Support building on Linux when full signing is not available
+    - AlexDelepine
+      - 6793 Update Ngen Priorities for VS
+    - hickford
+      - 6475 Populate audit sources consistently
+    - nohwnd
+      - 6735 Disable loading profile in utility powershell.exe calls
+    - mmitche
+      - 6539 Move NuGet to xliff-tasks
+    - dkurepa
+      - 6644 Add Version.Details.props
+    - bdukes
+      - 6530 Fix nuget.exe restore finding MSBuild from SSMS instead of Visual Studio
+    - ToddGrun
+      - 6519 Make LockFileLibrary immutable for performance and sanity reasons
+- Key: ReleaseNotesUrl
+  Value: https://learn.microsoft.com/nuget/release-notes/nuget-7.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://learn.microsoft.com/zh-cn/nuget/release-notes/nuget-7.0
+ReleaseTime: 2025-11-11T18:00:00.0000000Z

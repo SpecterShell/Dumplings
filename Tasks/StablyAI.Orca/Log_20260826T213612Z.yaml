@@ -1,0 +1,110 @@
+Version: 1.4.190
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.190/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    Please note: It usually takes 48–72 hours for a landed PR to be released (except P0+ fixes). We have many more exciting PRs and features coming in later versions!
+    Notable changes
+    - More reliable agent sessions, terminals, and recovery after a restart.
+    - Better reliability when using Windows, WSL, and remote workspaces.
+    - Improvements across worktrees, skills, the dashboard, automations, and everyday app polish.
+    UI / workspace
+    - fix(ui): keep dialog title and footer inside the panel by @ppw-stack in https://github.com/stablyai/orca/pull/15707
+    - fix(linear): unbound list-issues by default, surface truncation, bind cursor workspace by @brennanb2025 in https://github.com/stablyai/orca/pull/15824
+    - Change 'SEÑOR' to 'MR' in Spanish locale by @YerayAlonso in https://github.com/stablyai/orca/pull/15594
+    - fix(editor): detect .liquid files as Liquid by @webdevtodayjason in https://github.com/stablyai/orca/pull/15213
+    - fix(i18n): correct five Korean strings that changed meaning in machine translation by @nwparker in https://github.com/stablyai/orca/pull/15875
+    - Retry transient ripgrep spawn failures instead of demanding install by @AmethystLiang in https://github.com/stablyai/orca/pull/15983
+    - UX: compact native density for context + dropdown menus by @nwparker in https://github.com/stablyai/orca/pull/15924
+    - fix(i18n): match CheckRunJobs succeeded to its sibling count-label register by @erishforG in https://github.com/stablyai/orca/pull/16013
+    - fix(composer): close the Create Workspace dialog on the first Escape by @nwparker in https://github.com/stablyai/orca/pull/16027
+    - feat(dictation): add sound-reactive grape visualizer by @nwparker in https://github.com/stablyai/orca/pull/16017
+    - fix(github): add GHES avatar fallback to PR and task views by @erishforG in https://github.com/stablyai/orca/pull/13981
+    - fix(dictation): address visualizer review feedback by @nwparker in https://github.com/stablyai/orca/pull/16035
+    Worktrees
+    - fix(worktrees): honor absolute Linux worktree base paths for WSL repos (STA-4772) by @OrcaWin in https://github.com/stablyai/orca/pull/15384
+    - fix(worktree): let a configured worktree base outrank a built-in visibility source (#15232) by @OrcaWin in https://github.com/stablyai/orca/pull/15430
+    - fix(ssh): let fork-PR worktrees add their contributor remote via the relay by @nwparker in https://github.com/stablyai/orca/pull/15827
+    - fix(worktree): drop a just-added fork remote when its head fetch fails by @nwparker in https://github.com/stablyai/orca/pull/15850
+    - Move worktree palette search to top of sidebar nav by @AmethystLiang in https://github.com/stablyai/orca/pull/15854
+    - Fix Cmd+J Enter for worktree creation by @AmethystLiang in https://github.com/stablyai/orca/pull/15970
+    - fix(worktree): stop warning about a stale local base branch that does not exist yet (#15331) by @nwparker in https://github.com/stablyai/orca/pull/15871
+    - fix(git): enable Windows long paths for worktree creation (local, sparse, and SSH hosts) by @nwparker in https://github.com/stablyai/orca/pull/15866
+    Agents / native chat
+    - fix(skills): isolate concurrent upload staging by @Jinwoo-H in https://github.com/stablyai/orca/pull/15693
+    - fix(rate-limits): support Codex 0.149 approval policy by @Jinwoo-H in https://github.com/stablyai/orca/pull/15823
+    - fix(codex): suppress false restart notices after reauth by @Jinwoo-H in https://github.com/stablyai/orca/pull/15835
+    - feat(dashboard): add a keyboard shortcut to toggle the Agent Dashboard by @DNX in https://github.com/stablyai/orca/pull/15353
+    - Remove agent map view from dashboard by @AmethystLiang in https://github.com/stablyai/orca/pull/15853
+    - fix(agent-catalog): update outdated Claude Code doc links by @heychs in https://github.com/stablyai/orca/pull/15387
+    - fix(skills): normalize contributor-facing paths in the skill guide generator by @nwparker in https://github.com/stablyai/orca/pull/15861
+    - Add Artifacts and Skills pages to navigation history by @AmethystLiang in https://github.com/stablyai/orca/pull/15969
+    - fix(ui): clear agent attention icon when Floating Workspace tab activated via keyboard by @buf0-bot[bot] in https://github.com/stablyai/orca/pull/15745
+    - test(orchestration): distinguish the heartbeat straggler guard from the row's initial null by @nwparker in https://github.com/stablyai/orca/pull/15869
+    - fix(rate-limits): stop showing Gemini failures as Antigravity "Refresh failed" by @nwparker in https://github.com/stablyai/orca/pull/15876
+    - fix(agent-resume): restore Copilot sessions after restart by @nwparker in https://github.com/stablyai/orca/pull/15879
+    - feat(orcad): boot the Orca runtime on plain Node by @nwparker in https://github.com/stablyai/orca/pull/15968
+    - fix(skills): discover Hermes home skills by @nwparker in https://github.com/stablyai/orca/pull/15862
+    - fix(agent-resume): restore Kimi Code sessions after restart by @nwparker in https://github.com/stablyai/orca/pull/15883
+    Terminal
+    - fix(terminal): keep a quick command queued until its own spawn takes it by @AmethystLiang in https://github.com/stablyai/orca/pull/15630
+    - fix(terminal): mark captured shortcut input interactive by @itisvincent in https://github.com/stablyai/orca/pull/13800
+    - fix(terminal): preserve Shift+Enter during routing confirmation by @itisvincent in https://github.com/stablyai/orca/pull/13598
+    - fix(terminal): stop orphaning live agent terminals across host restarts and graph syncs by @Jinwoo-H in https://github.com/stablyai/orca/pull/15644
+    - fix(windows): own PTY process trees with job objects by @nwparker in https://github.com/stablyai/orca/pull/15755
+    - fix(windows): reach the pty job on the teardown path that actually runs by @nwparker in https://github.com/stablyai/orca/pull/15886
+    - fix(cli): allow an empty --value for storage set commands by @nwparker in https://github.com/stablyai/orca/pull/15863
+    - fix(pty): wrap codex without expanding or destroying a user alias by @nwparker in https://github.com/stablyai/orca/pull/15873
+    - fix(terminal): drop conda's orphaned CONDA_SHLVL sentinel by @nwparker in https://github.com/stablyai/orca/pull/15885
+    - fix(terminal): arm the restore baseline only on a snapshot that painted content by @AmethystLiang in https://github.com/stablyai/orca/pull/16009
+    - fix(settings): an empty agent detection must not erase the saved default by @nwparker in https://github.com/stablyai/orca/pull/16043
+    Windows, WSL, remote server / SSH
+    - fix(grok): stop the Windows status hook from spawning two interpreters per event by @OrcaWin in https://github.com/stablyai/orca/pull/15595
+    - fix(windows): one chokepoint for every child process by @nwparker in https://github.com/stablyai/orca/pull/15746
+    - perf(windows): read the process table natively instead of forking PowerShell by @nwparker in https://github.com/stablyai/orca/pull/15749
+    - feat(wsl): one runner for every wsl.exe invocation by @nwparker in https://github.com/stablyai/orca/pull/15903
+    - fix(wsl): migrate 21 call sites onto the WSL runner by @nwparker in https://github.com/stablyai/orca/pull/15923
+    - refactor(host): route secret storage through a SecretStore port by @nwparker in https://github.com/stablyai/orca/pull/15916
+    - refactor(wsl): delete the environment-policy layer the reviews kept failing on by @nwparker in https://github.com/stablyai/orca/pull/16007
+    - refactor(host): route app paths and version through an AppEnvironment port by @nwparker in https://github.com/stablyai/orca/pull/16019
+    - fix(project-groups): route rename and delete to the group's owning host by @nwparker in https://github.com/stablyai/orca/pull/15889
+    - refactor(ipc): split preflight and SSH registry out of the ipcMain modules by @nwparker in https://github.com/stablyai/orca/pull/15927
+    - fix(remote): keep editor focus after unfocused HTML side preview (STA-5001) by @brennanb2025 in https://github.com/stablyai/orca/pull/15716
+    - fix(preflight): do not count a Windows binary reached through interop as a WSL install by @nwparker in https://github.com/stablyai/orca/pull/16028
+    - fix(wsl): budget the whole command line, not just the script by @nwparker in https://github.com/stablyai/orca/pull/16032
+    - Fix Windows Git Bash console-capacity failures by @OrcaWin in https://github.com/stablyai/orca/pull/16045
+    - perf(preflight): read the WSL mount table once, and make launch agree with detection by @nwparker in https://github.com/stablyai/orca/pull/16053
+    Browser
+    - fix(cmd-j): host-qualify browser and simulator tab candidates (STA-4965) by @Jinwoo-H in https://github.com/stablyai/orca/pull/15686
+    - fix(win32): hide the console window for agent-browser and git helpers by @nwparker in https://github.com/stablyai/orca/pull/15887
+    Mobile
+    - Update Android download links to 0.0.44 by @AmethystLiang in https://github.com/stablyai/orca/pull/15898
+    - Revert premature Android link update merge by @AmethystLiang in https://github.com/stablyai/orca/pull/15899
+    - Reland Android download links for 0.0.44 by @AmethystLiang in https://github.com/stablyai/orca/pull/15905
+    - fix(mobile): remove close tabs to the right action by @AmethystLiang in https://github.com/stablyai/orca/pull/15894
+    Automations
+    - feat(automations): navigate table search results with arrows by @OrcaWin in https://github.com/stablyai/orca/pull/15805
+    - fix(automations): localize schedule weekday names and labels by @nwparker in https://github.com/stablyai/orca/pull/15884
+    - test(automations): assert in-place language switch on mounted picker by @AmethystLiang in https://github.com/stablyai/orca/pull/15977
+    Performance / reliability
+    - fix(runtime): recover adopted tui-idle and pin worker fixtures by @Jinwoo-H in https://github.com/stablyai/orca/pull/15569
+    - fix(ports): report a Stop as succeeded when the listener already exited by @nwparker in https://github.com/stablyai/orca/pull/15888
+    - fix(secrets): tell Linux users when their secrets are only obfuscated by @nwparker in https://github.com/stablyai/orca/pull/16033
+    - fix(secrets): report the protection gap on change, not on every launch by @nwparker in https://github.com/stablyai/orca/pull/16044
+    - fix(secrets): probe the Linux-only storage backend defensively by @nwparker in https://github.com/stablyai/orca/pull/16046
+    - fix(runtime): prevent restored workers from appearing idle while busy by @AmethystLiang in https://github.com/stablyai/orca/pull/15998
+    Tests / CI
+    - Fix flaky CI tests by adding retry logic and increasing timeouts by @AmethystLiang in https://github.com/stablyai/orca/pull/15635
+    - fix(ci): restrict release test token permissions (STA-4970) by @Jinwoo-H in https://github.com/stablyai/orca/pull/15675
+    - test(e2e): extract paired client window reveal into helper by @AmethystLiang in https://github.com/stablyai/orca/pull/15991
+    - test(runtime): use the platform submit delay in the cancellation-during-verification test by @nwparker in https://github.com/stablyai/orca/pull/15870
+    - build(runtime): gate new Electron imports reachable from the Orca runtime by @nwparker in https://github.com/stablyai/orca/pull/15919
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.188...v1.4.190
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.190
+ReleaseTime: 2026-08-26T19:45:57.0000000Z

@@ -1,0 +1,67 @@
+Version: 0.3.1
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.3.1/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.3.1
+    覆盖范围：v0.2.13（d5c992f）→ 本版（Plugin System V1、官方插件、JSON 独立工具窗、插件管理页）。
+    说明：v0.3.0 tag 曾指向一次未成功产出安装包的流水线提交，GitHub 未创建对应 Release。本版为 0.3.x 首个正式发布，产品内容与原 v0.3.0 计划一致，并包含发布链路修复。
+    版本重点
+    正式引入插件系统 V1：能力外挂、体验留在 Kite。搜索内联结果（计算器等）与独立工具窗（JSON）分流；非内联工具打开前需确认，且不改动启动器主窗口。
+    新功能
+    Plugin System V1
+    - Manifest / Registry / Activation Router：prefix、keyword Trigger；Command enter_provider 进入 Provider Mode。
+    - Plugin Host：懒启动外部进程，JSON-RPC（Content-Length 帧）；init/query 硬超时；idle shutdown；crash / crash-loop 可观测。
+    - List → ResultAction::Plugin；Panel → 声明式块 + NativeAction（copy_text / open_url / open_path）。
+    - Host API：host/clipboard.write、host/open_url、host/open_path、host/hide_kite。
+    - 插件开发说明：docs/PLUGIN-DEVELOPMENT.md。
+    官方插件
+    - 计算器：=1+2 等在搜索内联出结果，Enter 复制，无外部窗口。
+    - 窗口切换：win 列出打开的窗口，Enter 激活。
+    - 开发者工具：uuid / hash / ts 内联查询；json 走宿主 JSON 工具窗。
+    - 安装器与首次启动会 seed resources/official-plugins；设置页可「重装官方」。
+    JSON 工具（独立窗）
+    - 真正的第二个 OS 窗口（880×560），左原始、右结果：格式化 / 压缩 / 剪贴板 / 清空。
+    - 搜索 json：列表只显示「JSON 工具」，Enter 打开；Esc 取消。
+    - json {"a":1}：确认后预填并自动格式化。
+    - 设置 → 插件 → 开发者工具 → 说明 →「打开 JSON 工具」：需二次确认；主启动器窗口内容与尺寸不变。
+    - 关闭工具窗（×/Esc）只销毁工具窗。
+    设置页
+    - 插件管理：列表、说明详情、启用/禁用、重载、导入路径、重装官方、打开插件目录。
+    - 列表不再单独展示「JSON 工具」卡片；入口为搜索结果或开发者工具说明页。
+    - 官方插件展示文案以宿主为准，避免本机旧包说明过时。
+    修复
+    - 启动入口统一 ResultAction，过期搜索代际不得启动旧列表。
+    - 主窗失焦：设置页或 JSON 工具打开时不误隐藏。
+    - 热键/托盘唤起只还原启动器搜索，不强制关掉已打开的工具窗。
+    - CI / Release 在跑 cargo test 前先构建官方插件包（resources/official-plugins 为生成物，不入库）。
+    - window-switcher 列表测试不再依赖本机窗口标题关键字。
+    升级影响
+    - 设置、历史、固定项、别名无需迁移。
+    - 安装包新增 resources/official-plugins；首次启动会把官方插件补进用户插件目录（已存在的 id 不覆盖）。
+    - 数据目录可能新增插件相关日志/状态；不影响既有 SQLite 设置与历史。
+    - 插件 Manifest 要求 minimum_kite_version >= 0.3.0（Plugin API 1）。
+    已知限制
+    - 安装包仍无 Authenticode 数字签名。
+    - V1 不做 Plugin Store / 在线市场；仅本地文件夹导入与官方样例 seed。
+    - 非内联工具（JSON）必须二次确认后才开窗；内联 Provider 不走该步。
+    - 窗口切换、剪贴板等真机行为依赖本机环境；协议与状态机已有自动化覆盖。
+    - 官方插件样例运行时依赖本机构建产物；开发机请先跑 .\scripts\build-official-plugins.ps1。
+    构建与验证
+    - 发布 tag：v0.3.1
+    - tag 提交：06a1e4312ca37860e95c58666e7985fad9814a9e
+    - 上一个发布：v0.3.0
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #15
+    本次提交范围
+    - chore(release): v0.3.1 (06a1e43)
+    - fix(plugin): make window-switcher list test env-independent (96ab03e)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.3.1
+ReleaseTime: 2026-09-18T07:26:31.0000000Z

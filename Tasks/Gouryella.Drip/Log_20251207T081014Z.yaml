@@ -1,0 +1,24 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.3.2/drip-v0.3.2-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Gouryella/drip/releases/download/v0.3.2/drip-v0.3.2-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added support for HTTP response context cancellation, including logic for registering, triggering, and cleaning up cancellation functions.
+    Introduced a responseCancels mapping and corresponding synchronization lock in FrameHandler to track and control the request lifecycle.
+    When the data frame type is closed, actively called cancelResponse to release related resources.
+    Simultaneously, during the response body reading process, identified context cancellation or timeout errors and prematurely terminated the processing flow to avoid invalid operations.
+    What's Changed
+    - feat(client): Implements a response cancellation mechanism to improve… by @Gouryella in https://github.com/Gouryella/drip/pull/5
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.3.1...v0.3.2
+    What's Changed
+    - feat(client): Implements a response cancellation mechanism to improve… by @Gouryella in https://github.com/Gouryella/drip/pull/5
+    Full Changelog: https://github.com/Gouryella/drip/compare/v0.3.1...v0.3.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Gouryella/drip/releases/tag/v0.3.2
+ReleaseTime: 2025-12-07T05:56:36.0000000Z

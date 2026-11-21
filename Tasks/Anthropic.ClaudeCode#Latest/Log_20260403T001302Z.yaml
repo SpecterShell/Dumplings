@@ -1,0 +1,32 @@
+Version: 2.1.91
+Installer:
+- Architecture: x64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.91/win32-x64/claude.exe
+  InstallerSha256: 12F69849F6774749718520F41FB94F6FC30779B55D8F9B0ACAAF20C755E6B55D
+- Architecture: arm64
+  InstallerUrl: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.91/win32-arm64/claude.exe
+  InstallerSha256: 389DE7F1F2B979CB4098F7752CA0099275CEDABCFE3908A9886D143EF594972B
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added MCP tool result persistence override via _meta["anthropic/maxResultSizeChars"] annotation (up to 500K), allowing larger results like DB schemas to pass through without truncation
+    - Added disableSkillShellExecution setting to disable inline shell execution in skills, custom slash commands, and plugin commands
+    - Added support for multi-line prompts in claude-cli://open?q= deep links (encoded newlines %0A no longer rejected)
+    - Plugins can now ship executables under bin/ and invoke them as bare commands from the Bash tool
+    - Fixed transcript chain breaks on --resume that could lose conversation history when async transcript writes fail silently
+    - Fixed cmd+delete not deleting to start of line on iTerm2, kitty, WezTerm, Ghostty, and Windows Terminal
+    - Fixed plan mode in remote sessions losing track of the plan file after a container restart, which caused permission prompts on plan edits and an empty plan-approval modal
+    - Fixed JSON schema validation for permissions.defaultMode: "auto" in settings.json
+    - Fixed Windows version cleanup not protecting the active version's rollback copy
+    - /feedback now explains why it's unavailable instead of disappearing from the slash menu
+    - Improved /claude-api skill guidance for agent design patterns including tool surface decisions, context management, and caching strategy
+    - Improved performance: faster stripAnsi on Bun by routing through Bun.stripANSI
+    - Edit tool now uses shorter old_string anchors, reducing output tokens
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anthropics/claude-code/blob/HEAD/CHANGELOG.md#2191
+ReleaseTime: 2026-04-02T22:04:30.0000000Z

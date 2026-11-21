@@ -1,60 +1,62 @@
 $Object1 = Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/check-update?app=wonderpen'
 
 # Version
-$Task.CurrentState.Version = $Object1.data.version
+$this.CurrentState.Version = $Object1.data.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrl1 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-ia32'
+  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-ia32'
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-x64'
+  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl -Uri 'https://www.tominlab.com/to/get-file/wonderpen?key=win-x64'
 }
 
-if (!$InstallerUrl1.Contains($Task.CurrentState.Version)) {
-  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl1}`ndoesn't contain version $($Task.CurrentState.Version)"
+if (!$InstallerUrlX86.Contains($this.CurrentState.Version)) {
+  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrlX86}`ndoesn't contain version $($this.CurrentState.Version)"
 }
-if (!$InstallerUrl2.Contains($Task.CurrentState.Version)) {
-  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl2}`ndoesn't contain version $($Task.CurrentState.Version)"
+if (!$InstallerUrlX64.Contains($this.CurrentState.Version)) {
+  throw "Task $($this.Name): The InstallerUrl`n${InstallerUrlX64}`ndoesn't contain version $($this.CurrentState.Version)"
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/update-detail?app=wonderpen').data | Where-Object -Property 'version' -EQ -Value $Task.CurrentState.Version
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.tominlab.com/api/product/update-detail?app=wonderpen').data.Where({ $_.version -eq $this.CurrentState.Version }, 'First')
+
       if ($Object2) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $Object2.date_ms | ConvertFrom-UnixTimeMilliseconds
+        $this.CurrentState.ReleaseTime = $Object2[0].date_ms | ConvertFrom-UnixTimeMilliseconds
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.desc.en | Format-Text
+          Value  = $Object2[0].desc.en | Format-Text
         }
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object2.desc.cn | Format-Text
+          Value  = $Object2[0].desc.cn | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

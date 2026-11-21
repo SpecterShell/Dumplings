@@ -1,0 +1,41 @@
+Version: 0.3.6
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.3.6/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.3.6
+    版本重点
+    搜索框现在可以直接识别已存在的本地绝对路径：文件提供「打开文件」和「打开文件路径」，文件夹提供「打开文件路径」。开发者工具窗口统一为 JSON 工具的视觉样式，并新增 Base64 编解码。
+    新功能与体验改进
+    - 路径直达在后台确认输入指向的文件或文件夹，再把对应操作放在搜索结果前部。点击时再次确认路径仍可访问；只接受普通盘符绝对路径和 UNC 路径，不把输入拼入 shell 命令。
+    - JSON、Hash 和 Base64 独立窗口共用标题栏、按钮、提示、输入框和结果框模板。Hash 窗口尺寸与 JSON 保持一致。
+    - Base64 工具支持 UTF-8 文本编码为标准 Base64，以及将 Base64 解码为 UTF-8 文本；支持粘贴、复制结果和清空。搜索 base64 <文本> 会预填并编码，也可从开发者工具说明页打开。
+    修复
+    - 点击 Base64 输入框、移动光标或选择文本时保留已有结果；仅当输入内容实际变化时清除旧结果。JSON 和 Hash 的点击行为也纳入回归检查。
+    - 修正设置数据库测试的临时文件命名，避免并发测试复用 SQLite 文件；将扫描器来源测试与快扫时限分开，减少机器负载导致的偶发失败。
+    升级影响
+    - 设置、历史记录、固定项、别名和用户插件无需迁移。
+    - 宿主启用现有 base64 依赖的分配能力；官方开发者工具插件会随安装包重新打包和同步。无需用户新增配置。
+    验证与限制
+    - 本地完整 cargo test：552 通过、10 忽略、0 失败；官方插件工作区测试：14 通过。路径直达、Base64 双向转换及点击输入框保留结果均有自动化检查。
+    - 本地 cargo build --release 通过。
+    - Windows 桌面窗口的最终布局和新版安装包升级流程尚未在本机进行人工交互验收；发布工作流会在 Windows 上重新运行测试、构建正式程序并生成 NSIS 安装包。
+    - 安装包仍无 Authenticode 数字签名。正式发布报告会附上构建记录、文件大小和 SHA-256。
+    构建与验证
+    - 发布 tag：v0.3.6
+    - tag 提交：fd720b25fd35b0c48a867494dedf7ba2c84ce606
+    - 上一个发布：v0.3.5
+    - 提交数量：2
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #20
+    本次提交范围
+    - chore(release): prepare v0.3.6 (fd720b2)
+    - feat: add direct path actions and unified developer tools (5af2baa)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.3.6
+ReleaseTime: 2026-09-20T09:43:13.0000000Z

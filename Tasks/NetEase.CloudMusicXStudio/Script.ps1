@@ -1,37 +1,45 @@
-$Object = Invoke-RestMethod -Uri 'https://xstudio-singer.xiaoice.com/version/update' -Headers @{
+$Object1 = Invoke-RestMethod -Uri 'https://xstudio-singer.xiaoice.com/version/update' -Headers @{
   'architecture-abi'      = 'x86_64'
   'platform-with-version' = 'Windows'
+  'authorization'         = 'Bearer '
 }
 
 # Version
-$Task.CurrentState.Version = $Object.latest.name
+$this.CurrentState.Version = $Object1.latest.name
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.latest.release.url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.latest.release.url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.latest.release.date | ConvertTo-UtcDateTime -Id 'UTC'
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.latest.release.content | Format-Text
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.latest.release.content | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

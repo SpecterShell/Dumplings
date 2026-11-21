@@ -1,0 +1,39 @@
+Version: 1.9.20
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v1.9.20/AionUi-1.9.20-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v1.9.20/AionUi-1.9.20-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    ACP: Stability & Reliability Fixes
+    - Codex and other ACP agents no longer show a false "process exited unexpectedly" error when a conversation ends normally — the process exit is now correctly recognized as a clean idle shutdown.
+    - Long gaps between stream events during tool-call execution (common with Codex) no longer trigger spurious idle-finish warnings or duplicate finish events.
+    - Switching permission mode before sending your first message no longer throws a "Cannot set mode in idle" error — the mode change is silently deferred and applied on first activation.
+    - Agents like qwen-code that advertise their available modes during initialization now show the full mode list in the selector.
+    Windows: Broader Tool Detection
+    - Cargo, Go, Deno, and ~/.local/bin (uv/pipx) are now included in the Windows enhanced PATH, matching macOS/Linux behavior — CLI tools in those locations are now discoverable by ACP auto-detection.
+    - Windows users with Node.js below v20 can now use Codex and Claude Code backends without being blocked — those backends run via bundled bun, not system Node.
+    Aion CLI
+    - Fixed: Aion CLI mode on Windows now correctly finds the officecli binary — it was previously missing from the environment passed to the aionrs process.
+    Bug Fixes
+    - Fixed a white screen on app refresh after clicking "New Chat" in the packaged Electron app. A URL corruption bug under HashRouter caused the real pathname to be overwritten, resulting in ERR_FILE_NOT_FOUND on reload.
+    What's Changed
+    - fix(guid): use navigate() to clear resetAssistant state so HashRouter URL stays intact by @kaizhou-lab in #2583
+    - fix(acp): preserve top-level modes from initialize response by @kaizhou-lab in #2598
+    - fix(acp): defer setMode/setModel in idle state and sync reassertConfig on start by @zhuqingyv in #2595
+    - test(e2e): add PRDs and E2E specs for ACP conversations by @TCP404 in #2591
+    - fix(acp): suppress false crash report on idle process exit and idle-timer misfire during prompt by @TCP404 in #2619
+    - fix(shellEnv): add missing Windows extra tool paths to align with macOS/Linux by @piorpua in #2618
+    - fix(aionrs): use getEnhancedEnv() when spawning aionrs binary by @piorpua in #2610
+    - fix(acp): remove stale Node.js version checks for bundled-bun backends by @piorpua in #2622
+    - feat(skill): add pr-ship end-to-end PR lifecycle skill by @TCP404 in #2623
+    - chore: bump version to 1.9.20 by @piorpua in #2624
+    Full Changelog: v1.9.19...v1.9.20
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iOfficeAI/AionUi/releases/tag/v1.9.20
+ReleaseTime: 2026-04-23T13:26:55.0000000Z

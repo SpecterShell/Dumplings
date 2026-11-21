@@ -1,0 +1,26 @@
+Version: 0.9.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zhangzejing/ThinkReader/releases/download/v0.9.4/ThinkReader-Setup-0.9.4-win_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ThinkReader 0.9.4
+    MinerU API import and connection fixes for Windows.
+    Changes
+    - API imports require the official MinerU Open API CLI and a saved Token. Missing local models no longer disable Import or block an API job, including when an old local-fallback preference is saved.
+    - Settings and Import use the same readiness rule. API setup says “API configured”; this confirms configuration, not current service connectivity. Local model folders are not marked ready until model verification succeeds.
+    - “Fallback to local when the API fails” is unavailable until the local runtime and models are ready.
+    - The official CLI owns API networking; a separate Python HEAD request no longer rejects otherwise usable CLI connections. Initial connection failures can retry for five minutes. This retry budget never interrupts an active upload or parsing process, and acknowledged uploads are not resubmitted automatically.
+    - Import shows connecting, uploading, uploaded/queued, page extraction and result download. Upload is indeterminate because the official CLI does not report transferred bytes. Signed upload credentials are redacted from logs.
+    - Embedded MinerU method cards no longer overflow horizontally in narrow light or dark views. The previously untracked Hermes icon is included so a fresh source checkout builds successfully.
+    Limits
+    - Local model downloads and real local extraction are deferred at the maintainer's request. API tests use synthetic documents.
+    - The official CLI has a separate 30-minute extraction deadline; the five-minute connection retry budget is not an upload deadline.
+    - Windows binaries are unsigned; clean-machine installation is not covered by this development-machine validation.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhangzejing/ThinkReader/releases/tag/v0.9.4
+ReleaseTime: 2026-09-22T11:41:44.0000000Z

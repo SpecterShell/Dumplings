@@ -1,0 +1,19 @@
+Version: 4.10.16
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.16/agy-switch-4.10.16-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 支持 Google 新发布的 Gemini 4 Carbon、Gemini 4 Hydrogen（含 Extra/xhigh 档位）以及 Orchestrator (Carbon)、Orchestrator (Argon)。新模型会按档位归并到对应主模型，不再显示成未知名称或错误并入旧系列。
+    - 支持 Claude Sonnet 5.5 与 Claude Opus 5.5。Claude 5.5 的 Low/Medium/High 档位和 thinking 名称会归并到 5.5，不再被折叠成 4.6；已保存的 4.6 记录仍可正常显示。
+    - 更新 Gemini 与 Claude 计价：Gemini 4 Carbon、Gemini 4 Hydrogen 使用官方标准价，Carbon/Argon 在 2026-12-01 的调价按当前日期选择生效价格；Carbon/Hydrogen 的 -low、-medium、-high、-xhigh 档位和 Claude 5.5 的档位按同一模型单价估算，不再显示为未计价。
+    - 计价页地址改为 Google 当前发布的 aistudio.google.com/docs/pricing.md.txt，并提升解析器版本以丢弃旧缓存。内置兜底价目表补充 Gemini 4 Carbon、Gemini 4 Hydrogen，并保留 Carbon/Argon 的当前档位价。
+    - 识别 Gemini 4 Carbon 独立配额：当接口返回 gemini-carbon-5h / gemini-carbon-wtu-weekly 时，Carbon 不再借用共享 Gemini 额度；仪表盘新增 Carbon 周额度均值，账号卡片、账号表和周期变化中也会显示 Carbon 桶。接口未返回 Carbon 桶时保留模型自身的观测值，不虚构额度。
+    - 默认置顶模型更新为 Gemini 3.1 Pro、Gemini 3.8 Flash、Claude Sonnet 5.5；已保存的自定义置顶不受影响。
+    - 兼容 Antigravity 2.32 / CLI 1.5.x 的模型目录变化：agy --hub 后端、Claude 4.6 与 GPT-OSS 的下线转发继续沿用现有处理，不需要修改账号或切换流程。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.16
+ReleaseTime: 2026-11-15T12:38:33.0000000Z

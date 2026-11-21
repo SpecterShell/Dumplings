@@ -1,0 +1,41 @@
+Version: 0.19.16
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.19.16-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.19.16 更新
+    新功能
+    - Markdown 表格支持单元格独立编辑与 LaTeX 渲染 — 表格单元格可直接独立编辑，不必整表重写；表格内的 LaTeX 公式正常渲染，编辑后恢复正确的单元格导航。
+    - Vault 笔记安全渲染 YAML Properties — 笔记 frontmatter 中的 YAML 属性以安全方式展示，不再混入正文；编辑 Properties 时保留文档最新内容，避免覆盖已保存的改动。
+    - 工作区标签栏支持鼠标滚轮滚动 — 标签页较多时，可直接用鼠标滚轮或触控板横向滚动标签栏快速定位，不必拖动滚动条。
+    - 搜索索引完整覆盖当前会话消息 — 会话内搜索不再只覆盖部分内容，当前会话全部消息都纳入索引，搜索结果更完整。
+    - 新增 Ubuntu Linux 发行包 — 新增 Ubuntu 22.04 x64 的 AppImage 与 deb 两种安装包，声明运行时依赖并完成 deb sandbox 配置，同时补充 Linux 支持边界说明。
+    - 项目根目录 I/O 异步化 — 项目根目录读取改为异步执行，不再阻塞主线程，提升启动与文件操作的响应速度。
+    Bug 修复
+    - 恢复被禁用的场景音效设置 — 修复设置中禁用场景音效后仍被悄悄恢复的问题，开关状态保持用户的选择。
+    - 改进 macOS 终端回读与 agnoster 字形 — 修复 macOS 终端输出回读不完整、agnoster 主题特殊字形（箭头等）显示错乱。
+    - Vault 共享文档保存串行化 — 多个标签同时保存共享文档时按序执行，避免并发覆盖导致内容丢失。
+    - 修复长文档预览目录与导航 — 长文档虚拟化预览下目录（TOC）补齐完整，点击目录可正确跳转到对应位置。
+    - 修复 LiveMarkdown 切换后语法隐藏与图片预览 — 文件切换后 LiveMarkdown 语法高亮被隐藏、图片无法预览的问题恢复。
+    - 修复滚动位置恢复闪烁 — Markdown 预览恢复滚动位置时不再先闪回顶部再跳转。
+    - 统一队列运行代际生命周期 — 多条消息排队运行时，后代 run 的代际收尾统一，终态事件归属稳定，不再出现刷新与终态错乱。
+    - 修复 Vault 笔记切换阅读位置丢失 — 切换笔记标签再切回时，滚动位置保持在原阅读处。
+    - MCP 连接测试与配置保存隔离 — 测试 MCP 连接不再触发配置保存，避免测试过程意外改写配置或造成界面不一致。
+    - 探索分支复制不再阻塞界面 — Agent 探索时复制工作区改为异步 I/O，保留就绪语义，不再卡顿界面。
+    - 修复 Skills 外部编辑刷新与打开目录 — 外部修改 Skill 后自动刷新内容，并打开正确的文件夹位置。
+    - 预览重新打开后加载最新内容 — 重新打开预览时加载最新内容，不再显示关闭前的旧缓存。
+    - 支持快捷键关闭终端标签 — 终端标签可通过快捷键关闭，不必每次点击关闭按钮。
+    - 修复相对文件夹路径解析 — 修复文件变更列表与相关面板中相对路径解析错误，打开位置更准确。
+    - 修复浏览器链接聚焦与弹出标签隔离 — Agent 打开的链接自动聚焦，弹窗与新标签相互隔离，不再干扰当前工作标签。
+    - Windows ConPTY 行布局稳定 — 修复 Windows 终端长行与换行的行布局错乱，输出显示更稳定。
+    - Windows 启动运行时检测异步化 — Git/Node 运行时检测、注册表与 WSL 状态读取改为异步并发执行，加快 Windows 启动，避免界面卡死。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.19.16
+ReleaseTime: 2026-09-01T14:19:16.0720000Z

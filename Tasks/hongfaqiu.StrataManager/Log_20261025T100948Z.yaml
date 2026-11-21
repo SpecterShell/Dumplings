@@ -1,0 +1,26 @@
+Version: 0.2.21
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.21/Strata.Manager_0.2.21_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed a configuration that could not be removed after its model files were deleted by hand, with Retry stuck on verifying: Delete configuration now archives both the original JSON in the Strata folder and the app's private copy and removes the matching registration, so a scan does not list it again. A configuration file or some model shards that were already deleted by hand no longer block removing the registration.
+    - Fixed "Update to the new version" and "Switch to this version" failing with failed to persist temporary file (os error 183): when a runtime had two saved configurations with the same file name (the official app 0.2 names them strata-<quant>.json), their migrated copies were written into one folder and the second collided with the first ("file already exists"), rolling the whole switch back. Each configuration's migrated copy now has its own folder, a leftover from an earlier attempt is replaced atomically, and the error names the file.
+    - A "Delete bad shard and retry" button on the task card when a model shard fails its check: a folder chosen under "Use existing model" is treated as your own files and Strata never deletes from it, so once a shard is damaged, retrying fails the same way every time. A task that failed this way now shows a "Delete bad shard and retry" button; it first shows the full path of the file to be deleted, and after you confirm it deletes only that shard and its matching .done and .part leftovers, then starts the preparation again. Only the shard named in that task's log, inside the task's own model folder, can be deleted; no other file is touched.
+    - Fixed garbled text in download errors on Chinese Windows: on Windows, Python prints localized system errors in the system code page (GBK on Chinese systems), such as the sentence after [WinError 10060], and the app decoded it as UTF-8, which showed a string of replacement characters. The app now reads UTF-8 first and falls back to the system code page when the text is not valid UTF-8, so task messages and logs read correctly.
+    - A "Retry from ModelScope" button when Hugging Face cannot be reached: when the network cannot reach huggingface.co (cannot reach huggingface.co, WinError 10060), the first-run guide's download page and the task card show this button, which restarts the download from ModelScope in one click and keeps the files already completed. It applies to that one retry only and does not change your saved default download source.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复手动删除模型文件后，配置无法移除、点击重试一直校验：删除配置现在会同时归档 Strata 目录里的原始 JSON 和应用内的私有副本，并移除对应登记，扫描后不会再出现；配置文件或部分模型分片已被手动删除时，也可以直接移除登记，不再卡在「文件不存在」。
+    - 修复「更新到新版本」「切换到此版本」报错 failed to persist temporary file（os error 183）：同一个运行环境下如果有两份保存的配置同名（官方应用 0.2 都叫 strata-<量化>.json），切换时会把它们的迁移副本写进同一个文件夹，第二份撞上第一份、报「文件已存在」，整个切换回滚。现在每份配置的迁移副本放在各自的文件夹里，遇到上次尝试遗留的同名文件会原子替换，报错也会写明是哪个文件。
+    - 模型分片校验失败时，任务卡片新增「删除坏分片并重试」：在「使用已有模型」里选的文件夹按你自己的文件处理，Strata 不会自动删除，分片一旦损坏，直接重试会一直校验失败。现在这类失败的任务卡片会出现「删除坏分片并重试」按钮，点开会先显示将要删除的完整文件路径；确认后只删除这个分片和它同名的 .done、.part 临时文件，然后重新开始准备。只能删除该任务所用模型文件夹里、日志里点名的那个分片，不会删除其他文件。
+    - 修复 Windows 中文系统上下载报错出现乱码：Windows 上 Python 会按系统代码页（中文系统是 GBK）输出本地化的系统错误，比如 [WinError 10060] 后面那句「由于连接方在一段时间后没有正确答复……」，之前按 UTF-8 解码，显示成一串问号和乱码。现在先按 UTF-8 读，不是合法 UTF-8 时再按系统代码页解码，任务消息和日志里都能正常显示。
+    - 无法连接 Hugging Face 时，新增「改用国内源 ModelScope 重试」：国内网络访问不了 huggingface.co（cannot reach huggingface.co、WinError 10060）时，首次使用向导的下载页和任务卡片会出现这个按钮，一键用 ModelScope 重新下载，已完成的文件会保留。只对这一次重试生效，不会改动你保存的默认下载来源。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.21
+ReleaseTime: 2026-10-25T09:40:27.0000000Z

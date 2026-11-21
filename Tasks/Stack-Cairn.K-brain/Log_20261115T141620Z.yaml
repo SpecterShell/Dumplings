@@ -1,0 +1,34 @@
+Version: 0.107.34
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.34/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.34/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    K-brain v0.107.34
+    本版从 main 的 66a0e3f 构建，在 v0.107.33 的基础上新增跨会话用量统计接口。
+    用量统计接口（#209）
+    - 新增 GET /v1/usage/stats?days=N&tz=IANA，/v1/health 增加 capabilities.usage_stats。
+    - 汇总所有工作区会话最近 N 天（默认 371 天）的 token 用量，按指定时区分日。返回：
+      - 总量与费用估算（只计能计价的模型，订阅计费的 provider 不计价）；
+      - 按天明细（含各模型）、按模型明细；
+      - 活跃天数、当前与最长连续活跃天数、最常用模型、最长会话。
+    - 统计口径与 kn 的 /usage 卡片一致：输入已包含缓存读写，总量 = 输入 + 输出。
+    - 子代理用量只计一次；分支和历史复制的消息按 id 去重；旧会话没有逐条用量时按会话合计计入最后活动那天。
+    - 按会话文件缓存解析结果，重复调用开销小；统计不占用会话锁，不影响正在运行的回合。
+    - kn /usage 卡片的计价逻辑与该接口共用。
+    修复
+    - Windows：会话保存改名时，如果文件正被其他程序（杀毒软件、索引服务、用量统计）短暂打开，会重试约 4 秒，不再直接报 “Access is denied”。
+    已知限制
+    - 没有落成消息的模型调用（压缩、审阅、失败请求）不在逐条统计里，统计值可能略低于会话合计。
+    - 运行中的子代理在结束、转录保存后才计入。
+    下载与校验
+    提供 macOS、Linux、Windows 的 x64/ARM64 CLI 与 computer helper；SHA256SUMS 用于校验下载文件。
+    完整变更：https://github.com/Stack-Cairn/K-brain/compare/v0.107.33...v0.107.34
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.34
+ReleaseTime: 2026-11-15T13:22:12.0000000Z

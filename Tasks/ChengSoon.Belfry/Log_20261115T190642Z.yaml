@@ -1,0 +1,38 @@
+Version: 1.0.10
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.10/Belfry_1.0.10_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.10/Belfry_1.0.10_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v1.0.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 新增 A2A 协作：同一项目中的 Codex / Claude 会话可以通过 A2A 1.0 交换任务、补充输入、进度和结果。接收方使用显式回报区分进行中、等待输入、完成与失败；终端空闲不会把任务标记为完成。
+    - 新增外部 A2A 连接：按项目保存兼容 Agent Card 的服务，支持匿名、静态 Bearer 与 Header API-key；可检测接口、显式选择跨来源地址，并保留或清除凭据。
+    - 项目 A2A 面板改为链路场：项目居中，本地 Agent 与外部连接分列两侧；点击节点查看详情、编辑或删除，接通链路显示流动提示，节点超出时折叠为 +N。
+    - 房间、业务任务和投递记录持久化；共享任务板支持统筹／成员、前置任务、重开与归档；房间历史可逐页加载，待回复事项独立保留并可引用回复。
+    - 收件箱与协作面板显示消息投递阶段和 A2A 协议回报，区分已受理、进行中、等待输入、完成、失败与未知结果；协议预览按任务代次隔离并标记截断。
+    - 移除内置 Belfry 协作 Skill 与安装入口；启动迁移只删除与已知内置文件完全一致的副本，保留修改过的文件、其他 Skill 和符号链接。
+    改进
+    - 本地 A2A 只监听随机 loopback 端口，派活、续写与回报校验项目、会话实例、房间角色及任务代次；应用重启后协议句柄失效，但最近状态与文本产物预览仍保留。
+    - 终端输入与自动投递在写入正文和回车前再次核对原生状态、粘贴模式与输入就绪；保留用户草稿和输入法占用，不确定投递暂停并提示人工核对。
+    - 设置、插件、Git worktree、备份、SSH 与历史读取包含跨平台适配与稳定性修正。
+    升级提示
+    - 已打开的 Agent 会话需要重开，才能取得 1.0.10 新增的 A2A MCP 工具；1.0.9 及更早版本不包含这些能力。
+    - 旧的 Belfry 协作 Skill 副本由新版宿主启动时迁移；迁移不会删除修改过的文件，也不会替用户重启正在运行的会话。
+    - A2A 句柄绑定当前项目、连接与 Agent 实例；重启后请重新发现连接并读取授权上下文。
+    - 提供 macOS Apple Silicon / Intel 与 Windows 安装包、自动更新资产及 SHA256SUMS.txt。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#1010---2026-11-16
+ReleaseTime: 2026-11-15T18:05:31.0000000Z

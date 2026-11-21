@@ -1,43 +1,53 @@
-$Object = Invoke-RestMethod -Uri 'https://www.123pan.com/api/version_upgrade' -Headers @{
+$Object1 = Invoke-RestMethod -Uri 'https://api.123278.com/api/version_upgrade' -Headers @{
   'platform'    = 'pc'
-  'app-version' = $Task.LastState.Version.Split('.')[2] ?? 109
+  'app-version' = $this.Status.Contains('New') ? '109' : $this.LastState.Version.Replace('.', '')
 }
 
-if (-not $Object.data.hasNewVersion) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+if (-not $Object1.data.hasNewVersion) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
-$Prefix = $Object.data.url + '/'
+$Prefix = $Object1.data.url + '/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object2 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-if ($Object.data.lastVersion -ne $Task.CurrentState.Version) {
-  $Task.Logging('Distinct versions between two response objects', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+# Version
+$this.CurrentState.Version = $Object2.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.lastVersionCreate | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.data.desc | Format-Text
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.desc | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

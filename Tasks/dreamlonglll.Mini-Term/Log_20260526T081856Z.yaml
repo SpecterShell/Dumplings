@@ -1,0 +1,31 @@
+Version: 0.4.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.15/Mini-Term_0.4.15_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.15/Mini-Term_0.4.15_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - WSL 项目 envVars 通过 WSLENV 透传 — v0.4.14 引入项目级环境变量时 WSL 项目被跳过注入（顶部黄色警告条），本版本通过 Windows WSLENV 协议正式打通。后端 pty.rs 抽出纯函数 build_wslenv_value 拼接 WSLENV=K1/u:K2/u（/u 表示 Win→WSL Unicode 转换），并把宿主进程既有 WSLENV 追加到尾部合并，对齐 JetBrains IDEA terminal 业界惯例。WSL 项目顶部警告条由黄变绿，文案改为提示透传成功与「.bashrc 覆盖」语义。
+    安全性
+    - 防御纵深：在 MINITERM_ 前缀过滤之外，新增 WSLENV key 前后端双重拒绝（大小写敏感等值比较）。前端 ProjectEnvVarsModal 不允许用户填 WSLENV 作为 key，后端在拼接前再次过滤；用户直接改 config.json 绕过前端校验也无法覆盖 mini-term 自己拼的 WSLENV 字符串。
+    测试与契约
+    - 新增 7 个 build_wslenv_value 单元测试，覆盖空 list / 单变量 / 多变量顺序 / 宿主既有值合并 / 空字符串边界。
+    - spec backend/pty-env-vars-injection.md 的 WSL 章节从 v2 预留升级为已实现，wrong / correct 矩阵新增 WSL 反例与「MINITERM_* 已启用」措辞修正。
+    下载
+    - Windows — Mini-Term_0.4.15_x64-setup.exe（NSIS，推荐）或 Mini-Term_0.4.15_x64_en-US.msi
+    - macOS (Apple Silicon) — Mini-Term_0.4.15_aarch64.dmg（首次启动需在终端运行 xattr -cr /Applications/Mini-Term.app 解除 Gatekeeper quarantine）
+    - Linux — Mini-Term_0.4.15_amd64.AppImage / Mini-Term_0.4.15_amd64.deb / Mini-Term-0.4.15-1.x86_64.rpm
+    平台支持：Windows 为主要支持平台，日常开发与测试均在 Windows 上进行；macOS / Linux 代码层面已支持，但未经充分打磨，可用性欠佳，欢迎提 Issue 反馈。
+
+    完整 commits: https://github.com/dreamlonglll/mini-term/compare/v0.4.14...v0.4.15
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.15
+ReleaseTime: 2026-05-26T06:37:36.0000000Z

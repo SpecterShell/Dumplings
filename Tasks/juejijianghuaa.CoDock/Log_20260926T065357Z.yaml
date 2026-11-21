@@ -1,0 +1,32 @@
+Version: 0.5.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.5.0/CoDock-Setup-0.5.0-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.5.0 (2026-09-26)
+    这一版带来两大里程碑特性：跨会话接力（Session Continuity Relay） 与 内置 CoDock MCP 服务（跨 Agent 历史感知与同伴协同）。彻底解决“额度用尽或陷入死循环时换个 Agent 接着干”的断层痛点，并打破 Agent 之间的信息孤岛，开启多 Agent 协同工作流。
+    新功能
+    - 跨会话接力机制（Session Continuity Relay）：
+      - 历史会话列表一键触发：鼠标悬停任意历史条目点击「接力」图标或右键选择「跨会话接力……」。
+      - 自动提炼上下文：智能分析前序会话的 transcript，提取用户首条指令作为任务背景；自动清洗并去重所有涉及文件的工具调用路径并规范化为相对路径；提炼 AI 助手的最终回复与进展结论。
+      - 任意换乘 Agent：自由选择当前启用的其它 Agent（如从 Claude Code 换到 Kimi Code 或 Codex），并实时预览结构化接力 Prompt。
+      - 安全平滑投递：在新 Tab 终端初始化完成后，自动平滑注入上下文并敲击回车，零手动复制粘贴。
+    - 内置 CoDock MCP 服务：
+      - 原生提供标准 Streamable HTTP (http://localhost:9527/mcp) 与 stdio 模式，外部任意支持 MCP 的 Agent（Claude Code、Antigravity、Cursor、Windsurf 等）均可无缝接入。
+      - 提供 4 个核心协同工具：
+        - codock_search_history：在所有 Coding Agent 的历史会话中搜索关键词。
+        - codock_get_session：按会话 ID 获取完整的历史会话结构化记录。
+        - codock_list_active_tabs：查询当前正在 CoDock 运行的活跃终端 Tab。
+        - codock_read_peer_tab：读取其它同伴 Tab 终端的最新输出，实现真正的跨 Agent 分工与同伴协同。
+    官网与文档
+    - hero 上的版本徽章更新为 v0.5.0；工作方式（FLOW）升级为 6 步闭环（开、并、走、回、找、接）。
+    - 新增跨会话接力与内置 MCP 服务特性卡片；屏幕画廊新增接力高清晰截图，支持全屏灯箱放大预览。
+    - README.md 补充跨会话接力与 MCP 接入详细指南。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.5.0
+ReleaseTime: 2026-09-26T02:55:15.0000000Z

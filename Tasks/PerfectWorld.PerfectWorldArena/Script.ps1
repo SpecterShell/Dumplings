@@ -1,28 +1,48 @@
 $Prefix = 'https://client.wmpvp.com/download/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object = Invoke-RestMethod -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($Task.CurrentState.Version)"
+# Version
+$this.CurrentState.Version = $Object1.version
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      # ReleaseNotes (zh-CN)
-      $Task.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotes'
-        Value  = $Object.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
-      }
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    try {
+      $Object2 = (Invoke-WebRequest -Uri "https://pwaweblogin.wmpvp.com/platform/version?v=$($this.CurrentState.Version)").Content | ConvertFrom-Json -AsHashtable
+
+      if ($Object2.data.Contains('content')) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.data.content | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
-  }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Changed|Updated' {
+    $this.Message()
+    $this.Submit()
   }
 }

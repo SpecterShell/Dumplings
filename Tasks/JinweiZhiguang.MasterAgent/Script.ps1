@@ -1,21 +1,22 @@
-$Object = (Invoke-RestMethod -Uri 'https://mastergo.com/api/v1/config').data | ConvertFrom-Json
+$Object1 = (Invoke-RestMethod -Uri 'https://mastergo.com/api/v1/config').data | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object.fontWindow
+$this.CurrentState.Version = $Object1.fontWindow
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://static.mastergo.com/plugins/master-agent/windows/MasterAgentInstall-$($Task.CurrentState.Version).exe"
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "https://static.mastergo.com/plugins/master-agent/windows/MasterAgentInstall-$($this.CurrentState.Version).exe"
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

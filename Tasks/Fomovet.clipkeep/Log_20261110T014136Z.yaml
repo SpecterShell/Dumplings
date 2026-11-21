@@ -1,0 +1,23 @@
+Version: 0.2.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fomovet/clipkeep/releases/download/v0.2.4/clipkeep_0.2.4_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    clipkeep v0.2.4
+    本版本修复资源管理器重命名文件时无法粘贴的问题，并改进固定窗口连续粘贴时的输入位置跟踪。感谢 @Chitose11 提供 #7 的修复。
+    修复
+    - 重命名文件时粘贴：在资源管理器文件夹中重命名文件时，呼出面板不再抢走输入焦点，避免文件名编辑框提前关闭；点击历史记录即可粘贴到文件名编辑框 (#6、#7)。
+    - 固定窗口连续粘贴：在同一窗口内切换输入框后，后续粘贴会跟随新选择的输入位置，避免恢复到上一个输入框。
+    - 重复操作与过期任务：连续点击或重复按粘贴快捷键时，避免同时执行多次粘贴；取消大图片操作后重新呼出面板，旧操作不会继续接管新一轮粘贴。
+    改进
+    - 粘贴前检查原窗口和输入控件是否仍有效，等待修饰键释放并确认焦点；无法安全恢复时停止自动粘贴并提示手动粘贴。
+    - 通过 Esc、关闭按钮或呼出快捷键收起面板时，尝试返回原输入位置；点击其他软件导致自动隐藏时保留用户新选择的窗口。
+    - 粘贴或焦点恢复失败时显示错误；面板已经隐藏的错误会在下次打开时提示。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fomovet/clipkeep/releases/tag/v0.2.4
+ReleaseTime: 2026-11-10T01:10:23.0000000Z

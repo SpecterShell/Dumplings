@@ -1,0 +1,211 @@
+Version: 3.7.4
+Installer:
+- InstallerUrl: https://github.com/AviSynth/AviSynthPlus/releases/download/v3.7.4/AviSynthPlus_3.7.4_20250324.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Additions and changes:
+    - Bump year to 2025
+    - AddBorders and LetterBox: add transient filtering See :doc:AddBorders <corefilters/addborders>.
+    - new filter: MultiOverlay. Bulk copy-paste from clips. See :doc:MultiOverlay <corefilters/multioverlay>.
+    - Animate: Custom function option. See :doc:Animate <corefilters/animate>.
+    - Animate: more precise granularity for integer interpolation, allow 64 bit input
+    - Animate: add proper rounding for integer interpolation
+    - Resizers: add "force" integer parameter to force the resizing process even if Avisynth decides it is not needed
+    - Resizers: respect _ChromaLocation, and "placement" parameter which to adjust chroma locations during resizing
+    - Resizers: add "keep_center" parameter to disable pixel center position adjustments
+    - Resizers: allow arbitrary dimensions; the filter "support" size does not limit usability, no more
+      "image height is too small for this resizing method"-like error messages.
+    - GaussResize: add "b" and "s" parameters See :doc:Resize Filters <corefilters/resize>.
+    - DirectShowSource new parameter utf8 for utf8 filename support
+    - "propShow" font, text_color, halo_color, bold new parameters for custom style.
+    - "propShow" (#366): x, y, align new parameters for custom positioning.
+    - "propShow" props new parameter for filtering the name of property list with wildcard and regex support.
+      See :doc:propShow <corefilters/propShow>.
+    - "propDelete" and "propCopy": props accepts wildcard and regex for filtering the name of property list.
+      See :doc:Internal functions: frame properties <syntax/syntax_internal_functions_frame_properties>.
+    - "Info": cpu new parameter to disable showing CPU capabilities
+    - "Info" (#366): x, y, align new parameters for custom positioning
+    - Fix #368 Make proper vertical alignment for multiline text in Subtitle and Text
+      when vertical alignment is set to bottom or center.
+    - Studio RGB (narrow, limited) range will now be recognized (through _ColorRange=1)
+      and utilized in conversions to and from RGB, such as in GreyScale, ConvertToY, ConvertToYUVxxx,
+      or ConvertToRGB32 with PC.xxx matrix which now keeps the limited/narrow-rangeness of the source.
+      See also BugFix section.
+    - #392 "break" and "continue" in for-next and while loops
+    - Add "ArraySort" for sorting simple bool, numeric or string arrays
+    - SoundTouch: Increased the max number of channels to 32ch from the old limit of 16ch.
+    - Posix: Detect additional plugindirs from LD_LIBRARY_PATH environment variable
+    - #413 Add ListAutoloadDirs() script function returing a LF delimited string with directory list.
+    - SubTitle to accept real LF (\r) or CR LF (\r\n) control characters for line break.
+    - #422 Give meaningful and stopping error message when a bad C++ plugin is throwing exception
+      during autoload (e.g. wrong function signatures, crash because of using unsupported interface calls).
+      This kind of loading error is treated similarly fatal like mixing 32 and 64 bit plugins.
+    - #413 Add 64 bit data types (https://github.com/AviSynth/AviSynthPlus/issues/423)
+      - (technical) Value (AVSValue) types i and f are kept and still mean 32 bit integer and float values.
+      - (technical) New value types l and d added to mark 64 bit integer and double types.
+      - Integer decimal constants are automatically promoted to long (int64_t) if they do not fit into integer.
+        Integer decimal constants are automatically promoted to 64 bit double if they do not even fit into a 64 bit long.
+        (But values stored as 'only' integers behave as 64 bit long in math operations).
+      - New syntax element L (or l) suffix for hexadecimal constants for interpreting 64 bit data ($800000001010L)
+        Hexadecimal literals without L suffix still remain 32 bit integers. This ensures compatibility so that
+        color constants exceeding $7FFFFFFF (such as $FFFFFFFF) are still interpreted as 32-bit
+        integers and not as 64-bit long integers.
+      - Floating point constants (literals) stored as 64 bit double (formerly only with 32 bit float precision)
+      - IsInt() returns true for any 32 or 64 bit integer
+      - IsLongStrict() returns true only if underlying variable is long (64 bit integer)
+      - IsFloat() returns true for any 32 or 64 bit floating point content (float or double and for any integers - as before)
+      - IsFloatfStrict() returns true only if value is exactly a 32 bit single-precision float.
+      - Float() by default casts to double, but 32-bit floating point numbers are kept in 32-bit float format
+        (no automatic float-to-double conversion).
+      - New Double() converts always to 64 bit double
+      - New Floatf() converts always to 32 bit float
+      - New Long() converts always to 64 bit long
+      - New IntI() converts always to 32 bit integer
+      - Function Pi returns real double precision constant.
+      - VersionNumber() still returns a 32-bit float, but the exact value is adjusted slightly for compatibility
+        reasons. This is because the script constant 2.6 is now stored in 64-bit double precision, which can cause issues when
+        compared to a 32-bit float version of 2.6. For example, to ensure 2.6 (double) >= 2.6f (float) and
+        avoid breaking scripts that contain IsAvs26 = VersionNumber() >= 2.6 .
+      - Floating point mathematical functions (Sin, etc..) return double precision results.
+      - Floating point arithmetic (addition, subtraction, multiplication, division) uses double precision, except when both operands
+        are 32-bit floats, in which case the result is also a 32-bit float.
+        (32-bit float / 32-bit float results in a 32-bit float)
+      - Integer mathematical operation operate on 64 bit data.
+        When result is within a 32 bit integer range, it is stored as 32 bit integer internally, which is
+        automatically promoted to 64 bit long if needed.
+      - For-loops are using 64 bit integer for initial value, step and end-value.
+      - Animate: using 64 bit precision inside.
+      - Bit-related functions now have distinctly named 64-bit integer versions, while the old ones continue to work with plain 32-bit integers.
+        - BitAnd64, BitNot64, BitOr64, BitXor64,
+        - bitshl64, bitsal64: shift left (providing two versions; though arithmetic and logical is the same)
+        - bitshr64, bitsar64: shift right logical and arithmetic
+        - bitrol64, bitror64: 64 bit rotation left and right
+        - BitChg64, BitClr64, BitSet64, BitTst64, change, clear, set, test
+        - bitsetcount64 counts the set bits (or sum of set bits) of one or more parameter values.
+      - New: HexValue64() for 64-bit long result. The original HexValue() keeps returning 32 bit integer
+        so HexValue("FFFFFFFF") is still -1, but HexValue64("FFFFFFFF") will be 4294967295 (64 bit number)
+      - Integer and float frame property read and writes work on real 64 bit integers and doubles.
+      - Formatting functions (String(), etc.) to 64 bit data type aware.
+      - AudioLength() now returns 64 bit integer
+      - AudioLengthF() returns data to double instead of 32 bit float (though it's now useless and still can lose precision).
+      - Function parameter types (function signature) keep i and f, but accept 64 bit long and double
+        precision parameters transparently.
+      - String length can exceed the value of a 32 bit int. StrLen() returns long if int cannot hold the length.
+        LeftStr, RightStr, MidStr length parameters accept 64 bit long values.
+      - Compatibility: 64 bit parameter values are automatically replaced with 32 bit int and 32 bit float if Avisynth 2.5 or
+        old (pre-V11, non-64-bit aware) C interface is detected. Such plugins will see the good old 32 bit data.
+      - Backport the frame property changes from VapourSynth API4
+        - new saturated frame property getters on API returning only 32 bit data: propGetIntSaturated and propGetFloatSaturated
+        - A frame property with data type can hold a string or real binary data.
+          To distinguish between the two kinds, a hint can be set with a new API version of propSetDataH, which helps visualizing and later: exporting.
+        - propShow displays binary buffer instead of string if the internal subtype is set to Binary.
+          The buffer length and the first (up to) 16 bytes are displayed like this: Binary data. Length= xx [00,01,DD, ...]
+          A string content is displayed otherwise.
+        - Since propSet script function in Avisynth is string-only, it sets the hint to DATATYPEHINT_UTF8
+          (utf8 just hinting that this is a string)
+    - WinInstaller: add InnoSetup script for Windows on ARM
+    - buildsystem: restrict use of MSVC to x86(-64) only
+    - avs/config.h: add defines to separate X86 and ARM Windows variants
+    - PluginManager: only enable +GCC plugindir registry entries on X86
+    - PluginManager: indent cosmetics for clarity
+    - Restore AVS_VERSION define
+    Build environment and Interface:
+    - add LOONGARCH support
+    - Use system installs of DevIL and SoundTouch on all platforms, remove in-tree binaries/code
+    - avisynth.h: add ListAutoloadDirs() to internal interface declarations
+    - CMakeList.txt to accept Intel C++ Compiler 2025
+    - V11 interface: new 64 bit related AVSValue get and set function in C++ and C interface.
+    - V11 interface: C Interface: implement API for all getter/setter/typecheck for AVS_Value
+    - V11 interface: C interface supports Avisynth+ deep-copy dynamic arrays.
+    - Added optional C plugin init function: to enable full 64 bit data to C plugins, they should implement avisynth_c_plugin_init2.
+    - V11: C interface add avs_add_function_r as an alternative to avs_add_function, allowing the callback
+      to return the result via a by-reference AVS_Value parameter instead of returning the AVS_Value as a struct. (Use case from Python)
+      See :ref:c_avs_add_function_r
+    - V11 interface: add saturated int (int64->int) and float (double->float) frame property reading function to
+      IScriptInterface: propGetIntSaturated, propGetFloatSaturated
+      and prop_get_int_saturated, prop_get_float_saturated to C interface, like in VapourSynth API 4.
+    - V11 interface: "hint" to buffer/string frame properties, like in Vapoursynth API 4.
+      IScriptInterface: propGetDataTypeHint, propSetDataH.
+      C interface: avs_prop_get_data_type_hint, avs_prop_set_data_h.
+      Equivalent functions: VSAPI4.mapGetDataTypeHint = Avisynth.propGetDataTypeHint,
+      VSAPI4.mapSetData = Avisynth.propSetDataH,
+      VSAPI4.mapSetData3 = Avisynth.propSetData.
+    - V11: New enum in headers: AVSPropDataTypeHint (VSAPI4: VSDataTypeHint)
+    - Background modification: env->SaveString can store longer strings than INT_MAX if len is -1 (autodetect length by null termination).
+      Even on 32 bit systems size_t can exceed INT_MAX. (nevertheless, the length parameter - when is given - is still int type)
+    - Shibatch: check for GCC or Clang for MulDiv under MinGW
+    - plugins/CMakeLists.txt: restrict VDubFilter to x86(-64)
+    - plugin/CMakeLists: add CMake detection fallback for SoundTouch
+    - CMakeLists.txt: use extended policy version requirements
+    Bugfixes:
+    - Fix ConvertBits C 16->8 bit (x+round, then bitshift) which turned 0xFFFF into 256 which is 0 (wrong)
+    - Fix ConvertToRGB48/64 debug assert which passed less than adequate parameters to an internal PlanarRGb converter
+    - Fix: Resizers chroma shift if not chroma is not center-positioned (respect _ChromaLocation, and "placement" parameter)
+    - Fix #429 CPU-CUDA transfer would copy less bytes than vfb data_size
+    - Fix: ScriptClip and other runtime functions / frame prop read would crash if called from Avs2.5 or Pre-v11 C
+      IScriptEnvironment, which would happen is there is an old C plugin within ScriptClip
+      The C part was an intermediate development issue, but for Avs 2.5 plugins probably it always crashed.
+    - Fix: audio cache would overflow over int sized count and position differences
+    - Fix: "Info" overflowed and displayed negative hours/minutes/audio length at longer clips, use int64
+    - Fix "SetLogParams" defaults - mentioned in #391
+    - Fix corrupt Turn functions when a planar RGB turn would be followed by a YUV Turn.
+      Regression since TurnXXXX supports planar RGB (2016.08.23; probably since r2081 commit dba954e2de0c9c6218d17fc5c4974f4c28b627c3)
+    - Fix #386: Interleave to call plugin destructor like StackXXXX (memory leak in case of script errors)
+      additional code reorg in r4192
+    - Fix #384: swapped ShowGreen/ShowBlue for planar RGB sources
+    - Fix: allow use of "local" in ConditionalSelect string version (fixed wrong function signature)
+    - "Info" now can display a line which is only partially visible (instead of not showing it at all)
+    - "Text" use "lsp" parameter the same way as in SubTitle: in 1/8 pixel units, not in 1 pixels.
+    - "Text" vertical alignment position would be wrong for multiline strings containing even number of lines.
+    - Fix #365: Avisynth 2.5 plugins when NICE_FILTER would crash with "invalid response to CACHE_GETCHILD_AUDIO_MODE".
+      Regression in 3.7.3 reintroduced audio cache.
+    - Fix #370: array size assert error in ConvertToYUY2 when internally ConvertToYUV422 is called
+    - Leave _ColorRange frame property as-is, when using matrix names "PC.709" or "PC.601", for example in ConvertToRGB32.
+      This, along with narrow-range RGB support, also fixes an old glitch, when a limited range YUV Source
+      (like ColorBarsHD) would be converted to a full-range RGB (RGBs were assumed full range).
+    - Narrow-range RGB support fixes the minor +/-1 bit error in YUV to RGB (and back) matrix conversions
+      for such RGB sources and targets. This error would accumulate if conversions were applied consecutively
+      or mixed with other external conversions.
+    - Fix FadeIn, which behaved like FadeIn2
+    - Fix #418: ShowSMTPE/ShowTime alignment - NO_WIN_GDI case (e.g. Posix)
+    - Fix #421: add safety checks to SuperEQ to match SSRC
+    - Fix #426: An autoloaded function with multiple parameter versions would produce a named parameter error
+      if unnamed parameters were given before the named parameter. For example: TimeStretch(a_clip, rate=100.1)
+    Optimizations:
+    - avoid storing duplicated strings in internal string heap (related to issue #389)
+    - Expr: rewritten the C (non-Intel-JIT) path to support vectorization, if the compiler is capable.
+      Useful for non-Intel platforms where the (Intel SSE2-AVX2) JIT compiler does not work.
+      Expect 3-20x speedup compared to the old method.
+    - Expr: implement tan in JITasm. Expect ~6-15x speed up for an expression like "sxr 2 * 1 - 3.14159254 * 1 * tan 10 * 128 +"
+    - Resizers C implementation: more vectorizer compiler friendly code (1.5 - 2.5 speed, still slooow)
+    - Quicker SSE2 horizontal and vertical resizer
+    - [Un-optimization]: minor speed decrease in other resizers' performance, due to healing a hidden
+      possibility which would allow over-addressing the scan-lines and frame buffer. No wonder the old
+      code, which checked nothing, did well. IMHO the code is still quick.
+    Documentation:
+    - Correct building DirectShowSource prerequisites (Release_MBCS)
+    - Update "DirectShowSource" with utf8 parameter
+    - Update "Info"
+    - Update rst docs with control structs if/else/for/while
+    - Update "ShowTime", "ShowSMPTE", "ShowFrameNumber" section with 3.7.3 changes
+    - Update most items at Syntax and internal functions sections, add arrays, function objects,
+      escaped string literals, multithreading, frame properties, debug functions
+    - Add if-else, do-while, for-next, break and continue
+    - Update Import (add utf8)
+    - update Conditional filters, Runtime functions
+    - update ShowAlpha/Red/...
+    - Update Intel 2024 compiler build process
+    - Add autoload helper functions to rst docs, update content and bring syntax_plugins.rst to new format
+    - update compile_avsplus.rst online docs with Intel C++ Compiler 2025
+    - Interface V11 changes: see :ref:api_v11_whats_new for more details.
+    - Document 64 bit capable functions and changes in old ones in millions of other rst pages.
+    - Document C interface (in progress)
+    - Revamped resizer section :doc:Resize filters <corefilters/resize>
+    - Add instructions for building or using external system installs of SoundTouch and DevIL
+    - and so on...
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AviSynth/AviSynthPlus/releases/tag/v3.7.4
+ReleaseTime: 2025-03-24T19:30:55.0000000Z
+RealVersion: 3.7.4.4273

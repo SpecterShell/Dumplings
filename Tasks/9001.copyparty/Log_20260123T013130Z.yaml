@@ -1,0 +1,21 @@
+Version: 1.20.4
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/9001/copyparty/releases/download/v1.20.4/copyparty32.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/9001/copyparty/releases/download/v1.20.4/copyparty.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - #1235 rightclick-menu: fix creating new files/folders in gridview (thx @SpaceXCheeseWheel!) ffca67f2
+    🔧 other changes
+    - #1229 updated the Esperanto translation (thx @slashdevslashurandom!) 1142ac25
+    - #1232 shares: if an external domain is configured, then show both the LAN and external link for each share 81e5eb7b
+    - #1231 when reverse-proxied, always connection:close (don't reuse tcp/uds connections) e1eff216 b4fddbc3
+      - ^ was a nice reminder to not take every hint from the reverseproxy at face value, and a fresh socket for each request might help avoid such issues altogether
+      - the expected performance impact from this change is near-zero for real use, even if benchmarks confirm a 50% drop in requests/sec in the absolute-worst-case (burst of cheap requests)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/9001/copyparty/releases/tag/v1.20.4
+ReleaseTime: 2026-01-23T01:29:26.0000000Z

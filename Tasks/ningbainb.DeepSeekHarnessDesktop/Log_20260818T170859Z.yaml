@@ -1,0 +1,52 @@
+Version: 2.4.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ningbainb/deepseek-harness-desktop/releases/download/desktop-v2.4.0/DeepSeek-Harness-Desktop-Setup-2.4.0-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness Desktop 2.4.0
+    中文
+    本次亮点
+    - SSH 已连接终端在主机、监控、文件与终端内部视图之间切换时保持挂载和在线，返回终端不再重新建立连接；终端补齐右键粘贴和原生编辑菜单粘贴入口。
+    - 侧边栏左下角下载按钮由桌面壳稳定接管，始终表示“桌面软件更新”。远程插件升级或页面重新渲染不会把它改成插件更新；社区插件更新继续只在扩展坞中进行。
+    - Windows runtime、终端和 pwsh 工具统一继承隐藏控制台宿主，执行 PowerShell 工具时不再闪现额外命令窗口。
+    - 皮肤状态只写入 profiles/desktop 私有补丁。启动时会迁移并清理旧版写入全局 ~/.dsh/cordis.patch.yml 的托管段，保留有效 YAML，官方 dsh web 与桌面端可以继续并存。
+    - 覆盖升级采用关闭回执协议 v2：安装器生成 64 位十六进制随机令牌，桌面端完全停止 DSH runtime、暂停扩展操作并释放资源后，才在 TEMP 固定令牌路径原子写入回执。安装器核对 schema、令牌、旧 PID 和两个完成状态，再等待旧 PID 退出；不支持协议或回执超时的旧版本仍走受限的安装路径/产品身份清理。
+    - 主界面与扩展坞使用独立 preload，并按真实 webContents 身份登记 renderer surface。主界面不暴露插件安装/删除、QQ Bot 凭据操作或技能导入；扩展坞不暴露桌面软件安装更新。Desktop Contract v1 提供 1.0.0 版本与能力表用于功能探测，IPC 身份校验才是权限边界。
+    - 任务看板 schema v2 优先保存到当前 DSH profile 的 state/task-board/tasks-v2.json。Host 写入串行、临时文件回读校验后原子替换，损坏文件移名保留；浏览器通过固定 loopback same-origin 路由读写并用 SSE 接收变更。首次迁移会复制 localStorage v1、回读校验数量和内容哈希后再标记完成，2.4.x 不删除旧数据；Host 不可用时自动回退 v1。定时任务仍由打开的浏览器页面调度，不新增后台补跑。
+    - 安装预检继续兼容 2.2 路径漂移与旧卸载器错误码 2：仅对唯一产品主进程名使用兜底，官方 Web runtime 与无安装路径引用的无关 PowerShell/Node 仍保持受保护。
+    验证
+    - 新增回执协议测试，覆盖令牌格式、固定 TEMP 路径、必要状态、原子发布、不可覆盖已有回执、损坏回执和 Windows 安装清理降级。
+    - 新增 Desktop Contract 能力快照、主/扩展 preload 表面、renderer 注册销毁、未知 surface、越权调用与稳定错误码测试。
+    - 新增任务看板 Host 文件并发写、revision 递增、损坏文件保留、profile 路径约束、固定路由、loopback same-origin 防线、Host 优先、一次性复制、数量/哈希复核、旧数据保留和 Host 离线回退测试。
+    - Windows Desktop CI 使用 Node.js 24，并执行标题栏与官方目录选择器真实 E2E；发布前还会运行全仓类型检查、包测试、脚本测试、运行时依赖闭包、共享源码同步、聚合包/皮肤/社区索引、双语文档、安装包校验、打包态目录选择/关机回执 E2E 和打包运行烟测。
+    下载与校验
+    下载 DeepSeek-Harness-Desktop-Setup-2.4.0-x64.exe，并使用同一 GitHub Release 中的 SHA256SUMS.txt 校验安装包。2.2.0 与 2.3.0 用户可直接覆盖更新；安装器会优先请求受令牌保护的完整关闭，对不支持 v2 的旧实例使用受限兼容清理。应用下载仍由 latest.yml 的可信摘要校验。
+    说明
+    这是社区构建版本，并非 DeepSeek、OpenAI 或腾讯官方发行版。当前安装包未使用商业代码签名证书，Windows SmartScreen 可能显示“未知发布者”，请只从本项目 GitHub Release 获取安装包并核对 SHA-256。Desktop Contract v1 是内部功能探测接口，不是公开插件 SDK；2.4.0 不包含 Task Presets、Worktree 自动化、后台定时调度或完整模型历史持久化。任务看板 v1 数据会保留，方便降级和恢复。
+    English
+    Highlights
+    - Connected SSH terminals remain mounted and online while users switch among host, monitor, file, and terminal views. Returning to the terminal no longer reconnects, and paste is available through both the terminal context menu and the native Edit menu.
+    - The Desktop shell continuously owns the lower-left sidebar download control. It always means a Desktop application update, even after a remote plugin upgrade or renderer refresh; community plugin updates remain confined to Extension Dock.
+    - Windows runtime, terminal, and pwsh tool processes inherit a hidden console host, preventing extra command windows from flashing during PowerShell tool execution.
+    - Skin state is written only to the private profiles/desktop patch. Startup migrates and removes legacy managed sections from global ~/.dsh/cordis.patch.yml, keeps the YAML valid, and preserves coexistence with official dsh web.
+    - In-place updates use shutdown receipt protocol v2. The installer creates a random 64-character hexadecimal token. Desktop atomically publishes a receipt at the fixed token-derived TEMP path only after the DSH runtime is stopped, extension operations are quiesced, and resources are disposed. The installer validates schema, token, expected old PID, and both completion flags before waiting for that PID to exit. Unsupported legacy releases and receipt timeouts fall back to the constrained install-root and product-identity cleanup.
+    - The main surface and Extension Dock use separate preloads and register their live webContents identities. Main has no plugin install/remove, QQ Bot credential, or skill-import bridge; Extension Dock has no Desktop application update installer. Desktop Contract v1 exposes version 1.0.0 and capability snapshots for feature detection, while sender identity and channel allowlists remain the authorization boundary.
+    - Task Board schema v2 prefers state/task-board/tasks-v2.json inside the active DSH profile. Host writes are serialized, verified from a complete temporary file, and atomically replaced; corrupt documents are renamed aside. The browser uses fixed loopback same-origin routes and SSE mutation events. The first migration copies localStorage v1, reads it back, verifies count and content hash, and only then records completion. Version 2.4.x retains v1 and falls back to it whenever Host storage is unavailable. Scheduling remains in the open browser page and does not gain background replay.
+    - Installer preflight retains compatibility with path-drifted 2.2 processes and legacy uninstaller error code 2. The unique product executable name is the only name-based fallback, while the official web runtime and unrelated PowerShell or Node processes without an install-path reference remain protected.
+    Verification
+    - Receipt tests cover token syntax, the fixed TEMP path, mandatory shutdown states, atomic publication, refusal to overwrite an existing receipt, corrupt input, and the Windows legacy-cleanup fallback.
+    - Desktop Contract tests snapshot every capability map and cover split preload surfaces, renderer registration and destruction, unknown senders, cross-surface denial, and stable error codes.
+    - Task Board tests cover concurrent Host writes, revision ordering, corrupt-file preservation, profile path validation, fixed routes, the loopback same-origin fence, Host preference, one-time copy, count/hash verification, v1 retention, and offline fallback.
+    - Windows Desktop CI runs on Node.js 24 and includes real title-bar and official directory-picker E2E checks. Release gates also run repository type checks, package tests, script tests, runtime dependency closure, shared-source synchronization, aggregate/skin/community generation checks, bilingual documentation validation, packaged-payload verification, packaged directory-picker and shutdown-receipt E2E checks, and a packaged runtime smoke test.
+    Download and verification
+    Download DeepSeek-Harness-Desktop-Setup-2.4.0-x64.exe and verify it with SHA256SUMS.txt from the same GitHub Release. Users on 2.2.0 and 2.3.0 can install in place. The installer first requests the token-protected complete shutdown and uses the constrained compatibility cleanup only for instances that do not support v2. Downloaded artifacts remain authenticated by the trusted digest in latest.yml.
+    Notice
+    This is a community build and is not an official DeepSeek, OpenAI, or Tencent distribution. The installer does not currently use a commercial code-signing certificate, so Windows SmartScreen may show an unknown publisher. Download only from this project's GitHub Releases and verify SHA-256. Desktop Contract v1 is an internal feature-detection bridge, not a public plugin SDK. Version 2.4.0 does not include Task Presets, Worktree automation, background scheduling, or full model-history persistence. Task Board v1 data is retained for rollback and recovery.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ningbainb/deepseek-harness-desktop/releases/tag/desktop-v2.4.0
+ReleaseTime: 2026-08-18T15:24:13.0000000Z

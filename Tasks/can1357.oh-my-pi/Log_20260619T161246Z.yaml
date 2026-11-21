@@ -1,0 +1,77 @@
+Version: 16.1.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.1.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added regression test pinning that openai-completions emits a thinking block for reasoning_content deltas even when delta.content is explicitly JSON null (the DeepSeek-format dual-key pattern used by custom GLM/Qwen reasoning providers). See #2996.
+    Changed
+    - Improved the thinking loop guard to treat assistant text loops as retryable errors
+    - Refined text normalization logic to reduce false positives in the thinking loop detector
+    Fixed
+    - Fixed Ollama chat requests sending image payloads to text-only models. Image blocks are now omitted and replaced with the standard non-vision placeholder for models without vision support, while vision-capable Ollama models continue to receive images. (#3009 by @serverinspector)
+    - Fixed SqliteAuthCredentialStore.close() leaking one-off prepared statements created by inline this.#db.prepare() calls in #authCredentialsTableExists, #readAuthSchemaVersion, #inferAuthSchemaVersion, #migrateAuthSchemaV0ToV1, #backfillCredentialIdentityKeys, and updateAuthCredential. Each statement is now wrapped in try/finally with stmt.finalize(), and the close() method finalizes #insertUsageCostStmt and #listUsageCostsStmt which were previously missed. This caused EBUSY on Windows when tests tried to delete temp dirs containing open SQLite handles.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Marked Ollama Cloud catalog models to omit on-the-wire output-token caps, preventing context-window-sized num_predict values from causing HTTP 400s for models whose true output cap is not discoverable. (#2984)
+    - Fixed readModelCache/writeModelCache using a process-global shared database even when a custom dbPath was provided. Custom-path cache operations now open and close a per-call database via withModelCacheDb, preventing leaked SQLite handles on Windows
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - Refactored Perplexity authentication logic to prioritize cookies over OAuth in search operations
+    - Updated token command to correctly display active Perplexity OAuth tokens when present
+    Fixed
+    - Enabled auto-retry for AI "thinking loop" errors encountered during model inference
+    - Cleared stale error banners automatically when triggered by an auto-retry recovery phase
+    - Preserved bundled omitMaxOutputTokens policy when fresh cached provider discovery rows replace Ollama Cloud catalog models, so stale models.db entries cannot re-enable context-window-sized num_predict values. (#2984)
+    - Normalized cached-only Ollama Cloud discovery rows to omit on-the-wire output-token caps even when the cached model id has no bundled catalog entry. (#2984)
+    - Fixed Ollama, LM Studio, and llama.cpp (plus loopback vLLM / sglang servers) reprocessing the full prompt on every turn because provider.appendOnlyContext: auto only recognized DeepSeek and Xiaomi as prefix-cache providers. The auto-detect now enables append-only mode for ollama, ollama-cloud, lm-studio, llama.cpp, and any baseUrl resolving to a loopback/RFC1918/.local host, so the system prompt + tool catalogue + prior-turn message bytes stay byte-stable across turns and llama.cpp's KV-cache prefix reuse can hit (#3033).
+    - Isolated mnemopi's local embedding provider in a dedicated Bun.spawn subprocess so onnxruntime-node and fastembed never load into the main agent process. Previously memory.backend: mnemopi crashed Bun on Windows — standalone binaries faulted in the NAPI process.dlopen constructor at session start, npm installs faulted in the NAPI finalizer at process teardown. Mirrors the tiny-model isolation pattern from #1607; the parent SIGKILLs the child on dispose so the destructor never runs in either address space (#3031).
+    - Fixed image tool registration resolving image provider credentials during session startup, so broken or slow google-antigravity OAuth state no longer blocks sessions that never invoke generate_image (#3036).
+    - Fixed LSP client returning -32601 Method not found for defined server→client requests (window/showMessageRequest, window/showDocument, workspace/{semanticTokens,inlayHint,codeLens,codeAction,diagnostic}/refresh). Servers that stall waiting for a real reply (same failure mode as #3029) now receive the spec no-op result (#3044).
+    - Fixed WebP images being sent unchanged to local-server vision models, which can fail through llama.cpp/STB-backed decoders that do not support WebP (#2922).
+    - Made getSettingsListTheme, getEditorTheme, getSelectListTheme, and getSymbolTheme return a plain ASCII fallback instead of crashing with "undefined is not an object (evaluating 'theme.fg')" when the global theme is undefined — e.g. when a plugin calls them before initTheme() completes or from a separate module instance under npm-global installs. (#2998)
+    - Hardened TTS, STT, and tiny-title worker IPC send() paths against async EPIPE rejections: Subprocess.send() is now wrapped so neither a synchronous "process exited" throw nor an asynchronous EPIPE rejection (when the pipe breaks between exit being observed and the next send) can escape as a fatal unhandled rejection. A dying Kokoro/TTS/STT worker can no longer crash the whole agent session mid-task. (#2997)
+    - Fixed Windows test failures caused by path handling: tests now use pathToFileURL, path.resolve, and path.join instead of hard-coded POSIX paths; shortenPath() normalizes backslashes to forward slashes after ~ and respects home directory boundaries; shell-escaped interpolated paths in bash tool tests to prevent Git Bash eating backslashes
+    - Fixed HistoryStorage.resetInstance() leaking its SQLite database handle on Windows by adding a #close() method that finalizes all prepared statements and closes the database; AgentStorage gained the same resetInstance()/#close() pattern
+    - Fixed createAgentSession leaking the internally-created AuthStorage when session construction fails before the session takes ownership, causing EBUSY on Windows temp dir cleanup
+    - Fixed MnemopiBackend.removeDbFiles() throwing on Windows when the database handle is still being released; it is now truly best-effort (logs failures instead of silently swallowing)
+    - Fixed Windows EBUSY test failures by replacing raw fs.rmSync/fs.rm cleanup with TempDir (which retries) and best-effort .catch(() => {}) where SQLite handles outlive the test
+    - Fixed TempDir prefix convention: non-@ prefixes created temp dirs relative to cwd instead of os.tmpdir(), causing module resolution failures on Windows
+    - Fixed git line-ending mismatches in autoresearch tests by setting core.autocrlf false in test repo initialization
+    - Fixed Bedrock inference-profile ARN models being dropped from the allowed-model set when models were scoped via enabledModels, the SDK, or ACP, so an accepted ARN no longer resolves to an empty selection. (#3006)
+    @oh-my-pi/pi-mnemopi
+    Added
+    - Exposed setLocalModelInitializer (and the LocalEmbeddingModel, LocalModelInitializer, LocalModelInitOptions, StandardEmbeddingModel types) so hosts can route fastembed loads through a dedicated subprocess and keep onnxruntime-node's NAPI constructor + finalizer out of their own address space. Same wipe semantics as the existing setLocalModelInitializerForTests seam; the agent CLI uses it to crash-proof Windows when memory.backend: mnemopi is enabled (#3031).
+    Fixed
+    - Fixed background fact extraction skipping runtime-configured remote LLM endpoints when MNEMOPI_LLM_BASE_URL was unset, so remember(..., { extract: true }) now stores remote-distilled facts from mnemopi.llm config instead of falling back to regex heuristics. (#3041)
+    - Fixed local fastembed startup on macOS ARM64 by letting fastembed@2.1.0 install its matching onnxruntime-node@1.21.0 native runtime instead of forcing 1.26.0, and by repairing missing tokenizer sidecars from the upstream Hugging Face model cache when a stale fastembed archive lacks them. (#3054)
+    @oh-my-pi/pi-utils
+    Changed
+    - Expanded the TempDir Windows retry window from 4×10ms to 40×25ms (1s total) to accommodate SQLite WAL/SHM file handle release delays
+    Fixed
+    - Made EPIPE rejections from IPC send() to worker subprocesses (syscall: "send") non-fatal: the global unhandledRejection handler now logs and continues instead of terminating the session when an optional subsystem's pipe breaks. A broken optional subsystem (TTS/STT/tiny-title/MCP) can no longer crash the whole agent session mid-task. (#2997)
+    What's Changed
+    - fix(providers): accept Bedrock inference profile ARNs by @roboomp in https://github.com/can1357/oh-my-pi/pull/3006
+    - fix(ai): omit Ollama images for text-only models by @serverinspector in https://github.com/can1357/oh-my-pi/pull/3009
+    - fix: Windows test failures — path handling, EBUSY, SQLite handle leaks by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3019
+    - test(ai): pin reasoning_content contract for null content deltas (#2996) by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3020
+    - fix(ipc): harden worker IPC send against async EPIPE rejections (#2997) by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3021
+    - fix(coding-agent): re-encode WebP for local-server models by @danzaio in https://github.com/can1357/oh-my-pi/pull/3023
+    - fix(coding-agent): guard theme getters against undefined theme before init (#2998) by @oldschoola in https://github.com/can1357/oh-my-pi/pull/3026
+    - fix(mnemopi): isolate local embeddings worker in subprocess by @roboomp in https://github.com/can1357/oh-my-pi/pull/3034
+    - fix(coding-agent): delay image credential lookup until execution by @roboomp in https://github.com/can1357/oh-my-pi/pull/3037
+    - fix(coding-agent): auto-enable append-only context for Ollama and local servers by @roboomp in https://github.com/can1357/oh-my-pi/pull/3038
+    - fix(mnemopi): use runtime remote LLM for extraction by @roboomp in https://github.com/can1357/oh-my-pi/pull/3042
+    - fix(catalog): omit Ollama Cloud output caps by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/3043
+    - fix(lsp): reply to defined server requests with spec no-ops by @roboomp in https://github.com/can1357/oh-my-pi/pull/3045
+    - fix(mnemopi): restore local fastembed runtime on macOS by @roboomp in https://github.com/can1357/oh-my-pi/pull/3055
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.1.2...v16.1.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.1.3
+ReleaseTime: 2026-06-19T16:08:00.0000000Z

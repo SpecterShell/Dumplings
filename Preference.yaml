@@ -1,0 +1,53 @@
+WinGetOriginRepoOwner: SpecterShell
+PowerShellModules:
+- PowerHTML
+- powershell-yaml
+DefaultParameterValues:
+  "Invoke-WebRequest:ConnectionTimeoutSeconds": 15
+  "Invoke-WebRequest:OperationTimeoutSeconds": 15
+  "Invoke-WebRequest:MaximumRetryCount": 3
+  "Invoke-WebRequest:RetryIntervalSec": 3
+  "Invoke-RestMethod:ConnectionTimeoutSeconds": 15
+  "Invoke-RestMethod:OperationTimeoutSeconds": 15
+  "Invoke-RestMethod:MaximumRetryCount": 3
+  "Invoke-RestMethod:RetryIntervalSec": 3
+  "Invoke-WinGetDeliveryOptimizationDownload:ConnectionTimeoutSeconds": 15
+  "Invoke-WinGetDeliveryOptimizationDownload:OperationTimeoutSeconds": 60
+  "Invoke-WinGetDeliveryOptimizationDownload:MaximumRetryCount": 3
+  "Invoke-WinGetDeliveryOptimizationDownload:RetryIntervalSec": 3
+  "Invoke-WinGetDeliveryOptimizationDownload:MaximumRetryDelaySeconds": 30
+  "Invoke-WinGetDeliveryOptimizationDownload:MaximumTotalRetryDelaySeconds": 60
+  "Invoke-WinGetWinINetDownload:ConnectionTimeoutSeconds": 15
+  "Invoke-WinGetWinINetDownload:OperationTimeoutSeconds": 60
+  "Invoke-WinGetWinINetDownload:MaximumRetryCount": 3
+  "Invoke-WinGetWinINetDownload:RetryIntervalSec": 3
+  "Invoke-WinGetWinINetDownload:MaximumRetryDelaySeconds": 30
+  "Invoke-WinGetWinINetDownload:MaximumTotalRetryDelaySeconds": 60
+  "Get-RedirectedUrls:ConnectionTimeoutSeconds": 15
+Timeout: 10800
+# GitHub users whose matching WinGet PRs block a new submission. Leave null to
+# retain the default behavior where every author except the token owner blocks.
+# Set this to [] to let all PRs from other users coexist with a new submission.
+WinGetBlockingPullRequestUsers:
+- SpecterShell
+# Opt in only for packages missing from the reference repo. Task Config.yaml
+# can override each setting, including disabling a globally enabled fallback.
+WinGetPendingPackageFallback: true
+WinGetPendingPackageAction: UpdatePullRequest
+WinGetPendingPackageTrustedUsers:
+- SpecterShell
+- spectopo
+WinGetPendingPackageSearchLimit: 30
+# Existing packages keep new-PR submission unless UpdatePullRequest is selected.
+WinGetExistingPackageAction: NewPullRequest
+WinGetExistingPackageTrustedUsers:
+- SpecterShell
+- spectopo
+WinGetExistingPackageSearchLimit: 30
+WebDriverLeaseDurationSeconds: 60
+PlaywrightLeaseDurationSeconds: 60
+PlaywrightOperationTimeoutMilliseconds: 30000
+MessageQueueIntervalSeconds: 1
+MessageQueueMaximumRetryDelaySeconds: 30
+MessageQueueMaximumTotalRetryDelaySeconds: 60
+MessageQueueDrainTimeoutSeconds: 300

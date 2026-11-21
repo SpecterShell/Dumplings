@@ -1,0 +1,29 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.5/Sessions.Viewer_0.2.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.5/Sessions.Viewer_0.2.5_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.2.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Pin / sink individual sessions — each session card in the list gains "Pin to top" (▲) and "Send to bottom" (▼) actions, mirroring the project-level pin/sink. Pinned sessions float to the top with a brand accent stripe; sunk sessions dim and fall to the bottom. Ordering is a stable sort layered over the existing mtime / search-relevance order (pinned → normal → sunk), the state is per-agent (keyed by agent::path) and persisted to localStorage, and toggling the active state clears it. Because the list is paginated by mtime, pinning a session only reorders the sessions already loaded — scroll far enough to load an old session and it floats up as expected. The per-card refresh button was removed to make room; refresh still lives in the list header.
+    Performance
+    - Virtual-scrolled chat transcript — long sessions (thousands of messages) used to mount every .msg-row at once (tens of thousands of DOM nodes) and run all the Markdown / Shiki / Mermaid work synchronously on first paint, so opening and scrolling a big session stalled. The chat view now renders only the visible window plus an overscan buffer via @tanstack/vue-virtual, with per-row heights measured dynamically (offsetHeight, not getBoundingClientRect — the app's body { zoom: 0.9 } makes the latter under-measure by ~10% and visibly overlap rows) so async-expanding code blocks, images, and diagrams re-measure and self-correct without leaving gaps. Jump-to-message, flash-to-message, and scroll-to-bottom were re-implemented on top of the virtualizer's scrollToIndex.
+    - Cached Markdown rendering — renderText is now wrapped in a bounded (3000-entry) LRU cache keyed by raw text, so a message re-mounting as it scrolls in and out of the virtual window costs zero re-parsing instead of re-running the whole Markdown/table pipeline each time.
+    - Faster session-list scan for large Claude projects — switching into a project with many multi-tens-of-MB transcripts took ~10–16s. Three fixes: (1) the page window is scanned in parallel across cores with rayon (order preserved); (2) per-line scanning reads raw bytes with a reused buffer and pulls type / cwd from a cheap 4KB prefix scan (json_str_field_prefix) instead of serde-parsing every line — message bodies can be hundreds of MB, and full-parsing them was the root of the stall; only the few lines that actually need the title / custom-title / attachment get a full parse; (3) scan() results are cached by (mtime, size), so re-entering an unchanged project returns instantly.
+    - Watcher no longer re-reads on unrelated writes — because the live watcher subscribes to the session file's parent directory, any sibling session being appended fired an event that triggered a full read_session of the (possibly tens-of-MB) target file, pinning CPU. process_change now compares a cheap (mtime, size) fingerprint first and short-circuits when the target file is unchanged; real appends change the fingerprint and are read as before.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v025
+ReleaseTime: 2026-07-04T14:32:41.0000000Z

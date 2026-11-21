@@ -1,0 +1,28 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/PBH-BTN/PeerBanHelper/releases/download/v7.0.2/PeerBanHelper_windows-amd64_7.0.2.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/PBH-BTN/PeerBanHelper/releases/download/v7.0.2/PeerBanHelper_windows-aarch64_7.0.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这是一个常规累积错误修复更新。
+    优化
+    - 缓解当 BitComet 运行大量种子并连接大量 Peers 时，引发 PeerBanHelper 内存耗尽的问题 @Ghost-chu
+      - qBittorrent 也一同获得了类似的优化
+    - 创建 IPMatcher 时，合并去重规则以节省内存空间并提升运行速度 @Ghost-chu
+    错误修复
+    - 修复从网络更新 IP 规则时，有时检查缓存没有清除的问题，这可能导致封禁不及时 @Ghost-chu
+    - 修复 AvaitorScript 未正确注册类的静态方法的问题 @Ghost-chu
+    - 修复用户输入 appId 和 appSecret 时的空格问题，现在实际请求时将先进行 trim 操作 @Ghost-chu
+    - 修复 BitComet 的封禁列表超过 32KB 的时候无法继续封禁的问题 @Ghost-chu
+    - 修复连接 BitComet 下载器时，不会自动启用 BitComet 的 IP 过滤器的问题 @Ghost-chu
+    兼容性
+    - 添加并验证兼容 BitComet for Android v2.4.0 (20241031) @Ghost-chu
+    Docker
+    DockerHub: ghostchu/peerbanhelper:v7.0.2 阿里云国内镜像加速：registry.cn-hangzhou.aliyuncs.com/ghostchu/peerbanhelper:v7.0.2
+- Key: ReleaseNotesUrl
+  Value: https://github.com/PBH-BTN/PeerBanHelper/releases/tag/v7.0.2
+Version: 7.0.2
+ReleaseTime: 2024-11-02T16:43:09.0000000Z

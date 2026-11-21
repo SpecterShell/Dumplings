@@ -1,0 +1,69 @@
+Version: 0.9.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.9.6/Agentero_0.9.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.9.6/Agentero_0.9.6_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release centers on dual-pane PDF translation, a clearer Agent chat experience, and broader scholarly sources: layout translations can sit beside the original in a workspace split with bidirectional scroll sync; Agent replies fold reasoning, plans, and tools into a chain-of-thought, tables gain copy/download/fullscreen actions, and the built-in catalog moves from Gemini CLI to Antigravity. The library adds a citation-count column and PubMed / bioRxiv / medRxiv coverage. It also fixes missing NOTES after restart, incomplete layout translations, and updates that installed a stale release after long sessions.
+    Features
+    - Dual-pane PDF translation: With the setting on, open a workspace split that keeps the original PDF beside the layout translation with bidirectional scroll sync; a standalone translation window is also available, and the preference persists in Host settings. (92b903ca, 5550bbd5, 80ebab45, e76cef5a, #466 by @Phil-Fan)
+    - Agent chain-of-thought UI: Reasoning, plans, and tool calls fold into one chain-of-thought with a compact streaming activity row and elapsed time; hover-to-expand, error badges, and reply thinking orbs make the transcript easier to scan. (357773af, 6c853e34, 644c04d4, #480 by @Phil-Fan)
+    - Message table actions: Tables in Agent messages and reasoning render as PlainTable with copy, download, and fullscreen actions. (b6e268f6, 94677463 by @Phil-Fan)
+    - Antigravity CLI: The built-in catalog replaces Gemini CLI with Antigravity (agy-acp), migrates legacy registrations, and routes install / update / uninstall through the npm adapter path, with docs updated to match. (d7d7f95d, 67e49716, #468 by @Phil-Fan)
+    - Reasoning effort picker: Choose ACP thought_level / reasoning effort from the model-selector header, remember explicit picks per agent, and fall back to the highest available tier when unset. (e100f3b0, bd8bd6ca, #470 by @qychen2001)
+    - Library citation counts: The papers library table gains a citation-count column for quick impact scanning and sorting. (2056aa02 by @Phil-Fan)
+    - PubMed / bioRxiv sources: Scholarly search and import add PubMed and bioRxiv / medRxiv, with multi-source ApiPaper merge and scope-based title-search fusion. (d92cad0c, 9c010212 by @Phil-Fan)
+    Improvements
+    - Auto-discover Agents in the sidebar: Catalog scans now register Agents already on PATH but missing from the registry, and the sidebar probes them so the switcher fills without opening Settings first. (e598aa48, a48ffb0d, #482 by @Phil-Fan)
+    - History and switcher polish: Empty sessions are dropped with an empty-state message; Agent options sort alphabetically; switching Agents no longer inserts a system notice, and reply bubbles no longer repeat the identity label. (cb0de6e9, 0c7612c6, 19904af3, aa17a9e4 by @Phil-Fan)
+    - Unsupported Agent notes: Docs and Vault onboarding notes clarify that the Codex desktop app and WorkBuddy are not direct in-app ACP Agents today (Codex CLI via codex-acp remains supported). (700fba77, 09aa5cf5, #473 by @Phil-Fan)
+    Fixes
+    - Login-shell / relay ACP: Local ACP children inherit login-shell environment variables so tools that depend on user shell config (such as relay proxies) connect correctly; Agent tool install lifecycles also honor the configured proxy. (21b89633, 6e76b7ed, #478 by @Phil-Fan)
+    - Missing NOTES after restart: When restored tab state drifts from the dock, or a placeholder tab’s first click only activates without opening notes, NOTES reopens with the reading layout. (#476 by @bet4it)
+    - Complete, retryable layout translation: Preserve full source text, split oversized blocks, and retry failed units while keeping partial successes with an explicit partial state; incomplete OpenAI finish_reason values are rejected so smaller chunks can retry, avoiding clipped overlays and stale runs overwriting newer results. (#477 by @jiah0231)
+    - Stale update installs: Re-check the signed remote manifest before installing so long-running sessions still get the latest release, falling back to the cached manifest when offline. (7b843c14, #481 by @qychen2001)
+    - History scope and titles: Agent history is limited to the current Vault / directory; untitled items fall back to the first user prompt instead of a session-id prefix. (2664acf5, #483, #484 by @Phil-Fan)
+    - Prompt display noise: User-prompt display and selection backfill strip harness reminder and context blocks so only readable body text remains. (e39fb00f by @Phil-Fan)
+    - Dual-pane translation sync: Harden dual-pane initialization, PDF byte copies, and scroll sync; refresh the sidecar when the translation tab becomes active and reuse the source pane’s layout result. (b008df5b, aa42fda9, b4bf7440, 2a785db0 by @Phil-Fan)
+    - pi-acp host sync: Keep the pi-acp adapter aligned when the pi host updates so ACP calls do not drift. (4909b0f7, #471 by @Phil-Fan)
+    - Reasoning list indentation: Restore list indentation inside chain-of-thought reasoning content. (e856ec07 by @Phil-Fan)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.9.5...v0.9.6
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布围绕 PDF 双栏翻译、Agent 对话体验与学术数据源展开：版面翻译可在工作区分屏对照阅读并双向滚动同步；Agent 将推理 / 计划 / 工具折叠为思维链，消息表格支持复制与导出，内置目录从 Gemini CLI 切换为 Antigravity；文献库新增引用数列，并接入 PubMed 与 bioRxiv / medRxiv。同时修复重启后 NOTES 面板缺失、版面翻译截断或不完整、以及长时间运行后更新装到旧版本等问题。
+    新功能
+    - PDF 双栏翻译：开启设置后可在工作区以分屏标签对照原文与版面翻译，双栏双向滚动同步；也可在独立功能窗口中打开翻译视图，设置项会持久化到 Host。（92b903ca、5550bbd5、80ebab45、e76cef5a、#466 by @Phil-Fan）
+    - Agent 思维链对话 UI: 将推理、计划与工具调用折叠为统一思维链，流式过程显示紧凑活动行与耗时；悬停展开、错误态徽章与回复思考动画一并整理，对话更易扫读。（357773af、6c853e34、644c04d4、#480 by @Phil-Fan）
+    - 消息表格操作：Agent 消息与推理内容中的表格以 PlainTable 渲染，支持复制、下载与全屏查看。（b6e268f6、94677463 by @Phil-Fan）
+    - Antigravity CLI: 内置目录以 Antigravity（agy-acp）取代 Gemini CLI，并迁移旧注册项；安装 / 更新 / 卸载走 npm 适配器路径，文档同步更新。（d7d7f95d、67e49716、#468 by @Phil-Fan）
+    - 推理强度选择：在模型选择器标题行直接选择 ACP thought_level / reasoning effort，按 Agent 记忆显式选择，未指定时回退到最高可用档。（e100f3b0、bd8bd6ca、#470 by @qychen2001）
+    - 文献库引用数：论文库表格新增引用次数列，便于按影响力扫读与排序。（2056aa02 by @Phil-Fan）
+    - PubMed / bioRxiv 数据源：学术检索与入库新增 PubMed 与 bioRxiv / medRxiv，并支持多源 ApiPaper 合并与按 scope 的标题检索融合。（d92cad0c、9c010212 by @Phil-Fan）
+    改进
+    - 侧栏自动发现 Agent: 扫描目录时自动注册 PATH 上已安装但尚未入库的 Agent，并在打开侧栏时探测，无需先进入设置才能看到可切换列表。（e598aa48、a48ffb0d、#482 by @Phil-Fan）
+    - 历史与切换体验：历史列表去掉空会话并在无记录时给出空状态；Agent 选项按字母排序；切换 Agent 不再插入系统提示，回复气泡也不再重复展示身份标签。（cb0de6e9、0c7612c6、19904af3、aa17a9e4 by @Phil-Fan）
+    - 不支持的 Agent 说明：文档与 Vault 新手笔记明确：Codex 桌面版与 WorkBuddy 目前不能作为应用内 ACP Agent 直接使用（Codex CLI + codex-acp 仍可用）。（700fba77、09aa5cf5、#473 by @Phil-Fan）
+    修复
+    - 登录 Shell / 中转站 ACP: 本地 ACP 子进程合并登录 Shell 环境变量，修复依赖用户 shell 配置（如中转站代理）时连接失败；Agent 工具安装生命周期也会带上设置中的代理。（21b89633、6e76b7ed、#478 by @Phil-Fan）
+    - 重启后 NOTES 面板缺失：布局恢复后若标签状态与 dock 脱节，或占位标签首次点击只激活未补开笔记，会按阅读布局重新打开 NOTES 伴随面板。（#476 by @bet4it）
+    - 版面翻译完整与可重试：保留完整源文本、超大块安全切分并按单元重试；部分成功保留、显式 partial 状态，并拒绝不完整的 OpenAI finish_reason 以便缩小块后重试，避免覆盖层裁切与过期任务覆盖新结果。（#477 by @jiah0231）
+    - 更新装到旧版：安装更新前重新检查远程签名清单，长时间运行的会话也会拿到最新版本，离线时回退到缓存清单。（7b843c14、#481 by @qychen2001）
+    - 历史会话范围与标题：Agent 历史只显示当前 Vault / 目录下的会话；无标题时回退到首条用户提示，不再露出会话 id 前缀。（2664acf5、#483、#484 by @Phil-Fan）
+    - 提示词显示噪音：用户提示展示与选区回填会剥离 harness reminder 与上下文块，只保留可读正文。（e39fb00f by @Phil-Fan）
+    - 双栏翻译同步：加固双栏初始化、PDF 字节拷贝与滚动同步，翻译标签激活时刷新 sidecar，并复用源栏版面结果。（b008df5b、aa42fda9、b4bf7440、2a785db0 by @Phil-Fan）
+    - pi-acp 与宿主同步：更新 pi 宿主时保持 pi-acp 适配器版本一致，避免 ACP 调用失配。（4909b0f7、#471 by @Phil-Fan）
+    - 推理列表缩进：修复思维链推理内容中列表缩进丢失的问题。（e856ec07 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.9.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.9.6
+ReleaseTime: 2026-09-08T05:45:21.0000000Z

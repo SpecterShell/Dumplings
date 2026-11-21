@@ -1,0 +1,92 @@
+Version: 2026.07.0+139
+Installer:
+- InstallerUrl: https://download1.rstudio.org/electron/windows/RStudio-2026.07.0-139.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    RStudio
+    - (#5908): Dates and times (such as the Files pane Modified column) are now formatted according to the system region by default, rather than always using a US-style format. A new settings menu on the Files pane toolbar adds options to use ISO-8601 formatting or the UTC time zone instead.
+    - (#18077): The Quarto Document dialog now offers separate PDF (Typst) and PDF (LaTeX) output options. Typst is bundled with Quarto and requires no additional software.
+    - (#18020): Add rserver --check-config (and the rstudio-server check-config admin subcommand) to validate the configuration file without starting the service, reporting all unrecognized options in a single pass. --test-config is now a deprecated alias for --check-config with the same behavior; it previously stopped at the first unrecognized option. Using --test-config prints a deprecation warning, and it will be removed in a future release. --check-config now also validates that configured file paths (secure-cookie-key-file, rsession-config-file, database-config-file) exist on disk, and reports the detected R installation (informational). In Posit Workbench builds, the check also covers database connectivity and license status.
+    - (#17992): The Find in Files replace preview and Replace All results no longer present matches whose proposed replacement is identical to the matched text; lines whose every match would be unchanged are omitted entirely.
+    - (#15830): Add a Code menu and command-palette entry to re-enable the editor’s missing-package banner for a file after dismissing it, and rename the banner’s dismissal label to “Don’t show for this file” to make the per-file scope explicit.
+    - (#17734): Support em dashes and box-drawing characters as native R code section delimiters.
+    - (#8541): Add a “Change active editor tab with mouse wheel” preference (General > Basic > Other) to disable switching the active editor tab by scrolling the mouse wheel over the tab bar.
+    - (#2350): Add an Appearance pane to Project Options for setting a project-specific editor theme; leaving it at “(Default)” uses the global theme. A new “Ignore project-specific appearance settings” option (Global Options > Appearance) keeps the global editor theme even when a project sets its own.
+    - (#17923): Posit Assistant now runs R code expression by expression, interleaving each expression with its output in the chat pane, rather than running the whole block at once and showing all output at the end.
+    - (#14965): The Insert Pipe Operator command (Ctrl+Shift+M / Cmd+Shift+M) now inserts the native R pipe operator |> by default; the magrittr pipe %>% can be restored via the “Use R’s native pipe operator, |>” preference.
+    - (#17501): Move the Find in Files refresh button to the right side of the toolbar, matching the convention used by other panes, and make the replace preview’s match highlight colors theme-aware so they no longer look out of place under dark editor themes.
+    - (#17912): Add a project-trust-required session option (off by default) that treats all projects as untrusted by default – including projects in the user’s home directory – prompting users to trust each project when opened even if it contains no auto-executing files. Additionally, the visual editor is now disabled in untrusted projects, whether or not this option is set; only the source editor is available for markdown documents.
+    - (#17748): When “Use Air for code formatting” is enabled, Air now formats R documents even when no air.toml file is present, using the editor’s indentation settings (indent style and width). The previous behavior of formatting only in projects containing an air.toml can be restored with the new “Only use Air when an air.toml file is found” option (Global Options > Code > Formatting).
+    - (#11198): The session launcher is now a full-screen, multi-step workflow (Session / IDE, Integrations, Environment) with IDE cards, step-preserving close/reopen, and a Launch Session action on the Environment step.
+    - (#10417): RStudio can now reduce background file operations (recursive file monitoring, code indexing, and external-edit checks) for projects located on network or remote filesystems, improving responsiveness on slow drives. This applies automatically when a remote filesystem is detected, and can be configured globally (Tools > Global Options > General > Advanced) or overridden per-project (Project Options > General).
+    Posit Workbench
+    - (rstudio-pro#11596): Added default Local Job Launcher resource profiles to new Workbench installations.
+    - (rstudio-pro#10826): Added support for applying /etc/rstudio/profiles changes with rstudio-server reload (SIGHUP), without restarting Workbench. See Applying profile changes in the Admin Guide for more information on how profiles configuration changes are applied on reload.
+    - (rstudio-pro#11502): Posit Workbench’s rserver --check-config now also reports the audit database configuration and configured SSL certificate paths, alongside the database-connectivity and license checks. All of these overlay checks are informational and never fail the verdict, so the command can be run before the database, license, or certificates are in place.
+    Fixed
+    RStudio
+    - (#18148): Fixed the editor’s missing-packages banner sometimes failing to reappear when “Toggle Detect Missing Packages” was used to re-enable it after a per-file dismissal; package discovery could race with the dismissal property being cleared and silently suppress the banner.
+    - (#18145): Fixed the visual editor hanging at its loading spinner for every subsequently opened document after a visual-mode document (for example a freshly created Quarto document) was closed while its markdown conversion was still in flight. The stale document could also throw an uncaught IndexOutOfBoundsException while marking itself dirty after its tab was gone; the source pane now detaches a closed tab’s handlers so a dismissed document can no longer act on the tab strip.
+    - (#18138): Fixed View() failing with 'length = 2' in coercion to 'logical(1)' for objects containing a component whose class provides a length() method returning more than one value (for example the Formula objects stored in mlogit models). The Object Explorer now uses the internal length when inspecting such objects.
+    - (#18134): An error raised while activating the visual editor could leave the editor stuck on its loading spinner indefinitely, with no error reported. Such errors are now logged and reported through the standard error dialog instead of being silently swallowed.
+    - (#18125): Fixed autocompletion inside geom_*() calls failing to offer a ggplot2 aesthetic when the typed token matched only an aesthetic and not one of the function’s formal arguments (for example, linet now completes to linetype).
+    - (#18089): Restored the Cmd+Alt+F (Ctrl+Alt+F) keyboard shortcut for “Run Current Function Definition”, which had been unintentionally overridden by the “Find in Console” command. Find in Console is still available via the console toolbar and by pressing the Find (Cmd+F / Ctrl+F) shortcut while the console has focus.
+    - (#14040): Fixed the visual editor’s “Editor content width” resetting to the default (full) width when more than one R Markdown or Quarto document was open in visual mode and the user interacted with one of them (for example right-clicking a misspelled word, opening a toolbar menu, switching tabs, or resizing a pane). Hidden visual-editor tabs no longer overwrite the shared content-width style.
+    - (#17831): Fixed autocomplete not updating when deleting a colon to go from pkg::: to pkg::; the completion list now correctly narrows from all objects to only exported objects.
+    - (#17796): The Title, Author, and Date fields in the New R Markdown, New Quarto Document, and Compile Notebook dialogs no longer show the browser’s native spell-checking squiggles.
+    - (#17758): Fixed the console becoming unresponsive (sometimes for minutes, with the session entering uninterruptible sleep) after running a command that merely contained a word like “remove” or “update” – in a comment, a string, or as part of another function name such as str_remove_all(). RStudio now parses the command and resolves each call’s namespace before refreshing the Packages pane, so only genuine package-management calls (for example install.packages(), remove.packages(), or renv::update()) trigger the refresh and its potentially slow library scan. Base R’s remove() and update() no longer do.
+    - (#18091): RStudio Server sessions now suspend and shut down faster. Stopping the server (or a session timing out) no longer waits up to several seconds for a now-disconnected browser to retrieve final events, and suspending no longer spends time serializing internal RStudio-managed options that are recreated on resume.
+    - (#18046): Fixed Copilot completions sometimes appearing only as a gutter icon (rather than inline) when the first completion in a document fell back to a next edit suggestion. Such fallback suggestions now honor the “automatically display next edit suggestions” preference instead of being collapsed to the gutter.
+    - (#6796): The Git History pane now shows the full commit message body (not just the subject line) when viewing commit details.
+    - (#17982): Fixed a race condition in RStudio Desktop where the viewer pane iframe could be blocked by Electron’s navigation policy, causing cross-origin SecurityErrors when previewing markdown files or R Notebooks as HTML. The setViewerUrl IPC call is now awaited before the iframe navigates, ensuring the URL authority is registered in time.
+    - (#18057): Reduced the padding on text input fields and drop-down (select) controls, which had grown overly large (most noticeably in dark themes), and made the padding consistent across text inputs, password fields, and selects in both light and dark themes.
+    - (#18037): Fixed the Plots pane not being brought to the front when Posit Assistant runs code that produces a plot. Interactive agent code now activates the Plots pane like a console command does.
+    - (#18033): Fix ghost text set via rstudioapi::setGhostText() not being dismissed when navigating the cursor away or typing a non-matching character, which left it insertable by Tab even after it appeared to be gone.
+    - (#17970): Fix the Packages pane vulnerability dialog listing vulnerabilities that affect a different installed version of the clicked package; the dialog now shows only the vulnerabilities for that row’s version. A package with vulnerability records from multiple repositories now shows a single combined warning icon and dialog instead of one per repository.
+    - (#17985): Fixed an issue where the Import Dataset preview dialog failed to display error messages when the readr preview subprocess encountered an error, causing the dialog to hang indefinitely waiting for data that would never arrive.
+    - (#18003): Fixed an issue where reformat-on-save with Air configured as an external formatter ignored the project’s air.toml configuration.
+    - (#17774): Fixed reformat-on-save not formatting R scripts opened outside of an RStudio project (or with no project open), even though the “Reformat Document” command worked. Format-on-save is no longer restricted to files inside the active project.
+    - (#6147): The data viewer now scrolls continuously through the columns of a very wide data frame instead of paging through fixed blocks of columns, so a column’s filter, sort, and pin are no longer limited to (or lost when leaving) the currently visible set of columns.
+    - (#6147): The data viewer’s column-pagination arrows are replaced by a “Go to column” box in the toolbar that jumps to a column by name or number.
+    - (#6147): The data viewer’s summary sidebar now lists every column of the frame, loading each column’s summary as it scrolls into view.
+    - (#6147): The data viewer’s summary sidebar now reflects the active filter and search, rather than always describing the whole frame.
+    - (#17979): Add a “Show Filter UI by default” toggle to the data viewer’s Settings menu. When enabled, the filter bar is shown automatically each time a data frame is opened, instead of requiring a click to reveal it.
+    - (#17993): Add a “Use overlay scrollbars” toggle to the data viewer’s Settings menu. When disabled, the data viewer uses native, always-visible scrollbars instead of the auto-hiding overlay scrollbars.
+    - (#17807): Fixed a startup stall and missing package vulnerability badges that could occur when an intermediary (such as a proxy) kept the connection to Posit Package Manager open after responding. RStudio’s HTTP client now completes a response as soon as its full Content-Length body has been received, rather than waiting for the connection to close.
+    - (#18019): Fixed an issue where a transient connection failure while writing user state during startup could leave the IDE stuck on an empty grey screen.
+    - (#1667): On Linux Desktop, hardened middle-click (primary selection) paste in the editor and console: a selection is now flushed to the primary selection on mouse release rather than only after a short delay, and a middle-click paste falls back to the event’s clipboard text when the tracked selection is empty, so quickly selecting and middle-click-pasting no longer pastes nothing.
+    - (#18065): Fixed an uncaught JavaScript exception thrown when an r2d3 widget requested the editor theme, caused by an uninjected user-state provider in the page’s message listener. The theme handshake now completes so r2d3 widgets pick up the editor theme.
+    - (#18068): Auto-downloaded copies of the Air formatter are now installed under RStudio’s per-user data directory (for example ~/.local/share/rstudio/air on Linux or %LOCALAPPDATA%\rstudio\air on Windows) instead of ~/.local/lib/air. Copies installed by older versions of RStudio in the previous location are still detected and reused.
+    - (#18093): Fixed interactive execution of sql chunks that use the --| cell-option comment syntax (for example --| connection: con). The option line is now stripped from the chunk body before the query is sent to the database, so backends such as MySQL and MariaDB that reject --| as invalid SQL syntax no longer error.
+    - (#18139): Fixed an issue on Windows where the R session started in the “C” locale instead of the operating system’s locale, corrupting non-ASCII console input and breaking list.files() and other locale-sensitive operations for users whose locale is not ASCII-compatible (for example Turkish on Windows 11). The session now adopts the operating system locale at startup, restores the session locale rather than pinning it to “C” after rendering an R Markdown document, and logs locale synchronization failures instead of failing silently.
+    - (#18101): Fixed “Run Selection as Background Job” (and the related Source/Launcher job commands) appearing to do nothing when invoked from a detached source window on Windows Desktop. The job launcher dialog is shown in the main window, which is now brought forward so the dialog is visible.
+    - (#18143): Fixed the Object Explorer emitting Setting class(x) to "environment" warnings (and showing no description) for S4 objects wrapping environments, such as reference class instances. The explorer also no longer temporarily modifies the class of an environment being described.
+    Posit Workbench
+    - (rstudio-pro#11597): Fixed rstudio-server interpreters inspect and rstudio-server verify-installation failing on Job Launcher clusters that require a resource profile (allow-custom-resources=0).
+    - (rstudio-pro#11475): Fixed rstudio-server interpreters inspect and interpreter inspection from the admin interface always timing out after 5 minutes on Local and Slurm clusters, even when the inspection job succeeded.
+    - (rstudio-pro#9120): Fixed the SQLite-to-PostgreSQL database migration failing with a foreign key constraint error.
+    - (rstudio-pro#10885): Fixed a “database is locked” error that could interrupt OAuth (Snowflake) token refresh under concurrent session load.
+    - (rstudio-pro#11529): Fixed the homepage launcher UI so that selecting a resource profile that pins a SLURM queue (partition) locks the queue input and no longer submits the incorrect queue on launch.
+    - (rstudio-pro#11576): Fixed race condition with websockets and load balancing that could cause bad record mac errors in rserver.log that led to websockets being reconnected.
+    - (rstudio-pro#11646): Lowered default value for the timeout for launcher-sessions-proxy-timeout to reduce the overhead of client requests for missing sessions.
+    - (rstudio-pro#11256): Fixed problem where VS Code and Positron sessions could bypass the login timeouts even when idle.
+    Dependencies
+    - Ace 1.43.5
+    - Copilot Language Server 1.509.1
+    - Electron 41.9.0
+    - Job Launcher Service 2.26.1-574
+    - Node.js 22.22.2 (copilot, Posit Assistant)
+    - PWB Code Server 2026.07-b2876, Code OSS 1.118.0
+    - Positron 2026.07.1-5
+    - Quarto 1.9.38
+    - xterm.js 6.0.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.posit.co/ide/news/#rstudio-2026.07.0
+ReleaseTime: 2026-07-14

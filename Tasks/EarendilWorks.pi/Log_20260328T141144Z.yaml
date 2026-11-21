@@ -1,0 +1,26 @@
+Version: 0.63.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/badlogic/pi-mono/releases/download/v0.63.1/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added gemini-3.1-pro-preview-customtools model availability for the google-vertex provider (#2610 by @gordonhwc)
+    Fixed
+    - Documented tool_call input mutation as supported extension API behavior, clarified that post-mutation inputs are not re-validated, and added regression coverage for executing mutated tool arguments (#2611)
+    - Fixed repeated compactions dropping messages that were kept by an earlier compaction by re-summarizing from the previous kept boundary and recalculating tokensBefore from the rebuilt session context (#2608)
+    - Fixed interactive compaction UI updates so ctx.compact() rebuilds the chat through unified compaction events, manual compaction no longer duplicates the summary block, and the trigger-compact example only fires when context usage crosses its threshold (#2617)
+    - Fixed interactive compaction completion to append a synthetic compaction summary after rebuilding the chat so the latest compaction remains visible at the bottom
+    - Fixed skill discovery to stop recursing once a directory contains SKILL.md, and to ignore root *.md files in .agents/skills while keeping root markdown skill files supported in ~/.pi/agent/skills, .pi/skills, and package skills/ directories (#2603)
+    - Fixed edit tool diff rendering for multi-edit operations with large unchanged gaps so distant edits collapse intermediate context instead of dumping the full unchanged middle block
+    - Fixed edit tool error rendering to avoid repeating the same exact-match failure in both the preview and result blocks
+    - Fixed auto-compaction overflow recovery for Ollama models when the backend returns explicit prompt too long; exceeded max context length ... errors instead of silently truncating input (#2626)
+    - Fixed built-in tool overrides that reuse built-in parameter schemas to still honor custom renderCall and renderResult renderers in the interactive TUI, restoring the minimal-mode example (#2595)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/badlogic/pi-mono/releases/tag/v0.63.1
+ReleaseTime: 2026-03-27T03:16:20.0000000Z

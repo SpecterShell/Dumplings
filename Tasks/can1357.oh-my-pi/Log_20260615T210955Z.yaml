@@ -1,0 +1,177 @@
+Version: 16.0.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.0.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed transient provider errors after streamed tool-call arguments so incomplete tool calls are marked as interrupted output instead of eligible for automatic retry (#2683).
+    - Fixed @oh-my-pi/pi-agent-core telemetry content capture crashing every chat turn with TypeError: systemPrompt.map is not a function when captureMessageContent is enabled (OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true). ChatRequestSnapshot.systemPrompt now accepts string | readonly string[] and the telemetry serializers normalize a bare string to a single-element array — previously the full-system serializer called .map on a string (the .length guard passed, so it threw) and the request-message serializer iterated the string into one system message per character.
+    @oh-my-pi/pi-ai
+    Added
+    - Added Umans AI Coding Plan API-key login support and UMANS_AI_CODING_PLAN_API_KEY environment fallback (#2636 by @oldschoola).
+    Fixed
+    - Fixed OpenAI Responses, Azure OpenAI Responses, and Codex Responses providers ignoring async onPayload replacement bodies. Provider payload hooks can now transform the actual request body sent upstream, matching the Anthropic/Gemini replacement contract.
+    - Fixed OpenAI-compatible chat-completions streams that send object-shaped tool arguments in fragments by deep-merging nested objects and task arrays instead of replacing earlier chunks. (#2617)
+    - Fixed OpenAI Responses strict-mode tool schema normalization for nullable enum MCP parameters so enum constraints are distributed to matching anyOf branches instead of being copied onto the null branch. (#1835)
+    - Fixed Cursor provider formatting tool errors with the same [Tool Result] prefix as successful results, causing Composer models to misinterpret error messages (e.g. "Pattern must not be empty") as directives over long conversations. Errors now use a [Tool Error] prefix so the model can distinguish failures from successes in the prompt history. (#1853)
+    - Fixed validateToolArguments silently accepting JSON-encoded array strings (e.g. '["a","b"]') against union(string, array<string>) schemas — providers that double-serialize tool-call arguments (Z.AI / GLM) caused tools like search to receive the literal ["a","b"] as a single path, producing zero matches (single element) or glob parse errors (multi-element). A new pre-validation pass parses JSON-array-shaped strings when the schema explicitly accepts both shapes. (#1788)
+    - Fixed Anthropic thinking summaries that arrive wrapped in literal <thinking> tags so advisor/raw transcript dumps do not render nested thinking tags (#2695).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the Umans AI Coding Plan provider catalog with Anthropic-compatible model metadata and dynamic discovery (#2636 by @oldschoola).
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Settings: hooks and customTools arrays replaced with single extensions array
+    - CLI: --hook and --tool flags replaced with --extension / -e
+    - Directories: hooks/, tools/ → extensions/; commands/ → prompts/
+    - Types: See type renames above
+    - SDK: See SDK migration above
+    - Key detection functions removed from @mariozechner/pi-tui: All isXxx() key detection functions (isEnter(), isEscape(), isCtrlC(), etc.) have been removed. Use matchesKey(data, keyId) instead (e.g., matchesKey(data, "enter"), matchesKey(data, "ctrl+c")). This affects hooks and custom tools that use ctx.ui.custom() with keyboard input handling. (#405)
+    Added
+    - Added GitHub Copilot user-global discovery to the github provider: it now loads user-global instructions from ~/.copilot/copilot-instructions.md, honors the COPILOT_HOME relocation override, reads each directory listed in COPILOT_CUSTOM_INSTRUCTIONS_DIRS for an AGENTS.md and .github/instructions/**/*.instructions.md (matching Copilot CLI), scans the project .github/instructions/ tree recursively, and surfaces VS Code Copilot prompt files (*.prompt.md) from .github/prompts/ as slash commands. Previously only the project .github/ tree was scanned, so Copilot CLI users' cross-repo config was silently ignored. Closes #1913, #1915, #1916.
+    - Added web search provider exclusions so web_search can skip configured providers without disabling them for model use (#2608).
+    - Added an optional role field to task spawns that gives each subagent a tailored specialist identity: the role is injected as a system-prompt specialization preamble and becomes the subagent's display name and telemetry identity in the registry, IRC roster, and Agent Hub, so delegated trees are no longer clones of one generic worker (#2467)
+    - Added a non-blocking specialization advisory to the task tool: when a spawner with remaining depth capacity spawns generic role-less workers (a task/quick_task spawn without a role, or the same agent cloned ≥2× all without roles), the result steers it toward tailored specialists. Gated so a leaf at max recursion depth is never nudged; the task-tool depth gate is extracted into a shared canSpawnAtDepth helper (#2469)
+    - Added a work-aware IRC roster: irc list and the subagent peer roster now show each peer's current activity (a short gist of its latest intent/tool) alongside its role-derived display name, so a tree of tailored specialists is legible enough to coordinate. Backed by a new display-only activity field on the agent registry (#2470)
+    - Added proactive IRC coordination: when one task call spawns ≥2 live siblings with spawn capacity remaining, the result suggests coordinating overlapping work via irc (composed onto the specialization advisory), and the subagent COOP/irc prompts now actively steer discovery (list), coordination (message before overlapping edits), and follow-up (replyTo/await) instead of only assuming agents resolve collisions on their own (#2471)
+    - Added /review support for explicit GitHub pull request URLs and detected PR URLs from recent conversation context (#1743).
+    - Added a plan.defaultOnStartup setting (Tasks tab, default off) that automatically enters plan mode at the start of a new interactive session. It applies to any session that opens with no prior history — including a --continue/auto-resume that finds no recent session and starts fresh — while sessions with restored history keep the mode reconciled from that history. It is a silent no-op when plan mode is globally disabled (plan.enabled), and the setting is hidden from the settings UI unless plan mode is enabled.
+    - Added UMANS_AI_CODING_PLAN_API_KEY to the CLI environment help (#2636 by @oldschoola).
+    - Added WebSearchProviderError class with HTTP status for actionable provider error messages
+    - $ARGUMENTS syntax for custom slash commands as alternative to $@ for all arguments joined. Aligns with patterns used by Claude, Codex, and OpenCode. Both syntaxes remain fully supported. (#418 by @skuridin)
+    - Configurable double-escape action: choose whether double-escape with empty editor opens /tree (default) or /branch. Configure via /settings or doubleEscapeAction in settings.json (#404)
+    - Vertex AI provider (google-vertex): access Gemini models via Google Cloud Vertex AI using Application Default Credentials (#300 by @default-anton)
+    - Built-in provider overrides in models.json: override just baseUrl to route a built-in provider through a proxy while keeping all its models, or define models to fully replace the provider (#406 by @yevhen)
+    - Automatic image resizing: images larger than 2000x2000 are resized for better model compatibility. Original dimensions are injected into the prompt. Controlled via /settings or images.autoResize in settings.json. (#402 by @mitsuhiko)
+    - Alt+Enter keybind to queue follow-up messages while agent is streaming
+    - Theme and ThemeColor types now exported for hooks using ctx.ui.custom()
+    - Terminal window title now displays "pi - dirname" to identify which project session you're in (#407 by @kaofelix)
+    - Hook API: ctx.ui.setTitle(title) allows hooks to set the terminal window/tab title (#446 by @aliou)
+    - Hook API: before_agent_start handlers can now return systemPromptAppend to dynamically append text to the system prompt for that turn. Multiple hooks' appends are concatenated.
+    - Hook API: before_agent_start handlers can now return multiple messages (all are injected, not just the first)
+    - New example hook: tools.ts - Interactive /tools command to enable/disable tools with session persistence
+    - New example hook: pirate.ts - Demonstrates systemPromptAppend to make the agent speak like a pirate
+    - Tool registry now contains all built-in tools (read, bash, edit, write, grep, find, ls) even when --tools limits the initially active set. Hooks can enable any tool from the registry via pi.setActiveTools().
+    - System prompt now automatically rebuilds when tools change via setActiveTools(), updating tool descriptions and guidelines to match the new tool set
+    - Hook errors now display full stack traces for easier debugging
+    - Clipboard image paste support via Ctrl+V. Images are saved to a temp file and attached to the message. Works on macOS, Windows, and Linux (X11). (#419)
+    - Configurable keybindings via ~/.pi/agent/keybindings.json. All keyboard shortcuts (editor navigation, deletion, app actions like model cycling, etc.) can now be customized. Supports multiple bindings per action. (#405 by @hjanuschka)
+    - /quit and /exit slash commands to gracefully exit the application. Unlike double Ctrl+C, these properly await hook and custom tool cleanup handlers before exiting. (#426 by @ben-vargas)
+    Changed
+    - Enriched the bundled designer, reviewer, and task agent prompts: designer gains a token-first four-phase design-system workflow (analyze → build-if-missing → compose-with-tokens → verify), reviewer gains an evidence standard (a finding is not real until you can name the triggering input; passing tests are not proof of correctness), and task gains an evidence-bound completion requirement.
+    - Updated the session-continuation tip to mention Zellij and WezTerm panes.
+    - Documented the role task parameter in the task-tool description (both the batch and single-spawn shapes) and made tailored specialists the default delegation guidance, so the model gives each spawn a specialist identity instead of cloning generic workers (#2468)
+    - Changed the eval agent() helper to accept return_handle (Python) / returnHandle (JS): instead of bare text it returns a DAG node dict { text, output, handle, id, agent } whose handle is the spawned agent's recoverable agent://<id> URI, so a downstream pipeline/parallel stage can wire a large transcript by reference instead of re-inlining it. The default path is unchanged (bare text, or the parsed object under schema).
+    - Changed isAutoresearchShCommand() to use proper command-line argument parsing instead of regex, improving accuracy for complex shell invocations
+    - Changed autoresearch initialization prompt to display collected tradeoff metrics in the setup summary
+    - Changed command-initialize.md template to include guidance on preflight requirements, comparability invariants, and marking measurement-critical files as off-limits
+    - Changed command-initialize.md to instruct users to write or update autoresearch.program.md with durable heuristics and repo-specific strategy
+    - Changed autoresearch resume guidance to emphasize continuing on the current protected branch rather than switching branches
+    - Changed autoresearch prompt to clarify that autoresearch.md holds durable conclusions while autoresearch.ideas.md is the scratch backlog
+    - Changed autoresearch prompt guidance to require stable measurement harness and fixed benchmark inputs unless intentionally starting a new segment
+    - Changed autoresearch prompt to recommend keeping equal or near-equal results when they materially simplify implementation
+    - Changed init_experiment to reset pending run state (checks, duration, ASI, artifact directory) when initializing a new segment
+    - Changed log_experiment to set autoResumeArmed flag after successfully logging a run to enable auto-resume on next agent turn
+    - Changed run_experiment to set autoResumeArmed flag and update dashboard after completing a run
+    - Changed auto-resume logic to only prompt when a new pending run exists or when autoResumeArmed is explicitly set, preventing duplicate prompts
+    - Changed path normalization in contract validation to use path.posix.normalize() for consistent path handling
+    - Extended extension registerProvider() typing with OAuth provider support and source-aware registration metadata.
+    - Slash commands and hook commands now work during streaming: Previously, using a slash command or hook command while the agent was streaming would crash with "Agent is already processing". Now:
+      - Hook commands execute immediately (they manage their own LLM interaction via pi.sendMessage())
+      - File-based slash commands are expanded and queued via steer/followUp
+      - steer() and followUp() now expand file-based slash commands and error on hook commands (hook commands cannot be queued)
+      - prompt() accepts new streamingBehavior option ("steer" or "followUp") to specify queueing behavior during streaming
+      - RPC prompt command now accepts optional streamingBehavior field
+        (#420)
+    - Editor component now uses word wrapping instead of character-level wrapping for better readability (#382 by @nickseelert)
+    - Extensions can have their own package.json with dependencies (resolved via jiti)
+    - Documentation: docs/hooks.md and docs/custom-tools.md merged into docs/extensions.md
+    - Examples: examples/hooks/ and examples/custom-tools/ merged into examples/extensions/
+    - README: Extensions section expanded with custom tools, commands, events, state persistence, shortcuts, flags, and UI examples
+    - SDK: customTools option now accepts ToolDefinition[] directly (simplified from Array<{ path?, tool }>)
+    - SDK: extensions option accepts ExtensionFactory[] for inline extensions
+    - SDK: additionalExtensionPaths replaces both additionalHookPaths and additionalCustomToolPaths
+    - Removed image placeholders after copy & paste, replaced with inserting image file paths directly. (#442 by @mitsuhiko)
+    Fixed
+    - Fixed the advisor auto-resuming a run after the user deliberately interrupts it (Esc, or a cancel from collab/ACP/RPC/SDK/extension). A user interrupt now suppresses advisor concern/blocker auto-resume until the user next resumes (a typed message, ./c continue, or a steer/follow-up); the concern is still recorded as a visible, persisted advisor card — including one already steered into the run or arriving mid-abort — so it re-enters context on resume instead of being discarded. Natural yields are unchanged: the advisor can still steer and resume a stalled run.
+    - Fixed /advisor on|off not being session-local by overriding the setting instead of modifying global configuration, and fixed changes not updating the TUI status line immediately.
+    - Fixed plan.defaultOnStartup setting schema configuration missing the required ui.group property.
+    - Fixed web_search using stale or missing provider exclusions after /move or resuming a session from another project. Provider preferences (providers.webSearchExclude, providers.webSearch, providers.image) are now reapplied when project settings reload on cwd change (#2611).
+    - Fixed isolated task subagents with persisted transcripts resolving file tools against the parent repository instead of the isolated worktree, which made rcopy patch capture report no changes after tool-based edits.
+    - Fixed plugin config writes against older omp-plugins.lock.json files that did not have a top-level settings object, which crashed omp plugin config set before persisting the option (#2236).
+    - Fixed auto-retry regenerating a large write call after the provider stream timed out mid-tool-call (#2683).
+    - Fixed soft-expired issue:// and pr:// reads to refresh live before returning stale state, with an explicit stale warning when the live refresh fails (#2684).
+    - Fixed Claude marketplace plugin skills appearing as bare slash commands while keeping real plugin commands/ entries available (#2645).
+    - Fixed boundary duplication warnings to always display when replacement lines match the next surviving line, even when auto-correction is disabled
+    - Fixed secondary metrics validation to properly reject missing configured metrics and new metrics without force flag
+    - Fixed ASI data cloning to prevent prototype pollution attacks by filtering reserved property names
+    - Fixed CLI --api-key handling for deferred model resolution by applying runtime API key overrides after extension model selection.
+    - Fixed extension provider registration cleanup to remove stale source-scoped custom API/OAuth providers across extension reloads.
+    -  --list-models no longer shows Google Vertex AI models without explicit authentication configured
+    - JPEG/GIF/WebP images not displaying in terminals using Kitty graphics protocol (Kitty, Ghostty, WezTerm). The protocol requires PNG format, so non-PNG images are now converted before display.
+    - Version check URL typo preventing update notifications from working (#423 by @skuridin)
+    - Large images exceeding Anthropic's 5MB limit now retry with progressive quality/size reduction (#424 by @mitsuhiko)
+    - Slash command argument substitution now processes positional arguments ($1, $2, etc.) before all-arguments ($@, $ARGUMENTS) to prevent recursive substitution when argument values contain dollar-digit patterns like $100. (#418 by @skuridin)
+    - Edit tool diff not displaying in TUI due to race condition between async preview computation and tool execution
+    - /model selector now opens instantly instead of waiting for OAuth token refresh. Token refresh is deferred until a model is actually used.
+    - Shift+Space, Shift+Backspace, and Shift+Delete now work correctly in Kitty-protocol terminals (Kitty, WezTerm, etc.) instead of being silently ignored (#411 by @nathyong)
+    - AgentSession.prompt() now throws if called while the agent is already streaming, preventing race conditions. Use steer() or followUp() to queue messages during streaming.
+    - Ctrl+C now works like Escape in selector components, so mashing Ctrl+C will eventually close the program (#400 by @mitsuhiko)
+    - External editor (Ctrl-G) now shows full pasted content instead of [paste #N ...] placeholders (#444 by @aliou)
+    - Subagent example README referenced incorrect filename subagent.ts instead of index.ts (#427 by @Whamp)
+    @oh-my-pi/hashline
+    Fixed
+    - Auto-repaired one-sided multi-line boundary echoes by dropping delimiter-neutral duplicated boundary lines and emitted a boundary-echo warning
+    - Parser now treats a leading \ on inline payload bodies as the payload delimiter, matching standalone payload rows.
+    - Restored the warning emitted when escaped indented payload rows (\\ TEXT) are accepted as payload delimiters.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed shipped Linux native addons failing to load with version 'GLIBC_2.39' not found on distributions older than Ubuntu 24.04. After native builds moved onto the Ubuntu 24.04 (glibc 2.39) self-hosted runner, the x64 addon was a plain host build that linked the runner's glibc and the arm64 cross-build floated up to GLIBC_2.30; the linux-x64 (baseline + modern) and linux-arm64 addons are now built through cargo-zigbuild against a pinned glibc 2.17 floor, restoring portability to any glibc ≥ 2.17 (CentOS 7 / Ubuntu 14.04 era).
+    - Fixed Linux native builds hard-failing when RUSTC_WRAPPER=sccache points at an unavailable shared cache backend. The native build script now retries the napi build once without the sccache wrapper after a cache-storage startup failure, so install smoke tests and local fallback builds can proceed while preserving the cached fast path when the backend is healthy.
+    - Fixed shell cancellation cleanup failing to reap child processes inside containers whose guest kernel was built without CONFIG_PROC_CHILDREN (e.g. some Kata/microVM guests): the Linux descendant walk relied solely on /proc/<pid>/task/<tid>/children, which does not exist there, so children() / live_descendants() returned empty and termination waves never reached the children. It now falls back to scanning /proc and grouping by parent pid (the primitive the macOS path already uses) when no children file is readable, keeping the cheap per-task fast path on kernels that support it.
+    @oh-my-pi/snapcompact
+    Added
+    - Added openai-codex to first-party provider image budgets so ChatGPT Plus/Pro Codex sessions use the same 200-image request cap as OpenAI API sessions instead of the unknown-provider floor.
+    @oh-my-pi/pi-tui
+    Added
+    - Added Zellij and WezTerm pane environment fallbacks for terminal-specific session continuation when no TTY path is available.
+    Fixed
+    - Fixed slash command autocomplete acceptance replacing only a stale rendered prefix, which could leave fast-typed characters before /skills: completions and corrupt the submitted command (#1745).
+    What's Changed
+    - feat(marketplace): prefer .omp-plugin/marketplace.json catalog path by @dmarsh-gusto in https://github.com/can1357/oh-my-pi/pull/1173
+    - fix(tui): replace live slash autocomplete prefix on accept by @roboomp in https://github.com/can1357/oh-my-pi/pull/1748
+    - fix(ai): parse JSON-encoded array strings against union(string, array) tool schemas by @roboomp in https://github.com/can1357/oh-my-pi/pull/1789
+    - fix(tui): defer VTE SSH scrollback erases by @roboomp in https://github.com/can1357/oh-my-pi/pull/1801
+    - fix(ai): preserve nullable enum tool schemas by @roboomp in https://github.com/can1357/oh-my-pi/pull/1837
+    - fix(agent): handle string systemPrompt in telemetry content capture by @ephraimduncan in https://github.com/can1357/oh-my-pi/pull/1879
+    - fix: apply OpenAI Responses onPayload replacements by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/1887
+    - feat(coding-agent): add plan.defaultOnStartup to launch new sessions in plan mode by @ephraimduncan in https://github.com/can1357/oh-my-pi/pull/1890
+    - Add /review PR URL support by @Mathews-Tom in https://github.com/can1357/oh-my-pi/pull/1942
+    - feat(discovery): GitHub Copilot user-global instructions, env dirs, and prompts (#1913, #1915, #1916) by @AsafMah in https://github.com/can1357/oh-my-pi/pull/1983
+    - fix(coding-agent): handle legacy plugin config settings by @roboomp in https://github.com/can1357/oh-my-pi/pull/2237
+    - feat(tui): Zellij and WezTerm pane fallbacks for terminal session continuity by @enieuwy in https://github.com/can1357/oh-my-pi/pull/2400
+    - feat(irc): proactive coordination suggestions by @metaphorics in https://github.com/can1357/oh-my-pi/pull/2482
+    - Add web search provider exclusions by @bharatsuri1 in https://github.com/can1357/oh-my-pi/pull/2611
+    - fix(ai): merge streamed object tool arguments by @roboomp in https://github.com/can1357/oh-my-pi/pull/2623
+    - fix(ai/cursor): preserve large MCP tool-call args during streaming by @roboomp in https://github.com/can1357/oh-my-pi/pull/2625
+    - fix(coding-agent): open isolated subagent sessions in worktree cwd by @bjin in https://github.com/can1357/oh-my-pi/pull/2626
+    - Add Umans AI Coding Plan provider by @oldschoola in https://github.com/can1357/oh-my-pi/pull/2636
+    - fix(coding-agent): hide plugin skills from slash commands by @roboomp in https://github.com/can1357/oh-my-pi/pull/2651
+    - feat(coding-agent/eval): added return_handle to agent() for DAG handle piping by @metaphorics in https://github.com/can1357/oh-my-pi/pull/2662
+    - feat(coding-agent/agents): enriched designer, reviewer, and task agent prompts by @metaphorics in https://github.com/can1357/oh-my-pi/pull/2664
+    - fix(agent): stop retrying interrupted tool streams by @roboomp in https://github.com/can1357/oh-my-pi/pull/2687
+    - fix(github): refresh stale issue and pr views by @roboomp in https://github.com/can1357/oh-my-pi/pull/2688
+    - fix(cursor): distinguish tool errors from successes in prompt history by @basedcorp99 in https://github.com/can1357/oh-my-pi/pull/1853
+    New Contributors
+    - @Mathews-Tom made their first contribution in https://github.com/can1357/oh-my-pi/pull/1942
+    - @bharatsuri1 made their first contribution in https://github.com/can1357/oh-my-pi/pull/2611
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.0.0...v16.0.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.0.1
+ReleaseTime: 2026-06-15T19:47:19.0000000Z

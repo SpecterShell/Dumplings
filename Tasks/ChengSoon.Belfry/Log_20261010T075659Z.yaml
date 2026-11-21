@@ -1,0 +1,41 @@
+Version: 0.21.13
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.21.13/Belfry_0.21.13_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.21.13/Belfry_0.21.13_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v0.21.13
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 增加显式 BELFRY_CODEX_NATIVE=1 原生启动隔离模式：Codex 新会话使用自身权限配置，跳过托管插件/Hook、协作附加项和项目 Provider 覆盖；恢复仅接受明确会话 ID。默认模式不变，Claude、Pi 和普通终端不受影响。此模式是可回退的诊断/缓解路径，不保证修复中转间歇性错误，详见 docs/codex-native-launch.md。
+    - 增加只读 PowerShell Codex 诊断脚本，仅输出白名单配置与最近会话元数据，不读取凭据文件或输出对话内容。
+    改进
+    - 统一主界面、设置及工具面板的布局与深浅主题，保留紧凑窗口下主要操作的可达性。
+    - 会话列表、分组、按钮、确认框、Quick Open 与协作/历史抽屉提供一致的交互反馈和开合过渡，并尊重系统“减少动态效果”设置。
+    - 新建会话菜单支持键盘导航和分级退出；重新检测提供忙碌状态、防连点与失败重试；重命名支持 F2 和 Enter/Esc 焦点返回，Quick Open 支持焦点循环及快速重开重置。
+    - 拖拽按帧合并坐标更新，避免无关终端随舞台更新重渲染；成功加载的可选面板重开时复用加载结果，保留失败恢复机制。
+    - Provider 凭据使用认证加密保存，随机主密钥交由系统安全存储；列表和普通编辑不返回密钥，替换/清除操作显式确认，查看原始敏感配置需用户授权。旧存储迁移及损坏数据采用失败关闭保护，外部 CLI 配置仍可能包含明文凭据。
+    修复
+    - 修复侧栏高度、底部工具区、菜单裁切及右侧面板切换的布局问题，开合动效不卸载已有终端或逐帧调整 PTY 尺寸。
+    - 设置内容填满侧栏之外的可用宽度，修复宽屏下固定最大宽度留下大片空白的问题，并覆盖宽屏及紧凑窗口的无横向溢出回归。
+    - 修复按住历史面板按钮再松开时协作抽屉提前关闭、造成面板轨道短暂清空及额外 PTY resize 的问题；外部点击与面板切换在同一 click 阶段完成。
+    - 正常退出默认保留后台任务；再次进入优先连接原 PTY，失效身份只在明确缺失时恢复一次，不重放旧输入或项目启动脚本。
+    - Windows Hook 改用轻量 CLI 入口，避免依赖桌面程序冷启动；保留旧入口兼容并提示重新安装 Hook，读取单个 JSON 输入后即处理，不等待管道关闭。
+    - 跨会话自动投递不抢焦点，Windows 粘贴后保留解析余量；取消、写入失败或断连时暂停队列并报告原因，未确认开工时不重复粘贴。
+    升级提示
+    - Windows 用户升级后请在设置中重新预览并启用 Hook，再重开 Agent 会话；Codex 的 Hook 信任仍需用户确认。
+    - 原后台进程已消失时只能续接可用的 Agent 历史或重建会话，不能恢复原进程内存。真实 Windows 桌面交互与凭据迁移仍需在独立测试数据下验证。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#02113---2026-10-10
+ReleaseTime: 2026-10-10T02:33:58.0000000Z

@@ -1,0 +1,36 @@
+Version: 0.107.33
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.33/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.33/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    K-brain v0.107.33
+    本版从 main 的 2fe4405 构建，在 v0.107.32 的基础上新增第三方联网搜索回退，并修复子任务取消收尾。
+    联网搜索回退（#206）
+    OpenAI Chat Completions 兼容接口（DeepSeek、各类中转等）没有原生联网搜索，过去开启联网会直接报错。现在可以配置一个第三方搜索服务，由新的 web_search 工具代为搜索：
+    - 支持的服务：Tavily、Brave Search、SearXNG（自建，无需 key）、博查、Jina。
+    - 何时启用：开启联网、当前接口不支持原生搜索、且已配置搜索服务时，自动提供 web_search 工具。原生搜索可用时行为不变。
+    - 配置：在 config.json 中添加 webSearch: {provider, apiKey, baseUrl, maxResults}。
+      - apiKey 支持 $VAR、${VAR} 和 !command 写法。
+      - 也可以用环境变量设置：K_BRAIN_WEB_SEARCH_PROVIDER、K_BRAIN_WEB_SEARCH_API_KEY、K_BRAIN_WEB_SEARCH_BASE_URL，或各服务自己的变量，例如 TAVILY_API_KEY、BRAVE_SEARCH_API_KEY。
+    - 结果与错误：结果按编号列出标题、链接、摘要和日期。key 无效、额度不足、限流、超时都会给出明确提示；错误信息里不会出现密钥。
+    - 审批：和 web_fetch 一样，按会话的权限模式决定是否需要审批。
+    - LiveAgent 对接：
+      - /v1/health 增加 capabilities.web_search_fallback。
+      - /v1/settings 返回各提供方的 nativeWebSearchSupported 和 webSearch 状态（永不返回密钥），并支持写入搜索设置。
+    修复（#204）
+    - 取消运行时，先等已取消的子任务完成记录，再发布运行终态，客户端不会再漏掉子任务结果。
+    - 旧的子代理通知恢复正确来源，分支会话中也会保留，不再被当成用户发言。
+    兼容性
+    旧版本不认识 config.json 里的 webSearch 字段，会拒绝加载这个配置。降级前请先删掉该字段。
+    下载与校验
+    提供 macOS、Linux、Windows 的 x64/ARM64 CLI 与 computer helper；SHA256SUMS 用于校验下载文件。
+    完整变更：https://github.com/Stack-Cairn/K-brain/compare/v0.107.32...v0.107.33
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.33
+ReleaseTime: 2026-11-14T15:27:25.0000000Z

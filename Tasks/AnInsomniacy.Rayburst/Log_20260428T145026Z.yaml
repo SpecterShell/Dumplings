@@ -1,0 +1,28 @@
+Version: 3.8.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.5/MotrixNext_3.8.5_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release consolidates 7 beta iterations focused on browser extension integration, download path safety, and comprehensive diagnostic logging.
+    ✨ New Features
+    - Extension API secret isolation — Decoupled extension API secret from RPC secret with auto-generation on first launch, improving security for browser extension communication
+    - Extension filename support — Browser extension deep links and API requests now correctly extract and forward filenames (Content-Disposition/RFC 6266)
+    - Auto-detect system language — Application language automatically matches the OS locale on first launch
+    - Magnet task name extraction — Magnet downloads now display the torrent name from metadata instead of the raw info hash
+    - AddTask tab animation — Programmatic tab switching in the AddTask dialog now uses correct directional animation
+    - Comprehensive diagnostic logging — 32 log statements across HTTP API, aria2 RPC, task submission, deep-link processing, update lifecycle, and task merge paths for full traceability
+    🐛 Bug Fixes
+    - Fixed category save path doubling on Windows (#261) — Downloads with file categorization enabled produced invalid doubled paths (C:\Downloads\Programs\C:\Downloads\file.exe). Added out option sanitization at the Rust invoke boundary to enforce the filename-only invariant
+    - Fixed clipboard/batch race condition — Resolved a race condition between clipboard auto-fill and batch processing in the AddTask dialog
+    - Fixed cloud drive filename override — Extension-provided filenames are no longer overwritten by the resolve_filename HEAD request
+    🛠 Improvements
+    - Updated project documentation with revised feature list, installation instructions, and screenshots
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.5
+ReleaseTime: 2026-04-28T13:50:33.0000000Z

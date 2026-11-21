@@ -1,0 +1,41 @@
+Version: 1.3.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v1.3.5/LiveAgent-v1.3.5-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v1.3.5/LiveAgent-v1.3.5-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    LiveAgent v1.3.5
+    A maintenance release that tightens runtime process handling, makes Bash timeout outcomes explicit, reduces chat rendering overhead in long sessions, and clears the Windows build blocker for this version.
+    Overview
+    v1.3.5 focuses on runtime and rendering robustness. Detached child processes are now reclaimed and resident polling converges based on online status and backoff, long chat sessions no longer cause renderer CPU spikes or idle spinning in hidden windows, and Bash results clearly report when a run was stopped by the provider timeout ceiling. A Windows build failure that was blocking this release has also been fixed.
+    Highlights
+    - Long conversations use less CPU, and hidden windows no longer spin idle. (#800)
+    - Detached child processes are cleaned up, with resident polling converging on online status and backoff. (#801)
+    - Bash tool output now states explicitly when the command was killed by the provider timeout limit. (#802)
+    - Windows builds are unblocked for v1.3.5. (#804)
+    Changed
+    - Chat rendering performance work in long sessions and hidden windows, spanning the chat UI components (work trace, conversation stats bar, conversation search dialog, shared history modal), the background tasks panel, settings shell, and memory panel model. (#800)
+    - Runtime process handling updated in the managed process and process runtime paths. (#801, #804)
+    - Bash shell tool behavior and its tests updated in shellTools.ts and shell-tools.test.mjs. (#802)
+    Fixed
+    - Runtime: detached child processes are now reclaimed, and resident polling converges based on online status and backoff. (#801)
+    - Tools: Bash results now explain explicitly that a run was killed by the provider timeout ceiling. (#802)
+    - Runtime (build): removed a cfg(unix)-gated constant that caused an E0425 error in Windows builds, unblocking the v1.3.5 release. (#804)
+    Internal
+    - Added chat rendering performance lock tests (rendering-perf-locks.test.mjs). (#800)
+    - Added shared UI modules for document visibility and internationalization formatting helpers in agent-ui. (#800)
+    - Extended runtime process code in crates/agent-gui/src-tauri/src/runtime/process.rs. (#801)
+    - Touched gateway status dashboard and workspace/integration command modules (MCP, filesystem, git, browser launcher, gateway controller).
+
+    Contributors: @coder-hhx
+    Full Changelog: https://github.com/Stack-Cairn/LiveAgent/compare/v1.3.4...v1.3.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v1.3.5
+ReleaseTime: 2026-09-11T18:46:10.0000000Z

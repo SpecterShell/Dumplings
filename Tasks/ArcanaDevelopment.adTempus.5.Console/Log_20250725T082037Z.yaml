@@ -1,0 +1,47 @@
+Version: 5.0.5
+Installer:
+- InstallerUrl: https://www.arcanadev.com/download/files/adTempus 5.0.5 Console Only.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.arcanadev.com/adTempus/ReleaseNotes
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed Issues
+    Console
+    "Hidden" Job Variable values can be disclosed through configuration report or export
+    CR8015
+    When a Job Variable value is marked as hidden, its value is still visible in Configuration Reports and exports. The software was updated to conceal the value in these places.
+    For more information see article K00000637.
+    Distributed Scheduling
+    Agent fails to reconnect to Controller after connection is lost
+    CR8008
+    After the connection between an Agent and its Controller is lost and re-established, the Controller reconnects to the Agent, but the Agent is unable to send data back to the Controller.
+    For more information see article K00000635.
+    Export/Import
+    When importing a Job Control Action that targets another step in the same job, the link to the target step is lost
+    CR8006
+    If an imported job contains a Job Control Action that is configured to run another step in the same job, the link to the target job is lost, and the action runs the job from the beginning.
+    For more information see article K00000636.
+    General
+    File Trigger may fail silently with cloud storage providers
+    CR8023
+    When using a File Trigger with a cloud storage provider, the File Trigger may fail to trigger for files on the provider, without providing any error information. This problem was resolved.
+    Job Execution
+    Captured files from Agents do not appear in Console on Controller
+    CR8000
+    When a job runs on an Agent, Captured Files for that job may not appear in the history for the job on the Controller.
+
+    Note: This update must be applied to the Controller and all Agents for it to be effective. This update resolves the issue going forward, but Captured Files previously sent to the Controller will still not be visible.
+
+    For more information see article K00000634.
+    Inline function evaluation does not work correctly with chained method calls
+    CR8003
+    When using inline functions, chained method calls are not handled correctly. For example, if you use this syntax:
+    %=Now().ToString("yyyyMMdd")%
+    you expect this to be replaced with the current date on yyyyMMdd format. However, everything after "Now()" is ignored, and the resulting string uses the default date format.
+    Fixed a date calculation issue with "on or before" and "on or after" rules
+    CR7995
+    In some cases, scheduling rules that used the "on or before" or "on or after" settings and were calculated relative to another date rule matched the wrong dates. This problem was corrected.
+ReleaseTime: 2024-11-26

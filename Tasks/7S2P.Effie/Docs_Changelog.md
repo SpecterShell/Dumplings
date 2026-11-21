@@ -1,3 +1,71 @@
+# Version 3.8.3:
+
+- Support "Paste as Plain Text".
+- Some minor improvements and bugs fixed.
+
+# Version 3.8.1:
+
+- Support "Paste as Plain Text".
+- Some minor improvements and bugs fixed.
+
+# Version 3.7.3:
+
+- Some minor improvements and bugs fixed.
+
+# Version 3.7.1:
+
+- Added "AI Review" feature, see how AI evaluates your article.
+- Some minor improvements and bugs fixed.
+
+# Version 3.6.3:
+
+- Added "AI Review" feature, see how AI evaluates your article.
+- Some minor improvements and bugs fixed.
+
+# Version 3.6.1:
+
+- Added "AI Review" feature, see how AI evaluates your article.
+- Some minor improvements and bugs fixed.
+
+# Version 3.5.3:
+
+- Support for adding Windows local folders to Effie. Sheets in the local folders will not be uploaded to Effie Cloud.
+- Some minor improvements and bugs fixed.
+
+# Version 3.5.1:
+
+- Support for adding Windows local folders to Effie. Sheets in the local folders will not be uploaded to Effie Cloud.
+- Some minor improvements and bugs fixed.
+
+# Version 3.4.3:
+
+- Added support for statistics of selected text;
+- Introduced "Ask AI" feature for sheet content;
+- Some minor improvements and bugs fixed.
+
+# Version 3.4.1:
+
+- Added support for statistics of selected text;
+- Introduced "Ask AI" feature for sheet content;
+- Some minor improvements and bugs fixed.
+
+# Version 3.3.1:
+
+- New Export to Image Style (Light);
+- Added support for setting paragraph spacing;
+- More flexible line height adjustments;
+- Some minor improvements and bugs fixed.
+
+# Version 3.2.1:
+
+- Create your ideal writing environment: support switching theme colors. Choose from 8 designed styles.
+- Some minor improvements and bugs fixed.
+
+# Version 3.1.1:
+
+- Appearance (dark/light mode) supports 'Match System'.
+- Some minor improvements and bugs fixed.
+
 # Version 3.0.3:
 
 Latest Launched： Effie AI

@@ -1,0 +1,70 @@
+Version: 1.12.12
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.12_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.12/cpa-manager-plus_v1.12.12_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.12_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.12/cpa-manager-plus_v1.12.12_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.12
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.12 focuses on responsive account-list presentation and quota readability. Table and card modes now surface quota windows, historical usage, subscription details, and account metadata more completely, while xAI quota presentation now fails closed for unconfirmed plans. This release updates frontend presentation and selection logic only; it does not introduce database schema, credential-storage, or raw usage-data migrations.
+    Highlights
+    Features
+    - Refresh the responsive Accounts experience across mobile, laptop, and desktop widths, improving provider, plan, subscription, reset-credit, priority, note, and quota presentation while preserving existing account operations. (Web)
+    - Table mode can display up to four quota windows with adaptive layouts: one window uses the available quota width, three windows use a dedicated third row, and four windows use a 2×2 arrangement while preserving readable space for availability and recent requests. (Web)
+    - Restore the four historical-usage metrics in both cards and table rows with compact display values and complete accessible values, reducing information loss and narrow-layout overflow. (Web)
+    - Antigravity Pro, Ultra, and Ultra Lite cards can now show all four 5h / 7d quota windows directly, grouped by model family; other providers and Antigravity Free retain a more compact window count. (Web)
+    - Improve priority and note presentation in the account list while retaining inline editing behavior. (Web)
+    Fixes
+    - xAI Free and unrecognized plans no longer expose billing limits as quota. Only explicitly recognized paid plans surface quota / PAYG presentation, while raw billing responses remain available for diagnostics. (Web)
+    - Align main-list quota-window selection, ordering, and historical-usage targets so rendered windows and usage queries remain consistent. (Web)
+    Upgrade Notes
+    - No database schema migration is required, and usage history or credential storage is not modified.
+    - No new required configuration is introduced; existing Manager Server and CPA-hosted / external-panel API contracts remain unchanged.
+    - Most changes are concentrated in the Accounts UI, so table/card information density, column widths, and visible quota-window counts may differ from v1.12.11 after upgrading.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.11...v1.12.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.12-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.12 主要完善凭证列表的响应式展示和额度可读性。表格与卡片模式现在能更完整地呈现额度窗口、历史用量、订阅与账户信息，同时收紧 xAI 未确认额度的展示规则。本版本为前端展示与选择逻辑更新，不包含数据库 schema、凭证存储或 usage 原始数据迁移。
+    Highlights
+    Features
+    - 重做凭证列表的响应式布局，在移动端、笔记本和桌面宽度下改善列表与卡片模式；提供更清晰的 Provider、套餐、订阅、重置额度、优先级、备注与额度信息，并保留现有账户操作。（Web）
+    - 表格模式最多展示四个额度窗口，并按窗口数量自适应布局；单窗口充分利用额度列，三窗口使用独立第三行，四窗口采用 2×2 排列，同时为「可用状态」与「最近请求」保留更稳定的可读空间。（Web）
+    - 卡片与表格恢复四项历史用量指标，并使用紧凑值展示与完整可访问值，减少信息缺失和窄屏溢出。（Web）
+    - Antigravity Pro、Ultra 与 Ultra Lite 卡片现在可直接展示完整四个 5h / 7d 额度窗口，并按模型族分组；其他 Provider 与 Antigravity Free 继续保持更紧凑的窗口数量。（Web）
+    - 凭证列表支持更完整的优先级与备注展示，并保留内联编辑能力。（Web）
+    Fixes
+    - xAI Free 与无法确认的未知套餐不再把 billing limit 误展示为可用额度；只有明确识别的付费套餐才会暴露对应 quota / PAYG 信息，诊断所需的原始 billing 数据仍会保留。（Web）
+    - 统一主列表额度窗口的选择、排序与历史用量目标，避免表格实际展示窗口和后台用量查询目标不一致。（Web）
+    Upgrade Notes
+    - 本版本不包含数据库 schema 迁移，也不会修改 usage 历史数据或凭证存储。
+    - 无新增必填配置项，Manager Server、CPA-hosted / external panel 的现有 API 合同保持不变。
+    - 主要变化集中在凭证列表 UI；升级后表格和卡片的信息密度、列宽与额度窗口数量可能与 v1.12.11 不同。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.11...v1.12.12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.12-zh.md
+ReleaseTime: 2026-09-11T11:39:27.0000000Z

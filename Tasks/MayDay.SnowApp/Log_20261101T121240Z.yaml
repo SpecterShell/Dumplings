@@ -1,0 +1,70 @@
+Version: 0.5.11
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.11/Snow-App-Setup-0.5.11.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Database + WebSocket Team Collaboration: teams, projects, records and attachments now live in the local database and sync over a WebSocket hub on the host device instead of a Git repository; members join with an invite link, first-time joins need host approval, and reconnect tokens, invite-code reset and a member blocklist are supported. Legacy Git-based team data is imported when a team is created.
+    - Side-by-Side Session Panels: sidebar conversation rows can be dragged into the right panel (dropping in the center merges into the current group, on an edge splits a new one), tabs move between groups, dividers are draggable and double-click bisects the group, and panel widths are remembered; the session tab title becomes a dropdown that switches between the root session, sub-agents and WorkFlow nodes.
+    - Wenjie Theme: restores the old Horizon palette.
+    - On-Demand Checkpoint Diffs: the change list and rollback preview return a per-file summary only, and the unified diff is read page by page once a file is selected (scroll to load on desktop, pull-down on mobile); large SSH files are marked as not previewable.
+    - Tool Result Images Move to Disk: base64 screenshots returned by MCP tools no longer stay in memory, the renderer or the database - the result keeps a placeholder with a relative path, served on demand through img-proxy on desktop and /api/upload-images on mobile, plus a remote-control take-photo endpoint.
+    - Frame-Scoped Browser Observation: network, console and dialog capture is scoped per frame session and the browser tools can target a frame.
+    - Skill Mentions and Pre-Request Loading: # in the chat input autocompletes skills, and the selected skills are loaded before the model request.
+    - Rich Reject Reasons: tool authorization and sensitive-command prompts share a rich input that accepts pasted images and long-text fragments.
+    Improvements
+    - The team host service listens on a fixed port (default 17880, configurable in team settings) and starts right after a team is created; an optional login-time resident service keeps the host online after the window closes.
+    - OAuth plugin fetch hooks stream text/event-stream responses chunk by chunk for 2xx, keeping the typewriter output.
+    - Decision-model requests rejected as invalid fall back to the pre-GA request form, and that endpoint is remembered for the session.
+    - Skills catalog scanning follows symbolic links / junctions.
+    - Every run now ends with a structured reason (completed, user_abort, superseded, timeout, provider_error, tool_denied, ...) logged with duration, request and retry counts and forwarded to onStop hooks; long sessions keep only ids and roles in memory, use smaller windows in the background and retain just the tail of streaming output.
+    Bug Fixes
+    - User message search is no longer dismissed by the IME candidate window: it locks while typing and only Esc or an outside click closes it; the popover uses a fixed height and isolates global shortcuts.
+    - Dragging tabs or conversation rows is no longer swallowed by embedded webviews/iframes, so drop targets under a browser panel are reachable.
+    - Switching repositories no longer mixes up submission history and check states: in-flight paging responses are discarded and the list and scroll offset are reset on switch.
+    - Deleting or archiving a conversation clears its completion notification, opening a finished conversation clears it too, and cross-project notification caches are trimmed.
+    - Schema 66 backfills sub-agent dispatch identity, so historical activate / continue calls without a host interaction id no longer make the whole turn unrollbackable; editing an OAuth plugin file in API settings keeps its original source and oauthPlugin tag.
+    - File chips are no longer truncated to an ellipsis too early, stale compaction-failure notices are cleared, and MCP tool names show localized labels.
+    What's Changed
+    - feat(theme): 新增「问界」主题 —— 无界被莫名其妙戴了绿帽子，还是让华为问界来 by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/309
+    - feat: frame-scoped browser observation, pre-request skill loading and UI fixes by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/328
+    - fix(chat): 修复用户消息搜索被输入法打断 by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/329
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.10...v0.5.11
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.11
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 团队协作改为数据库 + WebSocket：团队、项目、记录与附件存入本地数据库，主机设备通过 WebSocket 广播同步，不再依赖 Git 仓库；成员凭邀请链接加入，首次加入需主机审批，支持重连令牌、邀请码重置与成员黑名单，创建团队时自动导入旧 Git 团队数据。
+    - 右侧面板会话并排：侧边栏会话行可拖入右侧面板（落点居中并入当前分组、落在边缘拆出新分组），标签可在分组间移动，分隔条可拖拽、双击平分，面板宽度自动记忆；会话标签标题改为下拉，可在根会话、子代理与 WorkFlow 节点之间切换。
+    - 问界（Wenjie）主题：还原老无界（Horizon）配色。
+    - 检查点差异按需分页：变更列表与回滚预览只返回文件摘要，选中文件后分页读取 unified diff（桌面滚动加载、手机下拉首页），SSH 大文件标记为不可预览。
+    - 工具结果图片落盘：MCP 工具返回的 base64 截图不再常驻内存、渲染进程与数据库，结果只保留占位符与相对路径，桌面经 img-proxy、手机经 /api/upload-images 按需读取，并新增远控拍照端点。
+    - 浏览器帧级观察：网络、控制台与对话框按 frame 会话捕获，浏览器工具支持指定 frame。
+    - 技能引用与预加载：聊天输入框支持 # 唤起技能补全，选中的技能在模型请求前加载。
+    - 拒绝原因支持图片与长文本：工具授权与敏感命令确认共用富文本输入，可粘贴图片与长文本片段。
+    改进
+    - 团队主机服务改用固定端口（默认 17880，可在团队设置中修改），创建团队后立即启动，可选注册为登录时自启服务。
+    - OAuth 插件 fetch hook 对 2xx 的 text/event-stream 响应逐块解析，保留打字机输出。
+    - 决策模型请求被判定为无效时回退到 GA 之前的请求表单，并记住该端点。
+    - Skills 目录扫描支持符号链接 / junction。
+    - 每次 run 结束记录结构化原因（completed、user_abort、superseded、timeout、provider_error、tool_denied 等），日志附带耗时、请求数与重试次数并传给 onStop hooks；长会话内存收敛：会话记录只留 id/role，后台会话使用更小窗口，流式输出只保留尾部。
+    修复
+    - 用户消息搜索不再被输入法候选窗打断（输入态锁定 + IME 组合保护），浮层改为固定高度并隔离全局快捷键。
+    - 拖拽标签或会话行时不再被内嵌 webview/iframe 吞掉事件，浏览器面板下方区域也可作为落点。
+    - 切换仓库时提交历史与检查状态不再错乱：丢弃在途分页响应，切换时清空列表并归零滚动偏移。
+    - 删除或归档会话会清理完成通知，打开已完成的会话也会清除通知，跨项目通知缓存不再残留。
+    - schema 66 回填子代理派发身份，历史上缺少 host interactionId 的 activate / continue 调用不再让整轮无法回滚；API 设置中编辑 OAuth 插件文件保留原始 source 与 oauthPlugin 标记。
+    - 文件芯片名称不再过早截断为省略号，压缩失败提示不再残留，MCP 工具名显示本地化名称。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0511
+ReleaseTime: 2026-11-01T11:30:52.0000000Z

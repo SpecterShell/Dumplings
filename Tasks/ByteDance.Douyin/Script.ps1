@@ -1,25 +1,53 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.douyin.com/downloadpage/pc' | ConvertFrom-Html
-$Object2 = ($Object1.SelectSingleNode('//*[@id="RENDER_DATA"]').InnerText | ConvertTo-UnescapedUri | ConvertFrom-Json -AsHashtable).Values.downloadInfo
+$Object1 = Invoke-WebRequest -Uri 'https://api.toutiaoapi.com/service/settings/v3/' -Body @{
+  aid             = '430651'
+  device_platform = 'pc'
+  from_aid        = '6383'
+  from_channel    = ''
+  from_version    = $this.Status.Contains('New') ? '5.2.1' : $this.LastState.Version
+} | Read-ResponseContent | ConvertFrom-Json -AsHashtable
 
-# Version
-$Task.CurrentState.Version = $Object2.version
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.apk.Replace('lf3-cdn-tos.bytegoofy.com', 'www.douyin.com/download/pc')
+if (-not $Object1.data.settings.Contains('douyin_pc_update')) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object2.time | Get-Date -Format 'yyyy-MM-dd'
+# Version
+$this.CurrentState.Version = $Object1.data.settings.douyin_pc_update.version
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $Object1.data.settings.douyin_pc_update.url.Replace('mix', 'ia32').Replace('x64', 'ia32')
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.data.settings.douyin_pc_update.url.Replace('mix', 'x64').Replace('ia32', 'x64')
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.settings_time | ConvertFrom-UnixTimeSeconds
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.settings.douyin_pc_update.notes | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

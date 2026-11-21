@@ -1,0 +1,276 @@
+Version: 1.4.4
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/BlueHeisenberg/SCSKiller/releases/download/v1.4.4/SCSKiller-Setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    This build isn't code-signed yet, so the first run will probably show SmartScreen's "Windows protected your PC".
+    Click More info, then Run anyway. Updates never show it.
+    To check the download arrived whole, compare its SHA-256 with the one at the end of these notes (PowerShell:
+    Get-FileHash <file>). These notes aren't signed, so that doesn't prove who built it. The source: https://github.com/BlueHeisenberg/SCSKiller/tree/v1.4.4.
+    Smart App Control (Windows 11) blocks unsigned apps outright, with no Run anyway.
+    Linux support is no longer experimental: Heroic, Lutris and Faugus Launcher join Steam. Get the AppImage from the
+    release page.
+    New
+    - On Linux, SCSKiller records Vulkan games of Heroic, Lutris and Faugus, also in their Flatpaks once you let the
+      launcher save the recordings.
+    - On Linux, one click lets a Flatpak Heroic use SCSKiller's recorder folder, so its DirectX games are recorded.
+    - On Linux, SCSKiller lists and compiles the Windows games you added to Faugus Launcher, and they get a Play button.
+    - On Linux, SCSKiller lists the games you added to Heroic, and Add a game takes a game's exe inside its Wine prefix.
+    - On Linux, Heroic, Lutris and Faugus games on Mesa drivers compile instead of stopping at Warming with "isn't a game of
+      a Steam library", and the compile follows a cache folder the launcher sets for the game. Games of a Flatpak Heroic,
+      Lutris or Faugus are compiled on AMD and Intel graphics too, inside the launcher's Flatpak.
+    - On Windows, SCSKiller finds games installed with WeGame, also in a Steam library folder and up to two folders below a
+      drive's root, and a WeGame game in a Steam library folder is no longer shown as VAC.
+    - GRYPHLINK games get their own section in the Library.
+    - Black Myth: Wukong Benchmark Tool and other Unreal benchmark tools on Steam are listed and compiled like games.
+    - The game page has a Ray tracing only button that compiles only the game's ray tracing pipelines, the rest compiles at
+      its next compile. The command line takes it as compile <game> --rt-only.
+    - When a game's plan changed a lot after a compile, the app offers to delete its old shader cache and compile again, so
+      no disk space is wasted.
+    - The compile queue has a Check now button that runs the waiting check for new shaders without waiting for the PC to be
+      idle.
+    - On Windows, games with OptiScaler installed as d3d12.dll can be recorded when "Record alongside OptiScaler" is on,
+      with OptiScaler and its settings left as they are.
+    - Unreal games with several AES keys, such as Fortnite, take one key per line, the game page shows how many of the
+      encrypted archives the keys open, and a key for a GUID no archive has says so.
+    - The Library shows its summary cards again, and Settings has a Compact UI option for the slim layout.
+    Improved
+    - On Windows, Settings has Remove recorders too, and it also removes SCSKiller's notification registration and temp
+      file.
+    - The CLI's status and the game page say when another SCSKiller copy's recorder is in the game's folder, and that
+      turning recording on takes it over.
+    - What's new no longer lists changes made for the other OS.
+    - On Linux, notifications meant only for Windows, such as Windows driver news, no longer show, and Lutris games get
+      their own Library section. The command line names Faugus and Lutris games as the Library does.
+    - The Library summary counts games you added yourself separately from the ones found in your stores.
+    - A paused compile keeps its rate and time left, and the check of each game before a compile shows in the log and the
+      tray.
+    - The game page's recorded pipelines show what the recording holds, not the count from when the compile plan was last
+      built.
+    - The game page's community data row says when the community recording isn't in use, because it's for Patreon supporters
+      or isn't downloaded yet, and the log says why.
+    - A failed compile says why on the game's page and in a one-line notification, also when an automatic compile fails.
+    - A game whose last compile failed says so on its page and in problem reports instead of "Not compiled yet", and a
+      compile process that stops is no longer shown as a GPU driver crash while the compile goes on.
+    - A compile with nothing left to do says so instead of ending silently.
+    - On Linux, problem reports name the Proton build of Faugus, Heroic and Lutris games instead of "Proton unknown", and
+      mask the home folder in Wine paths as ~ without the drive letter.
+    - Report a problem includes a failed compile's own log, its error and its last error output, shows how many shaders the
+      game still built after SCSKiller's compile, the game's rendering setting, and every shader archive read.
+    - The game page's Details and Report a problem show how much of the driver cache's disk space is in use.
+    - The first launch after a compile counts how many of its shader compiles reused a shader set the compile already had,
+      shown in status and in problem reports.
+    - A game the compile can't reach says a newer driver may let it compile again, instead of promising it.
+    - The game page no longer says a recording confirms the coverage for games that can't be recorded.
+    - Games with anti-cheat say the game contains anti-cheat and, where there is one, how to record it at your own risk. The
+      Settings option for the recorder in games with anti-cheat says enabling it is at your own risk, and SCSKiller isn't
+      responsible for bans.
+    - On Windows, the offline session's ban risk note says to play online only once its button reads "Record offline without
+      EasyAntiCheat" again.
+    - An update held back by a recording session says the session's game is running or its files are still in the game
+      folder.
+    - On Windows, the game page names the process a compile shows as in Task Manager, so it isn't mistaken for the game.
+    - On Windows, the game page says when Windows Smart App Control blocks the recorder.
+    - On Windows, a compile that Windows stops as the game's copy starts says so, and names the large-page setting when that
+      is set for the game's exe.
+    - On Windows, the compile's Finishing step shows a moving percentage and time left while the compiled shaders go into
+      the game's cache, also for a big game, and when that runs after the game exits, the game page says so and shows how
+      long it has taken.
+    - On Windows with NVIDIA, the Finishing step of a compile takes far less time and disk space when the game's own cache
+      is small.
+    - On NVIDIA, the warning before a very large compile says the cache will take more memory than the PC has free once it
+      would use over 90% of the RAM.
+    - An automatic re-warm after a driver update shows its notifications (a failed compile, the game started during the
+      hand-off) also when it runs while SCSKiller is closed.
+    - On Windows, compiles use the performance cores of Intel hybrid CPUs instead of only the efficiency cores.
+    - On Windows, a compile on a game with many ray tracing pipelines restarts far less often to free memory and never uses
+      more than 60% of the PC's RAM.
+    - With the traversal stutter fix on, SCSKiller sets aside graphics memory only when a game needs it, and gives unused
+      memory back sooner.
+    - On Windows with NVIDIA, a compile starts NVIDIA Aftermath when the game would, from an Unreal game's settings or
+      because the players who shared its community recording saw the game start it, so its pipelines reach the game's cache.
+    - On Windows with NVIDIA, games that start NVIDIA Aftermath, such as STAR WARS Galactic Racer, no longer compile their
+      shaders again at the first launch with the recorder installed.
+    - On NVIDIA, Unreal 5.5 and later games with a ray tracing recording compile the rest of their ray tracing shaders, as
+      Phantom Blade Zero does.
+    - On NVIDIA, the ray tracing part of a compile skips ray generation shaders at sizes the game never uses, so it takes
+      far less time in games such as Phantom Blade Zero.
+    - On NVIDIA, Phantom Blade Zero's ray tracing compiles with the settings the game uses, also with path tracing on, so far
+      fewer of its ray tracing shaders compile while you play.
+    - On NVIDIA, more recorded pipelines of games that use NVIDIA's shader extensions compile as the game creates them, so
+      fewer of them compile again while you play.
+    - On NVIDIA, when a game's first launch after a compile still compiles some pipelines, the next compile creates only
+      those and the new ones instead of every pipeline again.
+    - On NVIDIA, the recorder can go into more games that load Streamline first.
+    - On Windows, the recorder loads in Path of Exile 2, also on AMD, and the game page no longer guesses DirectX 11 when
+      the game's own setting says DirectX 12.
+    - RE Engine games that keep their settings in their own config file, such as RESIDENT EVIL RESISTANCE, get their DirectX
+      version from it.
+    - On Windows, a game that makes its DirectX 12 device without going through the recorder says so on its page instead of
+      "the recorder never loaded", and a launch the recorder loaded into without a DirectX 12 device says the game may have
+      run on DirectX 11.
+    - The Vulkan recorder records pipelines that set per-attachment sample counts, such as the Bloodborne PC port's.
+    - Luma's Unreal Engine and Watch Dogs 2 builds, which rewrite some of the game's shaders, count as shader mods like the
+      other Luma builds that do.
+    - The Medium compiles about 2% more pipelines from its game files, so fewer stutters remain on the first play.
+    - On Windows, the app's text follows Settings > Accessibility > Text size again, as it did up to 1.3.4, and changes with
+      it while the app runs.
+    - SCSKiller started with --version, --help, a command-line command or an option it doesn't know prints its version
+      or usage instead of opening the app.
+    - The command line's compile, status, key, exe, index and rehydrate for one game read and change only that
+      game's data instead of scanning and updating every other game first, and the queue shell reads piped commands that
+      start with a byte order mark.
+    - The command line's cache page uses the app's names, commands that take no argument refuse a stray one, and a compile
+      says why it fetched no community recording.
+    - On Linux, a game whose launch options or launcher settings pick a GPU compiles on that GPU when SCSKiller can tell
+      which one, and says why when it can't compile for it.
+    - On Linux, a game's DirectX or Vulkan choice in Heroic, Lutris or Faugus counts for its compile, as Steam launch
+      options do.
+    - On Linux, a game whose Wine prefix has no drive for its folder shows why it wasn't recorded.
+    - On Linux, a game whose Steam or launcher prefix doesn't exist yet shows "Start it once first" instead of Ready or Not
+      supported yet.
+    - On Linux, SCSKiller never asks you to paste Steam launch options. A Steam game's compiled cache sits in Steam's own
+      shader cache folder.
+    - On Linux, a compile never runs on a software renderer and stops with a clear error instead.
+    - The live counter no longer counts the DirectX 11 shaders SCSKiller can't build yet as failed, matching the summary at
+      the end.
+    Fixed
+    - On Windows, compiles of Xbox app games on Windows 10 reach the game's own NVIDIA shader cache.
+    - On Windows, Settings shows whether Windows' automatic disk cleanup is kept from clearing compiled shaders, also after
+      you leave the page.
+    - On Windows, Steam games no longer all count as VAC when Steam's registry path points at a game's own Steam folder, in
+      the app and in the recorder, and the log says that folder isn't a Steam install.
+    - A GOG, Epic or hand-added game no longer shows VAC because of a Steam file in its folder or a game's own Steam folder,
+      and the recorder works in it.
+    - On Linux, a non-Steam game installed into its own Proton prefix is no longer flagged VAC, and its recorder installs. A
+      game outside Steam whose files name a VAC game is shown with VAC, as the recorder already refused it at launch.
+    - A game folder SCSKiller can't fully read counts as unknown instead of anti-cheat: the recorder waits and comes back
+      once it reads, and Always record stays on. The Library shows "Checking for anti-cheat" instead of "Blocked by
+      anti-cheat" until the check finishes, and the at-own-risk recording offer says the check didn't finish instead of
+      saying the game contains anti-cheat.
+    - A game with no anti-cheat in its install keeps its recorder when its anti-cheat check runs long, as long as the
+      install hasn't changed since the last complete check.
+    - On Windows with AMD, a moment when Steam's data can't be read no longer stops SCSKiller for good from giving the
+      driver the game's name, and games it stopped get it back.
+    - On Windows with AMD, games that build AMD's GPU library into their exe, such as FINAL FANTASY XVI, compile into the
+      cache they read, and Clear cache no longer leaves a game Not compatible.
+    - On Windows with AMD, demos of games that register their full game's name with AMD's driver compile into the cache key
+      the demo reads.
+    - On Windows with AMD, SILENT HILL f's compile keeps its pipelines in the driver's cache instead of losing most of them.
+    - On Windows with AMD, a game whose launch uses another shader cache than SCSKiller's compile filled shows as not
+      reached instead of compiled.
+    - On Windows with AMD, compiles keep a ray tracing game's plan within the driver's cache size, also at a game's first
+      compile, so the game's cache is no longer trimmed and compiled again after every session.
+    - On Windows with AMD, a Vulkan game's compile fills the cache file the game reads, also when the game starts outside
+      Steam, instead of a new file each time that the game never used.
+    - On Windows with AMD, Clear cache and keeping caches aside handle shader cache files that a game run as administrator
+      wrote, instead of calling them in use or reached through a link.
+    - On Windows with AMD, some DirectX 11 games, such as Dota 2, no longer show "Not compatible" after a compile.
+    - Two games with the same exe name, such as Path of Exile and Path of Exile 2, no longer take each other's driver cache
+      files, and the ones already mixed up are relearned.
+    - Clear cache keeps a driver cache file another game also uses and says which, instead of refusing.
+    - On NVIDIA, compiled pipelines keep the game's NVAPI state when the community recording includes records from other GPU
+      vendors.
+    - On NVIDIA, ray tracing pipelines this PC recorded compile with the state the game used here, not another player's.
+    - On Windows with NVIDIA, STAR WARS Galactic Racer's compile matches the game's crash reporting setup, so it no longer
+      prepares shaders at start.
+    - Coverage no longer drops for games whose shared data includes other players' RenoDX recordings, as in Phantom Blade
+      Zero.
+    - Phantom Blade Zero compiles through RenoDX also when OptiScaler in its Binaries folder loads ReShade from beside the
+      game's exe.
+    - A RenoDX update that only rebuilds the same version no longer compiles the whole game again.
+    - Fortnite's Performance mode compiles its own shaders on DirectX 12 and only those on DirectX 11, and on Windows about
+      9,700 more of its pipelines compile on DirectX 12.
+    - On Windows, the DirectX 11 compile also builds vertex shaders that write to a buffer in the first output slot, so none
+      are skipped.
+    - On Windows, games that restart themselves through Steam when started by their exe record again, instead of recording
+      nothing in the relaunched game.
+    - A compile that runs short of memory no longer restarts again and again from the same point, as Phantom Blade Zero did
+      on 8-16 GB PCs. It creates the pipelines that were in flight one at a time, goes on with one thread, and skips a
+      pipeline for that compile only if it still can't get past it. Out-of-memory errors count as skipped, not failed.
+    - A compile whose compile process ends unexpectedly keeps its progress, and compiling again goes on from there instead
+      of from the last stop.
+    - A compile that resumed after ending unexpectedly no longer compiles what it already created again at the next compile.
+    - Pipelines a compile couldn't create after its compile process died and was started again are tried again at the next
+      compile, instead of counting as created.
+    - A compile that ends twice at the same pipeline skips that pipeline and goes on, instead of starting over at it each
+      time.
+    - A Vulkan pipeline that crashed or hung the driver is skipped in later compiles too.
+    - A stopped compile goes on where it stopped when the game's pipeline list changed.
+    - The low disk space pause checks the drive the shader caches really are on, also when a cache folder was moved to
+      another drive with a junction.
+    - On Windows, the hand-off into the game's cache checks free space on the drive a linked shader cache folder is on, not
+      on the system drive.
+    - The Cache page's total counts everything its rows list, including a compile's files still waiting to be handed to the
+      game's cache.
+    - On Windows, a game's Windows shader cache from before a game update is counted, shown on the Cache page and offered
+      for deletion, and Clear cache removes it.
+    - Indexing no longer fails with "outgrew its memory limit" on a package whose header has impossible counts. SCSKiller
+      reads that package whole and goes on, and after a memory peak it reads the remaining packages one at a time instead of
+      stopping.
+    - Days Gone is read as its own engine version, so its shaders index without hitting the memory limit and the recorder
+      loads in its DirectX 11.
+    - SCSKiller reads Crimson Desert's archive groups that hold very large files or a root folder.
+    - Cyberpunk 2077 with Cyber Engine Tweaks starts again with Record on.
+    - A game switched Off for shared shader hashes sends no more requests, also when a download was already retrying.
+    - Left-out folders and drives aren't read during scans any more.
+    - A game added by hand can no longer use a game folder that links into another game's folder, Game folder... on a game
+      that moved picks the game's exe in the new folder or says to add it again, and the recorder never goes next to an exe
+      outside the game folder it checked.
+    - Adding a game by hand no longer refuses its folder when mod tools such as Fluffy Mod Manager sit inside it.
+    - A game you added by hand inside a Steam game's install no longer removes the recorder from Steam's copy, and one added
+      in the folder where the Steam game's recorder sits leaves your library while the Steam game keeps its recorder and
+      recording.
+    - A game whose exe SCSKiller was told to use keeps recording after the game runs another exe.
+    - A second copy of SCSKiller no longer changes another copy's recorders, and a failed take-over puts the other copy's
+      recorder back exactly as it was.
+    - A game folder with only another tool's d3d12.dll, such as OptiScaler, is no longer taken over from another SCSKiller
+      copy.
+    - A copy with a moved data folder starts its driver-update notification on its own data folder and no longer changes the
+      installed copy's startup entry, driver-update task or menu entry.
+    - On Windows, a notification from a test copy that closed unexpectedly no longer acts on the installed copy's games.
+    - A recorder you remove stays off even when its files are copied back into the game's folder, and the recorder only
+      trusts SCSKiller's own data folder.
+    - Removing the recorder also removes the settings file SCSKiller wrote beside it when it holds exactly what SCSKiller
+      wrote, also after it was edited and put back.
+    - On Windows, Record while I play installs again where an earlier version's recorder settings file blocked it, and no
+      longer stops installing after SCSKiller loses track of that file.
+    - The first launch after a compile is checked once the game has closed, also for games, such as Unreal games, that close
+      without telling the recorder.
+    - Two games with the same exe name no longer both count as running when one of them starts, so the other no longer
+      reports that its recorder never loaded.
+    - Other processes started with a Vulkan game no longer leave refusal files in SCSKiller's data folder.
+    - On Linux, SCSKiller no longer stalls when run inside a sandbox such as bwrap or firejail, where compiles failed and
+      Restart to update kept waiting for a background rebuild that wasn't running. An update that can't install because the
+      lock folder can't be trusted says why, instead of blaming a compile.
+    - On Linux, Vulkan games no longer skip valid pipelines whose shaders use newer SPIR-V features such as FMA or opacity
+      micromaps, and pipelines Steam would skip too are no longer reported as GPU driver crashes.
+    - On Windows, Vulkan pipelines Steam would skip too, or that need a feature the GPU lacks, are no longer reported as GPU
+      driver crashes.
+    - On Linux, a Steam game whose Proton prefix Steam made in another library (a game on a second disk, its prefix in
+      Steam's own folder) compiles instead of asking for a first start from Steam.
+    - On Linux, the first compile after playing a Heroic, Lutris or Faugus game installed on its own drive or partition no
+      longer fails within a second.
+    - On Linux, compiles no longer open an empty console window at each warm start under Proton.
+    - On Linux, a Proton or Wine Unreal game's DirectX 12 setting is read from its Wine prefix, so Record installs the D3D12
+      recorder for it.
+    - On Linux, a compile no longer fails with "no GPU adapter" when the game's Wine prefix sets a DXVK device filter that
+      matches no GPU.
+    - On Linux, resuming a stopped compile on Mesa drivers continues where it stopped instead of compiling every pipeline
+      again.
+    - On Linux, games that set VKD3D_CONFIG in their launch options or launcher settings compile in that mode, so their
+      cache is used.
+    - On Linux with NVIDIA, a Vulkan game's next compile no longer replays everything.
+    - On Linux with NVIDIA, compiling a Heroic, Lutris or Faugus game keeps its cache with the game and puts it where the
+      game reads it after the game's next launch.
+    - On Linux, the Cache page describes the driver's cache folder and NVIDIA's cache size correctly.
+    - On Linux, a non-Steam game added to Steam no longer puts its compile into the cache of another game with the same exe
+      name, and a compile already put there is taken back out.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BlueHeisenberg/SCSKiller/releases/tag/v1.4.4
+ReleaseTime: 2026-11-03T02:40:14.0000000Z

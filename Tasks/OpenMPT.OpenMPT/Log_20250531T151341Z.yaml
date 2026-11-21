@@ -1,0 +1,188 @@
+Version: 1.32.01.00
+Installer:
+- InstallerUrl: https://download.openmpt.org/archive/openmpt/1.32/OpenMPT-1.32.01.00-Setup.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://openmpt.org/release_notes/History.txt
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Tree view
+    - [New] <js> The tree view can now also be placed on the right side of the window (View -> Toolbars).
+    - [Imp] <js> The Instrument Library now shows size information for samples in modules as well, and uses cached information for displaying file size and modification time of on-disk files instead of querying this information from the operating system every time a file is selected.
+    - [Mod] <js> The "Switch To Instrument Library" shortcut is no longer available if the tree view is hidden (http://bugs.openmpt.org/view.php?id=1802).
+    - [Mod] <js> When MIDI Library entries are unset by user, they are no longer replaced with the default soundfont after restarting OpenMPT (http://bugs.openmpt.org/view.php?id=1870).
+
+    General tab
+    - [New] <js> By holding Shift when pressing the Bypass checkbox, all other plugins are (un-)bypassed. Holding Ctrl instead, only Master plugins are affected.
+    - [Imp] <js> Expanded mix now also works with plugins that have no inputs.
+    - [Imp] <js> All mix modes are now available for instrument plugins as well. The old plugin mixing behaviour for instrument plugins is emulated with the new "Instrument" mix mode (http://forum.openmpt.org/index.php?topic=7178.0).
+
+    Pattern tab
+    - [New] <js> There is now a metronome that can be enabled from the toolbar or via a keyboard shortcut. The toolbar button also allows to change the metronome volume or replace metronome samples (http://bugs.openmpt.org/view.php?id=689).
+    - [New] <js> Merge functionality has been extended to support merging into multiple patterns with a user-specified length. This way, it becomes possible to automatically rearrange e.g. 64-row patterns into 128-row patterns in one go (http://bugs.openmpt.org/view.php?id=1750).
+    - [New] <js> Pattern Properties: When increasing pattern size, there is now an option to duplicate the existing contents to the newly-added rows (http://bugs.openmpt.org/view.php?id=431).
+    - [New] <js> Instrument / volume / effect column visibility can now be toggled independently. Column visibility is now remembered per-module if "Remember song window positions" is enabled (http://bugs.openmpt.org/view.php?id=1523).
+    - [New] <js> Add experimental hexadecimal volume column mode. Has to be enabled via hidden setting "Pattern.VolumeColumnInHex" and then manually assign the corresponding keys for A-F and reassign effect keys to something else (http://bugs.openmpt.org/view.php?id=1798).
+    - [New] <js> It is now possible to queue the next pattern to not only play when the current pattern is finished, but also when the current measure, beat or row is finished. This can be done through new order list context menu entries, four new keyboard shortcuts (combinations of Shift + Alt + Q), or as before by middle-clicking or Ctrl-left-clicking (together with the same modifier combinations of Shift and Alt as the aforementioned shortcuts, http://forum.openmpt.org/index.php?topic=7014.0).
+    - [New] <js> Added keyboard shortcuts for toggling most MIDI recording options (http://bugs.openmpt.org/view.php?id=500).
+    - [New] <js> Can now set a separate background color for the active row when recording is enabled (http://bugs.openmpt.org/view.php?id=856).
+    - [Imp] <js> Shortcuts that toggle settings with no immediate visual feedback now show the new setting value in the status bar (http://bugs.openmpt.org/view.php?id=500).
+    - [Imp] <js> It is now possible to solo a group of channels at once. The solo shortcut applies to all channels in the current pattern selection.
+    - [Imp] <js> It is now possible in the Pattern Properties dialog to edit the properties of multiple patterns without having to close and re-open the dialog every time, and also change their names (http://forum.openmpt.org/index.php?topic=3454.0).
+    - [Imp] <js> Global S9x commands are now applied while seeking as well.
+    - [Imp] <js> Added hidden setting "Pattern Editor.AutoHideVolumeColumnForMOD" to disable the volume column by default for MOD and MOD-like formats (http://bugs.openmpt.org/view.php?id=1836).
+    - [Imp] <js> The built-in pattern font is now automatically scaled according to DPI settings. From 150% onward it is upscaled 2x, from 250% onward it's 3x, etc...
+    - [Imp] <js> "Continue song as soon as MIDI notes are being received" can now optionally start playback from the start of pattern, rather than from the current row (http://bugs.openmpt.org/view.php?id=445).
+    - [Imp] <js> Allow MIDI Pitch Bend messages to not be recorded at all, always record them as macros, always as finetune, or both (http://bugs.openmpt.org/view.php?id=1874).
+    - [Imp] <js> In sample mode, show default volume also for note-less instruments (http://github.com/OpenMPT/openmpt/pull/29).
+    - [Imp] <js> Reduced flickering text when updating channel and row headers.
+    - [Imp] <js> "Display rows / orders in hex" setting is now also applied to accessible announcements (http://bugs.openmpt.org/view.php?id=1876).
+    - [Fix] <js> When inserting or duplicating multiple patterns, it was possible that patterns at the end of the order list disappeared.
+    - [Fix] <js> Using the Toggle Overflow Paste shortcut didn't update the corresponding toolbar button.
+    - [Fix] <js> Checking or unchecking Overflow Paste in one pattern editor didn't update the button in other pattern editors.
+    - [Fix] <js> It wasn't possible to toggle the record / VU meters / Plugin Display icons using the space bar.
+    - [Fix] <js> Fixed various accessibility issues in Quick Channel Settings dialog (http://bugs.openmpt.org/view.php?id=1880).
+    - [Fix] <js> After inserting patterns in the order list, the status bar and accessible announcement text were not updated.
+
+    Sample tab
+    - [Imp] <js> Replaced pitch shifting and time stretching components. By default, Signalsmith Stretch is now used for both high-quality shifting and stretching, and a custom "Akai"-like implementation can be used alternatively in "Lo-Fi Mode". Both implementations can handle any pitch shifting and time stretching amounts, and apply both changes simultaneously (http://bugs.openmpt.org/view.php?id=1808).
+    - [Imp] <js> When resampling samples in MOD files, there is now an option to adjust pattern data accordingly (http://forum.openmpt.org/index.php?topic=7245.0).
+    - [Imp] <js> The default / global volume tooltips now also show the effective amplification based on the sample / synth volume specified in the General tab (http://forum.openmpt.org/index.php?topic=7308.0).
+    - [Mod] <js> Loop information is now saved in FLAC metadata similar to how it is saved in WAV metadata when only a sustain loop is present. This way, it is possible to distinguish it from a normal sample loop.
+    - [Mod] <js> When resampling, sample offset command parameters are now rounded and parameters are never set to 0, as that would just recall the previous offset.
+
+    Instrument tab
+    - [New] <js> Last edited instrument is now remembered per-module if "Remember song window positions" is enabled.
+
+    Comments tab
+    - [New] <js> In addition to copying sample / instrument texts, they can now be pasted as well.
+    - [Imp] <js> Sample and instrument names and filenames are now drawn using the Comments font (so typically a fixed-width font; http://bugs.openmpt.org/view.php?id=1758).
+    - [Imp] <js> Allow to click anywhere in the sample / instrument list to select or open the corresponding editor (http://bugs.openmpt.org/view.php?id=1883).
+
+    VST / DMO Plugins
+    - [New] <js> Can now load shell VST plugins (http://bugs.openmpt.org/view.php?id=1551).
+    - [Imp] <js> VST: Improve correctness of PPQ position reporting. The PPQ is now also correct when the tempo changes, and when breaking to the next pattern, the position is rounded to the next start of measure (partially fixes https://bugs.openmpt.org/view.php?id=1731).
+    - [Mod] <js> After seeking, plugins are informed immediately about the new playback position if playback is stopped (http://bugs.openmpt.org/view.php?id=1731).
+    - [Fix] <js> Before OpenMPT 1.26, it was possible to send MIDI notes to channel plugins if the current instrument had a valid MIDI channel but no plugin assigned. The old behaviour is now re-enabled for old modules that rely on it.
+    - [Reg] <js> When a plugin referenced by a module isn't found, it is no longer added to the plugin library if it can be automatically found in the root of the VST plugin path specified in the OpenMPT settings.
+
+    Playback
+    - [Fix] <js> The retrigger command could behave differently when a MIDI channel was assigned to the active instrument (http://bugs.openmpt.org/view.php?id=1587).
+    - [Fix] <js> NNA channels associated with VST plugins or the MIDI I/O plugin will no longer cause channel starvation with NNA set to "Continue".
+    - [Fix] <js> Some plugin notes could keep playing forever when previewing samples or instruments while all NNA channels were in use.
+    - [Fix] <js> Avoid clicks on sample transition when applying a portamento effect between two different samples.
+
+    MPTM
+    - [New] <js> Every sequence has its own default tempo and speed now (http://bugs.openmpt.org/view.php?id=1322).
+
+    IT
+    - [Imp] <js> Default cue points are no longer set for samples in IT files and old enough MPTM files that don't use any volume-column offset commands (http://bugs.openmpt.org/view.php?id=1540).
+    - [Fix] <js> When using tone portamento to another sample after the previous sample's sustain loop has been released, the new sample should also not play its sustain loop.
+    - [Fix] <js> When triggering an empty instrument note slot, completely ignore the pattern cell - do not reset the currently playing instrument's envelopes (fixes wayfinder's Jet Rider), and also don't process any effects - including global ones.
+    - [Fix] <js> Offset with instrument number but no note should play offset effect with previous note (http://bugs.openmpt.org/view.php?id=1785).
+    - [Fix] <js> Fixed various combinations of volume column and effect column portamento effects (http://bugs.openmpt.org/view.php?id=1827).
+    - [Fix] <js> Implemented a quirk in command Lxx that always executes a portamento down when no tone portamento has been set up before, sometimes causing the target note to be reached immediately, or sliding the note down very subtly.
+    - [Fix] <js> Envelope Carry should not be influenced by a previous note-off (fixes bridge.it by rs3, http://www.un4seen.com/forum/?msg=144272).
+
+    XM
+    - [Mod] <js> Increased maximum channel count from 127 to 128, as MilkyTracker can write such files as well (http://bugs.openmpt.org/view.php?id=1877).
+    - [Fix] <js> When a key-off is encountered before auto-vibrato sweep reaches full depth, the vibrato depth is reset.
+    - [Fix] <js> Offset effect memory should only be updated when the command is next to a note (tx cyrb).
+
+    S3M
+    - [Mod] <js> Impulse Tracker style edit timer is now stored, and also read from files made with Schism Tracker.
+    - [Fix] <js> Combined slides (Kxy / Lxy) are no longer run on the first tick of a row in files made with Scream Tracker (http://bugs.openmpt.org/view.php?id=1828).
+
+    MOD
+    - [Imp] <js> Groo's "The Ultimate Beeper" now plays like in ProTracker.
+    - [Imp] <js> Modules saved with TakeTracker can now be identified.
+    - [Imp] <js> Improved Tetramed detection.
+
+    Other formats
+    - [New] <js> Can now read PumaTracker (PUMA) modules (http://bugs.openmpt.org/view.php?id=1327).
+    - [New] <js> Can now read Face The Music (FTM) modules (http://bugs.openmpt.org/view.php?id=1411).
+    - [New] <js> Can now read Future Composer (FC / SMOD) modules (http://bugs.openmpt.org/view.php?id=39).
+    - [New] <js> Can now read Game Music Creator (GMC) modules (http://bugs.openmpt.org/view.php?id=1762).
+    - [New] <js> Can now read Chuck Biscuits / Black Artist (CBA) modules from the Expoze musicdisk by Heretics (http://bugs.openmpt.org/view.php?id=1792).
+    - [New] <js> Can now read TCB Tracker (MOD) modules (http://bugs.openmpt.org/view.php?id=1845).
+    - [New] <js> Can now read Real Tracker 2 (RTM) modules.
+    - [New] <js> Can now read Images Music System (IMS) modules.
+    - [New] <js> Can now read ChipTracker (MOD) modules.
+    - [New] <js> Can now read EasyTrax (ETX) modules.
+    - [New] <js> Can now read UNIC Tracker v1 (UNIC) files.
+    - [New] <js> MED: Synthesized and hybrid instruments are now supported (http://bugs.openmpt.org/view.php?id=1321).
+    - [New] <js> GT2: Better support for old "envelopes", in particular adding support for the previously missing tremor / tremolo / vibrato.
+    - [New] <js> NST: His Master's Noise "Mupp" instruments are now supported, as well as command 7 "mega-arp".
+    - [New] <js> Better support for automatic slide commands (commands that keep sliding on following rows) in various formats (http://bugs.openmpt.org/view.php?id=1773).
+    - [Imp] <js> The pattern channel limit was raised from 127 to 192 for imported formats.
+    - [Imp] <js> SymMOD: Files containing more channels than OpenMPT can handle are no longer rejected (http://www.un4seen.com/forum/?msg=143952).
+    - [Mod] <js> PSM: Sub-songs are now imported as independent sequences instead of being crammed together into the same order list.
+    - [Fix] <js> DTM: Portamentos are now also evaluated on the first tick of the row.
+    - [Fix] <js> MO3: If multiple sample slots shared the same Ogg Vorbis sample, only one sample slot was loaded.
+    - [Fix] <js> MED: Tempo parameters > 255 BPM were not imported properly if the files was imported as MOD instead of XM (http://www.un4seen.com/forum/?msg=143478).
+    - [Fix] <js> MED: Import notes that exceed OpenMPT's note range.
+    - [Fix] <js> MED: Better handling of high octaves for non-MIDI instruments (http://www.un4seen.com/forum/?msg=144154).
+    - [Fix] <js> MED: Improve handling of low tempos in BPM mode (http://www.un4seen.com/forum/?msg=144160).
+    - [Fix] <js> MED: For IFFOCT instruments with extra sample loop information, the loop length was not correct. Sample transpose was also not applied correctly for IFFOCT instruments.
+    - [Fix] <js> MED: Command FFF should not stop a note if it is triggered on the same row (http://www.un4seen.com/forum/?msg=144691).
+    - [Fix] <js> MED: Set Pitch command (FFD) was not implemented (http://www.un4seen.com/forum/?msg=145039).
+
+    Stream Export
+    - [New] <js> Can now export all sub songs to individual files (http://bugs.openmpt.org/view.php?id=1515).
+    - [Imp] <js> Repeat count can now also be specified when exporting a pattern range or exporting all sub songs.
+    - [Imp] <js> Normalize and Clear Plugin Buffer choices are remembered across runs. Clear Plugin Buffer is now enabled by default.
+    - [Reg] <js> It is no longer possible to export a range of sequences.
+
+    Misc
+    - [New] <js> Added a quick start "project assistant" view that is shown whenever there is no module loaded (http://bugs.openmpt.org/view.php?id=863).
+    - [New] <js> In addition to the "Previous Order" and "Next Order" shortcuts, there are now also shortcuts that can delay the pattern transition until the next measure, beat or row is reached. When the song isn't playing, they behave like the normal "Previous Order" and "Next Order" shortcuts in the pattern editor (http://forum.openmpt.org/index.php?topic=7014.0).
+    - [New] <js> Added shortcut for browsing template modules (File/Open Template).
+    - [New] <js> Key bindings with Impulse Tracker-like and FastTracker-like note entry (but otherwise identical keyboard shortcuts) can now be applied directly from the keyboard settings dialog, without the need for external keymap files.
+    - [New] <js> Auto save: When auto saving to a user-specified folder, it is now possible to automatically delete old auto save files (default: older than 30 days).
+    - [New] <js> Auto save: Old auto save files are now moved to the recycling bin by default instead of being deleted permanently. Old behaviour can be restored in the auto save settings.
+    - [New] <js> MIDI Export can now write sub songs to individual files (http://bugs.openmpt.org/view.php?id=1515).
+    - [New] <js> Added a /play command line switch, which automatically starts playback of one of the modules passed via the command-line (http://bugs.openmpt.org/view.php?id=1751).
+    - [New] <js> Templates can now be opened from the "New" icon's dropdown menu in the main toolbar (http://bugs.openmpt.org/view.php?id=254).
+    - [New] <js> The main toolbar now shows the global volume of the currently playing module, and can also be used to modify it (http://bugs.openmpt.org/view.php?id=277).
+    - [Imp] <js> The visibility of all song info controls in the main toolbar can now be toggled via the context menu. The readouts can now also be edited directly in addition to the spin buttons.
+    - [Imp] <js> If the main toolbar is too wide to fit the window's size, it now wraps around. In vertical mode, it also wraps around more sensibly.
+    - [Imp] <js> Allow changing the base octave by entering digits 0 to 8 or + and - into the octave edit field in the main toolbar.
+    - [Imp] <js> Precision of time display in status bar was increased to show tenths of a second (http://bugs.openmpt.org/view.php?id=1791).
+    - [Imp] <js> When creating a new MOD file, it is now possible to specify whether it should be an Amiga MOD (4 channels, enable ProTracker quirks and Amiga resampler) or a PC MOD (8 channels, disable ProTracker quirks and Amiga resampler) (http://bugs.openmpt.org/view.php?id=1830).
+    - [Imp] <js> DPI-awareness can now be set in the Display options directly, without the need to edit hidden settings. High-DPI and mixed-DPI behaviour has been greatly improved in many aspects, and OpenMPT is now DPI-aware by default. The old hidden settings Display.HighResUI and Display.UseGDIUpscaling are gone and not migrated.
+    - [Imp] <js> When "Remember song window positions" is active, the last active state is now remembered for all tabs, not just the currently active tab.
+    - [Imp] <js> "Find MPT Hacks" now warns about S3Ms using extended OPL3 waveforms (as it was possible in early OpenMPT versions with OPL support).
+    - [Imp] <js> Channel Manager: It is now possible to interact with channels that have been marked for deletion.
+    - [Imp] <js> Redesign keyboard settings dialog. Assigned shortcuts are now immediately visible without having to manually select each shortcut. Potential cross-context conflicts between shortcuts are now always visible when selecting one of the shortcuts, and not just when editing them.
+    - [Imp] <js> The previously hidden setting "Pattern Editor.IgnoreSongTimeSignature" can now be changed directly via the Display settings.
+    - [Imp] <js> Tuning Dialog: The the dialog is now resizable.
+    - [Imp] <js> Auto save directory is now created when it's missing.
+    - [Mod] <js> Channel mute status is no longer saved by default.
+    - [Mod] <js> Auto save no longer defaults to saving in the song's original folder (http://bugs.openmpt.org/view.php?id=1837).
+    - [Mod] <js> Custom context menus are now handled using a new keyboard shortcut instead of hardcoding the Application key. Shift + F10 was added as a default alternative to the Application key for keyboards that don't have this key (http://bugs.openmpt.org/view.php?id=1815).
+    - [Mod] <js> New default keyboard shortcuts that conflict with existing shortcut are now added if the conflicting shortcut is in a more specific context, as the latter would override it anyway. Previously, it was the other way around, potentially changing existing shortcut behaviours.
+    - [Mod] <js> Global keyboard shortcuts no longer have priority over shortcuts in more specific contexts if they conflict, making their behaviour consistent with other contexts.
+    - [Mod] <js> Folder browser now uses modern browser style when available. The old browser style can be enforced by the hidden setting "Display.UseOldStyleFolderBrowser" (http://bugs.openmpt.org/view.php?id=1687).
+    - [Mod] <js> When auto-saving to a custom folder, sample paths for external samples are no longer relative in auto-saved files. This way, it is guaranteed that they will still work correctly when being moved back to the module's original folder.
+    - [Mod] <js> Various context menus are now opened when releasing the right mouse button, not when pressing it.
+    - [Mod] <js> Special key interception (Windows / Caps Lock / Scroll Lock / Num Lock) is now only active in contexts where a shortcut using that key is present (so e.g. having Note Off assigned to Caps Lock will now allow Caps Lock to be used as normal in another text edit field).
+    - [Fix] <js> Various keyboard handling issues on Wine should be fixed (http://bugs.openmpt.org/view.php?id=713).
+    - [Fix] <js> The "Previous Order" and "Next Order" shortcuts now also work when the pattern editor isn't focussed (http://bugs.openmpt.org/view.php?id=1489).
+    - [Fix] <js> Fixed various keyboard focus issues when switching between upper and lower half of editor views or switching to another application and back (http://bugs.openmpt.org/view.php?id=1799, http://bugs.openmpt.org/view.php?id=1800).
+    - [Fix] <js> Fixed accessibility issues in the Chord Editor (http://bugs.openmpt.org/view.php?id=1886).
+    - [Reg] <js> Global keyboard shortcuts can no longer be triggered while a menu or context menu is open.
+    - [Reg] <js> On Windows XP and Wine 3.12 and older, messages with "don't show again" option are now always shown at most once (the checkbox is no longer visible).
+
+    Bundled plugins
+    - [New] <js> MIDI I/O Plugin: Can now send an initial MIDI dump on playback start.
+    - [New] <js> MIDI I/O Plugin: The plugin now has its own extended MIDI macro system: Automating any plugin parameter (via PC events or, maybe a bit pointlessly, Zxx macros) sends MIDI macros that follow the same format as Zxx macros, but unlike Zxx macros they are not limited in length.
+    - [New] <js> MIDI I/O Plugin: A new virtual output device has been added to allow for MIDI messages to be forwarded to the configured output plugin. This way, the new macro mechanism can also be used together with other plugins and not just MIDI devices.
+    - [Imp] <js> MIDI I/O Plugin: PPQ position is now sent when "send timing information" is enabled. Position updates are sent at the start of every measure, and when changing playback position.
+    - [Imp] <js> MIDI I/O Plugin: The plugin editor is now resizable.
+    - [Fix] <js> MIDI I/O Plugin: When a MIDI device is lost temporarily, OpenMPT tries to re-open the correct device (identified by name or friendly name) when playback is started.
+    - [Reg] <js> MIDI I/O Plugin: The possibility to automate the MIDI input or output port was removed. The resolution of automation parameters was nowhere near enough to be able to actually select devices in a meaningful way.
+
+    Third-Party Libraries
+    - [Imp] Update nlohmann-json (v3.12.0), RtMidi (v6.0.0) and UnRAR (v7.1.6)
+ReleaseTime: 2025-05-31T13:50:26.2784190Z

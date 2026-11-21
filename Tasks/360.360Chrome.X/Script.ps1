@@ -1,49 +1,45 @@
-$Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/eex/' | ConvertFrom-Html
-
-# Version
-$Task.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div[3]/div[1]/p[2]').InnerText,
-  '([\d\.]+)'
-).Groups[1].Value
+$Object1 = Invoke-WebRequest -Uri 'https://browser.360.cn/browser_download_link.js'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//*[@id="download"]').Attributes['href'].Value
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = [regex]::Match($Object1.Content, "EEX:\s*'([^']+)'").Groups[1].Value
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16105183-1-1.html' | ConvertFrom-Html
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '_(\d+\.\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='postmessage_119165366']/text()[contains(., '$($Task.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://bbs.360.cn/thread-16169101-1-1.html' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//td[@id='postmessage_119526099']/text()[contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.InnerText -notmatch '版本号'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (zh-CN)
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; -not $Node.InnerText.Contains('版本号'); $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
-        }
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,30 @@
+Version: 1.2.12
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.2.12/Mini-Term_1.2.12_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - 添加项目后直接打开：弹窗、分组右键「添加项目」、拖目录进项目列表、添加远程项目、Worktree「设为项目」——任何一条入口添加完都直接切到新项目，并用默认 shell 开好第一个终端，不必再面对空态页点一次「新建终端」。路径撞上已有项目时只切过去不重复添加；已有终端的项目不会再多开一个。此前分组右键添加与拖放添加压根不切换，要自己去列表里找。
+    修复
+    - ①②③ 与 emoji 序列压住后面的字：终端列宽改按真实字位簇落格——①⑴ⓐⅠ 这类带圈枚举符号占 2 列；❤️ ⚠️ 呈现序列、👍🏽 肤色修饰、👨‍👩‍👧 ZWJ 组合、🇨🇳 区域指示符、1️⃣ 键帽整簇占一格，与 ConPTY / string-width 的口径对齐。AI 输出的清单与状态行不再互相叠字。
+    - 中文全角符号叠字、⚠ ✔ ⏺ 顶歪整行：※ ℃ № ★☆ ●○◎ ■□ ◆◇ ▲△▼▽ 等中文排版符号同样按 2 列落格；主字体没有的字此前被误判为「有字形」并进合并段，shape 时回退成两列字形把整行顶歪，现在按真实 shape 结果与字族名核对。⚠ ✔ ⏺ ☑ 这类文本呈现符号改走单色符号字体，能正确吃到前景色。
+    - 已知偏差：ConPTY 对 ① 仍按 1 列计光标，光标位置在这类字符后会偏一列。
+    下载
+
+    | 平台                | 文件                                                                                 |
+    | ------------------- | ------------------------------------------------------------------------------------ |
+    | Windows x64         | Mini-Term_1.2.12_x64-setup.exe                                                       |
+    | macOS Apple Silicon | Mini-Term_1.2.12_aarch64.dmg（首次打开前执行 xattr -cr /Applications/Mini-Term.app） |
+    | macOS Intel         | Mini-Term_1.2.12_x64.dmg（首次打开前执行 xattr -cr /Applications/Mini-Term.app）     |
+    | Linux               | Mini-Term_1.2.12_amd64.deb / Mini-Term_1.2.12_amd64.tar.gz                           |
+
+    Full Changelog: https://github.com/dreamlonglll/mini-term/compare/v1.2.11...v1.2.12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.2.12
+ReleaseTime: 2026-09-14T13:14:20.0000000Z

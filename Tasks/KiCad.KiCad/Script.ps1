@@ -1,0 +1,90 @@
+$Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/KiCad/kicad-source-mirror/releases/latest"
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('arm64') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x86_64') }, 'First')[0].name, '(\d+(?:\.\d+)+(-\d+)?)').Groups[1].Value
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
+
+      # Documentations
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'Documentations'
+        Value = @(
+          [ordered]@{
+            DocumentLabel = 'Documentation'
+            DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/"
+          }
+        )
+      }
+
+      # Documentations (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'Documentations'
+        Value  = @(
+          [ordered]@{
+            DocumentLabel = '文档'
+            DocumentUrl   = "https://docs.kicad.org/$($this.CurrentState.Version.Split('.')[0..1] -join '.')/zh/"
+          }
+        )
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.kicad.org/blog/'
+      }
+
+      $Object2 = (Invoke-RestMethod -Uri 'https://www.kicad.org/blog/index.xml').Where({ $_.title.Contains("$($this.CurrentState.Version.Split('-')[0])") }, 'First')
+      if ($Object2) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime ??= $Object2[0].pubDate | Get-Date -AsUTC
+
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $Object2[0].link
+        }
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2[0].description | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime, ReleaseNotesUrl and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

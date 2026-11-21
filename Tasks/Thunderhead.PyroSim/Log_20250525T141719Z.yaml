@@ -1,0 +1,89 @@
+Version: 24.2.1209
+Installer:
+- InstallerUrl: https://www.thunderheadeng.net/releases/PyroSim-2024-2-1209-x64-en.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    This release updates Statistics Devices for use in Controls and adds a new Results Scripting Engine.
+    This version of PyroSim is designed for FDS version 6.9.1 and uses version 21.0.2+13 of the OpenJDK Java VM.
+    Improvements to Statistics Devices
+    PyroSim 2024.2 includes a major update to Statistics Devices. After reviewing feedback from our users, it became clear that the prior version of the Statistic Device dialog did not clearly guide users on how to create their desired Statistic. Additionally, the Statistics Devices created could not be used as inputs to Controls.
+    PyroSim 2024.2 corrects these issues with an overhaul to the Statistics Device dialog, and changes in the data model that allow Statistics to be used in Controls.
+    Updated Statistics Device dialog
+    The updated dialog sports a more readable User Interface for the creation of single Statistics Devices, including the option for combined Spatial and Temporal Statistics Devices. The dialog also provides more freedom to the user by allowing all combinations of Spatial and Temporal Statistics, even if PyroSim does not believe they are appropriate for the Quantity selected. PyroSim provides a warning for these options, but leaves them available for selection in the event that FDS updates change how these Statistics are applied.
+    Example of a Statistic Warning in the updated Statistics Device Dialog
+    The dialog also provides the option to define a Setpoint for the Statistics Device. This allows Controls to reference the Statistics Device, widening the range of uses for Controls in PyroSim.
+    Example Setpoint in the Updated Statistics Device Dialog
+    Example of a Statistic Device being referenced in a Control
+    You can read more about the update to Statistics Devices in the PyroSim User Manual.
+    Results Scripting
+    The 2024.2 update to the Results Viewer includes a Python based Results Scripting Engine. The Results Scripting Engine provides the ability for users to create specialized visualizations of simulation data. The Results Scripting Engine works in concert with the theng Python library to make it easy for users to load and manipulate data from their Pathfinder and PyroSim/FDS simulations.
+    Results stores references to scripts in the Visualization file (.smvv / .pfrv) so that scripts can be easily run when the Visualization file and scripts files are shared with another user. When a script is run, Results can also load Images and HTML files directly in to the application, allowing for highly complex visualizations of data directly in the Results UI.
+    An example visualization created using the Results Scripting Engine
+    The Results Scripting Engine is now used to process the results of the Pathfinder Verification and Validation Tests that go in to our Verification and Validation Manual. This new system has made the task of processing the data of these over 100 Pathfinder simulations much simpler and easier to troubleshoot.
+    Because of this simplification, we are now also able to make our Verification and Validation testing suite available to all of our users to run for themselves. We will be posting a link to the public repository containing these models in the coming weeks.
+    You can read more about the Results Scripting Engine in the Results User Manual.
+    Results Visualization Import
+    Results 2024.2 makes it more convenient for users to visualize the results of separate models that share the same geometry, such as when using PyroSim Scenarios or the new Pathfinder Scenarios feature. Prior versions of Results required that users configure the visualization settings for each of their scenarios manually, which was a repetitive and time consuming process.
+    Results 2024.2 provides more utility to users by allowing them to import the visualization settings from one visualization file directly in to another. Users have the option to select which settings to import with the new Import Visualization Settings dialog after using the new Import Visualization Settings action, available in the File > Import menu.
+    The new Import Visualization Settings dialog in Results 2024.2
+    You can read more about the Visualization Settings import feature in the Results User Manual.
+    Changes since PyroSim 2024.1.0702:
+    Improved Statistics Devices
+    - Added support for Statistics Devices, which replace Statistics Output objects. Statistics Devices are more flexible, with support for combined spatial and temporal statistics and usage as input to controls.
+    Improved Cloud FDS Dialog
+    - Updated the Cloud FDS run dialog to request vCPU and memory options from the API.
+    - The cloud FDS dialog can now be resized to make easier to read long filenames.
+    - Added a prompt when attempting to view the Cloud FDS jobs list without credentials.
+    - Added additional diagnostic information if errors are encountered when starting a cloud FDS simulation.
+    Other Improvements
+    - Updated splash screen graphic.
+    - Updated the Surface Temperature default value in Surface Properties Dialog.
+    - Removed units of Additional Fields in Simulation Parameters Dialog.
+    - Updated layered surface definition to remove deprecated SURF heat transfer model parameter NORMAL_DIRECTION_ONLY.
+    - Added an error message for when a species has both Enthalpy of Formation and Reference Enthalpy defined.
+    - Removed the ability to insert and remove rows from the Lumped Species table via context menu actions.
+    - Added support for VENT input parameter DB.
+    Bug Fixes
+    - Fixed a bug that caused PyroSim to inconsistently identify values as default when switching unit systems.
+    - Fixed a bug that could cause a crash in the license activation dialog when clicking the local license folder.
+    - Fixed a bug that early termination of FDS run still launches Results.
+    - Fixed a bug where "Fractional Effective Dose (FED)" was available as an option in Plot 3D Output.
+    - Fixed a bug that would cause a crash when committing in 2D Slices Properties Dialog.
+    - Fixed a bug that wrong Flow Measurer Quantity got rendered after a rotation.
+    - Fixed a bug in Licensing and Activation where trailing spaces in the server name could cause hostname lookup errors.
+    - Fixed a bug that could cause a crash when renaming obstructions.
+    - Fixed a bug that could cause PyroSim to crash when moving groups in using the tree view.
+    - Fixed a bug that prevented CTRL+click from de-selecting objects in the 3D view.
+    - Fixed a bug where certain HVAC node and duct devices written to an FDS file by PyroSim could not be read by PyroSim.
+    - Fixed a bug that could cause a crash when editing a lumped species composition.
+    - Fixed a bug that allowed the user to request to kill or stop a Cloud FDS job that had already been stopped.
+    - Fixed a bug where importing an FDS file with a DEVC using 'GAUGE HEAT FLUX GAS' and 'HEAT_TRANSFER_COEFFICIENT' would result in a warning that 'HEAT_TRANSFER_COEFFICIENT' is unsupported. The resulting FDS record would then contain two entries for 'HEAT_TRANSFER_COEFFICIENT'.
+    - Fixed a bug where importing an FDS file with a DEVC using 'ADIABATIC SURFACE TEMPERATURE GAS' would result in omitted 'EMISSIVITY' and 'HEAT_TRANSFER_COEFFICIENT' parameters.
+    - Fixed a bug that could cause a crash when clicking the Copy button in the License dialog.
+    - Fixed a bug in CAD import that could cause some models to be simplified more than intended.
+    - Fixed a bug that could cause PyroSim to crash when converting walls to blocks.
+    - Fixed a bug where importing FDS files with point devices defined with XB would set the location to the minimum coordinate instead of the center.
+    - Fixed a bug that caused the incorrect species to render when importing an FDS file or copy/paste records into Pyrosim.
+    - Fixed a bug that caused the incorrect license source to be selected in Licensing and Activation Dialog.
+    - Fixed a bug that caused a divider to overlap text in the Reactions dialog.
+    - Fixed multiple bugs caused by unintentional localization that could occur when using non-US numeric symbols.
+    Changes to Results:
+    Results Scripting
+    - Added User Scripts to display custom visualizations created by Python scripts.
+    Import Visualization Settings
+    - Added the Import Visualization Settings menu action to share settings between multiple Results files, including viewpoints, tours, colorbar settings, etc.
+    Other Improvements
+    - The application title bar now shows the full path of the visualization file and relative paths of the attached results files.
+    - The Section Box dialog will now show the Z-plane editors in min/max order by default.
+    - Changed the precision of Time(s) in Edit Tour Dialog.
+    - Added Copy Name context menu action for selectable geometry
+    Bug Fixes
+    - Fixed a bug causing the FDS Vector Thickness and Interpolate Data options to not be saved in visualization files.
+    - Fixed a bug that caused Results to not parse SMV VENT info correctly when there are more than 999 surfaces.
+    - Fixed a bug that HVAC elements are not tracked in tree view.
+    - Fixed a bug with FDS boundary output rendering where visible back faces could cause incorrect coloring.
+    Changes in Patch 2024.2.1209
+    - Fixed a bug that could cause a crash when using multiple Activation Controls containing the same logic.

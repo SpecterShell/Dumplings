@@ -1,0 +1,134 @@
+Version: 0.12.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://releases.soloterm.com/windows/x86_64/Solo_0.12.4_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    TL;DR
+    - Stopping a command now lets it shut down cleanly. On macOS and Linux, Solo asks it to exit the way Ctrl+C would and escalates only if it keeps running. On Windows, Solo sends Ctrl+C and force-stops only after about 3 seconds. Child processes are stopped too, and a project whose folder is missing at startup is kept instead of removed.
+    - Timer and MCP messages to agents are much more dependable. They no longer get stuck unsubmitted in a prompt, never answer a permission prompt or question for you, and typing into an agent mid-delivery no longer locks its terminal. Resume also follows Claude Code's /clear and /resume, and Codex's -C.
+    - MCP gives you control over who can type into a process. Each process has an "Incoming MCP input" setting and keeps a log of the input it received, and agents can tell MCP input from your typing. spawn_agent also takes a working directory and a first prompt.
+    - A project's name now stays in sync with its solo.yml, and adding a git worktree of a project you already have links it to that project instead of creating a new one.
+    - Shortcuts changed: Cmd/Ctrl+1–9 switch between sessions across the whole workspace. On new installs, Focus sidebar and Focus terminal use Cmd+Shift+Left/Right on macOS and Ctrl+Shift+Left/Right on Windows, so they work from inside a terminal. If you're updating, they stay on Cmd+Left/Right (Ctrl+Left/Right on Windows) until you change them.
+    - Windows and WSL got a lot of fixes: Ctrl+C copies selected terminal text, Windows Terminal is easy to set up and opens in the right folder, and WSL agents and commands get the PATH from your shell setup.
+    Added
+    Processes & Projects
+    - A project's name now stays in sync with its solo.yml. Editing name: in solo.yml renames the project in Solo, and renaming a project in Solo (including through MCP rename_project) rewrites only the name: line, keeping comments, other keys, and line endings. Clearing the name removes the name: line, and a solo.yml without name: leaves the name you set in Solo alone. Renaming is refused while solo.yml has changes Solo hasn't synced yet, or when its name uses a quoted key or spans several lines, and Solo says why. Worktree projects are the exception: a linked worktree is named after the name you give it or its folder, syncing ignores its solo.yml name:, and renaming it changes only Solo's name for it, never its solo.yml.
+    - Adding a folder that is a git worktree of a project already in Solo now links it to that project as a worktree and places it in the project's workspace, instead of creating a separate, unrelated project. Reopening a worktree that was added as a standalone project before Solo detected worktrees also links it, as long as the old project holds no commands or other data.
+    MCP
+    - spawn_agent accepts an optional working_dir, such as a sibling git worktree, and an optional prompt that is sent as the agent's first message once it starts. The response reports whether the prompt was delivered.
+    - Each process has a new "Incoming MCP input" setting in its process settings: Allow all MCP callers (the default, so nothing changes until you pick another), Same project or spawning process, This process or spawning process, or Block all MCP input. It controls send_input, first prompts from spawn_agent, and timers aimed at the process from another process; your own typing is never affected. An agent can change its own process's setting with the new set_process_mcp_input_policy tool, and get_process_status shows the current setting.
+    - Solo now keeps a log of MCP and other automated input sent to each process, including refused attempts, and an agent can read its own log with the new get_process_input_log tool. Each entry records who sent the input, where it came from, and whether it was delivered. Messages keep up to their first 4 KB of text, while keystrokes and raw bytes keep only their length. Entries are removed after seven days, and when their process is deleted. Writes that type directly into a prompt (submit: false drafts and keys such as Enter) now also return a delivery ID and appear in get_process_status.
+    - The new scratchpad_create tool creates a scratchpad and can never overwrite an existing one, so agents no longer have to use scratchpad_write to create pads.
+    - Timers (timer_set, timer_fire_when_idle_any and timer_fire_when_idle_all) accept verbatim: true, which types only the message body without Solo's timer header, so a body like /compact runs as a slash command.
+    - submit_solo_feedback now returns a draft ID, and the new get_feedback_submission_status tool tells the agent that queued the draft whether you sent it, closed it without sending, or are still reviewing it.
+    Markdown
+    - The Markdown editor has typing shortcuts: - then Space on an empty line starts a bullet list, ``` then Enter starts a code block, and pressing Down at the end of a code block that ends the document adds a new line below it.
+    - Right-clicking a link in an editable Markdown surface offers Open link, Copy link, and Copy.
+    Terminal
+    - Terminal programs can follow Solo's light and dark theme. Solo answers light/dark queries and notifies programs that ask to be told (DEC mode 2031) when the theme switches.
+    Settings
+    - On Windows, the Terminals settings dialog has a "Set up Windows Terminal" button that fills in a ready-to-save Windows Terminal entry. It hides once you have one.
+    Changed
+    Processes & Projects
+    - On macOS and Linux, stopping a command now asks it to exit the way Ctrl+C would: Solo sends SIGINT to the program in the foreground of its terminal, then SIGTERM after 1 second and SIGHUP after 2 seconds, before force-killing whatever is left at the end of the grace period. Dev servers, REPLs such as rails c or psql, and scripts with cleanup handlers can now shut down cleanly. Child processes are stopped too, even ones that left the command's process group or outlive it, and Solo checks each one's identity before signaling it, so a reused process ID is never signaled. Interactive shells and agents still get SIGTERM, then SIGHUP.
+    - A command with more than 256 running child processes is force-killed on stop instead of going through the graceful sequence.
+    - A stopped command can show as stopped up to about 2 seconds before a child that outlived it receives its final signal. Cleanup always finishes within 3 seconds.
+    - On Windows, stopping a command now sends Ctrl+C first and force-stops it only if it is still running about 3 seconds later, so tools like npm run dev can clean up. Pressing Stop again during that time doesn't cut it short. Agents and terminals still stop immediately.
+    - When a project's folder is missing at startup, for example on an unmounted drive or a network share that isn't up yet, Solo now keeps the project and all its data and shows a "Folder unavailable" warning. Previously it removed the project and its commands. Syncing a project whose folder is unavailable now fails with an error instead of removing its commands. The "Remove project?" confirmation now lists everything removal deletes and notes that files on disk are kept.
+    - A working directory you enter inside the project folder is now saved relative to the project, so it still points to the right place if the project folder moves. Paths outside the project are saved as entered.
+    MCP
+    - Text sent to an agent with send_input now starts with a tag such as [Solo MCP input from <actor> (process #N)], so the agent can tell it apart from your typing. The tag also applies to submit: false drafts and spawn_agent first prompts. Messages that start with / are sent untagged so slash commands keep working, and intent: "interaction" input, raw bytes, and input to commands and terminals are never tagged. Text that imitates the tag is marked as quoted.
+    - Input authority is now tied to process identities the operating system confirms. Only an agent Solo can verify as the target process (or its spawning process, where the setting allows it) can change that process's input setting, read its input log, or send input the setting would otherwise block. A process ID passed to whoami or identify_session, or claimed when connecting, still scopes the session but no longer grants that authority, and reusing another connection's session ID no longer inherits it.
+    - get_process_output now marks text the terminal shows dimmed as [dimmed]…[/dimmed], so agents can tell placeholder and suggestion text in a prompt from text that was actually typed.
+    Command Palette
+    - Starting an agent from the command palette now offers Resume, Start fresh, or Cancel when the agent has a saved session, as the sidebar and hotkeys already did.
+    UI & Platform
+    - The default Focus sidebar and Focus terminal shortcuts changed so they work from inside a terminal. On macOS they are now Cmd+Shift+Left and Cmd+Shift+Right, and on Windows Ctrl+Shift+Left and Ctrl+Shift+Right; Linux keeps Ctrl+Left and Ctrl+Right. Updating from an earlier version keeps Focus sidebar and Focus terminal on Cmd+Left and Cmd+Right (Ctrl+Left and Ctrl+Right on Windows), saved as your own shortcuts. To give those keys to the terminal, unbind the two shortcuts or reset them to the default in Settings → Hotkeys. Once they're free, Cmd+Left and Cmd+Right at a macOS shell prompt move to the start and end of the line, including in agents that use the Kitty keyboard protocol, while full-screen apps such as Vim receive the key itself. On Windows, Ctrl+O, Ctrl+Left and Ctrl+Right in a focused terminal now reach the running program, so Ctrl+Left and Ctrl+Right move by word; a shortcut you assign yourself still takes priority.
+    - Cmd/Ctrl+1–9 now switch between the first nine sessions across all projects in the current workspace, in sidebar order, instead of only the current project's processes. Sub-agents and stopped commands hidden behind "Show more" are skipped, and jumping to a session in a collapsed project or section expands it. Agents the sidebar shows as top-level rows, such as an agent started over MCP from a plain terminal, are numbered too. The shortcuts are now named "Switch to session 1–9".
+    - On macOS, Writing Tools no longer appears in Solo's text fields.
+    Terminal
+    - In the built-in light terminal theme, ANSI white and bright white are darker, so text in those colors is readable on the white background. Bright white stays lighter than white, as before, and programs that ask for the palette get the new colors.
+    - On macOS, Solo no longer sets COLUMNS and LINES for the processes it launches, so programs read the terminal's live size after a resize instead of the size at launch. Values you set in a process's environment still apply.
+    - On Windows, Ctrl+C in a terminal now copies selected text and clears the selection, so the next Ctrl+C interrupts. With nothing selected it interrupts as before. Terminal copies on Windows now go through the system clipboard.
+    Fixed
+    Agents
+    - Solo now follows Claude Code session changes for the whole run, so after /clear or /resume inside Claude, Resume and restart return to the conversation you were actually in. Previously the session was recorded only at launch. If saving the change hits a database error, including while the agent is starting, Solo keeps trying instead of giving up. Starting several Claude agents in one folder also starts far fewer background claude processes.
+    - Codex agents launched with -C or --cd now record the session in that directory, so Resume returns to the right conversation instead of finding nothing or attaching an unrelated session from the project folder. When Solo can't know where Codex will run, such as with codex --worktree or when Codex starts through a shell or wrapper like sh -c, env, or sudo, it skips session capture rather than guess.
+    - Timer and MCP messages are now checked again right before each part is typed. If Claude Code opens a question while a message is being delivered, the rest of the message waits until you answer, instead of its Enter picking the question's default answer, and Solo submits the message once the question closes.
+    - Codex sessions whose terminal title isn't in English, such as a Russian title, no longer raise an internal error on every title update. Solo misread the title while checking whether Codex was waiting for approval.
+    - Typing into an agent while a timer or another agent's message is being delivered no longer locks the terminal until restart. If the interruption may have left part of the message in the prompt, you can still type, edit, and press Enter; Solo closes any half-sent paste and never submits the leftover text itself. Timer and MCP messages to that agent wait until you press Enter there (or restart it), so automation cannot submit a draft it cannot see.
+    - Timer and MCP messages no longer get stuck in an agent's prompt without being submitted. Once the text is in, Solo keeps working to deliver its Enter for up to 30 seconds: it waits until the agent has read the text, holds the Enter while a permission or question prompt is showing so it never answers it, and retries an Enter that never reached the agent. Closing the agent that sent a message no longer abandons its Enter.
+    - For Claude Code and Codex, Solo now confirms that a message was actually submitted by checking the agent's own session transcript. If the Enter was swallowed (for example, taken as a newline in the pasted text), Solo presses Enter again, at most twice, and only while no prompt is showing, nobody has typed, and the agent has not started working (its terminal stays quiet).
+    - Timer and MCP messages now also wait while Claude Code shows a permission prompt or Codex shows "Action Required", instead of typing into the prompt or answering it with Enter. An agent can still answer the prompt by sending Enter, Tab or a line feed with send_input and intent: "interaction"; an automated key sent without it waits, and the result says how to answer the prompt instead.
+    - A first prompt from spawn_agent, and any timer or MCP message, now waits while Claude Code shows one of its startup questions, and is sent once you answer. The questions are whether to trust a folder it hasn't opened before, whether to allow external CLAUDE.md imports, whether to use a project's new .mcp.json servers, and the warning shown on first launch with --dangerously-skip-permissions. Previously the message's Enter took the question's default answer: Claude quit on the folder-trust question and the bypass warning, which happened whenever an agent was started in a new worktree; imports were disabled; or the project's MCP servers were approved.
+    - An agent's keystrokes or explicit answer sent to another agent no longer cancel a message that is just being submitted there. Previously this could leave the message's text unsubmitted in the prompt and pause all further timer and MCP messages to that agent until someone pressed Enter in it. Agents' input now waits its turn instead (up to 10 seconds, then reports that input is in flight so the agent can retry), and never splits a paste you are making. Your own typing still takes over immediately.
+    - When automated input is paused because an earlier message may be left in an agent's prompt, the sending agent is now told so, instead of being told the terminal is unhealthy and should be restarted.
+    - Child agents no longer briefly jump into a different order while a project loads. They appear in the order you arranged them from the start, whether they are running, stopped, or have never been started.
+    - An agent's name from its terminal title, such as Claude's task title, now stays after the agent stops instead of reverting to the default name. It's replaced when the agent starts again.
+    - Terminal titles keep leading emoji, so a title like "🚀 Deploy" no longer loses its emoji. Agent status glyphs, such as Claude Code's ✳ and Gemini's ✋ Action Required, are still removed.
+    - OpenCode notifications now appear in Solo. Programs that track window focus are no longer told they have focus while the Solo window is in the background.
+    - OpenCode's MCP health check now uses OpenCode's normal data folder, so a background OpenCode service it starts no longer runs on throwaway storage.
+    - OpenCode agents receive messages, timers and spawn_agent prompts, typed into the terminal the same way as for other agents. Solo waits while you are typing, but it cannot see an unsent draft in OpenCode's input box, so a message can join a draft you left there. Messages run with the agent and model shown in OpenCode.
+    - In WSL, custom agent tools are now detected and can be launched. Tools configured with a Windows path show as Missing there instead of looking launchable.
+    - In WSL, agents and commands now get the PATH from your bash, zsh, or fish setup, so tools installed through nvm, ~/.local/bin, and similar are found, as they are in a WSL terminal.
+    Processes & Projects
+    - Briefly failing to load the project list no longer clears your selection or shows the "No projects yet" and Welcome screens.
+    - On macOS, removing a project is no longer blocked after a restart by a leftover record of a command that has already exited, when the process ID Solo recorded for its owner now belongs to an unrelated program. Records owned by any copy of Solo, or whose command may still be running, stay protected.
+    - A process's CPU and memory stats, and Activity Monitor, now include child processes that detach into their own session, such as a daemonized server. Activity Monitor's project filter no longer shows another project's process as a child.
+    - Adding a package inside a monorepo now suggests commands for the repository's package manager (pnpm, yarn, or bun), found from the root's packageManager field, lockfile, or pnpm-workspace.yaml, instead of defaulting to npm.
+    - Package manager detection now finds pnpm-lock.yaml, yarn.lock, package-lock.json and bun.lockb files larger than 1 MB, so large monorepos get pnpm run dev (or yarn or bun) instead of npm run dev.
+    - The nvm setup step now finds nvm-exec in the same NVM_DIR the process actually receives, including one set in your shell or the process's environment.
+    - Collapsed projects stay collapsed when Solo restores your last selection at startup.
+    - Dragging a visible sidebar section such as Scratchpads above another now saves when empty sections are hidden.
+    - The Projects home screen can scroll to the top of a list taller than the window.
+    MCP
+    - MCP clients that don't support shared schema definitions now see complete parameter types for every Solo tool, including send_input and most todo_* tools.
+    - whoami now works for an MCP client not started by Solo after it registers with identify_session, instead of reporting an unidentified session.
+    - An empty send_input message no longer presses Enter on a question the agent is showing, such as Claude Code's permission or folder-trust prompt, which could pick its default answer. The Enter now waits for the question to close, like other automated keys. A blank spawn_agent prompt is ignored.
+    - A message to an agent that contains terminal control codes, such as the colors in copied test output, is now sent with those codes removed instead of being refused. This covers send_input messages, timers and spawn_agent prompts, and the send_input result says how many codes were removed. Previously a multi-line message with a control code was refused, and a single-line one was typed with its Escape intact, which could interrupt the agent receiving it. intent: "interaction" and bytes are still sent exactly.
+    Terminal
+    - Pressing Ctrl+L in a terminal now keeps the screen cleared, instead of older output scrolling back into view after a short pause. This includes prompts that span several lines, shells that use the Kitty keyboard protocol such as fish 4, and returning to the terminal after selecting another process.
+    - On macOS, dead-key accents such as Option+E then A, or ´ on a Spanish layout, are typed once instead of twice.
+    - Each slow mouse-wheel notch now scrolls full-screen apps that handle the mouse.
+    - On macOS, with Option as Meta, Option combinations that type an ASCII symbol on your keyboard layout, such as @ on a Danish layout, now type that symbol.
+    - Installed Nerd Fonts that Solo's font scan missed now appear in the terminal font list, and Nerd Font icons missing from your font are drawn from an installed mono Nerd Font instead of a generic symbol font.
+    - After the interface reconnects, running terminals show their current activity state right away.
+    Settings
+    - Opening a folder or a terminal-based editor in Windows Terminal now starts in the right folder, including paths that contain ;. Solo recognizes Windows Terminal as wt, wt.exe, or WindowsTerminal.exe.
+    - Editor and terminal commands with quoted paths containing spaces now work. An editor or terminal command Solo can't parse shows an error, and a terminal without a CLI command reports that it can't launch a terminal-based editor instead of opening empty.
+    - On Windows, opening files in VS Code, VS Code Insiders, Cursor, or Windsurf now works with per-user installs when their command-line launcher fails. Testing an editor opens your home folder on every platform.
+    - On Windows and Linux, Browse in the Editors and Terminals settings now picks executables instead of macOS apps.
+    - Turning off the summarizer now clears agent summaries already on screen.
+    Markdown
+    - Typing -- in the Markdown editor no longer turns into an em dash, including inside inline code.
+    - Text inside inline code in the Markdown editor can be selected.
+    - Numbered lists with two- or three-digit numbers no longer have the edge of the number cut off.
+    - Typing \ in the Markdown editor no longer jumps to the sidebar's process filter.
+    Todos & Scratchpads
+    - Long todo titles now wrap in the detail view instead of being cut off, and an empty title shows a placeholder.
+    - Text in todo comments can be selected and copied.
+    - Viewing a todo no longer marks it as being edited. Editing starts when you change its title or notes and ends when you finish.
+    Feedback
+    - Closing the feedback dialog keeps an unsent report, including its email, until you send it or choose Discard draft. Unsaved changes to an agent tool in Settings are kept the same way until you save or choose Discard changes.
+    - After you send feedback, the dialog confirms that it was sent.
+    UI & Platform
+    - Dialogs no longer close when you press inside them and release over the backdrop, for example while selecting text.
+    - The selection Solo restores at startup is now the first Back/Forward history entry, so Go back can return to it.
+    - Workspace shortcuts follow the order shown in the workspace rail, and reordering workspaces in Settings updates the rail right away.
+    - After you switch workspaces, the sidebar's selection marker jumps straight to the selected row instead of sliding there from where it was in the previous workspace.
+    - Option/Alt+1–9 expands the project it selects, and Cmd/Ctrl+1–9 moves focus to the sidebar when the selected process is stopped.
+    - The startup splash screen no longer flashes in the wrong place before moving, and on macOS it is placed and sized correctly across monitors with different scaling.
+    - When Solo is installed with Nix, it no longer offers in-app updates that can't install there. Nix installs are read-only, so update them with Nix instead.
+    Privacy
+    - Solo now sends the same error report at most three times per run, instead of once for every time the error repeats.
+    Security
+    - Updated tokio to 1.53.3, which fixes RUSTSEC-2026-0386. This is precautionary: Solo's code doesn't use the affected AsyncFd API directly.
+    - Updated zod to 4.6.7, which fixes GHSA-mrhx-c7xc-m3w5 (CVE-2023-54404), where validating a very large array could exhaust memory. Zod runs only inside the routine sandbox, so only routine input validation could be affected.
+    - Updated ctutils to 0.4.5, which fixes RUSTSEC-2026-0385, comparisons that didn't run in constant time. This is precautionary: ctutils is used only by Cloud Sync encryption, which isn't enabled in released builds.
+    - Updated webpki-root-certs to 1.0.10, which removes a distrusted root certificate (RUSTSEC-2026-0383). This is precautionary: Solo's macOS, Windows, and Linux builds don't include this certificate list and check certificates against the system's trust store.
+    - Updated rustls-webpki to 0.103.16, a patched release for the eMudhra intermediate CA compromise. This is precautionary: Solo's own certificates are not affected, and on macOS and Windows certificate checks use the system's trust store.
+ReleaseTime: 2026-10-31T01:43:56.0000000Z

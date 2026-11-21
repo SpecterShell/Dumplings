@@ -1,50 +1,55 @@
-$Object = Invoke-RestMethod -Uri 'https://api.welink.huaweicloud.com/mcloud/mag/ProxyForText/pc/appstore_appservice/api/cloudlink/patch/free/check/version/pc/1' -Method Post -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://api.welink.huaweicloud.com/mcloud/mag/ProxyForText/pc/appstore_appservice/api/cloudlink/patch/free/check/version/pc/1' -Method Post -Body (
   @{
     appId    = 'com.huawei.cloud.welink'
     weDevice = '5'
     weOs     = '10'
-    weVCode  = $Task.LastState.VersionCode ?? 483
+    weVCode  = $this.LastState.VersionCode ?? 483
   } | ConvertTo-Json -Compress
 ) -ContentType 'application/json'
 
-if ($Object.data.status -eq 1) {
-  $Task.Logging("The last version $($Task.LastState.Version) is the latest, skip checking", 'Warning')
+if ($Object1.data.status -eq 1) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
   return
 }
 
 # Version
-$Task.CurrentState.Version = $Object.data.versionName
+$this.CurrentState.Version = $Object1.data.versionName
 
 # VersionCode
-$Task.CurrentState.VersionCode = $Object.data.versionCode
+$this.CurrentState.VersionCode = $Object1.data.versionCode
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data.updateUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.updateUrl
 }
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.data.tipEN | Format-Text
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.tipEN | Format-Text
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.tipZH | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.data.tipZH | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

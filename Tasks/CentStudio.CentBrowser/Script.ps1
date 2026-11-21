@@ -1,111 +1,78 @@
-# International x86
-$Request1 = [System.Net.WebRequest]::Create('https://www.centbrowser.com/update.php?switches&cb-check-update&version=4.3.9.248')
-$Request1.AllowAutoRedirect = $false
-$Response1 = $Request1.GetResponse()
-
-# International x64
-$Request2 = [System.Net.WebRequest]::Create('https://www.centbrowser.com/update.php?switches&64bit&cb-check-update&version=4.3.9.248')
-$Request2.AllowAutoRedirect = $false
-$Response2 = $Request2.GetResponse()
-
-# Chinese x86
-$Request3 = [System.Net.WebRequest]::Create('https://www.centbrowser.cn/update.php?switches&cb-check-update&version=4.3.9.248')
-$Request3.AllowAutoRedirect = $false
-$Response3 = $Request3.GetResponse()
-
-# Chinese x64
-$Request4 = [System.Net.WebRequest]::Create('https://www.centbrowser.cn/update.php?switches&64bit&cb-check-update&version=4.3.9.248')
-$Request4.AllowAutoRedirect = $false
-$Response4 = $Request4.GetResponse()
-
-# Version
-$Task.CurrentState.Version = $Response4.GetResponseHeader('Cent-Version')
-
-if ((@($Response1, $Response2, $Response3, $Response4) | Sort-Object -Property { $_.GetResponseHeader('Cent-Version') } -Unique).Length -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
-} else {
-  $Identical = $true
-}
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.centbrowser.com/' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Response1.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl = $InstallerUrl -replace '_x64'
 }
-$Response1.Close()
-
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Response2.GetResponseHeader('Location') | ConvertTo-Https
+  InstallerUrl = $InstallerUrl
 }
-$Response2.Close()
 
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x86'
-  InstallerUrl    = $Response3.GetResponseHeader('Location') | ConvertTo-Https
-}
-$Response3.Close()
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x64'
-  InstallerUrl    = $Response4.GetResponseHeader('Location') | ConvertTo-Https
-}
-$Response4.Close()
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object1 = Invoke-WebRequest -Uri 'https://www.centbrowser.com/history.html' | ConvertFrom-Html
-    $Object2 = Invoke-WebRequest -Uri 'https://www.centbrowser.cn/history.html' | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode1 = $Object1.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesNode1) {
+      $Object2 = curl -fsSLA $DumplingsInternetExplorerUserAgent 'https://www.centbrowser.com/history.html' | Join-String -Separator "`n" | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode1.SelectSingleNode('./p/i').InnerText,
+        $this.CurrentState.ReleaseTime = [regex]::Match(
+          $ReleaseNotesNode.SelectSingleNode('./p/i').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode1.SelectSingleNode('./span') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('./span') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-      $ReleaseNotesNode2 = $Object2.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesNode2) {
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://www.centbrowser.cn/history.html' | ConvertFrom-Html
+
+      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//html/body/div[2]/div/div[contains(./p/text()[1], '$($this.CurrentState.Version)')]")
+      if ($ReleaseNotesCNNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime ??= [regex]::Match(
-          $ReleaseNotesNode2.SelectSingleNode('./p/i').InnerText,
+        $this.CurrentState.ReleaseTime ??= [regex]::Match(
+          $ReleaseNotesCNNode.SelectSingleNode('./p/i').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode2.SelectSingleNode('./span') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode.SelectSingleNode('./span') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

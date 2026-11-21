@@ -1,27 +1,28 @@
-$Content = Invoke-RestMethod -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
+$Object1 = Invoke-WebRequest -Uri 'https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/latest/version.txt'
 
 # Version
-$Task.CurrentState.Version = $Version = $Content.Trim()
+$this.CurrentState.Version = $Object1.Content.Trim()
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl         = "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/${Version}/huaweicloud-cli-windows-amd64.zip"
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl         = "https://cn-north-4-hdn-koocli.obs.cn-north-4.myhuaweicloud.com/cli/$($this.CurrentState.Version)/huaweicloud-cli-windows-amd64.zip"
   NestedInstallerFiles = @(
-    @{
+    [ordered]@{
       RelativeFilePath     = 'hcloud.exe'
       PortableCommandAlias = 'hcloud'
     }
   )
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

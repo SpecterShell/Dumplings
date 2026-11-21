@@ -1,0 +1,250 @@
+Version: 0.5.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/anefzaoui/misterdownloadmanager/releases/download/v0.5.2/MisterDownloadManager-0.5.2-setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    On a Mac? The -experimental files are fresh builds for Mac (Apple Silicon and Intel) that we haven't tried ourselves yet. Want to be among the first? Give them a go and tell us how it went in an issue.
+    A big fixes release: YouTube and video downloads, crashes and freezes, downloads on slow disks, the Mac helper, plus a Safari extension, far more file types and a few new columns and options.
+    Added
+    - Torrent → Files…: the list of a torrent's files for any torrent, running, stopped or finished, with a box to choose each (also a Files… button in File Properties).
+    - Two columns for torrents in the download list (#357): Peers (those a torrent has connected while it runs, seeders and leechers alike) and Share ratio (what it has sent against what it took), after Transfer rate. A layout saved before them gets them there.
+    - The extension's Media on this page can name a file after its page: Prefix media file names with the page title puts the page's title before the file's own name. Off as installed.
+    - Far more file types taken from the browser by default (#382): AI models and datasets (GGUF, SAFETENSORS, CKPT, PT, ONNX, PARQUET...), 3D and CAD (GLB, FBX, OBJ, STL, BLEND, STEP...), design and camera RAW files, ebooks, Office files, DAT, disk images and split archives. A list you never edited gains them; one you edited stays yours.
+    - A Safari extension, inside the Mac app: a click on a link to a file type MDM takes goes to MDM, and so do the right-click items, the button over videos and Media on this page, as in the other browsers. Safari gives extensions no access to its downloads, so a download a page starts by itself stays with Safari, and the browser's proxy is not shared. See Browser integration.
+    - Help: what to do when an antivirus or VirusTotal flags MDM, and how to check your copy is the real one.
+    Changed
+    - In English, the Last Try Date and Added columns follow the system's 12- or 24-hour clock: Oct 28 9:44:12 PM 2026 when Windows uses a 12-hour clock, and Added starts wide enough for it (#392).
+    Fixed
+    - With no tray icon to come back from, closing or minimizing the main window now leaves it in the taskbar, with downloads still going, instead of hiding it with no way back. Options → General → Keep running when closing the window (on by default) makes closing quit MDM when unticked (#457).
+    - Crash reports: a crash monitor that can't open its connection no longer makes MDM wait five seconds at start or stays behind as a second process (#458).
+    - Download File Info no longer stays open but out of sight, with every later download waiting behind it (#440). The next one after answering Create folder came up as an invisible window, and on Windows one hidden with a minimized main window is now shown again, as is the duplicate question
+    - A file name sent by a site in plain UTF-8 now reaches MDM readable from Firefox and browsers built on it, such as Floorp, Waterfox and Zen: an Arabic name was saved as unreadable symbols (#447). A name written with percent signs in the same header is decoded as well. The add-on carries the fix
+    - A download saved under a numbered name because another file already had its name (master (1).mp4) now shows that name in the list and opens its own file, instead of keeping the old name and opening the other file (#442). Two downloads waiting under one name no longer collide when they start: the later one takes the next free name, instead of failing with "already being downloaded" or continuing the other one's data.
+    - A link sent from the browser no longer fails with 403 on sites that refuse a browser's User-Agent on a connection that isn't a browser's: MDM asks once more with its own, as Add URL does (#372).
+    - The video download button moves to a free corner instead of covering a control of the page, such as a thumbnail's watch-later button (#421). Dragging it still puts it where you want it.
+    - Crash reports: no report any more when one of the download engine's background tasks panics while MDM is already closing (#422).
+    - Crash reports: a freeze whose window had recovered by the time its dump was taken is reported as a freeze, not as a crash in MDM's own watchdog (#420).
+    - Text in a script outside the interface language (a video title in Bangla, a playlist in Japanese) now shows its letters, instead of boxes: the font for that script is loaded the first time it is needed (#405).
+    - Options → Proxy / Socks now applies to yt-dlp and gallery-dl too, so video look-ups and downloads no longer go straight out when a proxy is set (#363).
+    - The window no longer freezes while watching the clipboard when the program holding it hangs, or while a cancelled download's files are removed from a slow disk (#418, #423).
+    - Downloads at full speed no longer stop and go on a slow disk: writing the resume state flushed the file to the disk so often that every connection waited for it, and were then replaced as slow (#361).
+    - A save folder shown as Downloads/Video could be taken literally, asking to create it in the wrong place or failing with "Read-only file system" on macOS.
+    - macOS: Download video no longer stops with a Python error and a "Python.framework is damaged" alert on a copy of MDM downloaded by a browser (#330, #339). MDM now installs yt-dlp's folder build, which it unpacks once and checks against yt-dlp's signed list, instead of the single-program build that unpacks Python afresh at every start. The video window then offers to install it in place of a copy that came with an earlier version.
+    - Browser link import: tighter handling of site data.
+    - Crash reports: a freeze that was over before its snapshot was taken says so, instead of calling it a deadlock in code that was only waiting for events (#355).
+    - Move/Rename was greyed out with several downloads selected, for example a set just added to a queue. It now asks for a folder and moves them all there (#333).
+    - The extension no longer asks you to update MDM when only a bug-fix version separates them, which it did even when there was no update to get.
+    - Download video shows a plain file's size, from its server, instead of "size unknown" (#320).
+    - Download video finds the video on pages whose player loads a .mpd or .m3u8 address that answers something else first, as SVT Play does (#377).
+    - RSS feeds: the boxes on the Download rules tab (Episodes, Must contain and the others) keep the keyboard while you type, instead of losing it after each key (#353).
+    - A download refused by a site's bot check (Cloudflare's challenge) says so and how to get the file, instead of "the server answered 403 Forbidden" (#376).
+    - Open folder works on a torrent that is still downloading (#354).
+    - Alt and F10 open the menu bar while a button or the list has the keyboard focus, not only when nothing does (#328).
+    - Hide tab in a download's window takes the Speed Limiter or Options on completion tab off its tab row, instead of only going back to Download status. Right-click the tab row and choose Show hidden tabs to bring them back (#326).
+    - Windows: no more crash on a computer where Direct3D can't start, when a window opened during the switch to OpenGL (#337).
+    - Windows: no more crash when a screen is unplugged, turned off or rearranged while MDM runs (#335).
+    - A finished torrent that isn't being shared lets go of its files, so they can be moved or deleted while MDM runs.
+    - A torrent says Checking 42% while its files are read and checked, and a Recheck no longer stops partway and stays there.
+    - Video downloads: the progress no longer says 100 % while a video is still coming, when the site gives no total size, or between a video and its separate sound (#344). A video yt-dlp only knows by its address is named after the page, not a long hash (#345).
+    - A YouTube playlist in Add URL (#338) opens the video window with its videos, instead of saving the page as a file named "playlist".
+    - Dailymotion's embedded player (#359): its address is looked up as the video's own page, so the download button works on sites that embed one.
+    - A download that a page starts by script (a thank-you page going to the installer, as obsproject.com's does) gets the file's address, not the page's, so MDM no longer saves that page under the installer's name (#374). A finished download also shows what really came down when the server gives no size.
+    - Stop on a download in a running queue stays stopped, instead of the queue starting it again a moment later; Stop All too (#341).
+    - Removing the last feed in the RSS feeds window no longer crashes the app (#321).
+    - YouTube formats with Node.js or Bun installed (#360): yt-dlp needs a JavaScript runtime for them and looks for Deno alone, so MDM now tells it about Node.js (nvm's too) or Bun when there is no Deno.
+    - YouTube's look-up failing with "Requested format is not available" (#352): signed-in cookies make yt-dlp use only YouTube's players that need a JavaScript runtime, and without one no video is left. The page is now looked up again without the cookies, and lists its qualities.
+    - Download video offering only the sound, with no reason given (#351): when a page's better videos need ffmpeg and it isn't installed, the window now says so.
+    - Adding a link again after its finished file was moved or deleted starts a new download, instead of asking about a duplicate that isn't there (#342).
+    - Sharp, evenly spaced text on Windows: letters no longer run together or drift apart. English and other Latin, Greek and Cyrillic text is drawn the way Windows draws its own classic controls, with each letter's shape and width fitted together; every other script uses hinting suited to anti-aliased rendering (#323, #334).
+    Thanks to
+    The people who made this release possible with a pull request, an issue or a comment:
+
+    @Kyusetzu, @atishay-kasliwal, @awishtodiexz, @aniyow07, @AzureKnigh7, @Vhierly, @JuanF007, @Marobotic, @9M2PJU, @ggaoph-lab, @Jalawoud, @joeabouserhal, @riyazalsodie, @RuiNelson, @iamthelara, @jimmyoffa, @Stark-0505, @aanasik, @christubuntu, @lutfor183, @osvalfortunato, @daenerys-05, @alshedupur, @MagicNetTouch, @Pumudu820, @superflyin, @agagaslol123haha, @BariSkrktk, @bilals2008, @ErrorZeros, @finnuen, @HenryPorternew, @hexagon07, @ido-png, @resu789, @ryzenx3hack-lgtm, @sanayaima, @wxy0626, @aantamimmaarif, @aeacide, @ahfyjdq, @Alexandre1BR, @asherayub, @asukaminato0721, @biligala, @braininking, @Darkstar004, @DEEP-PEMN, @dr-strange15, @DrSaeedHub, @Dued12, @eabdalsalam2000-blip, @Eishawo, @Enzo1383, @Ever4engel, @F50Ci37Y, @faraz152, @fasempertegui, @HalimaBejaoui, @husnainahmedrana, @iyousif, @jiarafin01-code, @keyang556, @Koaxz, @lakhdar0715, @leonsk29, @LNPANDY, @Lyceu, @marcelofrau, @mcwill54, @medisettivamsikrishna, @merrthereboy, @mraztrea, @nant99, @Nirob3, @NY48X, @perfhelf, @phidelis30, @pricisTrail, @randika32-SL, @RAPER200X, @shawn8888, @SkewelVsAll, @skyebuildstheworld, @Slicknh0, @SShattered, @testednation, @topastro104, @tormento, @tuanhobbit, @ultiMAteGIT22, @wiwek13, @cheack, @ADIxxDEV, @akashraj1988, @alfablac, @Asef0Gondal, @atifjubaer, @bwoah-md, @Chiku-09, @FryLtz, @hellotiansky, @hmjz100, @IIIPeAceIII, @JohnyCore, @kalix123, @kartikbillimoria, @KodeBarista, @nasrrafiq, @ozgurkazancci, @phajiyev, @pula-web, @rabbit-lunatic, @SHURmanizer, @W5a6eeb, @yeasin2002
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anefzaoui/misterdownloadmanager/releases/tag/v0.5.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://misterdownloadmanager.com/zh-hans/news.html
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    A big fixes release: YouTube and video downloads, crashes and freezes, downloads on slow disks, the Mac helper, plus a Safari extension, far more file types and a few new columns and options.
+    添加时间
+    - Torrent → Files…: the list of a torrent's files for any torrent, running, stopped or finished, with a box to choose each (also a Files… button in File Properties).
+    - Two columns for torrents in the download list (#357): Peers (those a torrent has connected while it runs, seeders and leechers alike) and Share ratio (what it has sent against what it took), after Transfer rate. A layout saved before them gets them there.
+    - The extension's Media on this page can name a file after its page: Prefix media file names with the page title puts the page's title before the file's own name. Off as installed.
+    - Far more file types taken from the browser by default (#382): AI models and datasets (GGUF, SAFETENSORS, CKPT, PT, ONNX, PARQUET...), 3D and CAD (GLB, FBX, OBJ, STL, BLEND, STEP...), design and camera RAW files, ebooks, Office files, DAT, disk images and split archives. A list you never edited gains them; one you edited stays yours.
+    - A Safari extension, inside the Mac app: a click on a link to a file type MDM takes goes to MDM, and so do the right-click items, the button over videos and Media on this page, as in the other browsers. Safari gives extensions no access to its downloads, so a download a page starts by itself stays with Safari, and the browser's proxy is not shared. See Browser integration.
+    - Help: what to do when an antivirus or VirusTotal flags MDM, and how to check your copy is the real one.
+    已更改
+    - In English, the Last Try Date and Added columns follow the system's 12- or 24-hour clock: Oct 28 9:44:12 PM 2026 when Windows uses a 12-hour clock, and Added starts wide enough for it (#392).
+    已修复
+    - With no tray icon to come back from, closing or minimizing the main window now leaves it in the taskbar, with downloads still going, instead of hiding it with no way back. Options → General → Keep running when closing the window (on by default) makes closing quit MDM when unticked (#457).
+    - Crash reports: a crash monitor that can't open its connection no longer makes MDM wait five seconds at start or stays behind as a second process (#458).
+    - Download File Info no longer stays open but out of sight, with every later download waiting behind it (#440). The next one after answering Create folder came up as an invisible window, and on Windows one hidden with a minimized main window is now shown again, as is the duplicate question
+    - A file name sent by a site in plain UTF-8 now reaches MDM readable from Firefox and browsers built on it, such as Floorp, Waterfox and Zen: an Arabic name was saved as unreadable symbols (#447). A name written with percent signs in the same header is decoded as well. The add-on carries the fix
+    - A download saved under a numbered name because another file already had its name (master (1).mp4) now shows that name in the list and opens its own file, instead of keeping the old name and opening the other file (#442). Two downloads waiting under one name no longer collide when they start: the later one takes the next free name, instead of failing with "already being downloaded" or continuing the other one's data.
+    - A link sent from the browser no longer fails with 403 on sites that refuse a browser's User-Agent on a connection that isn't a browser's: MDM asks once more with its own, as Add URL does (#372).
+    - The video download button moves to a free corner instead of covering a control of the page, such as a thumbnail's watch-later button (#421). Dragging it still puts it where you want it.
+    - Crash reports: no report any more when one of the download engine's background tasks panics while MDM is already closing (#422).
+    - Crash reports: a freeze whose window had recovered by the time its dump was taken is reported as a freeze, not as a crash in MDM's own watchdog (#420).
+    - Text in a script outside the interface language (a video title in Bangla, a playlist in Japanese) now shows its letters, instead of boxes: the font for that script is loaded the first time it is needed (#405).
+    - Options → Proxy / Socks now applies to yt-dlp and gallery-dl too, so video look-ups and downloads no longer go straight out when a proxy is set (#363).
+    - The window no longer freezes while watching the clipboard when the program holding it hangs, or while a cancelled download's files are removed from a slow disk (#418, #423).
+    - Downloads at full speed no longer stop and go on a slow disk: writing the resume state flushed the file to the disk so often that every connection waited for it, and were then replaced as slow (#361).
+    - A save folder shown as Downloads/Video could be taken literally, asking to create it in the wrong place or failing with "Read-only file system" on macOS.
+    - macOS: Download video no longer stops with a Python error and a "Python.framework is damaged" alert on a copy of MDM downloaded by a browser (#330, #339). MDM now installs yt-dlp's folder build, which it unpacks once and checks against yt-dlp's signed list, instead of the single-program build that unpacks Python afresh at every start. The video window then offers to install it in place of a copy that came with an earlier version.
+    - Browser link import: tighter handling of site data.
+    - Crash reports: a freeze that was over before its snapshot was taken says so, instead of calling it a deadlock in code that was only waiting for events (#355).
+    - Move/Rename was greyed out with several downloads selected, for example a set just added to a queue. It now asks for a folder and moves them all there (#333).
+    - The extension no longer asks you to update MDM when only a bug-fix version separates them, which it did even when there was no update to get.
+    - Download video shows a plain file's size, from its server, instead of "size unknown" (#320).
+    - Download video finds the video on pages whose player loads a .mpd or .m3u8 address that answers something else first, as SVT Play does (#377).
+    - RSS feeds: the boxes on the Download rules tab (Episodes, Must contain and the others) keep the keyboard while you type, instead of losing it after each key (#353).
+    - A download refused by a site's bot check (Cloudflare's challenge) says so and how to get the file, instead of "the server answered 403 Forbidden" (#376).
+    - Open folder works on a torrent that is still downloading (#354).
+    - Alt and F10 open the menu bar while a button or the list has the keyboard focus, not only when nothing does (#328).
+    - Hide tab in a download's window takes the Speed Limiter or Options on completion tab off its tab row, instead of only going back to Download status. Right-click the tab row and choose Show hidden tabs to bring them back (#326).
+    - Windows: no more crash on a computer where Direct3D can't start, when a window opened during the switch to OpenGL (#337).
+    - Windows: no more crash when a screen is unplugged, turned off or rearranged while MDM runs (#335).
+    - A finished torrent that isn't being shared lets go of its files, so they can be moved or deleted while MDM runs.
+    - A torrent says Checking 42% while its files are read and checked, and a Recheck no longer stops partway and stays there.
+    - Video downloads: the progress no longer says 100 % while a video is still coming, when the site gives no total size, or between a video and its separate sound (#344). A video yt-dlp only knows by its address is named after the page, not a long hash (#345).
+    - A YouTube playlist in Add URL (#338) opens the video window with its videos, instead of saving the page as a file named "playlist".
+    - Dailymotion's embedded player (#359): its address is looked up as the video's own page, so the download button works on sites that embed one.
+    - A download that a page starts by script (a thank-you page going to the installer, as obsproject.com's does) gets the file's address, not the page's, so MDM no longer saves that page under the installer's name (#374). A finished download also shows what really came down when the server gives no size.
+    - Stop on a download in a running queue stays stopped, instead of the queue starting it again a moment later; Stop All too (#341).
+    - Removing the last feed in the RSS feeds window no longer crashes the app (#321).
+    - YouTube formats with Node.js or Bun installed (#360): yt-dlp needs a JavaScript runtime for them and looks for Deno alone, so MDM now tells it about Node.js (nvm's too) or Bun when there is no Deno.
+    - YouTube's look-up failing with "Requested format is not available" (#352): signed-in cookies make yt-dlp use only YouTube's players that need a JavaScript runtime, and without one no video is left. The page is now looked up again without the cookies, and lists its qualities.
+    - Download video offering only the sound, with no reason given (#351): when a page's better videos need ffmpeg and it isn't installed, the window now says so.
+    - Adding a link again after its finished file was moved or deleted starts a new download, instead of asking about a duplicate that isn't there (#342).
+    - Sharp, evenly spaced text on Windows: letters no longer run together or drift apart. English and other Latin, Greek and Cyrillic text is drawn the way Windows draws its own classic controls, with each letter's shape and width fitted together; every other script uses hinting suited to anti-aliased rendering (#323, #334).
+    GitHub 上的发布页面和文件
+    鸣谢
+    - Kyusetzu
+    - atishay-kasliwal
+    - awishtodiexz
+    - aniyow07
+    - AzureKnigh7
+    - Vhierly
+    - JuanF007
+    - Marobotic
+    - 9M2PJU
+    - ggaoph-lab
+    - Jalawoud
+    - joeabouserhal
+    - riyazalsodie
+    - RuiNelson
+    - iamthelara
+    - jimmyoffa
+    - Stark-0505
+    - aanasik
+    - christubuntu
+    - lutfor183
+    - osvalfortunato
+    - daenerys-05
+    - alshedupur
+    - MagicNetTouch
+    - Pumudu820
+    - superflyin
+    - agagaslol123haha
+    - BariSkrktk
+    - bilals2008
+    - ErrorZeros
+    - finnuen
+    - HenryPorternew
+    - hexagon07
+    - ido-png
+    - resu789
+    - ryzenx3hack-lgtm
+    - sanayaima
+    - wxy0626
+    - aantamimmaarif
+    - aeacide
+    - ahfyjdq
+    - Alexandre1BR
+    - asherayub
+    - asukaminato0721
+    - biligala
+    - braininking
+    - Darkstar004
+    - DEEP-PEMN
+    - dr-strange15
+    - DrSaeedHub
+    - Dued12
+    - eabdalsalam2000-blip
+    - Eishawo
+    - Enzo1383
+    - Ever4engel
+    - F50Ci37Y
+    - faraz152
+    - fasempertegui
+    - HalimaBejaoui
+    - husnainahmedrana
+    - iyousif
+    - jiarafin01-code
+    - keyang556
+    - Koaxz
+    - lakhdar0715
+    - leonsk29
+    - LNPANDY
+    - Lyceu
+    - marcelofrau
+    - mcwill54
+    - medisettivamsikrishna
+    - merrthereboy
+    - mraztrea
+    - nant99
+    - Nirob3
+    - NY48X
+    - perfhelf
+    - phidelis30
+    - pricisTrail
+    - randika32-SL
+    - RAPER200X
+    - shawn8888
+    - SkewelVsAll
+    - skyebuildstheworld
+    - Slicknh0
+    - SShattered
+    - testednation
+    - topastro104
+    - tormento
+    - tuanhobbit
+    - ultiMAteGIT22
+    - wiwek13
+    - cheack
+    - ADIxxDEV
+    - akashraj1988
+    - alfablac
+    - Asef0Gondal
+    - atifjubaer
+    - bwoah-md
+    - Chiku-09
+    - FryLtz
+    - hellotiansky
+    - hmjz100
+    - IIIPeAceIII
+    - JohnyCore
+    - kalix123
+    - kartikbillimoria
+    - KodeBarista
+    - nasrrafiq
+    - ozgurkazancci
+    - phajiyev
+    - pula-web
+    - rabbit-lunatic
+    - SHURmanizer
+    - W5a6eeb
+    - yeasin2002
+    感谢自版本 0.5.0 以来在 GitHub 上提交拉取请求、提出问题或发表评论的所有人。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://misterdownloadmanager.com/zh-hans/news.html#v0.5.2
+ReleaseTime: 2026-11-09T22:07:32.0000000Z

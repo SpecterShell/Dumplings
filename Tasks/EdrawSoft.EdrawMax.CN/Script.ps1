@@ -1,30 +1,37 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['5374']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5374']
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+if ($this.CurrentState.Installer[0].InstallerUrl.Contains('_gray')) {
+  $this.Log("The version $($this.CurrentState.Version) is an A/B test version", 'Error')
+  return
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
-
-    $Object2 = (Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=2').data[0].content | ConvertFrom-Html
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("/h1[contains(text(), '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
+      $Object2 = Invoke-RestMethod -Uri 'https://pixsoapi.edrawsoft.cn/api/helpcenter/draw/tutorial/list?class_id=6&product=2&platform=51'
+
+      if ($Object2.data[0].content.Contains($this.CurrentState.Version)) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::h6[1]/span').InnerText | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($Object2.data[0].content, '(20\d{2}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
       } else {
-        $Task.Logging("No ReleaseTime for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

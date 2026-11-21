@@ -1,0 +1,25 @@
+Version: 0.17.16
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.17.16-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.17.16 更新
+    新功能
+    - 浏览器支持打开本机开发服务 — BrowserNavigate 与 BrowserNewTab 现在允许 localhost、127.0.0.1、::1 及 *.localhost 等本机 loopback 地址，本地开发中的页面可直接在受管浏览器中打开与调试；局域网和其他私网地址仍保持隔离，本地 HTML 预览依旧推荐使用 BrowserPreviewOpen。
+    - 网络搜索不足时自动回退浏览器 — 内置 WebSearch 不可用、搜索失败或结果为空、或结果质量/完整性/时效不足时，Agent 会改用受管浏览器继续检索与核验，公开信息查找不再因单一搜索链路失败而中断。
+    - 侧边栏会话列表虚拟化 — 会话数量较多时，左侧栏仅挂载视口附近的行，滚动更流畅，右键菜单、悬浮提示等交互树不再随会话数线性膨胀；选中项自动滚动定位与快捷切换提示行为保持不变。
+    Bug 修复
+    - 灵动岛已查看错误自动退出 — 查看过错误详情后，灵动岛不再保留该会话的「需关注」状态；待接手会话（权限确认、计划审批等）仍持续提醒，直到实际处理完成。
+    - 浏览器截图内容校验 — 对浏览器截图与 MCP 返回的图片内容增加有效性校验，无效图片不会进入会话上下文，避免损坏的截图干扰后续对话。
+    - 多会话浏览器视图隔离 — 多个 Agent 会话并行使用浏览器时，原生浏览器视图不再互相抢占覆盖；迟到的旧布局请求会被拒绝，每个会话看到的是自己的页面。
+    - Windows 浏览器面板按钮对齐 — 修复浏览器面板关闭按钮被 Windows 窗口控制按钮覆盖的问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.17.16
+ReleaseTime: 2026-08-12T04:18:52.9970000Z

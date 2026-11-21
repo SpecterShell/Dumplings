@@ -1,0 +1,31 @@
+Version: 0.1.15
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/sqfcyily/deva/releases/download/v0.1.15/Deva-0.1.15-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版距 v0.1.14 较近，重点调整模型的默认上下文窗口与压缩时机。标称 1M 上下文的模型在上下文很长时会出现重复输出、无法正确响应等问题。模型标称的窗口不等于实际能用好的长度，这个版本参考 Codex 的做法收紧了默认值。
+    This release follows v0.1.14 closely and focuses on default context windows and compaction timing. Users reported that models advertising a 1M window may start repeating output such as end when the context gets long. A nominal window is not the length a model handles well, so following Codex, the defaults are now tighter.
+    上下文与压缩 / Context & Compaction
+    - 默认上下文窗口下调：非 Claude 模型的自动窗口默认为 256K，压缩会更早触发，避免模型在超长上下文中出现复读、输出退化。Claude 模型不受影响 / Smaller default context window: the automatic window for non-Claude models is capped at 256K, so compaction kicks in earlier and avoids repetition and degraded output in very long contexts. Claude models are unaffected
+    - 需要大上下文可手动选择：在模型设置中选择上下文窗口即可，不受上述上限限制；可选 128K、200K、256K、400K、512K（新增）、1M / Pick a larger window when needed: choose a context window in model settings to bypass the cap. Options: 128K, 200K, 256K, 400K, 512K (new) and 1M
+    - 压缩后真正变短：压缩后保留的最近内容不超过 4 万 token，大窗口模型压缩后不会仍剩下几十万 token / Compaction actually shrinks: the recent history kept after compaction is capped at 40K tokens, so large-window models no longer keep hundreds of thousands of tokens
+    - 压缩结果把关：摘要出现大段重复，或压缩后并没有变短时，放弃本次结果，避免白白丢失原文细节 / Summary guards: a summary with long verbatim repeats, or one that is not shorter than the original, is discarded so details are not lost for nothing
+    - 复读检测：回复陷入逐字重复时自动丢弃重试，仍然重复则截断停止；子智能体、项目成员和定时任务将其记为失败，不再当作正常结果 / Repetition detection: when a reply falls into verbatim repetition it is discarded and retried, then trimmed and stopped if it persists; subagents, members and scheduled tasks report it as a failure
+    - 完整对话记录：压缩不再删除界面上的消息，被压缩的轮次仍可查看，也仍可回退 / Full transcript: compaction no longer removes messages from the chat; compacted turns stay visible and rewindable
+    新功能 / New Features
+    - 引用消息：在聊天区选中文字后右键「引用」，内容以引用形式放在输入框上方，发送时附在消息开头；代码块保留语言与缩进 / Quote messages: select text in the chat and right-click "Quote" to attach it above the composer; it is prepended to your message on send, and code blocks keep their language and indentation
+    - 子智能体默认后台运行：派出后主对话可以继续，同一轮派出的多个子智能体全部结束后统一汇报 / Background subagents by default: the main conversation keeps going, and subagents dispatched in the same turn report back together once all finish
+    问题修复 / Bug Fixes
+    - 修复服务商默认输出预留过大、超出上下文窗口导致长对话请求被拒的问题；出现时会自动改为显式输出预算后重发 (#43) / Fix long conversations being rejected when the provider's default output reservation exceeds the context window; Deva now retries with an explicit output budget (#43)
+    - 定时任务列表：任务名过长时截断显示，已完成的一次性任务不再显示暂停按钮 / Scheduled tasks: truncate long task names and hide the pause button for completed one-shot tasks
+    - 禁止内置浏览器中的网页修改应用图标角标 / Block web pages in the built-in browser from setting the app icon badge
+    致谢 / Thanks
+    感谢 @ailianyiren（#41）、@leizh007（#41、#42、#43）的反馈与建议 / Thanks to everyone above for their feedback and suggestions.
+    完整变更 / Full Changelog: https://github.com/sqfcyily/deva/compare/v0.1.14...v0.1.15
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sqfcyily/deva/releases/tag/v0.1.15
+ReleaseTime: 2026-11-12T08:04:53.0000000Z

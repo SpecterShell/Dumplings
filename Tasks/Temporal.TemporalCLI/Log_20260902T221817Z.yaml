@@ -1,0 +1,23 @@
+Version: 1.8.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/temporalio/cli/releases/download/v1.8.3/temporal_cli_1.8.3_windows_amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/temporalio/cli/releases/download/v1.8.3/temporal_cli_1.8.3_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Backport for CLI v1.8.3 (monthly public/latest) by @ks-temporal in https://github.com/temporalio/cli/pull/1185
+    - chore: pin alpine docker image to 3.23.5 (backport to release/1.8.x) by @ks-temporal in https://github.com/temporalio/cli/pull/1192
+    Full Changelog: https://github.com/temporalio/cli/compare/v1.8.2...v1.8.3
+    Additional notes:
+    - activity update-options --task-queue now works. It silently did nothing in v1.8.2 (wrong update-mask path).
+      Users with automation passing that flag will see behavior change.
+    - activity reset --reset-attempts removed — it was a no-op. --reset-heartbeats is unaffected.
+    - AWS AgentCore compute provider added for worker deployment create-version.
+    - UI Server stays at v2.50.1 — better stated in the notes than discovered later.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/temporalio/cli/releases/tag/v1.8.3
+ReleaseTime: 2026-09-02T20:07:43.0000000Z

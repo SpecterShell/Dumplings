@@ -1,0 +1,43 @@
+Version: "7.21"
+Installer:
+- InstallerLocale: en
+  Architecture: x64
+  InstallerUrl: https://www.rarlab.com/rar/winrar-x64-721.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    1. WinRAR properly recognizes archives with a wrong file extension,
+         containing an archive in another format stored without compression.
+
+         For example, if host.rar, storing nested.zip inside, was renamed to
+         host.zip, previous versions could display nested.zip contents
+         when opening such host.zip. This version displays host.zip contents.
+
+      2. Similarly to Windows Explorer, the first click on size and time columns
+         in WinRAR file list sets the reverse sort mode with largest and latest
+         files at the top.
+
+      3. Switch -s=e performs the case insensitive file extension comparison
+         in Windows. Unlike previous versions, solid statistics isn't reset
+         anymore for file extensions differing only by case.
+
+      4. If self-extracting archive attempts to extract files to a folder
+         requring administrator rights and elevation prompt is cancelled by user,
+         the archive quits silently instead of issuing the folder access error.
+
+      5. Bugs fixed:
+
+         a) WinRAR 7.20 couldn't unpack ZIP archives containing file comment
+            fields;
+
+         b) switch -tl didn't set the latest time when used with RAR 7.20
+            "ch" command;
+
+         c) extraction command didn't automatically replace device names
+            like "aux", when unpacking archives containing such reserved names;
+
+         d) if folder shortcut was double clicked in "Save WinRAR settings as"
+            dialog when exporting WinRAR settings, folder shortcut itself was
+            overwritten with settings data instead of opening a target folder.
+RealVersion: 7.21.0

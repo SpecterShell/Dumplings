@@ -1,24 +1,43 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['5239']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['5239']
+
+if ($this.CurrentState.Installer[0].InstallerUrl.Contains('_gray')) {
+  $this.Log("The version $($this.CurrentState.Version) is an A/B test version", 'Error')
+  return
+}
 
 # Installer
-$Task.CurrentState.Installer.Clear()
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_$($Task.CurrentState.Version)_full5239.exe"
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "https://download.wondershare.com/cbs_down/pdfelement-pro_64bit_$($Task.CurrentState.Version)_full5239.exe"
-}
+$this.CurrentState.Installer = @(
+  [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl.Replace('_64bit', '')
+  }
+  [ordered]@{
+    Architecture = 'x64'
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
+  }
+)
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # Format HTML content
+      $this.CurrentState.Locale.Where({ $_.Key -eq 'ReleaseNotes' }).ForEach({ $_.Value = $_.Value | ConvertFrom-Html | Get-TextContent | Format-Text })
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

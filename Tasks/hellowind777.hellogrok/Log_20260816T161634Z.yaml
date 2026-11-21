@@ -1,0 +1,27 @@
+Version: 0.1.17
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.17/hellogrok-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.17/hellogrok-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.17
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.17
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Proxied custom channels now use their model-table ID as the Grok Build runtime identity while retaining the configured model as the upstream wire model. Normal stop restores the original assignment byte-for-byte, and new or updated session summaries can distinguish channels that share the same provider model.
+    - An ordinary proxy stop keeps a diagnostic listener so stale sessions receive a structured, non-retryable proxy_stopped response. Final application shutdown closes that listener and releases the local port.
+    Fixed
+    - /resume no longer falls back to an official model merely because a custom channel uses the same upstream model name; the selected custom channel identity is preserved across Responses, Messages, and Chat Completions.
+    - Upstream error status and body remain visible while structured retry classification stops authentication, permission, billing, insufficient-balance/quota, invalid-request, and invalid-model failures from entering generic retry loops. Rate-limit, overload, timeout, and temporary-service failures remain retryable, and an upstream X-Should-Retry override is honored.
+    - Tray Exit now uses a final shutdown path that always releases the facade listener after attempting configuration recovery, including when recovery must remain pending for the next launch.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0117-2026-08-16
+ReleaseTime: 2026-08-16T15:26:28.0000000Z

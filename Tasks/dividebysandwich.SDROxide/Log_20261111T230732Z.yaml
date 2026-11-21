@@ -1,0 +1,168 @@
+Version: 1.7.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dividebysandwich/sdroxide/releases/download/v1.7.1/sdroxide-v1.7.1-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new
+    Removed mode
+    A digital mode was removed whose author appears to be going after interoperable open source implementations. We have not received any demands yet but we're also not going to wait for it.
+    Instead, sdroxide will simply focus on implementing and promoting free and open modes as much as possible - which is why we're happy to announce Mercury and Data2G support!
+    New digital modes
+    - Mercury: New digital mode MERCURY, Rhizomatica's HF ARQ data modem (codec2 OFDM data modes with an MFSK floor for weak paths), 500 or 2300 Hz wide. Built from the Mercury 1.9.23 release. Experimental.
+    - Data2G: New digital mode DATA2G, an OFDM HF ARQ data modem with LDPC/polar codes, hybrid ARQ and a learned speed shifter, 500, 1200 or 2300 Hz wide. Built from the Data2G 0.4.3 release, on-air protocol 15; both stations must run the same protocol version. Experimental.
+    - Mercury / Data2G: Panel with link status (peer, speed, S/N, busy, who holds the modem) and a keyboard-to-keyboard terminal: CONNECT, type, DISCONNECT or ABORT. TUNE sends a tuning tone on Mercury
+    - Mercury / Data2G: TCP host on the usual TNC command/data ports (8300/8301 by default, localhost only), so Pat, Winlink Express, BPQ or VarAC can use the radio as their modem. One host at a time: the panel, the MAIL window or a TCP program
+    - Winlink: New routes Radio (Mercury) and Radio (Data2G) to call a gateway running that modem, with the gateway's dial frequency applied when the session starts
+    - Digital modes: TNC modems read receive audio in ~20 ms blocks, so the station is not deaf for a third of a second when the far end answers
+    Window management: undocked modules, tool windows, workspaces
+    Parts of a radio's screen can now move into OS windows of their own, ported from madmedicnl's sdroxide-brown:
+    - Undocked modules (Settings > UI): the panadapter, a second spectrum (AUX SP, with its own zoom and layers), the operating panel, the control strip and the band/mode selector can each go to their own window. Whatever stays in the main window takes the space back, and closing a module's window docks it again.
+    - Tool windows (settings, logbook, scanner, memories, spots, satellites and more) get a ⇱ in their title bar that moves them into an OS window, and remember it.
+    - Floating operating panel: the panel can float over the main window, so a tiling window manager cannot lose it.
+    - ▣ chip: shows on the System row while something is out of the main window. Left-click brings everything home, right-click lists every module and where it is.
+    - Workspaces: save a window arrangement under a name and put it back later, also with Ctrl+Alt+1…9, 0. Ctrl+Alt+W opens the window list and Ctrl+Alt+F floats or docks the panel.
+    - Every window has a stable application id for compositor window rules; the manual lists them with niri and i3 examples.
+    Your own filter presets
+    Right-click a filter preset chip in the BW popup to make it your own: give it a label and its low and high edges, or take the receiver's current filter with Use current. Each mode keeps its own presets, and Reset brings back the built-in. (#761)
+    TCI Client follows the radio
+    The outbound TCI client now also listens: turning the knob on the far radio moves SDROxide's dial, with echoes of its own tuning filtered out. (#760)
+    Command palette
+    Press Ctrl+K (⌘K on macOS) and type to jump straight to a mode, band, window, settings page, switch, memory or frequency by name. Typing a frequency such as 14.074 or 7100k tunes there. Nothing that transmits can be started from the palette.
+    Public SDRs on a map
+    The Public SDRs window gains a MAP view of the receivers on the program's own world map. Picking a receiver checks whether it answers (ONLINE / SILENT). ADD AS RADIO adds it as a radio of its own, named after its directory entry, and the tab name of a public-SDR radio links back to its place on the map. (#772, #777)
+    Radio panes with their own rows
+    Each pane of a split view now has its own row of radio tabs. − on a tab takes the radio off the row (it keeps running), Radio ▼ puts a radio that is on no row onto this one, and the columns chip at the end of the row opens another pane beside the others. The link rings sit on each radio's tab, and ⊞ is gone. (#776)
+    FT8/FT4 world map in a window
+    MAP ▼ above the FT8/FT4 map opens it in a window of its own, as big as you drag it and on a compact layout too. It also switches the map's cities, lines between stations working each other, and callsigns at the dots. A click on a station shows its entity, zone, grid, distance, heading, whether it is new, and its last message. Decoded stations stay on the map for ten minutes. (#786)
+    Two new noise tools in the NR menu
+    - HUM: a mains-hum high-pass that sits beside the NR engines.
+    - SK: a post-filter that shapes the passband from each bin's spectral kurtosis. It has open, close and width controls and its own presets, and runs before the AGC or after the NR engine.
+    Digital-mode panels and band buttons
+    - Band buttons change the band, not the mode: a band left in FT8 no longer pulls every later press back into FT8.
+    - A RECENT row above BAND keeps the last twelve band and mode combinations (e.g. 40M FT8, 20M USB) one click away.
+    - Choosing a digital mode raises its panel like a curtain over the spectrum and waterfall; clicking the lit mode again lowers it.
+    - The digital-mode panels fit their frames in every layout and language.
+    JS8 auto-responses
+    Rules that answer messages to your JS8 groups automatically, plus answers to INFO? and AGN?. Auto-responses are off by default, rate-limited (per station, per rule and at most 20 an hour) and listed with a countdown, and any operator SEND or abort cancels them.
+    Web remote: sign in once
+    The browser client signs in with a signed, HttpOnly session cookie instead of keeping the password in the browser. Changing the station's password signs every browser out.
+    Reproducible builds
+    Release builds for Windows, macOS and Linux are now reproducible, and each release ships SHA256SUMS and .buildinfo files so anyone can rebuild and compare. (#426)
+    More fldigi modes: MT63, MFSK, DominoEX, Contestia and the PSK families
+    New keyboard modes, interoperable with fldigi, ported from madmedicnl's sdroxide-brown:
+    - MT63 (2K): the wide, very robust 64-tone mode. It locks after a line or two of text.
+    - MFSK: the MFSK family (MFSK16, MFSK32 and friends), receive and transmit.
+    - DominoEX: all speeds, with a reverse switch.
+    - Contestia: Olivia's contest sibling, built on the existing fldigi-exact Olivia.
+    - PSK: speeds up to PSK1000, 8PSK, and fldigi's coded families: BPSK63F, the robust PSKR set and the multi-carrier C and RC modes. A few multi-carrier modes are receive only for now and say so.
+    - Hell: fldigi's glyph set for transmit, so our Hell looks like everyone else's, and received Hell is drawn the right way up.
+    Radiosondes
+    A RADIOSONDES window decodes weather balloons on their own lane while you keep listening: RS41, DFM-06/09/17, M10, M20, iMet-4, iMet-54, MRZ-N1, LMS6-400, LMS6-1680 / Mk2a, MTS01, RS-11G / iMS-100, C34/C50, Weathex and CF-06-AH / HT03G. Each sonde gets a card with its position, altitude, speed and, where the sonde sends them, temperature, humidity and pressure. Sondes are drawn on a map with their flight path, a scan steps through the band by sonde type, and a flight can be exported as KML or CSV. An optional SondeHub view (off by default) shows the sondes other stations are hearing nearby; remote and web screens get it through the station. Opened from the RADIOSONDES chip in the ISM window. Ported from F4NRM's work in sdroxide-brown.
+    Weather satellite pictures
+    A WEATHER SATELLITES window draws NOAA APT and Meteor LRPT pictures as they come in, and saves them as PNG. Open it from the SAT window, or press PICTURE on an APT or LRPT link to set up the decoder and tune there in one go. Meteor-M2 3 and Meteor-M2 4 are added to the satellite list. Ported from F4NRM's work in sdroxide-brown.
+    Play a recording back into the decoders
+    Recordings made with REC can be played back through the radio: pick one under REC > RECORDINGS… and it goes to the speaker and into the current mode's decoders as if it were on the air, with pause, seek and loop on a strip above the waterfall. WAV and MP3 files work, stereo included. Stopping puts the dial and mode back where they were. Also from the browser, which lists the station's recordings folder. Ported from F4NRM's work in sdroxide-brown.
+    What's Changed
+    - MT63, MFSK, DominoEX, Contestia: new keyboard modes, ported from sdroxide-brown by @madmedicnl
+    - PSK: fast speeds, 8PSK and the coded BPSK63F, PSKR and multi-carrier families, ported from sdroxide-brown by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/174 and follow-ups
+    - Hell: fldigi's transmit glyph set and Q's tail tip by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/512
+    - Keyboard modes: MT63, MFSK, DominoEX, coded PSK and 8PSK send idle while TX is held and close the over when it is released, so the last word is no longer cut off; Olivia and fast PSK get the same tail
+    - Keyboard modes: MT63 and the multi-carrier PSK modes are held to a fixed level instead of peaking well over full scale
+    - Radiosondes: 14 sonde decoders, sonde cards, map, scan, KML/CSV export and an opt-in SondeHub view, ported from sdroxide-brown by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/493, https://github.com/madmedicnl/sdroxide-brown/pull/503 and follow-ups
+    - Weather satellites: NOAA APT and Meteor LRPT pictures, ported from sdroxide-brown by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/585 and https://github.com/madmedicnl/sdroxide-brown/pull/595, with @madmedicnl's streaming Viterbi decoder
+    - Satellites: Meteor-M2 3 and Meteor-M2 4 in the built-in list, and TUNE on an LRPT link uses NFM
+    - Playback: play a recording back into the decoders, ported from sdroxide-brown by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/47, https://github.com/madmedicnl/sdroxide-brown/pull/49 and https://github.com/madmedicnl/sdroxide-brown/pull/118
+    - rigctl: a CW width is centred on the sidetone pitch instead of the default low edge by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/463
+    - rigctl: a width past the mode's maximum is sent once, and tests for the level masks dump_state advertises by @AJ6CU in https://github.com/madmedicnl/sdroxide-brown/pull/464 and https://github.com/madmedicnl/sdroxide-brown/pull/465
+    - Digital modes: stopping the transmission also ends the QSO, so CALL CQ comes back by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/415
+    - Window management: undocked modules, tool windows in OS windows, a floating operating panel, workspaces and window keys, ported from sdroxide-brown by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/766
+    - Window management: the window keys are not read while a text field has focus, so AltGr typing (Ctrl+Alt on Windows) no longer triggers them; tool windows remember whether they were in their own window
+    - Filter presets: right-click a chip to make it your own by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/761
+    - Filter presets: an open editor holds the BW popup and closes with it; the editor is translated into every language
+    - TCI Client: follow the radio when it is tuned from its own side by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/760
+    - TCI Client: a heard frequency the dial has already tuned past is dropped, and sent echoes are pruned on every send
+    - Audio, receive-only modes, network buffering: fixes backported from sdroxide-brown by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/765
+      - a renamed or missing sound card is reported instead of silently becoming the default
+      - the engine refuses to key the transmitter in a receive-only mode (WEFAX, NAVTEX, ACARS, ADS-B and others) by any route, and the TX controls are hidden there (#239)
+      - the web client no longer stutters on a healthy network, and HPSDR gets a receive socket sized for I/Q
+      - SSTV, WEFAX, Hell and RF Paint are excluded from the auto-notch, which was cancelling the picture
+      - zooming the panadapter out past the window no longer shakes it
+      - a logbook shared between tabs is kept when there is no store to re-read
+    - Audio device swap: an ambiguous match between two cards of the same model is refused, and a renamed card asks to be picked again
+    - Desktop: links in the app open in the system browser by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/780
+    - Waterfall: spot labels stack above the band-plan strip and the memory marks by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/781
+    - Full-band strip: the tuned frequency is marked in magenta, with triangles on the edges by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/782
+    - FT8: the action row (CALL CQ, STOP QSO, STOP TX) stays inside the window by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/788
+    - RTL-SDR: less CPU work converting samples, which helps on a Raspberry Pi by @0xPr0ton in https://github.com/dividebysandwich/sdroxide/pull/784
+    - Command palette: Ctrl+K goes to a mode, band, window, settings page, switch, memory or frequency by name by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/829
+    - Command palette: the arrow keys stop at the last row shown, and the window list is not offered in the browser, where it has no window
+    - Public SDRs: ADD AS RADIO with the directory name, a map that fills its window, an ONLINE/SILENT check, and the tab name linking back to the map by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/799 (#772, #777)
+    - Public SDRs: checking whether a radio is a public receiver no longer reads the radio's configuration from disk every frame on stations with several radios
+    - NR menu: HUM, a mains-hum high-pass beside the NR engines by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/826
+    - NR menu: SK post-filter, a filter curve from each bin's spectral kurtosis by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/828
+    - NR menu: the SK filter stays clean through long digital silence instead of muting the audio, and no longer allocates memory on every audio block
+    - Dwell recentre: a receiver centres its I/Q on a dial that has rested for 5 seconds while the panadapter shows area outside the I/Q window; it can be switched off in Settings > Radio by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/825 (#770)
+    - Dwell recentre: never retunes while transmitting
+    - Digital modes: band buttons no longer switch into a digital mode, a RECENT row of band and mode history, and the digital panel raised as a curtain over the spectrum by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/811
+    - Digital panels: window geometry, two crash fixes, and a divider that goes up to the top edge by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/813
+    - JS8: group auto-responses, INFO? and AGN? answers by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/794
+    - JS8: an auto-response held back by the hourly limit is dropped once it is overdue, instead of going out much later unattended
+    - Web remote: sign in once with a signed cookie, with no password kept in the browser, backported from sdroxide-brown by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/793
+    - Web remote: the password is never stored in the browser when "remember me" is unticked, even when the station is busy
+    - Builds: reproducible builds for Windows, macOS and Linux by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/812 (#426)
+    - Builds: the macOS build environment installs GNU tar for the reproducible archives
+    - Band plan: CB radio channels; with the country set to Germany (or following the computer's language) the band-plan strip shows CB channels 41-80, Freenet and PMR446, with channel tiles when zoomed in by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/815
+    - Full-band strip: outlines the span the panadapter shows by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/824
+    - Panadapter drag: the dial stops where the picture stops by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/823
+    - Panadapter drag: rigs whose panadapter centre is the dial (CAT I/Q such as an IC-7300, ELAD, Icom LAN) tune by dragging again
+    - Control ribbon: the mouse wheel adjusts the sliders by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/805
+    - UI settings: tooltip delay and follow-on time sliders by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/798
+    - UI settings: an invalid tooltip timing in a hand-edited config falls back to the default
+    - Tooltips: the paragraph break before an appended message is kept ("deaf.Counted") by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/797
+    - Manual (F1): opens as a centred page, so closing it does not quit the program by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/796
+    - Manual (F1): a table takes the width it is given, so the window stops growing past the screen by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/804
+    - Tool windows: the pop-out button no longer covers the close button in a scrolled window by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/802
+    - Memories: the window keeps its width instead of creeping to the screen's by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/795
+    - Radio panes: a row of picked radios per pane, Radio ▼, a columns chip that opens a pane, and the link rings on the tab in place of LINK and ⊞ by @HDZucht (#776, #763)
+    - Settings > Radio: the station radio is framed and headed "Station:", with a tooltip saying what it holds and why it has no close button by @HDZucht (#775)
+    - FT8/FT4 map: its own window, who-is-talking-to-whom links, callsign labels, a cities switch of its own, and a station card on click by @HDZucht (#786)
+    Bug Fixes
+    - SSB/CW passband: the filter length follows the bandwidth, so a narrow CW filter has narrow skirts (#758)
+    - Band stacks: a band left by a dial move (a digital mode's band chip, a typed frequency) is now recorded on its stack (#762)
+    - HPSDR: fall back to a broadcast discovery when a board ignores the directed probe (#744, #789)
+    - TX Audio: the pages scroll under a pinned meter strip, so the window fits the screen and can be dragged shorter (#790)
+    - Memories: CLEAR stays armed for five seconds instead of disarming when the pointer leaves it (#755)
+    - PSK skimmer: decode carriers at any offset, not just every 16th bin by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/832 (#822)
+    - HFDL: decoded messages no longer run off the bottom of the window, and a detached window is kept on screen above the taskbar by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/831 (#816)
+    - FT8: a Fox's RR73 with a report to the next station closes our contact outside Hound mode by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/830 (#817)
+    - Wavelog: the connection test and station location choice work from a remote screen by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/819 (#814)
+    - CW / MIDI: transmit no longer sticks after a PTT release from a MIDI keyer by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/806 (#716)
+    - Hermes Lite 2: a transverter can transmit with an I.F. above 30 MHz, up to the board's 38.4 MHz limit by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/803
+    - Transverters: radios whose transverters share one I.F. keep their band on startup and reconnect, instead of jumping from 2 m to 6 m by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/800 (#762)
+    - (tr)uSDX: key with TX0 when the audio rides the CAT link, so the host's audio goes out instead of the mic (#724)
+    - (tr)uSDX: pause the CAT audio stream with RX instead of UA0, so receive audio comes back after transmitting by @imorourke in https://github.com/dividebysandwich/sdroxide/pull/791 (#724)
+    - (tr)uSDX: a control command sent during a transmission (a drive change or a retune) no longer unkeys the radio mid-over
+    - Waterfall: pressing PTT no longer erases the waterfall history on CAT and TCI rigs and in digital modes; the transmit monitor is drawn on the span the receiver was showing (#827)
+    - Skimmer: clicking a CW, PSK or RTTY skimmer spot keeps your filter width when you are already in that mode (#821)
+    - Hell: received Hell is drawn with the first dot at the bottom, the right way up by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/514
+    - Hermes Lite 2 / HPSDR: I/Q is read on a receive thread of its own instead of polling the socket every 2 ms, which lost datagrams on Windows at low sample rates (Protocol 1 and 2); gaps in the EP6 sequence are filled with silence by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/600 and https://github.com/madmedicnl/sdroxide-brown/pull/626
+    - SmartSDR / Flex: the VITA-49 stream is read the same way, without the 2 ms socket timeout by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/629
+    - ADS-B: much less CPU on an empty sky; the noise floor is taken from the mean noise power instead of its lower quartile by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/24
+    - RDS: a block lock that has slipped one block out of step is dropped and found again, instead of decoding garbage by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/53
+    - APRS: messages whose addressee is not padded to nine characters are decoded by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/307
+    - KiwiSDR: a receiver behind a proxy that redirects the WebSocket (HTTP 307) connects by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/644
+    - PlutoSDR: the wedge probe uses the board's address from connect time by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/668
+    - Web remote: messages still queued when a session ends are sent before the connection closes by @F4NRM in https://github.com/madmedicnl/sdroxide-brown/pull/663
+    - Logbook: an ADIF import matches a contact already in the log by call and time, not band, so a re-imported file no longer doubles every digital-mode QSO by @madmedicnl in https://github.com/madmedicnl/sdroxide-brown/pull/420
+    New Contributors
+    - @HDZucht made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/780
+    - @0xPr0ton made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/784
+    Full Changelog: https://github.com/dividebysandwich/sdroxide/compare/v1.6.11...v1.7.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dividebysandwich/sdroxide/releases/tag/v1.7.1
+ReleaseTime: 2026-11-11T21:37:59.0000000Z

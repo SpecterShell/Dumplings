@@ -1,0 +1,23 @@
+Version: 0.30.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.30.26/Prometheus_0.30.26_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.30.26/Prometheus_0.30.26_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 速率统计偏低：生成过程中的思考内容与工具调用参数没有计入，导致模型思考或发起工具调用时实时速率骤降、结束后也偏低；现在文本、思考、工具调用参数全部计入
+    - 部分网关单独上报的思考 token 未计入输出，现已合并进输出与速率
+    - 单条回答的速度与整段对话的平均速度改用同一 token 口径，两者不再互相矛盾
+    改进
+    - 单条回答的用量把「输入」与「上下文」分开显示：输入只表示未缓存部分，避免长对话被误读成消耗了大量新 token
+    - 用量统计页新增「缓存读取」独立卡片，「输入」标注为未缓存；趋势图按表格同样的口径绘制，柱高与下方数字一致
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.30.26
+ReleaseTime: 2026-11-17T03:59:47.0000000Z

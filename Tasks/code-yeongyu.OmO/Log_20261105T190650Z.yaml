@@ -1,0 +1,250 @@
+Version: 5.1.61
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.61/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.61/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runs on senpi 2026.11.3-3: Claude Opus and Fable get their full system prompt back (the pre-diet wording; every other model keeps the slimmer prompt), Anthropic Subscription no longer refuses a working Claude login as blocked when an older omo process is still running or when Claude Code can't read its login behind a locked keychain, a usage limit with an ISO reset time blocks that account until the reset instead of retrying every minute, a goal waits for the first limited account to come back instead of spending turns, and Shift+Enter inserts a newline in macOS Terminal.app. (#12311)
+    Runs on senpi 2026.11.3-3: the engine socket can now send compact message updates (compact_message_updates_v1) with event_resync recovery, so long streamed turns cost less to relay. It stays off unless SENPI_ENGINE_SOCKET_COMPACT_UPDATES=1 is set. (Part of code-yeongyu/senpi#4272) (#12215)
+    macOS computer use keeps the display awake while it operates, and says when the screen is locked or asleep. The engine now holds a PreventUserIdleDisplaySleep power assertion ("OmO computer use is operating the desktop" in pmset -g assertions) from the first request other than capabilities, control.state and stopPath.* until 60 seconds after the last one; session.close, a disconnect and a stop release it at once. capabilities.displayAsleep reports when every display of the session sleeps, omo doctor prints it on the display line, and a CaptureFailed, InputFailed or Timeout message ends with (the screen is locked) or (the display is asleep) when that is the likely cause. Other platforms are unchanged. (#11530, part of #11466)
+    Fixed
+    - In the desktop's first-run setup, "Understanding you" no longer stops with "No retained scan with this id" after About you brings anything in. Applying an onboarding scan now keeps it available to understanding until the scan expires; a scan is still applied only once. (#12509, fixes #12508)
+    - The engine now registers its agent dir with the device service even when the service's state directory appears right after the engine started (for example, when the device service is installed or started at the same moment). A freshly armed directory watch can miss an entry created in its first milliseconds, so the registrant never noticed the service and other devices listed no sessions. Each watch arm now re-checks the path once after it settles. (#12482)
+    - Your other signed-in devices now see this device's sessions after the OmO device service starts or restarts. Every omo engine, in the terminal and the ones the desktop app starts, keeps its own agent directory registered with the device service and registers it again when the service comes back or the device is signed in again; it never holds an engine open and stays off with "device_service": { "enabled": false }. (#12380, fixes #12379)
+    - A reflection sandbox probe that timed out once (for example on a busy machine) no longer turns the sandbox off until restart. Reflection checks again on its next run, so it runs sandboxed again once bwrap responds. A machine where bwrap definitively cannot create a sandbox is still checked only once (#12376). A reflection run that falls back to running unsandboxed because bwrap is unusable at that moment is now logged once as a degraded sandbox, and once more when the sandbox comes back, instead of passing silently. (#12378)
+    - A session whose Stop was released but whose background children stayed paused, refusing every new task with "Task admission is held by your Stop", is released by the next message you send. /resume and new prompts used to do nothing because the session no longer held a Stop, so only /reload or a restart cleared it (#12342). (#12343)
+    - Revoking a memory-sync device, omo logout, or signing out on the desktop no longer freezes every other device's pushes. A remaining device now rotates the account memory key so the removed device is excluded, and it can no longer read notes written after it was removed. While a key change is pending, the status shows sync as blocked instead of claiming it is synced. (#12280) (#12302)
+    - The dev-browser CDP-port test "with no grace window it still runs cleanly under set -u" now waits for the port holder to exit before it checks that the holder received SIGTERM. Under host load it could fail even though the release worked (#12287). (#12293)
+    - Memory sync replicates between devices again. The client refused every batch row from GET /v1/sync/entries that carried the batch_id the service contract declares, so two devices paired but no edit reached the other. Account recovery, and pairing a device after the first batch, failed the same way. A well-formed batch_id on a batch row is now accepted. A null or malformed one, one on a keyring row, and any other extra field are still refused (#12277). (#12292)
+    - Background task children that a Stop paused are resumed again when you type after the Stop. The run's Resume used to miss them because the Stop's own run fences raised the session's pause sequence, so they stayed paused for hours while the task widget showed them as running or starting (#12249). (#12268)
+    - A paused child that its run's Resume cannot restore is retried a few times and then ends as an error the parent is told about, instead of staying paused forever. Its transcript is kept for task_output. (#12268)
+    - The task widget shows a paused child as paused, with no running clock, and /task-kill offers paused children. (#12268)
+    - Memory reflection children started inside the Linux bubblewrap sandbox no longer exit at startup with unsafe trust ancestor. Inside the sandbox's user namespace, root-owned directories show the overflow uid. The engine trust stage now accepts one only when the launcher verified, from outside the sandbox, that this exact inode is root-owned. A directory owned by another user is still refused. The sandbox child also gets its own private TMPDIR, and a read-only trust directory falls back to a private temporary one. A hand-made user namespace that omo cannot verify now gets the named refusal trust-userns-unattested with a next step, instead of a stack trace. (#12079, code-yeongyu/senpi#5334)
+    - RPC liveness tests keep pre-existing async work on the real clock, so unrelated timers cannot be mistaken for leaked session timers during confirmed close. The regression injects a foreign timer while the session is terminal-pending and retains every close and cleanup assertion. (#11937, fixes #11934)
+    - Keep buffered logging on its own scheduler and cancellation pair so virtual clocks used by RPC callers cannot capture log flushes (#11687, landing the work from #11641)
+    - A disposed process child no longer sends anything or arms a timer after its teardown: a late abort, steer, finished-turn check or state probe is refused at once instead of waiting out a 10-30 s request deadline, an extension UI request it sends after teardown gets no automatic answer written back, a closed-pipe error reported after teardown no longer arms the exit grace timer, and a heartbeat probe whose launch lands after its heartbeat stopped is skipped (#11687, part of #11673)
+    - A memory session's shutdown now waits for every memory read still running in its identity directory: the compiled-block and recall-corpus caches, every memory hook and memory tool call in flight (a prompt turn, a settle, a memory tool write), the bind-time reconcile, and detached dream requests are all tracked, so no git child outlives session_shutdown and Windows no longer fails the next removal of that directory with EBUSY (#11671, part of #11135; the probe case is #11136)
+    Changed
+    - Thread tools no longer refuse a chain of messages at its fifth hop, at 64 messages, or when it comes back to a session it passed (A to B to A): a chain has no hidden count limit. A chain continued after its 7-day root lifetime is delivered under a fresh root instead of being refused. A session still cannot message itself. (#12331, part of #12320)
+    - Thread tools and subagent, workflow, workpool and team tools declare that they run on the loop side of a split session (runs: "brain"); sessions that are not split behave exactly as before. (#12324, part of #12320)
+    - The OmO Native extension's main bundle is about 27.9 KB smaller: the two ultrawork directive variants store their shared text once instead of twice. Both directives are unchanged. (#12291)
+    Added
+    - Every interactive omo start now sets up this device's OmO device service in the background once you are signed in, so your other signed-in devices can see and command its sessions. It never delays the start and speaks up only when it stops on something you can fix. Turn it off with "device_service": { "enabled": false } in omo.json, or keep it and stop other devices from controlling this one with omo remote control off (omo remote control shows the setting). (#12257, part of #12051)
+    - a222147c64 docs(changelog): #11671 is part of #11135, not its fix (5.1.61 notes correction)
+    - 8a8a934ec7 Merge pull request #12482 from code-yeongyu/fix/12481-registrant-watch-rearm
+    - 544b18d5e4 Merge pull request #12509 from code-yeongyu/fix/12508-understand-after-apply
+    - 2b83c378c5 Merge pull request #12441 from ShryukGrandhi/fix/issue-12264-team-mode-status-test-ts-aggregatestatus
+    - b0afad05c7 Merge pull request #12401 from ShryukGrandhi/fix/issue-12255-omo-config-core-ignored-sections-test-fa
+    - cba7998938 Merge remote-tracking branch 'origin/dev' into fix/12481-registrant-watch-rearm
+    - d0da15d40e Merge pull request #12480 from code-yeongyu/fix/10814-registrant-within-test-budget
+    - 48ed2357dd Merge pull request #12269 from code-yeongyu/cu-v2/task-4-v1-consumer-regression-corpus-oneshot-an
+    - 2710b7ccf1 docs(changes): fragment for #12509
+    - 3af3d32f02 test(device-service-core): the dead-endpoint case writes the platform's endpoint; registrant waits reset per test
+    - 86a002386f fix(device-service-core): a freshly armed endpoint watch re-checks once, so a dropped creation event no longer loses the service
+    - 3ec557716f test(device-service-core): registrant within() waits take the remaining test budget
+    - 08d95e4c87 Merge remote-tracking branch 'origin/dev' into cu-v2/task-4-v1-consumer-regression-corpus-oneshot-an
+    - 8c9e1a991b Merge pull request #12215 from code-yeongyu/feat/4272-o01-adopt-compact-engine
+    - 5aa0138bdb Merge remote-tracking branch 'origin/dev' into cu-v2/task-4-v1-consumer-regression-corpus-oneshot-an
+    - 47cad651b8 Merge remote-tracking branch 'origin/dev' into gf-dm-12441
+    - cd3dd0b27f Merge remote-tracking branch 'origin/dev' into gf-dm-12401
+    - 4ee1b0078d Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 9e7a0287f1 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 192f8d920c Merge pull request #12443 from code-yeongyu/docs/12440-remote-sessions-nits
+    - eaf80c63cb Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 62e97f2ea8 Merge pull request #12431 from code-yeongyu/docs/12419-remote-sessions-reference
+    - 0df4662ce5 docs(remote): accuracy fixes in the omo remote reference (#12440)
+    - 23557a9bab Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - cacedd9863 Merge pull request #12380 from code-yeongyu/feat/499-engine-agent-dir-register
+    - 7ee37edd7b docs(remote): public reference for omo remote (#12419)
+    - 03b0c0066d Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 6aa899982e Merge pull request #12257 from code-yeongyu/feat/12051-startup-bootstrap
+    - 2beeff20c8 chore(omo-native): regenerate service-auth bundle for the registrant (#12379)
+    - ea7a948a60 Merge remote-tracking branch 'origin/feat/12051-startup-bootstrap' into feat/499-engine-agent-dir-register
+    - a19f29e0bd test(device-service): no dangling retry waiter; registrant-support is a knip entry (#12379)
+    - f64db551bd test(device-service): a missing omo binary rejects with the spawn error on Windows too (#12257)
+    - b06b9322dc Merge remote-tracking branch 'origin/feat/12051-startup-bootstrap' into feat/499-engine-agent-dir-register
+    - fcf7facc07 Merge remote-tracking branch 'origin/dev' into feat/12051-startup-bootstrap
+    - add3f01a29 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - cb7f76ecf6 Merge pull request #12378 from code-yeongyu/fix/bwrap-probe-no-timeout-memo
+    - 04341dc1cc Merge commit '10fe65afdf5261f4741985ca6244fb97571f2d5f' into fix/bwrap-probe-no-timeout-memo
+    - 9710d01f6d Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 10fe65afdf Merge pull request #12079 from code-yeongyu/fix/5334-bwrap-trust-userns
+    - 5ef2ca41e3 Merge origin/dev daa1ab2b8e into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - 3670797bbf test(desktop-engine): mask the heartbeat fields of the mcp desktop_stop reply
+    - ca98dc307b test(desktop-engine): re-pin the v1 corpus capabilities after displayAsleep landed on dev
+    - 89be5010be Merge remote-tracking branch 'origin/dev' into cu-v2/task-4-v1-consumer-regression-corpus-oneshot-an
+    - 4fb0da6b8a Merge remote-tracking branch 'origin/dev' into fix/bwrap-probe-no-timeout-memo
+    - aced663555 docs(changelog): engine agent dir registrant (#12379)
+    - 5bff9b203b Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 6aff286237 feat(device-service): every tui and rpc engine keeps its own agent dir registered with the device service (#12379)
+    - 2b1209442c test(device-service): real device keys and two registers per new connection (#12379)
+    - daa1ab2b8e Merge pull request #12331 from code-yeongyu/feat/12320-thread-chain-unlimited
+    - 9618a95f0b Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - a1b0650b03 test(device-service): RED for the engine agent dir registrant (#12379)
+    - 1b8e954dea Merge remote-tracking branch 'origin/dev' into fix/bwrap-probe-no-timeout-memo
+    - 9da72bb1d1 Merge remote-tracking branch 'origin/dev' into feat/12051-startup-bootstrap
+    - c397b91e2f Merge remote-tracking branch 'origin/dev' into train/bh-11671-11687
+    - cb6847f69e Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 1c9ef5fe8b Merge remote-tracking branch 'origin/dev' into fix/bwrap-probe-no-timeout-memo
+    - c4d8d9b1bb Merge pull request #12375 from code-yeongyu/fix/reflection-sandbox-test-deterministic-probe
+    - 464183b91a Merge remote-tracking branch 'origin/dev' into fix/bwrap-probe-no-timeout-memo
+    - 9f45e9d6f7 Merge remote-tracking branch 'origin/dev' into fix/reflection-sandbox-test-deterministic-probe
+    - 1d36fa0d80 docs(changes): add #12378 fragment
+    - 7ce3ce7d79 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 4c78223429 Merge remote-tracking branch 'origin/dev' into feat/12320-thread-chain-unlimited
+    - 7d511d1b7d Merge pull request #11671 from code-yeongyu/fix/compaction-survival-teardown-holder
+    - b5460ea824 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 072b2b487a Merge remote-tracking branch 'origin/dev' into train/bh-11671-11687
+    - f2303dae7e Merge pull request #12343 from code-yeongyu/fix/run-pause-stale-ledger-heal
+    - 7f9514d6ef Merge remote-tracking branch 'origin/dev' into feat/12320-thread-chain-unlimited
+    - 05e8d6a58b Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 0934957047 Merge remote-tracking branch 'origin/dev' into prep/11671-dev-merge
+    - 5487861bd8 Merge pull request #12302 from code-yeongyu/fix/memsync-revoke-rotates-key
+    - add237de93 Merge origin/dev dd30ce62ee into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - 80267ff5f3 Merge remote-tracking branch 'origin/dev' into fix/memsync-revoke-rotates-key
+    - c435604170 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - dd30ce62ee Merge pull request #12340 from code-yeongyu/fix/12338-lock-sweep-handoff-proof
+    - 68ee80a91a Merge remote-tracking branch 'origin/dev' into prep/11687-dev-merge
+    - 4dbfc87dd6 Merge remote-tracking branch 'origin/dev' into prep/11671-dev-merge
+    - d6042f0782 Merge remote-tracking branch 'origin/dev' into fix/run-pause-stale-ledger-heal
+    - 3bea91dc78 Merge remote-tracking branch 'origin/dev' into fix/memsync-revoke-rotates-key
+    - 91502f046b Merge remote-tracking branch 'origin/dev' into feat/12320-thread-chain-unlimited
+    - 8a3743d663 Merge remote-tracking branch 'origin/dev' into fix/12338-lock-sweep-handoff-proof
+    - 303a52556a Merge pull request #12324 from code-yeongyu/feat/12320-thread-task-runs-brain
+    - 279dfa2b71 Merge remote-tracking branch 'origin/dev' into prep/11687-dev-merge
+    - 44e4ce59f9 Merge remote-tracking branch 'origin/dev' into prep/11671-dev-merge
+    - 982daf2c34 test(team-mode): use an impossible pid for stale claim-lock fixtures
+    - 7d348e4582 test(omo-config-core): check ignored-section diagnostics by issuePaths, not serialized text
+    - 5c1b8002f2 Merge remote-tracking branch 'origin/dev' into fix/memsync-revoke-rotates-key
+    - 51462e2a72 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 3a432afaff test(desktop-engine): bound the oneshot replay wait and report skipped daemon cases
+    - 7adadfb805 Merge pull request #11530 from code-yeongyu/feat/11466-cu-display-awake
+    - 168e1823cc Merge remote-tracking branch 'origin/dev' into fix/run-pause-stale-ledger-heal
+    - 107669a286 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - bc38c5539c Merge pull request #12341 from code-yeongyu/fix/11692-store-index-deterministic
+    - 78f6bda60b Merge remote-tracking branch 'origin/dev' into feat/12320-thread-task-runs-brain
+    - 7696e8ed26 Merge remote-tracking branch 'origin/dev' into feat/12320-thread-chain-unlimited
+    - 5aa5064d47 Merge remote-tracking branch 'origin/dev' into cu-v2/task-4-v1-consumer-regression-corpus-oneshot-an
+    - 4e81f7594b Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 70c9253631 Merge origin/dev e281809156 into fix/5334-bwrap-trust-userns: generated bundles regenerated; drop this branch's budget raise (fits dev's budget after the trim)
+    - 3dad6fe1b2 Merge remote-tracking branch 'origin/dev' into feat/12051-startup-bootstrap
+    - e281809156 Merge pull request #12291 from code-yeongyu/chore/omojs-trim
+    - a130369159 docs(changes): fragment for #12343
+    - e4e01b427c Merge remote-tracking branch 'origin/dev' into feat/12320-thread-task-runs-brain
+    - d69976a3f0 test(eq): re-record darwin-arm64 EQ.omo E21-E24 goldens at the merged head
+    - 9a00423f72 test(eq): re-record linux-x64 EQ.omo E21-E24 goldens for the merged computer skill digest
+    - 21e44d4a54 fix(knip): drop the pre-existing export rows of the removed causal.ts (#12320)
+    - c838c8a309 test(memory-core): release writer B only after this acquisition's link has met it (#12338)
+    - 2ecabe64d7 Merge origin/dev f9c7e7ad59 into fix/5334-bwrap-trust-userns: generated bundles regenerated, budget re-measured
+    - 6308cb4b57 Merge origin/dev into feat/11466-cu-display-awake and regenerate bundles
+    - cc62aef18b Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 01e077a4de docs(omo-thread): the chain limits are gone from the reference (#12320)
+    - 62afbdca47 Merge commit 'f9c7e7ad59' into chore/omojs-trim
+    - f9c7e7ad59 Merge pull request #12268 from code-yeongyu/fix/task-child-stuck-deadline
+    - 654896f0b9 Merge commit '46d0ceb8d2' into chore/omojs-trim
+    - 58b5298942 docs(changes): fragment for #12331
+    - 9dbe443aa4 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 2a02eba861 docs(changes): fragment for #12324
+    - 933594a03e Merge remote-tracking branch 'origin/dev' into fix/task-child-stuck-deadline
+    - 46d0ceb8d2 Merge pull request #12293 from code-yeongyu/fix/12287-dev-browser-term-await
+    - 4e4fcf7251 Merge remote-tracking branch 'origin/dev' into fix/12287-dev-browser-term-await
+    - d8858c8377 Merge pull request #12233 from code-yeongyu/fix/10770-ulw-execute-fake-timer-snapshot
+    - be3cde825f Merge pull request #11937 from code-yeongyu/fix/11934-liveness-order
+    - 808dde7e05 Merge remote-tracking branch 'origin/dev' into fix/11934-liveness-order
+    - 374e7a804f Merge pull request #12292 from code-yeongyu/fix/sync-entries-batch-id-envelope
+    - e3a7983401 Merge remote-tracking branch 'origin/dev' into fix/10770-ulw-execute-fake-timer-snapshot
+    - 9ecc28b5c2 chore(bundle): regenerate omo-native service-auth bundle for #12292
+    - 497ef90592 chore(knip): drop the outputPathsIn pre-existing export row
+    - 433188c3d7 Merge origin/dev 46177aef5d into fix/5334-bwrap-trust-userns: generated bundles regenerated, budget re-measured
+    - 57e1c91e61 docs(changes): rotation on revoke (#12302)
+    - 3aedeeeed2 Merge remote-tracking branch 'origin/dev' into fix/task-child-stuck-deadline
+    - a53243aa41 build(bundles): regenerate the device-service sidecar on Linux (#12257)
+    - c6465b4ced fix(device-service): keep the bootstrap latch on globalThis; list the sidecar runtime as a knip entry (#12257)
+    - 9cdc0abd60 test(device-service): RED - a second instance of the sidecar in the same process does not bootstrap again (#12257)
+    - bcf187097c fix(memory-core): rotate the account key when a member is revoked (#12280)
+    - c8bf222944 test(memory-core): RED for rotation on revoke (#12280)
+    - 54009a127b Merge remote-tracking branch 'origin/dev' into fix/sync-entries-batch-id-envelope
+    - 46177aef5d Merge pull request #12289 from code-yeongyu/release/v5.1.60-source-state
+    - 1dc5121f4f docs(changes): fragment for #12293
+    - de856958b9 docs(changes): fragment for #12292
+    - 493cfb320c test(device-service): prove the worker deadline by the close-settled rejection, not a watched pid file (#12257)
+    - c19bfa3af0 fix(memory-core): accept the contract batch_id on /entries batch rows (#12277)
+    - 668e787188 test(memory-core): serve the contract /entries batch_id in sync fixtures (RED, #12277)
+    - 8148bf1ec2 test(dev-browser): await the holder's exit before asserting its TERM (#12287)
+    - 068e94b6f5 fix(device-service): move the start-up bootstrap runtime to a lazy sidecar; categorize the fake omo binary paths (#12257)
+    - d114bee58e fix(task): fold #12268 review - honest end text, serialized end, atomic owner check
+    - a04b5e92a6 Merge remote-tracking branch 'origin/dev' into fix/11934-liveness-order
+    - 8ce3b0aeb9 Merge remote-tracking branch 'origin/dev' into fix/task-child-stuck-deadline
+    - 84faa5b27c docs(changes): fragment for #12268
+    - bb5938aafd Merge remote-tracking branch 'origin/dev' into fix/11934-liveness-order
+    - 222c0ccbfd build: regenerate the native service-auth bundle (review #12257)
+    - 81544283df fix(device-service): bootstrap only in the top-level TUI, stay quiet without a credential store, bound the worker (review #12257)
+    - 8866f2adff test(device-service): RED - TUI-only start-up bootstrap, quiet without a credential store, worker deadline (review #12257)
+    - 6fdaecae47 Merge remote-tracking branch 'origin/dev' into fix/task-child-stuck-deadline
+    - 8cb567594a Merge origin/dev into feat/4272-o01-adopt-compact-engine (take dev pins 2026.11.2-3)
+    - 8c6e9504da docs(changes): changelog fragment for #12257 (part of #12051)
+    - 119641ea64 build: regenerate the omo schema and the native service-auth bundle (part of #12051)
+    - 84c2508d5b feat(device-service): run the device service bootstrap at every interactive omo start (part of #12051)
+    - 167699657e test(device-service): RED - start-up bootstrap, omo remote control and the host attach control (part of #12051)
+    - 4b247614f5 Merge remote-tracking branch 'origin/dev' into fix/10770-ulw-execute-fake-timer-snapshot
+    - ec6e599b1f test(desktop-engine): freeze a v1 consumer replay corpus for --oneshot and --mcp
+    - 72df9de93b Merge origin/dev 0ef1af9d23 into fix/5334-bwrap-trust-userns: generated bundles regenerated, budget re-measured
+    - 9d916e4314 docs(changes): fold the #11641 fragment into #11687 (one fragment per PR after the retarget)
+    - b9777c2ab4 Merge remote-tracking branch 'origin/dev' into adopt-11687
+    - 58db084117 Merge remote-tracking branch 'origin/dev' into pr-11671-merge
+    - efe0a6f451 Merge origin/dev 0af30e0323 into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - 2040e66563 Merge remote-tracking branch 'origin/dev' into fix/11934-liveness-order
+    - 223b8069ab Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 6edb1b6560 Merge remote-tracking branch 'origin/dev' into pr-11671-merge
+    - e41c5152b9 Merge branch 'fix/11446-rpc-deadline-test-determinism' of https://github.com/code-yeongyu/oh-my-openagent into adopt-11687
+    - bdafcc8db8 Merge remote-tracking branch 'origin/dev' into adopt-11687
+    - 2fe20c41c4 Merge remote-tracking branch 'origin/dev' into fix/rpc-heartbeat-clock-isolation-11641-adopt
+    - 658eb66aa9 Merge remote-tracking branch 'origin/dev' into pr-11671-merge
+    - 0d335d92cf Merge origin/dev 7d4a61e0d8 into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - 58b7ec8a64 Merge origin/dev d8c67b06a8 into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - b3eb9e27f5 Merge remote-tracking branch 'origin/dev' into feat/4272-o01-adopt-compact-engine
+    - 7665fea11d Merge origin/dev 7c37db199c into fix/5334-bwrap-trust-userns: generated bundles regenerated, no hand-edited hunks
+    - 0117d34d5d Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 0e8e8ef454 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 95cdacd69f Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - df25bbef56 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 8cb7d2aef9 Merge origin/dev into fix/5334-bwrap-trust-userns: regenerate omo.js; budget = committed 1,460,496 B + 4,096 B (linux/amd64, bun 1.4.4, node 24.22.0)
+    - 0ba4285ed7 chore(bundle): omo.js budget = measured 1,460,395 B + 4,096 B for the bwrap trust attestation (node 24, bun 1.4.4, linux/amd64)
+    - 36d1d15c64 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 6486b46551 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - e9a6d06001 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 7df67b8edd Merge remote-tracking branch 'origin/dev' into fix/11934-liveness-order
+    - 5d98ef7a4e Merge feat/11466-cu-display-awake into the computer-use train
+    - ee4948fdc9 Categorize the computer-use guide's omo doctor mention in the command-string audit
+    - 45167815b9 docs(changes): key liveness clock fragment to PR 11937
+    - 80411853ed Merge origin/dev into feat/11466-cu-display-awake and regenerate bundles
+    - f678d017f7 Merge remote-tracking branch 'origin/dev' into fix/compaction-survival-teardown-holder
+    - 389a5ee5eb Merge origin/dev into feat/11466-cu-display-awake and regenerate bundles
+    - 623ae0a72a Merge origin/dev into feat/11466-cu-display-awake
+    - 50d873935f fix(rpc): keep logger timers outside virtual clocks
+    - 1a7e397e09 Merge remote-tracking branch 'origin/dev' into fix/11446-rpc-deadline-test-determinism
+    - 916393b34c fix(memory): track memory tool calls at shutdown; settle tracked work after the drain's own steps (#11135)
+    - 9f6ef18066 docs(changes): add fragment for #11687
+    - 4f6c39c7ae fix(memory): shutdown waits for every in-flight memory hook and detached read, not only the caches (#11135)
+    - 9682233eef docs(changes): add fragment for #11671
+    - 1d00eea579 fix(memory): settled() waits for every in-flight cache read, so shutdown leaves no git child in the identity dir (#11135)
+    - a9b32cd640 docs(changes): add the fragment for #11530
+    - b374737ca9 feat(desktop-macos): keep the display awake while operating and say when it sleeps
+    Thank you to 2 community contributors:
+    - @ShryukGrandhi:
+      - test(omo-config-core): check ignored-section diagnostics by issuePaths, not serialized text
+      - test(team-mode): use an impossible pid for stale claim-lock fixtures
+    - @surlymochan:
+      - test(team-e2e): use a collision-proof fake root pid in taskkill cases
+      - test(team-e2e): correct the pid 4242 flake comment and drop the never-failing assertion
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.61
+ReleaseTime: 2026-11-05T19:01:35.0000000Z

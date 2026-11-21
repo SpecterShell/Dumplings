@@ -1,0 +1,23 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/iewnfod/lumina-terminal/releases/download/v0.2.5/Lumina.Terminal_0.2.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/iewnfod/lumina-terminal/releases/download/v0.2.5/Lumina.Terminal_0.2.5_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🐛 Bug Fixes
+    - Window sizing by rows/cols now lands exactly on the requested grid — Sizing a window from a profile's rows/columns no longer drifts by a cell or two. Two bugs were at play: profile padding was added on top of a chrome inset that already included it (inflating the window), and sizing used the raw character measurement instead of the renderer's rounded cell, so fit() settled on (rows−1)/(cols−1) for fonts with non-integral metrics. The sizing inputs are also logged once per session, making bad sizes diagnosable remotely
+    - "Remember window size/position" works again — The startup restore ran before the config store had loaded, saw the defaults (both toggles off), and consumed its one-shot guard without restoring anything, so saved geometry never applied. It now waits for config to load before restoring
+    - First-run wizard no longer pins rows/cols into the profile — The wizard's rows/columns fields were written into the profile and silently overrode the global render settings forever after (profile wins), making later global-settings changes look broken. The wizard now only captures identity (name / shell / SSH) — render options are configured in-app — and profile type is picked first, since it decides which fields apply
+    📚 Docs
+    - The full configuration reference moved to the project wiki — the in-repo docs/Configuration.md / Configuration_zh.md pages were replaced by wiki links from the README, keeping the repo lean while the reference stays maintained
+    Full Changelog: https://github.com/iewnfod/lumina-terminal/compare/v0.2.4...v0.2.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iewnfod/lumina-terminal/releases/tag/v0.2.5
+ReleaseTime: 2026-09-01T08:46:26.0000000Z

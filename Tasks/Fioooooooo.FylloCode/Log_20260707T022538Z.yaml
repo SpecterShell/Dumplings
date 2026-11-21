@@ -1,0 +1,88 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.14.0/FylloCode-0.14.0-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.14.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This stable release consolidates the 0.14 beta cycle around session-scoped planning, project guideline governance, and clearer project governance views. Chat now has a more explicit split between direct implementation, Plan, and Proposal flows, while Overview, Proposal, Task, and the new Guidelines browser form a fuller operating surface for project governance. The bundled MCP servers are updated as well: fyllo-specs now handles linked-worktree exploration and archive guidance more accurately, and fyllo-cortex focuses its guidelines tool on maintenance workflows.
+    Added
+    - Session-scoped Plan workflow: agents can create lightweight plans, users can review, edit, save, and approve them in-app, approvals are recorded in lineage, and plan.create Fyllo actions connect them back to the current Chat session
+    - Read-only /guidelines project guidelines browser, reachable from the Overview Guidelines stat card, showing recursive guidelines/**/*.md entries, frontmatter metadata, document bodies, empty states, and error states
+    - Chat user prompt timeline, message copy actions, sent-time display, and collapsible session sidebar for more stable navigation and reading in long conversations
+    - Task board entries for linked Chat sessions, allowing users to inspect and reopen conversations related to a task; local tasks also gain a clearer close-task card action
+    - Unified linked-worktree indicators across Proposal, Overview, and Chat EventRail, with the related worktree path shown on hover or focus
+    - New OpenSpec capabilities for project-health, guidelines-browser, local-task-actions, task-linked-conversations, proposal-browser, fyllo-specs-explore, and related governance/workflow contracts introduced during the release
+    Changed
+    - Chat system reminders now use a three-lane decision model: direct implementation, Plan, and Proposal. Chat and Apply stages also inject a project guidelines/**/*.md index so agents spend less effort rediscovering repository conventions before making changes
+    - Overview now uses a clearer dynamic/static two-area structure, making active proposals, recent lineage, governance health, spec growth, and guideline evolution easier to scan
+    - /proposal is simplified into a complete proposal-list entry point, removing duplicate stats, status tabs, and local filtering while keeping the detail Slideover
+    - Local task actions now distinguish routine closing from permanent deletion: task cards close open tasks, and deletion lives inside the task detail edit dialog
+    - fyllo-specs instructions for create-plan, create-proposal, apply-change, and archive-change were tightened to report progress in the user's language, reread approved plans, and write concrete guideline-maintenance tasks
+    - fyllo-specs explore now discovers active changes in both the main workspace and registered linked worktrees, returning workspace metadata and non-fatal warnings in state
+    - fyllo-specs create-proposal now writes an accurate ISO created timestamp for new OpenSpec changes; archive-change guidance now emphasizes the proposal's delivered work instead of archive mechanics in commit subjects
+    - fyllo-cortex guidelines tool changed from read/write to three maintenance modes: init, create, and update, returning scenario-specific <tool_instruction> content and current <state>
+    - FylloCode's own guidelines, OpenSpec baseline, README, and documentation site were refreshed for Overview, Plan/SDD workflows, Loop Engineering, and MCP server references
+    Fixed
+    - Fixed Chat EventRail proposal state not always refreshing after Proposal details close
+    - Fixed Proposal detail headers failing to distinguish ready-to-archive, archiving, and base states, and fixed stale task counts, statuses, or dates after reopening details
+    - Fixed Proposal workflow menus escaping the Slideover and Proposal overlays stacking below the task origin banner
+    - Fixed Proposal archive actions appearing available when run metadata belongs to another proposal or an archive operation is already in progress
+    - Fixed fyllo-cortex guideline scanning fallback behavior for unreadable files, UTF-8 BOM frontmatter, and missing FYLLO_PROJECT_PATH
+    - Fixed shell tooltip hover options applying too broadly, plus several Chat layout, global overlay, prompt timeline, and archive-status display details
+    Notes
+    - The application version is now 0.14.0.
+    - fyllo-specs MCP server is now 0.8.0, covering the Plan tool, worktree-aware explore, accurate change creation timestamps, create-proposal guideline task rules, and archive commit guidance.
+    - fyllo-cortex MCP server is now 0.4.0. This is a breaking change: guidelines read/write modes were removed; callers must use init, create, or update.
+    - Local lineage session links now include a plans field. Existing data is read as an empty plans array and does not require manual migration.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0140---2026-07-07
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个正式版本将 0.14 beta 周期中的 Plan 工作流、项目准则治理和治理视图优化收束为稳定发布。Chat 现在可以在直接实现、Plan 和 Proposal 之间更清晰地分流，Overview、Proposal、Task 与准则浏览页也形成了更完整的项目治理入口。内置 MCP server 同步升级，fyllo-specs 补齐 linked worktree 场景下的探索与归档指引，fyllo-cortex 的 guidelines 工具则专注于准则维护。
+    新增
+    - 新增 session-scoped Plan 工作流：Agent 可创建轻量 plan，用户可在应用内审阅、编辑、保存和批准，批准记录会进入 lineage，并通过 plan.create Fyllo action 串联回当前 Chat session
+    - 新增 /guidelines 只读项目准则浏览页，可从 Overview 的「项目准则」统计卡进入，按 guidelines/**/*.md 递归展示准则列表、frontmatter 元数据、正文、空状态和错误状态
+    - Chat 新增用户 prompt 时间线、消息复制按钮、发送时间展示和会话侧栏折叠，让长会话定位、复制与阅读更稳定
+    - 任务看板新增任务关联会话入口，可从任务卡查看并打开相关 Chat session；本地任务也新增更明确的关闭任务快捷操作
+    - Proposal、Overview 和 Chat EventRail 统一展示 linked worktree indicator，并在 hover/focus 时展示对应 worktree 路径
+    - 新增 project-health、guidelines-browser、local-task-actions、task-linked-conversations、proposal-browser、fyllo-specs-explore 等 OpenSpec 能力规约，用于沉淀本轮治理与工作流行为契约
+    调整
+    - Chat system reminder 改为直接实现、Plan、Proposal 三级分流，并在 Chat 与 Apply 阶段自动注入项目 guidelines/**/*.md 索引，减少 Agent 修改前重复发现准则的成本
+    - Overview 改为更清晰的动态/静态双区结构，进行中提案、最近脉络、治理健康、规约增长和准则演化的层级更明确
+    - /proposal 页面简化为完整 proposal 列表入口，移除重复的顶部统计、状态 tabs 和本地筛选，同时保留详情 Slideover
+    - 本地任务操作从“卡片直接删除”调整为“卡片关闭任务、详情编辑弹窗中删除任务”，降低日常收尾时误删任务的风险
+    - fyllo-specs 的 create-plan、create-proposal、apply-change、archive-change 指引进一步收敛，要求按用户语言反馈进度、在 Plan 批准后重读文件，并把准则维护任务写得更具体
+    - fyllo-specs explore 现在能发现 main workspace 和 registered linked worktree 中的 active change，并在 state 中返回 workspace metadata 和非致命 warning
+    - fyllo-specs create-proposal 现在为新 OpenSpec change 写入准确的 ISO created 时间戳；archive-change 的提交信息指引改为强调 proposal 的实际交付内容，而不是归档动作本身
+    - fyllo-cortex guidelines 工具从 read/write 改为 init/create/update 三种维护模式，并返回场景化 <tool_instruction> 与当前 <state>
+    - 项目自身的 guidelines、OpenSpec baseline、README 与文档站内容进行了同步整理，覆盖 Overview、Plan/SDD 工作流、Loop Engineering 和 MCP server 参考资料
+    修复
+    - 修复 Proposal 详情关闭后 Chat EventRail proposal 状态可能不同步的问题
+    - 修复 Proposal 详情 header 无法区分实现完成待归档、归档中和基础状态的问题，并修复重新打开后元数据可能显示旧任务数量、状态或日期的问题
+    - 修复 Proposal workflow 菜单可能溢出 Slideover，以及 Proposal overlay 层级低于任务来源横幅的问题
+    - 修复 Proposal 归档按钮在 run meta 不属于当前 proposal 或正在归档时仍可能展示为可用的问题
+    - 修复 fyllo-cortex guidelines 扫描在单个文件读取失败、UTF-8 BOM frontmatter 或缺少 FYLLO_PROJECT_PATH 时的降级与回退问题
+    - 修复 shell tooltip hover 配置影响范围过宽的问题，并修复若干 Chat 布局、全局 overlay、prompt timeline 与归档状态显示细节
+    备注
+    - 应用版本升级到 0.14.0。
+    - fyllo-specs MCP server 升级到 0.8.0，覆盖 Plan tool、worktree-aware explore、准确 change 创建时间、create-proposal 准则任务规则和 archive commit 指引。
+    - fyllo-cortex MCP server 升级到 0.4.0。这是 breaking change：guidelines 的 read/write 模式已移除，调用方需要改用 init、create 或 update。
+    - 本地 lineage session link 新增 plans 字段。既有数据会按空数组读取，不需要手动迁移。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0140---2026-07-07
+ReleaseTime: 2026-07-07T02:15:24.0000000Z

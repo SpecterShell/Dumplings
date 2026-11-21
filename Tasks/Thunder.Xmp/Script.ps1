@@ -3,49 +3,59 @@ $Object1 = Invoke-RestMethod -Uri 'https://static-xl.a.88cdn.com/json/xunlei_vid
 # Upgrade
 $Object2 = Invoke-RestMethod -Uri 'http://upgrade.xl9.xunlei.com/pc?pid=2&cid=100039&v=6.2.3.580&os=10&t=2&lng=0804'
 
-if ($Object2.code -eq 0 -and (Compare-Version -ReferenceVersion $Object1.version -DifferenceVersion $Object2.data.v) -gt 0) {
+if ($Object2.code -eq 0 -and [ChunkVersion]$Object1.version -lt [ChunkVersion]$Object2.data.v) {
   # Version
-  $Task.CurrentState.Version = $Object2.data.v
+  $this.CurrentState.Version = $Object2.data.v
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object2.data.url.Replace('xmpup', 'xmp')
-  }
-
-  # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object2.data.desc | Format-Text
   }
 } else {
   # Version
-  $Task.CurrentState.Version = $Object1.version
+  $this.CurrentState.Version = $Object1.version
 
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $Object1.url | ConvertTo-Https
-  }
-
-  # ReleaseTime
-  $Task.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
-
-  # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = $Object1.content | Format-Text
   }
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      if ($Object2.code -eq 0 -and [ChunkVersion]$Object1.version -lt [ChunkVersion]$Object2.data.v) {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object2.data.desc | Format-Text
+        }
+      } else {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Object1.update_time | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Object1.content | Format-Text
+        }
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,120 @@
+Version: 6000.0.42f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/feb9a7235030/Windows64EditorInstaller/UnitySetup64-6000.0.42f1.exe
+  ProductCode: Unity 6000.0.42f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/feb9a7235030/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.42f1.exe
+  ProductCode: Unity 6000.0.42f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.42
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.42f1
+    - Analytics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - Android: [iOS] [UnityWebRequest] Requests with "UnityWebRequest" are open for SSL Proxying (UUM-97194)
+    - Audio Authoring: Audio Reverb Zone still produces sound when the Audio Source volume is 0 (UUM-92689)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - Graphics Device Features: Editor freezes when loading a specific AssetBundle (UUM-99842)
+    - HDRP: Graphics Compositor breaks Unity rendering when the "Output Camera" is changed to a scene Camera and one Camera SubLayer is active.
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84610
+    - Input: Touch Input is not registered correctly when using multiple displays (UUM-99077)
+    - Lighting: "Draw Additional Lights Shadowmap" calls increase when custom MaterialBlockProperty is used (UUM-97309)
+    - Lighting: Adaptive Probe Volumes are not applied to URP Simple Lit or Lit Shaders when using "Mixed" Light Mode (UUM-98838)
+    - Packman: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - Raytracing: Crash after the “State comes from an incompatible keyword space“ log when opening the project (UUM-98620)
+    - Serialization: Crash on MonoBehaviour::VirtualRedirectTransfer when closing Editor after removing HDRP and importing Water Samples before (UUM-97847)
+    - SRP XR: GPU utilization increases by 20% on Meta Quest headsets when Render Graph is enabled on 6000.0.16f1 and higher (UUM-90118)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    - Vulkan: Editor crash on "(nvoglv64) vkGetInstanceProcAddr" when opening Prefab with Gizmos enabled in the Scene View (UUM-99992)
+    - Vulkan: [Android] [Vulkan] [WebCamTexture] "WebCamTexture.Play" crashes the application when the camera is started (UUM-95365)
+    6000.0.42f1 Release Notes
+    Improvements
+    - 2D: Improve the performance of setting of the SpriteRenderer.sprite property. (UUM-97467)
+    - TLS: Updated our internal version of MbedTLS to version 3.6. This version brings new and improved security features to network communications in the engine, but also means that unsecure and deprecated protocols are now unsupported. Notably, support for TLS 1.0 and 1.1 was removed.
+    API Changes
+    - Graphics: Added: NativeArray and Span overloads to ImageConversion.LoadImage to allow users to avoid managed allocations in cases where their encoded byte data is not stored in a byte[] (UUM-98227)
+    - iOS: Added: iPhone 16e device generation enums and screen cutouts.
+    Changes
+    - Editor: Added a better error message to prevent player building inside PlayerLoop (UUM-90979)
+    Fixes
+    - 2D: Fixed an incorrect deprecation message. (UUM-83095)
+    - 2D: Fixed an issue by adding a layer mask in renderer 2d data for filtering options. (UUM-95754)
+    - 2D: Fixed case where 16-bit Sprite Textures have a banding effect and loss of data when packing into Variant Sprite Atlas. (UUM-97999)
+    - 2D: Fixed global light textures not set correctly. (UUM-82524)
+    - 2D: Fixed warning 'GetControlID at event ValidateCommand returns a controlID different from the one in the Layout event' is logged when undoing the deletion of an Edited Freeform 2D Light (UUM-90726)
+    - Asset Pipeline: Fixed assert that got raised when TransientArtifactProvider::IsTransientArtifact is called from non mainthread, when main thread is doing asset database refresh. (UUM-96903)
+    - Editor: Added physical keyboard support on android. (UUM-65280)
+    - Editor: Disabled splatmaps for shadows-only terrain. (UUM-79364)
+    - Editor: Fixed an issue by adding a shared parameter indicator "*" to the name "Use incremental GC". (UUM-86940)
+    - Editor: Fixed an issue by replacing the ScrollView by a scrollable textArea in the Console. (UUM-97127)
+    - Editor: Fixed debug draw mode not rendering with GPUResidentDrawer enabled. (UUM-71437)
+    - Editor: Fixed dropdown items are not highlighted when setting padding in .unity-base-dropdown__item and hovering the mouse over the label. (UUM-86350)
+    - Editor: Fixed Editor crash when building a player using BuildOptions.DetailedBuildReport on Mac. (UUM-91450)
+    - Editor: Fixed Focus select on TextField on mobile devices. (UUM-90980)
+    - Editor: Fixed IME box position for IMGUI. (UUM-82782)
+    - Editor: Fixed issues with IMGUI's input field not updating properly when using certain methods such as Paste and Cut. (UUM-95908)
+    - Editor: Fixed modified time for meta file when creating a new script file in an embedded package. (UUM-93130)
+    - Editor: Fixed RadioButtonGroup getting cleared when selected in the UIBuilder (UUM-87770)
+    - Editor: Fixed shader compilation warning when building a URP project to tvOS.
+    - Editor: Fixed the drag line of the splitter not sticking to the mouse position. (UUM-79619)
+    - Editor: Fixing a potential NullRef exception when trying to open the SceneView Menu. (UUM-97539)
+    - Editor: same static batching data when building a player from editor or from command line (UUM-98557)
+    - Graphics: Fixed a crash with Terrain combined with Graphics Jobs. (UUM-98417)
+    - Graphics: Fixed OpenGL/ES check to detect a back buffer when using Native Render Pass. (UUM-88999)
+    - Graphics: Fixed OpenGL/ES check to detect a back buffer when using Native Render Pass. (UUM-92250)
+    - Graphics: Fixed OpenGLCore crash on Windows when using Native Render Pass.
+    - HDRP: Fixed an error that occurs when using more than 200 Local Volumetric Fog. (UUM-84912)
+    - Input System: Fixed an issue where the Input System could become unresponsive after the game or application had been running for a long time or when using high-frequency input devices. (UUM-98890)
+    - Particles: Fixed undefined particle collision events being returned when the event list is larger than the event count. (UUM-97977)
+    - Prefabs: Fixed issue by handling PrefabInstances as Added GameObjects with deleted parent in the source Prefab. (UUM-87105)
+    - Scripting: Fixed 'Stack overflow' error logged in the Console when a script that has a lot of classes is compiled. (UUM-90041)
+    - Scripting: Fixed play state change callback not being invoked when domain reload forces playmode exit. (UUM-85334)
+    - Serialization: Fixed issue where the "UniversalRenderPipelineGlobalSettings.asset" is creating noise in the git diff when building a Player. (UUM-80052)
+    - Shadergraph: Fixed the generation of new artifact ID of ShaderGraph on every reimport. (UUM-86662)
+    - SRP Core: Fixed serialization errors are thrown when "com.unity.render-pipelines.core" is added as a custom package. (UUM-83161)
+    - Terrain: Fixed an issue in which terrain toolbar overlay disappears between minimizing and maximizing the scene view. (UUM-93352)
+    - UI Elements: Fixed an issue by correcting the indentation for decorator drawers. (UUM-89976)
+    - UI Elements: Fixed an issue by preventting the rename and create template option in the context menu when multiple elements are selected within UIBuilder hierarchy. (UUM-76831)
+    - UI Elements: Fixed undo order bug in UIBuilder. (UUM-76948)
+    - UI Elements: Set character limit on UIBuilder library search field (UUM-76898)
+    - UI Toolkit: Fixed an issue in the UI Builder where the data source path would not be set when using the auto-completer. (UUM-98766)
+    - UI Toolkit: Fixed an issue where click was not working after an element is removed from its panel without releasing its pointer capture. (UUM-98080)
+    - UI Toolkit: Fixed exceptions when showing a non-serializable field in the UI Builder inspector. A warning will now be shown. (UUM-90113)
+    - UI Toolkit: Fixed ListVIew so it sends the selectedIndex changed property event when changing the index with a mouse click. (UUM-86936)
+    - UI Toolkit: Fixed UI Builder type selector missing some types, such as primatives, when the base type was System.Object. (UUM-90037)
+    - UI Toolkit: Fixed UI Builders incorrectly informs about a circular dependency when the reference document is removed. (UUM-85011)
+    - Undo System: Fixed an issue by removing undo groups which contain no actions automatically. (UUM-88038)
+    - Universal RP: Fixed GUID issue for FullScreenPassRendererFeature when migrating from 2022.3 to a later version. (UUM-92491)
+    - Universal RP: Fixed issues with FullScreenRenderPass on visionOS. (UUM-97588)
+    - VFX Graph: Fixed an incorrect capitalization in "open VFX". (UUM-71169)
+    - VFX Graph: Fixed an issue by not allocating VFX system data in player with no renderer. (UUM-86941)
+    - VFX Graph: Fixed context title label was slightly offset when being edited. (UUM-97959)
+    - VFX Graph: Fixed invalid cast exception when clicking on template window headers. (UUM-92158)
+    - VFX Graph: Fixed labels were cut in the blackboard when the editor font setting was set to "System Font". (UUM-84919)
+    - VFX Graph: Fixed labels were not visible at all in the graph when the editor font setting was set to "System Font". (UUM-96179)
+    - VFX Graph: Fixed missing dirty calling SetTexture. (UUM-96024)
+    - VFX Graph: Fixed undoing slider value change would not be reflected in the float field next to it. (UUM-92186)
+    - VFX Graph: Fixed Unexpected compilation warning. (UUM-92778)
+    - VFX Graph: Fixed unexpected visible particle if set alive is force to true in SG Opaque Output. (UUM-96266)
+    - Web: Fixed an issue where calling RequestUserAuthorization(UserAuthorization.Microphone) in the Web player would prompt the user for webcam permissions instead of microphone permissions. The microphone API is not yet supported in Web, so a warning message has been added to inform developers of this limitation. (UUM-75678)
+    - Web: Fixed freeze on startup when decompression fallback is enabled and multithreading is disabled. (UUM-98296)
+    Package changes in 6000.0.42f1
+    Packages updated
+    - com.unity.adaptiveperformance: 5.1.1 to 5.1.2
+    - com.unity.adaptiveperformance.google.android: 1.3.1 to 5.1.2
+    - com.unity.addressables: 2.2.2 to 2.3.16
+    - com.unity.addressables.android: 1.0.4 to 1.0.6
+ReleaseTime: 2025-03-11T13:58:50.1000000Z

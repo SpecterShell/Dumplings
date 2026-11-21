@@ -1,0 +1,75 @@
+Version: 0.10.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.2/pinvou-agent_0.10.2-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.2 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新增功能
+    1. 蜂群模式（多智能体委派）：原"多智能体模式"升级为真正的委派能力——开启后直接子并发上限 4 → 128、单会话准入 8 → 1024（底座自身硬上限，spawn 深度仍为 2）；运行中代理悬浮层通过实时事件展示委派状态（活跃时 3 秒心跳、空闲 15 秒，冷启动不闪"0 running"），权威账本兜底；连续 spawn 调用在主聊天与 codex 原生通道聚合为单行计数显示。文案统一为"蜂群模式 / Swarm Mode / スワームモード"；设置与会话数据无需迁移。
+    2. 普通会话可绑定工作目录：工作区聊天会话可绑定用户选择的文件夹，并遵循代码通道的安全姿态——从绑定目录注入 AGENTS.md、首次启动默认 Plan、首次 YOLO 切换走共享的一次性确认卡、项目技能按绑定而非模式扫描。绑定存储收敛到代码通道同款的每会话 workspace-binding.json sidecar（含启动时迁移），两条通道共享一份工作区最近列表，绑定持久化失败会回滚会话创建。检查点/回退仍为代码模式专属；Web 与远程会话不提供选择器。
+    3. 会话项目层三期/四期（菜单移动 + 拖拽归组）：在 0.10.1 的项目存储与侧栏分组之上——新增项目间移动对话框（支持搜索、标记当前项目、仅移动确认步骤，目标项目未覆盖会话工作区时移动是显式决策而非静默扩根）；会话行支持拖拽到项目组头（放置环高亮），工作区已被目标项目覆盖时立即移动，否则打开预设为仅移动确认的选择器。拖拽手势与会话撕出长按手势工程化分离且共享同一表面（仅行的标签可发起任一手势）；三语文案齐备，helper 逻辑由 node 测试钉住。
+    4. 一键导出完整会话日志为 tar.xz：CLI codewhale sessions export <id> --output out.tar.xz 与 GUI 会话右键菜单新增三语"导出会话日志"入口——打包系统提示、每轮消息（含思考与工具调用/结果）、分支日志、可移植 container.json、工件与清单。解包后的 session.json 可通过 /load 全保真恢复；Codex（外部 ACP）与无本地持久记录的 Web 通道会话不在导出范围。
+    5. 运营商自有端点统一输出上限档位：本地模型 24K 输出特例与"窗口一半"启发式统一为一张窗口档位声明表，本地 vLLM 与自定义 OpenAI 兼容端点共用（≥500K 窗口 → 131072，≥250K → 65536，否则 min(窗口/4, 32768)；无窗口事实 → 32768；低于 4096 不声明）。端点经 /v1/models 自报的上限（max_output_tokens、max_completion_tokens、OpenRouter 风格 top_provider…）一律 min() 进声明与显式配置——只会收紧。256K 默认本地部署现声明 65536（原 24576），128K 声明 32768；官方云预设与 coding plan 保持 fail-closed 不声明。
+    6. 连接器 CLI 与第三方技能升级到最新：dws（钉钉）1.0.58 → 1.0.61、lark-cli（飞书）1.0.87 → 1.0.95、wecom-cli（企微）1.1.0 → 1.2.1、tmeet（腾讯会议）1.0.15 → 1.0.18，锁哈希全部由新下载的产物重算（钉钉/飞书与上游 checksums.txt 交叉核对）；四套第三方技能按三方合并重同步，已登记的本地 fork 修改逐条回放（详见 NOTICE，含 tmeet 新增 minutes/app/event 覆盖）。
+    问题修复
+    1. 已禁用的 MCP 应用按"已禁用"上报：此前应用被关闭后其工具无痕消失，助手可能声称"该应用不存在"。现在每轮原生聊天携带新鲜的按作用域清单（已安装 ID、显示名、启用标志）——禁用应用保持可发现，工具门控仍阻止调用，卸载后陈旧安装信息清除，且不包含任何凭据或禁用工具的 schema。
+    2. 中/日会话接入承诺的精简系统提示首尾：精简 preamble/closer 覆盖此前从未接线，中文与日文会话每轮都在消费底座长版首尾（含 CodeWhale 品牌与"也用中文思考"的教学——产品决定：永不强制思考语言）。接线已就位，并由 forkguard 测试钉住（上游同步合并若丢失会变红）；同批审计顺带给工作模式加上"被门控拒绝的写入不得重试（展示变更并等待）"契约、清理孤儿 ## 7. 编号残留、修正与底座行为矛盾的模块注释。
+    3. 超时杀死不再遗留僵尸进程：run_with_timeout 此前杀死超时的连接器安装子进程但从不 wait，同一"杀而不收"模式还存在于飞书/企微/钉钉/腾讯会议认证流程的另外十处。共享的有界回收原语在 2 秒宽限内观察子进程退出，而非阻塞在 wait()；卡在不可中断睡眠的子进程会被上报为 abandoned 而非挂死超时路径；output_with_timeout* 同步获得该有界行为。
+    内部改进
+    1. CodeWhale 底座推进到 2026-09-17 头（92427bd8d）：五个 squash 合并——模型面文本不再指名不存在的工具（skills-index 与 subagent 头部教导 tool_search 激活路径）、TurnStarted 回显宿主提供的 submission_id、<project_instructions>/constitution 源标签相对化、基线门禁修复、stopship 发布验收 scout 改走 tool_search。fork 登记重钉 layer 0（33 个 signed-off 提交；gitlink 按 fork-policy §0 豁免领先不可变 r1 标签 18 个提交，直至 r2 出标）。
+    2. pinvou-cli 工作区获得独立必需 CI 门禁：新 cli-test job 跑 fmt + 全 target 测试（含此前从未运行过的 adapter-gaia dataset_contract）与一个编译检查 CLI Windows 专属分支的 Windows leg，路径过滤器同时覆盖 CLI 路径依赖的 app-crate 表面。pinvou --version 现报告 cli crate 版本，由 sync-version.mjs 钉到根 VERSION；架构守卫以零基线扫描 pinvou-cli/crates/ 的越界底座/UI 引用。
+    3. CI runner 磁盘/内存加固终结 release 构建 ENOSPC：探测确认托管 runner 为单盘，旧方案创建的 16 GB /mnt swapfile——而非容量不足——挤爆了 0.10.x x86_64 release 构建的磁盘。磁盘交换改为 opt-in；zram 保持默认第一层但获得 fail-closed 的 50% 内存池上限（2026-09-12"runner 失联"事件的合理机制）；zswap 在 zram 活跃时让位；全部内存设置调用点包裹 timeout --kill-after 并由仓级门禁测试强制；新增 scripts/ci-rust-disk.py 按两层白名单裁剪 toolcache；runner 钉到 22.04。
+    4. PR 标题在 PR 阶段按提交规范校验：squash 合并用 PR 标题构建 main 分支 subject，而合并队列从不运行 commit-message job，违规落地后无法修复（45 天内 main 推送 21 次失败）。专用轻量 workflow 在所有订阅事件上校验实时标题，且处于永不遮蔽必需检查的上下文。
+    5. Windows 专属 unsafe 块补全文档：clippy 硬门禁（-D warnings）在 Windows 开发机上因 38 个既有错误失败——37 个是 Linux CI 从不编译的 Windows 专属模块中未文档化的 unsafe 块，另有一个 expect。全部块补上准确的 // SAFETY: 注释，expect 换成周边错误处理风格；无行为变化。
+    6. checkpoints git-env 隔离测试不再污染进程环境：该测试此前把 GIT_INDEX_FILE/GIT_OBJECT_DIRECTORY 写入进程全局环境，间歇性破坏 spawn git 的兄弟测试。进程环境变更被整体移除——隔离契约直接断言在命令的 env 条目上——全量套件在默认多线程 harness 下通过（2198 个测试）。
+    7. eval 策略 id 更名为名副其实：pinvou-product/v1 实际执行 GAIA 公网只读六工具集，其分数容易被误读为产品能力基线。现以 pinvou-read-only-web/v1 规范注册；旧 id 保留为解析到同一策略的弃用别名，新 smoke run 记录规范 id，旧 run 仍可恢复。
+    注意事项
+    - 项目层：三期（菜单移动）与四期（拖拽）落在 0.10.1 的存储 + 侧栏分组底座之上；重绑（#463）与统一（#464）随后。移动/拖拽确认刻意为仅移动——从不添加工作区根。
+    - 拖拽与撕出：两个手势共享同一表面（会话行标签）且设计上互斥；三平台真实触控板/鼠标拖拽 QA 无法由 CI 覆盖，欠手工验证（#462 中登记为该手势的 release blocker）。
+    - 蜂群模式：显式用户 max_subagents 偏好在蜂群会话中被覆盖（含 0），为已披露的产品决定；spawn 深度仍为 2，设置与会话数据无需迁移。
+    - 绑定会话：plain-scope 工具开关的 DenyAll 收敛刻意拆至 #455；Web 与远程会话无绑定选择器，检查点/回退仍为代码模式专属。
+    - 输出上限：官方云预设与 coding plan 保持 fail-closed 不声明；端点自报上限只会收紧、从不抬高。
+    - 连接器：WECOM_MIN_VERSION 升至 1.2.1。
+    - eval 策略：pinvou-product/v1 仍可解析为弃用别名；产品等效基准意味着无 eval 策略的 headless 任务。
+    - CodeWhale：gitlink 按 fork-policy §0 豁免刻意领先不可变 r1 标签 18 个提交，直至 r2 出标。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ b8893c1d / Actions #35308587808（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 多智能体委派升级为蜂群模式：子并发上限升至 128（单会话准入 1024），运行中代理悬浮层实时展示委派状态，连续 spawn 聚合为一行。
+    - 普通聊天会话可绑定真实工作目录并继承代码通道安全姿态：AGENTS.md 注入、Plan 优先启动（共享 YOLO 确认）、按绑定扫描项目技能。
+    - 会话可经菜单选择器在项目间移动（搜索 + 仅移动确认），也可直接拖拽到项目组头上。
+    - CLI 与会话右键菜单一键导出完整会话日志为压缩 tar.xz，/load 可全保真恢复。
+    - 本地与自定义 OpenAI 兼容端点经统一窗口档位表声明输出上限（256K 本地部署现声明 65536 而非 24576），端点自报上限只会收紧。
+    - 连接器 CLI 全部升级（钉钉 1.0.61、飞书 1.0.95、企微 1.2.1、腾讯会议 1.0.18），第三方技能重同步并保留本地修复。
+    修复
+    - 已禁用的 MCP 应用现在按"已安装但禁用"上报给模型，而非看似不存在。
+    - 中日会话使用预期的精简系统提示首尾（每轮上下文更省；不强制思考语言），工作模式获得"被门控拒绝的写入不得重试"契约。
+    - 连接器安装超时与认证取消不再遗留僵尸子进程，杀死后的路径不再因不可中断子进程挂死。
+    en-US
+    New features
+    - Multi-agent delegation becomes swarm mode: child concurrency caps rise to 128 (1024 admitted per session), a live running-agents overlay shows delegation state, and consecutive spawns aggregate into one line.
+    - Normal chat sessions can bind a real working directory and inherit the code lane's safety posture: AGENTS.md injection, Plan-first launch behind the shared YOLO confirmation, and binding-based project-skill scanning.
+    - Conversations can be moved between projects via a searchable menu picker with an explicit move-only confirm, and session rows can be dragged directly onto project group headers.
+    - One-click export of a complete session log as a compressed tar.xz archive from both the CLI and the session context menu, restorable at full fidelity via /load.
+    - Output caps for local and custom OpenAI-compatible endpoints are declared through one unified window-tier table (a 256K local deployment now declares 65536 instead of 24576), tightened by any cap the endpoint itself reports.
+    - All connector CLIs are upgraded (DingTalk 1.0.61, Lark 1.0.95, WeCom 1.2.1, Tencent Meeting 1.0.18) and the bundled third-party skills are re-synced with local fixes preserved.
+    Fixes
+    - Disabled MCP applications are now reported to the model as installed-but-disabled instead of appearing not to exist.
+    - Chinese and Japanese sessions use the intended slim system-prompt bookends (less context per turn; no forced thinking language), and work mode gains an explicit "rejected gated write must not be retried" contract.
+    - Connector installer timeouts and auth cancels no longer leave zombie child processes, and the post-kill path can no longer hang on an uninterruptible child.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.2
+ReleaseTime: 2026-09-18T08:52:49.0000000Z

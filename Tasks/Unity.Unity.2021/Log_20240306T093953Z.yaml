@@ -1,0 +1,153 @@
+Installer:
+- InstallerUrl: https://download.unity3d.com/download_unity/7a0645017be0/Windows64EditorInstaller/UnitySetup64-2021.3.36f1.exe
+  ProductCode: Unity 2021.3.36f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/2021.3.36
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2021.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/cn/2021.3/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2021.3.36f1
+    - 3D Physics: Physics.ComputePenetration returns False when two colliders overlap (UUM-15831)
+    - Culling: Changes to MeshRenderer.shadowCastingMode don't take effect immediately when being made in OnPreRender (UUM-64799)
+    - IAP: [Android] The Player crashes with a "JNI ERROR (app bug)" error when the global reference table gets overflowed by BillingClientStateListener (UUM-55105)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Input: Crash on InputDeviceIOCTL when closing Unity editor (UUM-10774)
+    - Input: High polling rate mice are causing performance issues (windows, editor) (UUM-1484)
+    - Metal: [iOS] App crashes with out of memory exception in UnityGfxDeviceWorker when starting the app (UUM-55488)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - Universal RP: Objects are invisible in Scene view when using Wireframe Shading Mode (UUM-36914)
+    2021.3.36f1 Release Notes
+    Improvements
+    - AI: The instantiation of NavMeshes into the scene happens slightly faster.
+    API Changes
+    - XR: Changed: Make 2021.3 IUnityXRDisplay code-compatible with the newer v10 API (does not add v10 features; unsupported features are ignored).
+    Changes
+    - XR: [2021.3] Update com.unity.xr.openxr package version to 1.10.0.
+    Fixes
+    - 2D: Fixed (Case UUM-56609) Fix case where sprite atlas secondary texture is not scaled down when setting Max Texture Size. (UUM-55671)
+    - AI: Fixed crash that happens when NavMesh Agents with active avoidance try to move between obstacles that carve the NavMesh in some particular locations. (UUM-49214)
+    - Android: Fixed a crash, when one of the extracted il2cpp resource is delete in application data folder, in case like this, application will reextract il2cpp resources again. (UUM-46362)
+    - Android: Fixed crash in development build when passing array of AndroidJavaObject to Java method. (UUM-60779)
+    - Android: Fixed problem with with using AndroidJavaObject.Set() for AndroidJavaProxy. (UUM-59734)
+    - Android: Provide human readable warning message if Unity encounters a bug in Android SDK's command line tools 2.1. (UUM-62275)
+    - Animation: Blend Tree assets are now correctly deleted when overwritten by an Animation Clip in an Animator. (UUM-62807)
+    - Animation: Fixed deleting StateMachine leaking outgoing transitions. (UUM-58996)
+    - Animation: Fixed Editor spike when selecting a GameObject with a Playable Director Component. (UUM-59654)
+    - Audio: Fixed seeking of serialized MP3 files. (UUM-62086)
+    - Build Pipeline: Fixed an issue where Editor would crash due to a corrupted json file. (UUM-48603)
+    - Build Pipeline: Fixed AssetBundle incremental build detect script namespace/assembly change. (UUM-35766)
+    - Documentation: Fixed documentation on SystemInfo.hdrSupportFlags. (UUM-59911)
+    - Documentation: Fixed example code for AudioSource.GetSpectrumData by using AudioSource instead of AudioListener. (UUM-52561)
+    - Documentation: Removed mentions of web player in Microphone.Start. (UUM-52555)
+    - Editor: Added null check to audio filter read callback. (UUM-59618)
+    - Editor: Clarified that the slope in GetSteepness is always positive.
+    - Editor: Ensured the resize cursor doesn't show up when hovering over a draggable tab. (UUM-59161)
+    - Editor: Fields that could still be edited even though multi-editing is not supported when multiple Game Objects are selected should no longer be visible. (UUM-61080)
+    - Editor: Fixed a bug where GUI in the Scene were using an incorrect offset when Scene filtering was active. (UUM-61753)
+    - Editor: Fixed a bug where the hotkey would appear in the label of the selected item of a UIElements.PopupField and a EditorGUILayout.Popup. (UUM-6243)
+    - Editor: Fixed a crash related to throwing BuildFailedException in BuildProcessor.PrepareForBuild. (UUM-62231)
+    - Editor: Fixed a performance regression in the TextureImporter. (UUM-36303)
+    - Editor: Fixed an issue where the Columns and Rows values are not updating in a TextureImporter preset. (UUM-59090)
+    - Editor: Fixed an issue where we would use a cached SerializedProperty that belonged to a different SerializedObject for the ReorderableList. This would cause changes to be lost due to them being applied to the wrong SerializedObject. (UUM-35957)
+    - Editor: Fixed backport of a MPEG codec bug resolution. (UUM-59571)
+    - Editor: Fixed crash that occurs when opening the Occlusion Culling window. (UUM-506)
+    - Editor: Fixed error thrown from UnityYAMLMerge when comparing similar sequences. (UUM-31240)
+    - Editor: Fixed incorrect color sample results with the eyedropper tool Color Picker on macOS. (UUM-60339)
+    - Editor: Fixed issue where certain monitor layouts will confuse which monitor to open menus on MS Windows. (UUM-48008)
+    - Editor: Fixed macOS platform not having XcodeApi if iOS platform support is not present. (UUM-56448)
+    - Editor: Fixed scene template dependency list view in inspector window. (UUM-59838)
+    - Editor: Fixed wrong menu item getting the checked state when it had a duplicate name. (UUM-3533)
+    - Editor: On activity the videoplayer is stuck if called after the standby/resume state. (UUM-54785)
+    - Editor: Opening a context menu on macOS will now focus the application so all functions in the hierarchy work. (UUM-26081)
+    - Editor: Protected against crashes when passing invalid dimensions to an editor window (NaN or Infinity). (UUM-53656)
+    - Editor: Removing error message warning for invalid property path (UUM-34635)
+    - Editor: Texture .meta files contain override information for Server platform, which is not required as those settings are shared with Standalone and GPU only textures are stripped from Server builds. (UUM-56603)
+    - Editor: The Editor no longer crashes with a callstack resulting in validateMenuItem. (UUM-33727)
+    - GI: Removed logging which has caused users, supporters and developers to waste time and leave the user with no solution. (UUM-64413)
+    - Graphics: Fixed a crash on Vulkan where RenderTextures may reuse handles and change them to Memoryless textures which may cause an improper pointer dereference. (UUM-62663)
+    - Graphics: Fixed a regression in DrawProceduralIndirect in the Directx 11 backend when it was erroneously throwing "Draw indirect argument buffer too small" when using an argument buffer of 4 ints. (UUM-63246)
+    - Graphics: Fixed case where shader keywords were incorrect when loading old AssetBundles. (UUM-61412)
+    - Graphics: Fixed undefined behavior in Texture2D.Compress / EditorUtility.CompressTexture / EditorUtility.CompressCubemapTexture when these were dealing with partial mip-chain textures. The APIs now leave the mipmap count of textures untouched. (UUM-35985)
+    - Graphics: Improved performance of CopyTexture when copying from a readable Texture2D just after it was scheduled for uploading (Texture2D::Apply()). (UUM-35167)
+    - IL2CPP: Fixed data races in lazy initialization checks on ARM processors. (UUM-44039)
+    - IL2CPP: Fixed leak of cached reflection data on IL2CPP unload. (UUM-58464)
+    - IL2CPP: Fixed occasional crash when attaching/detaching the Unity debugger. (UUM-48692)
+    - IL2CPP: Fixed rare crash when using ConditionalWeakTable. (UUM-54316)
+    - IL2CPP: Fixed socket.send() sending uncatchable SIGPIPE signal on Linux. (UUM-39498)
+    - IL2CPP: Fixed to allow IP options IP_HDRINCL, IP_TOS and IP_TTL on some platforms where they are supported but were incorrectly defined out. (UUM-55772)
+    - IL2CPP: Throw a PlatformNotSupportedException for Process.HasExited. (UUM-55384)
+    - iOS: Added missing privacy manifest entry for System Boot time API usage.
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-53175)
+    - Linux: Fixed crash when destroying and rebuilding main GTK menu. (UUM-56334)
+    - macOS: Crash Reporter failing to upload to cloud due to path not being pre-created. (UUM-60277)
+    - macOS: Fixed memory leak when enumerating files. (UUM-52219)
+    - macOS: Limit Update loop frequency by target frame rate to not overwhelm the system and not delay input processing. (UUM-59176)
+    - Mono: Accessing AppContext.BaseDirectory will no longer throw an exception. (UUM-48816)
+    - Mono: Disallow unrestricted polymorphic deserialization in DataSet. (UUM-62270)
+    - Mono: Fixed "ldftn opcode to an icall causes JIT compilation upon every invocation". (UUM-54694)
+    - Mono: Fixed a race condition when the number of files in a directory changes while this code is executing. (UUM-58474)
+    - Mono: Fixed crash on domain reload, due to domain specific memory stored within image specific data structures. (UUM-60632)
+    - Mono: Fixed crash on Windows when certain Global Flags were enabled with the GFlags SDK tool. (UUM-49475)
+    - Mono: Fixed crash that would occur when attempting to determine the size of a recursively defined struct. (UUM-58734)
+    - Mono: Fixed issue with Socket.ReadAsync where the buffer submitted would not be updated when using a Memory. (UUM-54449)
+    - Networking: Throw exception instead of crashing if UnityWebRequest is sent during app quit, such as from Destroy(). (UUM-63150)
+    - Package Manager: Package Import window retains its functionality when collapsing the root folder of a package. (UUM-52889)
+    - Prefabs: Enabled saving Prefab Instances with missing source & disabled dragging Prefab Instances merged as missing. (UUM-877)
+    - Scene/Game View: Fixed an issue where the Transform Tool would not respect the global handle rotation setting. (UUM-62487)
+    - Scene/Game View: Fixed gizmos not rendering in scenes that are loaded during play mode from user code. (UUM-63255)
+    - Scene/Game View: Fixed Move tool behavior when the parent GameObject changes during manipulation. (UUM-56520)
+    - Scene/Game View: Making GameObject icon visibility responsive to Scene View visibility. (UUM-55801)
+    - Scripting: Removed the multiple HelpURL attributes warning. (UUM-59630)
+    - Search: Allows index to be saved in local package. (UUM-62277)
+    - Search: Ensure Index have a dependency id computed from their type name. (UUM-62159)
+    - Search: In IndexManager, disable SubObject options editing if the index is Scene or Prefab. (UUM-62150)
+    - Search: When directory are renamed, properly invalidate propertydb. (UUM-59213)
+    - Shaders: Improved message in the player log when sending the shader variant to the GPU driver. (UUM-62527)
+    - SpeedTree: Fixed error when opening SpeedTree8ColorAlpha subgraph in shadergraphs. (UUM-40439)
+    - SRP Core: Fixed issue where errors could be thrown by debug action registration if deleting all axes in Input Manager. (UUM-45496)
+    - Terrain: Entering detail painting mode no longer crashes the Editor when the TerrainData contains corrupt data. (UUM-62515)
+    - Tests: Removed unstable test, StreamingTests, from Runtime Tests, as it has already been ported to UTF. (UUM-10084)
+    - uGUI: Fixed the order of game object selection by passing only the root game object when building gizmos. (UUM-52935)
+    - UI Elements: Fixed some errors when parsing a menu item name that was just whitespace. (UUM-64241)
+    - UI Elements: Updated the logic to use the proper source count removing the dependency from the source type and layout version. (UUM-55415)
+    - UI Toolkit: Fixed an issue where the UI Toolkit controls from the com.unity.dt.app-ui package would not show up in the UI Builder's Library. (UUM-60553)
+    - UI Toolkit: Fixed composite field values remain displayed as mixed when their showMixedValue is set back to false. (UUM-33760)
+    - UI Toolkit: Fixed documentation links for UI Toolkit assets and scripts. (UUM-28715)
+    - UI Toolkit: Fixed DropdownField default values being classed as overridden in UI Builder. (UUM-62249)
+    - UI Toolkit: Fixed mouse events not sent exclusively to capturing element in runtime. (UUM-60384)
+    - UI Toolkit: Fixed ScrollView's Elastic mode is unrestricted when scrolling with the Scrollbar's arrows. (UUM-27737)
+    - UI Toolkit: Fixed view data states not being saved for children of ListView. (UUM-62717)
+    - UI Toolkit: Fixed wrong help link for TextMeshPro Sprite Asset. (UUM-48801)
+    - UI Toolkit: The url Style sheet value now uses speech marks instead of apostrophes. (UUM-59416)
+    - Universal RP: Fixed an issue where renderer features didn't pass validation if they inherit from another renderer feature. (UUM-56639)
+    - Universal RP: Fixed bright pixels when using a camera with skybox and MSAA rendering opaque objects with alpha clipping together with a transparent object if additive blending. (UUM-52949)
+    - Universal Windows Platform: Player will now store the previous UnityPlayer.log under UnityPlayer-prev.log. (UUM-55652)
+    - VFX Graph: Fixed missing node links when copy/pasting a system with missing PointCacheAsset. (UUM-46548)
+    - VFX Graph: Incompatibility with HLSL 2021. (UUM-63956)
+    - Video: Crash on BaseVideoTexture::InitVideoMemory when capturing Theta V's output texture. (UUM-60361)
+    - Video: Video Player freezes when dismissing Siri by tapping on the screen. (UUM-3561)
+    - WebGL: Fixed for Render Texture depth buffers sometimes not being cleared properly. (UUM-57343)
+    - WebGL: Fixed Orientation Lock code to not crash when run on iOS Safari's new partially complete implementation of screen.orientation API. (UUM-49634)
+    - Windows: Fixed Double backslash becoming single backslash when passing a Network path as a command line argument. (UUM-55979)
+    - Windows: Removed undesirable HID warning messages. (UUM-56489)
+    - XR: Removed the use of an intermediate texture when not required for XR rendering when scaling is used.
+    Package changes in 2021.3.36f1
+    Packages updated
+    - com.unity.mobile.notifications: 2.3.1 → 2.3.2
+    - com.unity.xr.openxr: 1.9.1 → 1.10.0
+    - com.unity.netcode.gameobjects: 1.8.0 → 1.8.1
+    Packages added
+    - com.unity.dt.app-ui@1.0.1
+Version: 2021.3.36f1
+ReleaseTime: 2024-03-05T18:42:24.1710000Z

@@ -1,0 +1,22 @@
+Version: 0.6.30
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.30/OMPiUI_0.6.30_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - fix: 完成剩余网络审计与状态同步修复 (453d41b)
+    - fix: 完成退出背压与终端隧道恢复修复 (b9b261b)
+    - fix: 处理 #304–#308、#310–#317 共 13 项问题；退出排空遵守 IPC 背压，大响应保留事件容量，取消作业及时归还响应预留并独立限制底层执行数量。
+    - fix: 终端重连等待已交付 xterm 的输出结算后再续传；隧道两端显式计量 pong 并约束积压；Go 网桥补充 HTTP 与升级连接的空闲回收期限。
+    - fix: 协议问题自动进入长周期恢复探测并显示中英文通知；重复 bash 补丁不再逐帧通知或作废在途快照，收敛逻辑使用合并后的状态。
+    - perf: 历史预取只缓存引用页，前台阅读时才还原大条目；目录请求共享缓存与在途结果、独立取消并隔离服务器 generation；配对邀请隐藏、过期或兑换后停止请求。
+    - fix: HTML 预览超过资源预算时显示截断提示，避免将部分加载误认为完整页面。
+    - verification: 类型检查、lint、全部后端测试、go test ./... 与生产构建通过；lint 为 0 error、6 条已有 warning，后端有 2 项按配置跳过。前端默认全量并发曾遇到未改动的设置备份测试 5 秒超时，单独复现通过，随后以 --maxWorkers=4 运行全部 1399 项测试通过。安装包构建与实机升级仍以发布工作流和设备验收为准。
+    - chore: 根包、全部 workspace、互依赖、npm 锁文件及 Tauri/Cargo 统一为 0.6.30；事件协议及官方会话目录、格式不变。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.30
+ReleaseTime: 2026-10-16T03:52:21.0000000Z

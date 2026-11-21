@@ -1,0 +1,20 @@
+Version: 1.0.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.5/OpenCowork-win-amd64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.5/OpenCowork-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Ensured first-run global memory directory initialization and onboarding profile writes can create missing USER.md without surfacing startup errors.
+    - Broadened missing-file detection for Windows and native-worker messages such as Could not find file, allowing onboarding, settings, and memory fallback paths to create files instead of failing.
+    - Made local MemoryRead create missing memory files from templates before reading them.
+    - Treated missing OpenAI Responses previous_response_id replay errors as recoverable and retried with full sanitized input.
+    Security
+    - Upgraded the native worker SQLitePCLRaw bundle to 3.0.3, pulling SourceGear.sqlite3 3.50.4.5 and clearing the SQLitePCLRaw.lib.e_sqlite3 vulnerability warning.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/OpenCowork/releases/tag/1.0.5
+ReleaseTime: 2026-07-02T15:38:05.0000000Z

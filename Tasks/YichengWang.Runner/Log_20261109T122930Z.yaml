@@ -1,0 +1,44 @@
+Version: 0.19.6.20261109.0804
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.19.6/Runner-Setup-0.19.6.20261109.0804-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.6 is a feature release for macOS, Windows and Linux on top of 0.19.5.
+    New
+    - Intel Mac build. Intel Macs now get their own Runner-0.19.6-x64.dmg next to the Apple Silicon one, with a separate Sparkle feed so each Mac is only offered the build for its architecture. The Intel build is cross-compiled and has not yet been verified on Intel hardware. (#1223)
+    Bug fixes
+    - Missions no longer settle while a member still has background work. A Claude Code member that ends its turn with a background task or a scheduled wakeup still pending now counts as working, so the mission waits for the woken turn instead of reporting Settled early. (#1183)
+    - Stuck "Compacting context" clears. A Claude Code compaction that failed, was skipped or was blocked used to leave the session on Working · Compacting context forever, so its mission never settled. Runner now ends it from the transcript, or after ten minutes at most. (#1224)
+    - Mission reports reach linked Claude Code chats again. A linked chat that had received a mission's line could be held as if the person were still typing, so its Needs you and Settled reports were never delivered. (#1225)
+    - Claude chats resume with a custom CLAUDE_CONFIG_DIR. Runner looked for the conversation in ~/.claude even when Claude was set to use another folder, so it refused to resume the chat or started a blank one. (#1221)
+    - Side panel state is kept per tab. Each chat, terminal and mission tab keeps its own side panel surface and open or collapsed state, so opening Files in one tab no longer changes the others. (#1219)
+    - ⌘W asks before archiving a chat on another computer. In a window showing another computer, ⌘W on a tab with a single chat archived it immediately; it now shows the same confirmation as a local tab. (#1227)
+    - Retrying a failed update check shows progress. Retry now shows "Checking for updates…" until the check ends instead of leaving the old error on screen, and a failed macOS check logs why it failed. (#1232)
+    - Markdown tables wrap inside their columns. Long text and inline code in a table cell of the Markdown preview no longer overlap the next column or run past the preview's edge. (#1226)
+    Nightly channel
+    - Nightly and preview-nightly builds also ship the Intel -x64.dmg with its own appcast. (#1223)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.6 是 macOS、Windows 和 Linux 上基于 0.19.5 的功能版本。
+    新功能
+    - Intel Mac 版本。 Intel Mac 现在有独立的 Runner-0.19.6-x64.dmg，与 Apple Silicon 版本并列提供，并使用单独的 Sparkle 更新源，每台 Mac 只会收到适合自身架构的版本。Intel 版本为交叉编译，尚未在 Intel 硬件上验证。(#1223)
+    问题修复
+    - 成员仍有后台任务时，mission 不再提前结束。 Claude Code 成员结束本轮时若仍有后台任务或定时唤醒未完成，现在会被视为工作中，mission 会等被唤醒的那一轮结束，而不是提前报告 Settled。(#1183)
+    - 卡住的「Compacting context」会自动结束。 Claude Code 的压缩失败、被跳过或被阻止时，会话以前会一直停在 Working · Compacting context，所在 mission 也无法结束。现在 Runner 会根据对话记录结束该状态，最迟十分钟后恢复。(#1224)
+    - 关联的 Claude Code 聊天能再次收到 mission 报告。 已收到 mission 消息的关联聊天有时会被当作用户仍在输入而一直挂起，导致 Needs you 和 Settled 报告无法送达。(#1225)
+    - 使用自定义 CLAUDE_CONFIG_DIR 时，Claude 聊天可正常恢复。 以前即使 Claude 配置为使用其他文件夹，Runner 仍在 ~/.claude 中查找对话，因此拒绝恢复聊天或打开一个空白的新对话。(#1221)
+    - 侧边面板状态按标签页分别保存。 每个聊天、终端和 mission 标签页都保留自己的侧边面板内容和展开/收起状态，在一个标签页打开 Files 不再影响其他标签页。(#1219)
+    - ⌘W 归档另一台电脑上的聊天前会先确认。 在显示另一台电脑的窗口中，对只含一个聊天的标签页按 ⌘W 会立即归档；现在会和本地标签页一样先弹出确认。(#1227)
+    - 重试失败的更新检查时会显示进度。 点击 Retry 后会显示「Checking for updates…」直到检查结束，不再一直显示旧的错误；macOS 上检查失败时会记录失败原因。(#1232)
+    - Markdown 表格内容在列内换行。 Markdown 预览中，表格单元格里的长文本和行内代码不再覆盖相邻列或超出预览边缘。(#1226)
+    Nightly 渠道
+    - Nightly 和 preview-nightly 版本同样提供 Intel -x64.dmg 及其独立的 appcast。(#1223)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.19.6
+ReleaseTime: 2026-11-09T08:43:22.0000000Z

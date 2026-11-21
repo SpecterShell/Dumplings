@@ -1,0 +1,28 @@
+Version: 1.16.12
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.12/vproxy-1.16.12-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.12 发布说明 / Release Notes
+    🎉 VProxy v1.16.12 正式发布！本版本配合 VP-Core 1.7.7 原生 OpenVPN 客户端，实现 OpenVPN 家宽 / VPN Gate 类节点的双内核支持，并配套面板格式回归测试与全套文档矩阵更新：
+    🌐 内核选路：OpenVPN 升级 VP-Core 优先
+    - VP-Core 原生出站优先：openvpn 协议选路从「仅新版 mihomo」升级为 VP-Core 优先（mihomo 兜底）——VP-Core 1.7.7 纯 Rust 客户端实测 VPN Gate 家宽节点全链路 204；内核协议白名单同步放行；
+    - vp_core 编译器白名单放行：type: openvpn 节点不再被剔除，配置完整直通进 VP-DSL（含 ca/cert/key PEM），DSL 生成 node "..." openvpn { ... } 块；
+    - 面板字段透传：dev / auth / handshake-timeout 等面板扩展字段原样保留，不破坏解析与编译。
+    🧪 回归测试
+    - 面板 anchor 格式专项：ca: &hwca | 锚点 + *hwca 别名引用（本订阅 78/79 节点复用首节点 PEM 的形态）断言 serde_yaml 展开后每节点拿到完整 CA/证书；
+    - vp_core 编译端到端：openvpn 节点经编译器进 IR JSON 与 VP-DSL 双产物断言（server/port/cipher/CA 逐字段）；
+    - VP-Core 侧哑证书回归：X.509 v1 哑客户端证书判定单测（VPNGateClientCert1 真实样本）。
+    📚 文档矩阵更新
+    - docs/architecture.md 协议 × 内核矩阵：VP-Core 行补 openvpn，选路序列补 openvpn → VP-Core（mihomo 兜底）；
+    - 中英文 README：VP-Core 矩阵行补 openvpn，选路要点更新。
+    ⚠️ 说明
+    - OpenVPN 数据信道支持 AEAD（GCM/ChaCha20）与 CBC+HMAC-SHA1（SoftEther/VPN Gate 兼容）；不支持 tls-auth/tls-crypt 与 UDP 传输；VPN Gate 免费节点存在常态漂移（掉线 / 服务端禁认证），节点测速与连接报错如实反映。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.12
+ReleaseTime: 2026-11-14T19:36:21.0000000Z

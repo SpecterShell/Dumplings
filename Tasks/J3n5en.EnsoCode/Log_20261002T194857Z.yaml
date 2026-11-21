@@ -1,0 +1,67 @@
+Version: 0.2.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/J3n5en/EnsoCode/releases/download/v0.2.3/EnsoCode-Setup-0.2.3.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    ✨ 新功能
+    - OAuth 改走 pi-mcp 流程：iss 校验、授权服务器元数据地址、clientName、insufficient_scope 补授权保留已授 scope
+    - 服务器支持 description，进按需服务器清单与工具搜索命名空间描述
+    - exploreFold 折叠区间写成 pi context_edit，投影、压缩与用量估算同步生效
+    - route virtual models by difficulty with a classifier
+    - add virtual models with rule-based routing
+    - add memory_delete agent tool
+    - prewarm and reuse WeType connections
+    - add WeType cloud recognition model
+    - replace exec and MCP proxy with pi codemode
+    - add plan mode toggle to built-in tools
+    - Windows 用 UI Automation 提供 ax()/find() 与控件操作
+    - add Codex native compaction strategy
+    - 去掉 Windows 实验开关，与 macOS 一样只由设置开关控制
+    - Windows 后端补齐——窗口/截图坐标对齐、前台切换、按键映射与用户输入检测
+    - Windows 截图与 SendInput
+    - AXContents、postToPid 与 sky_click
+    - 持久 VM、AX diff 与短查询 find
+    - 占用条、getState 与系统设置导航
+    - 真机 AX 可点，跨轮 ref 仍有效
+    - 加入桌面 computer 工具
+    - load Claude Code plugins with per-plugin toggles
+    - add web_search and web_fetch tools
+    - move running foreground shell commands to background
+    🐛 问题修复
+    - 建连因 scope 不足失败时保留挑战并报需授权，不被普通错误覆盖
+    - 工具名与命名空间按 pi 规则归一化为 [A-Za-z0-9_]，撞名带哈希、同命名空间服务器拒绝
+    - spawn 前斜杠菜单改用 pi 包管理与 loadSkills 发现 skill，与 worker 加载结果一致
+    - 接入 pi 同文件写入队列，避免与 edit/write 并行互相覆盖
+    - 系统提示词改走 pi 结构化选项，修复 SSH 会话 cwd 重复
+    - 选分类器来源/服务商时带上首个分类器模型，避免配置被丢弃
+    - 订阅克隆模型补进 provider 目录，虚拟模型可路由到它
+    - tighten classifier routing edge cases
+    - harden virtual model routing
+    - validate Settings panes and clarify guest scope in prompt
+    - dedupe macOS AX elements with CFEqual
+    - detect macOS focused window from the frontmost app
+    - bring quit confirmation window to foreground
+    - pass device ID for OpenAI ChatGPT sign-in
+    - make background image cards transparent
+    - Windows 首次 ax()/find() 对 Chromium/Electron 窗口只拿到外壳
+    - AX worker 退出时 ax()/getState 软失败，截图照常返回
+    - 前台输入先把目标窗口提到最前并确认，否则拒绝发送；截图/AX 操作不再占用桌面
+    - 按 App 找窗口时跳过输入法指示器等小浮窗
+    - 复审修复——排队中的中止与关闭、输入法切换期间中止、导入不改开关
+    - 中文输入法下键盘输入乱序
+    - 打包 koffi 原生绑定，占用检测 fail-safe
+    - macOS 原生层句柄生命周期与键鼠投递
+    - 本版仅 macOS 可用，并收紧结果体积与工具说明
+    - 默认关闭与权限边界 fail-closed
+    - 取消传播、墙钟超时与全局桌面租约
+    - 修复编译错误并解包 utilityProcess 的 AX 消息
+    - stop loading untrusted project pi extensions and packages
+    - skip instructions with missing sources on export
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/J3n5en/EnsoCode/releases/tag/v0.2.3
+ReleaseTime: 2026-10-02T16:24:07.0000000Z

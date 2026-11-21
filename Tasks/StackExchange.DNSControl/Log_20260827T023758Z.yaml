@@ -1,0 +1,371 @@
+Version: 5.0.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/DNSControl/dnscontrol/releases/download/v5.0.0/dnscontrol_5.0.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/DNSControl/dnscontrol/releases/download/v5.0.0/dnscontrol_5.0.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Greetings DNS fans!
+    v5.0.0 is released! This was a big community effort!
+    Thanks to all the people that helped test and fix bugs including @labrown @fm @cafferata @chicks @androw @AsifNawaz-cnic @blackshadev @bytemain @chicks-net @cylonchau @das7pad @dnscale-ops @DustyRah @eliheady @haylinmoore @huihuimoe @huskyistaken @imlonghao @jbelien @jochristian @kallsyms @KlettIT @kordianbruck @labrown @masterzen @meghanakudua02 @morozov-alexey @mtmn @patschi @pgaskin @ppmathis @rblenkinsopp @riku22 @riyadhalnur @SimenBai @SukkaW @ttkzw @vojtad @willpower232 @xddxdd @yzqzss @zupolgec (it's impossible to make such a list without forgetting someone. Apologies in advance to anyone I missed!) A special thanks to my new employer, CoreWeave, for their support!
+    v5.0.0 is all about EXTENSIBILITY!
+    - When IETF standarizes a new record type: DNS Support is automatic!
+      - When they appear in codeberg.org/miekg/dns, DNS control supports them (almost) automatically!
+      - Individual provider support requires very little work, often none!
+    - Non-standard record types like R53_ALIAS act just like standard types!
+      - We no longer need to special-case them all over the code. They even appear in zonefiles!
+    - “Builders” are easier to create, less brittle!
+      - Builder can now be written in Go, which has much better testing facilities.
+      - Legacy providers (SPF_BUILDER, DKIM_BUILDER, DMARC_BUILDER) are still brittle, but will soon be upgraded.
+    - And…
+      - Better internationalized domain name (IDN) support. Fields are now consistently processed at input, not later in the pipeline. This simplifies code and reduces potential errors. As a result, all providers now have 100% IDN support “for free”.
+      - DNSControl should use significantly less memory for large DNS zones.
+      - Writing new providers is significantly easier.
+      - Processing large zones is faster, with new potential optimizations coming!
+      - Zero compatibility issues. Your old dnsconfig.js should “just work”.
+    How did this happen? We upgraded from github.com/miekg/dns to codeberg.org/miekg/dns (a.k.a. “DNS version 2”) and took advantage of the new features. Specifically, models.RecordConfig no longer contains fields for each record type, most of which go unused. Instead it stores a DNS version 2 RDATA interface that contains the fields needed for that specific record type. This also allowed us to create new factories (NewRecordConfig() and NewRecordConfigParse()) which replace many lines of code in providers. As a result, every file that touches models.RecordConfig had to change. Thanks to @miekg for collaborating on the RDATA features which make much of this possible.
+    What does this mean to you?
+    - IGNORE() is now reliable for all providers!
+    - SOA records are no longer special. They work like all other records.
+    - DS ordering works: A DS record is created after its target NS exists, and deleted only after its target NS is removed
+    - dnscontrol foo now errors “command not found” instead of carping that no help for “foo” exists.
+    - Documentation bugfix: Parameters for various types and builders now in sync with code.
+    - VULTR now supports concurrency and AUTODNSSEC
+    - Custom record types for ADGUARDHOME, AKAMAIDNS, AZURE_DNS, ROUTE52, BUNNYDNS, CLOUDFLAREAPI, CLOUDNS, LUADNS, MIKROTIK, NETLIFY, and PORKBUN have been converted to the new custom record type system. They are no longer special and even appear in zonefile backups.
+    Some potential regressions: (These record types may not have worked previously.)
+    - deSEC no longer supports DS records
+    - Exoscale no longer supports PTR records
+    - Tencent no longer supports ALIAS or PTR records
+    Dev notes:
+    Developers might be interested in the code changes, which are described here in modernizingproviders.md
+    - Code for standard record types (models/record_astype.go) and custom types (pkg/privatetypes/) are generated.
+    - Record type is stored as an integer, because string comparisons are slow. (.Type is still available for now but please use .TypeNum)
+    - Go 1.27 is now the minimum Go compiler version. The struct literal change is particularly helpful.
+    - “Golden files” record API input/outputs for off-line testing, eliminating the need for API access in many cases.
+    - All providers have been upgraded to “diff2”. The diff1 compatibility code has been removed.
+      There is a new “cookbook” which explains common code patterns: Cookbook.
+    - It is now significantly easier to write providers. The translation from native to models.RecordConfig is much easier thanks to new factory functions.
+    - I'm now maintaining a list of REFACTORING PROJECTS in case anyone wants to grab one. It's a good way to learn the code base or get more experience with the Go language.
+    - You may be interested that during the development of this release, both the old and new RecordConfig were supported with a very slick bidirectional conversion process. As the legacy fields were eliminated, the conversionn process got closer and closer to being a no-op until suddenly the and n
+    Stats:
+    - 467 files changed!
+    - 283 new files added!
+    - 34 files deleted! (my favorite statistic!)
+    Testing notes
+    The following providers received extensive testing:
+    AKAMAIEDGEDNS ALIDNS AXFRDDNS AZUREDNS AZUREPRIVATEDNS BIND CLOUDFLARE CLOUDNS
+    CNR DESEC DIGITALOCEAN DNSCALE DNSIMPLE DOMAINNAMESHOP DYNU GANDIV5 GCLOUD
+    GIDINET HEDNS HUAWEICLOUD INFOMANIAK INWX LINODE LUADNS MYTHICBEASTS NAMECHEAP
+    NAMEDOTCOM NETBIRD NETLIFY NETNOD NEXDNS NS1 OPENWRT ORACLE OVH PORKBUN POWERDNS
+    ROUTE53 SAKURACLOUD TRANSIP UNIFI VERCEL VULTR WEBSUPPORT
+    The following providers lacked testing. Please use with caution:
+    ADGUARDHOME AUTODNS BUNNYDNS CSCGLOBAL DNSMADEEASY EXOSCALE FORTIGATE GCORE
+    GIGAHOST HETZNERV2 HOSTINGDE JOKER LOOPIA MIKROTIK NETCUP PACKETFRAME
+    REALTIMEREGISTER RWTH SCALEWAY SOFTLAYER TENCENTDNS
+    Users of the IMPORT_TRANSFORM() and IMPORT_TRANSFORM_STRIP() functions should test carefully before using in production.
+    Changes
+    The list is too long to include all commits, but here are the highlights:
+    - Add factory for models.DomainConfig: models.NewDomainConfig(zone).
+    - Add factories for models.RecordConfig, replace old code where we can.
+    - Down-casing, canonicalization, IDN conversion, stutter checking, and normalizing fields is now done when making the RecordConfig, not at the validation/normalization step later in the pipeline. As a result, errors are reported sooner and more accurately. pkg/normalize/validate.go still exists and is used, but is slowly being deprecated.
+    - Remove the rtypecontrol module. In the few places it was used, replace with the new RDATA functionality.
+    - DNS types RP and DS were reimplemented using the new RDATA system.
+    - Replace RecordConfig.Comparable with RecordConfig.ComparableV3 (name change to find stragglers).
+    - Custom types are now described in YAML with code generated automatically (pkg/privatetypes/types_generate.yaml)
+    - TLSA comparison is now done on ToUpper, not ToLower, strings.
+    - Added a "cookbook" of how to use new factories: Cookbook.
+    - Integration tests: Test cfworkers and cfredirect by default.
+    - Integration tests: Improve SVCB/HTTPS tests, especially for ech=IGNORE
+    - LOC() is now a "builder" that outputs LOC records.
+    - LOC floating point rounding error fixed
+    - Builders are registered using models.RegisterBuilder()
+    - No longer store the "Raw" domain names (the name as the user input them). They were never used.
+    - D_EXTEND() refactored. Implementation is simplier and faster.
+    - RecordConfig now stores .TypeNum which is the numeric value for the type. Eventually we'll remove .Type.
+    - Change github.com/miekg/dns to codeberg.org/miekg/dns (and related packages) where possible, including new helper functions in pkg/dnsrr/dnsrr.go to help migrate away from dnsv1
+    - pkg/js/helpers.js: Improved rawRecordBuilder() to be feature-compatible with recordBuilder()
+    - pkg/js/helpers.js: Convert to "the new way" for all record types.
+    - pkg/js/parse_tests update fixtures due to new JSON fields. .json files no longer have Unicode chars.
+    - Zonefiles now include "real" data for custom types instead of comments.
+    - New package: mustbe for converting raw data to the types we need.
+    - BIND: Zonefile generator produces better files.
+    - BIND: Refactor SOA serial number handling.
+    - CLOUDFLAREAPI: Update SINGLE_REDIRECT, CF_REDIRECT, CF_TMP_REDIRECT, CF_WORKER_ROUTE to comply with the new way to do custom record types.
+    - New functions ZoneifyQuoted, Zoneify, etc. are standard ways to create zonefile-compatible strings.
+    Sincerely,
+    --Tom Limoncelli
+    Monthly video call!
+    Everyone is invited to the Monthly DNSControl Community Video Conference Call on the 2nd Tuesday of each month. Join whether you are a new user with questions or an experienced developer that wants to discuss DNSControl internals... or anything in between! Meeting details on
+    GitHub Discussions.
+    Changelog
+    Major features:
+    - 6fcc3de94a4b4a7ef109001a2647206e3b95ba04: FEATURE: updated DMARC_BUILDER for RFC 9989 (#4794) (@ElliottCepin)
+    Provider-specific changes:
+    - 18266466ab04ec9eb86c435e951c7cbb09a714f7: ADGUARDHOME: Modernize record conversion (#4536) (@TomOnTime)
+    - 79500897a89e4598be37fed8d594effbe079e890: AKAMAIEDGEDNS: Add Akamai Edge DNS golden tests (#4717) (@TomOnTime)
+    - 337f1158c9f48f96867f30b4accc76925dacb69b: AKAMAIEDGEDNS: Fix bugs mentioned in Issue (#4466) while running integration tests (#4421) (#4487) (@meghanakudua02)
+    - a9ff22fac2efb99a9d034ac7520196d98c004147: AKAMAIEDGEDNS: Modernize record conversion (#4537) (@TomOnTime)
+    - 3da203315a722a92555f41dd0027c67bdd1eb732: AKAMAIEDGEDNS: Move AnswerType out of RecordConfig (#4709) (@TomOnTime)
+    - dbbba2116d2cc2b7299fe73a0589e0edf05ebd23: ALIDNS: Modernize field access (#4657) (@TomOnTime)
+    - 218b565424cd7a68c366ee571a62b431693ee2d8: ALIDNS: Modernize record conversion (#4538) (@TomOnTime)
+    - 5401afec9d71eda9417fde5565e3f2939817836b: ALIDNS: audit punycoded CNAME targets (#4424) (@bytemain)
+    - 9899adb95c69cca8b92af03f8d1a139d3873f005: ALIDNS: decode punycode labels before IDNA validation (#4787) (@bytemain)
+    - f1efd81107f75f67708e893e7cbba83ceafd4f5d: AUTODNS: Modernize field access (#4660) (@TomOnTime)
+    - 8950faaac6e02759f837ddeb4a5fd165295a03a9: AUTODNS: Modernize record conversion (#4539) (@TomOnTime)
+    - 93f655ca40a73554d51ff46d775f56b6c0cfa056: AXFRDDNS: Adopt dnsv2 (partial) (#4529) (@TomOnTime)
+    - 7b13af90a82034cb7fb7d3e769bbe4483b6a6007: AXFRDDNS: Modernize field access (#4661) (@TomOnTime)
+    - 108cf31058de2e8c25391d0a07bb08224a3faf3e: AXFRDDNS: convert to codeberg.org/miekg/dns (dnsv2) (#4658) (@shuvamk)
+    - cb37dcb8510897e37a3b8d4b56fd85b6cf3260ec: BIND: Refactor to use modern constructs (#4423) (@TomOnTime)
+    - 7128ea750ced9a625503276eb44c926bf1eba567: BUNNYDNS: Modernize code (#4647) (@TomOnTime)
+    - 4ccaa2118f2302dd5f77de02ffd54fa5493aefde: BUNNYDNS: Modernize field access (#4662) (@TomOnTime)
+    - 4e4da9c7f8f0ab771a280029466f8154d59df3cf: BUNNYDNS: Modernize record conversion (#4540) (@TomOnTime)
+    - 94b973e9164c873e96c98639309eb09cbbd7b7d7: CLOUDFLAREAPI: Modernize field access (#4625) (@TomOnTime)
+    - f530e0e8ed5f581f453a64a810d4e90ecf432c88: CLOUDFLAREAPI: Reduce use of legacy functions (#4480) (@TomOnTime)
+    - d9bbd73362070d4504105121c5359969a170ffc8: CLOUDNS: Modernize field access (#4663) (@TomOnTime)
+    - ab531a126e334d818115f7b12d386bb4436fef39: CLOUDNS: Modernize record conversion (#4541) (@TomOnTime)
+    - c27f98b973050ea2ec63f3510f21ac6f4216b29c: CNR: Modernize field access (#4620) (@TomOnTime)
+    - 38a22732a3a1929f331ccd11dfe4ac426be399a1: CNR: Use diff2.ByRecord instead of diff.NewCompat (#4604) (@TomOnTime)
+    - f92f03a91b1d234a8443bae5cd35d9f089dbde90: CSCGLOBAL: Modernize record conversion (#4542) (@TomOnTime)
+    - 4e7b3ccb95b86d5a449053164c1647f5144fd992: CSCGLOBAL: Use diff2.ByRecord instead of diff.NewCompat (#4605) (@TomOnTime)
+    - 0084086eb1b9e8cd6f395685c5994f3ab1e2c228: DESEC, POWERDNS: Add audit rules for DNSKEY records (#4705) (@androw)
+    - 97cddcd293c82cdd86403fd9817ce91e0570c5a9: DESEC: Fix TXT records quote, disable TTL tests (#4677) (@androw)
+    - d5b24244dcde4cd37c1025de558dd3f0f90ed444: DESEC: Update DNSSEC capabilities (#4692) (@androw)
+    - 698b06fca8cb20e9ca9f0f900f51008bf0f9f129: DNSCALE: Modernize field access (#4664) (@TomOnTime)
+    - 8f694d8c0cc53b9d2b335f65706637b349d576c6: DNSCALE: fix regression in PR#4664 (#4763) (@dnscale-ops)
+    - 7d3fc44bd576e7341b9839cac7898b4a9317617c: DNSIMPLE: Modernize field access (#4648) (@TomOnTime)
+    - 0af29d7b358dab876f0b47722f32410cd795caa1: DNSIMPLE: Modernize field access (#4656) (@TomOnTime)
+    - da6f97c2feceb99b2d34476239900e08fe25ebfc: DNSMADEEASY: Cover label conversion in types_test.go (#4696) (@vojtad)
+    - 0b97c68caf7a81c1f78e1bba32b1b7fe28c783e6: DNSMADEEASY: Unify how labels are made (#4679) (@TomOnTime)
+    - b017a1d0adae3540120d1114530bd15b9f67c7a5: DNSMADEEASY: fix TXT ≥256-byte round-trip and ALIAS/ANAME diff loop; document sandbox testing (#4469) (@vojtad)
+    - 5a0362ac9f4b71976a0ae2cbdab6be8e99c83b7f: DOMAINNAMESHOP: Improve label creation (@TomOnTime)
+    - d75427a89ce661cd2d90d6678e204772b0306813: DOMAINNAMESHOP: Reject NS records at apex (#4702) (@SimenBai)
+    - 851a7bc2af3860b256f482e57d398d9d62e11aff: DYNU: Fix NAPTR replacement field, and RP trailing dot (#4785) (@DustyRah)
+    - 11f67baa7a4d39b2266fd1a0e0a021e75f83ac45: DYNU: Modernize field access (#4665) (@TomOnTime)
+    - 3b254c47f8f1a843f782bb830d586ec7a10b71f5: EXOSCALE: Document that PTR records not supported (#4779) (@TomOnTime)
+    - fd4dffbb786b8480b1319fd6e928440b4a73ded2: FORTIGATE: Debug failing IGNORE tests (#4621) (@TomOnTime)
+    - ca08787aebb82db81bd07b50e04a3ef67efc11db: FORTIGATE: Modernize field access (#4666) (@TomOnTime)
+    - 5d41d71dcdcfb36a0b5c80dd450bfc7367793bcb: FORTIGATE: Skip TXT test (#4766) (@TomOnTime)
+    - 6f0dc26ea77e4543965790c3af4097417f2bb025: GIDINET: v5 test fixes and modernize record conversion (#4451) (@zupolgec)
+    - c39ac7f8c470e2f5b4ce4b1d2e2d083c7e556ae8: INFOMANIAK: Disable tests for features that do not exist (#4613) (@TomOnTime)
+    - abf72281de09b34ae33b9067ac45dfe4597b2457: INFOMANIAK: Fix TXT records (#4800) (@TomOnTime)
+    - dbda6b2537aaedf0b8b4868f0da70fec36d121a6: JOKER: Modernize field access (#4673) (@TomOnTime)
+    - c73196c0e768a3197b1e618af0e7d16cafe909b1: NAMEDOTCOM: Fix ALIAS regression (#4746) (@TomOnTime)
+    - f56aafd3a1f945e051b7da65a86a233505ce7df4: NAMEDOTCOM: Upgrade to diff2 (#4565) (@TomOnTime)
+    - cf545213a00291a352bc68ff0c2055759566bd47: NETBIRD: Add apiurl creds argument (#4486) (@3l0w)
+    - 5b761f3f61c9a39d30c4d95a13808b14c4d875b6: NETCUP: Modernize field access (#4667) (@TomOnTime)
+    - f486bdc0c5090e7096a201487abd59ecc313baae: NETCUP: fixup provider to make it pass the latest integration test suite (#4706) (@kordianbruck)
+    - b9823fbc0476104e3b89c516c3f0bc29134c1ef8: NETLIFY: toRC should not mutate native record (#4671) (@TomOnTime)
+    - 97f6a9c60ef663a00d5522241a757bb2b58dee59: NETNOD: Fix typo (#4530) (@TomOnTime)
+    - e755fc95c98d1d0969c20ba8e598c3d55325ba04: NETNOD: Modernize field access (#4668) (@TomOnTime)
+    - 3661095d420e8b4111fe26ef57278292774b3d70: NEXDNS: Modernize for v5 (@TomOnTime)
+    - 69d4d88fa19f08418d55c2cc6f44bced86bc9cce: OVH: Add the ability to disable ListZones() for testing / Fix TXT record handling (#4791) (@TomOnTime)
+    - 349405ab656584b5d0ee944e58c1b9f5bab93dd7: OVH: Modernize field access (#4669) (@TomOnTime)
+    - ed58476306f0c011589492504e5df85b48166bc5: PACKETFRAME: No longer has maintainer (#4788) (@TomOnTime)
+    - b3d616fe0647cfa5f579b170170aafbc032480d9: PORKBUN: Modernize field access for SVCB records (#4649) (@TomOnTime)
+    - 07058de78b4884bb2b9f23faa9fb4ad7c508f208: POWERDNS: Fix SVCB bug (#4778) (@TomOnTime)
+    - 5cbd56eb8fc53df50fd3ecaeff78e3709d757368: POWERDNS: Update access to SVCB fields (#4639) (@TomOnTime)
+    - c571cc80a50c94faab905b66dced72ae9907c12b: ROUTE53: Fix R53_ALIAS and R53_EVALUATE_TARGET_HEALTH bugs (#4797) (@TomOnTime)
+    - 2d57bb7b307aa64f4d9555d95af84a89757aff7a: ROUTE53: Modernize (#4481) (@TomOnTime)
+    - a9374d89168264a7d0922681625481fd7c1f77a5: SAKURACLOUD: Modernize field access (#4670) (@TomOnTime)
+    - 430d2c61561f2b4ebbaedf4a80f2f61db5adac05: SOFTLAYER: Use diff2.ByRecord instead of diff.NewCompat (#4606) (@TomOnTime)
+    - e55b628004220b564a050baa37587eaa413e69e3: TENCENTDNS: integration tests fix (#4775) (@cylonchau)
+    - 233e37fcaf7b8dd13489faa95e2c34a53cae9631: TRANSIP: Fix TXT bug (#4592) (@TomOnTime)
+    - 5d6e5083dab2a5f9cac3d61c4fcd14201ed773ae: TRANSIP: Fix TXT records (#4597) (@TomOnTime)
+    - c683ca3170503c3ae0071cd070259819d0102134: UNIFI: new API compatibility fixes + tests (#4452) (@zupolgec)
+    - b56dfd3c769ee8a01d9d0fef57ff121af59ff210: VERCEL: Modernize fields (#4619) (@TomOnTime)
+    - 92c95300f3475e7e70fd2af598fe1059e86a6c27: VERCEL: Skip NullMX tests (#4773) (@SukkaW)
+    - 6259760ba05ad2621442db0018d3a1a7315ae676: VULTR: convert fields (#4618) (@TomOnTime)
+    - 25e4f81dfacfb91c334cabc950c9d8bb77809b12: WEBSUPPORT: fix MX/SRV empty priority and v5 preparation (#4732) (@mtmn)
+    - 4873383339b4c71d75110e233f8c8ea8bdc3fd04: desec: Modernize record conversion (#4543) (@TomOnTime)
+    - a3d31ee52b27f7f5e088c47fd3ef5124ccbbb313: dnscale: Modernize record conversion (#4544) (@TomOnTime)
+    - 5c24a8d5c73e5a321134e64cfdb8c8c2576f4504: dnsimple: Modernize record conversion (#4545) (@TomOnTime)
+    - c6af85dd9c10309d398d40cb2875217ffe218742: dnsmadeeasy: Modernize record conversion (#4546) (@TomOnTime)
+    - 0f1f821620883725bc951edc6c0babc0d36e5227: domainnameshop: Modernize record conversion (#4547) (@TomOnTime)
+    - 845371508d94688df5cc182b91c4576ad054cd24: dynu: Modernize record conversion (#4548) (@TomOnTime)
+    - ab2e50b44d723b4d2462fb6e94bddabe9220b427: exoscale: Modernize record conversion (#4549) (@TomOnTime)
+    - 41b6cc66a73d119446b83a9cc0a90cc5f212f481: fortigate: Modernize record conversion (#4550) (@TomOnTime)
+    - fb07524eed61e40b29499704837b0f871c9d2eb9: gcore: Modernize record conversion (#4551) (@TomOnTime)
+    - d0767127080348b1a94bcca841612ec40745262e: gidinet: Modernize record conversion (#4552) (@TomOnTime)
+    - 70425d2f8933c58ed5ad61210e545407fc9db1ce: gigahost: Modernize record conversion (#4553) (@TomOnTime)
+    - cecd5ea124efbca7d0cd8d7826cb165ecb8e3fe0: hostingde: Modernize record conversion (#4555) (@TomOnTime)
+    - 33d8f21f4c33ed1c0d27726225828c7739acf872: huaweicloud: Modernize record conversion (#4556) (@TomOnTime)
+    - 4c0768102704af38a68a3e91dec470366e71f419: infomaniak: Modernize record conversion (#4557) (@TomOnTime)
+    - 32ecb358ad8702824ffd4489d3c7b41c4185f61e: inwx: Modernize record conversion (#4558) (@TomOnTime)
+    - 620a04fb1849133e47cda4bd9256f41aeeb97a34: joker: Modernize record conversion (#4559) (@TomOnTime)
+    - fa2783690a0bc2d35de38e62f2c85661e7f409cd: linode: Modernize record conversion (#4560) (@TomOnTime)
+    - 5af75bd64ad3a5b5d048926c6707f44750487d48: loopia: Modernize record conversion (#4561) (@TomOnTime)
+    - a862f2b5bb199ef4ee0edc54e66c88cc7c7f19f5: luadns: Modernize record conversion (#4562) (@TomOnTime)
+    - 3ed414a8e45677f5eb788afd0299a7b1d5907a10: mikrotik: Modernize record conversion (#4563) (@TomOnTime)
+    - fe93b0ba1fa7aada4eca84f481caf54618913d42: namecheap: Modernize record conversion (#4566) (@TomOnTime)
+    - ff88d92e6ff86d69da2a1bbe3f750311cb4ed453: netbird: Modernize record conversion (#4567) (@TomOnTime)
+    - 990e72fe66e9a0d7612a6599c07d4e1f754415d5: netcup: Modernize record conversion (#4568) (@TomOnTime)
+    - 259b4b778a5a56238f82ce1c09b1fc7bc2c03184: netlify: Modernize record conversion (#4569) (@TomOnTime)
+    - 40ad888965c3c548804abc32fd49b25fcb38207f: ns1: Modernize record conversion (#4570) (@TomOnTime)
+    - a5894e88b35ba346081391a8e4236df29d2f5f95: openwrt: Modernize record conversion (#4571) (@TomOnTime)
+    - 348304e6ffccb6d280d245d7b422a19aa8b66cf2: oracle: Modernize record conversion (#4572) (@TomOnTime)
+    - 62031d9eea1ea332d4304a089f158304f456ec43: packetframe: Modernize record conversion (#4573) (@TomOnTime)
+    - 7a40210c7c99878b1b7b10aea8da68b74d73eab0: porkbun: Modernize record conversion (#4574) (@TomOnTime)
+    - a974a34f3b6b454d20e0016cdeddd1d6e1330564: powerdns: exclude from DS and DNSKEY record tests (#4614) (@jpbede)
+    - 9a2e03ba75cc6e7fd80d96badfb69ca2be0a9e9f: realtimeregister: Modernize record conversion (#4575) (@TomOnTime)
+    - 1f7ad07c0507ee641da1d4a882d9b429eb267d21: rwth: Modernize record conversion (#4577) (@TomOnTime)
+    - c813ead6969cb6ee3c0bafaf3c68066a8841b72d: sakuracloud: Modernize record conversion (#4578) (@TomOnTime)
+    - eb5b16f1c7f2fc8a8f1247e3454182641d858f5e: scaleway: Modernize record conversion (#4579) (@TomOnTime)
+    - cde24d12fc3c3ab95dc824f8d3518cf7e6b2a346: softlayer: Modernize record conversion (#4580) (BLIND MERGE) (@TomOnTime)
+    - ba1463ddc5178c279b45567840618886fac8ecf4: tencentdns: Modernize record conversion (#4581) (@TomOnTime)
+    - 4a76fbfec4ff410388debe14f3d6891389da451b: unifi: Modernize record conversion (#4582) (@TomOnTime)
+    - 823586c6975869e5ac309b8a9fc96fa5754b7d73: vultr: Modernize record conversion (#4583) (@TomOnTime)
+    - d66b24135532c9869b5bc4802cb9829caf0bca9d: websupport: Modernize record conversion (#4584) (@TomOnTime)
+    Documentation:
+    - 7f6139a8c192991a3a8edeec6fb3c674c50eadd6: DOCS: Document RecordConfig V3 best practices (#4464) (@TomOnTime)
+    - 91a04282a56f530b169886f70a0ff098d0c19ba5: DOCS: Fix many comments (#4783) (@TomOnTime)
+    - 62a6b52b098d752f0a46769105a2b41018bf6e49: DOCS: Update link to the official GHA (#4764) (@TomOnTime)
+    - f9aa09aa77cecf77383a6a79d79ac5df8b7ecff2: DOCS: Verify parameters match across code, docs, and dnscontrol.d.ts (#4805) (@TomOnTime)
+    - 2765ef1e7fa00c4cd9cd6842eaf4fd470a25e6b7: docs(README): Add GHA, update RFC4183 change, etc. (#4774) (@TomOnTime)
+    CI/CD:
+    - f56dd3697a73d4a9afdc244c72a5e1d3101b5211: BUILD: Upgrade to Go 1.27 (#4803) (@TomOnTime)
+    - b0583a4bf216a85616014e2f45a6dd7b5c23600b: CI: Add "golden" data files for most providers (@TomOnTime)
+    - 95c47d779980d25c2c93f8100a7261a72f8a9d70: CI: Lint, add all env variables, improve gotestsum usage (#4727) (@TomOnTime)
+    - 957f17c960f6181c2ae7748e4d497e52d229ed1e: CI: Optimize cache use for faster builds (#4733) (@TomOnTime)
+    - b7c1605e64ba5ab687b0414754a5f652c9759c04: ci(cache): Cache go modules (#4731) (@TomOnTime)
+    - 243ed156a538d055561bc8bdaac64910dc07b0a3: ci(codeql): Enable CodeQL advanced mode (@TomOnTime)
+    Dependencies:
+    - bf2efade125dd6212065fb545e8ea3c50e865d14: CHORE: Update dependencies (#4813) (@TomOnTime)
+    - 99018403fb184480d4d44d2938472f91aceaf9f5: Update deps (@TomOnTime)
+    Other changes and improvements:
+    - 1007860abb2fd87dda247fc076cca6ecab27f2d9: AKAMAI: Refactor how to change .Type (#4755) (@TomOnTime)
+    - 4a058a0e4754a75dd4e6cf8e795fac6aa562cd2c: Add provider conversion golden tests (#4716) (@TomOnTime)
+    - 0de7521af0e9969f165d7c9c9f7bd40c844de47a: BENCHMARK: Compare TypeNum and RDATA type switches (#4719) (@TomOnTime)
+    - 51344061a57322ef43323e57d9f7f671427522f7: BUGFIX: Activate single-dot policy (#4739) (@TomOnTime)
+    - ce21768707b605cd69e662063b7e9e3f3c579de7: BUGFIX: Fix dnssort issue not resolving all records in certain edge cases (#4786) (@blackshadev)
+    - fcb93e92ed67e21b1a7958b755963456f18748e3: BUGFIX: IsPrivateType has an off-by-one error (@TomOnTime)
+    - f365b0b5d23262e877769af7e73d8292914b22e2: BUGFIX: PrettySort not working with PTR-like short names (#4420) (@TomOnTime)
+    - 9c8625b6ce4793ad65bf38bb6d73148f328ebe36: BUGFIX: Unknown commands should print better error (#4769) (@TomOnTime)
+    - cd0c9f6aa435ff64b0846835af2b4ad07fb4f909: BUGFIX: integration tests audited the harness's own delegation NS records (#4758) (@SimenBai)
+    - 5729f287807465dbee1638f71f94afaeef977e3a: BUGFIX: rejectif.NsAtApex never matched the apex label (#4707) (@SimenBai)
+    - 68bd3d13411102c5102d03070b97b6de79f4398f: CHORE: "vet -fix" (#4465) (@TomOnTime)
+    - bfa8067b643b6b34b0aee2751efc5c91fc0e97b0: CHORE: Add Must* equivs of RecordConfig factories (#4461) (@TomOnTime)
+    - 0df590a03fead9ab208539e1cb9eb9a127f6a844: CHORE: Adopt models.MustNewDomainConfig where appropriate (@TomOnTime)
+    - 5bb24d3093e8bd3eef788848d87042c62ac34b75: CHORE: ChangeType() → ChangeTypeToCNAME() (#4754) (@TomOnTime)
+    - d38ac06702880f0713eb816331b436cdfc6afd89: CHORE: Cleanups to make merging with v5 easier (#4444) (@TomOnTime)
+    - 51c0dc75661e1286addce8760145ca42d3e2dc98: CHORE: Delete obsolete comments (#4455) (@TomOnTime)
+    - cb6e7ae93bdc120740e7626c208a24d91a446c4f: CHORE: Eliminate legacy SOA fields (#4615) (@TomOnTime)
+    - 641d7448da466bc5821a9e011e6088e07a9263f9: CHORE: Fix ALIAS and modernize BIND, CLOUDFLAREAPI, GANDI_V5 (#4468) (@TomOnTime)
+    - fa6403c280f7e18ee2ad4866c4a176dc512f31f1: CHORE: Fix GoReleaser to skip release candidates (#4485) (@TomOnTime)
+    - b3f12e6aba650f7fb819d55144386fb303c6a6cb: CHORE: Fix comments (#4483) (@TomOnTime)
+    - a52926c9483b0eb6d36760902a80dd38164dce11: CHORE: Fix comments (#4756) (@TomOnTime)
+    - 4227b1241f583cb0c44a574d37f3d63bec00a53b: CHORE: Fix merge error (#4528) (@TomOnTime)
+    - 50000e04aa4b4bc9fd2fb47e4f0b3233341321e3: CHORE: Generated files should have a comment indicating so (#4476) (@TomOnTime)
+    - 5ddee183ea4798931478ddea342f5550563c1352: CHORE: Merge from base (#4527) (@TomOnTime)
+    - 30925b152350657952c51ab166add10e791ea16b: CHORE: Modernize pkg (#4674) (@TomOnTime)
+    - 58cd91d7e4553e4a61c7be0d84cd49e6dfc65812: CHORE: Remove unused SetTarget*() functions, improve warnings (#4672) (@TomOnTime)
+    - cae316b3674606e81e3d63614e71298c83149cae: CHORE: Sync with main (#4589) (@TomOnTime)
+    - 306a54e64aefd88857df4d3d68be385286e66458: CHORE: Upgrade umbrelladocs/linkspector (#4752) (@TomOnTime)
+    - 8a7aaa748e0ed7ddb3784041db30a36fdbab6bd9: CHORE: Upgrade umbrelladocs/linkspector (#4753) (@TomOnTime)
+    - 844541692a7fd7489aaae272b6e57a86f95dcbb3: CLEANUP: Use errors.New instead of fmt.Errorf when there is no format verb (#4802) (@TomOnTime)
+    - d782d96dd1b458a3e4f151aadd851599b22fcf0e: CORE: Remove legacy conversion code (#4735) (@TomOnTime)
+    - c1d31c9a964553f6b2f86717ccf64d805954e99c: CORE: Upgrade OVH to RecordConfig v3 functions (#4503) (@TomOnTime)
+    - 742891124d7a5134e504cf956440f59f8cbfcaf9: Change Feature Flags to Feature Summary (@tlimoncelli26)
+    - abb50c3dbd0b535b14cd6e2cb0bd9a7c727f2a88: Cleanups (@TomOnTime)
+    - b6a4992c496776f457a035de9bd2bc046fa562a9: Cleanups (@TomOnTime)
+    - 8c77f74b7a02703958e857d7ed446785d320a3b1: Complete merge (@TomOnTime)
+    - 7f6f7c544d05dd2e42affdec292ab6e51138ad02: FIX: porkbun url/url301/porkbun_urlfwd (#4440) (@imlonghao)
+    - 41c6744feda3daf6c19e5f62cfe32b1d36c358b9: Fix comments (@TomOnTime)
+    - 127e3a7de7ca133ed914e2ffcddab63df6cdd240: MYTHICBEATS: Convert to dnsv2 (#4682) (@TomOnTime)
+    - fffcf8df13c30cb35b693d04e0b0610f8c91c7fe: Misc fixes: CLOUDFLAREAPI, TRANSIP, and nrc.Flags (#4627) (@TomOnTime)
+    - 1005c87548e1a9580d633301c94e30a56d4ab14d: Modernize Azure DNS provider (#4490) (@TomOnTime)
+    - b02462c81a10390cc5468046df05bcd08ddbe414: Modernize Azure Private DNS provider (#4491) (@TomOnTime)
+    - 1e2fa8bf11ee3db2850916700c776c99a927be8d: Modernize CNR provider (#4493) (@TomOnTime)
+    - b6da8d84eca0ec4e5da14592523d97bbecd88f30: Modernize DYNU's access to SVCB records (#4650) (@TomOnTime)
+    - 70585b2ad408eaa19a28f19855c775529922b346: Modernize DigitalOcean provider (#4494) (@TomOnTime)
+    - 92588ce2dd2af112b13864711f03e2a311974298: Modernize Gandi v5 provider (#4495) (@TomOnTime)
+    - c00ada96c41005cce962468e11c0e9d3153f32d7: Modernize HE.net DNS provider (#4496) (@TomOnTime)
+    - 7e2673fedc8a007bac00ff3321f8b9a4f181152c: Modernize Name.com provider (#4497) (@TomOnTime)
+    - f51859388db643400a6cbe7fb16b422170a545a1: Modernize Netnod provider (#4498) (@TomOnTime)
+    - 927041e09b2cd83a0ea0b51e954e26b1e46de1fb: Modernize PowerDNS provider (#4501) (@TomOnTime)
+    - c7324b35b6622cd22bfac774ba76a82384bd35dc: Modernize TransIP provider (#4499) (@TomOnTime)
+    - f98aa65027dc9a5c99e1bc3a9d14d38553fc5d95: Modernize Vercel provider (#4500) (@TomOnTime)
+    - c6bc4e05109881230b67143df892085f78f1cb37: REFACTOR: Convert .GetRDATA().(type) to .AsTYPE (#4602) (@TomOnTime)
+    - 97da2556422896e4e2110da466ab6c64ccf2d357: REFACTOR: Add flags to NewRecordConfig() (#4603) (@TomOnTime)
+    - ca96ca83d179bdcf84cfefc81998b342d860bcd0: REFACTOR: CAA/DNSKEY/DS/PopulateFromString and others now use modern methods (#4426) (@TomOnTime)
+    - 8ebbb1fc95c09fac08b32044c5e434b6cf582595: REFACTOR: Cleanups (#4811) (@TomOnTime)
+    - 5b31ed72bf69db46d53a987d6a9e89bbc7102ba0: REFACTOR: Compute DomainNameVarieties() as part of dnsconfig.js processing, not after (#4425) (@TomOnTime)
+    - ad65eb1613d83715d6f650a853a54b19de8b4eeb: REFACTOR: Convert more GetTargetField()s (#4694) (@TomOnTime)
+    - f38ac46342215aade8d735b84f4d7776cbf3f4d0: REFACTOR: Eliminate GetTargetCombined*() / modernize CF_WORKER_ROUTE (#4691) (@TomOnTime)
+    - c88169000dd94ee35bf5e6095603e55bfd508ca3: REFACTOR: Eliminate legacy MxPreference field (#4701) (@TomOnTime)
+    - bdc97e1a3ad3aca6b96f87c93902bfccf85d8d53: REFACTOR: Eliminate pkg/diff, fix CLOUDNS ordering natively (#4751) (@TomOnTime)
+    - d7c6ed3fc57b131616ccdd562c9f011c091d9095: REFACTOR: Eliminate rc.ZonefilePartial (#4446) (@TomOnTime)
+    - 24d8ee2c5d6e57f265cd3c735d055380216db122: REFACTOR: Fix V3 fields in SetRDATA() rather than catching them later (#4435) (@TomOnTime)
+    - 4dfcf0cc859e66070d688c2d2fb800962debe651: REFACTOR: Modernize AZURE_ALIAS and others (#4473) (@TomOnTime)
+    - da02ca033fc1dcd7356ec0f8a3bfd9d2ac485b0d: REFACTOR: Modernize CF_SINGLE_REDIRECT FRAME URL URL301 (#4484) (@TomOnTime)
+    - e5e5c1057859b93352480cd16f1e71b10d32ebe7: REFACTOR: Modernize CLOUDFLAREAPI and AZURE_DNS (partial). Add docs. (#4489) (@TomOnTime)
+    - 82202ee08418f1c2584bb1e05fa021b3f82b3d0c: REFACTOR: Modernize GCLOUD. New TXT type handling maintains segments inernally (#4479) (@TomOnTime)
+    - 33058f34a2401d423f433520c502fa10c95c0842: REFACTOR: Modernize LOC, MX, NAPTR, SMIMEA, SOA, SRV, SSHFP, TLSA (#4437) (@TomOnTime)
+    - 689149ac320ef78c9f0ee4f425c796b8b60e218c: REFACTOR: Modernize t_svcb.go (#4438) (@TomOnTime)
+    - 286f15eec4a31705e6bd1173124b30d36db958b4: REFACTOR: Modernize t_txt.go (#4439) (@TomOnTime)
+    - 843c6ec654e9e62f80ed46f7b26230833836e352: REFACTOR: Modernize the "commands/" files (#4684) (@TomOnTime)
+    - b507c062656f49c79886f4a5114bc48dd07565f2: REFACTOR: More cleanups and modernization (#4741) (@TomOnTime)
+    - 8f1283cbe9bf88e026116f462ecc27457700f95e: REFACTOR: More efficient SVCB/HTTPS parsing (#4432) (@TomOnTime)
+    - 0434d5a02925222e807822d16dd724b81a0c174b: REFACTOR: Optimize switch on .Type to be .TypeNum (#4718) (@TomOnTime)
+    - 95f4b92e4fa4f0525b3a481c1d48601f44b1e2e2: REFACTOR: Reduce the use of GetTargetField() (#4714) (@TomOnTime)
+    - 6d96e2767955a4fe0d95d47920c50bc163caa581: REFACTOR: Reduce use of SetTarget(), GetTargetField() and .target (#4708) (@TomOnTime)
+    - 143376a3dc1a68eebbd78badbb39ee55c13682b4: REFACTOR: Remove .target from RecordConfig, fix related SetTarget/GetTargets (#4730) (@TomOnTime)
+    - 1668c0f111da419ab822e61111d8d8a0cfd55c2c: REFACTOR: Remove RC.DnsKey* .Loc* .Smimea* (#4686) (@TomOnTime)
+    - b694126c803ed10664f2e34766b1eb0c7176e831: REFACTOR: Remove legacy fields for SRV and NAPTR (#4703) (@TomOnTime)
+    - ec4e9b0677ecc3c775da2f949692f619e62d9501: REFACTOR: Remove models.Records.String() (#4631) (@TomOnTime)
+    - 25ecc211ba475f1bf369cca1669850c0aa03c46f: REFACTOR: Remove more RecordConfig fields (#4711) (@TomOnTime)
+    - 1d051bc936a92e238f300e86d4b2c6ea55d45bed: REFACTOR: Simplify Zonify() functions (#4448) (@TomOnTime)
+    - 175b6e1773ea6c8cf37db8e077c24610934aae0b: REFACTOR: Simplify boolean returns, hoist regexps, tidy error paths (#4801) (@TomOnTime)
+    - a94f7e3ca56794d167f5273a4c96efb3f8561f27: REFACTOR: Switch on RDATA types where safe (#4720) (@TomOnTime)
+    - 79647b6b0677ec7b379a67ca0fbee259c908736b: REFACTOR: TargetHost is never @, add TargetHostSRV (#4478) (@TomOnTime)
+    - be513877a30aaa0dcb675fee60e75a5902b4d90f: REFACTOR: Upgrade from dnsv1 to dnsv2 (#4683) (@TomOnTime)
+    - de81cff246779d4474d667a77758e65f784e81bc: REFACTOR: Use RDATA instead of individual fields (@TomOnTime)
+    - fc02655ba18e523d8c4cfda058894a825e17b4ad: REFACTOR: Use models.Records, not []*models.RecordConfig (#4750) (@TomOnTime)
+    - 088a11fa004857bde8c9fd53d2858a03b42fd8d9: Release v4.44.1 (#4599) (@TomOnTime)
+    - 82916f19fc986403cb5fb14a1008a5b1ff96face: Release v5.0.0 (#4814) (@TomOnTime)
+    - d3c7a4893753a58744ec372d80e446912f39cc7b: Release v5.0.0-rc1 (#4521) (@TomOnTime)
+    - 153c0d612a16b4d509c15d565a75e8bfb0b81718: Release v5.0.0-rc2 (#4591) (@TomOnTime)
+    - 1c629cfcba07e7da27e193a56a9b948298f0f94c: Release v5.0.0-rc3 (#4651) (@TomOnTime)
+    - e5dc8f6078ac106c7a4f1208b4b29a7b637470ae: Release v5.0.0-rc4 (#4689) (@TomOnTime)
+    - c3d1163d8c90bde3c893cff9c3eb40e82ec17cfc: Release v5.0.0-rc5 (#4726) (@TomOnTime)
+    - 6ceb82d8fb0f577daaecad83d34c8ce391c8c7dd: Release v5.0.0-rc6 (#4736) (@TomOnTime)
+    - 542bab3203459ba761d96a9b107af9f7ddcb8d04: Release v5.0.0-rc7 (#4744) (@TomOnTime)
+    - 09d026c4861d37570a6f4fedc95e9ed1e72c4a41: Release v5.0.0-rc8 (#4747) (@TomOnTime)
+    - d8b9c4836bc2d12f273211b9c9e8a8c657d81ce0: Release v5.0.0-rc9 (#4789) (@TomOnTime)
+    - 562a9049c9fdf0ad540562f4ba1dea5a63c3a7e7: Replace dnsutilv1 functions AddOrigin and TrimDomainName (#4504) (@TomOnTime)
+    - b537261d404e6d1169bea72db3878b94d66c235a: Revert "Release v5.0.0-rc6 (#4736)" (#4740) (@TomOnTime)
+    - b2e068ba1439709e8d97566b1c8ca0c1969a2e34: Revert "TEST: providergolden: Add -record and -update to specific tests (#4713)" (@TomOnTime)
+    - af11e0141ac6a97f26b1aa272a4c0ab1d133aba8: Squashed commit of the following: (@tlimoncelli26)
+    - 9bd72abbb0bb9ae37cc6f737fc17f34f2a49921e: Switch to dnspatched (@tlimoncelli26)
+    - 646156c11a0e42ab479a3b99ef00132e0c2531e6: Sync with main branch (#4533) (@TomOnTime)
+    - 948395ed2e98a7166d834e9b6b1a9f68611ac9f3: TEST: providergolden: Add -record and -update to specific tests (#4713) (@TomOnTime)
+    - b4ef8a9176ea2126679e110742d7fdd2ce5f8aab: adopt newest dnspatched (@TomOnTime)
+    - 612870c9d3b36e9465da8eab6b6e1aff0aedd771: chore: Linting (#4798) (@TomOnTime)
+    - 06e21a762832309fe041c48bd11a392f7fc1eb11: dc copies mutex (@TomOnTime)
+    - 8fbde16abe16bc49b3614d26ed87e0e98e9c89c8: delete .bak files (@TomOnTime)
+    - d982ff03aa5b2766312eee7c9fe8093638ce18be: empty (@TomOnTime)
+    - 0a4ccfc8a17f4a114819db6e478649b319364a59: empty (@TomOnTime)
+    - 7a4bfbd54b855527a0564a508525391df8581027: empty (@TomOnTime)
+    - d5b1176288cebd431a0e3d00d2db798bd8416803: empty (@TomOnTime)
+    - 01ceae139830b9d2f8c6fa19576dfd45f8637366: fix blackslash problem (@tlimoncelli26)
+    - 053d8421d676eed7400207a27ce3aaa3820fa1d2: go mod tidy (@TomOnTime)
+    - 2ea8402c0ca3dd31349506255f198b667f4b4220: hetznerv2: Modernize record conversion (#4554) (@TomOnTime)
+    - 12f5bc1a833b175b723b9fc43505b65a403ac3c8: linting (@TomOnTime)
+    - 9b68b964a129f72723b6bcb993986746468b3185: linting (@tlimoncelli26)
+    - ceb642a950be4ae570970ee6dc5054cfe4e01d61: update dnspatched (#4737) (@TomOnTime)
+    - 8f51939ebe7b45ffcc3bf70c041dee0cf1ddfe4f: update is_modern.sh to include dnsv1 (#4535) (@TomOnTime)
+    - d39bc03fffa50f615619af3f08d445cf7be4dacc: updated go.mod (@tlimoncelli26)
+    - e32fa9cc08758e06038d15d8b0ea8c66011343a9: use dc.LabelFromShort() even when not required for safety. (#4681) (@TomOnTime)
+    - fe4e7f2aca1bde112e7155020f08bbfcfd8feb3a: v5 - add non-porkbun compatibility to url301 (#4427) (@willpower232)
+    - ef14a1c5267002f30b883982211cc66b37ee52fe: wip! (@tlimoncelli26)
+    - 1f3c7020a99d13b539911df4f21d3ffc6295e0d5: wip! (@TomOnTime)
+    Deprecation warnings
+    Warning
+
+    - REV() will switch from RFC2317 to RFC4183 sometime after v5.0 is released. This is a breaking change. Warnings are output if your configuration is affected. See https://docs.dnscontrol.org/language-reference/top-level-functions/revcompat
+    - NAMEDOTCOM, OPENSRS and SOFTLAYER need maintainers! These providers have no maintainer. Maintainers respond to PRs and fix bugs in a timely manner, and try to stay on top of protocol changes.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/DNSControl/dnscontrol/releases/tag/v5.0.0
+ReleaseTime: 2026-08-27T02:20:33.0000000Z

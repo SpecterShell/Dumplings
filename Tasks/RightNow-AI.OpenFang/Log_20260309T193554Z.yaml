@@ -1,0 +1,34 @@
+Version: 0.3.35
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.35/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.35/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - SSE streaming: add stream_options for accurate token counts in OpenAI-compatible drivers
+    - UTF-8 safety (#472): fix 7 byte-slicing panics on multi-byte characters
+    - Cron timezone (#473): chrono-tz for IANA timezone-aware scheduling
+    - TOML multiline (#463): triple-quoted strings for system_prompt in manifest generation
+    - Dashboard auth (#468): 401 interceptor clears stale tokens, all tabs use OpenFangAPI client
+    - Custom providers (#471, #476, #446): auto-detect {PROVIDER}_API_KEY env vars, clear error on missing base_url
+    - Cron stale agent (#461): reassign_agent_jobs() on hand reactivation
+    - Provider probing (#474): concurrent health checks with 60s cache
+    - Model switch sync (#466, #387): server-resolved provider propagated to dashboard
+    - OpenRouter models (#385): 10 real models replacing placeholders
+    - Embedding URL (#395): auto-append /v1, read provider_urls config
+    - ZHIPU format (#384): non-null content on tool_call messages
+    - Fish shell (#372): detect target file for correct PATH syntax
+    Stats
+    39 files changed, 1194 insertions, 254 deletions, 1915 tests pass, 0 clippy warnings
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.35
+ReleaseTime: 2026-03-09T18:31:37.0000000Z

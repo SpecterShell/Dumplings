@@ -1,51 +1,39 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.xmind.app/xmind/update/latest-win64.yml' | ConvertFrom-Yaml
+$InstallerX64Url = Join-Uri 'https://www.xmind.app/xmind/downloads/' (Get-RedirectedUrl -Uri 'https://xmind.app/zen/download/win64/' | Split-Path -Leaf)
+$VersionX64 = [regex]::Match($InstallerX64Url, '(\d+(?:\.\d+){2,})').Groups[1].Value
+
+$InstallerArm64Url = Join-Uri 'https://www.xmind.app/xmind/downloads/' (Get-RedirectedUrl -Uri 'https://xmind.app/zen/download/win_arm64/' | Split-Path -Leaf)
+$VersionArm64 = [regex]::Match($InstallerArm64Url, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
 # Version
-$Task.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $VersionX64
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.url.Replace('xmind.net', 'xmind.app')
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerX64Url
+}
+if ($VersionArm64 -eq $VersionX64) {
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'arm64'
+    InstallerUrl = $InstallerArm64Url
+  }
+} else {
+  $this.Log("The version of arm64 installer ($VersionArm64) is different from x64 installer ($VersionX64). Skipped.", 'Warning')
 }
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.'releaseNotes-en-US' | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.'releaseNotes-zh-CN' | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Object2 = Invoke-WebRequest -Uri 'https://xmind.app/desktop/release-notes/' | ConvertFrom-Html
-
-    try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@id='release-notes']/div/div/div[contains(./h3/text(), '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $ReleaseNotesTitleNode.SelectSingleNode('./h5').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-      } else {
-        $Task.Logging("No ReleaseTime for version $($Task.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $Task.Logging($_, 'Warning')
-    }
-
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

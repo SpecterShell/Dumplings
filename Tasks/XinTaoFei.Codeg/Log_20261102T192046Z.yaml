@@ -1,0 +1,51 @@
+Version: 0.41.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.41.4/codeg_0.41.4_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.41.4/codeg_0.41.4_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release renders inline math more reliably, fixes duplicated terminal output in remote workspaces, makes the execution timeline easier to read, and updates five agents.
+    New
+    - ZCode supports /rename to rename the current session, and the conversation title in codeg updates to match unless you have already renamed the conversation yourself.
+    - OpenCode's reserved space before automatic compaction can be set as a share of the context window, such as 20%, as well as a token count.
+    Improved
+    - Resumed delegations appear as delegation rows in the execution timeline, marked as resumed and showing the reason for resuming.
+    - Read and search steps inside explore groups use the same layout as command rows, and the secondary text of non-text steps has higher contrast.
+    - Updated OpenCode to 2.2.5, CodeBuddy to 2.179.2, Kimi Code to 2.4.1, Antigravity to 1.4.5 and the ZCode bridge to 0.82.0.
+    - Kimi Code can read text files up to 16 MiB, so files larger than 2 MiB no longer fail to load.
+    Fixed
+    - Single-dollar inline formulas such as $T$ now render as math, while amounts, shell variables and code stay exactly as written. (#1081, @xy3xy3)
+    - Opening another window in a remote workspace no longer duplicates terminal output, including the window for importing local conversations. (#1085, @xyalter)
+    - Background command and image generation cards in OpenCode history now show their final results and no longer stay stuck as running.
+    Note
+    - OpenCode's /goal, /init and /review commands currently show no progress after you send them, and the session can stop responding if a step needs your approval.
+    - OpenCode's background command and image generation results appear after you reopen the conversation, not while they are still running.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版改进了行内公式的渲染，修复了远程工作区终端输出重复的问题，让执行过程时间线更易阅读，并更新了五个智能体。
+    新增
+    - ZCode 支持用 /rename 重命名当前会话，codeg 中的会话标题会同步更新，你自己改过的标题不会被覆盖。
+    - OpenCode 自动压缩前预留的空间可以按上下文窗口占比填写，例如 20%，也可以继续填写 token 数。
+    改进
+    - 恢复后的委派在执行过程时间线中显示为委派行，并带有已恢复标记和恢复原因。
+    - 探索分组里的读取和搜索步骤改用与命令行一致的布局，非文字步骤的次要文字也更加清晰。
+    - OpenCode 更新至 2.2.5，CodeBuddy 更新至 2.179.2，Kimi Code 更新至 2.4.1，Antigravity 更新至 1.4.5，ZCode 桥接更新至 0.82.0。
+    - Kimi Code 支持读取最大 16 MiB 的文本文件，查看超过 2 MiB 的文件时不再失败。
+    修复
+    - $T$ 这类单美元符号行内公式现在可以正常渲染，金额、Shell 变量和代码内容仍按原样显示。(#1081, @xy3xy3)
+    - 在远程工作区打开其他窗口时，终端输出不再重复显示，打开导入本地会话的窗口也是如此。(#1085, @xyalter)
+    - OpenCode 历史会话中的后台命令和图片生成卡片会显示最终结果，不再一直停留在运行中。
+    注意
+    - OpenCode 的 /goal、/init、/review 命令发出后暂时看不到执行进度，如果中途需要授权，会话可能停止响应。
+    - OpenCode 后台命令和图片生成的结果需要重新打开会话才会显示，运行期间暂时无法实时看到。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.41.4
+ReleaseTime: 2026-11-02T18:52:48.0000000Z

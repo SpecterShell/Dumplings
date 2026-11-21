@@ -1,0 +1,24 @@
+Version: 1.15.11
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.11/vpn-parser-1.15.11-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.11 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.11！本版根治"运行中开关 TUN 只落库不生效"、默认管理员启动，并升级内核 v1.3.1 根除"TUN 开启后整机断网"：
+    🔧 运行中开关 TUN / 系统代理只落库不生效（P0 根治）
+    - 病根：仪表盘模式开关保存配置时同步置位 proxy_busy，紧跟其后的 !proxy_busy 守卫永远为假，apply_proxy_mode_change 从未执行；而 reload_config 对运行中的非 Mihomo 内核（VP-Core 等）只更新内存 options —— TUN 开关只落库、内核毫不知情，界面上显示已开启、实际仍是旧模式；
+    - 修复：save_proxy_config 检测到工作模式变化时登记待应用标记，保存成功（busy 回清）后统一走热切换 / 整进程重启；仪表盘开关、网络抽屉"保存网络配置"、命令面板全入口覆盖，保存失败自动丢弃标记（未落库的模式不被应用）。
+    🛡 配合 VP-Core v1.3.1：TUN 整机断网根除
+    - 内核侧 DNS 上游（DoH / DoT）裸拨号与出站套接字源 IP 未绑定，auto-route 下全部流回 TUN 自身形成回环（内核日志刷 198.18.0.1 源流量、节点拨号超时）；升级到内核 v1.3.1 后出站统一 UNICAST_IF + 源 IP 显式绑定，ECH 被拒也不再判死连接，详情见 VP_Core v1.3.1 发布说明。
+    ⚙️ 默认管理员启动
+    - 新装默认以管理员权限运行（TUN 虚拟网卡模式需要）：首次启动弹一次 UAC，取消则本次普通权限运行、下次再试；老用户已保存的设置原样保留。
+    🧹 体验修复
+    - 网络医生检测不再闪 PowerShell 控制台窗：TUN 网卡检测子项补 CREATE_NO_WINDOW。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.11
+ReleaseTime: 2026-10-31T09:31:16.0000000Z

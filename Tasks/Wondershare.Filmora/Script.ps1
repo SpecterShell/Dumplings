@@ -1,21 +1,38 @@
-$Task.CurrentState = Invoke-WondershareJsonUpgradeApi -ProductId 846 -Version '10.0.0.0' -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri 'https://pc-api.300624.com/v2/product/check-upgrade?pid=846&client_sign={}&version=10.0.0.0&platform=win_x64'
+
+# Version
+$this.CurrentState.Version = $Object1.data.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://download.wondershare.com/cbs_down/filmora_64bit_$($Task.CurrentState.Version)_full846.exe"
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.full.url.Replace('upgrade', 'cbs_down') | ConvertTo-Https
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.whats_new_content | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-    $Task.Write()
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

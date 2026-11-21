@@ -1,0 +1,168 @@
+Version: 4.21.0
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.21.0/cribl-4.21.0-5bbb9984-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4210/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important Changes
+    This release introduces deprecation notices that require action if you use the affected features:
+    - Notice: End of Support for Edge Nodes Running Version 3.x
+    - Notice: Upcoming Removal of Legacy Edge Upgrade Option
+    - Notice: Upcoming Removal of Legacy Windows Collection Settings
+    - Deprecation Notice: Smart Mode for Source Persistent Queue
+    Review the full list of important changes for additional critical updates.
+    New Features
+    This release provides the following improvements:
+    OpenSSL FIPS Provider for Windows Included in the Installer
+    Cribl Edge installer on Windows now handles configuring the OpenSSL FIPS provider, simplifying FIPS-enabled deployment at scale.
+    Introducing Stream AI
+    Cribl StreamAI is a new AI gateway in Cribl.Cloud that gives you centralized visibility into your organization’s AI usage. Connect Billy and other Cribl AI features, or your own OpenAI- and Anthropic-compatible clients such as Claude Desktop and Codex, to StreamAI with an API key. StreamAI intelligently routes each request to the best model for the task, optimizing for performance and cost efficiency. The StreamAI dashboard shows detailed usage by API key, and you can optionally send request telemetry to the AI Observability app or any OpenTelemetry tool.
+    Unified Billy Experience
+    The Billy sidebar chat experience is now expanding across Cribl products, replacing the standalone Billy widget with a consistent, context-aware assistant. Billy now understands where you are in the product, allowing you to perform product-specific actions, troubleshoot issues, consult documentation, and inspect deployment data while respecting your existing RBAC permissions. Conversations save automatically so you can pick up past sessions from your history at any time.
+    FinOps Center v2
+    The Track Cribl Product and Credit Usage page now lets you track your contract credit balances, view projected credit rollover, and understand recent consumption from a unified overview. On Breakdown, you can attribute credit spend by product or Workspace and view detailed usage and trends. You can also review acquired credits and monthly invoice costs by Workspace, product, and line item.
+    Limit the Disk Space that Collector Discover Results Use
+    You can now limit the size of each Collector job’s Discover results with the Max discover results (% of Worker disk) setting. This prevents a job from using too much disk space on the Node that runs Discover. The default setting, 0.2, limits each job to 20% of the $CRIBL_STATE_DIR/jobs volume. If a job’s Discover results exceed the limit, the job fails.
+    Product-Level Restrictions on Authentication Tokens
+    When creating provisioning authentication tokens, you can now restrict the token by product, by selecting Stream Workers, Edge Nodes, Outposts, or Connected Leaders. Only Nodes of the given type will be able to connect to the Leader using this token. Existing tokens do not change scope and will accept connections from all Node types.
+    Use Global Secrets from HashiCorp Vault Without Inbound Access
+    In Cribl.Cloud, you can now configure HashiCorp Vault secret stores to connect using an on-prem Outpost Node so that the Leader does not open a connection to the HashiCorp Vault URL. Vault does not have to accept the inbound connection from the Leader, and its firewall or IP allowlist does not have to allow the Leader. The Outpost Node contacts HashiCorp Vault and returns the global secret values on its existing connection to the Leader.
+    Data Sharing Controls for Cribl AI Training
+    Cribl now introduces a data-sharing option in AI Settings, giving admins control over whether their organization’s data is used to train Cribl AI models.
+    For paid organizations, sharing is optional and you will be opted-out of sharing by default. Admins can enable or disable this setting at any time. Data collection will not begin before December 2026, even for organizations that opt in now.
+    For Free tier organizations, data sharing shall begin starting December 2026. Organizations that prefer to exclude their data from model training can upgrade to a paid tier to access custom data controls.
+    This setting does not affect Cribl.Cloud Government, where AI data sharing is permanently disabled and cannot be altered.
+    Retrieve Global Secrets from CyberArk
+    You can now create secret stores for global secrets that are backed by CyberArk Central Credential Provider (CCP). Cribl authenticates with an AppID and retrieves the current secret value for an account in a Safe. Define credentials once in CyberArk and reuse them across Cribl Stream and Edge.
+    Endpoint Lists
+    You can now create an Endpoint List of receiver hosts and load weights in a Worker Group, Fleet, or Pack, and share it across Cribl HTTP and Cribl TCP Destinations in that same scope.
+    Cross-Region PrivateLink for AWS in Cribl.Cloud
+    If you use AWS PrivateLink to connect to Cribl.Cloud, you can now configure up to three additional regions that can connect. This allows you to send data securely between AWS accounts and regions.
+    New Sources and Destinations
+    Akamai Object Storage Destination: A new Akamai Object Storage Destination enables you to send events to Akamai Object Storage.
+    Backblaze B2 Destination: A new Backblaze B2 Destination enables you to send events to Backblaze B2.
+    DigitalOcean Spaces Destination: A new DigitalOcean Spaces Destination enables you to send events to DigitalOcean Spaces.
+    DreamObjects Destination: A new DreamObjects Destination enables you to send events to DreamObjects.
+    Exoscale SOS Destination: A new Exoscale SOS Destination enables you to send events to Exoscale SOS.
+    Fastly Object Storage Destination: A new Fastly Object Storage Destination enables you to send events to Fastly Object Storage.
+    Filebase Destination: A new Filebase Destination enables you to send events to Filebase.
+    Impossible Cloud Destination: A new Impossible Cloud Destination enables you to send events to Impossible Cloud.
+    IONOS S3 Object Storage Destination: A new IONOS S3 Object Storage Destination enables you to send events to IONOS S3 Object Storage.
+    Oracle Cloud Object Storage Destination: A new Oracle Cloud Object Storage Destination enables you to send events to Oracle Cloud Object Storage.
+    OVHcloud Object Storage Destination: A new OVHcloud Object Storage Destination enables you to send events to OVHcloud Object Storage.
+    Scaleway Object Storage Destination: A new Scaleway Object Storage Destination enables you to send events to Scaleway Object Storage.
+    Seagate Lyve Cloud Destination: A new Seagate Lyve Cloud Destination enables you to send events to Seagate Lyve Cloud.
+    Serverless Elastic Destination: A new Serverless Elastic Destination enables you to send events to an Elastic Serverless project.
+    Tencent Cloud COS Destination: A new Tencent Cloud COS Destination enables you to send events to Tencent Cloud COS.
+    Wasabi Destination: A new Wasabi Destination enables you to send events to Wasabi.
+    Experience Improvements
+    - Cribl Edge now supports macOS 27 Golden Gate.
+    - Parsers, Regexes, and Scripts in Subfleets now display information about whether their configuration is inherited from a parent Fleet, created locally, or no longer inherited because it was modified locally. You can now revert Pipeline configurations, and bulk-revert configurations for Sources and Destinations.
+    - On Windows, the os metadata source now reports the computer’s domain or workgroup in __metadata.os.computerMembership. A domain-joined machine includes addomain (the Active Directory DNS domain) and netbiosdomain. A machine that is not domain-joined includes workgroup.
+    - When a request is authenticated with an API Credential, the corresponding access.log event now records the API Credential name and the creator’s email address, if they are available.
+    - You can now add a certificate by uploading a PKCS#12 bundle (.pfx or .p12) as an alternative to PEM format. The exception is FIPS mode, which supports only PEM format.
+    - Cribl.Cloud now lets administrators edit existing SAML and OIDC single sign-on (SSO) configurations in place, without deleting and recreating the connection. Administrators can test configuration changes as part of the edit workflow.
+    - Sample file import and copy are now available in both the Knowledge library and the Sample Data tab in Data Preview. You can add a sample where you manage the library, and copy a sample to another Worker Group, Fleet, or Pack while you test a Route or Pipeline.
+    - You can now delete disconnected Stream Workers, Edge Nodes, and Outposts from their respective lists.
+    - The new total.dropped_events_system internal metric counts events dropped because they could not be delivered, such as when a persistent queue is full, or a Destination stays blocked or rejects events. total.dropped_events still counts every dropped event, including drops from Pipeline Functions and disabled Destinations. Compare the two metrics to tell whether events were dropped by your Pipelines or lost to delivery problems.
+    - Show System Fields, a new toggle in the Data Preview Advanced Settings menu, hides the system fields Cribl adds so you can see the event you are building. JSON schema checks can now skip internal fields and system fields, so a schema that rejects extra fields can pass on your data. In both cases, the fields stay on the event.
+    - Pack Publish to Git now includes an option to remove unwanted “changeme” values when pushing to an external repository. By unselecting Replace masked values with “changeme”, you can preserve non-sensitive values and variables that were previously overwritten.
+    - On Preview Mappings, Select Fields now limits the preview to the fields you select, so you can check those fields without the rest of the event in the way.
+    - The SNMP Trap Serialize Function can now use a stored secret, including a global secret, for the SNMPv3 authentication key and privacy key.
+    - The JSON Unroll Function is faster. A narrow event is about 40% faster, and data that is not JSON and passes through can be up to about 60 times faster.
+    - Auto-Parse is faster in the Parser Function, on Routes, and on Sources. For mixed events, it now reaches about 70% of a custom parser’s throughput. An Aho-Corasick prefilter skips rules that don’t match the event, instead of checking all roughly 186 rules one by one.
+    - In the Capture Data and Live Data modals, Where to capture now includes Before the event breaker (raw data) on Syslog, TCP (Raw), TCP JSON, Cribl TCP, Splunk TCP, UDP (Raw), NetFlow & IPFIX, SNMP Trap, HTTP/S (Bulk API), Raw HTTP/S, Cribl HTTP, Splunk HEC, Elasticsearch API, Windows Event Forwarder, and other Syslog and HEC Sources. It shows the data a Source received before the Event Breaker runs, so you can troubleshoot events that arrive merged, split in the wrong place, or garbled.
+    - In an Event Breaker rule preview, selecting a sample now loads the original log lines. The preview no longer shows the sample as formatted JSON.
+    - Disable bursts is a new setting on Destinations and Collectors. It makes a throttling rate a hard limit that applies immediately, instead of an average over one hour that traffic can exceed.
+    Sources and Destinations
+    - The Azure Blob Storage Destination can now write up to 10 literal index tags on each uploaded blob.
+    - The Amazon S3 Destination can now write up to 10 static object tags on each uploaded object.
+    - You can now configure an auth token on Cribl HTTP and Cribl TCP Sources and Destinations in every deployment, including on-prem.
+    - Dynamic headers field on the Webhook, Dynatrace HTTP, Microsoft Sentinel, Loki, Cortex XSIAM, and Kafka Destinations now names the event field that supplies headers for each event. HTTP Destinations default to __headers, and the Kafka Destination defaults to __headersOut. On Loki, those headers are sent when Enable dynamic headers is toggled on.
+    - On a JSON Array Event Breaker rule, you can now set the maximum decoded length of a string value.
+    - The File Monitor Source now offers a Recursive Watch option to help discover files in large trees without causing excessive CPU usage. The watcher tracks the designated directory, reducing the need for walking the full tree. Additional Re-scan interval and Max watched directories settings help finetune the recursive watcher behavior.
+    Important Changes
+    Notice: End of Support for Edge Nodes Running Version 3.x
+    To optimize Leader performance and accelerate the delivery of modern edge observability features, Cribl is officially ending support and testing for Edge Nodes running version 3.x that connect to the Leader. To ensure a smooth transition for legacy environments, modern Leaders will not actively block inbound connections from Edge Nodes running version 3.x at this time. However, backward compatibility is no longer actively maintained or tested.
+    If you have legacy Edge Nodes running 3.x remaining in your Fleet, we strongly recommend upgrading them to a supported 4.x release to guarantee uninterrupted configuration management and telemetry collection.
+    Notice: Upcoming Removal of Legacy Edge Upgrade Option
+    The Enable Legacy Edge upgrades check box will be removed as an upgrade option in a future release. If you are running Cribl Edge Nodes older than version 4.5.0, they can no longer be upgraded automatically via the Leader. You must manually upgrade these specific Nodes to version 4.5.0 or later. Once they are on a modern version, they will automatically inherit the standard upgrade framework for all future updates.
+    Notice: Upcoming Removal of Legacy Windows Collection Settings
+    The legacy Use Windows Tools setting (found in the Windows Event Logs, Windows Metrics, and System State Sources) will be removed in a future release. This setting enables a legacy PowerShell-based collection method. By default, these Sources use the newer native collection method, which is faster, more reliable, and collects the same data.
+    No action is required. When Cribl removes these settings, affected Sources automatically use the native method.
+    Deprecation Notice: Smart Mode for Source Persistent Queue
+    To improve data integrity, Smart mode is now deprecated for Source persistent queue for hybrid and on-prem deployments. In January 2027, configurations for all deployments will automatically migrate to Always on mode, which uses a persistent queue buffer for all events.
+    Consider updating existing configurations to Always on mode prior to the automatic migration date. Before changing the configuration:
+    - Monitor your persistent queue needs to correctly size your persistent queue disk space needs and then allocate sufficient disk space.
+    - When making changes to your persistent queue, remember to first drain queues before disabling them to avoid orphaned data.
+    - Verify that data routing and filtering behaves as expected in a test environment before rolling out the new configuration to production.
+    Deprecation Notice: Disable Node Persistence
+    The Disable Node persistence setting is deprecated and will be removed in a future release. Node information is persisted by default. Use the Worker Group/Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    Notice: Future Removal of AppScope Source
+    The AppScope Source will be removed from Cribl Stream/Edge in a future release.
+    Notice: Future Removal of CBC and RSA TLS Cipher Suites
+    In an upcoming release, Cribl.Cloud will remove support for CBC and RSA-based TLS cipher suites. The change strengthens the security and confidentiality of customer environments.
+    Cribl is removing these suites for two reasons:
+    - CBC ciphers are susceptible to well-documented side-channel and padding oracle attacks.
+    - RSA key exchange does not provide forward secrecy. If a server’s private key were compromised, previously recorded sessions could be decrypted later.
+    This change applies to the TLS endpoints your Workspaces expose and connect to for data movement. That includes connections your systems make into Cribl Stream, and outbound connections Stream makes to your Destinations. Customers most likely to be affected have:
+    - Legacy or embedded data senders that push data into Stream Sources. Examples include older syslog forwarders, appliances, IoT devices, OT devices, and custom agents.
+    - Third-party or on-prem systems whose TLS libraries have not been updated in several years. Those systems can negotiate only CBC or RSA-keyed cipher suites.
+    - Custom integrations built on outdated TLS stacks that connect to Stream HTTP, TCP-TLS, or Kafka Sources. The same applies when Stream pushes data to those systems as a Destination. Outdated stacks include older OpenSSL, legacy Java runtimes, and end-of-life operating systems.
+    Corrections
+    Security Fixes
+
+    | ID         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+    | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | PLAT-15464 | Improved expression security by treating Pack IDs and other context values as data. When you create or install a Pack, its ID must be 256 or fewer letters, digits, hyphens, underscores, or dots, and the ID cannot consist only of dots. Existing Packs are unaffected.                                                                                                                                                                                                                                 |
+    | PLAT-16668 | Fixed an issue where enabling Leader High Availability/Failover for the first time on a standalone Leader discarded committed rules in the CUSTOM section of .gitignore. Cribl now preserves those rules on the Leader and on the failover volume.                                                                                                                                                                                                                                                        |
+    | PLAT-31    | Node.js used by Cribl Stream and Cribl Edge has been upgraded from version 22.22.2 to 22.23.4 to incorporate upstream security fixes.                                                                                                                                                                                                                                                                                                                                                                     |
+    | PLAT-15463 | Pipeline preview now skips Functions that use a stored secret unless the Member has the Admin Permission on the Worker Group or Fleet, or on a parent Fleet. Sample events pass through the skipped Functions unchanged, and the preview shows a warning that names each skipped Function. When a Member without the Admin Permission previews a Pack that contains a skipped Function (or a Pipeline that chains to it), the Pack returns no events. Deployed Pipelines still resolve the stored secret. |
+
+    Operational Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                      |
+    | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-45233 | Fixed an issue where deleting a Fleet or Worker Group left its Node records in the Leader database, causing those records to reappear when a Fleet or Worker Group was recreated with the same name.                                                             |
+    | CRIBL-45827 | On-prem Leaders that store config bundles in Amazon S3 now discover the bucket’s Region. Bundle upload and download work when that Region is not us-west-2. The IAM policy for the bucket needs s3:GetBucketLocation.                                            |
+    | CRIBL-44033 | Fixed an issue where a Destination with a persistent queue did not appear on Logging > Levels, so you could not change that Destination’s log level. The Destination is listed there again.                                                                      |
+    | CRIBL-45866 | Fixed an issue where a Syslog Source listed only its base log channel on Logging > Levels. The TCP and UDP channels were missing, so changing the base level did not change them. Each enabled transport is listed on its own, and you set its level separately. |
+    | CRIBL-45629 | Fixed an issue where a blocked Destination could keep undelivered events in memory after the connection closed. Worker Process memory then grew until the host ran out of memory.                                                                                |
+    | PLAT-16995  | Fixed an issue that caused the Secrets page for a Worker Group or Fleet to time out. This happened when an on-prem Leader used a custom Helper processes socket dir instead of the default temporary directory.                                                  |
+    | CRIBL-45933 | Fixed an issue where a load-balanced File Monitor Source or Kubernetes Logs Source could change an event, or drop its host and source fields, when a message was split across reads.                                                                             |
+
+    Source and Destination Fixes
+
+    | ID          | Description                                                                                                                                                               |
+    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | PLAT-17218  | Fixed an issue where a scheduled Source or Collector could miss a collection window if its configuration was saved at the moment the collection window was due to start.  |
+    | CRIBL-46638 | Fixed an issue where the Kubernetes Metrics Source logged Failed to parse K8s object on every collection cycle for a CronJob that had been created but had not yet run.   |
+    | CRIBL-46165 | Fixed an issue where reading a persistent queue could change multibyte characters in an event, so the event that left the queue did not match the event that entered it.  |
+    | CRIBL-38453 | HTTP-based Destinations now count events that a downstream receiver rejects, and those drops appear on the Charts tab.                                                    |
+    | CRIBL-43624 | Load-balanced HTTP Destinations can now send to a hostname that has only an IPv6 address, and to an IPv6 address written in brackets.                                     |
+    | CRIBL-45442 | An OpenTelemetry Source set to OTLP version 0.10.0 now rejects /v1/logs as an unsupported path and counts the request as dropped.                                         |
+    | CRIBL-45723 | TCP Sources now close the socket when a TLS handshake times out, so failed handshakes do not keep using Worker memory.                                                    |
+    | CRIBL-45909 | The Datadog Agent Source now ingests traces from Datadog Agent 7.84 and later.                                                                                            |
+    | CRIBL-45720 | On Cribl.Cloud, the SignalFx Destination sends to observability.splunkcloud.com. On-prem and Cribl.Cloud for Gov deployments continue to use signalfx.com.                |
+    | CRIBL-37669 | A load-balanced HTTP Destination now returns to a healthy state after a retryable error clears, and reports that error as a warning.                                      |
+    | CRIBL-42007 | A file-based Destination now moves a staged file it cannot finalize to the dead-letter queue, or removes the file when dead-lettering is off.                             |
+    | CRIBL-45624 | The ClickHouse and Dynatrace HTTP Destinations now send queued batches before they finish closing.                                                                        |
+    | CRIBL-46757 | The Alibaba OSS Destination now uses virtual-hosted addresses, so uploads are no longer rejected as a path-style request.                                                 |
+    | CRIBL-46756 | The Alibaba OSS Destination now offers only the object ACLs Alibaba supports: private, public-read, public-read-write, authenticated-read, and bucket-owner-full-control. |
+
+    Other Functional Fixes
+
+    | ID          | Description                                                                                                                                                      |
+    | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-40898 | Fixed an issue where saving a lookup could write an empty row. C.LookupRegex() then matched every value, so a Drop filter using that lookup dropped every event. |
+
+    SDK Changelogs
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - Typescript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-11-18

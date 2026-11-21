@@ -1,0 +1,23 @@
+Version: "9.66"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-966.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#966
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Release notes:
+      - We are anticipating an "information security armageddon" due to increasing ability of AI to find security issues, in all software and systems, which were not found in human testing and code review.
+        The quality of commercially available AI tools has improved to where they are now indispensable for software correctness. We are applying AI tools proactively to find and fix flaws which previously missed detection.
+        Users will observe this as an increased frequency of significant and important updates. We believe the time to do this is now, before exploitation becomes too easy.
+    - Control Panel and Settings:
+      - Advanced settings and its windows now open much faster.
+        Recent Windows versions have become painfully slow to open settings, compared to older Windows versions. We implemented optimizations to restore and improve performance.
+      - Improved interactive diagnostics for connections that fail due to SSH algorithm mismatches.
+    - SSH:
+      - Improved multiple avenues which an authenticated client could use to exert disproportionate memory pressure on the server.
+      - The SSH Server now accepts the client's SSH_MSG_EXT_INFO if the client sends it incorrectly as the next packet after SSH_MSG_SERVICE_REQUEST. Correct client implementations must send this packet after SSH_MSG_NEWKEYS. If the packet is sent late, not all extensions are supported.
+        If the SSH_MSG_EXT_INFO packet is received even later, this still causes an SSH protocol disconnect.
+ReleaseTime: 2026-07-20

@@ -1,0 +1,98 @@
+Version: 1.3.0-beta.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.3.0-beta.1/OSW-1.3.0-beta.1-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/yinxulai/osw/releases/download/v1.3.0-beta.1/OSW-1.3.0-beta.1-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    这是一个 beta 版本。 每个 beta 版本都可能会发生接口的变化和数据结构的调整，不承诺数据的兼容和自动迁移。请在更新前手动导出供应商数据（模型管理 → 导出）备份，以备不时之需。
+    为什么不兼容见 https://github.com/yinxulai/osw/issues/24。
+    Important
+    This is a beta build. Every beta release may change internal APIs and data structures; data compatibility and automatic migration are not promised. Export your provider data before updating (model management → export) as a backup, just in case.
+    See https://github.com/yinxulai/osw/issues/24 for why.
+    Highlights
+    A preview of 1.3.0. This cycle turns OSW from "a proxy you point clients at" into "a gateway you configure once", and gives it an illustrated handbook.
+    Functional iterations
+    - Client configuration is now automatic. OSW detects the AI clients on your machine and can write their config for you (apply to all), keeping a revertible copy of each file before it changes it. The client registry was split into per-client directories, so adding a client no longer touches the engine.
+    - Request rewriting gained a sandboxed script action. Beyond the structured match + action rules, a script action runs in a sandbox and replaces the whole payload — for the logic that structured actions cannot express. Script samples were trimmed to a stage-paired set and are filtered by action stage; the event-level SSE response stage sits behind a feature flag while its streaming gap is closed.
+    - Live metrics are unified and on by default. One live-speed readout across surfaces now follows the latest in-flight request, estimates output tokens so TPS lights up during streaming, and falls back to the last settled speed (expiring after 5 seconds) when a request goes quiet.
+    - Identity was reworked around a stable record id. Routes, workflows and rewrite rules are keyed by a mutable model id (renaming no longer breaks references) while records keep a stable id.
+    - Onboarding shrank to two steps and now embeds the client-config editor inline; the guide is a straight line instead of a checklist.
+    - Scheduling — session-level cache affinity keeps a session on the upstream that already holds its prompt cache, so the cache is not thrown away on failover (#39).
+    - Handbook. A new documentation site ships with English support (Chinese is the primary language), content grouped by tab, and a screenshot on every guide page.
+    Upgrade notes
+    - Beta releases do not promise data compatibility or automatic migration (see the notice at the top). Export your provider data before updating.
+    - Model identity is now the record id. If you renamed a logical model or reimported providers in an earlier version, re-check your routes, workflows and rewrite rules after upgrading.
+    - Rewrite-rule script actions and event-level SSE response rewriting are new; review existing rules whose behavior depended on the previous payload semantics.
+    New
+    - screenshots: make capture orchestratable and embed docs screenshots
+    - screenshots: share host IPC with the headless entry and gate captures on rendered content
+    - readme: add the X cover hero and document the headless re-capture flow
+    - development-seed: seed request rewrite rules, bindings, and hit records
+    - screenshots: add the client-config page and a headless CLI re-capture entry
+    - live-metrics: expire the settled speed fallback after 5 seconds
+    - live-metrics: fall back to the last settled speed and enrich live detail
+    - metrics: standardize live metrics across surfaces, on by default
+    - client-config: give the development runtime its own provider identity
+    - client-config: generate config into drafts and unify the write actions
+    - client-config: autoconfigure every client and split the registry into per-client directories
+    - onboarding: simplify guide to two steps and embed client config editor
+    - docs: categorize content by tab and complete the English translations
+    - docs: add English support with Chinese as the primary language
+    - www: add a docs entry point to the site
+    - rewrite-rule: close the response stage behind a feature flag, keeping the type
+    - rewrite-rule: trim script samples to a stage-paired set and filter by action stage
+    - rewrite-rule: make the script action replace the whole payload
+    - rewrite-rule: add a sandboxed JS script action type
+    - console: mark deleted config rows in request logs and analytics
+    - core: keep config rows resident and drop ids from logs
+    - core: make the record id the identity for routes, workflows and rewrite rules
+    - scheduling: session-level cache affinity to protect upstream prompt caches (#39)
+    Fixed
+    - live-metrics: estimate output tokens so live TPS lights up during streaming
+    - proxy: record the resolved logical model on successful requests
+    - docs: align osw-docs config with its Workers project type
+    - console: place script sample picker in the action row and free overlay close buttons from the drag region
+    - rewrite-rule: make rewriting honest about delivery shapes
+    - rewrite-rule: seed return snippets with the whole payload
+    - console: stop the sidebar collapsing on theme toggle
+    - console: unstick logical-models skeleton and restore animated theme toggle
+    - app: keep nativeTheme on the system profile so follow-system actually follows
+    - console: hold number fields as a draft while typing and clamp on commit
+    - core: map config-db constraint violations to typed 409/404 errors
+    - logical-models: key routing by a mutable model id, records by a stable id
+    Changed
+    - router: drop the redundant content padding on the workflow canvas
+    - live-metrics: unify live speed on the latest in-flight request
+    - seed: call the fixture soft-deleted, not "retired"
+    - core: drop the logical model id unique index and tombstone rename
+    Under the hood
+    - screenshots: refresh the site snapshots
+    - live-metrics: note the settled speed fallback expires after 5 seconds
+    - client-config: assert declared-path identity and derive the shell profile
+    - docs: note that the command line is unreleased and unaccepted
+    - document that the Pages Deploy command must be blank
+    - split the handbook navigation into four tabs
+    - rename apps/docs subtrees to specs/upstream/assets
+    - re-plan apps/docs layout and set up Cloudflare Pages
+    - rewrite: document script authoring and the closed response stage
+    - rewrite-rule: specify event-level SSE response rewriting and flag the streaming gap
+    - give each docs subtree its own index
+    - fold the user guide into apps/docs
+    - add user guide site powered by Clarify
+    - rewrite: cover the rewrite-rule script action end to end
+    - drop dead code and rewrite history-narrating comments/docs
+    - analytics: lock in that deleted config stays visible in stats and logs
+    - bump version to 1.3.0-beta.1
+    Other changes
+    - move docs root
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yinxulai/osw/releases/tag/v1.3.0-beta.1
+ReleaseTime: 2026-10-03T01:44:26.0000000Z

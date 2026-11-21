@@ -1,28 +1,34 @@
-$Object = Invoke-RestMethod -Uri 'https://www.yunzhijia.com/mixed/cloudhubx/win32_ia32/update.json'
+$Object1 = Invoke-RestMethod -Uri 'https://www.yunzhijia.com/mixed/cloudhubx/win32_ia32/update.json'
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.BaseURL + $Object.fileUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.BaseURL + $Object1.fileUrl
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.descList | Format-Text
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.descList | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

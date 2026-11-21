@@ -1,0 +1,30 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/PBH-BTN/PeerBanHelper/releases/download/v6.4.3/PeerBanHelper_windows-x64_6.4.3.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/PBH-BTN/PeerBanHelper/releases/download/v6.4.3/PeerBanHelper_windows-arm64_6.4.3.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新东西
+    - 为 FreeBSD 系统添加了 FreeBSD 包 @Gaojianli
+    更改
+    - BitComet 支持现在适配 v2.10 正式版预览 版本接口 @Ghost-chu
+      - 现在 BitComet 所需的 BouncyCastle 依赖库将在运行时下载，以解决出现的一部分奇怪的签名问题
+    - 在出现 WebUI 端口监听失败的错误时，显示更加友好的提示信息 @Ghost-chu
+    错误修复
+    - 修复用户在城市过滤器中添加空白项时，PeerBanHelper 没有拒绝并接受了请求，导致用户可能意外添加空字符串规则，导致 PBH 封禁所有 Peer。 @Ghost-chu
+    - 修复在保存封禁列表时，使用 callBatchTasks 避免特殊情况下，用户丢失封禁列表的问题。 @Ghost-chu
+    - 对 PeerRecords 停止使用 ObjectCache，其优化并不明显，并增加了内存消耗。 @Ghost-chu
+    - 修复使用数据透视时，部分 IP 查询时错误的显示 “这个 IP 没有被观测到过，但你仍然可以在这里查看他的部分信息” 的问题 @Ghost-chu
+    - 修复使用数据透视时，可能无法查询到刚刚产生的记录。现在查询时将强制保存缓存的记录。 @Ghost-chu
+    - 缓解规则统计缓存导致内存溢出崩溃的问题（特别是在加入了 BTN 网络的用户上发生）。晚些时候将重构该模块。 @Ghost-chu
+    - 修复了 6.4.2 中初始化 BitComet 下载器时提前类加载导致的崩溃的问题
+    Docker 用户
+    DockerHub: ghostchu/peerbanhelper:v6.4.3
+    阿里云国内镜像加速：registry.cn-hangzhou.aliyuncs.com/ghostchu/peerbanhelper:v6.4.3
+- Key: ReleaseNotesUrl
+  Value: https://github.com/PBH-BTN/PeerBanHelper/releases/tag/v6.4.3
+Version: 6.4.3
+ReleaseTime: 2024-10-10T11:53:01.0000000Z

@@ -1,0 +1,19 @@
+Version: 0.4.11
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.11/Mini-Term_0.4.11_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.11/Mini-Term_0.4.11_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.4.11 - 主要变更：从前端 SshModal、SshConnection 数据模型、TerminalInstance ssh 命令拼接到 mt-ssh-mcp sidecar pool 入口拒绝逻辑，整链路清理 SSH 跳板机/ProxyJump 能力 - mt-core 新增兼容测试，老 config.json 残留的 proxyJump 字段被 serde 静默忽略，避免升级后旧配置反序列化失败 - README 版本徽章、SSH 章节的跳板机能力描述同步更新 - package.json、Cargo.toml、tauri.conf.json 与 Cargo.lock 版本号同步升级至 0.4.11
+    - refactor: 移除 SSH 跳板机/ProxyJump 功能 - 删除前端 SshModal 的「跳板机」输入框、SshConnection 的 proxyJump 字段以及 TerminalInstance 里 ssh -J 拼接逻辑，SSH 设置中不再出现该字段 - 移除 mt-core SshConnection 的 proxy_jump 字段，并新增兼容测试确认老 config.json 残留的 proxyJump 字段被 serde 静默忽略 - 删除 mt-ssh-mcp sidecar 在 SshPool::acquire 入口的跳板机拒绝分支与配套两个单测，russh 持久会话池路径彻底无 jump 概念 - 同步清理 README 中跳板机/ProxyJump 的特性描述与 ssh_exec 的跳板机能力说明，文档与实际能力对齐
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.11
+ReleaseTime: 2026-05-22T09:02:51.0000000Z

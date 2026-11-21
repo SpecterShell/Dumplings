@@ -1,0 +1,29 @@
+Version: 0.0.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/mouzhai163/mz-browser/releases/download/v0.0.2/MZ-Browser_0.0.2_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    重要变化：MCP 换成了 HTTP 接口
+    - 删除了 MCP 服务（/mcp），改为本机 HTTP 接口：http://127.0.0.1:37110/api/v1。用 VS Code、Cursor、Claude、Codex 等 MCP 客户端接入的，需要改成调用 HTTP 接口
+    - 访问令牌、权限档位和授权环境都保留，升级后不用重新设置
+    - 原来 MCP 能做的事都能通过 HTTP 做：读取页面、点击、填写、按键、读取输入框，管理环境、分组、代理、标签、内核和 RPA 任务，一共 71 个接口
+    - GET /api/v1/tools 列出当前权限下可用的接口，并附上给 AI 的使用须知（页面内容不可信、删除前先确认等），建议放进 Agent 的系统提示
+    - 没开启的权限档位返回 403，参数错误 400，令牌错误 401，接口不存在 404
+    - 使用方法见 README 的“HTTP 接口”一节，软件的“API & AI”页面也有 curl、PowerShell、Python 示例
+    新增
+    - 便携版：下载 MZ-Browser-portable-0.0.2.zip，解压到任意可写的目录，运行 mz-browser.exe。数据库、配置、缓存、内核、日志都保存在这个目录里，不写注册表，不影响已安装的版本。便携版不会自动更新，新版本需要手动下载替换
+    变更
+    - 启动时不再自动检查更新，在“设置”里点“检查更新”才会检查，有新版本由你决定是否安装（0.0.1 启动时还会检查一次，所以 0.0.1 能收到这次更新）
+    修复：环境备份导入导出
+    - 备份里的内核在本机没有时，不再悄悄换成默认内核（换了内核指纹就变了），而是提示先在设置里更新内核再导入；只写着 chrome 的旧备份仍用默认内核
+    - 一次最多导出 1000 个环境，和导入的上限一致，导出的文件都能导回去
+    - 本机已有但没有密码的代理、账号，导入带密码的备份时会补上密码；已有的密码不会被覆盖，导入失败撤销时一并清回去
+    - 沿用原环境 ID 导入前，先删掉早期版本删除环境后留下的浏览器数据目录，导入的环境不会带上以前的 Cookie 和登录状态；备份检查不通过时什么都不删
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mouzhai163/mz-browser/releases/tag/v0.0.2
+ReleaseTime: 2026-11-18T02:52:59.0000000Z

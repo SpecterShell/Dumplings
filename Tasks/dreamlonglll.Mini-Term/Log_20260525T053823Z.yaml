@@ -1,0 +1,24 @@
+Version: 0.4.12
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.12/Mini-Term_0.4.12_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.12/Mini-Term_0.4.12_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.4.12 - 主要变更：新增 WSL 项目根支持，Windows 用户能把 \wsl$<distro><unix-path> 与 \wsl.localhost<distro><unix-path> 形式 WSL 路径加为项目，文件树自动剥 ?\UNC\ verbatim 前缀，开终端时 create_pty 入口自动检测 WSL UNC 并改用 wsl.exe -d --cd 启动（无视用户配置的 cmd/pwsh 强制覆盖，与 Windows Terminal MangleStartingDirectoryForWSL 行为一致），cwd 真正落在 WSL 内，前端弹一次性 toast 提示 - 后端新增 mt-core wsl_path 模块（parse_unc 含 12 单测）+ src-tauri fs.rs strip_verbatim_prefix 扩展 UNC verbatim 支持（含 PathBuf 包装版与 verify_under_project_root 集成共 14 单测）+ pty.rs decide_wsl_override 决策分支（7 单测）共 33 条新单测全过 - 沉淀 3 条后端 spec 便于后续复用：portable-pty ConPTY cwd 静默 fallback / Windows ?\UNC\ verbatim 前缀 dunce 盲区 / wsl.exe --cd 路径语义 - README 版本徽章升级，SSH 章节后新增「WSL 支持（Windows）」段，含 AI 状态识别在 wsl.exe 启动后失效 + notify 9P 文件系统事件可能丢失两条已知 caveat - package.json、Cargo.toml、tauri.conf.json 与 Cargo.lock 版本号同步升级至 0.4.12
+    - docs: 新增后端 spec 沉淀 PR3 Windows + WSL 集成的 3 条非显然 gotcha
+    - refactor: 处理 PR3 review 留下的三条小尾巴（注释 + toast 视觉 + README 表述）
+    - feat: 接通 WSL 启动器，create_pty 入口检测 UNC 自动改用 wsl.exe -d --cd
+
+    - test: 补全 fs.rs WSL UNC 单测，覆盖 PathBuf 包装版与 verify_under_project_root 集成
+    - feat: 新增 WSL UNC 路径识别 + 扩展 verbatim 前缀剥离，为「打开 WSL 项目根」铺底层
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.12
+ReleaseTime: 2026-05-25T03:18:33.0000000Z

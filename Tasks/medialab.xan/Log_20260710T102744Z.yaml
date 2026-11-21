@@ -1,0 +1,35 @@
+Version: 0.60.0
+Installer:
+- InstallerUrl: https://github.com/medialab/xan/releases/download/0.60.0/xan-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Breaking
+    - Renaming xan from --path to --root.
+    - Renaming xan separate -T/--txt to -L/--lines.
+    Features
+    - Adding xan count -c/--check-alignment & -H/--human-readable.
+    - Adding xan sort -e -z/--compress.
+    - Adding xan sample -g -S/--sorted.
+    - Adding xan from -f=(json|ndjson) --model.
+    - Adding xan cat rows -I/--intersection & -U/--union.
+    - Adding xan top -g -S/--sorted.
+    - Adding the sort, dedup, flatten & flat_map moonblade function.
+    - Adding support for list & map columns when using xan from -f=parquet.
+    Fixes
+    - Fixing text wrapping across tool, especially xan flatten -w & xan flatten -F.
+    - Fixing xan select -e & xan map plural clause flattening given list.
+    - Fixing xan from -f=parquet not emitting correct column names for list & map columns.
+    Performance
+    - Introducing a fast path for xan sort -e when input fits in a single chunk.
+    - Faster xan from -f=ndjson & -f=parquet.
+    - Amortizing xan sample allocations.
+    - Improving performance of xan freq & xan p freq.
+    Quality of Life
+    - Better record size estimation for xan sort -e.
+    - Better xan flatten -c when string width cannot be computed correctly (because of emojis typically).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/medialab/xan/releases/tag/0.60.0
+ReleaseTime: 2026-07-10T09:56:56.0000000Z

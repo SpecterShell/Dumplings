@@ -1,0 +1,36 @@
+Version: 263.7307.50
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-263.7307.50.exe
+  ProductCode: PyCharm 263.7307.50
+  InstallerSha256: 3EEEEFC2165BA3F9F8003A3D3EEF8E9FCEB07018362BAA5C91090AFF726887E9
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/python/pycharm-263.7307.50-aarch64.exe
+  ProductCode: PyCharm 263.7307.50
+  InstallerSha256: 1498FA2A3959E984C005D8DE9EDABC0545BDCB330D6AE91BA39C49D25CA6F485
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This build fixes a long-standing uv workspace resolving issue on WSL, closes a false positive for dictionaries of methods, and adds a long-requested startup script option for the debug console, along with several other type checking and debugger fixes:
+    Code Insight
+    - Calling a method stored in a dictionary (like self.calls[key](arg)) no longer triggers a false positive Unexpected arguments warning - PY-42050.
+    - Passing a TypedDict where a plain dict is expected now reports a type mismatch instead of passing silently - PY-39241.
+    - Calling an optional callable without a null check, such as func() where func: Callable[[], None] | None, is now flagged - PY-90534.
+    - ParamSpec (PEP 612) type parameters are now resolved correctly in generic classes - PY-93095.
+    - A type parameter is no longer flagged as unused when it's referenced inside a quoted type - PY-93096.
+    - PyTypeHintsInspection no longer reports a type expression as invalid just because it can't be evaluated - PY-87570.
+    - Completion and nested schemas, such as Ruff's, now work for tool sections in pyproject.toml - PY-82737.
+    Debugger
+    - Set a startup script for the debug console, similar to the regular Python console - PY-21419.
+    - Dictionary keys appear in their correct order again in the debugger and the inline values preview - PY-75697.
+    - Stopping a debugpy session now sends SIGINT first for a graceful shutdown, matching the existing pydevd behavior; a second stop sends SIGKILL - PY-92286.
+    Interpreters and Packaging
+    - uv workspace member dependencies are now resolved correctly over WSL, instead of being flagged as missing despite being installed and importable - PY-91376.
+    - Not-installed packages in a Pipfile are highlighted again - PY-90716.
+    - The Python Interpreters dialog is redesigned to show interpreter paths and let you rename interpreters directly, without extra toolbar actions - PY-89868.
+
+    Full release notes.
+- Key: ReleaseNotesUrl
+  Value: https://youtrack.jetbrains.com/articles/PY-A-233538639
+ReleaseTime: 2026-10-23

@@ -1,0 +1,28 @@
+Version: 0.2.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.1/Strata.Manager_0.2.1_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Python dependency false “needs repair”: discovery prefers the private Python named by Strata launchers (run-*.bat / run-*.sh), allows ~20s for cold Windows probes, and no longer silently switches interpreters on timeout — so a working bat install is not flagged for repair.
+    - Memory need copy: the “needs about X GB” line is now an official peak figure and notes GPU offload can lower host RAM; with an NVIDIA GPU, short system RAM alone warns as tight and does not block Enable configuration.
+    - Title-bar CTA: when models are discovered but no service profile is enabled, the pill says “Models found — tap to enable” and jumps to My models.
+    - VRAM capacity: when the service is stopped but nvidia-smi already reported capacity, the UI shows that capacity instead of lingering “Not measured”.
+    - One-click repair runtime: missing regex / jinja2 are installed into the same private Python the Strata launchers use — no second interpreter.
+    - One-click copy diagnostics: engine version, install dir, Python path, missing modules, a short recent-log snippet, and OS/GPU/RAM as plain text for support.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Python 依赖误报修复：扫描时优先使用 Strata 启动脚本（run-*.bat / run-*.sh）里的私有 Python，冷启动探测等待放宽到约 20 秒，超时也不再偷偷换到系统解释器，避免 bat 能跑而 Manager 误标「需要修复」。
+    - 内存需求文案：模型「运行约需 X GB」改为峰值参考，并标明显存卸载后可更低；有 NVIDIA 显卡时，内存单独不够只警告为「偏紧」，不阻挡「启用配置」。
+    - 顶栏 CTA：本机已扫到模型但尚未启用服务时，顶栏由「尚未配置服务」改为「已发现模型，点启用」，并可一键跳到「我的模型」。
+    - 显存容量：服务未运行时，若 nvidia-smi 已给出容量，不再长期显示「未实测」，改为展示已知显存容量。
+    - 一键修复运行环境：缺 regex / jinja2 时，向 Strata 启动脚本使用的同一私有 Python 执行 pip install（不另造解释器）。
+    - 一键复制诊断信息：打包引擎版本、安装目录、Python 路径、缺失模块、近期日志摘要与本机 OS/GPU/RAM 到剪贴板，便于发给支持。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.1
+ReleaseTime: 2026-10-19T03:31:28.0000000Z

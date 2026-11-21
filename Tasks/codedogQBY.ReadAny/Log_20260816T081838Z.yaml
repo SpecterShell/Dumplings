@@ -1,0 +1,41 @@
+Version: 1.3.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.6/ReadAny_1.3.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.6/ReadAny_1.3.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ReadAny v1.3.6 来啦。这一版重点完善了 桌面端与移动端的 RAG / 知识检索能力，新增 PDF 深色与 Sepia 主题适配，并集中改善 AI 对话、引用跳转、移动端输入以及 EPUB / PDF 阅读体验。
+    说明：本版本说明只列用户可感知的新增、优化和修复。开发过程中的内部验证、联调和边界问题收敛不单独列出。
+    新功能
+    - PDF 支持深色与 Sepia 主题：桌面端和移动端的 PDF 页面可跟随全局主题，并逐页识别内容，尽量避免对照片或深色页面错误反色
+    - 新增 Atlas Cloud AI 服务商：可在 AI 模型设置中配置和使用 Atlas Cloud
+    - AI 对话显示选中文本原句：从阅读器选中文字并进入 AI 对话后，可在顶部直接对照原文提问
+    - 移动端补全本地与远程向量检索：支持远程 Embedding，并为中文和英文提供本地模型选择
+    优化
+    - RAG 检索更完整可靠：统一桌面端和移动端的查询向量配置，校验书籍向量来源与维度，减少模型或服务切换后检索结果异常
+    - AI 工具调用与引用跳转更稳定：工具参数兼容性、超时处理和状态展示更可靠；缺少精确位置的引用也会尝试根据章节和原文恢复跳转
+    - AI 对话反馈更清楚：超长输入会提示分段提问，输出达到长度限制或工具调用未完成时不再把残缺回答显示为正常完成
+    - 移动端输入体验更完善：设置、首次引导、笔记、书籍详情、新建分组等输入区域会自动避让键盘
+    - 阅读器书籍样式兼容性更好：书籍字体设置可正确作用于正文，同时尊重书籍对行内图片高度的显式设置，并继续限制大图溢出
+    - 阅读器交互更稳：优化 iOS 长按选词、划线和翻页的冲突，链接点击、目录跳转与正常点按翻页之间的判断更准确
+    修复
+    - 修复 iOS 选词或划线结束后可能误触翻页，以及选中状态下翻页行为不稳定的问题
+    - 修复点击 EPUB 目录或正文链接后可能闪回原页、跳到上一章的问题
+    - 修复部分 EPUB 缺少样式表链接时书籍样式完全丢失的问题
+    - 修复部分 EPUB 行内小图标被异常放大，以及行内标记式注脚无法预览或跳转的问题
+    - 修复 macOS Retina 屏幕上 PDF 文本层错位、跨行选中和复制不准确的问题
+    - 修复移动端 PDF 在深色主题下出现色差、白边等显示问题
+    - 修复 AI 聊天中超长连续文本无法换行、深色模式下 Markdown 可读性较差的问题
+    - 修复部分 AI 工具参数无法生成 Schema、引用未登记或点击后无法跳转的问题
+    - 修复 Android TTS 音色选择器崩溃，以及小米 MiMo TTS 偶尔无法继续朗读的问题
+    - 修复卸载外部 AI / CLI 接入后残留配置或反馈不明确的问题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/codedogQBY/ReadAny/releases/tag/v1.3.6
+ReleaseTime: 2026-08-16T07:35:40.0000000Z

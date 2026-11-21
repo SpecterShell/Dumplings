@@ -1,0 +1,49 @@
+Version: 0.3.31-7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://installers.lmstudio.ai/win32/x64/0.3.31-7/LM-Studio-0.3.31-7-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://installers.lmstudio.ai/win32/arm64/0.3.31-7/LM-Studio-0.3.31-7-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.3.31 - Release Notes
+    New in LM Studio 0.3.31:
+    - Improve image understanding output quality, especially for OCR tasks
+    - Default image attachment size is now 2048px on the longest side for better quality with vision models
+      - Can be changed in Settings > Chat > Image Inputs
+    - Support for MiniMax M2 tool calling
+    - Flash Attention is now enabled by default for CUDA engines
+    - New CLI commands to manage engines:
+      - lms runtime get
+      - lms runtime update
+    - Improved macOS 26 compatibility and support
+    Build 7
+    - Fixed a bug where sometimes the Load Model button was greyed out for large MLX models
+    - Set Flash Attention on by default for CUDA engines
+    Build 6
+    - Added tool use support for MiniMax M2
+    - Added better controls for image input size for vision models
+    Build 5
+    - Update dependencies to support macOS 26
+    - Server UX improvements
+      - Log v1/chat/completions prompt processing progress to Developer Logs
+      - Model-specific v1/chat/completions Developer Logs
+      - Log error when JIT model load failed due to guardrails settings
+    Build 4
+    - Fixed "vision.imageResizeSettings key does not exist" error
+    - Added settings for configuring maximum image input dimensions for vision models.
+      - Accessible via Settings > Chat > Image Inputs > "Image resize bounds"
+      - These settings control the maximum dimensions to which input images are resized before being sent to vision-capable models.
+    Build 3
+    - Added lms runtime get and lms runtime update CLI commands to manage runtime extensions from the terminal.
+      - Run lms runtime -h for more info.
+    - Fix issue where sometimes reasoning models' output would start with a plaintext <think> token
+    Build 2
+    - Increase image resize limits to 1024x1024 for improved image processing performance (superseded: now 2048px)
+      - In a future update this will be user configurable (fixed in build 4)
+    Build 1
+    - [MLX] Fix ValueError: Image features and image tokens do not match for Qwen3 VL Thinking models
+    - Fix occasional UI crash when searching models
+RealVersion: 0.3.31

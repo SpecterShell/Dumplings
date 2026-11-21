@@ -1,0 +1,30 @@
+Version: 0.2.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.12/CommandCodeGo.Manager-Setup-0.2.12-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.12/CommandCodeGo.Manager-Setup-0.2.12-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复内容
+    - 总览实时统计：代理请求完成后自动更新请求数、Tokens、最近请求和图表；连接中断时每 5 秒补拉数据，回到页面或重新连接后自动同步。
+    - 完整的 24 小时统计：由数据库聚合过去 24 小时的全部请求，修复只统计当天最近 500 条记录的问题；缓存命中 Tokens 已包含在输入中，不再重复计入总量。
+    - 账号切换真正生效：客户端密钥、已入库的直通密钥和配置默认密钥使用统一的账号选择规则。切走账号后不再静默回退；没有可用备用账号时明确提示失败，成功时显示目标账号。最近请求新增实际使用的账号名称。
+    - 连续耗尽自动轮转：备用账号也耗尽时，继续尝试下一个可用账号；每个账号在单笔请求中最多尝试一次。全部不可用时返回错误，普通瞬时限速不会触发换号。
+    - 窗口状态修正：手动切走与 5 小时、每周额度限制分别保存；取消手动切走不会清除真实额度限制，一个窗口恢复也不会误清除另一个窗口。
+    验证
+    - 全部 133 项自动化测试通过。
+    - 前端 TypeScript 检查、网页构建和服务端打包通过。
+    - 使用本地模拟上游完成浏览器验证：不刷新页面即可看到请求数和 Tokens 更新，切走 A 后新请求实际使用 B。
+    升级说明
+    - 桌面版：从托盘菜单完全退出旧版，再安装对应系统和架构的新版并重新打开。仅关闭窗口不会退出后台服务。
+    - Docker：更新到 0.2.12 或重新拉取 latest，保留原数据卷并重建容器。
+    - 源码部署：更新代码，执行 npm run build:web 后重启代理服务。
+    - 统计在请求完成后更新；切换账号只影响新请求，已在途请求继续完成。
+    完整变更：v0.2.11...v0.2.12
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/learningdog1/CommandCodeGo-manager/releases/tag/v0.2.12
+ReleaseTime: 2026-10-09T05:32:32.0000000Z

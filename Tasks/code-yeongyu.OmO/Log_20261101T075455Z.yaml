@@ -1,0 +1,223 @@
+Version: 5.1.55
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.55/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.55/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    remove-ai-slops now names the two Bun scripts the programming skill ships for test work. Phase 2 runs check-test-junk.ts over every in-scope test file and treats its file:line findings as category-9 candidates (never automatic cuts); Phase 4b names mutation-proof.ts as the command behind the serial apply/run/restore proof it already described. (#12017)
+    The programming skill ships two Bun scripts that make the test rules mechanical. check-test-junk.ts flags the junk classes a regex can see in touched test files (source greps, prose pins, fixed sleeps, .only/.skip, self-comparisons, lower-bound cardinalities) with a per-line opt-out, and mutation-proof.ts breaks a production owner, runs the named tests, restores the file byte for byte and prints red/green, so "test your test" is one command. (#11972)
+    remove-ai-slops now prunes junk tests with the same table the programming skill and the gate reviewer use. Category 9 marks every in-scope test R/F/C/D, proves each deletion or merge by its class's rule (a production mutation for the behavior classes) before the cut, keeps the retention bar, and reports a baseline-red test as a bug instead of deleting it; behavior is locked with gate-passing tests rather than change certificates, and the report carries a Tests Ledger. (#11968)
+    - senpi-task: a message sent to a daemon task while its launch is being recorded keeps its input identity; the task record no longer rolls its effect_seq back, and a record rewritten to the same size is no longer read stale (#10708). (#11946)
+    - Internal telemetry maintenance. (#11882)
+    Fixed
+    - omo remote attach on Windows now reports a stopped OmO device service as not running instead of a raw connection error (#12042). (#12043)
+    - Memory sync on a CLI sign-in recovers after the OS credential store briefly reads empty (a locked keychain, a racing writer). The operations that saw the empty read are still refused, but the next sync pass gets a live account instead of staying off until restart. A real sign-out or credential change still stops sync (#11812). (#12001)
+    - On Windows, omo host ensure forwards a private pipe pair through the npm launcher, Bun re-exec, and provisioned-runtime handoff. Both pipe handles travel together on their original stdio slots, and the waiting launcher closes its owned copies after spawning. Invalid or aliased pairs remain null declarations; POSIX socket forwarding is unchanged. (#11958)
+    - Memory git failures that end without any output now say how the git process ended (exit code, signal and elapsed time) instead of a bare exit code. On macOS and Linux the signal tells an externally killed git apart from a silent git error; on Windows a killed child reports no signal, so there the elapsed time is the only clue. (#11945)
+    - The compiled-worker relocation test no longer hangs now and then. Its fixture waited on terminate() from inside the worker's message handler, which races the worker's own exit and never settles on Bun 1.4.4. It now waits for the worker's clean exit after the ready message, and a timeout failure reports its signal. (#11941, fixes #11940)
+    - The maintainer omob build now compiles the engine trust helper in its own cargo call, as the release workflows do, so a locally built desktop engine matches the released one. (#11939, part of #10762)
+    - Validate retained research source bytes before replacing an extraction and preserve the original capture time when reusing those bytes. (#11936)
+    - Memory /doctor no longer tells the user to "fix the cause" of parked facts batches without naming it: the facts check now reads as a plain-words to-do (run /facts retry for a transient cause such as a timeout, or the named fix such as setting memory.facts.model), followed by the cause counts per parked batch and the newest parked batch's run log path, and /facts retry reports how many batches it unparked and whether any parked again, with the cause. (#11909, part of #10897)
+    - A skill MCP server's timeout (milliseconds, set on the server entry in the skill's mcp frontmatter or mcp.json) now bounds every direct MCP request: list tools/resources/prompts, call tool, read resource and get prompt. Values outside 1 to 2147483647 ms fall back to the SDK default (#11869, carried forward from #7224 by @AceRothstein71)
+    Changed
+    - The omo-ai installer and launcher no longer rewrite the Claude Code version the engine advertised on Anthropic OAuth requests: senpi removed that request path together with the declaration the rewrite looked for (senpi#5131), so engine preparation keeps only the compile-safe css-tree data and the RPC stream guard, and an engine without the declaration no longer fails preparation with "unsupported Senpi". (#11964)
+    - Simplified OpenCode agent assembly by removing redundant type assertions and an unused builtin-skill name inventory. Agent mode, override precedence, and skill selection remain unchanged. (#11870) (#11899)
+    Added
+    - Categories and agents can set models_distribution: "round_robin" alongside models to spread new task children across their configured model chains. The default sequential policy keeps the existing order. Each child's fallback chain wraps from its selected starting model without repeating models, and continuations keep their current model. (#11905)
+    - omo remote checks your OmO sign-in first and stops with one plain line when you are signed out, the keychain is locked or the credential store is unavailable (#11853). (#11864)
+    - omo remote attach <device>/<session> shows a session from another device of this account in the attach TUI, observe-only for now: input is refused with "remote input not enabled yet" (#11853). (#11858)
+    - omo remote status | devices | sessions | enable | disable shows this account's devices and the sessions on them through the OmO device service, as tables or --json, with a typed SDK (@oh-my-opencode/device-service-core) over the service's local API v1 underneath (#11853). (#11857)
+    - Computer use (macOS): type() into a window that shows another computer or device (Screen Sharing, iPhone Mirroring) sends the keys of the current keyboard layout, since such a window receives key codes rather than typed text; every character is mapped before anything is sent, and a character no key types fails InvalidKey with nothing typed. In the background, text into a Screen Sharing window that needs Shift or Option fails BackgroundUnavailable before the first key (it takes modifiers from the physical keyboard; use foreground delivery), and el.type() never inserts into a remote window. (#11749, part of #11466)
+    - Command Code is now offered during setup as a custom provider: when CMD_API_KEY (or COMMANDCODE_API_KEY) is present in the environment, setup writes a keyless models.json provider entry covering both Command Code wires (Anthropic messages and OpenAI-compatible chat completions) and stores the key reference in auth.json, so agents can use Command Code models without manual provider configuration (#11326). (#11326)
+    Improved
+    - Simplify agent-usage reminder state reuse without changing reminder caps, delegation suppression or session cleanup. (#11890) (#11899)
+    - e650809dc4 chore(release): regenerate service-auth bundle for 5.1.55 (#12046)
+    - 1c5187e363 docs(changelog): keep 5.1.55 notes neutral on telemetry
+    - 13a25928c5 Merge pull request #12001 from code-yeongyu/fix/11812-transient-null-read
+    - f6c39e53f4 Merge pull request #12043 from code-yeongyu/fix/remote-attach-stopped-service
+    - a7b37c74e3 changes: 12043
+    - d1cd2d7805 fix(omo-native): omo remote attach names a stopped service on a refused connection
+    - 8bda141bcd Merge pull request #11858 from code-yeongyu/feat/omo-remote-attach
+    - f57238ceac Merge pull request #11864 from code-yeongyu/feat/omo-remote-bootstrap
+    - f929317baf Merge pull request #11946 from code-yeongyu/fix/10708-input-identity
+    - 24290412f5 build(memory-sync): regenerate bundles after merging dev 8b8b5a7eab
+    - cbef4822b6 Merge remote-tracking branch 'origin/dev' into fix/11812-transient-null-read
+    - 61f3a7edb0 Merge remote-tracking branch 'origin/feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - fc2f8a7384 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-bootstrap
+    - 8b8b5a7eab Merge pull request #11857 from code-yeongyu/feat/omo-remote-device-client
+    - 91b437964d Merge remote-tracking branch 'origin/dev' into fix/10708-input-identity
+    - 5dd32cb9a0 Merge commit 'cafe154cbd' into feat/omo-remote-attach
+    - 61e2248609 Merge pull request #11945 from code-yeongyu/fix/11943-git-exec-signal
+    - cafe154cbd Merge remote-tracking branch 'origin/feat/omo-remote-device-client' into feat/omo-remote-bootstrap
+    - 78a1540a1f chore(omo-native): regenerate service-auth bundle after merging dev
+    - d0350c82b5 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-device-client
+    - 224ce9f710 docs(changes): scope the git termination note per platform (#11945)
+    - 03d6211906 Merge pull request #12019 from code-yeongyu/fix/12018-verify-assets-files-only
+    - 5b210a02ad Merge remote-tracking branch 'origin/dev' into fix/11943-git-exec-signal
+    - bf472e81d9 Merge pull request #11936 from MoerAI/fix/11551-kept-raw-snapshot-integrity
+    - adf3cc765d Merge pull request #11326 from Bearmancer/feat/commandcode-custom-provider
+    - 8b93cb08e2 Merge pull request #11964 from code-yeongyu/fix/5131-drop-claude-code-floor
+    - 2e6885751c Merge branch 'dev' into fix/11551-kept-raw-snapshot-integrity
+    - 79e65ae6b3 Merge remote-tracking branch 'origin/dev' into fix/12018-verify-assets-files-only
+    - 5aaf501560 test(device-service-core): LA17 expects the user SDDL token in the ACE list (Windows prints LA)
+    - de3f64e697 Merge pull request #11905 from code-yeongyu/feat/10146-models-distribution
+    - e0c128ed36 Merge pull request #11749 from code-yeongyu/feat/11466-cu-remote-typing
+    - f468e6e6f2 fix(device-service-core): keep SID_TOKEN_SCRIPT module-private (knip)
+    - f1b932d273 Merge branch 'dev' into fix/11551-kept-raw-snapshot-integrity
+    - 27bdf80e2d Merge pull request #11909 from surlymochan/fix/10897-doctor-parked-facts-cause
+    - a67e3dc21e Merge pull request #12017 from code-yeongyu/test-rules/ras-wire-scripts
+    - e12952dd6c fix(device-service-core): accept the SDDL alias Windows prints for the user in the exact DACL verdict
+    - 1f3786190a Merge pull request #11882 from code-yeongyu/fix/install-key-review-lows
+    - f75703398b Merge branch 'dev' into feat/commandcode-custom-provider
+    - 215b147199 Merge pull request #11939 from code-yeongyu/feat/10762-omob-two-cargo-calls
+    - 32e6bfba02 Merge remote-tracking branch 'origin/dev' into lane/11964
+    - e357654f99 test(eq): re-record linux-x64 E21-E24 goldens for the remote-screens computer doc
+    - 2a28bd13e9 Merge pull request #11958 from code-yeongyu/feat/omo-win32-private-fd-pair
+    - 170220ecff fix(publish): verify only top-level release files, not payload dirs (#12018)
+    - fa1397fad2 Merge origin/dev into feat/11466-cu-remote-typing and regenerate bundles
+    - b0991a66b5 remove-ai-slops: fold the two review LOWs (mark set, --test splitting caveat)
+    - aeea2a4957 changes: fragment for #12017
+    - d0d8c744be remove-ai-slops: name the programming skill's detector and mutation-proof scripts
+    - 07bc15bbd5 Merge pull request #11968 from code-yeongyu/test-rules/remove-ai-slops-junk-tests
+    - eeb81f98c4 Merge pull request #11869 from code-yeongyu/fix/6631-mcp-request-timeout
+    - 07acf3d3f4 fix(device-service-core): report the DACL apply error as plain text and show the written SDDL in LA17
+    - 7e6e7b7574 fix(memory): drop unused classifyFactsFailure export flagged by knip
+    - 2bbfa366d4 fix(memory): resolve parked facts run path via ledger batchId; report /facts retry as started
+    - 536dcde2aa Merge remote-tracking branch 'origin/dev' into feat/10146-models-distribution
+    - b29ed90dc8 docs(changelog): add fragment for #11909
+    - b642e5f78f feat(memory): name the parked-facts cause and run log in /doctor; report retry outcomes
+    - 485d179ba7 Merge remote-tracking branch 'origin/dev' into feat/10762-omob-two-cargo-calls
+    - 302a8a474f Merge remote-tracking branch 'origin/dev' into fix/install-key-review-lows
+    - 5a4c299071 Merge origin/dev (5.1.54 release point) into test-rules/remove-ai-slops-junk-tests
+    - b90e17ceb4 Merge pull request #11998 from code-yeongyu/release/v5.1.54-source-state
+    - ac579e5688 fix(device-service-core): apply the exact Windows DACL through SetAccessControl and name the error
+    - 98f5549af2 chore(knip): drop SESSION_READ_WAIT from preExistingExports now that omo remote uses it
+    - 6ca1b8b1f6 Merge remote-tracking branch 'origin/dev' into feat/omo-win32-private-fd-pair
+    - 6a44924bd1 Merge pull request #11941 from code-yeongyu/fix/11940-worker-compile-load-timeout
+    - f49050d25a docs(remove-ai-slops): fold the #11968 review at c7b8b08143
+    - 33ca5c06e5 Merge remote-tracking branch 'origin/dev' into fix/11940-worker-compile-load-timeout
+    - 1b1f17cea7 fix(device-service-core): write the per-boot token with the platform secure-file helper in the proof test
+    - eaf0f0495e Merge pull request #11972 from code-yeongyu/test-rules/test-junk-detector
+    - 1b239a3105 docs(changes): add #12001 fragment
+    - 5ee2bc5d0b Merge origin/dev (c4312cd8bd, #11967 + #11991 merged) into test-rules/test-junk-detector
+    - 81c94ee6ea fix(memory-sync): renew the CLI account controller after a transient null read (#11812)
+    - 61b3344842 Merge pull request #11899 from code-yeongyu/cleanup-r3/omo-train-2
+    - 0cfa935a80 fix(omo-native): exit omo remote attach when the TUI cannot start
+    - 3d55d8f04a test(eq): re-record linux-x64 E21-E24 goldens for the remote-screens computer doc
+    - c7b8b08143 test(qa): refresh Linux E21-E24 after the remove-ai-slops description fold (#11968)
+    - 91d7782772 docs(remove-ai-slops): fold the #11968 review at 51ab1bb271
+    - b23d570708 Merge origin/dev into feat/11466-cu-remote-typing and regenerate bundles
+    - d21830f7f3 test(telemetry): replace a non-null assertion with an explicit guard
+    - 56d080c575 Merge test-rules/programming-testing-refs (dev 5.1.53 + E21-E24 goldens) into test-rules/test-junk-detector
+    - 51ab1bb271 test(qa): refresh Linux E21-E24 for the remove-ai-slops description (#11968)
+    - d226b5a9d0 Merge branch 'dev' into feat/commandcode-custom-provider
+    - ed862a5242 Merge test-rules/programming-testing-refs (dev 5.1.53 + E21-E24 goldens) into test-rules/remove-ai-slops-junk-tests
+    - 34adee1e45 Merge branch 'dev' into fix/11551-kept-raw-snapshot-integrity
+    - 61936b2b68 Merge remote-tracking branch 'origin/dev' into feat/10146-models-distribution
+    - d6afe4a977 Merge remote-tracking branch 'origin/dev' into fix/10708-input-identity
+    - 126a20b7e7 Merge remote-tracking branch 'origin/dev' into fix/install-key-review-lows
+    - f0ce60ae67 Merge remote-tracking branch 'origin/dev' into fix/6631-mcp-request-timeout
+    - c4134fb3e3 Merge remote-tracking branch 'origin/dev' into feat/10762-omob-two-cargo-calls
+    - 8f47f58459 Merge remote-tracking branch 'origin/dev' into cleanup-r3/omo-train-2
+    - 7b6449f30f docs(remove-ai-slops): fold the #11968 review: proofs per class, run serially by the orchestrator
+    - 47412b785d fix(omo-native): close a refused Windows pair's pipes in the hop (#11955)
+    - 9749fcf848 fix(programming): fold the #11972 review notes into the detector and the proof helper
+    - daa3add342 Merge remote-tracking branch 'origin/feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - c4dc5f77c2 Merge remote-tracking branch 'origin/feat/omo-remote-device-client' into feat/omo-remote-bootstrap
+    - a0bd5d2559 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-device-client
+    - ed3e37ec64 docs(changelog): fragment for #11972
+    - f3bbab3665 feat(programming): check-test-junk detector and mutation-proof helper on Bun
+    - d32e37ffc1 docs(changelog): fragment for #11968
+    - a088e65819 docs(remove-ai-slops): treat tests as a cleanup surface with the junk-class table and proof rule
+    - d05c7e8c6b fix(omo-native): drop the Claude Code UA floor rewrite of the installed engine
+    - 421271eb08 fix(omo-native): recognise Windows pipes by their S_IFIFO mode bits (#11955)
+    - 58bc4c6d6c fix(omo-native): classify Windows private pipes by mode (#11955)
+    - 8cfafdd5d0 test(omo-native): isolate Windows pipe bootstrap failures (#11955)
+    - f525701f1c test(delegate-task): create the distribution fixture home under the OS temp dir
+    - 2c5628c19d docs(omo-native): record Windows pipe pair forwarding (#11955)
+    - e1bd7922e2 feat(omo-native): forward Windows private pipe pairs (#11955)
+    - df39c78a68 fix(setup): finish Command Code adoption review
+    - 7482d7d1ee Merge remote-tracking branch 'origin/dev' into feat/10146-models-distribution
+    - af21ce15bc Merge remote-tracking branch 'origin/dev' into fix/6631-mcp-request-timeout
+    - 6cb85fd9c6 docs(changes): note the git termination diagnostic (#11945)
+    - 4a705cce2a docs(changes): fragment for #11946
+    - 8d9154773b fix(memory-core): name how a git child ended when it fails without output (#11943)
+    - fb6316fbca test(build): wait for the self-exiting worker instead of terminating it
+    - c7c50851eb docs(changes): add the #11941 fragment
+    - c1d1921f82 test(build): give the relocated compiled-worker run a load-safe budget
+    - 066fdfd1b6 docs(changes): add the #11939 fragment (#10762)
+    - 08acef317f fix(omob): build the engine trust helper in its own cargo call (#10762)
+    - cdb8d70d41 docs(changelog): record retained raw snapshot integrity fix
+    - 38e0c49e8e fix(ulw-research): validate kept raw bytes before replacement
+    - 7d91ee0847 Merge origin/dev into feat/11466-cu-remote-typing and regenerate bundles
+    - a4a37fd1c5 Merge origin/dev into omo train-2
+    - ad34934b8b Merge branch 'feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - d35336b37e Merge branch 'feat/omo-remote-device-client' into feat/omo-remote-bootstrap
+    - db97ee5071 fix(remote): spawn PowerShell through node:child_process and preload the PostHog test guard in device-service-core (part of #11853)
+    - 805dec643e fix(models): preserve narrow reasoning effort through fallback snapshots
+    - 3d33bed179 fix(config): retain round-robin chains through agent materialization
+    - 2e096c052d docs(changelog): record model distribution in PR 11905
+    - 6c7cdfbd8d feat(task): distribute category and agent model starts per spawn
+    - c9b79dfb2e Merge #11879 (cleanup-r3/o-memory-codex-slop) into omo train-2
+    - d22dbc04fe Merge branch 'feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - 113aeae030 Merge branch 'feat/omo-remote-device-client' into feat/omo-remote-bootstrap
+    - db848a92b4 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-device-client
+    - 79c65e6355 docs(changes): fold train fragments into 11899.md
+    - 47aff9e3f6 Merge #11890 (cleanup-r3/o-oc-hooks-slop-ready) into omo train-2
+    - fd45e5014b Merge #11884 (cleanup-r3/o-small-cores-slop) into omo train-2
+    - 2aa93f78ef Merge #11870 (cleanup-r3/o-oc-features-slop) into omo train-2
+    - fc78e16f47 fix(mcp-client-core): cap the request timeout at the timer limit, drop the unused override, document timeout (review #11869)
+    - a638463472 docs(changelog): note reminder state cleanup
+    - d0bba01f18 refactor(opencode): simplify reminder state lookup
+    - 51e43f5af3 fix(remote): bound attach replay, isolate listeners, bound the keychain read (fixes #11885)
+    - c54f98e840 Merge branch 'feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - cc6cdc3ce0 fix(remote): omo account show exits 0 when signed out; the docstring and tests say so (part of #11853)
+    - 6d70a430a3 fix(telemetry): stop OTLP after install-key rejection
+    - f7bdded8a9 test(model-core): infer provider lookup fixture metadata
+    - 394daaffe5 test(memory): remove redundant queue fixture array assertions
+    - 4e9ddbb46d Merge branch 'feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - 92aa6631ad refactor(memory): narrow reminder condition keys after clean handling
+    - ccdd5785cb Merge branch 'feat/omo-remote-device-client' into feat/omo-remote-bootstrap
+    - a80ab44fa7 docs(changelog): record agent assembly cleanup
+    - 30d6a1e7ba fix(remote): detach releases the attach's subscription and settles detached (part of #11853)
+    - 8eaabd1cef docs(changes): record the MCP request timeout fix (#11869)
+    - 3528c964ed refactor(opencode): remove redundant agent assembly casts
+    - 08ca6ebb2b fix(mcp-client-core): propagate the configured request timeout to skill MCP calls (#6631)
+    - cbf85f6788 Merge branch 'feat/omo-remote-bootstrap' into feat/omo-remote-attach
+    - 1f08b7ab1c docs(changes): fragment for #11864
+    - aa5d5e2db5 feat(remote): omo account show is the first step of every omo remote command (part of #11853)
+    - 52bbfaf91c Merge branch 'feat/omo-remote-device-client' into feat/omo-remote-attach
+    - bf1af03e46 refactor(remote): the local API is omo's own implementation of docs/local-api.md (part of #11853)
+    - 5203d2c10b Merge branch 'feat/omo-remote-device-client' into feat/omo-remote-attach
+    - 6717350fcc fix(remote): lint-ratchet and command-string audit findings before CI (part of #11853)
+    - c4adca6fea docs(changes): fragment for #11858
+    - 15ca2c8873 feat(remote): omo remote attach /, observe-only (part of #11853)
+    - 14d940810e docs(changes): fragment for #11857
+    - 0e8922d7ad feat(remote): device-service SDK over local API v1 and the omo remote command group (part of #11853)
+    - bb36b568c2 fix(desktop-macos): a bare key counts as pressed only once its press went out
+    - 4f05a2b307 fix(desktop-macos): bare remote keys release what they pressed and use a null source
+    - 59ae702b0e docs(changes): fragment for #11749
+    - e221e80caa chore(knip): list the engine test helper input-calls.ts as an entry
+    - d1b5caaa04 feat(desktop-macos): type into Screen Sharing and iPhone Mirroring windows
+    - 73fe17449c fix(setup): restore OpenCode source naming and scope Command Code guidance to planned runs
+    - af90b90910 feat(setup): configure Command Code as a models.json custom provider
+    Thank you to 2 community contributors:
+    - @MoerAI:
+      - fix(ulw-research): validate kept raw bytes before replacement
+      - docs(changelog): record retained raw snapshot integrity fix
+    - @surlymochan:
+      - feat(memory): name the parked-facts cause and run log in /doctor; report retry outcomes
+      - docs(changelog): add fragment for #11909
+      - fix(memory): resolve parked facts run path via ledger batchId; report /facts retry as started
+      - fix(memory): drop unused classifyFactsFailure export flagged by knip
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.55
+ReleaseTime: 2026-11-01T07:08:35.0000000Z

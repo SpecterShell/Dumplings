@@ -1,13 +1,14 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['9589']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['9589']
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

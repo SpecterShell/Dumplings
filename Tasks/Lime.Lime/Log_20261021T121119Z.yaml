@@ -1,0 +1,38 @@
+Version: 1.165.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.165.0/Lime-1.165.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.165.0
+    新功能
+    - 工作区侧面板增加最近输出、文件预览与网页入口，统一新标签页、浏览器和编辑器的打开与返回流程。
+    - 文件树支持连续及多项选择，完善文件菜单、键盘操作和编辑器联动。
+    - Memory 整理复用共享 Agent runtime，支持受限工具执行、原生文件修改、引用与用量记录。
+    修复
+    - 修正异步问答的草稿、跨线程恢复、取消和终态展示，避免重复输入和状态通知误报。
+    - 补齐线程分叉与冷恢复中的会话设置、压缩检查点、模型历史、输入图片和用量恢复。
+    - 修正 Anthropic 增量签名及 Gemini 签名内容的保存与重放，按 provider 路由隔离原生历史。
+    - 修正内部 Agent 关闭时的原生文件任务取消与回收，避免尚未退出的写任务越过提交边界。
+    - 修正 macOS 原生文件工具在沙箱中加载同目录动态库的问题。
+    - 工作区记忆摘要尚未建立时使用全局摘要，保留工作区摘要优先级。
+    优化与重构
+    - 将规范历史、压缩与模型记录收敛到同一 rollout 批次和持久化回执；普通及压缩 rollout 可用于独立恢复。
+    - Memory 提取采用单次、严格结构化且不携带工具的模型请求，整理阶段保留精确来源版本与所有权校验。
+    - 更新 Hook 元数据、插件投影、协议 schema 与生成客户端，保持消费者合同一致。
+    - 拆分历史恢复、线程用量、文件输出与构建输入模块，清理旧整理提案和重复转换路径。
+    测试与质量
+    - 扩展公共 JSON-RPC 的线程分叉、冷恢复、四协议历史捕获与原生文件权限回归。
+    - 更新侧面板、文件树、问答、五语言资源、Electron fixture 和构建产物新鲜度检查。
+    - Memory、完整 Codex 对齐及跨平台能力仍以各专项执行计划的实际验收范围为准。
+    文档
+    - 更新架构、GUI、Memory、线程恢复、插件和运行时对齐计划，保留未完成验收与原始失败记录。
+    其他
+    - 应用、CLI 与 Rust workspace 版本统一为 1.165.0。
+    完整变更：v1.164.0 → v1.165.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.165.0
+ReleaseTime: 2026-10-21T11:56:59.0000000Z

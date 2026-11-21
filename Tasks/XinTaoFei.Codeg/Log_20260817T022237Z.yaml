@@ -1,0 +1,29 @@
+Version: 0.26.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.26.1/codeg_0.26.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.26.1/codeg_0.26.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A follow-up to 0.26.0: retry notices stop piling up under the composer, and a session started from a To-do card keeps the name of the card that launched it.
+    Fixed
+    - Retry notices no longer stack under the composer. A long turn that reconnected three times left three amber rows permanently docked over the chat. A warning now clears the moment the agent produces output again, instead of waiting for the turn to end cleanly; several at once collapse into a single strip with a "+N more" count; and every strip — the muted "Recovered" line included — carries a close button. That recovered line also goes on its own after ten seconds, rather than sitting under the composer for the rest of the session announcing a hiccup that was already over.
+    - A session started from a To-do card keeps the card's name. The name was written at launch and then overwritten on the first detail load by whatever the agent's own session file parsed to — for agents that write no title of their own, the first line of the composed prompt — so the sidebar filled up with rows like 项目：/Users/… that answered to nothing on the board. The name is now locked when the session launches, renaming a card renames the session it produced (a session you renamed by hand keeps your name), and sessions from earlier runs are repaired on upgrade.
+    - An automation run is named after the automation. Not after the first eighty characters of its prompt, which is identical on every run and never said which automation the session belonged to.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    0.26.0 的后续修复：重试提示不再堆在输入框上方，从「待办任务」卡片启动的会话也会保留卡片本身的名字。
+    修复
+    - 重试提示不再层层堆在输入框上方。 一个较长的回合若中途重连了三次，聊天区上方就会永久留下三行琥珀色提示。现在只要智能体重新有输出，警告立即收起，而不必等整个回合干净地结束；同时出现多条时会合并成一条并标注「另 N 条」；每一条提示——包括那行浅色的「已恢复」——都带上了关闭按钮。「已恢复」还会在十秒后自行消失，不再挂在输入框下方直到会话结束，通报一个早已过去的小插曲。
+    - 从「待办任务」卡片启动的会话会保留卡片的名字。 名字虽然在启动时就写入了，却会在第一次加载详情时被智能体自己的会话文件覆盖——对于不写标题的智能体，那就是拼装后提示词的第一行，于是侧边栏里塞满了 项目：/Users/… 这类在看板上对不上号的条目。现在名字在会话启动时即被锁定；重命名卡片会一并改掉它产生的会话（你手动改过名字的会话保持不变）；此前已经跑过的会话会在升级时一并修复。
+    - 自动化的每次运行以自动化本身命名。 不再截取提示词的前八十个字符——每次运行的提示词都一样，根本看不出这次运行属于哪个自动化。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.26.1
+ReleaseTime: 2026-08-17T01:25:35.0000000Z

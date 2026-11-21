@@ -1,0 +1,44 @@
+Version: 3.5.0-build.72
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/JimLiu/baocut/releases/download/baocut-v3.5.0-build.72/BaoCut-3.5.0-build.72-win-x64-cuda-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new in BaoCut 3.5.0
+    Editing and captions
+    - Dynamic caption scenes: a deterministic, declarative caption format now shares its rendering path across preview and export. Styles can combine animated text, layered fills/gradients/strokes, pinned PNG resources, repeated decorations, bound labels and bounded image sequences. This is a format/rendering foundation, not a new preset gallery. Source
+    - Richer caption layout and timing: word, line, page and character clocks; explicit whitespace selection; duration-aware Bézier expressions; real glyph/ink/page measurements; counted line/page patterns; animated per-unit font sizes and mixed font styles. Fixed page windows retain original word timing, and page timing and whitespace caret geometry are corrected. Layout, timing fix
+    - Caption materials: bounded feedback trails, blur, soft bands, wave displacement, multiscale/component glow with independent tint and color transforms, palette noise, angular sampling, gradient smear and noisy sweeps. Independent material layers preserve source-over/screen behavior against the real video background. Materials and layers
+    - Shorts keep the full source picture: changing the canvas ratio reveals the original source instead of cropping an already cropped short. Auto-framed clips keep their subject's focal point and allow 100–400% zoom; applying zoom to a whole short preserves each shot's own focal point. Switch to free placement to move the clip. Result cards explain this behavior, and background video facts are cached by content revision. Framing, cache fix
+    - Free placement: canvas-filling media without a focal point can be dragged, scaled, aligned or nudged into picture-in-picture without a visual jump. Arrow keys also nudge a selected main-track video; auto-framed clips retain their framing. Source
+    Image generation and models
+    - One default picker per capability: speech recognition, speech synthesis and image generation settings share a picker covering local, remote-node, cloud and agent models. Automatic image selection prefers Codex signed in with a ChatGPT subscription, then installed local models (Qwen-Image-2.1 Turbo first), OpenAI, Google Gemini and other connected services. API-key Codex remains explicitly selectable with a cost/availability caution, and image generation is enabled by default. Source
+    - Local image progress: model loading, denoising step counts, elapsed time and estimated time left appear in image tools, the editor, model try dialogs and background tasks. Estimates begin after the first completed step and stop during decoding; cloud runs show elapsed time. CLI progress and MCP job inspection expose the same progress data. Generated images open in the shared image viewer. Jobs, viewer
+    - Lower Qwen-Image memory use on MLX: stream DiT layers in halves, release one-shot embedding weights, load VAE weights per block, and write denoising/upsampling chunks in place. Existing commit-level comparisons found identical output bytes; results depend on resolution and model pack. Source
+    - Local image API controls: /v1/images/generations accepts BaoCut seed and steps extensions and returns the frozen seed and supplied step count. Values follow each model's limits; Qwen-Image-2.1 Turbo uses exactly eight steps. Source
+    Reliability and workflow
+    - Built-in skills show localized names and concise summaries while retaining their raw names in skill menus/settings. Raw-name sorting stays consistent across languages. The video-production skill now starts with a polished opening sample, incorporates shot/timecode revision rounds, and supports user-recorded narration. Skill display, production workflow
+    - Download cards stay visible after import and show the save folder, landed files and sizes, with inline audio/video playback where applicable. Desktop adds Open with default app and Show in Folder. Source
+    - Task details recover from rendering errors without taking down the shared interface; compiled row styling is also fixed. Source
+    - Long transcripts and documents support partial speaker-name, word-text and stable-ID field edits without resubmitting the whole document. Authenticated local submissions no longer hit an artificial request-size ceiling; revision checks and undo remain in place. Source
+    - Exports stage on the destination disk, check that disk's free space, clean up their temporary task directories, and give clearer storage/resource errors. Source
+    - Export rendering avoids redundant full-frame scans/copies, uses exact caption blending, and reuses word-animation poses and blurred effect layers. macOS scheduling and encoder changes reduce stalls under CPU load; Windows workers opt out of EcoQoS throttling. Caption raster counts and an interleaved export benchmark improve diagnostics. Prior commit-level benchmarks are platform-specific and are not a new release-wide performance guarantee. Compositing, encoder, effect cache
+    Scope and verification
+    Changes cover 3.4.2 build 71 → 3.5.0 build 72: 78 commits, reviewed in three batches; no associated PRs returned by the commit API. All commit sources were reconciled, including merges, prototype/docs/tests, previous-release feed updates and version metadata. EmbeddingGemma retrieval and further Windows media-path work are design-only. The portable GPU compositor is an internal foundation; dynamic-caption GPU material integration and preview-host wiring are still pending.
+    Frozen source: 2d4dcf670e48a2554e2bd2bc75f9b5da22d0a794. Native packaging verification is described below. UI/export acceptance, real model/GPU inference and paid Agent calls are not part of the automated release jobs.
+    Platform verification
+    BaoCut 3.5.0 (Build 72) for Apple Silicon, macOS 14+.
+    Bundle ID: com.baocut.app. Developer ID signed, hardened runtime and Apple notarization accepted for both App and DMG.
+    Runtime and native Worker startup, signer fingerprint, staple and Gatekeeper checks passed. UI/export, real model inference and paid Agent calls were not exercised by this workflow. ffmpeg/ffprobe and an agent engine are external dependencies.
+    Source: 2d4dcf670e48a2554e2bd2bc75f9b5da22d0a794
+    Actions: https://github.com/JimLiu/baocut/actions/runs/38350838586
+    Windows x64
+    Variants: cpu, cuda, vulkan. NSIS installers and portable ZIPs are unsigned. Real credential migration and model/Agent/GPU inference were not exercised by the installer tests. Requires the Microsoft Visual C++ v14 x64 Redistributable; the current package does not bundle the VC runtime DLLs.
+    Native build and installer verification: https://github.com/JimLiu/baocut/actions/runs/38350838586
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JimLiu/baocut/releases/tag/baocut-v3.5.0-build.72
+ReleaseTime: 2026-10-13T06:24:43.0000000Z

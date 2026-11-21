@@ -1,21 +1,34 @@
-$Content = Invoke-RestMethod -Uri 'https://desktop.figma.com/win/RELEASES'
+$Object1 = Invoke-RestMethod -Uri 'https://desktop.figma.com/win/RELEASE.json'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Content.Split(' ')[1], 'Figma-([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = "https://desktop.figma.com/win/build/Figma-$($Task.CurrentState.Version).exe"
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = "https://desktop.figma.com/win/build/Figma-$($this.CurrentState.Version).exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'arm64'
+  InstallerType = 'exe'
+  InstallerUrl  = "https://desktop.figma.com/win-arm/build/Figma-$($this.CurrentState.Version).exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://desktop.figma.com/win/build/Figma-$($this.CurrentState.Version).msi"
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

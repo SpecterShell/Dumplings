@@ -1,0 +1,33 @@
+Version: 1.16.8
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.8/vproxy-1.16.8-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.8 发布说明 / Release Notes
+    🎉 VProxy v1.16.8 正式发布！本版本重点修复了大文件订阅（如 5MB 庞大节点配置）拉取被 6 秒响应头超时误杀的问题，彻底重构了服务状态项点击系统浏览器的直连极速秒开链路，并修复了外部双引号导致的 %22 误解析缺陷：
+    📦 订阅采集：大文件与慢服务端自适应超时
+    - 单候选源响应头预算自适应放宽：
+      - 针对绝大多数机场/自建的常规单候选订阅源，彻底解除针对 GitHub 镜像竞速设计的 6 秒硬编码限制；
+      - 响应头预算自适应放宽为 budget.saturating_sub(3s).max(15s).min(budget)，在默认 30s 预算下给予服务端足足 27 秒 的首包等待时间（若设置更大超时，响应头时间按需动态跟随扩大）；
+      - 彻底根治 5MB 等复杂配置在服务端计算、压缩、下发首包响应头时被 6s 内未收到响应 提前掐断的问题。
+    - 数据块传输抗抖动能力提升：
+      - 将响应体数据流式读取的空闲超时 BODY_IDLE_TIMEOUT 由 5 秒放宽至 15 秒；
+      - 为大文件在跨国公网链路下的 TCP 抖动重传与拥塞提供更稳健的容错保底。
+    ⚡ 交互响应：默认浏览器直连秒开与 URL 脱敏
+    - 注册表解析直连秒开（< 10ms）：
+      - Windows 端优先直接从注册表 UrlAssociations\https\UserChoice 读取用户默认浏览器可执行命令，通过 CreateProcessW 极速拉起进程；
+      - 彻底规避传统 ShellExecuteW 向全系统所有顶级窗口广播 DDE (WM_DDE_INITIATE) 造成的 300ms ~ 2000ms 假死迟钝感。
+    - 精准去除多余引号与 %22 误解析：
+      - 命令行占位符替换前自动执行 URL 去引号净化，绝不向浏览器外部硬塞多余双引号；
+      - 彻底解决 Chromium / Edge 浏览器将末尾双引号编码为 %22 并导致目标网址无法访问的问题。
+    - COM STA 降级兜底与即时视觉反馈：
+      - 降级走 ShellExecuteW 时在专属后台线程声明 COINIT_DISABLE_OLE1DDE，杜绝阻塞 UI 线程；
+      - 服务状态项点击引入鼠标按下即时微态高亮与 1.5 秒激活反馈，支持右键单独单项测速。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.8
+ReleaseTime: 2026-11-09T07:36:41.0000000Z

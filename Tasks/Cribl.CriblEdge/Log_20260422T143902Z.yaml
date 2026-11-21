@@ -1,0 +1,110 @@
+Version: 4.17.1
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.17.1/cribl-4.17.1-b862732f-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4171/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The following draft provides early access to release notes for the upcoming Cribl Suite product release. Features or functionality presented are not considered binding commitments and are subject to change at the discretion of Cribl at any time for any reason without notice. This information should not be relied upon in making purchasing decisions.
+    Important Changes
+    ​
+    New Release Windows
+    ​
+    Beginning with this release, Cribl.Cloud will have multiple upgrade windows as follows:
+    Upgrade WindowTime and DateAWS Regions Included
+    All Standard Organizations21 Apr 2026 between 12:00 and 24:00 UTC (8:00 AM and 8:00 PM EDT)All regions
+    US West and APAC (Enterprise)22 Apr 2026 between 10:00 and 13:00 UTC (6:00 AM and 9:00 AM EDT)ap-northeast-1, ap-southeast-1, ap-southeast-2, and us-west-2
+    US East and EMEA (Enterprise)23 Apr 2026 between 00:00 and 03:00 UTC (8:00 PM and 11:00 PM EDT)ca-central-1, eu-central-1, eu-central-2, eu-west-1, eu-west-2, eu-west-3, sa-east-1, us-east-1, and us-east-2
+    The upgrade windows apply to your Leader. Cribl.Cloud Workers will be upgraded immediately after the Leader is upgraded, regardless of the region they reside in.
+    On-prem binaries will be available on 22 Apr 2026. However, if you are a hybrid user, you must wait until your cloud Leader Node has been upgraded before upgrading your Edge Nodes. Failure to do so will result in unexpected behavior.
+    Upcoming Changes to Sensitive Information in API Responses
+    ​
+    In an upcoming release, API responses for the following endpoints will no longer include sensitive information in plaintext:
+    - /system/settings
+    - /system/settings/auth
+    - /lib/database-connections
+    This affects passwords and password-equivalent attributes such as bindCredentials and client_secret. The values for these attributes will be omitted or masked in responses.
+    What you need to do: Update any automation or scripts that depend on reading these plaintext values from the API responses for these endpoints.
+    Action Required: End of Life Notice for AWS SDK v2
+    ​
+    AWS ended support for their AWS SDK for JavaScript v2 on September 8, 2025. This SDK is used by Cribl AWS Sources and Destinations. To ensure uninterrupted operation and compatibility, we upgraded our SDK to v3 in the September 2025 Cribl release and will completely remove the v2 SDK in May 2026.
+    What you need to do: Plan to upgrade your Cribl deployment to the latest version by April 2026 to ensure continued compatibility with AWS Services.
+    New Features
+    ​
+    This release provides the following improvements:
+    IP Allowlisting for API Credentials in Cribl.Cloud
+    ​
+    Use the new IP Allowlist option to restrict API access to specific IPv4 CIDR ranges for API Credentials.
+    New Login Experience for Cribl.Cloud
+    ​
+    If you have access to multiple Organizations, you can select the Organization to log in to from the start. Also, if you have multiple authentication methods, you can choose which one to use to log in.
+    Billing Reader Permission in Cribl.Cloud
+    ​
+    The new Billing Reader Permission provides read-only access to view billing information and credit consumption in the FinOps Center.
+    Experience Improvements
+    ​
+    - You can now install Cribl Edge on Windows using a Virtual Service Account (VSA).
+    - The Edge Process explorer (Fleet > Explore > Processes) now allows you to hide and show selected columns.
+    - The Cribl Search Destination is now featured more prominently in the primary Destinations list, making it easier to configure this Destination and integrate your Edge Nodes with your Cribl Search environment.
+    - New Mapping Ruleset IDs will now only accept letters, numbers, underscores, and dashes. IDs for existing Rulesets are unaffected. You can now delete pre-existing mapping rulesets with slashes in the ID.
+    - We’ve added specific UI and API-level validation for Azure Fleet IDs to ensure they align with Azure’s naming requirements. When creating or configuring a Fleet designated for Azure, the system now enforces the following rules for the Group/Fleet ID:
+      - Characters: Must contain only lowercase alphanumeric characters (a-z, 0-9) and hyphens (-).
+      - Starting/Ending: Must start with a letter and end with either a letter or a number.
+      - Length: Must not exceed 63 characters.
+    Sources and Destinations
+    ​
+    - Added safeguards for oversized events sent to Splunk so that fields like _raw are automatically truncated before hitting Splunk’s ~64 MB S2S limit, preventing connection resets and destination blocking while exposing metrics/logs to help identify and troubleshoot large-event issues.
+    - Updated the Prometheus Destination to serialize histogram metrics according to Prometheus specs, emitting *_bucket, *_sum, and *_count time series for histograms instead of using the base metric name for bucket data.
+    - Added support for a configurable workspace host in the Databricks Destination so you can connect to Databricks workspaces in government and other secure cloud environments while preserving existing behavior when no custom host is set.
+    - Added a gzip compression setting to the Cortex XSIAM Destination so you can enable compression directly in the tile, helping reduce egress costs while keeping the native XSIAM integration and batching behavior.
+    Corrections
+    ​
+    This release contains the following bug fixes:
+    Security Fixes
+    ​
+    IDDescription
+    CRIBL-39556, CRIBL-39749
+    This release includes a critical security fix affecting prior versions of Cribl Edge for Linux and Windows. Customers are strongly encouraged to upgrade to v4.17.1.
+
+    More details can be found on Cribl’s Trust Portal notification page. (Login required).
+
+    To learn more about Cribl’s Security Program, please join us in #security in Cribl Community. Inquiries to Cribl’s Security Team may also be sent to security@cribl.io.
+    Operational Fixes
+    ​
+    IDDescription
+    CRIBL-38512
+    We resolved an issue in the UI on the Edge Nodes page where selecting Clear All failed to permanently dismiss error messages for Edge Nodes. Dismissed messages would often reappear after a page refresh or a new polling cycle, even if the underlying issue had been fixed. The UI now correctly synchronizes these deletions, ensuring that once you clear an alert, it stays cleared.
+    CRIBL-38025You can now toggle the Send to Cribl Support option when creating a diagnostic bundle in Edge Nodes connected to a Cribl.Cloud Leader.
+    CRIBL-39444Fixes issue where the preview pane was empty in the Import Sample Data modal.
+    CRIBL-21968We resolved an issue where the Preview pane failed to display results for Pipelines or Functions that were inherited from a parent Fleet. The Preview pane now correctly accesses configurations from the parent Fleet and displays results as intended.
+    CRIBL-37760We resolved a timing conflict that occurred during failed configuration deployments. This issue could cause Cribl Edge to spawn multiple Worker Processes, sometimes equal to the number of CPU cores on the host. This fix ensures that Cribl Edge maintains its resource guardrails and does not exceed its intended Worker Process count, even during a deployment failure.
+    CRIBL-34954We have updated the Cribl container image to disable core dumps by default as a cautionary measure. If you need to capture these files for debugging, you can now use the CRIBL_ENABLE_CORE_DUMP environment variable to opt back into your host’s standard kernel.core_pattern management for core dumps.
+    CRIBL-38740We fixed an issue where users with Admin or Editor permissions for a specific Fleet were unable to access the Certificates page or view certificate previews in Sources and Destinations. Certificate permissions are now inherited correctly at the Fleet level.
+    CRIBL-38273Fixed an issue where Cribl-to-Cribl communication between organizations using the same license could intermittently fail because dynamic license fields were included in the auth token calculation, causing token mismatches and broken connections.
+    MON-669Fixed an issue where the default system_email Notification target was not displayed and could not be selected when creating or editing Notifications in Cribl.Cloud. Previously configured Notifications that use the system_email target continued to send emails, but could not be managed through the UI.
+    CRIBL-38135We resolved an inconsistency where the IP addresses displayed in the Edge Node list did not match the values in exported JSON or CSV files. The export process now correctly reflects the primary IP address shown in the UI, ensuring your reports are accurate. Note that these IP addresses now use CIDR notation (such as 192.168.1.10/24) to provide more detail about the network configuration of your Edge Nodes.
+    CRIBL-30609We updated the Pack dropdown in the breadcrumb header to display Pack IDs instead of display names. Previously, if you imported the same Pack multiple times or had several Packs with identical display names, the dropdown would show a list of duplicate names. This fix makes it easier to identify and switch to the specific Pack you need.
+    CRIBL-36334We resolved an issue where the preview for Mapping rulesets was not functioning when the ruleset was inactive.
+    CRIBL-39038We resolved an issue where links in the Recent Actions list would break when a user created a Pipeline within a specific Project. The links have been corrected to navigate directly to the relevant Project view within the Fleet, ensuring a seamless transition from the activity log to your configuration.
+    PLAT-10337Fixed an issue where Cribl Stream users with the User Permission who were also members of a Team with the Admin Permission could not view or manage AI Settings.
+    PLAT-10364Fixed an issue where, when creating a custom Role, selecting the ProductAdmin, ProductReader, or ProductUser Policy showed only Worker Groups in the Object drop-down menu. The Object options now correctly list product names for these Policies.
+    Source and Destination Fixes
+    ​
+    IDDescription
+    CRIBL-39244
+    Fixed an issue where the Total bytes column in the Status tab of some Sources would display 0.
+    CRIBL-35398Improved handling of staged files for file-based Destinations so that orphaned staging files are automatically reprocessed after Edge Node crashes, OOMs, or abrupt shutdowns, reducing the risk of data loss and disk exhaustion in long-running and scaled-out deployments.
+    CRIBL-38459Kinesis Data Streams and Kinesis Firehose Sources now correctly include messageType and subscriptionFilters from CloudWatch Logs subscription filter payloads in ingested events.
+    CRIBL-38537Fixed an issue where the OTLP Metrics Function only set time_unix_nano based on <metric>_otel fields from OTel Sources, causing incorrect or identical start/end times for metrics coming from other Sources (such as Prometheus Remote Write) and breaking integrations like Google Cloud Observability.
+    CRIBL-38577We fixed an issue where the Windows Event Collector would reprocess the same logs in an infinite loop.
+    CRIBL-39077Fixed an issue where the Prometheus Edge Scraper Source would attempt to scrape invalid URLs when Discovery type was set to Kubernetes Pods on a K8s cluster with IPv6 only networking.
+    SDK Changelogs
+    ​
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - Typescript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-04-22

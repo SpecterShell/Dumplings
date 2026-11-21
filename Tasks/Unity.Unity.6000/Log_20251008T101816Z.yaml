@@ -1,0 +1,148 @@
+Version: 6000.0.59f2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/ef281c76c3c1/Windows64EditorInstaller/UnitySetup64-6000.0.59f2.exe
+  ProductCode: Unity 6000.0.59f2
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/ef281c76c3c1/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.59f2.exe
+  ProductCode: Unity 6000.0.59f2
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.59
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.59f2
+    - 2D: [Android][PowerVR] 2D Lights are constantly duplicating and increasing in intensity in the Player (UUM-115475)
+    - AI Navigation Core: NavMeshSurface ignores convex Mesh Colliders when using Physics Colliders (UUM-102676)
+    - Android: [GameActivity] APK built with Development Build enabled gets flagged as having Malware (UUM-116588)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: [Intel] Crash on BufferD3D12::BeginWrite when opening a newly created URP project with DirectX12 set as the default graphics API (UUM-104889)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (UUM-103995)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (licensing client path is not found) (UUM-103996)
+    - IL2CPP: [macOS][iOS][IL2CPP] Crash when using the nullable enum as a parameter and passing a default value into it. (UUM-116854)
+    - Shader System: Crash on tlsf_free when selecting a cube in the "Getting Started With Unity" template (UUM-107673)
+    - Vulkan: Artifacts appear in the Player when using Screen Space shadows with orthographic camera (UUM-116048)
+    6000.0.59f2 Release Notes
+    Improvements
+    - Editor: Prevented potential undefined behavior from accessing deleted GtkWidget references during window cleanup on Linux. (UUM-114419)
+    - GI: Changed behavior of light probe loading such that, when unloading the last scene that contains light probes, you don't need to call LightProbes.Tetrahedralize() to apply the changes anymore. (UUM-116318)
+    - GI: Improved documentation for IProbeIntegrator API used for implementing custom GI baking of light probes.
+    - Test Framework: Implemented debounced search in the Test Runner window to improve search performance for projects with many tests. (UUM-119308)
+    - VFX Graph: Reduced allocations in VFXBatch.Update causing slowdown. (UUM-96241)
+    API Changes
+    - Physics: Added: Physics::RebuildBroadphaseRegions has been unmarked from being deprecated due to multi-box pruning broad phase being brought back. (UUM-112553)
+    - Test Framework: Added: IPostbuildCleanupWithTestData interface- same as IPostbuildCleanup but provides a TestData object.
+    - Test Framework: Added: IPrebuildSetupWithTestData interface- same as IPrebuildSetup but provides a TestData object.
+    - Test Framework: Added: PostbuildCleanupWithTestData attribute- same as PostbuildCleanup but provides a TestData object.
+    - Test Framework: Added: PrebuildSetupWithTestData attribute- same as PrebuildSetup but provides a TestData object.
+    - Test Framework: Added: TestData record- provides data about the current test run, including the test mode (editmode, playmode, player) the tests it will run, and the platform it will run on.
+    - Test Framework: Added: TestMode enum- a mirror of the existing enum with the addition of 'None' and 'Player' to distinguish them as Test Modes.
+    Fixes
+    - 2D: Fixed default name for Light2D on game object creation. (UUM-116587)
+    - 2D: Fixed Light Batching Debugger constantly refreshing list to 0. (UUM-116583)
+    - 2D: Fixed Rendering Debug views for Rendergraph2D. (UUM-116276)
+    - AI: A Navigation Raycast() was freezing the game when passing through very small NavMesh polygons created by NavMesh Obstacles that carve. (UUM-110863)
+    - AI: The NavMesh was getting built over disabled Terrain Colliders. (UUM-117115)
+    - Android: Fixed Exception "Didn't find class "com.unity3d.player.ReflectionHelper" and application crash when setting AndroidJNIHelper.debug to true. (UUM-111622)
+    - Android: Fixed for input filed alignment on Api 35+. (UUM-102822)
+    - Android: Fixed GameActivity specific problem with touch coordinates translation when using custom screen resolution and rotating the screen. (UUM-115393)
+    - Android: Fixed possibly missed events in UAAL scenario when calls were made right after instantiating the UnityPlayer. (UUM-116775)
+    - Android: Preserve full pointer high bits in allocator bookkeeping to prevent truncation on ARM64. (UUM-78023)
+    - Android: When input field is hidden, text input no longer introduces previously deleted characters when using Vietnamese keyboard on certain devices. (UUM-110122)
+    - Android: [Video] Improved End-Of-Stream handling for unsupported video tracks on Android. (UUM-111761)
+    - Animation: Fixed issue where Animator side menu visibility icon had inconistent selection styling compared with other buttons on the same toolbar. (UUM-112098)
+    - Animation: Fixed issue where AnimatorController and AvatarMask assets would show a blank icon when imported as part of unitypackages. (UUM-114830)
+    - Animation: Fixed issue where transitions with normalized duration and calls to Animator.CrossFade had incorrect duration if the animator speed was not 1 or -1. (UUM-109060)
+    - Audio: Fixed OnAudioFilterRead not working when enabling/disabling component. (UUM-114268)
+    - Build Pipeline: Fixed issue where build report output paths are incorrect for asset bundle build. (UUM-116222)
+    - DX12: Minor CPU time optimization by reducing descriptor copy calls and GetResourceAllocationInfo(). (UUM-117629)
+    - Editor: Added an API to explicitly mark text as Dirty. (UUM-102663)
+    - Editor: Assigning a file containing invalid JSON to UnityEditor.PS5.PlayerSettings.paramFilePath will now throw a JSONParseException or JSONTypeException. (UUM-56191)
+    - Editor: Ensure we do not use ADB in FindRef to avoid loading all assets. (UUM-117182)
+    - Editor: Fixed a bug where the Cameras overlay would only open one Property Editor at a time, and if you changed the camera selection it would not open a new Property Editor. (UUM-115167)
+    - Editor: Fixed corruption issue when opening the about box a second time after moving the main window to another monitor. (UUM-92333)
+    - Editor: Fixed CreateInspectorGUI being called twice when Inspector was hidden for custom editors. (UUM-74710)
+    - Editor: Fixed for 'MemoryStream is corrupted' fatal error, when a modified prefab with prefab instance has its mono script deleted while at the same time a compilation error also is introduced. (UUM-82391)
+    - Editor: Fixed invalid specular highlight appearing in terrain grass shader. (UUM-113119)
+    - Editor: Fixed issue where dependency shader changes were not properly detected in Terrain splat materials which resulting in the usage of Unity's error shader for rendering that geometry. (UUM-117516)
+    - Editor: Fixed null exception on threads with TextCore. (UUM-117136)
+    - Editor: Fixed null exception on threads with TextCore. (UUM-119476)
+    - Editor: Fixed out of range issue when deleting with RTL text. (UUM-116909)
+    - Editor: Prevent create template for Tabs in TabView. (UUM-108766)
+    - Editor: Properly free VT CB indices even if render thread resources failed to create. (UUM-56395)
+    - Editor: The progress bar dialog on macOS will no longer disappear when dragged to a separate display space. (UUM-111328)
+    - Editor: [WebGPU] Enable support for the float32-blendable extension to enable blending of RGBA32Float textures. (UUM-117370)
+    - EmbeddedLinux: Fixed main thread name setting. (UUM-116884)
+    - GI: Fixed a bug where "Don't recalculate" probe placement mode sometimes doesn't work when GPU streaming is enabled. (UUM-103688)
+    - GI: Fixed a bug where "per-vertex" SH evaluation mode didn't work with Deferred rendering URP. (UUM-104066)
+    - Graphics: Ensures corresponding VkFramebuffer(s) are destroyed when an FDM VkImage is destroyed. (UUM-113806)
+    - Graphics: Fixed a crash or a blank screen being drawn when MSAA resolve to back buffer is requested on platforms that don't have support for it. Add error message to explain the issue. (UUM-60474)
+    - Graphics: Fixed incorrect rendering of objects when using GPU Occlusion Culling on scenes containing mesh renderers using meshes with no triangles. (UUM-115962)
+    - Graphics: Fixed Vulkan crash on Android while switching between scenes. (UUM-82923)
+    - Graphics: This PR fixes the light flickering issue when deferred, shadow, and TAA are enabled. (UUM-113351)
+    - Graphics: When the "Load texture data on demand" setting was enabled, sometimes textures would not be properly loaded in the editor and result in empty or missing texture errors in the console. (UUM-114482)
+    - Graphics Tests: Multiple "Player" graphics tests in a single scene fail to find references. (UUM-109000)
+    - HDRP: Fixed a [Scene Color Sampling fails when using a custom pass in 'After Post Process']. (UUM-79015)
+    - Particles: Avoid throwing errors when a trail renderer is auto-destructed while using the trail preview in the editor. (UUM-109475)
+    - Particles: Changed default particle material for HDRP to be consistent with other pipelines. (UUM-113852)
+    - Particles: Document unexpected behavior for PauseAndCatchUp culling mode. (UUM-102085)
+    - Particles: Fixed crash when using a speed multiplier that takes value of 0 and velocity is used to select the sprite. (UUM-111657)
+    - Particles: Fixed jittering of particle editor when the window is made too small. (UUM-105164)
+    - Particles: Fixed memory leak related to ParticleSystem job fences. (UUM-113729)
+    - Particles: Prevent AABB related errors when executing a rendering command buffer in LateUpdate. (UUM-96997)
+    - Particles: Prevent potential crash when calling GetParticles on a system with trails. (UUM-40536)
+    - Physics: Brought back multi-box pruning broad phase, due to automatic box pruning being insufficient for larger world use-cases. (UUM-112553)
+    - Physics: Fixed a crash when exiting playmode, which was caused due to physics scene data not being disposed in a thread safe manner. (UUM-92619)
+    - QNX: Fixed main thread name setting. (UUM-116884)
+    - QNX: Screen.SetResolution now resizes window buffer correctly in windowed mode on QNX. (UUM-114197)
+    - Scene/Game View: Fixed a bug where an overlay docked in a corner would be directly undocked when quickly clicking on the dragger. (UUM-116551)
+    - Scene/Game View: Fixed an issue where opening Game View would crash if the editor's layout had previously serialized with an invalid display target value. (UUM-115918)
+    - Scene/Game View: Fixed issue where the overlays' menu popup would only open when UITK elements were hovered. (UUM-114670)
+    - Shadergraph: Added SrcBlendAlpha and DstBlendAlpha properties if allowMaterialOverride is set to true on URP. (UUM-105226)
+    - SRP Core: Fixed incorrect merging of passes in Render Graph when a pass targets a texture that is sampled in previous pass. (UUM-112857)
+    - SRP Core: Fixed prefab override UI and mixed value behaviour for Rendering Layers mask UI. (UUM-110587)
+    - Tests: Reverted fence dependency checking algorithm changes. (UUM-116058)
+    - TextMeshPro: Fixed incorrect Ligature glyph atlas index when using font assets with Multi Atlas Texture enabled. (UUM-111770)
+    - TextMeshPro: Fixed incorrect preferred value calculations for text objects that contain characters and / or sprites whose character or glyph metrics have a scale = 0. (UUM-112064)
+    - uGUI: Fixed an editor bug where resizing the handle rect of a Slider and then performing an Undo causes its anchors to get reset. (UUM-108288)
+    - uGUI: Updated drag tracking to release all active drag events when the application loses focus. (UUM-104163)
+    - UI Toolkit: Fixed "Extract inline style" option bug in UIBuilder. (UUM-105327)
+    - UI Toolkit: Fixed an issue with the TreeView where releasing the pointer during a Drag And Drop operation raised an exception. (UUM-66397)
+    - UI Toolkit: Fixed ArgumentException when scheduling action during DetachFromPanelEvent and then moving the element to another active panel. (UUM-117338)
+    - UI Toolkit: Fixed generated UxmlElement and UxmlObject code not fully qualifying some types. (UUM-116673)
+    - UI Toolkit: Fixed NullReferenceException sometimes happening when UI Debugger is in an inactive tab. (UUM-117267)
+    - UI Toolkit: Fixed scale and crop VectorImage clipping issue. (UUM-104608)
+    - URP: Added check logic related to OpenGL devices in DecalRenderFeature. (UUM-107966)
+    - URP: Fixed SSAOOnly pass in the deferred path to be compatible with Native Render Pass. (UUM-113638)
+    - Version Control: Fixed double indentation in the Project Browser when Version Control is enabled. (UUM-112555)
+    - VFX Graph: Adjust "Prewarm Time" input field to fit 2 digits of precision. (UUM-113612)
+    - VFX Graph: Adjust padding on Sub Mesh Mask label for mesh outputs. (UUM-113945)
+    - VFX Graph: Avoid text cutoff when a context name is really long. (UUM-114091)
+    - VFX Graph: Fixed "Error assigning 2D texture to 3D texture property" errors being thrown when no Texture3D is assigned to a Texture3D property in ShaderGraph outputs. (UUM-101749)
+    - VFX Graph: Fixed enum field was not set properly and then UI was always resetting to default value. (UUM-109559)
+    - VFX Graph: Fixed Graph Debug Information window sometimes not displaying information with gameobject attached. (UUM-113047)
+    - VFX Graph: Fixed rare case where exposed properties were lost when changing instancing mode in the asset. (UUM-109410)
+    - VFX Graph: GPU Time Threshold in Heatmap Parameters clamped to positive values only. (UUM-114294)
+    - VFX Graph: Limit the maximum number of characters to 128 for a group title to avoid any visual glitch. (UUM-111257)
+    - VFX Graph: Prevent potential crash when deleting VisualEffect, Mesh or Texture while using Native Graphics Jobs. (UUM-100342)
+    - VFX Graph: Prevent the output category in the blackboard from being duplicatable, renamable or deletable. (UUM-103966)
+    - VFX Graph: Refresh attached VisualEffect when visual effect component changes. (UUM-113966)
+    - VFX Graph: Show "radiusScale" property when "Frustum culling" option is enabled on Shader Graph mesh outputs. (UUM-108679)
+    - VFX Graph: The title of a group could not be edited anymore when the title has been emptied. (UUM-111258)
+    - VFX Graph: Usability fixes when setting prewarm values in visual effect asset inspector. (UUM-114276)
+    - Video: Refine sRGB texture linearization compatibility checks for WebKit and older Firefox versions. (UUM-110367)
+    - Web: Fixed an issue where WebGPU would not be passed the power preference settings from the WebGL player publishing settings. (UUM-114664)
+    - WebGL: Fixed URP Lit shaders from failing on mobile devices with Adreno GPUs. (UUM-86919)
+    Package changes in 6000.0.59f2
+ReleaseTime: 2025-10-08T09:29:47.7630000Z

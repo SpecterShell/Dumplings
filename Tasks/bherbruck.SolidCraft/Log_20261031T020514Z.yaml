@@ -1,0 +1,97 @@
+Version: 0.28.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.28.0/solidcraft-0.28.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.28.0/solidcraft-0.28.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.28.0/solidcraft-0.28.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Designs saved in 0.28.0 use format 45 and don't open in 0.27.x or older.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    New
+    - Print face: pick the face a part sits on, and Send to Slicer uses it. Mark a flat face as a body's print face with Ctrl+B, Print Face on the face's context menu, or the Print face input in the Send to Slicer window. Send to Slicer, Save as Mesh for a slicer and Open in EasyPrint then lay that body on the bed on that face, centered over the origin; the design itself doesn't move. The print face is lightly tinted in the view, set by Preferences › General › Slicer › Print face highlight (#8433).
+    - The toolbar shows which analyses are toggled on. A surface analysis that is on shows as pressed on the ribbon, and a status item above the view names it with its setting, its legend and an × to turn it off; Section gets an item too, whose setting opens the section editor. Esc turns off the newest one. Preferences › Interface › Highlight active ribbon commands, Show viewport analysis status and Show viewport section status turn these off (#8555–#8557).
+    - Point clouds: color and filter by any property in the scan. A point cloud keeps every property its PLY file gives its points. Color it by one, with a ramp for real numbers or a palette with a legend for whole numbers, and filter it by ranges or named values. Each range track shows how the values are spread and can be zoomed, stepped and played as a sweep (#8819).
+    - Construction-line tools for sketches. Sketch › Create and the Sketch Palette have a Construction Line family that draws infinite construction lines directly: through two points, horizontal, vertical, at an angle, parallel, perpendicular, tangent through a point, tangent at a curve point, common tangent and angle bisector. Each placement is one undo step. Preferences › Sketch & selection › Extended construction line tools hides them (#8679).
+    - Copy sketches between designs. Copy a completed sketch in one tab and paste it into another as an independent, editable sketch, with the parameters it uses, in one undo step. A sketch whose plane or projections depend on model geometry outside the copy is refused, with the reason (#8962).
+    - Nest and reorder Browser groups: Browser groups can hold other groups, and groups and components can be dragged into the order you want (#9116).
+    - Personal Sheet Metal Rules: the Sheet Metal Rules manager saves a rule under a name in your profile, and every design's rule manager offers it, with Rename and Delete (#9520).
+    - Quick measurement: a new option, off by default, shows the selection's length, diameter and radius, area, position, or the distance and angle between two items in the view's bottom right corner; a click copies it (Preferences › Interface › Quick measurement in the view's corner) (#7513).
+    - Insert Part into several holes: the Insert Part dialog takes several holes and seats one fastener in each, as placements of one component, in one undo step (#9342).
+    - Sketch Report: Inspect Sketch on the Sketch tab opens a window with the solver status, degrees of freedom left, counts, the curves and points that aren't fully constrained, and Copy JSON (#6263).
+    - Hyperbolic functions in expressions: sinh, cosh, tanh, asinh, acosh and atanh (#9334).
+    - Number parameters in sketch text: a text's words can include a number parameter, such as 'W' + Width, and number(Width, 2) gives the number alone with fixed decimals (#9386).
+    - Finnish is a new interface language (#9631).
+    Improved
+    - Select Other picks hidden geometry: the Select Other list includes hidden bodies and sketches and occluded edges and vertices near the pointer, and grows to the window's height. Turn off Preferences › Sketch & selection › Select hidden geometry with Select Other to keep the previous list (#5577).
+    - Constraint icons hide when zoomed out: sketch constraint glyphs leave the view once the sketch is zoomed out far enough to clutter it. Turn off Preferences › Sketch & selection › Hide constraint glyphs when zoomed out to keep them at every zoom (#9023).
+    - Status items fold: three or more status items above the view fold into one summary badge with a menu; Preferences › Interface › Fold viewport status items keeps the full row (#8558).
+    - Browser eye on the right: each Browser row's show/hide eye sits in a column at the right end of the row, away from the activate button; Preferences › Interface › Eye next to the fold arrow puts it back (#8720).
+    - Reorder features in the Browser's History: with the History shown in the Browser, dragging a feature row reorders it, as in the History at the left (#9599).
+    - Ribbon drop-downs as large icons: new options, off by default, in Preferences › Interface show a panel's drop-down as a grid of large icons, and leave out commands already pinned on the ribbon (#5012).
+    - Model cache: a saved model still opens fast after an update, a design with mesh bodies keeps its saved model, and a large design writes its saved model once per set of sketch keys and reads it back on several threads, so it no longer thins the cache (#7354, #9218, #9010).
+    - Check for updates in Help: Help › Check for updates checks right away and offers the update, or says SolidCraft is up to date, in the interface language (#8896).
+    - Hole dialog: hovering an option in the Extents, Hole Type, Hole Tap Type and Drill Point lists shows the hole it makes (#9577).
+    - Expressions: Down arrow in an empty field lists the design's parameters, the Parameters dialog's expression field opens wide while you edit a long formula, a decimal comma works inside plain parentheses, and =5 takes the design's unit as 5 does (#9385, #9384, #9447, #9261).
+    - Apply parameter edits together: a new option, off by default: clear Apply each change as you leave its field at the top of the Parameters dialog, and edits wait for Apply or OK, then go in together with one rebuild and one undo step; Cancel or Esc drops them (#9400).
+    - Parameters: clicking a Name heading sorts each section by name, A to Z, Z to A, or back to the design's order (#8725).
+    - Value boxes: Preferences › Design › Show values beside their handles in the view, on by default, can be turned off to type values only in the command window, with nothing over the model (#9547).
+    - Sketch views: Preferences › Sketch › Turn to face a sketch when it opens, on by default, can be turned off to keep the view when a sketch opens, and editing a sketch in a rotated component squares its axes to the screen (#9190, #9042).
+    - 3D mouse: a new option, off by default, turns a square-on sketch with the 3D mouse (Preferences › Navigation › 3D mouse › Turn sketches with the 3D mouse), and Reverse zoom direction now reverses only the wheel, not the 3D mouse (#9406, #8994).
+    - Sketch picking and snapping: Mirror, Move/Copy, Scale and the patterns take a whole profile with a click inside it or a whole chain with a double-click; the cursor snaps On a spline, ellipse or conic; it snaps where the guides from two recent centers or midpoints meet; and Project takes a construction axis (#8812, #9343, #8744, #9471).
+    - Large imported sketches: dragging in a sketch with a large imported logo stays smooth, as profiles are found island by island (#9313).
+    - Extrude, Revolve and Emboss: a sketch picked in the Browser or History while the dialog is open fills Profiles with all its profiles (#6154).
+    - Body selection: hovering a body-only input, such as Save as Mesh, highlights the whole body, and opening an Extrude editor shows the hidden body that supplies its face profile until it closes (#5575, #5576).
+    - Recover unsaved design? has Discard all, with a confirmation (#9300).
+    - Start: the Recent list tells same-named designs and imports apart, with the file kind and the path (#9174).
+    - Canvas: Calibrate Canvas takes its two points as clicks on the image (#9208).
+    - Toasts have a close (×) with a countdown ring instead of a Close button (#8763).
+    - Theme: System follows the desktop's dark or light setting on Linux GNOME, and on macOS it follows a change of Appearance while the app runs (#8123, #9103).
+    - Preferences search finds settings in rows without a label, such as the status bar and Reveal on hover (#9318).
+    - English: the interface uses American spelling throughout, with British spelling in English (UK) (#9194).
+    - Opening a DWG says it's a DWG file and suggests STEP or DXF instead (#9487).
+    - DXF export writes the full AutoCAD 2000 file structure, so strict readers such as AutoCAD 2025 open it (#9662).
+    - Closing no longer waits for the Home pictures of every recent file, which could freeze the window for several seconds (#9416).
+    - Large histories: a folded Browser or History folder finds its worst mark in one pass, which took most of each frame on a long history (#9294).
+    - Agent chat reads the options an agent offers through ACP, so you can pick the model for Claude as well as OpenCode, and supports OpenCode V2 (#3867).
+    - solidcraft-cli mcp --param-check also checks calls sent to a running app, and the control channel takes a per-request param_check level (#9073, #9185).
+    Render
+    - GPU path tracing on NVIDIA: the path shader compiles on NVIDIA's Vulkan driver (#6850).
+    - Framing: Fit Product and the fit on entering Render frame the product inside the picture's frame, after the saved setup loads (#5764).
+    - Size limits: a raster render too large for the renderer is refused before it starts, with a suggestion to reduce its size or the visible geometry, and a size the CPU profile can't render names the method or profile that can (#5728, #8943).
+    Fixed
+    - Assistant: long Claude conversations no longer fail once older history is trimmed (#9448).
+    - macOS: quitting on a Mac with a Touch Bar no longer crashes, and older Macs patched with OpenCore Legacy Patcher start with a working window (#7762, #8930).
+    - Lost GPU: after the graphics device is lost, for example on resume from sleep with an NVIDIA GPU, the old window closes instead of hanging in the driver, and settings survive the restart (#9054).
+    - Web: the web app in Chinese loads a Chinese font instead of showing empty boxes (#8981).
+    - SolidCraft 95 theme: an active toggle on the view's bottom bar, such as Orthographic, showed as a blank dark blue block; its label and icon now draw in the theme's selected-text color where the accent color doesn't read (#9171).
+    - Crashes: a pane docked beside a view area that came out inside out, the Render frame overlay after the view changed, and three other layout spots no longer crash (#9499, #9271, #9504).
+    - Sketch: a projected face follows a resize that moves its corners far, an old edge-on projection keeps its line so an offset that uses it no longer fails, Trim prefers free curves over projected edges, a fillet that would use up an arc or round a smooth joint is refused, a feature on a failed sketch names that sketch, and an empty sketch says it has no geometry instead of "fully constrained" (#9453, #9097, #9224, #8813, #9276, #9104).
+    - Sketch display: the Sketch Grid box in the Sketch panel turns the sketch's grid off, the coordinate readout starts right of the pointer arrow, and a Hole at sketch points hides its sketch as an Extrude does (#9187, #9484, #9211).
+    - View: an opened design is framed at the home view, the Visual style and Navigation tool ribbon commands offer their choices instead of an error, analysis legends stay clear of a History at the left, and the Preferences window covers the ribbon behind it (#9204, #9127, #9210, #9243).
+    - Section caps: where one body touches another along a curved face, such as a shaft in its bore, each body's cap stays whole instead of showing the other body's face through it in streaks (#9665).
+    - Selection: the marquee selects the regions of an imported SVG sketch, as a click does, and the Select panel shows and clears component picking (#7368, #9485).
+    - Measure: an exact circle's or arc's length agrees with its circumference (#9227).
+    - Configurations: a row with an invalid parameter expression is refused when it is saved, not when it is activated (#9414).
+    - Recover unsaved work: the card always shows Recover and Discard (#9636).
+    - Update: Cancel stops the download sooner (#8946).
+    - Crash reports no longer label a run "during startup" when a window opened later (#9661).
+    - Scripting: motion.list gives study keys in the units motion.study takes (degrees for angles), so a listed study can be written back unchanged; sketch.inspect names each curve of a profile loop once; and ui.home refuses a sample index that names no sample (#9760, #9186, #9212).
+    - Names: a sketch curve id with a character that breaks a face name is refused (#9606).
+    Translations
+    Finnish is new (#9631). German, Polish, Danish, Russian, Ukrainian and Spanish catch up with the catalog, and Czech, French, Hungarian, Italian, Dutch, Romanian, Swedish, Turkish, Traditional Chinese, Malay, Indonesian, Galician, Norwegian Bokmål, Bosnian, Croatian, Serbian and Arabic gain the new strings.
+    Compatibility
+    0.28.0 writes design file format 45 (0.27.x wrote 44). Format 45 adds nested and ordered Browser groups, point cloud properties and filters, and print faces. 0.28.0 opens every earlier design, but 0.27.x and earlier refuse a design saved by 0.28.0. Drawing files (.scdwg) are format 1.
+    Thanks
+    Thanks to 50 contributors.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.28.0
+ReleaseTime: 2026-10-31T01:20:03.0000000Z

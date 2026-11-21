@@ -1,0 +1,40 @@
+Version: 16.0.7
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.0.7/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Changed
+    - Switched Google OAuth callback hostname from localhost to 127.0.0.1 to prevent IPv6 loopback fallback delays and proxy routing interception.
+    Fixed
+    - Fixed OpenCode Go usage reporting to synthesize /usage limits from OMP-observed request costs for the 5h, weekly, and monthly provider caps. (#2942)
+    - Fixed MiniMax Anthropic-compatible requests to serialize adaptive thinking without an invalid Anthropic output_config.effort tier (#2928).
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed MiniMax Anthropic-compatible M2/M3 thinking metadata to expose the adaptive transport and keep M2 mandatory reasoning floored (#2928).
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Fixed /model in the TUI to open the model setup picker again, leaving /switch as the temporary session model switcher (#2933).
+    - Fixed OpenCode Go sessions recording per-request cost history so /usage can show local cap utilization. (#2942)
+    @oh-my-pi/pi-natives
+    Added
+    - Added Fortran support to the AST tooling, including file/alias resolution.
+    What's Changed
+    - fix(coding-agent): restore /model role picker by @roboomp in https://github.com/can1357/oh-my-pi/pull/2938
+    - fix(ai/kimi): sanitize client device headers to avoid Cloudflare 520 errors by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/2939
+    - fix(coding-agent): bypass stream-interrupted guard for Gemini malformed function calls by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/2940
+    - fix(providers): add OpenCode Go usage reporting by @roboomp in https://github.com/can1357/oh-my-pi/pull/2947
+    - perf(auth): switch Google OAuth callback hostname to 127.0.0.1 for fast loopback by @cagedbird043 in https://github.com/can1357/oh-my-pi/pull/2932
+    - fix(providers): map MiniMax Anthropic thinking by @roboomp in https://github.com/can1357/oh-my-pi/pull/2934
+    - feat(coding-agent): add Fortran support by @TobiasLinnITHE in https://github.com/can1357/oh-my-pi/pull/2964
+    New Contributors
+    - @TobiasLinnITHE made their first contribution in https://github.com/can1357/oh-my-pi/pull/2964
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.0.6...v16.0.7
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.0.7
+ReleaseTime: 2026-06-18T14:59:15.0000000Z

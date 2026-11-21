@@ -1,58 +1,61 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.todesk.com/download.html' | ConvertFrom-Html
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.todesk.com/download.html'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.data[0].clientInfo'
+}
 
 # Version
-$Task.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/a').InnerText,
-  '([\d\.]+)'
-).Groups[1].Value
+$this.CurrentState.Version = $Object1.win_version
 
 try {
-  $InstallerUrl = "https://dl.todesk.com/irrigation/ToDesk_$($Task.CurrentState.Version).exe"
+  $InstallerUrl = "https://dl.todesk.com/irrigation/ToDesk_$($this.CurrentState.Version).exe"
   Invoke-WebRequest -Uri $InstallerUrl -Method Head | Out-Null
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
+  $this.CurrentState.Installer += [ordered]@{
     InstallerUrl = $InstallerUrl
   }
 } catch {
-  $Task.Logging("${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')", 'Warning')
+  $this.Log("${InstallerUrl} doesn't exist, fallback to $($Object1.soft.https.'#cdata-section')", 'Warning')
   # Installer
-  $Task.CurrentState.Installer += [ordered]@{
-    InstallerUrl = $Object1.SelectSingleNode('/html/body/div/div/div/div[1]/div[2]/div[1]/div[1]/section/div[1]/a').Attributes['href'].Value
+  $this.CurrentState.Installer += [ordered]@{
+    InstallerUrl = $Object1.SelectSingleNode('//div[@class="win_download"]').Attributes['href'].Value
   }
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://update.todesk.com/windows/uplog.html' | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row' and contains(./div[1]/div[1]/div[1], '$($Task.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://update.todesk.com/windows/uplog.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='row' and contains(.//div[@class='text'], '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode.SelectSingleNode('./div[1]/div[2]').InnerText,
+        $this.CurrentState.ReleaseTime = [regex]::Match(
+          $ReleaseNotesNode.SelectSingleNode('.//div[@class="release-date"]').InnerText,
           '(\d{4}\.\d{1,2}\.\d{1,2})'
         ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('./div[2]') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "release-note")]') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,112 @@
+Version: 1.4.197
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.197/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    Please note: It usually takes 48–72 hours for a landed PR to be released (except P0+ fixes). We have many more exciting PRs and features coming in later versions!
+    Notable changes
+    - Faster worktree switching, Git metadata scans, terminal startup, and renderer updates across local, WSL, and remote workspaces.
+    - More reliable native chat and agent sessions, including large command results, live tool progress, image attachments, and delivery recovery.
+    - Broader SSH, Windows/WSL, GitLab, updater, startup, and release reliability improvements.
+    UI / workspaces
+    - fix(mobile): unblock targeted SSH session tab refresh by @Jinwoo-H in https://github.com/stablyai/orca/pull/17486
+    - Preserve user-set workspace names across branch changes by @Jinwoo-H in https://github.com/stablyai/orca/pull/17448
+    - Automations ux improvement by @AmethystLiang in https://github.com/stablyai/orca/pull/17626
+    - fix(terminal): mount one surface per workspace id in the workbench (STA-4846) by @nwparker in https://github.com/stablyai/orca/pull/17432
+    - Avoid Linear read re-fetches when workspace scope is unchanged by @AmethystLiang in https://github.com/stablyai/orca/pull/17529
+    - fix(browser): scroll oversized viewport presets by @Jinwoo-H in https://github.com/stablyai/orca/pull/17569
+    - fix(browser): refuse DevTools for offscreen guests by @Jinwoo-H in https://github.com/stablyai/orca/pull/17485
+    - Import browser cookie search to tab by @AmethystLiang in https://github.com/stablyai/orca/pull/17627
+    - Move mobile search button to bottom left floating by @AmethystLiang in https://github.com/stablyai/orca/pull/17808
+    - fix(i18n): correct zh-CN translation for editor view toggle buttons by @Aealen in https://github.com/stablyai/orca/pull/13723
+    Agents / native chat
+    - fix(orchestration): explain invalid send message types by @Jinwoo-H in https://github.com/stablyai/orca/pull/17487
+    - fix(runtime): isolate paired terminal creates from host focus by @Jinwoo-H in https://github.com/stablyai/orca/pull/17713
+    - fix(native-chat): preserve large structured command results by @brennanb2025 in https://github.com/stablyai/orca/pull/17707
+    - Revert "fix(native-chat): preserve large structured command results" by @brennanb2025 in https://github.com/stablyai/orca/pull/17719
+    - fix(native-chat): reland large structured command results by @brennanb2025 in https://github.com/stablyai/orca/pull/17720
+    - Show live tool progress in native chat by @brennanb2025 in https://github.com/stablyai/orca/pull/17597
+    - fix(skills): narrow computer-use discovery boundary by @Jinwoo-H in https://github.com/stablyai/orca/pull/17736
+    - fix(native-chat): stop rendering tool output as the agent's streaming reply by @brennanb2025 in https://github.com/stablyai/orca/pull/17782
+    - fix(native-chat): keep the attachments on a Claude turn that pasted images by @brennanb2025 in https://github.com/stablyai/orca/pull/17801
+    - fix(native-chat): stop unjournaled provider frames from killing the structured session by @brennanb2025 in https://github.com/stablyai/orca/pull/17813
+    - fix(agent-send): acknowledge delivery when picker closes before send completes by @AmethystLiang in https://github.com/stablyai/orca/pull/17835
+    - fix(mobile-native-chat): retire an image echo glued with the send beside it by @brennanb2025 in https://github.com/stablyai/orca/pull/17783
+    - Add startup delivery diagnostics and success announcements by @AmethystLiang in https://github.com/stablyai/orca/pull/17814
+    Terminal
+    - fix(terminal): preserve large agent prompt pastes by @Jinwoo-H in https://github.com/stablyai/orca/pull/17718
+    - Activate terminal splits before inherited CWD resolution by @nwparker in https://github.com/stablyai/orca/pull/17601
+    - fix(terminal): keep restored OSC-8 ranges across a no-op resize by @nwparker in https://github.com/stablyai/orca/pull/17759
+    - refactor(mobile): split session and terminal surfaces by @nwparker in https://github.com/stablyai/orca/pull/17595
+    Windows, remote server / SSH
+    - fix(runtime): publish remote control outages to host surfaces by @brennanb2025 in https://github.com/stablyai/orca/pull/17531
+    - feat(ssh): batch process evidence in PTY inventory by @brennanb2025 in https://github.com/stablyai/orca/pull/17525
+    - fix(remote): distinguish SSH transport from runtime availability by @brennanb2025 in https://github.com/stablyai/orca/pull/17710
+    - fix(worktree): reject Windows drive-qualified shared paths in the symlink guard by @nwparker in https://github.com/stablyai/orca/pull/17793
+    - fix(gitlab): stop the native glab known-hosts probe waking an idle WSL distro by @nwparker in https://github.com/stablyai/orca/pull/17789
+    - fix(git): resolve WSL drvfs Git metadata pointers on a Windows host by @nwparker in https://github.com/stablyai/orca/pull/17790
+    - fix(worktree): run the create-base warm-up on the routed git host by @nwparker in https://github.com/stablyai/orca/pull/17794
+    - fix(wsl): drop the linked-worktree Git route cache after worktree mutations by @nwparker in https://github.com/stablyai/orca/pull/17791
+    - fix(windows): repair the install-dir package ACL that blanks the window by @nwparker in https://github.com/stablyai/orca/pull/17740
+    - docs(wsl): note that the distro VHDX is a high-water mark, not a leak by @nwparker in https://github.com/stablyai/orca/pull/17900
+    - fix(worktree): reclaim a prepared checkout whose discard failed in-process by @nwparker in https://github.com/stablyai/orca/pull/17899
+    - fix(git): give WSL-hosted repos one FETCH_HEAD lock lane by @nwparker in https://github.com/stablyai/orca/pull/17898
+    - fix(wsl): read untracked line counts through the host's worktree spelling by @nwparker in https://github.com/stablyai/orca/pull/17897
+    - fix(git): read the diff working tree and stamp through the host path spelling by @nwparker in https://github.com/stablyai/orca/pull/17896
+    - fix(wsl): resolve conflict and working-tree probes in the host path namespace by @nwparker in https://github.com/stablyai/orca/pull/17895
+    - fix(git): narrow fork-remote fetch refspecs to tracked branches by @nwparker in https://github.com/stablyai/orca/pull/17887
+    - fix(wsl): resolve sparse-checkout and diff-stamp gitdirs through the caller's distro by @nwparker in https://github.com/stablyai/orca/pull/17932
+    Performance / reliability
+    - test: cover high-value recent PR regression contracts by @Jinwoo-H in https://github.com/stablyai/orca/pull/17489
+    - fix: satisfy GitLab hook and test lint gates by @AmethystLiang in https://github.com/stablyai/orca/pull/17694
+    - fix(lint): merge duplicate process-table-snapshot imports by @nwparker in https://github.com/stablyai/orca/pull/17724
+    - test(cursor): widen Windows hook spawn budget to fix ETIMEDOUT flake by @nwparker in https://github.com/stablyai/orca/pull/17721
+    - test(native-chat): fix flaky transcript watch-error initial-snapshot recovery test by @nwparker in https://github.com/stablyai/orca/pull/17722
+    - test(updater): stop a slow module import from failing the next test by @nwparker in https://github.com/stablyai/orca/pull/17726
+    - fix(artifacts): raise desktop sharing limit to 5 MiB by @Jinwoo-H in https://github.com/stablyai/orca/pull/17708
+    - fix(serve): install supervisor disconnect quit after app environment init by @spellbook96 in https://github.com/stablyai/orca/pull/16762
+    - perf(worktree): cut cold worktree-switch attach latency by @nwparker in https://github.com/stablyai/orca/pull/17667
+    - perf(codex): share one launch-prep hook install across a spawn burst by @nwparker in https://github.com/stablyai/orca/pull/17669
+    - perf(terminal): drop the headless snapshot cache, keep the spawn lock by @nwparker in https://github.com/stablyai/orca/pull/17752
+    - perf(git): bound ref and worktree scans by @nwparker in https://github.com/stablyai/orca/pull/17655
+    - fix(startup): install the app environment with the userData decision by @nwparker in https://github.com/stablyai/orca/pull/17755
+    - perf(renderer): avoid combined-diff tree rebuilds during progressive loads by @nwparker in https://github.com/stablyai/orca/pull/17643
+    - perf(relay): cache process-table descendant indexes by @nwparker in https://github.com/stablyai/orca/pull/17646
+    - test(ci): retry Windows teardown EPERM and restart evaluate misses by @nwparker in https://github.com/stablyai/orca/pull/17780
+    - test(e2e): remove source control golden race by @Jinwoo-H in https://github.com/stablyai/orca/pull/17784
+    - test(e2e): do not treat a destroyed renderer as a relaunched runtime by @nwparker in https://github.com/stablyai/orca/pull/17785
+    - perf(renderer): collapse duplicate reveal atlas rebuilds by @nwparker in https://github.com/stablyai/orca/pull/17762
+    - fix(crash-reporting): record Linux MemAvailable at process-gone by @nwparker in https://github.com/stablyai/orca/pull/17733
+    - perf(worktree): resolve the WSL workspace root off the main thread when preparing by @nwparker in https://github.com/stablyai/orca/pull/17792
+    - fix(dev): make reclaim report real sizes on Windows and keep setuid intact by @nwparker in https://github.com/stablyai/orca/pull/17800
+    - Increase artifact content size limit to 10 MiB by @AmethystLiang in https://github.com/stablyai/orca/pull/17910
+    - fix(ai-vault): avoid large Codex scan timeouts by @djegor315-sketch in https://github.com/stablyai/orca/pull/17889
+    - fix(runtime): defer websocket heartbeat startup probe by @Jinwoo-H in https://github.com/stablyai/orca/pull/17810
+    - fix(dev): skip blocking keychain diagnostic by @brennanb2025 in https://github.com/stablyai/orca/pull/17877
+    - ci(release): gate signing behind release preflight by @Jinwoo-H in https://github.com/stablyai/orca/pull/17773
+    - ci(release): tolerate legacy tags without source maps by @Jinwoo-H in https://github.com/stablyai/orca/pull/17788
+    - ci(release): prevent signing on workflow reruns by @Jinwoo-H in https://github.com/stablyai/orca/pull/17802
+    - fix(ci): age adhoc releases by publishedAt, not createdAt by @AmethystLiang in https://github.com/stablyai/orca/pull/17984
+    - docs: update Android APK link to 0.0.47 by @AmethystLiang in https://github.com/stablyai/orca/pull/17764
+    - fix(docs): align OSS docs presentation and SEO by @nwparker in https://github.com/stablyai/orca/pull/17809
+    - Standardize documentation formatting: line wrapping, tables, and imports by @AmethystLiang in https://github.com/stablyai/orca/pull/17765
+    - fix(relay): close review findings from #17525 by @nwparker in https://github.com/stablyai/orca/pull/17763
+    - fix(diff): close large-diff deferral review findings from #17521 by @nwparker in https://github.com/stablyai/orca/pull/17758
+    - Serialize filesystem watcher batch flush operations by @AmethystLiang in https://github.com/stablyai/orca/pull/17602
+    - refactor(runtime): split OrcaRuntimeService and compatibility tests by @nwparker in https://github.com/stablyai/orca/pull/17605
+    - refactor(renderer): split oversized UI surfaces by @nwparker in https://github.com/stablyai/orca/pull/17610
+    - refactor(renderer): split runtime and store modules by @nwparker in https://github.com/stablyai/orca/pull/17611
+    - refactor(preload): split bridge API modules by @nwparker in https://github.com/stablyai/orca/pull/17612
+    - refactor(main): split backend services and startup by @nwparker in https://github.com/stablyai/orca/pull/17670
+    New Contributors
+    - @spellbook96 made their first contribution in https://github.com/stablyai/orca/pull/16762
+    - @djegor315-sketch made their first contribution in https://github.com/stablyai/orca/pull/17889
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.195...v1.4.197
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.197
+ReleaseTime: 2026-09-04T00:45:53.0000000Z

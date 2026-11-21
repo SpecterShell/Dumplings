@@ -1,0 +1,23 @@
+Version: 0.15.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chxcodepro/claude-guard/releases/download/v0.15.9/IP-Guard-Setup-0.15.9.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    0.15.9 - 2026-11-19
+    修复
+    - 修复增强出口周期复核首次暂时失败时，提前撤销仍有效的出口许可、切断 Claude Desktop 的 Code 和聊天在途连接的问题。同一路由重试沿用原 15 秒有效期；地址失配、许可过期、路由变化或三次复核均失败时继续封锁。
+    - 补齐 T3 / Claude Agent SDK 的思考强度、会话恢复位置、权限工具与工具列表等启动参数识别。(by @passionada)
+    验证
+    增强出口许可的 8 项定向回归通过。本机已加载 0.15.9，普通聊天与保留完整历史的 Code 恢复分支均收到真实模型响应，Code 完成工具调用并正常结束工作回合。已结束任务的全自动续接尚未实现。
+    GitHub Actions 44679571799 四个平台构建与验收通过。Windows 的 39 项定向用例通过；正式安装器在隔离 Windows 中退出码为 0，安装后界面与原生组件握手为 0.15.9，十项附件和更新元数据已核对。
+    本机一次静默升级曾在退出时记录 0xC0000409，文件更新及后续运行正常，隔离 Windows 安装未复现该异常。
+    范围
+    Windows 严格进程树过滤继续保留实验范围；Linux / macOS 附件为受管代理预览版。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chxcodepro/claude-guard/releases/tag/v0.15.9
+ReleaseTime: 2026-11-20T05:19:08.0000000Z

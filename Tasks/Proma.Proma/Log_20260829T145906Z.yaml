@@ -1,0 +1,32 @@
+Version: 0.19.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.19.5-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.19.5 更新
+    新功能
+    - Agent 终端支持选择 Shell Profile — Agent 打开或执行终端时可显式指定 shell（PowerShell、Git Bash、WSL、CMD、zsh、bash），并按平台记住上次选择；复用 shell 不匹配的终端时会给出明确错误提示，不再静默回退到默认 shell。
+    - 设置页新增生产力工具开关 — 新增 Todo、日程、Obsidian 三个独立开关：关闭后对应侧边栏入口隐藏，Agent 也不再注入相关工具与规则；开关持久化，失败时自动回滚避免界面与设置不一致。
+    - 右侧工作区标签栏可拖动 — 标签较多时可拖动标签栏的滚动条快速定位，避免切换文件/预览时来回点按。
+    Bug 修复
+    - 恢复 LiveMarkdown 渲染 — 修复 Markdown 实时渲染回退问题，补齐代码块高亮、表格、数学公式与目录高亮等预览能力；Vault 笔记冲突时支持显式重新加载。
+    - 修复预览选择引用与发送失败丢内容 — 恢复预览中的选择引用定位；消息发送失败时保留输入内容与选择上下文，重试无需重打。
+    - 修复 Google Pi 模型接入异常 — 规范化 Google Pi 的 base URL 处理，避免 Agent 连接异常。
+    - Agent 终端行为优化 — 后台文档任务（PDF、Office 处理等）不再弹出终端打断操作；Agent 运行时优先复用已有可见终端，减少无谓的终端堆积。
+    - 排队消息流路由稳定 — 多条消息排队时保持各自流路由归属，后台刷新与终态事件不再错乱。
+    - 计划模式允许只读 PowerShell — Windows 下计划模式允许执行只读 PowerShell 命令，不再误拦截。
+    - 草稿会话可见性持久化 — 草稿会话的显示/隐藏状态跨会话保持，重启后不再丢失。
+    - Windows 标题栏点击区域修复 — 标题栏拖拽区与窗口控制按钮的命中区域分离，避免按钮误触或失灵。
+    - 右侧面板刷新闪烁修复 — 右侧工作区面板切换不再整页重载闪烁，文件浏览状态更稳定。
+    依赖升级
+    - Pi Agent 运行时升级 — 由 0.84.2 升级至 0.84.4，同步适配终端复用、权限校验等 Agent 工具行为。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.19.5
+ReleaseTime: 2026-08-29T12:32:09.8100000Z

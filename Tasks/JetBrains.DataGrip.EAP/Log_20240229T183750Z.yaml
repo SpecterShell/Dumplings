@@ -1,0 +1,51 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/datagrip/datagrip-241.14024.11.exe
+  ProductCode: DataGrip 241.14024.11
+  AppsAndFeaturesEntries:
+  - DisplayName: DataGrip 241.14024.11
+    ProductCode: DataGrip 241.14024.11
+  InstallerSha256: AF82297430262C6D8E31A6DD0A7A13C7C2B63816851C34CE269113ECD3A59D65
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/datagrip/datagrip-241.14024.11-aarch64.exe
+  ProductCode: DataGrip 241.14024.11
+  AppsAndFeaturesEntries:
+  - DisplayName: DataGrip 241.14024.11
+    ProductCode: DataGrip 241.14024.11
+  InstallerSha256: 0CEB044D144F57CE35B2B2CA38684541DF70C69A3A9FC9B54061E48B3539E08F
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Simplification of sessions
+    Over the last few years, we've received tons of feedback from users who say that they don't understand the concept of sessions and that this functionality has contributed significantly to DataGrip's learning curve. Here are several examples:
+    - The project-first and separate-console-session model is way over the top overkill. This model makes opening and executing a simple SQL file a real chore. If I just want to open and execute a script I have to first create a project, then add the file to the project, then open a console, then open a session, and then attach the file to the session. What a gigantic PAIN.
+    - Coming from SQL Server Management Studio, DataGrip's UI is a lot more complex. In SSMS you basically just have servers, queries and results. In DataGrip there's sessions and consoles and scratch files, etc., etc., making the tool much less intuitive for new users.
+    - Some of the way the UI works is clunky and non-obvious. When I have to select a console to run a script on, it's not entirely clear to me why I have to do this or what the ramifications of the selection are. This shouldn't really be the default behavior.
+    In DataGrip, "session" is a technical term that refers to the container for a connection. In other words, connections can be established, stopped, and re-established within one session. For each connection, there is one session.
+    The ability to attach sessions is a powerful mechanism, but in the majority of cases, users just need to set the context (data source and database or schema) for the queries to be run.
+    Starting from version 2024.1, users will no longer need to manually choose which session to run queries in, and this will be the case for all types of queries. Sessions are still there under the hood, but you won't need to worry about them.
+    Let's take a deep dive into how this change affects DataGrip's main use cases.
+    Attaching and switching data sources
+    To attach a file, you now simply need to select the data source, rather than the session. After selecting the data source, you choose the schema.
+    Switching sessions
+    The Switch Session action now only appears in the client context menu in the Services tool window. It allows you to switch the session only within the current data source.
+    Running functions
+    You no longer need to select a session before launching a function. In the function launch window, a Run From option allows you to select the console or file from which the function will be launched.
+    Record view
+    You can now focus on one record in the data editor. To open a record view, use the shortcut Ctrl/Cmd+Shift+Enter or the Show Record View button on the toolbar:
+    A record view will open in the side panel, where the value editor and aggregate view are located:
+    The cells in record view are editable if they are editable in the main grid.
+    Code completion: custom symbols to accept suggestions
+    We've added to specify which symbols you will use to accept code completion suggestions, allowing you to write SQL even faster.
+    To make this work, you need to enable two options.
+    This one:
+    And this one:
+    This feature can be especially useful when using operators:
+- Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/datagrip/whatsnew/
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/zh-cn/datagrip/whatsnew/
+Version: 241.14024.11
+ReleaseTime: 2024-02-29

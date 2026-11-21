@@ -1,0 +1,29 @@
+Version: 0.9.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.1/Mini-Term_0.9.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.1/Mini-Term_0.9.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - 修复 Codex 会话退出后标签状态残留的问题：此前 Codex 的 hook 注册漏了 SessionEnd 事件，退出 Codex 后标签页与项目列表上的状态灯会一直停在 ai-idle，只能等下次启动 AI 会话才自愈。现在退出即回落 idle，并补了注册契约测试防止退出事件再次遗漏
+      - 已启用过 hook 的用户请到设置里重新注册一次 Hook（合并写入，不会覆盖你已有的 hook 配置），新的 SessionEnd 条目才会落到 Codex 配置里
+    下载
+
+    | 平台    | 文件                                         | 说明                                                                     |
+    | ------- | -------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.9.1_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.9.1_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.9.1_amd64.AppImage / .deb        | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.9.0...v0.9.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.9.1
+ReleaseTime: 2026-08-01T14:17:55.0000000Z

@@ -1,0 +1,31 @@
+Version: "9.61"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-961.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#961
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - General:
+      - The SSH Client is now more defensive against processing patterns which could cause the SSH Client to allocate large amounts of memory.
+    - Remote Desktop:
+      - Since an April 2026 Windows update, the Windows Remote Desktop client (MSTSC) now displays a warning when started with an RDP profile which does not carry a trusted signature. The SSH Client's New Remote Desktop feature starts MSTSC using a temporary profile, so this warning displays each time New Remote Desktop is used.
+        To improve usability, the SSH Client now supports RDP profile signing. The SSH Client offers to generate a local self-signed certificate specific for the current Windows user. If confirmed by the user, the client sets up the certificate in the user's Trusted Root Certification Authorities. The SSH Client can then start Remote Desktop using a signed temporary profile.
+        The Custom setting for MSTSC command-line parameters cannot be used when RDP signing is enabled. MSTSC rejects command-line overrides for signed profiles. Such custom settings can be configured using Custom RDP settings. The SSH Client includes these settings in the signed profile.
+
+      - When using a file-based profile, the SSH Client now includes the profile name in the Remote Desktop window title.
+    - SFTP drive:
+      - The SSH Client now includes WinFsp version 2.2.26112. This addresses CVE-2026-3006, which is a local privilege escalation. Users who install the SSH Client with the SFTP drive feature available ("Install WinFsp" enabled when installing), especially on multi-user systems, are recommended to update.
+      - When opening or creating a file, the SSH Client now strips access flags not supported by the SFTP server. In previous versions, such access flags could cause actions on the SFTP drive to fail - for example, copy and paste to an SFTP drive.
+    - Graphical client:
+
+      - The SSH Client's main window now restores as intended when the last Remote Desktop connection, SFTP window or terminal window is closed.
+
+      - In version 9.51, the implementation of dark mode support accidentally disabled the ability to configure custom colors on Terminal tab > Default colors. This functionality is now restored.
+      - Ctrl+Backspace is now more consistently supported across input elements.
+      - UI improvements, including for issues related to dark mode.
+    - SFTP:
+      - When displaying a vendor-id extension, the SSH Client would incorrectly display the product name twice, instead of displaying the product name and version. Fixed.
+ReleaseTime: 2026-05-02

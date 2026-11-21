@@ -1,0 +1,27 @@
+Version: 14.1.3
+Installer:
+- Architecture: x86
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.3/windows_10_cmake_Release_graphviz-install-14.1.3-win32.exe
+- Architecture: x64
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/14.1.3/windows_10_cmake_Release_graphviz-install-14.1.3-win64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Using long node names in combination with the fdp layout algorithm no longer results in truncated generated names.
+    - Vertical centering of text within HTML-like table cells has been improved.
+    - The existing ability to provide a numeric parameter to -v to specify verbosity level are newly documented in dot --help.
+    Fixed
+    - gvmap no longer dereferences a null pointer when reading position-less graphs.
+    - gvmap no longer crashes when adding coordinate data.
+    - mm2gv no longer accepts input matrices with non-real element type. Previously these would be accepted but processed incorrectly leading to out-of-bounds memory reads and writes.
+    - The Tcldot_Init, Tcldot_builtin_Init, and Tcldot_SafeInit symbols in tcldot.dll are externally visible on Windows. #2809
+    - The Tclpathplan_Init and Tclpathplan_SafeInit symbols in tclpathplan.dll are externally visible on Windows. #2809
+    - The Autotools build system more consistently uses $PYTHON3 instead of python3 when invoking Python. This ensures developers are more easily able to control the Python installation in use from the top level.
+    - The Autotools build system explicitly links against libglu libraries when linking against libglut.
+    - Corrected time formatting in verbose info/debug messages (enabled by -v). Previously, minutes was missing, showing HH:SS instead of HH:MM:SS.
+    - Further parts of the network simplex algorithm have been rewritten in a non-recursive style. This allows processing larger graphs that previously caused stack overflows. #2782
+    - Canonicalizing an empty string or a string entirely made up of characters needing escaping no longer triggers an out-of-bounds memory write. This was a regression in Graphviz 13.0.1. #2743
+    - An off-by-one error in the network simplex algorithm has been corrected. This could have led to suboptimal layout in some edge cases. This was a regression in Graphviz 13.0.0.
+ReleaseTime: 2026-03-03T06:41:05.1940000Z

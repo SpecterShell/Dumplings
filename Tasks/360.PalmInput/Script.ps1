@@ -1,34 +1,37 @@
-$Object = Invoke-WebRequest -Uri 'https://cdn.soft.360.cn/static/baoku/info_7_0/softinfo_104126128.html' | ConvertFrom-Html
+$Object1 = Invoke-RestMethod -Uri 'https://www.xinshuru.com/xinshuru/data/updatelogs/pc.json'
 
 # Version
-$Task.CurrentState.Version = $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[2]/span[2]').InnerText.Trim()
+$this.CurrentState.Version = $Object1.winlogs[0].version -replace '^v'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.SelectSingleNode('//*[@id="download_btn"]').Attributes['data-downurl'].Value | ConvertTo-Https
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https:' + $Object1.wininfo.downloadurl
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object.SelectSingleNode('//*[@id="app-data"]/div[3]/div[2]/ul/li[4]/span[2]').InnerText,
-  '(\d{4}-\d{1,2}-\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.winlogs[0].date | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.SelectSingleNode('//*[@id="doc"]/div[3]/div[3]/div[2]/div') | Get-TextContent | Format-Text
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.winlogs[0].features | ConvertTo-OrderedList | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

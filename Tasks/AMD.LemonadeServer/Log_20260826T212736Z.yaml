@@ -1,0 +1,121 @@
+Version: 11.8.0
+Installer:
+- InstallerUrl: https://github.com/lemonade-sdk/lemonade/releases/download/v11.8.0/lemonade-server-minimal.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Headline
+    - A new experimental ds4 (DwarfStar) backend serves DeepSeek V4 Flash on AMD Strix Halo GPUs.
+    - The catalog adds the RPG-HaloTales-V2 chat model, Flux-2-Klein-4B/9B image models, and new OpenMOSS voice-design and sound-effect speech models.
+    - Cloud providers now support custom authentication headers and byte-for-byte Anthropic Messages passthrough via wire_format, and lemonade cloud list --json reports provider readiness.
+    - Interrupted model downloads can be cancelled with Ctrl+C and resumed, capped with a new download_rate_limit config key, and long connections stay alive through TCP keepalive and streaming heartbeats.
+    - The new lemonade update-models command and global and per-model auto-update settings keep installed models current.
+    Breaking Changes
+    - LemonadeServer.exe --port and --host are now ephemeral in-memory overrides and no longer persist to config.json; use lemonade config set port=<P> / host=<H> to persist them.
+    - Custom *_args precedence changed: explicit request *_args no longer inherit model/architecture args, and merge_args=false now suppresses all inherited backend/machine args and overridable runtime defaults.
+    - The llama.cpp backend now defaults --parallel to 1, removing implicit multi-slot concurrent batching; restore it with --llamacpp-args "--parallel N".
+    - Legacy telemetry attributes openinference.session.id and openinference.user.id were removed in favor of the standard session.id and user.id keys; update downstream dashboards and queries.
+    - whisper.cpp transcription now defaults an omitted language to auto (source-language auto-detection) instead of English; pass language=en to force English.
+    - Removed the undocumented HTTP routes /v1/params, /v1/log-level, /api/v1/test, and /status; use /internal/set and /internal/config instead.
+    - Backend latest version resolution now includes pre-releases for all backends.
+    Lemonade Server
+
+    | Operating System   | Downloads                                 |
+    | ------------------ | ----------------------------------------- |
+    | Windows            | lemonade.msi                              |
+    | Ubuntu 24.04+      | Launchpad PPA                             |
+    | Debian 13 (x86_64) | lemonade-server_11.8.0-debian13_amd64.deb |
+    | Debian 13 (ARM64)  | lemonade-server_11.8.0-debian13_arm64.deb |
+    | Fedora 43 (x86_64) | lemonade-server-11.8.0-fc43.x86_64.rpm    |
+    | Fedora 43 (ARM64)  | lemonade-server-11.8.0-fc43.aarch64.rpm   |
+    | Fedora 44 (x86_64) | lemonade-server-11.8.0-fc44.x86_64.rpm    |
+    | Fedora 44 (ARM64)  | lemonade-server-11.8.0-fc44.aarch64.rpm   |
+    | macOS              | Lemonade-11.8.0-Darwin.pkg                |
+
+    Other platforms? See our Installation Options for Docker, Snap, Arch, Debian, and more.
+    Embeddable Lemonade
+    Portable binaries for bundling into your own installer. Run lemond ./ as a subprocess.
+
+    | Platform     | Download                                       |
+    | ------------ | ---------------------------------------------- |
+    | Ubuntu x64   | lemonade-embeddable-11.8.0-ubuntu-x64.tar.gz   |
+    | Ubuntu arm64 | lemonade-embeddable-11.8.0-ubuntu-arm64.tar.gz |
+    | Windows x64  | lemonade-embeddable-11.8.0-windows-x64.zip     |
+    | macOS arm64  | lemonade-embeddable-11.8.0-macos-arm64.tar.gz  |
+
+    What's Changed
+    Thanks @Bekhouche, @GabrielReusRodriguez, @Geramy, @NineBallo, @abn, @anditherobot, @bitgamma, @blackdeathdrow, @bong-water-water-bong, @fl0rianr, @github-actions, @jeremyfowers, @jgmelber, @kenvandine, @meghsat, @original4422, @pwilkin, @ramkrishna2910, @sjjh, @soothill, @superm1, @zaneni6 for your awesome contributions to this release!
+    Click to expand changelog
+    - Add missing handler for lemonade:// URLs (Closes: #1144656) by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/3195
+    - fix(GUI app): stop chat from bypassing collection.router routing by @meghsat in https://github.com/lemonade-sdk/lemonade/pull/3180
+    - Fix the developer setup page URLs by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/3225
+    - fix(rocm): only stage amdhip64_7.dll when TheRock runtime is newer than System32 by @blackdeathdrow in https://github.com/lemonade-sdk/lemonade/pull/3217
+    - docs: add latest release and Lemonade AI YouTube videos to news feed by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3202
+    - feat(cloud): configurable auth header name and prefix per provider by @jgmelber in https://github.com/lemonade-sdk/lemonade/pull/3222
+    - fix: cancel model download on Ctrl+C (SIGINT) via libcurl progress callback (#1385) by @bong-water-water-bong in https://github.com/lemonade-sdk/lemonade/pull/2462
+    - feat(server): record the backend launch command in /health by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/3229
+    - chore: rename app identifiers to ai.lemonadeserver namespace by @abn in https://github.com/lemonade-sdk/lemonade/pull/1978
+    - docs: add MCP Gateway to the API Spec nav by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3242
+    - Update the contribution guide for H2 2026 by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3246
+    - Add HaloTales-V2 and related models by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/3264
+    - Flm version update by @zaneni6 in https://github.com/lemonade-sdk/lemonade/pull/3266
+    - fix(server): treat --port and --host CLI flags as ephemeral overrides by @abn in https://github.com/lemonade-sdk/lemonade/pull/3249
+    - Move persistent Lemonade JSON state from .cache to .config by @superm1 with @Copilot in https://github.com/lemonade-sdk/lemonade/pull/3028
+    - feat(server): hide backends with no runnable models on this host by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/3219
+    - feat(telemetry): configurable session ID ingestion and OpenInference tool-call capture by @abn in https://github.com/lemonade-sdk/lemonade/pull/3248
+    - feat(server): treat config.json as sparse user overrides with deep merging by @abn in https://github.com/lemonade-sdk/lemonade/pull/3268
+    - test(telemetry): prevent dangling RuntimeConfig pointer and worker race in telemetry helpers test by @abn in https://github.com/lemonade-sdk/lemonade/pull/3283
+    - fix(server): resolve custom args by scope by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/3265
+    - feat(server): enable cross-platform tcp keepalive socket options by @abn in https://github.com/lemonade-sdk/lemonade/pull/3209
+    - ci: temporarily disable tts-openmoss integration tests by @Geramy in https://github.com/lemonade-sdk/lemonade/pull/3291
+    - test: fix dangling CLI temp path in runtime override test by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/3288
+    - test: move multi-checkpoint download-state coverage to C++ by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/3286
+    - test: move llamacpp system backend policy coverage to C++ by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/3287
+    - test: migrate model registry label validation to C++ by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/3285
+    - feat(server): add context_length to the models endpoints by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/3280
+    - feat(cli): add --json output to lemonade cloud list by @GabrielReusRodriguez in https://github.com/lemonade-sdk/lemonade/pull/3261
+    - feat(streaming_proxy): add sse comment heartbeats during prompt prefill by @abn in https://github.com/lemonade-sdk/lemonade/pull/3210
+    - test(server): assert CLI parse return status and remove unused header in runtime override test by @abn in https://github.com/lemonade-sdk/lemonade/pull/3294
+    - fix(router): handle transient GPU hangs and compute errors in lemond by @abn in https://github.com/lemonade-sdk/lemonade/pull/2652
+    - feat(sync): add administrative model synchronization and auto-update configuration by @abn in https://github.com/lemonade-sdk/lemonade/pull/2779
+    - Update stable-diffusion.cpp to master-827-97d2990 and CUDA master-827-e2329c3 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/3311
+    - [Stable Diffusion] Respect the user configurable "Model Options" by @NineBallo in https://github.com/lemonade-sdk/lemonade/pull/2845
+    - Handle llama.cpp new release scheme by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/3315
+    - Update faq.md: correcting list format by @sjjh in https://github.com/lemonade-sdk/lemonade/pull/3299
+    - fix(server): release large request memory by @soothill in https://github.com/lemonade-sdk/lemonade/pull/2873
+    - feat(server): size-filter streaming backends by working set, not full size by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/3328
+    - docs: document POST /v1/install/dry-run by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3324
+    - feat(router): add min_total_chars / max_total_chars whole-conversation length conditions (#2958) by @meghsat in https://github.com/lemonade-sdk/lemonade/pull/3181
+    - docs: document POST /internal/simulate-vram-pressure by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3325
+    - feat(routing): add expected_output_tokens signal to RouteContext by @Bekhouche in https://github.com/lemonade-sdk/lemonade/pull/3163
+    - docs: document POST /v1/routing/validate by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3323
+    - Retire undocumented /params, /log-level, /api/v1/test, and /status routes by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3322
+    - Add TheNoise-based upscalers by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/3327
+    - Require 2 reviewers for breaking changes by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3348
+    - ci: retry apt-get on transient arm64 mirror 404s by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/3353
+    - fix(vllm): scale gpu-memory-utilization to free memory on shared-memory devices by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3344
+    - test(server): eliminate timing flakiness in StreamingHeartbeatTest by @abn in https://github.com/lemonade-sdk/lemonade/pull/3338
+    - fix(openmoss): bump OpenMOSS TTS pin to v0.3.0 and re-enable CI by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3335
+    - docs: add smart router subject area and two router maintainers by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/3351
+    - Bump project version from 11.7.0 to 11.8.0 by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/3354
+    - Update faq.md removed double tts chapter by @sjjh in https://github.com/lemonade-sdk/lemonade/pull/3300
+    - feat(cli): return per-model detail from status --json by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/3259
+    - fix(llamacpp): pin --parallel 1 so ctx_size is not oversubscribed by @jgmelber in https://github.com/lemonade-sdk/lemonade/pull/3277
+    - feat(config): add configurable download rate limit by @blackdeathdrow in https://github.com/lemonade-sdk/lemonade/pull/3281
+    - fix(whisper): auto-detect omitted transcription language by @original4422 in https://github.com/lemonade-sdk/lemonade/pull/3245
+    - Feat/openmoss 0.3.0 backport/server side by @pwilkin in https://github.com/lemonade-sdk/lemonade/pull/2863
+    - feat(cloud): relay Anthropic-wire-format providers through /v1/messages by @jgmelber in https://github.com/lemonade-sdk/lemonade/pull/3223
+    - feat(backends): ds4 (DwarfStar) backend for DeepSeek V4 Flash [experimental] by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/3047
+    New Contributors
+    - @jgmelber made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/3222
+    - @sjjh made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/3299
+    - @soothill made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2873
+    - @original4422 made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/3245
+    Full Changelog: https://github.com/lemonade-sdk/lemonade/compare/v11.7.0...v11.8.0
+
+    Windows installers are signed. Free code signing provided by SignPath.io, certificate by SignPath Foundation. See our Code Signing Policy.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lemonade-sdk/lemonade/releases/tag/v11.8.0
+ReleaseTime: 2026-08-26T19:22:13.0000000Z

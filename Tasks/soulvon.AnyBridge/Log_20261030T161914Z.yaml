@@ -1,0 +1,19 @@
+Version: 1.0.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v1.0.5/AnyBridge_1.0.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v1.0.5/AnyBridge_1.0.5_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复：系统代理注册表残留指向死端口时（代理软件退出但 ProxyEnable 未清，如 FlClash 残留 7897），sidecar 上游请求全部 proxyconnect ECONNREFUSED；新增代理端口健康探测（5s 周期 / 1.5s 超时），死端口自动降级直连、恢复后自动切回，无需重启服务。
+    - 改进：Cursor 接管配置 http.proxySupport 由 on 改为 override——on 的语义是「使用代理设置」，系统代理存在时 Cursor 可能优先走系统代理导致流量绕开本地代理且无日志；override 强制 http.proxy 覆盖系统代理（旧值为 on 的机器在下次启用时自动重写）。
+    - 改进：Cursor 3.27+ 的云端命令通道 GET /agent/v1/run 本地短路返回 401（携带本地注入 token 官方必然 401，本地 agent 主链路不依赖该通道），消除每次启动的 tunnel ERROR 并减少一次出站连接；fallback 透传未命中路径开始留痕（去重限 256 条），新版新增端点将从日志冒出。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v1.0.5
+ReleaseTime: 2026-10-30T16:13:48.0000000Z

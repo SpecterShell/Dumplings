@@ -1,31 +1,37 @@
-$Object = (Invoke-RestMethod -Uri 'https://api.start.qq.com/cfg/get?biztypes=windows-update-info').configs.'windows-update-info'.value | ConvertFrom-Json
+$Object1 = (Invoke-RestMethod -Uri 'https://api.start.qq.com/cfg/get?biztypes=windows-update-info').configs.'windows-update-info'.value | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object.latestversion
+$this.CurrentState.Version = $Object1.latestversion
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.downloadurl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.downloadurl.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.updatedate | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.updatedate | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.whatsnew | Format-Text
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.whatsnew | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

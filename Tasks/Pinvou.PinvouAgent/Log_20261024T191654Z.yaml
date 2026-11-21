@@ -1,0 +1,83 @@
+Version: 0.10.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.15/pinvou-agent_0.10.15-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.15 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. 定时任务 CRUD 工具族 app-automations（#628）：桌面 Operate/Yolo 会话默认安装的新工具族，模型可直接创建定时任务、查看任务详情（含已存储的提示词）、列出任务摘要（不含提示词）、修改名称/模型/暂停状态，以及按精确 ID 删除任务。删除请求目标明确时按既有工具权限直接执行、不再弹出二次确认卡；名称、引用或细节使目标不确定时必须先询问用户，不得猜测或扩大范围。提示词与 rrule 的替换仍返回 confirmation_required，须经面板审阅提交。工具支持的调度仍为 HOURLY/WEEKLY/ONCE 产品子集；新任务先以 Paused 持久化，待工作区、模型绑定与类型保存后再按需激活，工作区失败则回滚惰性记录。Python 侧校验并原子落盘，Rust 侧复校验、走既有定时任务领域管线、发布摘要绑定回执并刷新面板；不新增 OS 调度器或第二条调度循环。同时应用层显式拒绝底座 automation/send_later 工具跨会话使用（纵深防御，既有 allowlist 本已排除）。Plan 模式阻断整个工具族（含读操作），CLI/headless 不暴露。无任务定义完整备份或撤销：删除后仅保留既有最小运行历史元数据。
+    2. 定时消息投递到会话（#629）：定时任务可在每次触发时将任务正文投递到一个既有普通会话（新增 session_message 类型），复用自动化调度器与 EnginePool 消息交接。创建时传 target_session 即派生该类型，更新仅可为既有消息任务改目标；CLI list/show 保留类型与目标，MCP read/list 暴露类型与 targetSession。目标须为精确存在的常规会话文件：保留的 _ 前缀、无人值守的 agentic_ 与既有隔离前缀均被拒绝。重定向保留旧的已完成目的地；面板为可识别的消息任务显示本地化目的地行，结果卡显示 120 字正文摘录与请求目标。「已完成」语义为引擎已接受交接而非目标模型已完成作答；steer/新轮次共享 30 秒窗口，循环槽位超时 60 秒即跳过。
+    问题修复
+    1. 无凭证 MCP 连接器启动时保持禁用（#740）：依赖密钥/令牌认证的已安装 MCP 连接器，此前在存储凭证已失效时仍以启用状态恢复——条目缺失认证接线，唯一确定的结果是首次调用 401。现规则显式化：无法认证的已安装 MCP 连接器在凭证就位前保持禁用。远端恢复、本地重建与遗留迁移三条路径统一：凭证无法解析的条目写入 disabled: true，备注列出缺失的键名（绝不含值）并指向重装修复；既有已启用但缺认证接线的条目在下次对账时翻转为禁用。通过商店卡片「配置」重新输入密钥即整体重写条目并恢复启用；启动修复刻意保留显式 disabled: true（该标记与用户手动停用字节相同，修复不等于用户要求重新启用）。OAuth 声明的服务器、用户自设 oauth 块、清单无法判定的手写认证接线、已禁用条目与可选凭证字段均豁免。
+    2. headless agentic_ 会话跨家族隔离（#752）：无人值守的 agentic_ 会话加入隔离来源集合，与 sched-/eval_/aux- 三族在全部表面一致拒绝（大小写不敏感，防止大小写不敏感文件系统上 AGENTIC_ 别名真实根目录）：messaging 参与者门拒绝 agentic_ 发送方与目标（被提示注入的 headless 运行不得收发跨会话消息）；scheduled 创建请求发送方门拒绝 headless 请求者；app-automations 与 session-reader 两个 MCP 服务器的隔离前缀集合补齐（read_session/list_sessions 不再跨会话提供 headless 转录，send_message_to_session 同样拒绝，--only-session 启动校验拒绝该钉扎）；aux 会话创建拒绝 headless 父会话，aux_parent_session_id 前缀循环作为 spawn 时后盾；前端 session-mention.js 与 ChatView 四处 aux 门同步镜像。
+    3. 子代理运行浮层状态闪烁（#773）：蜂群运行浮层合并持久化 worker ledger 轮询（3 秒）与桥接转发的实时子代理进度事件两个状态源，两者词表与身份不一致，多个并行子代理时行标签每次交错都翻转。状态标签在「排队/工作中」间闪烁——引擎 AgentProgress 事件同时携带自由文本进度短语与结构化 activity.worker_status，但转发器丢弃了结构化半部；现 worker_status 在 AgentProgress 载荷与邮箱 ToolCallStarted 合成中一并转发，mergeOverlayEntry 优先结构化令牌，且 model_wait（等待模型往返，实时的步间状态）改显示为「工作中」，仅 queued/starting/waiting_for_user 保留排队文案。类型标签在真实角色与通用角色间闪烁——实时事件不含角色/类型，合并时 null 抹掉了 ledger 的 spawn 时身份；现对非 ledger 写入保留 role/agentType（ledger 仍权威），ledger 的 agent_type 到达浮层使无角色行按转录面板同样方式解析标签。旧引擎载荷无 worker_status 时保持短语回退。
+    4. CodeWhale 底座修复：Windows Python 标准流 UTF-8 保留、工具失败标志入历史、JSONPath 子集文档（#750；CodeWhale #115/#116/#117）：gitlink 083cebfd9 → ea9fdc90f。#115——每次普通 shell 执行叠加 hook/task 环境（含空映射）时，旧 CommandSpec::with_env 替换整个构造器映射，丢弃 PYTHONIOENCODING=utf-8，Windows 上 Python 回退本地编码而 PowerShell 与工具输出读取器仍期望 UTF-8（表现为 Python 中文乱码、PowerShell 正常）；现合并叠加值，显式覆盖按 Windows 大小写不敏感规则处理，覆盖前台、后台/PTY、交互式与编码 PowerShell 重试。#116——工具返回的失败标志写入实际历史并经会话往返验证，持久化历史、恢复的 Anthropic 请求、CLI 失败指标、会话选择器预览、运行时 API 与恢复的应用卡成功态均据此一致。#117——为 Web 调用方记录 JSONPath 支持子集并加解析器契约回归。父仓同步：fork-guard 祖先门禁隔离 fixture 与子进程继承的 GIT_* 变量，Windows regression 步骤新增三个确定性筛选器。
+    性能优化
+    1. 失败统计跳过输出清洗（#774）：会话失败统计此前为读取退出码而构建完整 Shell 显示详情，包括对整段输出的三次终端控制序列正则扫描；现复用同一命令读取器的标量模式供统计使用，显示路径完整保留（字段优先级、属性读取、转换、异常顺序、命令摘要与 agent 等待豁免不变）。2000 条历史轮次投影 P50：每轮 1 个 Shell 工具首次更新 7.3ms → 5.0ms、前 30 次累计 210.2ms → 131.4ms；每轮 5 个工具首次更新 30.6ms → 16.0ms、前 30 次累计 840.7ms → 405.1ms。不新增缓存状态，不改变会话、取消、中断或重试归属；短历史整视图提速未确立。
+    2. 原生 Shell 通知合并（#753）：后台 Shell 轮询变化时可能在既有 50ms 工具输出定时器待触发期间发布同一工作集；现在成功同步发布普通运行输出后，仅当身份与请求修订未变时消费该冗余原生定时器。轮询通知保持原 catch/retry 边界；订阅方失败与重入输出保留待触发定时器；前台、新建/绑定/状态/终态与混合任务更新行为不变；不批量化仅轮询通知。每 1.1 秒虚拟输入的前端工作量 P50：2000 轮前台 + 5 个后台会话 916.4ms → 637.0ms（−30.5%），+ 10 个后台会话 1,572.3ms → 1,162.3ms（−26.1%）。单后台会话尾部未见一致改善，不声称零开销或冷启动改进。
+    内部改进
+    1. 依赖清理、去重与更新第二轮（#761）：继 #699 之后在 macOS 11 / Safari 14.0、glibc 2.35、Windows 10 1809 与 MSRV 1.90 地板不变前提下全面复测。Rust：tauri 2.12.3 → 2.12.5 及配套（畸形 asset:/ipc: URI 由整应用崩溃改为错误/403；tauri-runtime-wry 2.12.3 修复 Linux 无边框窗口缩放/光标命中），calamine 0.36 → 0.37 + zip 8 → 9.0.5（三工作区收敛到单一 zip 9，彻底退休 RUSTSEC-2026-0367/0368/0369；吸收 #751 范围），quick-xml 0.41 → 0.42，deny.toml 退休 zip 三条 ignore、yanked 恢复 deny、移除 RUSTSEC-2026-0381 ignore，pinvou-knowledge rust-version 1.90，三锁整体 cargo update 刷新（含 aws-lc 5.5 → 5.11、hyper 1.12、arboard 3.7 修 macOS set_image panic 等）。npm：vite 8.3.5、react 19.3.1、eslint 10.13 等范围内刷新，knip 去重 25 名/51 副本 → 24/49，eslint-plugin-jsdoc 钉 65.3.2。随发 SDK 钉：claude-agent-acp 0.93.0 → 0.94.0 + claude-agent-sdk 0.3.300 → 0.3.303、tmeet 1.0.18 → 1.0.19、chrome-devtools-mcp 1.11.0 → 1.12.0、Pillow 12.3.0 → 13.0.0、XlsxWriter 3.2.9 → 3.3.0，守卫同步。CI：actions/cache v4 → v6、cargo-shear 1.14.0。行为收紧（calamine 0.37 上游一致性修复）：XLSX 中非 0/1/true/false 的畸形布尔单元格由静默渲染 true 改为整表读取失败——知识库摄取记录警告并跳过该工作表、解析器对该文件传播错误；东亚数字格式（numFmt 27–36/50–58）现归类为日期，以格式化日期而非原始序列号提取。zip ≥ 9 在读取时强制声明的未压缩大小，read_zip_entry_bounded 将其归一为既有伪造头拒绝文案。
+    2. CI 缓存保温、发布加固与 webui 去重（#745）：2026-10-21 CI 审计（12 条车道）的七项跟进，无应用代码变更。rust-lint/knowledge-rust 在 main push 上无条件执行以保持 rust-cache 命名空间新鲜（此前路径门控令非 Rust 合并跳过，缓存老化后下一个 Rust PR 全冷跑）；三条遗漏的 rust-cache 腿补 cache-on-failure；macos-rust-check 获得与 Linux/Windows 一致的 codewhale-tui dev-O0 覆盖（7 GB runner 内存守卫）；test:webui 经新 run-webui-smoke.mjs 复用预构建 dist 不再重复构建。发布工作流：Windows job 补 --remap-path-prefix（此前唯一随包携带构建机绝对路径的平台），头注释改为如实描述 Windows main-ref dispatch 例外，x64 deb 重命名统一为字面名 + test -f 模式，arm64 超时 90 → 120 分钟、loongarch64 180 分钟（比例耦合测试钉扎）。
+    3. cargo-deny 忽略 RUSTSEC-2026-0387（#776）：2026-10-24 起 RustSec 新收录 crypto-bigint 0.5.5 常时操作时序侧信道公告，命中三个锁定图（age 0.12.1 → p256 0.13.2 → elliptic-curve 0.13.8 → crypto-bigint ^0.5），rust-lint/knowledge-rust 的 advisories 硬门对所有触及依赖/策略路径的 PR 失败。修复线 crypto-bigint ≥ 0.7.6 被 elliptic-curve 的 ^0.5 约束钉死、无传递升级路径，故按 deny.toml 既有策略增加 ignore 条目并注明退出条件（上游发版可解析 ≥ 0.7.6 时先升父级再移除）。实际可利用性低：age 在本仓仅用于本地文件加密（知识库备份归档、共享知识库主机备份/恢复），非网络暴露面。双图 cargo-deny 0.20.2 实测全 ok，并以 base 旧 deny.toml 反向实证红灯确系本条目翻转。
+    4. fork 登记 T2 工具失败集成整理（#755）：删除重复的顶层 T2 节与自相矛盾的候选/合入前清单，将上游 2ae7460e4 选择性来源、省略的取消元数据/shell 回执变更、中断标记行为与已知标志丢失边界折入既有 Maintenance 集成回执；点名记录 is_error 的实际消费方，并把既有往返回归名加入中英两份 T2 测试清单。纯文档变更（两文件 +8/−3）。
+    注意事项
+    - app-automations 工具族（#628）：删除请求在目标明确时不再弹出二次确认卡（既有工具权限下直接执行），目标不确定时模型须先询问；无任务定义完整备份或撤销，复杂提示词删除后可能丢失。提示词/rrule 替换仍须面板审阅提交。history-archive.json 任务元数据无年龄修剪、随删除任务增长，归档压缩/保留为后续项。崩溃于回执前的创建仍为至少一次语义，可能重复创建。
+    - 定时消息（#629）：旧版本应用在注册表重写时可能丢弃新增的目标字段——降级前先停止应用并私下保留/恢复注册表，或重升级后重建受影响任务；无目的地的消息条目 fail-closed。「已完成」= 引擎已接受交接，非目标模型已完成作答；无精确一次投递日志，取消/超时不保证撤回。
+    - 无凭证 MCP 连接器（#740）：升级后若某个密钥/令牌认证的 MCP 连接器显示为已禁用并附带「缺失键名」备注，通过商店卡片「配置」重新输入密钥即可恢复启用；启动修复不会自动重新启用显式 disabled: true 的条目。
+    - 蜂群运行浮层（#773）：等待模型往返的子代理现显示「工作中」而非「排队」；仅 queued/starting/waiting_for_user 保留排队文案。
+    - XLSX 解析收紧（#761，calamine 0.37）：畸形布尔单元格导致整表跳过（带警告）、东亚数字格式按日期提取；受影响的知识库文档建议重新摄取。
+    - RUSTSEC-2026-0387（#776）：crypto-bigint 时序侧信道公告在上游修复链落地前不再阻断 CI，仅影响本地文件加密路径；条目注明重评触发条件。
+    - LoongArch64 安装包继续随发布提供（dpkg 架构 loong64，面向 UOS V25 / deepin 23/25 新世界系统）；平台降级面不变：本地嵌入不可用（知识库检索自动降级全文检索）、连接器与 Codex/Claude 原生运行时无按需安装器（PATH 已装二进制继续可用）。
+    - 官网页面版本同步可能滞后，v0.10.15 官网页面尚未更新，下载前请确认页面显示的版本。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 安装包与发布产物由版本 PR 合入 main 后触发的发布工作流构建，未在本地构建。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 13766907f / Actions #40083198108（五平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 定时任务 CRUD 工具族 app-automations：模型可创建、查看、列出、修改（名称/模型/暂停）与按精确 ID 删除定时任务；目标明确的删除直接执行、不确定时先询问；提示词/rrule 替换仍须面板确认。（#628）
+    - 定时消息投递到会话：定时任务可在每次触发时把正文投递到既有会话，CLI/MCP 暴露类型与目标，隔离前缀目标被拒绝。（#629）
+    修复
+    - 无凭证的已安装 MCP 连接器在启动时保持禁用直至凭证就位（备注列出缺失键名），通过商店卡片重新配置即恢复。（#740）
+    - headless agentic_ 会话加入隔离来源集合，messaging/scheduled/session-reader/aux 全部表面一致拒绝（大小写不敏感）。（#752）
+    - 蜂群运行浮层子代理状态与类型标签不再闪烁；等待模型往返显示为「工作中」。（#773）
+    - CodeWhale 底座：Windows 上 Python 输出 UTF-8 默认编码在 hook/task 环境叠加后保留（修 Python 中文乱码）；工具失败标志写入历史；Web JSONPath 子集文档与解析器契约。（#750）
+    性能优化
+    - 失败统计跳过显示用输出清洗：2000 轮历史投影前 30 次累计最多 −51.8%。（#774）
+    - 原生 Shell 通知合并：多后台会话前端工作量 −26.1% 至 −30.5%。（#753）
+    内部改进
+    - 依赖清理第二轮：tauri 2.12.5、calamine 0.37 + zip 9（退休三条 zip 公告）、随发 SDK 钉同步升级；XLSX 畸形布尔/东亚数字格式解析收紧。（#761）
+    - CI 缓存保温、macOS 内存守卫、webui 去重；发布 Windows 包补 --remap-path-prefix。（#745）
+    - cargo-deny 忽略 crypto-bigint RUSTSEC-2026-0387（仅本地文件加密路径，注明退出条件）。（#776）
+    - fork 登记 T2 工具失败集成整理。（#755）
+    en-US
+    New
+    - app-automations scheduled-task CRUD tool family: the model can create, inspect, list, update (name/model/paused) and delete scheduled tasks by exact ID; an unambiguous delete executes directly while an uncertain target requires asking first; prompt/rrule replacement still goes through panel confirmation. (#628)
+    - Scheduled messages into a session: a task delivers its body into an existing session at each fire; CLI/MCP expose kind and target; isolated-prefix targets are refused. (#629)
+    Fixes
+    - Installed MCP connectors whose key/token cannot be resolved stay disabled at startup until the credential is present (the note names the missing keys); reconfiguring from the store card re-enables them. (#740)
+    - Headless agentic_ sessions join the isolated-origin set and are refused consistently across messaging, scheduled, session-reader and aux surfaces (case-insensitive). (#752)
+    - Swarm running overlay status and type labels no longer flicker; waiting on the model round trip shows as "Working". (#773)
+    - CodeWhale foundation: Windows Python stdio keeps its UTF-8 default through hook/task env overlays (fixes garbled Python output); tool failure flags are recorded into history; web JSONPath subset documented with a parser contract. (#750)
+    Performance
+    - Failure statistics skip display-only output cleanup: 2000-turn history projection, first-30 cumulative up to −51.8%. (#774)
+    - Native shell notifications coalesced: frontend work with multiple background sessions −26.1% to −30.5%. (#753)
+    Internal improvements
+    - Dependency cleanup round 2: tauri 2.12.5, calamine 0.37 + zip 9 (retiring three zip advisories), shipped SDK pins bumped in lockstep; XLSX malformed-boolean / East-Asian number-format parsing tightened. (#761)
+    - CI cache warmth, macOS memory guard, webui dedupe; the Windows release package gains --remap-path-prefix. (#745)
+    - cargo-deny ignore for crypto-bigint RUSTSEC-2026-0387 (local file-encryption path only, exit criteria recorded). (#776)
+    - Fork register T2 tool-failure integration consolidated. (#755)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.15
+ReleaseTime: 2026-10-24T18:15:38.0000000Z

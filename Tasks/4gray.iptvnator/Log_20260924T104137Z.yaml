@@ -1,0 +1,225 @@
+Version: 0.24.0
+Installer:
+- InstallerUrl: https://github.com/4gray/iptvnator/releases/download/v0.24.0/iptvnator-0.24.0-windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    Programme guide, rebuilt
+    The M3U programme guide now follows your playlist's own channels and order, with groups and favorites one click away. Keep the player above the grid while you browse, click a channel to switch, or double-click to switch and close. Open the guide with G, hide channels without EPG and choose compact or comfortable rows. (#1560, closes #171)
+    Browse channels and episodes without leaving fullscreen
+    Press C or use the left edge of the video to open a searchable channel list. Series get season tabs and an episode list with artwork and watch progress too. With the default shared controls, switching channels, episodes or alternative movie sources keeps the player fullscreen. (#1519, #1620, #1509, closes #48)
+    See what is playing while it plays
+    The stream-info overlay shows resolution, frame rates, bitrates, audio details, buffer and dropped frames when the player can report them. Available in the built-in web players and experimental frame-copy Embedded MPV; unavailable values stay hidden. (#1578)
+    Nightly channel
+    Get builds from each merge through Settings → About → Update channel, or download them from the nightly repository. Stable remains the default.
+
+    27 features · 54 fixes · 1 performance improvement — including local XMLTV files, Xtream catch-up downloads, automatic reconnects for embedded MPV, season artwork and recovery for sources missing after an older upgrade.
+    Read the 📝 release story on the blog, the full CHANGELOG, or the changes since v0.23.0.
+    Before updating, back up your playlists and important data. Desktop startup applies database updates and clears outdated metadata matches; allow the preparation screen to finish and avoid downgrading an upgraded profile.
+    Thanks
+    Thank you to @Bpl5966 for MPV reconnects and extra options (#1515), @mark-jardine for the EPG time offset (#1489), and @larsemig for stream information (#1578).
+    Thank you also to @thejdubb02 for the original zoom-persistence, Turkish-search and Xtream EPG-refresh fixes (#1613, #1612, #1610). This work was incorporated and extended in #1617, #1640 and #1647, with his co-authorship preserved.
+    A warm thank-you to everyone who reported issues, tested builds, helped in the Telegram community, or supported development. 💙
+    ❤️ If IPTVnator is useful to you, you can help keep it moving through GitHub Sponsors or Ko-fi
+    All features, fixes and performance improvements
+    Features
+    - collections — A live channel you watch from Favorites or Recently viewed now says which playlist it belongs to: a chip with the playlist name sits in the programme panel next to the channel, and clicking it (or "Open in " in the channel's right-click menu) jumps to that channel inside its own playlist. Works for Xtream and M3U sources. (#1634)
+    - collections — "Open in " for live channels in Favorites and Recently viewed now works for Stalker portals too: the chip in the programme panel and the channel's right-click menu jump to that channel inside its portal's Live TV, with its category selected and the channel playing. Radio stations keep the existing behaviour. (#1639)
+    - dashboard — The dashboard no longer labels every title with "Xtream · Series" or "Stalker · Movie": the hero shows only the source name, and Continue Watching cards show the episode you are on plus the minutes left. Stalker shows filed under Movies now get that S·E badge, the progress bar, and a working "Resume episode" that opens the show at the saved episode. (#1646)
+    - dashboard — On the desktop app, favourite and recently watched Xtream and Stalker channels on the dashboard now show what is on air, with the programme's time and progress. Each card asks its portal only once it scrolls into view and fills in on its own, so a slow portal never holds up the page or the other cards. (#1638)
+    - downloads — Download completed Xtream catch-up programmes as TS files from Live TV programme details. Find them in Downloads with the channel and broadcast date and play them offline. Interrupted archive downloads restart from the beginning. (#1572)
+    - embedded-mpv — The embedded MPV player now reloads a live stream that drops mid-playback on its own, with increasing delays and an "attempt N of 6" line instead of a dead error screen; a new Settings > Playback toggle turns this off. The same section gains an advanced field for extra libmpv options (one key=value per line) that applies on every engine, with a short network timeout on by default. (#1515)
+    - epg — Copy a catch-up programme’s URL from its EPG details in Xtream and supported M3U sources, including Favorites and Recent, without interrupting playback. The link can be used in an external player or download tool. (#1569)
+    - epg — EPG settings now include a display-only time offset, making it easy to correct provider feeds with missing or incorrect timezone information without re-importing the guide. (#1489, closes #50)
+    - epg — EPG sources no longer have to be URLs: point Settings → EPG or a playlist's EPG list at an XMLTV file on your computer, by absolute path, file:// link, or the new folder button. Plain .xml and gzip .xml.gz both work. A typed path is confirmed once in a native dialog before it is read; the settings page spells out the accepted formats with examples. (#1600)
+    - epg — The programme guide now shows your playlist's own channels in their order, with the current group or favorites one click away. Click a channel to switch playback while the player stays on screen above the grid; double-click switches and closes. Open it from the new Guide button, the header, the command palette, or the G key. Hide channels without EPG and pick comfortable or compact rows. (#1560, closes #171)
+    - epg — The EPG timeline toolbar is more compact: "Now" is an icon button, and the zoom slider is replaced by a single button that cycles day overview → by hour → detailed. Ctrl/⌘ + scroll (or a trackpad pinch) over the timeline zooms smoothly around the cursor. The channel and programme title now use all the space the controls free up. (#1557)
+    - packaging — AppImage builds now include an update source for AppManager, allowing it to discover new GitHub releases and download full application updates without manually configuring the repository. (#1559)
+    - playback — Playback errors now explain confirmed access and DRM license failures, with stream codecs, DRM systems and failure stages in the details. Copy diagnostics creates a support report without stream URLs or credentials. No extra requests are made to your provider. (#1574)
+    - playback — Rest the mouse on the left edge (tap it on touch) or press C while a live channel plays fullscreen: the channel list (M3U all/groups/favorites/recent, Xtream, Stalker, global favorites) slides over the video with search, so you can zap without leaving fullscreen. Nothing covers the video while it is closed. M3U playlists also zap with PageUp/PageDown. (#1519, closes #48)
+    - playback — Series playback now has the slide-in list in fullscreen too: rest the mouse on the left edge, click it, or press C to see the season tabs and episodes with stills, runtimes, descriptions and watch progress, and jump to another episode without leaving fullscreen. Works for Xtream and Stalker series with any built-in player. (#1620)
+    - playback — The player overlay now shows stream information: resolution, playback and source frame rates, stream and codec bitrates, audio details, buffer and dropped frames. Available in built-in web players and experimental frame-copy Embedded MPV. Unknown or unavailable values stay hidden; measured frame rates reflect dropped frames and stalls. (#1578)
+    - playlist — Desktop users can review inactive sources and delete selected ones together. The dialog checks the whole library, preselects confirmed expired or disabled accounts, and lets you keep individual sources. Busy sources are skipped, and deletion results are reported individually. (#1596)
+    - playlist — Desktop playlist lists now show availability for Stalker portals and M3U links alongside Xtream accounts. Checks share cached results, run in the background, and explain when a source could not be verified. (#1592)
+    - portal — Movies can now be marked as watched (or unwatched) by hand from their detail page on Xtream and Stalker sources, including the Favorites and Recently Viewed views — the same way seasons and episodes already could. The catalog shows the green check right away, and a watched movie offers Play instead of a Resume near the end. (#1605)
+    - portal — Series with more than six seasons now show a small season poster in the season dropdown — on each row that has one and on the closed selector — so a long list of "Season N" entries is easier to scan. The fullscreen episode panel's season strip also gets its own "N episodes" translation instead of borrowing the download manager's. (#1633)
+    - portal — Series pages now show each season's own poster next to the season tabs, and the fullscreen episode list shows it above its tabs too. The picture comes from TMDB when metadata enrichment is on, otherwise from your provider's season art; one-season shows keep the page as it was. (#1628)
+    - portals — Desktop settings now let you disable the temporary pause after repeated Xtream or Stalker connection failures, without restarting. Account info explains when requests are paused and offers an immediate retry. (#1536)
+    - portals — Live TV panels now fold in steps: hide only the categories rail and keep the channel list, or hide both for a player-only view. With categories hidden, the list header becomes a category dropdown, so switching categories stays one click away, and hiding both panels then bringing them back returns to the level you had before. (#1556)
+    - portals — Movie and series grids can now drop the title row: turn off "Show titles under covers" in Settings > General and the catalog, favorites and recent grids become a wall of covers that shows more rows per screen. The title slides in on the cover when you point at it or focus it with the keyboard, and stays on for items whose cover is missing. Live channels and search results keep their labels. (#1604)
+    - shell — Settings → General has a new "Window on startup" option: open the desktop app at its last size, maximized, or fullscreen — handy on a TV or HTPC. Starting with --fullscreen forces a single fullscreen launch without changing the setting, and F11 now toggles fullscreen anywhere in the app. (#1514, closes #1455)
+    - shell — Zoom the app from the keyboard on every platform: Ctrl (Cmd on macOS) with +/- steps the size in about 10 % increments, including on the numpad, and Ctrl/Cmd+0 returns to the default. Windows and Linux gain these shortcuts, which previously existed only in the macOS menu. (#1623, closes #1109)
+    - updater — Settings → About now has an Update channel switch. Nightly follows every merge into master: the desktop updater offers each new build automatically, and About shows the build's commit for bug reports. Stable stays the default; a nightly build remains installed until the next stable release is newer. (#1608)
+    Fixes
+    - collections — Switching Favorites or Recently Viewed between "This playlist" and "All playlists" now shows a thin progress bar under the header and dims the list while the new items load, instead of leaving the old list on screen with no sign that anything happened. The toggle reflects your choice at once, a playing channel keeps playing, and quick switches show no indicator at all. (#1636)
+    - dashboard — The dashboard's "Now on air on favorite channels" and "Recently watched Live TV" rails now show the current programme for channels whose guide lives in an XMLTV another playlist imported, not only in the global EPG sources from Settings — the same lookup the "See all" pages already used. (#1637)
+    - database — Updating directly from older versions no longer blocks playlist loading with a missing database column error. Existing sources, favorites, and playback history are preserved. (#1582, closes #1580)
+    - embedded-mpv — When a stream refuses the connection, the embedded MPV player (frame-copy engine) no longer hands the URL to yt-dlp before giving up: the failure shows up right away and its error no longer reads "youtube-dl failed: unexpected error occurred", matching the native-view engines and the external MPV player. (#1526)
+    - epg — EPG guides now load when a server adds gzip compression to an already compressed XMLTV file. Sources using a single gzip layer continue to work. (#1589, closes #1586)
+    - epg — The EPG import panel no longer shows a horizontal scrollbar while sources download. Source names now read as host/file instead of running the two together, channel and programme counts use your locale's digit grouping, and the minimize button and summary are translated. (#1599)
+    - epg — Removing and saving an EPG source now clears its cached programmes, including data left by previously removed sources on restart. Other configured sources and playlist guides are preserved, and Live TV stops showing programmes from the removed source. (#1548)
+    - host-health — Portal recovery now waits for an active probe to finish before sending another request, even when redirects or a slow response take longer than 45 seconds. Completed and cancelled requests release the probe slot reliably. (#1547, closes #1439)
+    - live-tv — A hidden channel list no longer looks like a playlist that lost its channels: the player now says the list is hidden and offers a "Show channels list" button, a toggle in the workspace header stays in place in both states, and hiding the list in one place (M3U player, portal Live TV, favorites/recent) no longer hides it everywhere else. (#1555, closes #1458)
+    - m3u — ClearKey channels with ordinary Base64 keys now play when imported or refreshed, including JSON playlist exports that use + and / characters. Refresh an existing playlist once to apply the fix. (#1575)
+    - m3u — DASH channels, including ClearKey-protected streams, now play from Recently Viewed and Favorites using the compatible built-in player. Existing imports keep their DRM keys without needing to re-import the playlist. (#1597, closes #1590)
+    - m3u — M3U URL imports now accept a custom User-Agent for providers that require it before downloading the playlist. The value is saved and reused for playlist refreshes in the desktop app and self-hosted web app. (#1535, closes #465, closes #1120)
+    - m3u — Movies and episodes recognized as video files in M3U playlists now offer playback time and seeking in built-in players, even when TMDB or movie details are disabled. Seeking remains dependent on the source's support. (#1594)
+    - migration — Upgrades from older desktop versions retain all sources from the legacy profile. Already-upgraded users can choose to recover missing sources without replacing current sources or settings. Migration keeps the original data and retries safely after a failed write. (#1550, closes #1504)
+    - migration — Startup now shows a theme-aware preparation screen while loading sources and checking a large programme guide. Temporary source-read failures retry automatically; if loading still fails, you can retry without restarting the app. Recovery also completes any previously failed programme-guide cleanup before opening the library. (#1568)
+    - playback — The built-in player controls now hide on their own after you click a button in the bar with the mouse, such as fullscreen or mute. Previously the clicked button kept the bar pinned on screen until you clicked the video, which also paused it. Applies to the shared controls in the web players and the Embedded MPV frame-copy engine. (#1512)
+    - playback — Arrow keys and the ±10 s buttons in the Embedded MPV player now move by their full step every time. Pressing an arrow repeatedly, or holding it, used to advance only about a second per press because each step was computed from a stale position; steps are now relative seeks executed by mpv itself, so rapid presses add up. (#1518)
+    - playback — The fullscreen channel list is easier to find and calmer to use: moving the mouse shows a small tab on the left edge, a click on that edge opens the list at once, hover still opens it after a short rest, and the list now stays open for a full second after the mouse leaves. Opened with C, it no longer closes while the mouse only wanders over the video. (#1619)
+    - playback — The fullscreen channel panel stays open under the pointer when its opening animation is delayed, instead of closing before the list appears. (#1591)
+    - playback — With the default shared player controls, the built-in player now stays in fullscreen when you switch to another episode, when the next episode starts automatically, and when a live channel or an alternative movie source is switched — previously every switch dropped back to the page. The legacy vendor-controls opt-out keeps its previous behavior. (#1509)
+    - playback — Switching channels or leaving playback now closes the old picture-in-picture window in HTML5, Video.js, and ArtPlayer even when shared player controls are disabled, preventing frozen or outdated video from remaining on top. This includes Safari’s legacy picture-in-picture mode. (#1538)
+    - playback — Embedded MPV controls and programme-guide panels now follow the visual theme and stay readable in light and dark mode. Video overlays retain their contrasting dark backgrounds. (#1541, closes #1530)
+    - playback — The built-in HTML5 player now plays .mkv, .webm, .avi, .mov and other non-HLS video files directly instead of handing them to the HLS engine, which failed with a "network or provider loading error" on many Xtream episodes and movies. ArtPlayer and the HTML5 player now choose their engine by the same rule. (#1510)
+    - playback — Keyboard shortcuts work again right after you click a button in the built-in player controls. Previously the clicked button kept the keyboard: after clicking fullscreen, Space left fullscreen instead of pausing, and the seek, volume and mute keys did nothing until you clicked the video. Applies to the shared controls in the web players and the Embedded MPV frame-copy engine. (#1516)
+    - playback — With IPTVnator's shared controls turned off, the Video.js player's keyboard shortcuts now work again right after you click a button in its control bar. Previously the clicked button kept the keyboard: after clicking fullscreen, Space left fullscreen instead of pausing, and the seek, volume and mute keys did nothing until you clicked the video. (#1523)
+    - playback — VLC now opens without an extra console window on Windows when playback progress tracking or Reuse VLC instance is enabled. (#1533, closes #871)
+    - playlists — Opening an M3U playlist immediately after refreshing now waits for its pending save, so the channel list does not revert to the previous catalog. (#1591)
+    - portals — Xtream and Stalker portals no longer enter a connection cooldown merely because several parallel requests fail in the same millisecond. This fixes false unavailability in both the desktop app and the self-hosted web version. (#1537, closes #1438)
+    - portals — Xtream and Stalker keep remote channel order while you browse other categories or search. Use Show playing channel to return to the current channel without restarting playback. Stalker radio supports the same behavior. (#1554, closes #1520)
+    - portals — A slow Xtream or Stalker panel is no longer mistaken for a dead one: a request that reached the panel and then timed out no longer trips the 30-second "portal is not responding" pause, which only fires when the panel never accepts the connection. The desktop app also gives IPv4 fallback the same 2.5-second budget as the self-hosted backend, so dual-stack panels behind VPNs stop failing in bursts. (#1621)
+    - search — Search now returns the same results whether you type upper or lower case Turkish characters. Titles with the dotted capital I (for example "İnşaat") are found by typing a plain lower case i, so "inş" and "İnş" match the same channels and movies — in global search, in each portal's search, in the command palette, and in the channel, category, favorites and download list filters. (#1640, closes #609)
+    - settings — The update status in Settings → About now names the channel it describes, and after picking another channel the check button becomes "Save and check": one click saves the choice and reports what that channel offers. Previously "Check again" silently re-checked the still-saved channel, so a fresh nightly could look like "no update". (#1631)
+    - shell — Reloading the desktop app while on any page no longer breaks it: View › Reload on macOS used to leave a blank, dead window until restart, and the reload offered by the settings unsaved-changes dialog did nothing. Both now reload the app back onto the page you were on. (#1622)
+    - shell — The app now remembers your zoom level (Cmd/Ctrl and +/-): it holds when you switch between sections or resize the window, and comes back after a restart, so a larger font size no longer resets to the default. (#1617, closes #1109)
+    - stalker — Stalker items whose portal sends an empty id next to a valid one are no longer lost: such a channel or movie can be favorited, played, resumed and found again, instead of being stored without an identity and quietly refusing to open. (#1639)
+    - stalker — Stalker Live TV search stays within the selected category in the sidebar and fullscreen panel, including channels beyond the first page. All Items searches the whole catalog, and the two search fields work independently. (#1552, closes #1543)
+    - stalker — In Stalker portals, switching the Live TV or radio category in the sidebar no longer stops the channel that is playing. The category only changes which channels are listed, matching how Xtream portals and M3U playlists already behave. (#1517)
+    - stalker — Stalker series with season markers such as “s02” or “2 сезон” now show the correct season in tabs and episode labels while preserving watch progress. TMDB updates no longer reset loaded episodes, and delayed portal responses cannot mix episodes from different series. (#1545)
+    - stalker — Seeking in Stalker movies and series now reaches the selected position instead of jumping forward or skipping to the next episode after resuming playback. (#1544)
+    - tmdb — Russian titles containing "й" or "ё" and Arabic titles with hamza letters now match on TMDB. The search used to send a folded spelling — dropping the breve from "й", for instance — that TMDB never recognised, and cached the miss for a week; those cached misses are cleared on the next start. (#1626)
+    - tmdb — A new series no longer picks up the poster, cast and plot of an older show that happens to share its title. Metadata is looked up in your own language, so an unrelated foreign series can be listed under the very same name — and the better-known one used to win. The release year the provider states now decides first. (#1648)
+    - ui — Live TV now supports keyboard movement between categories and channels, and channel lists keep scrolling after mouse selection. Channel scrollbars and resize handles are independently accessible. Movie and series details support immediate keyboard scrolling and no longer hide their scrollbars. (#1542, closes #1506)
+    - ui — Detail buttons, episode cards and episode rows now keep visible backgrounds and borders in the light theme. The grid/list switch also clearly highlights the selected view in both themes. (#1549)
+    - ui — Movie and series detail pages now show one Back arrow instead of two. The floating arrow always returns to the list, while watching too, and the "Close player" button beside the player is the only control that returns to the description. Escape still closes the player first and then goes back. (#1627)
+    - ui — Movie and series detail pages keep their Back button visible while scrolling. Escape closes the inline player to the description, then returns to the previous view. Open menus, dialogs and fullscreen retain priority. (#1576, closes #1570)
+    - updater — "What's new" no longer fails with a raw error for a build published after the app started: the release list is re-read from GitHub when the requested version is missing, so a freshly offered nightly shows its notes. When a version really has no release, the dialog now says so in plain words and links to the channel's releases page. (#1631)
+    - web-backend — The self-hosted backend now checks every provider redirect and pins connections to validated addresses, preventing redirects or DNS changes from bypassing private-network restrictions. Trusted LAN access remains available through the existing opt-in. (#1553, closes #1436)
+    - xtream — Xtream Live TV in Auto can try advertised TS once when HLS initially fails with an HTTP error in a web player. The selected player and stream headers are kept. Settings explain the manual TS workaround for external players, Embedded MPV, and HLS retries that never report a terminal failure. (#1558, closes #1513)
+    - xtream — Catch-up (timeshift) from the Favorites and Recent tabs now asks the panel for the programme you clicked: the start time is rendered in the panel's own timezone instead of your computer's. The panel's timezone is remembered per source, survives restarts, and panels that report an unusual timezone name are handled through their clock. (#1563, closes #1562)
+    - epg — The current program shown under each channel in the Xtream Live TV list now moves on by itself once that program ends, and its progress bar keeps advancing. Previously both stayed frozen on the old program until you left the category and came back in. (#1647, closes #767)
+    - xtream — Xtream category management now selects or deselects only matching categories while searching, preserving the visibility of all other categories. Button labels and availability reflect the search results, and the counter clearly shows the total selected. (#1534, closes #812, closes #816)
+    - xtream — The explicit HTTPS and HTTP connection test now detects Xtream portals that accept HTTP when HTTPS is unavailable and fills in the working address before you save. The saved address is used for catalog updates, provider EPG and playback. Connection failures now show a more specific explanation. (#1588)
+    - xtream — Opening a live channel in another Xtream playlist (from global search, the dashboard or the new "open in playlist" chip) no longer lands on an empty Live TV page: the jump used to get lost while the app was still opening that playlist, and now waits for its catalog before selecting and playing the channel. (#1634)
+    - xtream — The Xtream sync panel now keeps its status text, labels and Stop sync button clearly readable in both light and dark themes. (#1546)
+    Performance
+    - database — Refreshing or removing a large Xtream playlist is several times faster: the "Removing cached content" stage and the re-import now commit around 5,000 rows at a time instead of 100, and progress updates arrive at most ten times a second instead of once per batch. (#1511, closes #1292)
+    Changes by pull request
+    What's Changed
+    - fix(playback): keep fullscreen across episode, channel and source switches by @4gray in https://github.com/4gray/iptvnator/pull/1509
+    - fix(playback): route non-HLS containers to the native source path by @4gray in https://github.com/4gray/iptvnator/pull/1510
+    - perf(database): commit catalog writes in row-budgeted transactions by @4gray in https://github.com/4gray/iptvnator/pull/1511
+    - fix(playback): auto-hide shared controls after a mouse click on a bar button by @4gray in https://github.com/4gray/iptvnator/pull/1512
+    - feat(shell): startup window mode, --fullscreen switch and F11 toggle by @4gray in https://github.com/4gray/iptvnator/pull/1514
+    - fix(playback): keep playback shortcuts after a mouse click on a bar button by @4gray in https://github.com/4gray/iptvnator/pull/1516
+    - fix(stalker): keep live playback when switching the ITV/radio category by @4gray in https://github.com/4gray/iptvnator/pull/1517
+    - test(stalker): cover radio playback surviving a category switch in web E2E by @4gray in https://github.com/4gray/iptvnator/pull/1522
+    - feat(embedded-mpv): configurable extra libmpv options and network auto-reconnect by @Bpl5966 in https://github.com/4gray/iptvnator/pull/1515
+    - fix(playback): keep Video.js vendor-chrome shortcuts after a mouse click on a control by @4gray in https://github.com/4gray/iptvnator/pull/1523
+    - fix(playback): seek Embedded MPV steps relative to mpv's own position by @4gray in https://github.com/4gray/iptvnator/pull/1518
+    - feat(epg): add global EPG display time offset by @mark-jardine in https://github.com/4gray/iptvnator/pull/1489
+    - chore(deps): close transitive CVE alerts via pnpm overrides by @4gray in https://github.com/4gray/iptvnator/pull/1527
+    - fix(embedded-mpv): disable the youtube-dl hook in the frame-copy helper by @4gray in https://github.com/4gray/iptvnator/pull/1526
+    - fix(dashboard): read cached EPG timestamps as unix seconds by @4gray in https://github.com/4gray/iptvnator/pull/1532
+    - chore(deps): bump the npm-minor-patch group across 1 directory with 19 updates by @dependabot[bot] in https://github.com/4gray/iptvnator/pull/1528
+    - feat(portals): make connection cooldown configurable in desktop settings by @4gray in https://github.com/4gray/iptvnator/pull/1536
+    - fix(playback): hide VLC RC console on Windows by @4gray in https://github.com/4gray/iptvnator/pull/1533
+    - style(website): solid hairlines, Bricolage Grotesque display face, drop TV effects by @4gray in https://github.com/4gray/iptvnator/pull/1539
+    - fix(portals): count concurrent connection failures once by @4gray in https://github.com/4gray/iptvnator/pull/1537
+    - fix(xtream): apply category bulk actions to search results by @4gray in https://github.com/4gray/iptvnator/pull/1534
+    - fix(playback): close legacy picture-in-picture on video replacement by @4gray in https://github.com/4gray/iptvnator/pull/1538
+    - fix(m3u): support User-Agent when adding playlist URLs by @4gray in https://github.com/4gray/iptvnator/pull/1535
+    - fix(ui): restore channel and detail keyboard scrolling by @4gray in https://github.com/4gray/iptvnator/pull/1542
+    - fix(playback): apply themes to player and EPG panels by @4gray in https://github.com/4gray/iptvnator/pull/1541
+    - feat(playback): slide-in channel list for fullscreen playback by @4gray in https://github.com/4gray/iptvnator/pull/1519
+    - fix(stalker): let media transports control seek byte ranges by @4gray in https://github.com/4gray/iptvnator/pull/1544
+    - fix(stalker): align title-marked seasons and prevent stale episodes by @4gray in https://github.com/4gray/iptvnator/pull/1545
+    - feat(website): turn the screenshot showcase into a channel switcher by @4gray in https://github.com/4gray/iptvnator/pull/1540
+    - fix(ui): restore detail surface boundaries in light theme by @4gray in https://github.com/4gray/iptvnator/pull/1549
+    - fix(host-health): retain trial ownership until requests settle by @4gray in https://github.com/4gray/iptvnator/pull/1547
+    - fix(xtream): improve sync overlay contrast in both themes by @4gray in https://github.com/4gray/iptvnator/pull/1546
+    - fix(migration): preserve and recover legacy desktop sources by @4gray in https://github.com/4gray/iptvnator/pull/1550
+    - feat(website): rebuild the hero, features, download and support sections by @4gray in https://github.com/4gray/iptvnator/pull/1551
+    - fix(epg): remove cached XMLTV data after source deletion by @4gray in https://github.com/4gray/iptvnator/pull/1548
+    - fix(web-backend): validate and pin provider redirect hops by @4gray in https://github.com/4gray/iptvnator/pull/1553
+    - fix(stalker): keep live search within the selected category by @4gray in https://github.com/4gray/iptvnator/pull/1552
+    - fix(portals): preserve live channel navigation while browsing by @4gray in https://github.com/4gray/iptvnator/pull/1554
+    - feat(epg): compact timeline toolbar with icon-only Now and cycling zoom by @4gray in https://github.com/4gray/iptvnator/pull/1557
+    - fix(xtream): try advertised TS after initial web HLS HTTP failure by @4gray in https://github.com/4gray/iptvnator/pull/1558
+    - fix(live-tv): keep a hidden channel list discoverable and scoped per surface by @4gray in https://github.com/4gray/iptvnator/pull/1555
+    - feat(portals): fold live TV panels in nested levels with a category dropdown by @4gray in https://github.com/4gray/iptvnator/pull/1556
+    - feat(epg): rebuild the programme guide for M3U playlists by @4gray in https://github.com/4gray/iptvnator/pull/1560
+    - feat(packaging): add AppManager discovery metadata to AppImages by @4gray in https://github.com/4gray/iptvnator/pull/1559
+    - fix(xtream): render catch-up start times in the panel timezone by @4gray in https://github.com/4gray/iptvnator/pull/1563
+    - fix(migration): show startup preparation and recover source read failures by @4gray in https://github.com/4gray/iptvnator/pull/1568
+    - feat(epg): copy catch-up programme URLs by @4gray in https://github.com/4gray/iptvnator/pull/1569
+    - feat(playback): enrich failure diagnostics and add safe support reports by @4gray in https://github.com/4gray/iptvnator/pull/1574
+    - fix(m3u): accept standard Base64 ClearKey values by @4gray in https://github.com/4gray/iptvnator/pull/1575
+    - feat(downloads): download completed Xtream catch-up programmes as TS by @4gray in https://github.com/4gray/iptvnator/pull/1572
+    - feat(playback): stream-info popover in the player overlay by @larsemig in https://github.com/4gray/iptvnator/pull/1578
+    - fix(ui): keep detail back navigation available while scrolling by @4gray in https://github.com/4gray/iptvnator/pull/1576
+    - test(database): guard upgrades across skipped releases by @4gray in https://github.com/4gray/iptvnator/pull/1582
+    - fix(epg): decode gzip files wrapped in HTTP gzip by @4gray in https://github.com/4gray/iptvnator/pull/1589
+    - fix(xtream): detect HTTP portals during explicit connection tests by @4gray in https://github.com/4gray/iptvnator/pull/1588
+    - fix: prevent fullscreen hover and playlist refresh races by @4gray in https://github.com/4gray/iptvnator/pull/1591
+    - fix(m3u): enable VOD controls independently of TMDB by @4gray in https://github.com/4gray/iptvnator/pull/1594
+    - feat(playlist): show desktop health indicators for network sources by @4gray in https://github.com/4gray/iptvnator/pull/1592
+    - test(electron): synchronize source refresh completion by @4gray in https://github.com/4gray/iptvnator/pull/1595
+    - feat(playlist): land reviewed inactive-source cleanup on master by @4gray in https://github.com/4gray/iptvnator/pull/1596
+    - fix(m3u): restore DASH playback from favorites and recently viewed by @4gray in https://github.com/4gray/iptvnator/pull/1597
+    - fix(epg): keep the import panel free of horizontal scrolling by @4gray in https://github.com/4gray/iptvnator/pull/1599
+    - feat(epg): accept local XMLTV files as EPG sources by @4gray in https://github.com/4gray/iptvnator/pull/1600
+    - docs(tmdb): clarify user-provided API key policy by @4gray in https://github.com/4gray/iptvnator/pull/1581
+    - feat(portals): posters-only cover wall for movie and series grids by @4gray in https://github.com/4gray/iptvnator/pull/1604
+    - chore(deps): upgrade Angular to 22.1 and Nx to 23.2 by @4gray in https://github.com/4gray/iptvnator/pull/1603
+    - feat(portal): mark movies as watched from the detail page by @4gray in https://github.com/4gray/iptvnator/pull/1605
+    - feat(updater): nightly builds and a stable/nightly update channel by @4gray in https://github.com/4gray/iptvnator/pull/1608
+    - ci(nightly): run the version step in bash on Windows by @4gray in https://github.com/4gray/iptvnator/pull/1609
+    - ci(nightly): set the electron-builder publish channel for nightly builds by @4gray in https://github.com/4gray/iptvnator/pull/1611
+    - fix(shell): persist the app zoom level as frame-bound temporary zoom (#1109) by @4gray in https://github.com/4gray/iptvnator/pull/1617
+    - fix(playback): make the fullscreen channel panel discoverable and calmer to close by @4gray in https://github.com/4gray/iptvnator/pull/1619
+    - feat(playback): fullscreen episode panel for series playback by @4gray in https://github.com/4gray/iptvnator/pull/1620
+    - fix(shell): reload the packaged renderer back onto its in-app route by @4gray in https://github.com/4gray/iptvnator/pull/1622
+    - test(website): wait for the copy button label before reading the clipboard by @4gray in https://github.com/4gray/iptvnator/pull/1624
+    - fix(ui): keep one Back arrow on detail pages by @4gray in https://github.com/4gray/iptvnator/pull/1627
+    - fix(tmdb): search TMDB with the provider spelling, not the folded key by @4gray in https://github.com/4gray/iptvnator/pull/1626
+    - feat(shell): zoom shortcuts on Windows and Linux (#1109) by @4gray in https://github.com/4gray/iptvnator/pull/1623
+    - build(deps): declare node-gyp for the embedded MPV native build by @4gray in https://github.com/4gray/iptvnator/pull/1625
+    - test(web-e2e): reach row buttons with Option+Tab on WebKit by @4gray in https://github.com/4gray/iptvnator/pull/1629
+    - feat(portal): show each season's own poster beside the season tabs by @4gray in https://github.com/4gray/iptvnator/pull/1628
+    - test(e2e): give the DASH collection round-trip its cold-load budget by @4gray in https://github.com/4gray/iptvnator/pull/1632
+    - fix(settings): honest update-channel check and fresh release notes by @4gray in https://github.com/4gray/iptvnator/pull/1631
+    - fix(portals): stop treating a slow panel as a dead host; IPv4 fallback budget in Electron by @4gray in https://github.com/4gray/iptvnator/pull/1621
+    - feat(portal): season thumbnails in the season dropdown + PR #1628 follow-ups by @4gray in https://github.com/4gray/iptvnator/pull/1633
+    - feat(collections): open a favorite or recent live channel inside its playlist by @4gray in https://github.com/4gray/iptvnator/pull/1634
+    - build(deps): resolve the eight open Dependabot security alerts by @4gray in https://github.com/4gray/iptvnator/pull/1635
+    - fix(collections): non-destructive reload feedback for the scope switch by @4gray in https://github.com/4gray/iptvnator/pull/1636
+    - chore(deps-dev): bump @types/better-sqlite3 from 7.6.13 to 9.6.0 by @dependabot[bot] in https://github.com/4gray/iptvnator/pull/1501
+    - ci(release): sweep PR draft releases the close event never reaches by @4gray in https://github.com/4gray/iptvnator/pull/1641
+    - refactor(collections): split the unified collection page and live tab by @4gray in https://github.com/4gray/iptvnator/pull/1642
+    - fix(search): locale-invariant Turkish case folding in every search path (#609) by @4gray in https://github.com/4gray/iptvnator/pull/1640
+    - fix(dashboard): live rails find XMLTV programmes outside the global EPG sources by @4gray in https://github.com/4gray/iptvnator/pull/1637
+    - feat(dashboard): say where you left off instead of which provider it came from by @4gray in https://github.com/4gray/iptvnator/pull/1646
+    - feat(dashboard): portal EPG on the live rails, loaded lazily per visible card by @4gray in https://github.com/4gray/iptvnator/pull/1638
+    - feat(collections): open a Stalker live favorite inside its portal by @4gray in https://github.com/4gray/iptvnator/pull/1639
+    - fix(epg): advance the Xtream channel list's current programme as time passes by @4gray in https://github.com/4gray/iptvnator/pull/1647
+    - fix(tmdb): a new series no longer matches its older, better-known namesake by @4gray in https://github.com/4gray/iptvnator/pull/1648
+    - docs(agents): compact root guidance and preserve task-specific knowledge by @4gray in https://github.com/4gray/iptvnator/pull/1645
+    - fix(embedded-mpv): unbreak the Windows runtime pin and the refresh that abandoned it by @4gray in https://github.com/4gray/iptvnator/pull/1656
+    - docs(tmdb): replace catalog titles in matching examples with stand-ins by @4gray in https://github.com/4gray/iptvnator/pull/1658
+    - chore(release): prepare v0.24.0 by @4gray in https://github.com/4gray/iptvnator/pull/1659
+    - test(electron): fix Windows cleanup and retain packaged smoke diagnostics by @4gray in https://github.com/4gray/iptvnator/pull/1665
+    New Contributors
+    - @Bpl5966 made their first contribution in https://github.com/4gray/iptvnator/pull/1515
+    - @mark-jardine made their first contribution in https://github.com/4gray/iptvnator/pull/1489
+    - @thejdubb02 made their first merged contribution through https://github.com/4gray/iptvnator/pull/1617, incorporating their original https://github.com/4gray/iptvnator/pull/1613. Their search and EPG fixes also shipped through #1640 and #1647.
+    Full Changelog: https://github.com/4gray/iptvnator/compare/v0.23.0...v0.24.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/4gray/iptvnator/releases/tag/v0.24.0
+ReleaseTime: 2026-09-24T06:58:11.0000000Z

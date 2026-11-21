@@ -1,0 +1,21 @@
+Version: 0.5.17
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.17/AnyBridge_0.5.17_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.17/AnyBridge_0.5.17_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复「重启 Devin 以应用代理」报「Devin 进程未能终止」的回归（重装/自定义安装路径后稳定复现）：
+      - 根因：进程终止按安装目录精确前缀筛选 PID，而存活检测按路径宽松子串判定，两者基准不一致；重装后注册表/快捷方式指向的路径与实际运行进程目录错位时，强杀一个都没命中而检测仍报存活，稳定误报「未能终止」。
+      - PID 筛选与存活检测改为同源判定（路径含 devin 目录名并排除 Windsurf 的 devin 扩展目录），并叠加安装目录前缀匹配取并集。
+      - 强杀升级为最多 3 轮「枚举 → taskkill → 复查」，总等待窗口 3s → 6s，覆盖 Electron 进程树慢退出。
+      - taskkill 失败原因不再静默吞掉，报错信息附带 kill 输出（如「拒绝访问」），便于自助定位权限问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.17
+ReleaseTime: 2026-09-17T11:38:49.0000000Z

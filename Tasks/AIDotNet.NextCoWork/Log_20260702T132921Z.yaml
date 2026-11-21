@@ -1,0 +1,27 @@
+Version: 1.0.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.4/OpenCowork-win-amd64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.4/OpenCowork-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Removed BOM character from package.json for better compatibility with various tools and parsers.
+    - Added pointer-events-none to user message locator container to prevent it from intercepting clicks on underlying UI elements.
+    Changed
+    - Optimized streaming and debug overhead by implementing on-demand caching and batch refresh instead of full recalculation on every increment, reducing O(n²) complexity in main and sidecar processes.
+    - Enhanced debug request body handling by upgrading from in-memory truncation to persistent disk storage for better readability of long request bodies.
+    - Added constraints for sub-agent and plan mode operations: sub-agents can no longer directly create/execute/approve plans, and plan mode tools are disabled by default in sub-agent contexts.
+    - Implemented context injection for plan mode, plan revision, plan execution, plugin channels, system commands, and slash commands to ensure model input consistency with current runtime state.
+    - Added prompt cache key truncation and derived sub-agent cache keys for OpenAI Responses API.
+    - Added duplicate task deduplication during runtime to prevent identical sub-agent prompts from being executed multiple times.
+    Fixed
+    - Fixed sidecar manager initialization and communication flow.
+    - Improved session image export functionality.
+    - Updated routing AI provider configuration.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/OpenCowork/releases/tag/1.0.4
+ReleaseTime: 2026-07-02T11:36:45.0000000Z

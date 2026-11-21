@@ -1,68 +1,74 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.zotero.org/download/client/update/0/0/WINNT_x86/en-US/release/update.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://www.zotero.org/download/client/update/0/0/WINNT_x86/en-US/release/update.xml?force=1'
 
 # Version
-$Task.CurrentState.Version = $Version = $Object1.updates.update.version
+$this.CurrentState.Version = $Object1.updates.update.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win32&version=${Version}"
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win32&version=$($this.CurrentState.Version)"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win-x64&version=$($this.CurrentState.Version)"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri "https://www.zotero.org/download/client/dl?channel=release&platform=win-arm64&version=$($this.CurrentState.Version)"
 }
 
 # Sometimes the installer does not match the version
-if (-not $InstallerUrl.Contains($Version)) {
-  $Task.Logging('The installer does not match the version', 'Warning')
+if (-not $InstallerUrl.Contains($this.CurrentState.Version)) {
+  $this.Log('The installer does not match the version', 'Warning')
 
   # Version
-  $Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'Zotero-([\d\.]+)').Groups[1].Value
+  $this.CurrentState.Version = [regex]::Match($InstallerUrl, 'Zotero-([\d\.]+)').Groups[1].Value
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Uri2 = 'https://www.zotero.org/support/changelog'
-    $Object2 = Invoke-WebRequest -Uri $Uri2 | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[starts-with(@id, 'changes_in_$($Version.Replace('.', ''))')]")
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $RelaseNotesUrl = 'https://www.zotero.org/support/changelog'
+      }
+
+      $Object2 = Invoke-WebRequest -Uri $RelaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[starts-with(@id, 'changes_in_$($this.CurrentState.Version.Replace('.', ''))')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '\((.+?)\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '\((.+?)\)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
-        }
-
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = $Uri2 + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
+          Value = $RelaseNotesUrl + '#' + $ReleaseNotesTitleNode.Attributes['id'].Value
         }
       } else {
-        # ReleaseNotesUrl
-        $Task.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $Uri2
-        }
-
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

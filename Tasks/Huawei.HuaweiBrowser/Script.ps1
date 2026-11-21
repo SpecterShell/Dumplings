@@ -1,34 +1,38 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://consumer.huawei.com/cn/mobileservices/browser/')
+$Prefix = 'https://consumer.huawei.com'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}/content/dam/huawei-cbg-site/cn/mkt/mobileservices/browser/new-version/js/nav.js"
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl1 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for X64"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlX64 = $Prefix + [regex]::Match($Object1, 'btnDown0\.attr\("href", "(.+?)"\)').Groups[1].Value
 }
+$VersionX64 = [regex]::Match($InstallerUrlX64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
 
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $InstallerUrl2 = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//a[./text()="PC for ARM"]')).GetAttribute('href')
+  InstallerUrl = $InstallerUrlArm64 = $Prefix + [regex]::Match($Object1, 'btnDown1\.attr\("href", "(.+?)"\)').Groups[1].Value
+}
+$VersionX86 = [regex]::Match($InstallerUrlArm64, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
+
+if ($VersionX64 -ne $VersionX86) {
+  $this.Log("x86 version: ${VersionX86}")
+  $this.Log("x64 version: ${VersionX64}")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Version1 = [regex]::Match($InstallerUrl1, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
-$Version2 = [regex]::Match($InstallerUrl2, 'HuaweiBrowser-([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $VersionX64
 
-if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

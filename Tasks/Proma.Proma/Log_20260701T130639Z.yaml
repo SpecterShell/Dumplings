@@ -1,0 +1,26 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.14.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.14.0
+    对比基准：v0.13.28
+    这是一个记忆系统重构版本：用轻量的工作区文件记忆取代 MemOS Cloud，Agent 能直接读写 CLAUDE.md 和 .claude/memory/ 来沉淀跨会话知识；同时去掉了 MCP 服务器的测试门槛，修好了会话 JSONL 解析的稳定性问题。
+    新功能
+    - 工作区记忆面板 — 新增「工作区记忆」Tab，Agent 生成的长期记忆（CLAUDE.md 与 .claude/memory/ 下的文件）直接可见、可编辑，编辑后自动保存到磁盘。(#1047)
+    - 用户画像自动沉淀 — Agent 在生成工作区记忆时，会持续迭代 .claude/memory/user-profile.md，越用越懂你的偏好和习惯。(#1047)
+    - MCP 服务器不再需要测试验证 — 添加 MCP 服务器后不再强制要求测试通过才能用，降低接入门槛。(#1049)
+    移除
+    - 移除 MemOS Cloud 记忆系统 — 之前的 MemOS Cloud 云端记忆已完全移除，替换为本地的文件记忆方案。你的记忆数据不再经过云端，完全留在本地磁盘上。(#1047)
+    Bug 修复
+    - 修复 Agent 会话 JSONL 解析 — 优化了会话文件的解析策略，避免异常数据导致解析失败。(#1048)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.14.0
+ReleaseTime: 2026-07-01T11:41:59.1970000Z

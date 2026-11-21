@@ -1,0 +1,25 @@
+Version: 2026.46.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/OpenAEC-Foundation/open-calc-studio/releases/download/v2026.46.1/Open.Calc.Studio_2026.46.1_x64-setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    Open Calc Studio 2026.46.1
+    Public testing release, 11 November 2026. Product version 2026.46.1; MSI 26.46.1; project format remains 2.4.0.
+    Changes
+    - #80: PDFs load again in the web version. The PDF.js worker is emitted as .js instead of .mjs, which web servers without .mjs in their MIME table served as application/octet-stream ("Setting up fake worker failed").
+    - Variants (knownbugs 12, 264): grid, status bar, tail/hours panels, header, summary, structure tree, mobile and wizard total only the active variant. The review centre uses the same totals.
+    - Review centre (knownbugs 11, 13, 14): a post with only empty rows is flagged as missing a price; empty rows under a post whose own price carries the total are not; a rate group without a rate does not count as a price.
+    - #69: Calc writes the shared openaec::cost::estimateItem profile (IFC data → Download (OpenAEC IFCX), or MCP export_ifcx with profile: "openaec") and reads free items with an inline quantity. Proposed shared contract in the IFCX profile document; the full Calc IFCX export is unchanged.
+    Upgrade note: in estimates that use variants, displayed totals can be lower than in 2026.46.0, because rows of variants you did not choose no longer count. Without variants nothing changes. Reports and printing still include all variants (knownbug 165).
+    Evidence and limits
+    1,567 application tests passed; the web PDF fix was verified in a browser against a server with the live MIME table and on the live site. The shared export of the sample estimate gave 6 items, EUR 28,109.00, equal to its direct costs, and opens again with the same amount.
+    Not certified by this release: real SuperCloud end-to-end acceptance (#73, handover in the issue), anonymous container download (#35, GHCR package private by organisation policy), production accounts (#42) and the remaining findings in knownbugs.md.
+    Full release notes · IFCX profile
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/OpenAEC-Foundation/open-calc-studio/releases/tag/v2026.46.1
+ReleaseTime: 2026-11-11T23:32:33.0000000Z

@@ -1,0 +1,134 @@
+Version: 2022.3.55f1c1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unitychina.cn/download_unity/06b99830297d/Windows64EditorInstaller/UnitySetup64-2022.3.55f1c1.exe
+  ProductCode: Unity 2022.3.55f1c1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/2022.3.55
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.55f1
+    - Audio Authoring: Audio Source clip is not audible when exceeding a high number of active Audio Sources (UUM-91256)
+    - DirectX12: Allocated graphics memory does not get released when the Editor is out of focus while using D3D12 graphics API (UUM-86354)
+    - DirectX12: Crash on GfxDeviceD3D12Base::DrawBuffersCommon when opening a project after changing the Graphics API to DirectX12 (UUM-77757)
+    - DirectX12: The Camera does not render correctly when the Camera.Rect() is changed and HDR is enabled and DX12 graphics API is selected (UUM-86917)
+    - Input: Crash on InputDeviceIOCTL when closing Unity editor (UUM-10774)
+    - Packman: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - uGUI: TMP Input Field is moving Text and Caret UI positions for each new line when 'Auto Size' and 'Multi Line Newline' are used (UUM-89963)
+    - Vulkan: Crash on vkNegotiateLoaderLayerInterfaceVersion when rendering a specific particle system with an Emission Rate over Time of 35 or more using Vulkan (UUM-91203)
+    - Vulkan: [Android] Particles not rendered in the Player on some Android devices with Android 14 (UUM-68080)
+    2022.3.55f1 Release Notes
+    Features
+    - Version Control: Added an menu entry to 'Open in Unity Cloud' showing the repository in the Unity Dashboard.
+    - Version Control: Added copy path & history context menu actions in all menus where they apply.
+    - Version Control: Added diff and merge settings in Project Settings -> Version Control -> Unity Version Control Settings.
+    - Version Control: Added file conflict & dir conflict context menu actions to the merge view.
+    - Version Control: Added merge options dialog to the merge view.
+    - Version Control: Added the ability to merge a branch or a changeset, using a new context menu actions.
+    API Changes
+    - Build Pipeline: Added: BuildReport.GetLastestReport and BuildReport.SummarizeErrors made public and documented.
+    Changes
+    - Version Control: Automatically add UnityDirMonSyncFile rule for existing ignore.conf to avoid triggering unnecessary finding changes operation.
+    - Version Control: Improved the "search" edit box so it can resize when there is not enough space in the toolbar.
+    - Version Control: Optimized incoming changes to only reload the Package Manager when needed (Gluon/partial workspace only for now).
+    - Version Control: Optimized switching operations to only triggers the Package Manager to reinstall packages when needed.
+    - Version Control: Removed from the public documentation all internal APIs that were previously visible by mistake.
+    - Version Control: Removed support for migrating old Collaborate workspaces to Unity Version Control.
+    - Version Control: Replaced the "D" DevOps icon by the branching icon used in the Hub.
+    - Version Control: Replaced the logo of Unity in the Sign in to Unity VCS window.
+    - Version Control: Updated the minimum supported version to Unity 2021.3.0f1.
+    - XR: Updated xr.sdk.openxr package version to 1.13.2.
+    Fixes
+    - 2D: FIx Unnecessary scripting call in Sprite Renderer - SpriteRenderer.InvokeSpriteChanged. (UUM-83203)
+    - 2D: Fixed a sorting issue when a lower sorted mesh in a chunk are unable to fit in lower sorted Tile due to vertex or index limit, but are able to fit in a future higher sorted Tile. (UUM-86981)
+    - 2D: Fixed clear flags when post processing is used. (UUM-83351)
+    - 2D: Fixed performance regression with Tilemap.SetTile. (UUM-85203)
+    - Android: Added support for 16kb page sizes.
+    - Android: Fixed Android 15 keyboard Edit Field overlapping into cutoff area. (UUM-77367)
+    - Android: Fixed issue where user installed certificates directly to an Android device wouldn't show up in the trusted_ca list. (UUM-73839)
+    - Android: Updated BundleTool to version 1.17.2. (UUM-90609)
+    - Asset Import: Fixed crash when reading from corrupted binary artifact. (UUM-83891)
+    - Asset Pipeline: Handle corrupted library crash to allow the users to open their project. (UUM-14959)
+    - Documentation: Updated ScriptableObject and ScriptableSingleton documentation. (UUM-84568)
+    - DX12: Fixed a crash that can happen when opening a project when ray tracing effects are enabled in HDRP. (UUM-87329)
+    - Editor: Error messages in dialogs are no longer cut off when using high DPI monitors on MS Windows. (UUM-87585)
+    - Editor: Fixed a perf issue with the Linux editor when using high ulimit file descriptor counts. (UUM-85386)
+    - Editor: Fixed an error that caused terrain layer map corruption and console errors when painting with a global mipmap limit set. (UUM-55985)
+    - Editor: Fixed an issue where horizontal scrolling would not work when using a trackpad gesture. (UUM-84867)
+    - Editor: Fixed an issue where shortcuts would not work on macOS after completing a rename operation. (UUM-56765)
+    - Editor: Fixed Context Menu not updating in the Shortcuts manager when resolving a Binding Conflict. (UUM-84760)
+    - Editor: Fixed issues with world space canvases rendered in offscreen cameras when in play mode and with a user defined application target frame rate. These could display flickering with transparent canvas UI components or ghosting for moving components. (UUM-86486)
+    - Editor: Fixed some settings Asset icons that were missing in the selection window. (UUM-83464)
+    - Editor: Fixed the issue where licensing modals was printing an error message in Editor console:
+      "Layout update is struggling to process current layout". (UUM-86833)
+    - Editor: Fixed the popup field handling the pointer-up event when the label was clicked. (UUM-87579)
+    - Editor: Fixed UI Toolkit Debugger to have minimum width split panes. (UUM-87428)
+    - Editor: Updated 7-Zip to 24.09.
+    - Graphics: Fixed gpu frametime scope for dx11. (UUM-70012)
+    - Graphics: Made BlitTexture(RenderTargetIdentifier) be affected by PostProcessing. (UUM-85970)
+    - HDRP: Added clamp to HairAngleWorld to prevent nan from FastASin. (UUM-72279)
+    - HDRP: Fixed an issue where cascade shadows and distance shadowmask were not blended properly. (UUM-78038)
+    - IL2CPP: Fixed case where IL2CPP can allocate more memory than needed. (UUM-83219)
+    - iOS: Fixed plugin framework folders showing up red in exported iOS Xcode project. (UUM-84687)
+    - Linux: Fixed Input.mouseScrollDelta which could be inconsistent depending on the framerate. (UUM-88049)
+    - Mono: Fixed some corner case issues with math operations. (UUM-85488)
+    - Package Manager: Switch project when importing a full project asset package is fixed for mac users. (UUM-87430)
+    - Particles: Artefacts while displaying gizmo. (UUM-55691)
+    - Physics 2D: When disabling a Collider2D, ensure that contacts are not destroyed before they are reported if "Callbacks On Disable" is active. (UUM-89955)
+    - Profiler: Fixed Unity report invalid value for TSLA (Temp) allocators in memory snapshot.
+    - Scripting: Fixed early player loop overrides being reset to default when initialization is fully done. (UUM-57619)
+    - Scripting: Fixed EditorApplication.isFocused returning false in playmode. (UUM-83091)
+    - Scripting: Fixed RuntimeInitializeOnLoad invoking the wrong method overload. (UUM-53659)
+    - Scripting: Fixed RuntimeIntializaOnLoad invoking attribute marked accessor methods in Editor.
+    - Scripting: Fixed Update being called after the script is disabled in Start. (UUM-72366)
+    - Serialization: Crash on ReadAndActivateObjectThreaded when reimporting a missing PSB file prefab. (UUM-59093)
+    - Serialization: Handle hash collisions in the TypeTreeCache. (UUM-85722)
+    - Shadergraph: Fixed Shader warnings in URP ShaderGraph when using the Normal From Texture node. (UUM-90053)
+    - Shadergraph: Fixed/improved identifier collision detection on properties. (UUM-73838)
+    - Shaders: Fixed implicit randomwrite shader requirement for compute shaders. (UUM-85545)
+    - SpeedTree: Fixed an issue where undo was not possible when the branch was rotated. (UUM-82599)
+    - uGUI: Added the missing platform switches for Windows standalone platform. (UUM-78726)
+    - UI Toolkit: Fixed two memory retention issues in the UI Toolkit renderer (entry processor and render device release) and added an API to reset the renderer. (UUM-87216)
+    - Universal RP: Added SS Shadow coord transform to TransformWorldToShadowCoord. (UUM-73947)
+    - URP: Fixed sorting the Reflection Probe by resolution. (UUM-83862)
+    - Version Control: Added a warning message to inform users about mismatching cloud project.
+    - Version Control: Fixed a crash in the create workspace window when unable to resolve a @unity organization.
+    - Version Control: Fixed files getting checked out even though they are in hidden_changes.conf.
+    - Version Control: Fixed incoming changes view that was not kept as selected after resolving some conflicts.
+    - Version Control: Fixed link to invite members in Unity Cloud.
+    - Version Control: Fixed manual login to Cloud that didn't work with an Enterprise installation.
+    - Version Control: Fixed new child branch not created from HEAD after update.
+    - Version Control: Fixed resolve conflicts not informing about lack of UVCS installation.
+    - Version Control: Fixed the Invite users to cloud organization when using an Enterprise installation.
+    - Version Control: Fixed the learn more (here) link that showed the hex color value in Unity 6.
+    - Version Control: Fixed workspace name that was not refreshed after repository manual creation or selection.
+    - Version Control: Removed from the Create Workspace window the Local server that was present with no installation of UVCS.
+    - Version Control: Replaced hardcoded urls pointing to plasticscm.com.
+    - Video: Video contains artifacts when played in the Video Preview section in the Inspector Window. (UUM-83600)
+    - VisionOS: Fixed plugin framework folders showing up red in exported VisionOS Xcode project. (UUM-84687)
+    - WebGL: Fixed black screen render for some Android devices when Splash screen is disabled and Linear color is used. (UUM-77046)
+    Package changes in 2022.3.55f1
+    Packages updated
+    - com.unity.2d.aseprite: 1.1.6 to 1.1.7
+    - com.unity.collab-proxy: 2.5.2 to 2.6.0
+    - com.unity.services.core: 1.12.5 to 1.14.0
+    - com.unity.xr.core-utils: 2.3.0 to 2.4.0
+    - com.unity.xr.openxr: 1.13.1 to 1.13.2
+    - com.unity.microsoft.gdk: 1.2.3 to 1.3.0
+    - com.unity.microsoft.gdk.tools: 1.2.3 to 1.3.0
+    - com.unity.services.levelplay: 8.3.0 to 8.5.1
+    - com.unity.asset-manager-for-unity: 1.0.0 to 1.2.2
+    Packages added
+    - com.unity.microsoft.gdk.discovery@1.0.0

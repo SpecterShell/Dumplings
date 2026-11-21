@@ -1,0 +1,24 @@
+Version: 0.6.11
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.11/Mini-Term_0.6.11_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.11/Mini-Term_0.6.11_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.11 · 修复窗口失焦后的系统输入锁定
+    🐛 缺陷修复
+    - 失焦输入锁定：此前窗口失焦瞬间若左键仍处于按下状态（拖动标题栏时切换窗口、截图工具抢焦点等场景），鼠标捕获与 Win32 模态输入状态会被完全跳过清理，残留的模态状态可能阻塞整个桌面的输入切换。现在失焦后会等待左键松开，再检查并投递 WM_CANCELMODE 完成延迟清理，正常的窗口拖动 / 缩放不受影响。
+    - 句柄安全防护：延迟恢复操作通过窗口身份标记校验目标窗口，避免误操作已销毁或被系统复用的窗口句柄。
+    ⚙️ 工程维护
+    - Rust 单元测试增至 334 个，补充系统菜单锁定、鼠标捕获与延迟释放的回归测试。
+
+    Windows：Mini-Term_0.6.11_x64-setup.exe（推荐）或 _x64_en-US.msi · macOS（Apple Silicon）：_aarch64.dmg · Linux：.AppImage / .deb / .rpm
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.11
+ReleaseTime: 2026-07-23T12:41:44.0000000Z

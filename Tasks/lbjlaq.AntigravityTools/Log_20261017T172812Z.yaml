@@ -1,0 +1,135 @@
+Version: 4.9.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.9.8/Antigravity.Tools_4.9.8_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.9.8/Antigravity.Tools_4.9.8_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [Classic Exclusive Auto Hot-Switch on Depleted Quota, Dual-Pool Monitoring & Legacy Sync Cleanup] (Ref #3509, Ref #3671, Ref #3684):
+      - Automatic Seamless Hot-Switching for Antigravity Classic (Classic Only): Integrated an auto-switch engine directly into the background quota inspection pipeline (refresh_all_quotas_internal). When Antigravity Classic is running and the active account's quota falls below the configured threshold, the engine automatically selects the healthiest available account from the pool based on threshold satisfaction, tier priority (Pro/Ultra > Free), highest remaining quota, and LRU anti-oscillation. Seamlessly restarts language_server via supervisor within 2 seconds while preserving Keyring credentials, guarded by a 120-second cooldown lock and desktop notifications. (Ref #3509)
+      - Streamlined Dual Quota Pool Monitoring & Threshold Control: Eliminated cluttered per-model selection tags in favor of intuitive dual-pool cards aligned with the dashboard — "Gemini Pool (Pro / Flash / Image)" and "Third-Party Models (Claude 3.7 / 3.5 / GPT)", with customizable trigger thresholds from 0% to 99%.
+      - Removal of Redundant Legacy Account Sync & UI Streamlining: Removed the confusing legacy "Auto Sync Current Account" card from Account Settings and removed its unused background interval timer, keeping the settings interface clean and focused.
+      - Full 12-Language Localization: Synchronized complete translations across all 12 supported languages including Chinese (Simplified & Traditional), English, Korean, Japanese, Russian, Spanish, Portuguese, Turkish, Vietnamese, Arabic, and Malay.
+    - [Antigravity CLI (agy) Native Evolution, Anti-Telemetry Tracking & Dynamic Model Selection] (Ref #3686, Ref #3630):
+      - Smooth Migration to Antigravity CLI (agy): Officially migrated the CLI synchronization module to support Antigravity CLI (agy), while maintaining 100% backward compatibility for legacy gemini CLI detection and restoration. (Ref #3686)
+      - Frontend Dynamic Model Selection & Real-Time Reflection: Rebuilt CLI model onboarding with a dropdown interface supporting custom model selection; the backend reflects the live configured model in real-time upon state inspection.
+      - Automatic Shell Wrapper Management & Thinking Effort Disassembly: Automatically identifies and wraps ~/.local/bin/agy, injecting GEMINI_API_KEY, GOOGLE_GEMINI_BASE_URL, and anti-telemetry headers; intelligently disassembles base model names and reasoning effort tiers (e.g. gemini-3.8-flash-low into --model gemini-3.8-flash --effort low).
+      - Independent Active Account Tracking & Multi-Client Badges: Added detect_active_clients_status to independently identify live active accounts across Antigravity Classic, Antigravity IDE (state.vscdb), and Antigravity CLI (agy credentials & Keyring), displaying dedicated contextual badges ([Classic], [IDE], [CLI]) and row highlighting. (Ref #3630, Ref #3686)
+    - [Intelligent 403 State Identification, Upstream Action URL Extraction & Closed-Loop Self-Healing] (Ref #3630, Ref #3684):
+      - Full 403 Body Capture & Action URL Extraction (validation_url / appeal_url): Eliminated premature discarding of 403 HTTP response bodies in modules/quota.rs. Full Google RPC error payload details are now parsed to extract validation_url (human/captcha verification links) and appeal_url (Terms of Service appeal links) into the account model, lighting up actionable frontend buttons.
+      - Decouple Temporary Verification (VALIDATION_REQUIRED) from Permanent Ban: Refactored gateway handlers across Gemini, Claude, and OpenAI to make temporary validation and permanent ban (set_forbidden) mutually exclusive, avoiding accidental permanent disabling during temporary observation windows.
+      - Automatic Deadlock Clearing & Closed-Loop Recovery on Successful Probe: When an account completes verification externally and quota probing succeeds, the system automatically clears the proxy_disabled flag and resets stale 403 error reasons, reloading the account back into the pool.
+    - [Align with Claude Code 2.1.301 Protocol Specification, Full-Link Traceability & Claude 5 Models] (PR #3689, Ref #3684, Ref #3686, Thanks to @cubelikeplayDaniel):
+      - Anti-WAF Identity Sanitization & Agent SDK CLI Preamble Alignment: Extended RE_WAF_TRIGGER_HEADERS and prompt normalization in prompt_sanitizer.rs to strip Agent SDK CLI preambles and clean new telemetry headers (cc_workload, cc_is_subagent), preventing Google Cloud Code WAF 429 rate limit errors. (PR #3689, Ref #3684, Thanks to @cubelikeplayDaniel)
+      - Full-Link Downstream Traceability (request-id): Unified injection of request-id: req_{trace_id} across streaming, aggregated JSON, and non-streaming responses in handlers/claude.rs. (PR #3689, Thanks to @cubelikeplayDaniel)
+      - Claude Protocol Schema Alignment & Adaptive Thinking Display: Added ThinkingConfig.display and Usage.cache_creation to cleanly receive and relay cache creation token distribution metrics. (PR #3689, Thanks to @cubelikeplayDaniel)
+      - Claude 5 Model Family Registration & CLI Sync: Registered 8 core Claude 5 model definitions in cli_sync.rs (with 256k context window). (PR #3689, Ref #3686, Thanks to @cubelikeplayDaniel)
+    - [Prevent OOM Crashes on Cyclic JSON Schema Expansion & Reliability Hardening] (PR #3694, Fixes #3690, Ref #3682, Ref #3693, Thanks to @cubelikeplayDaniel):
+      - Cyclic Self-Reference Termination & Safe Degradation: Introduced active traversal tracking active_refs during recursive reference flattening for branching schemas (\(b \ge 2\)), degrading safely into terminal empty objects annotated with "(Cyclic $ref: ...)" and preventing \(2^{64}\) exponential memory explosions (SIGKILL 137). (PR #3694, Fixes #3690, Thanks to @cubelikeplayDaniel)
+      - Schema Array Normalization & Terminal ARRAY Items Guard: Strips illegal properties on array nodes while ensuring compliant items, preventing Gemini Protobuf 400 INVALID_ARGUMENT errors. (PR #3694, Ref #3682, Thanks to @cubelikeplayDaniel)
+      - Adaptive Streaming Peek Timeout for Reasoning Models: Implemented calculate_adaptive_peek_timeout_full to extend first-chunk pre-read timeout baseline from 30s to 60s/90s/120s for thinking/reasoning models, preventing premature cancellations and rotation storms. (PR #3694, Ref #3693, Thanks to @cubelikeplayDaniel)
+      - Zero-Downtime Atomic Account Pool Reload: Redesigned reload into local batch loading followed by atomic retain and insert, eliminating transient 503 Token pool is empty errors during reloads. (PR #3694, Thanks to @cubelikeplayDaniel)
+      - Anti-Regression Rate Limit Protection & Order-Agnostic ErrorInfo Scanning: Preserves longer unexpired quota backoff periods against shorter subsequent generic 429 delays, and scans all entries in RPC details arrays. (PR #3694, Thanks to @cubelikeplayDaniel)
+      - Authorization Header Sensitive Masking & Single-Pass Regex Code Restoration: Marked Authorization headers as sensitive in logs and upgraded code block restoration to single-pass regex replacement. (PR #3694, Thanks to @cubelikeplayDaniel)
+    - [Eliminate Ineffective Prod Endpoint, Relax Streaming Watchdog to 120s & Preserve Roles] (PR #3691, PR #3672, PR #3687, PR #3685, Fixes #3506, Ref #3525, Ref #3671, Thanks to @EricZhou05, @blackdm666, @cubelikeplayDaniel):
+      - Eliminate 100% 429-Yielding Prod Public Endpoint: Completely removed Prod from V1_INTERNAL_BASE_URL_FALLBACKS, retaining only official native primary Daily and verified backup Sandbox endpoints. (PR #3691, Ref #3525, Thanks to @EricZhou05)
+      - Recalibrate Streaming Watchdog First-Chunk Timeout to 120s Baseline: Relaxed streaming first-chunk timeout to 120s baseline (max(120, body_len / 64KB + 120)), fully accommodating model reasoning and cold-cache preheating. (PR #3691, Fixes #3506, Thanks to @EricZhou05)
+      - Preserve System/User/Assistant Roles in Array Inputs: Reused convert_codex_to_openai_request to accurately restore structured message roles per turn in Responses-style requests. (PR #3672, Fixes #3671, Thanks to @blackdm666)
+      - Eliminate 0ms Optimistic Reset Storms: Replaced optimistic reset with physical asynchronous cooling (<= 5s) and explicit cooldown returns (> 5s); introduced two-round uniform rotation (150ms delay) and linear backoff, lowering 429 error rates to 0.0%. (PR #3685, Thanks to @cubelikeplayDaniel)
+      - Case-Insensitive Retry-After Header Parsing: Supported case-insensitive matching for "Wait " and "wait " to ensure proper Retry-After: N header generation on 503 responses. (PR #3687, Fixes #3506, Thanks to @EricZhou05)
+    - [Traffic Monitor Inspector Overhaul: Single-Tab Postman Architecture, Structured Payloads & Dual-Link HAR Export]:
+      - Unified Postman-Style Single-Tab Layout: Restructured payload details into Request, Forwarded, and Response tabs with compact metadata and non-wrapping token consumption status.
+      - Dual View Modes: Supports toggling between Structured View (system prompts, dialogue bubbles, tool declarations, thinking blocks) and Raw Code View.
+      - Key-Value Headers Table & Masking: Two-column key-value tables with instant copying and Bearer sk-*** masking toggles.
+      - Standard Dual-Link HAR 1.2 Export: Exports client-to-gateway and gateway-to-upstream entries with 100% complete 3-message capture and one-click cURL/JSON copy.
+
+    - [经典款独占配额自动无感热切换、双核算力池监控与冗余同步清理] (Ref #3509, Ref #3671, Ref #3684):
+      - 经典款配额耗尽/低于阈值全自动无感热切 (仅限原生经典版): 在后台配额巡检流水线（refresh_all_quotas_internal）中接入自动热切引擎；当检测到 Antigravity 经典款当前正在运行且活动账号配额低于预设阈值时，自动在账号池中按「满足阈值门槛 + 付费等级优先 (Pro/Ultra > Free) + 可用配额更多 + LRU 防震荡」挑选最佳可用账号。利用经典款由内置 supervisor 原地拉起 language_server 并继承 Keyring 凭据的特性，在 2 秒内无感完成热切换，附带 120 秒冷却锁与系统桌面通知。(Ref #3509)
+      - 极简双核算力池监控与阈值调节：告别繁复密集的细分子模型标签，与仪表盘配额体系深度对齐，提供「Gemini 算力池 (Pro / Flash / 绘图)」与「第三方模型池 (Claude 3.7 / 3.5 / GPT)」两大核心池多选卡片；支持用户自定义 0% ~ 99% 换号触发阈值。
+      - 清理冗余的账号同步轮询与界面精简：彻底移除设置页中容易引起混淆的历史老旧功能「自动获取当前账号」配置卡片与无效后台定时器，保持账号设置页聚焦整洁。
+      - 全量 12 种多国语言覆盖：经典款自动热切相关文案完整覆盖中文（简/繁）、英文、韩文、日文、俄文、西文、葡文、土文、越文、阿文、马文等全部 12 种语言。
+    - [Antigravity CLI (agy) 原生全面演进、防遥测封号与模型动态选择导入] (Ref #3686, Ref #3630):
+      - 平滑迁移至 Antigravity CLI (agy): 在 CLI 配置同步模块中正式迁移支持 Antigravity CLI (agy)，保持对旧版 gemini CLI 探测与配置恢复的 100% 向后兼容。(Ref #3686)
+      - 前端模型自由选择与状态实时反查回显：彻底重塑 CLI 模型导入机制，前端下拉列表支持自由选择或自定义输入任意模型；后端在状态检测时实时反查提取本地实际生效的配置模型并精准回显至前端。
+      - 自动 Shell Wrapper 接管与智能思考档位拆解：自动识别系统 ~/.local/bin/agy 二进制并接管写入包装脚本，无缝注入 GEMINI_API_KEY、GOOGLE_GEMINI_BASE_URL 及防风控遥测标头；底层智能拆解基底模型与思考档位（如 gemini-3.8-flash-low 自动映射为 --model gemini-3.8-flash --effort low），杜绝因复合命名引发已知模型解析失败而静默降级的问题。
+      - 经典款、IDE 款与 CLI (agy) 三端当前账号独立探测与情境化多端徽章：新增 detect_active_clients_status 命令，分别精准探查 Antigravity 经典款（Keychain / DB）、Antigravity IDE (state.vscdb) 以及 Antigravity CLI (agy 原生凭据与 Keyring) 三端真实的当前生效账号；并在卡片视图与表格视图中引入专属情境化徽章（[经典款]、[IDE]、[CLI]）与高亮边框聚焦。(Ref #3630, Ref #3686)
+    - [403 状态智能识别、上游操作指引提取与全自动闭环自愈] (Ref #3630, Ref #3684):
+      - 403 报文体全量捕获与动作链接提取 (validation_url / appeal_url): 在配额探测模块（modules/quota.rs）中根除 403 立即丢弃响应体的缺陷；全量读取 Google RPC 错误详情报文，精准解析 details.metadata 中的 validation_url（人机/安全验证链接）与 appeal_url（服务条款申诉链接）并持久化至账号模型。配合前端 AccountErrorDialog，即时点亮「点击去验证」、「复制验证链接」或「前往申诉」交互按钮。
+      - 临时人机验证 (VALIDATION_REQUIRED) 与永久封禁严格解耦：在 Gemini、Claude 与 OpenAI 协议网关及预热检测中，将临时人机验证与永久封禁（set_forbidden）改造为严格互斥逻辑。发生 VALIDATION_REQUIRED 时仅进入 10 分钟观察窗口并记录验证链接，不再强行写入永久 proxy_disabled = true，杜绝临时验证被误判为永久死刑。
+      - 配额探测成功自动解除死锁与闭环自愈：当账号在外部（如官方 IDE 或网页端）通过验证、配额探测恢复正常（is_forbidden == false）时，自动解除 proxy_disabled 禁用状态并清空历史 403 错误信息；同时触发 trigger_account_reload 与前端状态推送，使恢复的账号无需人工干预即可全自动重归现役代理号池。
+    - [对齐 Claude Code 2.1.301 协议规范、全链路请求追溯与 Claude 5 模型族] (PR #3689, Ref #3684, Ref #3686, Thanks to @cubelikeplayDaniel):
+      - 防 WAF 身份清洗扩展与 Agent SDK CLI 深度对齐：针对 @anthropic-ai/claude-code@2.1.301 引入的复合身份提示词（Agent SDK CLI 运行时开场白），全面扩展 RE_WAF_TRIGGER_HEADERS 与身份归一化清洗规则；识别并清洗 cc_workload、cc_is_subagent 等扩展元数据请求头，坚决杜绝因上游 Google Cloud Code WAF 识别非白名单特征触发 429 限流风控。(PR #3689, Ref #3684, Thanks to @cubelikeplayDaniel)
+      - 全链路下行追踪对齐 (request-id): 在 Claude 协议处理器的流式 (SSE)、流聚合 JSON 与非流式 JSON 三大响应分支中，统一对齐注入 request-id: req_{trace_id} 响应头，与客户端 x-gateway-upstream-request-id 严格对应。(PR #3689, Thanks to @cubelikeplayDaniel)
+      - Claude 协议规范补全与自适应思考展示控制：补充 ThinkingConfig.display（支持 "omitted" / "summarized" / "highlights"）以适配自适应思考模式下的展示控制属性；在 Usage 中补充 cache_creation 结构，无缝接收与传递下行缓存创建 Token 分布。(PR #3689, Thanks to @cubelikeplayDaniel)
+      - Claude 5 模型族录入与 CLI 动态同步：在网关核心模型列表中全面录入 Claude 5 系列 8 个核心模型（claude-fable-5、claude-opus-5-5、claude-sonnet-5-5、claude-haiku-5-5 及其思考变体），上调上下文规格至 256k。(PR #3689, Ref #3686, Thanks to @cubelikeplayDaniel)
+    - [JSON Schema 递归展开防 OOM 崩溃与全链路可靠性加固] (PR #3694, Fixes #3690, Ref #3682, Ref #3693, Thanks to @cubelikeplayDaniel):
+      - 循环自引用展开阻断与安全降级：针对包含分支因子 \(b \ge 2\) 的递归数据结构（如二叉树 left: $ref, right: $ref），在展开路径中引入活跃引用集合 active_refs；一旦检测到循环引用立即安全降级为带有 "(Cyclic $ref: ...)" 提示的终态空对象并中止展开，彻底阻断 \(2^{64}\) 指数级节点裂变爆炸，杜绝 Linux VPS/服务器遭遇物理内存耗尽触发 OOM (SIGKILL 137) 崩溃。(PR #3694, Fixes #3690, Thanks to @cubelikeplayDaniel)
+      - 工具 Schema 规范化与终态 ARRAY 守卫：修正具备 properties 与 type: "array" 的工具 Schema 规范化逻辑，安全剥离非法的 properties 并保底注入合规 items；增加终态铁律守卫，确保所有最终为 ARRAY 的节点必持合规 items，防止联合数组类型触发 Gemini Protobuf 400 INVALID_ARGUMENT 校验拦截。(PR #3694, Ref #3682, Thanks to @cubelikeplayDaniel)
+      - 推理模型自适应流式预读 Peek 宽限与首包防误杀：针对 Claude 与 OpenAI 协议端点中思考/推理模型（thinkingConfig、reasoning_effort、o1/o3/o4 系列及其思考变体），实现 calculate_adaptive_peek_timeout_full；将流式首包预读超时底线从 30 秒自适应阶梯扩展至 60 秒（大上下文根据 Token 估算自动扩展至 90 秒 / 120 秒），彻底解决长前缀思考预热与高推理深度导致的 30 秒超时误杀与全池轮换重试雪崩。(PR #3694, Ref #3693, Thanks to @cubelikeplayDaniel)
+      - 账号池零停机原子同步加载与并发闪断消除：消除 load_accounts 期间预先全量清空全局 self.tokens 容器导致的并发请求遭遇 503 Token pool is empty 闪断故障；重构为局部暂存集合异步载入，再通过 retain 安全剔除已失效账号并原子覆写新增/有效账号，确保账号池在高并发热重载过程中全程 100% 在线。(PR #3694, Thanks to @cubelikeplayDaniel)
+      - 限流防倒退校验与 ErrorInfo 顺序无关解析：在 parse_from_error_with_mode 中增加防倒退校验，当账号已处于更长且未过期的锁定状态（如配额耗尽 300 秒退避）时，自动忽略后续并发请求返回的无具体延时的较短通用 429 间隔（60 秒），防止长锁定被瞬态短报错冲刷倒退；遍历扫描 details 数组中的所有对象寻找 reason，杜绝因 google.rpc.ErrorInfo 位于非零索引引发的限流原因漏判。(PR #3694, Thanks to @cubelikeplayDaniel)
+      - 鉴权安全加固与 Prompt 代码块防递归展开：向 Google 上游发送请求的 HeaderMap 中的 Authorization HeaderValue 显式标记为 sensitive，确保在所有日志追踪与 Debug 打印中自动脱敏为 [sensitive]；将受保护代码块占位符的多轮循环串行替换升级为基于正则的单次原子还原，并在身份标识正文中补充 ! ? ; ！ ？ ； 等标点边界。(PR #3694, Thanks to @cubelikeplayDaniel)
+    - [剔除不可用 Prod 端点、流式看门狗放宽至 120s 与多轮角色保留] (PR #3691, PR #3672, PR #3687, PR #3685, Fixes #3506, Ref #3525, Ref #3671, Thanks to @EricZhou05, @blackdm666, @cubelikeplayDaniel):
+      - 剔除 100% 报 429 的 Prod 生产公共端点：经全规模对照实测，Prod 生产端点（cloudcode-pa.googleapis.com）对该接口全上下文规模均在 1 秒左右必然返回 429 RESOURCE_EXHAUSTED，无法作为有效 fallback。在 V1_INTERNAL_BASE_URL_FALLBACKS 中彻底剔除 Prod 端点，仅保留官方原生主力 Daily 与实测可用的备用 Sandbox 双端点容灾。(PR #3691, Ref #3525, Thanks to @EricZhou05)
+      - 校准流式接口自适应防假死首包超时门槛至 120 秒：将流式接口（streamGenerateContent）首包超时保底放宽至 120 秒（max(120, body_len / 64KB + 120)），充分保障大模型冷缓存预热与思考链推理时间，杜绝长会话被反代误杀切入 429 与 503 假阳性。(PR #3691, Fixes #3506, Thanks to @EricZhou05)
+      - Responses 格式数组 input 完整保留多轮对话角色：解决 /v1/chat/completions 接收仅带 instructions / input 而无 messages 的 Responses 格式请求时，原实现强行将数组 input 字符串化导致丢失角色边界的问题。改为无缝复用 convert_codex_to_openai_request 结构化转换器，按条目精确还原各轮次角色。(PR #3672, Fixes #3671, Thanks to @blackdm666)
+      - 根除 0ms 乐观重置风暴与物理异步冷却：彻底移除 clear_for_optimistic_reset() 机制；当号池最短限流等待时间 <= 5s 时执行真实物理异步冷却，> 5s 时主动返回明确冷却需求；引入两轮自适应匀速轮换（150ms 延迟）与线性阶梯退避重试（1.5s ~ 3.5s），高并发 429 失败率从 37.4% 彻底降低至 0.0%。(PR #3685, Thanks to @cubelikeplayDaniel)
+      - 全账号限流重试秒数解析大小写双向兼顾：解决 extract_retry_after_seconds 仅检索大写 "Wait " 导致无法解析冷却秒数的缺陷，支持 "Wait " 与 "wait " 双向匹配，确保 503 错误响应正常生成 Retry-After: N 标准头部。(PR #3687, Fixes #3506, Thanks to @EricZhou05)
+    - [流量监控报文详情重构：统一单 Tab 视窗、正文结构化审查与双链路 HAR 导出]:
+      - 统一 Postman 风格单 Tab 视窗架构：将报文详情重塑为「请求 (Request)」、「转出 (Forwarded)」、「响应 (Response)」三大主选项卡，告别上下分屏挤压，大幅提升查阅空间。
+      - 正文「结构化拆分」与「原始代码」双视图：智能拆解展示系统提示词、多轮对话气泡、工具函数声明、思考推理块与调用回执，复杂 Agent 报文清晰直观。
+      - 键值对表格与敏感 Header 脱敏保护：请求头与 Query 参数升级为两列键值对表格，支持关键词搜索、悬浮复制及 Bearer sk-*** 掩码脱敏与明文切换。
+      - 标准双链路 HAR 1.2 导出 (3 报文齐全): 导出包含「客户端->网关」与「网关->上游真实端点」双链路 Entry，确保抓包工具导入时客户端请求、网关转出及响应 3 个报文 100% 齐全；支持一键复制 cURL 命令与全量 JSON。
+    What's Changed
+    - fix(process): 隔离各 IDE 目标 state.vscdb 并通过 proc_pidpath 精准识别进程二进制 (Fixes #3598) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3600
+    - fix(gemini): 穿透非流式收集器中的流错误响应并防止空块污染思考缓存 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3601
+    - fix(proxy): 释放 invalid_grant 分片锁避免自死锁，隔离 project_id 探测并引入 5 分钟负缓存 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3602
+    - fix(patch): macOS 注入重签名失败时自动回滚备份以防 AMFI 闪退，并在还原时保留官方证书 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3603
+    - fix(cowork): 纳入工具 Schema 核算开销、消除免死租约遗漏，加固压缩生命周期与状态修剪 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3604
+    - fix(proxy): 统一 Claude 配额保护组、修复自定义路由与 Gemini Schema 规范化 (#3506, #2041, #1798) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3606
+    - fix(agy): verify keyring switches and sync selected account by @chenty2333 in https://github.com/lbjlaq/Antigravity-Manager/pull/3607
+    - fix(gateway,ide): 优化网关级联故障转移重试、长连接会话恢复与 IDE 凭据命名变体支持 (#3506, #3517, #3509, #3598) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3608
+    - fix(cowork,patch): 深度提升压缩率、合并压缩状态机并支持补丁注入全生命周期管理 (#3604) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3609
+    - fix(pipeline): 彻底根治思考预算统一覆盖为 32768 根因并保证后缀与默认模式优先级 (#3610) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3611
+    - fix(proxy): 对齐 Anthropic SSE 流错误官方标准类型并恢复客户端自动重试 (#3612) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3613
+    - fix(proxy): 修复 Cowork 自动压缩触发与判定解耦，排查压缩后上下文残留 (Ref #3614) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3615
+    - fix(i18n): 补齐特定 Agent 配置及 Dashboard 仪表盘全部 12 种语言国际化翻译 (Fixes #3617) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3618
+    - fix(i18n): 解决右上角语言连续快速切换导致并发写竞态、状态回滚与死锁 (Fixes #3619) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3620
+    - fix(proxy): 修复 Claude SSE 流超时阻塞与 overloaded_error 诱发重试死循环导致 20+ 分钟卡死 (#3621) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3622
+    - fix(proxy): 根除中途断流伪截断收尾并延长稳态超时至 120s，透传网络异常保障客户端原生重试 (Ref #3621, PR #3622) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3625
+    - fix(proxy): 精准移除轮换累计熔断与外层冗余超时并在首包重试时打破粘性死锁 (Fixes #3626, Ref PR #3622, PR #3625) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3628
+    - feat(token-stats): add 91-day activity heatmap, 24h hourly trends, top model distribution and pricing calculator by @zepeng-jin in https://github.com/lbjlaq/Antigravity-Manager/pull/3616
+    - feat(ui): 全站核心页面自洽入场动效与卡片微交互触觉反馈 (方案 B) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3636
+    - fix(proxy): 对齐 Claude Code 2.1.293 终结状态机并消除断流重试风暴与无尽计时悬挂 (Fixes #3633) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3634
+    - fix(proxy): 修复配额重置时间跨模型污染导致额度充足时误报 503 调度受限 (Fixes #3627) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3640
+    - fix(image,proxy): 优化 Imagen 3 微间隙原地 GraceRetry 与限流冷却队列救援 (Fixes #3329, Fixes #3409) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3641
+    - feat(proxy): 支持持续会话与固定账号零额度无感自动切换 (Fixes #3639, Ref #3509) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3642
+    - fix(cowork,compact): 加固 Claude Cowork 深度压缩状态机与接续标记穿透识别 (Ref #3576, RFC Deep Compact) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3644
+    - feat(proxy): 引入周配额临期优先调度算法 (EDF / Use-It-Or-Lose-It)，防止周期重置作废剩余额度 (Fixes #549, Ref #900) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3645
+    - fix(defense): 将 Gemini 空轮次保底垫片调整为惰性标点，根治 AI Agent 确认状态机被 'ok go on' 劫持缺陷 (Fixes #3629) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3649
+    - fix(pipeline,tools): 修复安全分类校验过滤、Claude 工具调用哨兵注入、shell 工具别名对齐与 Pro 模型限额截断 (Fixes #3195, #3202, #3229, #3224, #3215) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3652
+    - feat(proxy): support concurrency-aware spillover scheduling and max accounts cap by @zepeng-jin in https://github.com/lbjlaq/Antigravity-Manager/pull/3662
+    - feat(token-stats): support minute-level aggregated stats and granular trends by @zepeng-jin in https://github.com/lbjlaq/Antigravity-Manager/pull/3663
+    - fix(proxy,client): 加固切号持久化、配额即时耗尽标记与乐观重置保底 (Fixes #3639, Fixes #3637) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3664
+    - fix(scheduler,stream): 引入濒危额度过滤消除假性 429 并补齐断流三元组终结契约 (Fixes #429, #458, #3635, Ref #3626, #3639) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3666
+    - fix(openai): Chat Completions 的 Responses 格式数组 input 保留多轮角色 (Fixes #3671) by @blackdm666 in https://github.com/lbjlaq/Antigravity-Manager/pull/3672
+    - fix(proxy): 修复请求级 429 过早退出缺陷、统一上游 Prod 优先级并适配 Claude Code 1M 方括号 (Fixes #3506, Ref #3525, Ref #3634, Ref #3666) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3680
+    - fix(proxy,retry): 彻底移除 0ms 乐观重置风暴、引入物理冷却退避与端点健康隔离 (Fixes #3506, Ref #3525, Ref #3634, Ref #3666, Ref #3680) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3685
+    - fix(retry): 修复 Retry-After 头部解析失败问题 by @EricZhou05 in https://github.com/lbjlaq/Antigravity-Manager/pull/3687
+    - feat(claude): 对齐 Claude Code 2.1.301 协议规范、全链路请求追溯与 Claude 5 模型族 (Ref #3684, Ref #3686) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3689
+    - fix(upstream): 剔除不可用 Prod 端点并放宽流式首包 Watchdog 超时至 120s (Fixes #3506, Ref #3525) by @EricZhou05 in https://github.com/lbjlaq/Antigravity-Manager/pull/3691
+    - fix(proxy): 修复 JSON Schema 循环引用指数膨胀 OOM 与端点全链路可靠性加固 (Fixes #3690, Ref #3693) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3694
+    New Contributors
+    - @chenty2333 made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3607
+    - @modded-soldier-9 made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3640
+    - @blackdm666 made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3672
+    Full Changelog: https://github.com/lbjlaq/Antigravity-Manager/compare/v4.9.4...v4.9.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.9.8
+ReleaseTime: 2026-10-17T14:09:57.0000000Z

@@ -1,28 +1,34 @@
-$Object = Invoke-RestMethod -Uri 'https://www.xmind.net/_api/checkVersion/0?distrib=cathy_win32'
+$Object1 = Invoke-RestMethod -Uri 'https://www.xmind.net/_api/checkVersion/0?distrib=cathy_win32'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.buildId, '([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.buildId, '([\d\.]+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.download
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.download
 }
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.whatsNew.Split("`n`n")[1] | Format-Text
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.whatsNew.Split("`n`n")[1] | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

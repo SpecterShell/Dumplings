@@ -1,0 +1,23 @@
+Version: 1.16.15
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.15/vproxy-1.16.15-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.15 发布说明 / Release Notes
+    🎉 VProxy v1.16.15 正式发布！本版本全新上线扩展插件商店，将近 30 天流量统计升级为交互式堆叠柱状图，并带来 TUN / MTU 10040 警告根治与 Socks5/OpenVPN 内核选路修复：
+    🧩 扩展插件商店全新上线
+    - 插件商店菜单：在「扩展功能」抽屉中新增独立的「插件商店」入口，支持一键安装、卸载与快速拉取，配置持久化落盘；
+    - 自适应紧凑卡片：插件卡片采用 1~3 列响应式多列网格，内边距与排版精简轻量，清晰展示插件状态、版本、作者及主页；
+    - 内置官方插件：首批内置 GitHub Gist 发现插件，支持按协议过滤与深度翻页，一键全网扫描公开分享的节点与订阅。
+    🛡️ 内核与网络传输修复
+    - 根治 TUN 下 UDP/QUIC 报文 10040 警告（#13）：解决 Windows 平台 WSAEMSGSIZE (10040) 错误，针对 IPv6 与 TUN 适配器下的报文分段与发送缓冲区限制进行自适应保护；
+    - Socks5 握手保护：Socks5 节点未显式声明 udp 时不再强制注入 udp: true，防止对纯 TCP socks5 节点造成握手异常；
+    - OpenVPN 选路分流：完善 OpenVPN CBC/SHA1 遗留加密套件与 AEAD 套件在内核选路中的平滑分流机制。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.15
+ReleaseTime: 2026-11-17T06:11:51.0000000Z

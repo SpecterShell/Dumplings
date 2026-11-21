@@ -1,0 +1,34 @@
+Version: 0.26.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/microclaw/microclaw/releases/download/v0.26.0/microclaw-0.26.0-x86_64-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    MicroClaw Code becomes a fully separate product from the MicroClaw Server.
+    After upgrading, run mccode setup (or add a model profile to
+    ~/.mccode/settings.yaml); an old ~/.microclaw/code is not read.
+    Changed
+    - MicroClaw Code is fully separate from the MicroClaw Server. Its home
+      moves from ~/.microclaw/code to ~/.mccode (nothing is migrated: move the
+      old directory by hand to keep settings and sessions). Code no longer
+      borrows model credentials from MICROCLAW_CONFIG or
+      ~/.microclaw/microclaw.config.yaml: it uses --config, MCCODE_CONFIG,
+      ~/.mccode/config.yaml or a settings profile. Its variables are
+      MCCODE_HOME, MCCODE_CONFIG, MCCODE_SANDBOX, MCCODE_MANAGED,
+      MCCODE_LOCAL_SANDBOX, MCCODE_PATH_ALLOWLIST and MCCODE_REPO (the old
+      MICROCLAW_CODE_* names are no longer read), and Server variables such as
+      MICROCLAW_CONFIG, MICROCLAW_SKILLS_DIR and MICROCLAW_LOCAL_SANDBOX
+      no longer affect it. Managed settings move to /etc/mccode/managed.yaml
+      (macOS /Library/Application Support/mccode/managed.yaml, Windows
+      %ProgramData%\mccode\managed.yaml). The OS sandbox hides ~/.mccode
+      from shell commands, like ~/.microclaw.
+    - Documentation and the mccode config init template keep role models on the
+      session's profile, and say that model.roles.subagent is not used yet.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/microclaw/microclaw/releases/tag/v0.26.0
+ReleaseTime: 2026-11-07T00:31:55.0000000Z

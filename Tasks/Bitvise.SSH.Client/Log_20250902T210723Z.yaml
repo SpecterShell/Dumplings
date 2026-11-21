@@ -1,0 +1,18 @@
+Version: "9.47"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-947.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9#947
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Graphical SSH Client:
+      - When using public key authentication using a passphrase-protected key, previous SSH Client versions did not refresh client keypair information as intended. After a manual logout, the SSH Client would continue to cache the client key passphrase. If the passphrase was removed, or if it was newly set, the SSH Client did not take the new setting properly into account.
+        After a manual logout, client key information is now refreshed. The SSH Client will ask for the client key passphrase during the next login. For automatic reconnect, the passphrase continues to be cached, so that it does not have to be re-entered if the connection is lost and automatically restored.
+    - sftpc:
+      - The sftpc command-line SFTP client now supports the -ifExist parameter for put and get commands. When -ifExist is passed, the command completes successfully if the source of the transfer does not exist. In previous versions, a wildcard pattern needed to be used to avoid an error if there are no matches.
+    - Terminal:
+      - When recording a terminal session, the output file is now opened using the Windows flag FILE_SHARE_READ. This allows the file to be viewed in other applications while recording is in progress.
+ReleaseTime: 2025-09-02

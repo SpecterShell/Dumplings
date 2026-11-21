@@ -1,0 +1,171 @@
+Version: 18.0.5
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.0.5/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Corrected remote compaction summaries so they accurately report the number of input tokens processed.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Renamed the exported stream-retry helper from withEmptyCompletionRetry to withReplaySafeStreamRetry and added retry policy options for empty completions and provider errors. Consumers using the old helper must migrate.
+    Added
+    - Added browser-based Sign in with OpenRouter using OAuth PKCE, while retaining support for pasted OpenRouter API keys and redirect URLs for remote sessions.
+    - Added /login API-key authentication for DeepInfra and Yolo-Auto, including validation against each provider before the credentials are accepted.
+    Fixed
+    - Fixed DeepSeek vision models from losing image input while keeping image parts stripped for text-only DeepSeek endpoints.
+    - Fixed OpenAI-compatible gateways that report uppercase completion reasons such as STOP or MAX_TOKENS; these are now classified correctly, including mapping MAX_TOKENS to a length limit.
+    - Fixed provider message-count limit errors being treated as unrecoverable payload errors instead of recoverable context overflows.
+    - Improved Codex WebSocket continuations so rate limits, throttling, and compatible mode changes preserve valid response continuations instead of unnecessarily replaying the full context.
+    - Fixed Codex WebSocket cleanup failures caused by already-closed sockets.
+    - Added safe retries for transient mid-stream socket closures across OpenAI Responses, Chat Completions, Azure OpenAI Responses, and Codex SSE when no replay-unsafe output has been emitted.
+    - Fixed usage and cost reporting for OpenAI-compatible gateways backed by Vertex AI or Gemini by recognizing cached prompt tokens reported through cachedContentTokenCount.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added built-in DeepInfra provider support (deepinfra, DEEPINFRA_API_KEY) with live model discovery, including chat models, context windows, pricing, cache-read pricing, vision input, and reasoning-effort capabilities.
+    - Added built-in Yolo-Auto provider support with the flat-rate deepseek-flash-v4 model and live model discovery.
+    Fixed
+    - Fixed the Synthetic provider’s default model to use hf:zai-org/GLM-5.2 instead of the retired hf:zai-org/GLM-5.1.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added append-only transcript declarations and stable-row APIs for components with immutable history prefixes.
+    - Added the :img read selector to rasterize local SVG and SVGZ files for vision input.
+    - Added side-by-side image and SVG previews to omp git, including Git LFS object resolution and clear placeholders for unavailable or unsupported binary content.
+    - Added the omp if-bench command for zero-tool instruction-following and working-memory benchmarking across models, with live progress and ranked results.
+    - Added q to quit the git TUI.
+    - Added advanced whitespace filtering to the git TUI, including formatting-only changes and import-only changes in TypeScript, JavaScript, Rust, and Go.
+    - Improved the git TUI sidebar by compressing single-child directory chains and separating new or untracked files from tracked changes.
+    - Added Yolo-Auto to /login and documented the YOLO_AUTO_API_KEY environment variable.
+    - Updated the OpenRouter /login flow to support browser-based sign-in and automatic API-key provisioning, while retaining support for pasted sk-or-… keys.
+    - Added DeepInfra support for the image_gen and tts tools, including provider selection and MP3 or WAV output for text-to-speech.
+    Changed
+    - Standardized completed edit results with hashline-style paths and numbered previews across edit modes.
+    - Improved omp git responsiveness with immediate file rendering, progressive syntax highlighting, and deferred large-commit statistics.
+    - Documented that retry.maxDelayMs: 0 permits provider-requested quota waits to continue until automatic retry, rather than enforcing a wait ceiling.
+    - Expanded git TUI navigation and file-management shortcuts, including refresh, stage/unstage, directory operations, hunk and file navigation, pane movement, diff-view selection, commit-form access, and paging.
+    Fixed
+    - Fixed race condition where tunnel startup was incorrectly reported as failure on quick process exit
+    - Fixed Obsidian theme task instructions and usage-limit text becoming unreadable against dark backgrounds.
+    - Fixed marketplace-installed plugins failing to discover their rules/ directories.
+    - Fixed advisor notes in /tree displaying internal XML wrappers instead of readable text.
+    - Fixed successful agent and subagent results being discarded when cleanup exceeded its deadline.
+    - Fixed exiting plan mode mid-turn so the active turn now stops immediately.
+    - Fixed Windows workstation context reporting a virtual display adapter instead of the physical GPU.
+    - Fixed numbered selector menus such as /review ignoring digit-key selection.
+    - Fixed the welcome screen failing to reflow after terminal resizing.
+    - Fixed transcript layout issues that could clip assistant text, leave stale tool cards, disrupt scrolling, or make large-session rendering and shutdown unreliable.
+    - Fixed streamed assistant responses failing when later provider updates revised earlier Markdown.
+    - Fixed cache-miss status placement after streamed assistant output.
+    - Fixed /model role-cycle icons overlapping their ordinal on full-width terminals.
+    - Fixed constrained /collab QR codes rendering as empty rows; the browser URL hint is now shown instead.
+    - Fixed hub list and child peer rosters incorrectly including parked agents in model context and restored accurate status counts.
+    - Fixed browser relay clients hanging when enabling the Runtime domain on a shared tab.
+    - Fixed interactive TTSR interruptions being displayed as errors after successful rule injection.
+    - Fixed fast tool completions leaving a persistent running summary that obstructed later output.
+    - Fixed the Windows console welcome header being duplicated after cold launch.
+    - Fixed git TUI hunk navigation feedback when the sidebar has focus and preserved file selection after staging or unstaging.
+    - Fixed long sessions becoming unrecoverable when providers reject histories exceeding message-count limits.
+    - Improved /dump output with readable system-notice titles and XML-fenced raw payloads.
+    - Fixed kernel sessions failing to recover when cancellation was reported by a dead kernel.
+    - Applied advisor tool-call loop limits to prevent repeated failing calls from continuing without bound.
+    - Fixed lsp rename_file incorrectly reporting inaccessible paths as nonexistent and mishandling uncertain destination checks.
+    - Fixed LSP clients with different launch or initialization configurations incorrectly sharing one process; reloading now replaces superseded clients.
+    - Fixed the browser relay leaving Chrome's debugging infobar attached after the last client released a tab.
+    - Fixed auto-retry countdowns appearing frozen during long provider-requested waits.
+    - Fixed the Todo HUD becoming stale after viewing a subagent and returning to the main session.
+    - Fixed child-task artifact links and duplicate hub jobs result bodies.
+    - Fixed omp update showing a POSIX reinstall command on Windows after a package-rename migration failure.
+    - Preserved thinking.requiresEffort: false in custom model configuration so supported local Qwen templates can disable thinking explicitly.
+    - Fixed project settings from shared capability files being able to replace an entire settings group when a conflicting non-object value is present; the conflicting value is now ignored with a warning.
+    - Jina Reader requests now use configured credentials for higher authenticated rate limits while remaining available anonymously.
+    - Fixed advisor session persistence and loading performance for repeated retries and unusually large advisor transcripts.
+    - Fixed failed browser.open calls leaving OMP-spawned application processes running when no tab could be acquired.
+    - Improved browser-handle failures with prompt, operation-specific timeout errors instead of waiting for the entire browser cell.
+    - Fixed autonomous runs becoming idle after thinking-only length stops during speculative handoff.
+    - Fixed completed assistant replies disappearing from the live transcript under viewport pressure.
+    - Accelerated SHA-2 and SHA-3 checksums on supported ARM64 hardware.
+    - Fixed large MCP tool payloads being stored redundantly on disk.
+    @oh-my-pi/pi-natives
+    Added
+    - Added asynchronous, size-bounded SVG-to-PNG rasterization for terminal media previews.
+    - Added the DiffStream API for processing text and byte input incrementally, opening files asynchronously, reporting stable-prefix progress, generating exact unified diffs, and warming syntax grammars asynchronously.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Renamed the public TerminalFrameProvider.resetHistory method to beginHistoryReplay.
+    Added
+    - Loader messages can now be provided as a function, allowing dynamic labels such as live countdowns to update on each spinner tick while preserving the existing behavior for static strings.
+    Changed
+    - Improved history replay and terminal output handling so replayed content is rendered efficiently and complete replay results are written together.
+    Fixed
+    - Fixed graceful shutdown so finalized output is correctly retired before handing control back to the shell.
+    - Fixed terminal scrollback corruption during shutdown, tmux pane zoom and resize, and destructive screen resets, preventing duplicated frames, lost history, and stale transcript re-streaming.
+    - Fixed streaming Markdown rendering at chunk boundaries to preserve CommonMark emphasis behavior for Unicode text and correctly recognize GFM tables as they are completed.
+    @oh-my-pi/pi-utils
+    Added
+    - Added stableStringifyJson for deterministic serialization of nested JSON-shaped data.
+    Fixed
+    - Fixed managed Chrome-for-Testing installation failures when extracting the trusted browser download.
+    What's Changed
+    - feat(catalog,ai,coding-agent): add DeepInfra provider by @ats3v in https://github.com/can1357/oh-my-pi/pull/9223
+    - fix(catalog): point the Synthetic default at a model the catalog still has by @Robinbinu in https://github.com/can1357/oh-my-pi/pull/9611
+    - fix(ai): recognize provider message history limits by @roboomp in https://github.com/can1357/oh-my-pi/pull/9630
+    - feat(tui): tick the auto-retry countdown down instead of freezing by @sgfvamll in https://github.com/can1357/oh-my-pi/pull/9634
+    - fix(ai): prevent Codex WebSocket close crash by @ephraimduncan in https://github.com/can1357/oh-my-pi/pull/9641
+    - fix(task): prevent unreadable and duplicate results by @roboomp in https://github.com/can1357/oh-my-pi/pull/9649
+    - fix(ai): preserve codex chains across service tiers by @alphastorm in https://github.com/can1357/oh-my-pi/pull/9650
+    - fix(collab): hide QR when transcript clips below full height by @Giardi77 in https://github.com/can1357/oh-my-pi/pull/9658
+    - fix(ai): exempt DeepSeek vision SKUs from text-only image guard by @chuzui in https://github.com/can1357/oh-my-pi/pull/9436
+    - fix(coding-agent): authenticate Jina Reader requests by @poorpaper in https://github.com/can1357/oh-my-pi/pull/9468
+    - fix(agent): resumed maintenance after speculative handoff by @roboomp in https://github.com/can1357/oh-my-pi/pull/9530
+    - fix(settings): non-object project leaves no longer shadow settings groups by @sjawhar in https://github.com/can1357/oh-my-pi/pull/9532
+    - fix(browsers): extract managed chrome past 64 MiB member cap by @roboomp in https://github.com/can1357/oh-my-pi/pull/9538
+    - fix(browser): guarded handle actions fail fast instead of stalling the cell by @roboomp in https://github.com/can1357/oh-my-pi/pull/9539
+    - fix(browser): reaped spawned apps after failed opens by @roboomp in https://github.com/can1357/oh-my-pi/pull/9540
+    - test(coding-agent): wait for complete detached PID writes by @pedropaulovc in https://github.com/can1357/oh-my-pi/pull/9542
+    - fix(builtins): enabled arm hash acceleration by @roboomp in https://github.com/can1357/oh-my-pi/pull/9556
+    - fix(advisor): dedupe replayed transcript persistence and unblock resume by @roboomp in https://github.com/can1357/oh-my-pi/pull/9557
+    - test(coding-agent): remove load-sensitivity from three native/unit suites by @pedropaulovc in https://github.com/can1357/oh-my-pi/pull/9561
+    - fix(ai): treat uppercase OpenAI finish_reason as case-insensitive by @yiliang114 in https://github.com/can1357/oh-my-pi/pull/9566
+    - fix(coding-agent): refresh todo HUD when re-attaching a session by @roboomp in https://github.com/can1357/oh-my-pi/pull/9575
+    - fix(tui): keep final replies visible under viewport pressure by @roboomp in https://github.com/can1357/oh-my-pi/pull/9577
+    - fix(models-config): preserve thinking.requiresEffort from models.yml by @serkud in https://github.com/can1357/oh-my-pi/pull/9578
+    - fix(compaction): describe remote compaction summary as processed input tokens by @roboomp in https://github.com/can1357/oh-my-pi/pull/9587
+    - fix(coding-agent): suppress TTSR interruption errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/9589
+    - fix(tui): separated model role cycle ordinal by @roboomp in https://github.com/can1357/oh-my-pi/pull/9592
+    - perf(tui): skip tail re-lex on inert markdown deltas (fast-tail splice) by @szavadsky in https://github.com/can1357/oh-my-pi/pull/9598
+    - fix(coding-agent): stop cold launch clearing native scrollback twice by @roboomp in https://github.com/can1357/oh-my-pi/pull/9600
+    - test(utils): skip resolveWindowsShell cmd.exe fallback under WSL by @roboomp in https://github.com/can1357/oh-my-pi/pull/9606
+    - test(coding-agent): stabilize streaming edit precheck timing by @roboomp in https://github.com/can1357/oh-my-pi/pull/9607
+    - fix(ai): preserve Codex append state after throttling by @serverinspector in https://github.com/can1357/oh-my-pi/pull/9615
+    - fix(update): use platform-aware reinstall hint in rename migration by @roboomp in https://github.com/can1357/oh-my-pi/pull/9621
+    - docs(coding-agent): document retry.maxDelayMs 0 disabling the wait cap by @sgfvamll in https://github.com/can1357/oh-my-pi/pull/9632
+    - fix(ai): retry replay-safe OpenAI stream failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/7981
+    - fix(browser): replay Runtime contexts per relay session by @roboomp in https://github.com/can1357/oh-my-pi/pull/9617
+    - feat(catalog,ai,coding-agent): add Yolo-Auto provider with /login flow by @H4vC in https://github.com/can1357/oh-my-pi/pull/9665
+    - fix(task): preserve successful subagent yield across deferred cleanup by @roboomp in https://github.com/can1357/oh-my-pi/pull/9673
+    - fix(prompting): prefer physical Windows GPUs by @roboomp in https://github.com/can1357/oh-my-pi/pull/9676
+    - fix(coding-agent): drop duplicated rawContent from spilled tool results by @roboomp in https://github.com/can1357/oh-my-pi/pull/9689
+    - fix(coding-agent): interrupt in-flight turn on plan-mode exit by @roboomp in https://github.com/can1357/oh-my-pi/pull/9703
+    - fix(discovery): load marketplace plugin rules by @roboomp in https://github.com/can1357/oh-my-pi/pull/9704
+    - fix(tui): hide advisor XML in session tree by @roboomp in https://github.com/can1357/oh-my-pi/pull/9709
+    - fix(tui): select numbered menu option by pressing its digit by @roboomp in https://github.com/can1357/oh-my-pi/pull/9711
+    - fix(ai): read vertex cachedContentTokenCount as cache-read source by @roboomp in https://github.com/can1357/oh-my-pi/pull/9714
+    - fix(theme): improved obsidian muted text contrast by @roboomp in https://github.com/can1357/oh-my-pi/pull/9715
+    - fix(tui): prioritize transcript text over tool cards under viewport pressure by @roboomp in https://github.com/can1357/oh-my-pi/pull/9723
+    New Contributors
+    - @ats3v made their first contribution in https://github.com/can1357/oh-my-pi/pull/9223
+    - @Robinbinu made their first contribution in https://github.com/can1357/oh-my-pi/pull/9611
+    - @sgfvamll made their first contribution in https://github.com/can1357/oh-my-pi/pull/9634
+    - @Giardi77 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9658
+    - @poorpaper made their first contribution in https://github.com/can1357/oh-my-pi/pull/9468
+    - @yiliang114 made their first contribution in https://github.com/can1357/oh-my-pi/pull/9566
+    - @serkud made their first contribution in https://github.com/can1357/oh-my-pi/pull/9578
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.0.4...v18.0.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.0.5
+ReleaseTime: 2026-08-25T16:41:38.0000000Z

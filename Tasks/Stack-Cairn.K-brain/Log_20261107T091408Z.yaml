@@ -1,0 +1,30 @@
+Version: 0.107.27
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.27/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.27/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    K-brain v0.107.27
+    本版从 main 的 c8202c0 构建，在 v0.107.26 的基础上改进 kn TUI 输入框的鼠标操作和排队消息，并修复滚轮乱码。
+    kn TUI
+    - 输入框支持鼠标编辑（#176）：
+      - 单击把光标移到点击位置，中文等宽字符和自动换行的行都能对准；
+      - 拖选文字（松开时照旧复制），双击选中一个词，三击或 Alt+A 选中全部（Ctrl+A 仍是跳到行首）；
+      - 有选中内容时：Backspace/Delete 删除，直接输入或粘贴替换，Ctrl+X 剪切（Ctrl+Y 粘回），Ctrl+C 复制，←/→ 收起到开头或结尾，Esc 取消选中，都可以撤销。
+    - 待发出的消息可以点选编辑和取消（#176）：AI 运行中，单击排队的消息选中它，再点一次拿回输入框编辑，点选中行上的 ✗ 删除；Alt+E 直接编辑最后一条（输入框里有草稿时先暂存）。原来的键盘操作（↑ 选中、Ctrl+E 编辑、Del 删除、Alt+↑↓ 调整顺序）保持不变，提示行会列出可用的按键。
+    - 修复滚动滚轮时输入框出现乱码（#176）：滚轮滚得快时，终端发来的鼠标报告会被截成两段，残片被当成按键打进输入框，其中的 Esc 还会打断正在运行的这一轮。现在会把截断的报告拼回去，按正常的滚动处理；单独按 Esc、手动输入相似的文字都不受影响。
+    - 修复从外部编辑器回来后滚轮变成翻历史（#176）：Ctrl+G、/brain、/system 打开外部编辑器后，鼠标模式会被关掉，滚轮变成方向键在提示词历史里来回翻。现在回来后会重新打开。
+    - 修复会话第一轮时 Esc 不能打断（#176）：第一轮运行中如果有排队消息，第一条会被误显示为选中，Esc 只取消选中而不打断。
+    - 表单征询卡片、权限确认、提问等对话框打开时，鼠标不会移动输入框光标或选中排队消息；遮挡的字段不会被复制到剪贴板。
+    已知限制：没有启用键盘增强协议的终端里，单独按 Esc 最多会延迟 30 毫秒；macOS 上 Alt+A、Alt+E 需要把 Option 设为 Meta 键（三击在所有终端都可用）。
+    下载与校验
+    提供 macOS、Linux、Windows 的 x64/ARM64 CLI 与 computer helper；SHA256SUMS 用于校验下载文件。
+    完整变更
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.27
+ReleaseTime: 2026-11-07T08:39:17.0000000Z

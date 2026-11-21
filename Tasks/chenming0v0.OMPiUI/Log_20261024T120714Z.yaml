@@ -1,0 +1,17 @@
+Version: 0.6.41
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.41/OMPiUI_0.6.41_x64-setup-lite.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - fix: 移除「原生 OMP」终端接管入口——输入框下方按钮、▾ 下的 omp play/omp stream、/ui-terminal 命令、终端面板的接管提示条、terminals.create 的 nativeSessionId/ompCommand 参数、服务端 prepareNativeSession 预留与写入/删除守卫、worker disposeForNativeTakeover、supervisor 原生租约，以及 scripts/verify-native-terminal.mjs。回退 c9bd333 的接管部分、d7808c1（#393、#395）的接管守卫，以及 6885e2a（#394）的租约部分。终端标签与 PTY 退出回收保留；supervisor 运行时租约不变。需要官方 TUI 时自行开终端。
+    - fix(worker): 托管 bash 拦截前台 pty:true timeout:0 的提示不再指向原生终端入口。
+    - fix(app): 长任务结束刷新后，所属助手消息已滑出加载窗口的已完成工具调用不再被追加到时间线末尾（表现为工具调用在任务完成后才跳出来）。兜底行只保留仍在运行或晚于最新已加载条目的调用。
+    - fix(app): 待发送消息与原生历史行的匹配不再依赖图片 mimeType 与 data，改用「发送后新出现的行 + 相同文本 + 相同图片数」。OMP 落盘前会重编码图片（缩放、png→webp/jpeg），旧的严格比较会漏认，导致带图消息发出后一直挂在待发送区。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.41
+ReleaseTime: 2026-10-24T11:57:15.0000000Z

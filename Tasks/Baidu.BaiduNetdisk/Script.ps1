@@ -1,31 +1,40 @@
-$Object = Invoke-RestMethod -Uri 'https://pan.baidu.com/disk/cmsdata?platform=guanjia'
+$Object1 = Invoke-RestMethod -Uri 'https://pan.baidu.com/disk/cmsdata?platform=guanjia'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1.list[0].version, '(\d+\.\d+\.\d+\.\d+)').Groups[1].Value
+
+# RealVersion
+$this.CurrentState.RealVersion = [regex]::Match($Object1.list[0].version, '(\d+\.\d+\.\d+)\.\d+').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.list[0].url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.list[0].url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.list[0].publish | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.list[0].publish | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.list[0].detail.more | Format-Text | ConvertTo-OrderedList
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.list[0].detail | ForEach-Object -Process { @($_.title) + $_.more } | Format-Text | ConvertTo-OrderedList
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

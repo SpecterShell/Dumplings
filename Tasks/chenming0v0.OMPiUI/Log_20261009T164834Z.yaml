@@ -1,0 +1,21 @@
+Version: 0.6.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.1/OMPiUI_0.6.1_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复任务暂停不生效，以及切换会话后模型、思考强度和运行状态显示不准确的问题。
+    - fix: 暂停目标时中止当前执行，并使过期的自动续跑与待发消息失效，避免任务在暂停后重新启动。
+    - fix: 从当前分支恢复磁盘会话的默认模型和思考强度，不再用首页偏好替代会话配置；辅助角色与临时回退回复不会覆盖显式选择。
+    - fix: 会话状态请求增加版本校验，隔离跨会话的临时选择，防止迟到响应覆盖新配置或将已停止任务重新显示为运行中。
+    - fix: 补齐模型变更与原生配置更新事件，任务结束和全局空闲状态立即同步界面，同时保留尚未结束的后台工作状态。
+    - fix: 模型和思考强度设置检查原生 RPC 失败结果，模型列表缓存尚未更新时保留运行时模型元数据。
+    - test: 补齐暂停恢复、配置恢复、响应乱序及停止状态回归测试。
+    - chore: 根包、全部 workspace、Tauri 与锁文件统一为 0.6.1。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.1
+ReleaseTime: 2026-10-09T15:38:27.0000000Z

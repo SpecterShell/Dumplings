@@ -1,0 +1,47 @@
+Version: 0.1.8
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.8/ddc-v0.1.8-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.8/ddc-v0.1.8-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.8 — quality rounds 59-64 + determinism hardening
+    Code quality (gold standard: full javac + android.jar, 4 real-world APKs):
+    - LOCAL-OK-gated renames for field-obscured nested types (JLS 6.4.2
+      shadow family, flutter g$i shape): a full-corpus dex reference scan
+      (new refscan module) gates each rename to provably file-local blast
+      radius, plus the shadow-package twin rule. Ungated global renaming
+      was measured catastrophic on conflict-dense corpora (weibo +36916).
+    - Conditional-super restructuring, 5 mechanical shapes: if/else branch
+      merge with per-arg ternaries, straight-line inline-hoist, duplicate
+      delegation dedup (R8 path-duplicated Kotlin default-arg bridges),
+      throw-guard branches, chained guards via recursive normalization.
+      "super must be first statement" errors: 513 → 142.
+    - Enum constant ctor args resolved through clinit reaching-definitions
+      (R8 register reuse across constant constructions): no more
+      DEBUG(var0) dummy-name garbage.
+    - Static-field owner on synthetic holders prints the concrete anonymous
+      name (LongMath$1.$SwitchMap$..., was Object.$SwitchMap$...).
+    Determinism (byte-identical output across runs restored):
+    - Root cause: a process-wide shared fallback VarInfo cached whichever
+      dangling var id hit it first (jdc-core) — now per-id.
+    - Accessor code snapshotted before image retirement (inline_accessors
+      cross-image reads raced retirement).
+    - CodeItem::parse only reads the catch-handler list when tries exist
+      (spec 8.3.1) — exact-sized snapshots used to fail parsing, silently
+      disabling accessor inlining corpus-wide.
+    - jdc-core walk gains a deterministic work budget (Σ universe per
+      visit) behind the wall-clock backstop.
+    Gold standard totals (vs v0.1.7): reqable 15987 → 14658,
+    weibo 155335 → 154560, lark 68842 → 64222, weixin 298275 → 297003
+    (net -7996). Decomp times unchanged (weibo ~6.5s, weixin ~12s).
+    67 tests green; zero compiler/clippy warnings in ddc + jdc-core 0.2.3
+    (its never_loop correctness lint fixed); jdc-core bumped to 0.2.3.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.7...v0.1.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.8
+ReleaseTime: 2026-09-21T09:05:06.0000000Z

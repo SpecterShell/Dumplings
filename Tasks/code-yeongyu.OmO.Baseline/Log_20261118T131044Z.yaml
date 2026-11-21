@@ -1,0 +1,890 @@
+Version: 5.1.77
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.77/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    On Windows, a busy sign-in lock now names the process holding it. omo login, whoami and logout used to report the holder as exited or unreadable whenever it was still running, so the message gave no pid and no fix. They now name its pid and image (read with tasklist), the lock path, and taskkill /PID <pid> /F as the way to end it. (#14118, refs #14001)
+    Changed
+    - GPT lanes (ultrabrain, deep-high, deep-low, unspecified-low), the plan reviewer and both Obsessive profiles lead with GPT-6.2 Astra and GPT-6.2 Sol. GPT-6 Astra and GPT-6.1 Sol stay right behind at the same effort, so an engine or provider without 6.2 (including GitHub Copilot) keeps the models it ran before. GPT-6.2 ids get the low..max effort ladder, and none and minimal are sent as low. (#14126) (#14149)
+    - OmO now runs on senpi 2026.11.18 (from 2026.11.15-4), the release that carries the GPT-6.2 Astra and Sol catalog rows and the gpt-6.2 prompt preset. (#14126) (#14149)
+    - Thread tool rows in the TUI now read like a status line instead of a JSON dump. Each thread_* tool shows one call line (the verb, the target thread's name or short id, and the message's first line) and one outcome line with a few short details: -> planner follow-up delivered (turn 306), planner: 12 messages (latest: ...), 3 threads in this workspace with the first few threads, created scratch. Delivery ids, message sequence numbers and full uuids stay out of the collapsed row; a failure shows its code, message and next step; the expanded view (ctrl+o) adds the full result. What the model receives is unchanged. (#12997) (#14141)
+    Fixed
+    - A thread_send to a busy thread on another device that was queued there as a follow-up now answers queued with its delivery_id and effective_mode. It used to answer idempotency_uncertain ("accepted the message but did not report where it waits") even though the message was delivered and answered. The receiving engine's queued admission is its receipt, and its pending-message count does not include admitted deliveries. (#14013, fixes #14012) (#14141)
+    - A reply to a peer on another device no longer answers not_found when the delivery that brought the peer's message carries no device attestation (an rpc:local/<id> or bare delivery id). If this device holds no session by that id or stated name, the reply is looked up account-wide. It is delivered only to the session the sender's durable id names; another match is reply_target_mismatch, and an id that more than one device lists is ambiguous_target with nothing sent. (#14052) (#14141)
+    - thread_create with a prompt gives the new thread that prompt as its own first user message, with the creator's authority, instead of a relayed peer message under the gateway header. A later thread_send from any session, the creator included, keeps the relay header. (#14058) (#14141)
+    - omo -p exits again after the run calls a thread tool. The device-service connection a thread tool opened is now closed when the session shuts down, so it no longer keeps a finished print-mode run alive. (#14062) (#14141)
+    - The thread tools' descriptions now name each tool both directly and in its eval form (for example "thread_list (tool.thread_list() in an eval cell)"), so they read correctly in a session that has no eval tool, where the thread tools are ordinary direct tools. (#14070) (#14141)
+    - thread_list no longer reports the sessions of a device that is offline or did not answer as live. Their rows come from the relay's cached snapshot and are now listed resumable; opening one with thread_create asks that device to reopen it, and answers device_offline while the device stays offline. A listed thread with an empty title shows its folder's name instead of an empty name; that label is for display only and is not an address. (#14084) (#14141)
+    - thread_read and the thread control tools no longer answer not_found for a session that another device of the account holds but runs nowhere, when it is addressed by session id. thread_read, thread_interrupt, thread_rename, thread_set_model and thread_set_reasoning answer not_resumable, and thread_close answers closed: false with reason not_live, as on the device that holds it. A name still answers not_found there, and thread_read does not read that device's transcript. (#14087) (#14141)
+    - After a sign-in refresh, short commands such as omo account whoami no longer stay running for up to 30 seconds while omo binds the device to this computer: that step now stops within its 5-second budget, and once the budget runs out it changes nothing and prints nothing. (#14090)
+    - A thread tool call that stays on this device no longer asks for its own approval inside an eval cell you already approved. Listing, reading, creating, renaming, closing or messaging a local thread from one cell now asks once (for the cell) instead of once per call. A call that may change another device still asks. Local thread tools work the same signed out as signed in. (#14082)
+    - thread_create on this device no longer leaves a prompt-less thread when the connection closes after the host made the session. The create finds the thread it made and answers it, and a retry under the same idempotency_key answers the same thread and admits the prompt exactly once. A retry that cannot find that thread here (a create on another device, or a host that ignored the derived id) still answers idempotency_uncertain. (#14066)
+    - On Linux, a locked Secret Service that unlocks without a prompt (for example a headless gnome-keyring with an empty-password login collection) no longer blocks the OmO sign-in: omo asks it to unlock first and reports it locked only when unlocking needs a password or prompt. (#14040)
+    - Cold wake: the OmO session host service no longer restarts itself every 30 seconds on Linux and macOS. It starts the host once at login, on every omo remote bootstrap, and again whenever another device wakes a session here; a start that hangs ends after 5 minutes. omo remote status shows it running while its host is up, and unknown when the host cannot be read (#13668). (#13669)
+    Removed
+    - A session that calls one of the removed chat-binding tools (thread_bind, thread_unbind, thread_rebind, thread_bindings) now gets a plain unknown-tool answer; the hint about them is gone. (#14042) (#14141)
+    Added
+    - omo account store enable keeps the sign-in in OmO's own keychain on a Mac whose login keychain stays locked, for example when another macOS user holds the screen or omo runs over SSH. The store is opt-in. disable moves the sign-in back, and status reports which store is in use. omo never changes the keychain search list or the default keychain, and never falls back between stores. (#14033)
+    - c49f1316c0 Merge pull request #14149 from code-yeongyu/fix/14126-gpt-6-2-routing
+    - 29609fb6d3 Merge origin/dev (81872d2ae9, #14168) into fix/14126-gpt-6-2-routing; generated bundles regenerated
+    - 81872d2ae9 Merge pull request #14168 from code-yeongyu/fix/win-doctor-store-test
+    - 7377999ad7 Merge pull request #14163 from code-yeongyu/fix/lint-ratchet-thread-create-atomic
+    - 5a1015534b Merge origin/dev (36187a8a20, #14118) into fix/14126-gpt-6-2-routing; generated bundles regenerated
+    - 1c5bd7d673 fix(test): skip the macOS-only credential-store doctor cases on Windows
+    - 36187a8a20 Merge pull request #14118 from code-yeongyu/fix/14001-win-credential-lock-holder
+    - 499a5cd695 test(thread): replace non-null assertion with an explicit guard (lint ratchet)
+    - 88aee613b5 Merge origin/dev (d9da4772ca, #14160) into fix/14126-gpt-6-2-routing; generated bundles regenerated
+    - 94321f9995 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 369871b1bb fix(omo-codex): drop the unused model-core dependency (#14126)
+    - d9da4772ca Merge pull request #14160 from code-yeongyu/chore/fmt-train2-thread-files
+    - a838fe5347 chore(fmt): format two thread files left unformatted by train-2 merges
+    - 7027602fbd Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 630a673483 Merge pull request #13669 from code-yeongyu/fix/session-host-unit-oneshot
+    - 5a49c49739 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 574c52ec78 Merge origin/dev (d70210bde0b) into fix/session-host-unit-oneshot; regenerate the bundles device-service-core cold-wake feeds on the merge result (#13669)
+    - d70210bde0 Merge pull request #14141 from code-yeongyu/train/omotrain2-20261118
+    - 89a0730dad Merge origin/dev (553d770ea4d) into fix/session-host-unit-oneshot; regenerate the bundles device-service-core cold-wake feeds on the merge result (#13669)
+    - b846289520 Merge origin/dev 553d770ea4 into train/omotrain2-20261118
+    - 553d770ea4 Merge pull request #14033 from code-yeongyu/feat/13116-dedicated-keychain
+    - 354acc344e build: regenerate bundles after merging dev
+    - ee9d434b54 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - e96665a8d9 Merge origin/dev (99c6c01367) into fix/session-host-unit-oneshot; regenerate the bundles device-service-core cold-wake feeds on the merge result (#13669)
+    - f02318ae3d build: regenerate the service auth bundles
+    - f3aa87eee1 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - 99c6c01367 Merge pull request #14066 from code-yeongyu/fix/14060-atomic-create
+    - ab7a6b6ad0 docs(omo-codex): CODEX_ASTRA_MODEL names the Codex data bump issue #14155 (#14126)
+    - 0768262f88 Merge origin/dev (229cc72a54) into fix/14060-atomic-create; take dev's generated bundles
+    - bd5da03178 Merge origin/dev into fix/14126-gpt-6-2-routing
+    - 229cc72a54 Merge pull request #14040 from code-yeongyu/fix/linux-secret-service-promptless-unlock
+    - 8aafc28b3c build: regenerate the service auth bundles
+    - 854d1e9a48 chore(generated): regenerate the bundles device-service-core cold-wake feeds on dev 451d76e2a6 (#13669)
+    - 2609b24f3d Merge pull request #14089 from code-yeongyu/fix/i22-thread-permission-review-lows
+    - df6cbec95c style: bun fmt the GPT-6.2 routing changes (#14126)
+    - 72daf83365 test(omo-opencode): category and momus defaults name GPT-6.2, GPT-6 rungs in fallback_models (#14126)
+    - 3563b9cf9c fix(omo-codex): pin the Codex edition's Astra id beside its data files (#14126)
+    - ea28a0fffc Merge origin/dev 74d8fd0557 (release v5.1.76) into train/omotrain2-20261118
+    - ae7dc24320 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - 51d544f393 Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - 57e7319765 Merge origin/dev (451d76e2a6) into fix/session-host-unit-oneshot
+    - 38ca235734 build: regenerate bundles after merging dev (#14104)
+    - 451d76e2a6 Merge pull request #14090 from code-yeongyu/fix/13651-budget-followup
+    - b70f03a115 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 11a99683e4 fix(thread): an uncertain thread_create retries only when the thread its key derives is here (#14066 review M1, L1)
+    - 72d4370c90 Merge origin/dev (with #14082) into the review-LOWs follow-up; regenerate omo.js and bundle-inputs (node 24)
+    - d35da185fe Merge remote-tracking branch 'origin/dev' into fix/13651-budget-followup
+    - 74d8fd0557 Merge pull request #14082 from code-yeongyu/fix/i22-thread-tools-no-sign-in-no-approval-storm
+    - 778cc24db1 Merge pull request #14104 from code-yeongyu/fix/14001-parser-test-windows-children
+    - 1d9a4ac078 Merge commit 'c1e0b4d964' into fix/14001-win-credential-lock-holder
+    - bb307070ae chore(generated): regenerate the bundles device-service-core cold-wake feeds on dev c43f69c1c4 (#13669)
+    - b93cb8eec2 Merge origin/dev (c43f69c1c4) into #14082; regenerate omo.js (node 24)
+    - 56553f92f5 Merge #14082 head into the review-LOWs follow-up; regenerate omo.js (node 24)
+    - 48f168913c Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - dcddd317de Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 19a57c4d4a chore(bundle): set the omo.js budget from the omotrain2 train-top regen (1,515,915 B + 4 KiB)
+    - 67d4f3924d chore(train): fold the nine member changelog fragments into changes/unreleased/14141.md
+    - 1fa10c5825 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - a33328cd4c Merge origin/dev (c43f69c1c4) into fix/session-host-unit-oneshot
+    - c43f69c1c4 Merge pull request #14152 from code-yeongyu/release/v5.1.76-source-state
+    - 3d3e836e45 build: regenerate the service auth bundles
+    - 014e12b3a8 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - 6ef0c6d865 Merge remote-tracking branch 'origin/dev' into fix/13651-budget-followup
+    - aa0a3d8c5e Merge commit '6aac9e487fb89dc85cea0f7883c8032e4f191c07' into fix/13651-budget-followup
+    - b50818e07a docs(changes): fragment for #14149
+    - 2c2a2405d9 Merge pull request #14081 from code-yeongyu/fix/13651-cli-bind-rename
+    - b7f350c222 test(thread): the #14060 create-atomic checks read the flat thread id thread_create answers
+    - 14b1513ff0 style(qa): format the create-atomic scenario
+    - 2657a17ef4 test(qa): create-atomic real-host scenario; changes fragment
+    - 26c2974a74 fix(thread): thread_create survives a lost open reply and is retried exactly once (#14060)
+    - 6aac9e487f Merge remote-tracking branch 'origin/dev' into fix/13651-cli-bind-rename
+    - 2c953ae219 Merge pull request #14063 from code-yeongyu/fix/14049-reopen-exited-thread
+    - 381f010c0d docs: name GPT-6.2 in the current defaults, goldens follow the gates (#14126)
+    - c20345d9b6 feat(telemetry): export GPT-6.2 model ids (#14126)
+    - b5587058df feat(routing): lead GPT lanes and Obsessive profiles with GPT-6.2 (#14126)
+    - 9e72fa7c6e feat(model-core): recognize GPT-6.2 Astra and Sol capabilities (#14126)
+    - dedb2a0ecb Merge origin/dev (23c4382cb0) into fix/14049-reopen-exited-thread; take dev's generated bundles
+    - 23c4382cb0 Merge pull request #14129 from code-yeongyu/fix/9306-dag-lock-live-holder-wait
+    - d68a9fafaf Merge remote-tracking branch 'origin/dev' into train/omotrain2-20261118
+    - af328d8a90 build: regenerate the service auth bundles
+    - 5912c1d7a2 test(thread): a reopen by id answers the exited thread's own id (#14049)
+    - 0ffab8bbd0 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - c1e0b4d964 Merge remote-tracking branch 'origin/dev' into fix/14001-parser-test-windows-children
+    - 401ad2c1d0 fix(opencode): replace an exited native parser process before writing to it
+    - 32e17fe4db chore(train): regenerate Set A bundles at the omotrain2-20261118 top
+    - e79f804ce0 Merge pull request #14055 from code-yeongyu/fix/14032-cli-replace-device
+    - 48587a857e build: regenerate bundles after merging dev
+    - 00a800a682 chore(generated): regenerate the bundles device-service-core cold-wake feeds (service-auth, omo-device-account, omo-device-service, omo-wake) for #13669
+    - 939d5f3620 Merge remote-tracking branch 'origin/dev' into train/omotrain2-20261118
+    - 657382bcb1 Merge remote-tracking branch 'origin/dev' into fix/13651-cli-bind-rename
+    - 0963464dfd build: regenerate the service auth bundles
+    - ad9235ce31 Merge remote-tracking branch 'origin/fix/13651-cli-bind-rename' into fix/13651-budget-followup
+    - f0f3f47dd6 test(thread): name each #14072 device-name create; a create with neither prompt nor name is refused (#14050)
+    - ac2844b2aa Merge pull request #14103 from code-yeongyu/fix/14001-operator-darwin-shasum
+    - 54a7202e46 fix(opencode): the writer's re-thrown EPIPE carries the errno only in its message
+    - 315237f9a7 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - e1a437a9a7 build: regenerate bundles for the Windows lock-holder name (#14117)
+    - dabd0e05f6 Merge origin/dev 52d92bcc39 into omotrain2-20261118 (#14088 merged solo)
+    - e2c24a3e71 Merge remote-tracking branch 'origin/dev' into fix/9306-dag-lock-live-holder-wait
+    - 421cf3f73e Merge origin/dev (52d92bcc39) into fix/session-host-unit-oneshot
+    - db8451ad82 Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - ca8e2e39d9 chore(changes): note #14129
+    - 52d92bcc39 Merge pull request #14088 from code-yeongyu/docs/thread-sdk-version-note
+    - 15bd39d6c1 Merge origin/dev (ac7437078e, #14124) into fix/14049-reopen-exited-thread; regenerate bundles
+    - 0e733770d5 Merge remote-tracking branch 'origin/dev' into fix/14001-operator-darwin-shasum
+    - f7959227aa Merge origin/dev into fix/14049-reopen-exited-thread; name session-control creates (review M1); regenerate bundles
+    - f7e4ec3206 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - ac7437078e Merge pull request #14124 from code-yeongyu/fix/14072-create-device-by-name
+    - c5b389b803 Merge pull request #14102 from code-yeongyu/fix/14031-keychain-remove-other-binary
+    - 5cd507ad0c Merge origin/dev de9593c668 into omotrain2-20261118
+    - e53379a914 Merge PR #14058 into omotrain2-20261118
+    - 471977fed5 Merge PR #14092 into omotrain2-20261118
+    - b1adc4eeb5 Merge PR #14084 into omotrain2-20261118
+    - 086a7cd167 Merge PR #14070 into omotrain2-20261118
+    - fcf3a54e03 Merge PR #14062 into omotrain2-20261118
+    - b0f26ba1d7 Merge origin/dev (de9593c668) into fix/session-host-unit-oneshot
+    - 574d2641cc docs(changes): fragment for #14124
+    - dd3bddabe7 fix(thread): thread_create names a device by display name, id or unique id prefix (#14072)
+    - 3c630aa70b chore(omo-native): regenerate service-auth bundle (stale on dev)
+    - e4e9cbff1c Merge remote-tracking branch 'origin/dev' into fix/14032-cli-replace-device
+    - 81a2f3d764 Merge remote-tracking branch 'origin/dev' into fix/14001-parser-test-windows-children
+    - 17723aa0bf Merge remote-tracking branch 'origin/dev' into fix/14031-keychain-remove-other-binary
+    - de9593c668 Merge pull request #14106 from code-yeongyu/fix/14001-rpc-terminate-windows-bound
+    - ea95cf1d33 build: regenerate service-auth and the device-account/feedback extensions after merging dev (#14039)
+    - a6add08db6 Merge remote-tracking branch 'origin/dev' into fix/14001-win-credential-lock-holder
+    - 57a5c1b741 Merge PR #12997 into omotrain2-20261118
+    - 7e3d994a0b Merge PR #14088 into omotrain2-20261118
+    - 45cd15f762 Merge PR #14087 into omotrain2-20261118
+    - a71d0fe401 Merge PR #14052 into omotrain2-20261118
+    - 5279ab0766 Merge PR #14042 into omotrain2-20261118
+    - 92076fdde9 Merge PR #14013 into omotrain2-20261118
+    - 3e71da2a67 Merge remote-tracking branch 'origin/fix/13651-cli-bind-rename' into fix/13651-budget-followup
+    - 35564b18ef Merge remote-tracking branch 'origin/dev' into fix/13651-cli-bind-rename
+    - af6da45f45 Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - 1d2c0fbf61 Merge remote-tracking branch 'origin/dev' into fix/i22-thread-tools-no-sign-in-no-approval-storm
+    - 2f27f1e31e Merge remote-tracking branch 'origin/dev' into fix/14001-rpc-terminate-windows-bound
+    - 8ef9ff9f21 Merge pull request #14100 from code-yeongyu/fix/14001-win-memsync-wait-timers
+    - 9d6e1c97e9 test(memory-core): pin the tasklist image-name parse for a held lock (#14117 review L1)
+    - 891ae752e2 changes: fragment for #14118
+    - 4329e6f8fc fix(service-auth): name the credential lock holder on Windows (#14001)
+    - 35744ece6f Merge pull request #14114 from code-yeongyu/fix/14113-remote-sessions-deadline
+    - 40b8cc3afa fix(opencode): a killed parser pipe's EPIPE is a gone connection on Windows too
+    - db42225e6a Merge remote-tracking branch 'origin/dev' into fix/14032-cli-replace-device
+    - 6d986fdfcf docs(changelog): name the #14113 fragment after its PR #14114
+    - 60ec96535f test(omo-native): give the remote CLI harness a local operator endpoint that answers at once (#14113)
+    - 91d8773b90 Merge remote-tracking branch 'origin/dev' into fix/14001-rpc-terminate-windows-bound
+    - 66f68ca7c0 Merge remote-tracking branch 'origin/dev' into fix/14001-parser-test-windows-children
+    - cd8707b5c6 Merge remote-tracking branch 'origin/dev' into fix/14031-keychain-remove-other-binary
+    - 378a9c366c Merge remote-tracking branch 'origin/dev' into fix/14001-operator-darwin-shasum
+    - 030b8b8650 merge dev 8d4d3dd0fb (EQ.omo goldens #14107)
+    - 0a4e55560b docs: bound the changelog fragment's claim to the exit-event wait (review L1)
+    - 9ce8c114c0 build: regenerate the service auth bundles
+    - 2693ae4703 fix(service-auth): report a not-owned item in OmO's keychain as an OmO-keychain error
+    - 322001c350 build(memory-sync): regenerate the bundles; this fix goes straight to dev, so no train top regenerates them (#14100 review H1)
+    - e8d65c498b merge dev (take dev bundles before regenerating)
+    - 17650b5cb8 Merge pull request #14101 from code-yeongyu/fix/windows-device-service-dacl
+    - 39d990aab0 style: bun fmt the shasum shim block
+    - 3f68d29378 build: regenerate the service auth bundles
+    - 875ae7ae3f Merge remote-tracking branch 'origin/dev' into fix/14032-cli-replace-device
+    - 7d1d59e86d Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - 0962af3199 Merge pull request #14030 from code-yeongyu/fix/13757-keychain-helper-lock-custody
+    - cf52ab3fe5 fix(keychain-helper): state the marker-gated delete rule; release purge's CF objects
+    - 5f7985a00d fix(service-auth): keep the earlier-device label helper module-local (knip)
+    - 917d8dcf2a Merge remote-tracking branch 'origin/fix/13651-cli-bind-rename' into fix/13651-budget-followup
+    - f448ae343a fix(device-service-core): report the whole PowerShell error message up to its position line (#14101 review LOW 1)
+    - a13a60b2c9 docs(changes): fragment for #14102
+    - 07493c05ad test(opencode): enumerate the parser test's native children through CIM on Windows
+    - 79bf169180 fix(publish): hash the operator-darwin manifest with shasum so the step runs on macOS runners
+    - 51f6988930 fix(keychain-helper): delete a helper-owned item from any helper copy
+    - 7f1e4226d7 test(omo-native): bound the packed-install cleanup hook like its steps, past the 40 s default (#14001)
+    - 3e5c82f0cf fix(device-service-core): write the Windows exact DACL with SetAccessControl, not Set-Acl, and decode the CLIXML error record (#14001)
+    - 99314affc2 test(thread): assert the #14084 cases in the one-field result shape dev adopted (#14056)
+    - b8941f4829 docs(changes): fragment for #14100
+    - a41897fad7 fix(memory-sync): count only the sync runner's own timers in the #13624 wake tests (Windows CI red, #14001)
+    - 4db66c09cf Merge remote-tracking branch 'origin/dev' into fix/i22-thread-tools-no-sign-in-no-approval-storm
+    - 00b55ec567 Merge origin/dev into fix/14038-thread-desc-both-forms
+    - bf34b78b5d chore(service-auth): regenerate the service-auth bundles for the replace flow (#14055)
+    - 6e4728a145 Merge remote-tracking branch 'origin/dev' into fix/14043-thread-list-liveness
+    - 74edb629dc Merge remote-tracking branch 'origin/dev' into fix/13651-cli-bind-rename
+    - f2c0d0b13e Merge remote-tracking branch 'origin/dev' into fix/14032-cli-replace-device
+    - 17bfad46f3 Merge remote-tracking branch 'origin/dev' into prestage-14088
+    - 268f722c1c Merge remote-tracking branch 'origin/dev' into prestage-14087
+    - f270e63a52 Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - d83ae3bb7e Merge remote-tracking branch 'origin/dev' into prestage-12997
+    - d15ea8a3ef Merge remote-tracking branch 'origin/dev' into prestage-14052
+    - 4d8a491931 Merge remote-tracking branch 'origin/dev' into prestage-14042
+    - 2f1179f4bf Merge remote-tracking branch 'origin/dev' into prestage-14013
+    - 69ac99e2b9 Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - a1491ae711 Merge pull request #14077 from code-yeongyu/release-train/omo-20261117
+    - 38d64f751a docs(thread): name the bound-chat reach of thread_report/thread_answer in the permission docstring (#14082 delta review L2)
+    - d181fb4e9f Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-14088
+    - 2de28662ad style(thread): format with the repo formatter
+    - b9b8e81d1d style(thread): format with the repo formatter
+    - 44582a3f02 Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-14087
+    - 9d0ac07cdc Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-12997
+    - d114a66d35 Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-14052
+    - 454c5636d3 chore(thread): register the local-approvals QA driver in run-all and knip; add the #14082 changelog fragment
+    - 00cd8c5c59 Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-14013
+    - cad3b0762f Merge branch 'release-train/omo-20261117' of https://github.com/code-yeongyu/oh-my-openagent into prestage-14042
+    - 33ad5a6dda build: regenerate generated bundles after merging dev fe95296518
+    - 693b7ca44b fix(thread): keep plan-create importing AMBIGUOUS_CANDIDATE_LIMIT as dev does (knip)
+    - a6a2eb7e17 Merge remote-tracking branch 'origin/dev' into fix/i22-thread-tools-no-sign-in-no-approval-storm
+    - daac5e7fe2 Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - e7989c9c6f Merge remote-tracking branch 'origin/dev' into fix/14043-thread-list-liveness
+    - 331f0fe9a8 Merge remote-tracking branch 'origin/fix/13651-cli-bind-rename' into fix/13651-budget-followup
+    - ef156a051b test(omo-native): answer the post-refresh device list in the local-only refresh fake (#13651)
+    - 6f415324d0 Merge remote-tracking branch 'origin/dev' into fix/13651-cli-bind-rename
+    - ae285db9ad docs(changelog): #14085 merged to dev on its own; keep its fragment and drop the folded line
+    - cfc8b3d49d chore(bundles): regenerate service-auth and omo-device-account on the dev merge
+    - 8cc47e2de3 Merge origin/dev into fix/14038-thread-desc-both-forms
+    - a2d6be098e fix(thread): drop the unused callerId parameter of the relay chain helper (oxlint)
+    - 3229d98a4e Merge commit 'ee9ec3e1cedff239a6a775498d5be34aad036845' into release-train/omo-20261117
+    - ee9ec3e1ce style(thread): format the paged-read files the train brought in
+    - 59007e3400 Merge commit 'fe95296518bccb79f0a1b6a520d79893e98087cd' into release-train/omo-20261117
+    - fe95296518 Merge pull request #14080 from code-yeongyu/fix/13189-account-devices-revoke
+    - 23ed1577aa Merge pull request #13652 from code-yeongyu/fix/launcher-relays-usr2
+    - f524b7d387 Merge pull request #13639 from code-yeongyu/fix/memory-sync-waiting-signout
+    - 3874e7a61f Merge pull request #13628 from code-yeongyu/fix/omob-swap-inside-clone
+    - ea993d8823 Merge pull request #13262 from code-yeongyu/fix/13261-team-messaging-flake
+    - 7ca89d5af8 Merge pull request #13248 from code-yeongyu/fix/13194-cap-b01-budget
+    - fd43dad886 Merge pull request #14083 from code-yeongyu/feat/ulw-plan-doctrine-edges
+    - 6d93adf60b Merge pull request #13467 from code-yeongyu/fix/sdk-hint-guard-13446
+    - 0af541b5dd build(service-auth): regenerate service-auth.generated.js after merging dev dda99008d9
+    - c6c266fb0e docs(changes): add #14090 fragment
+    - e70ef0dd25 fix(thread): an account-wide alias claim keeps its ask; cover opening a local thread (#14082 review LOWs)
+    - 967b8baa68 chore(omo-native): regenerate service-auth bundle for #14081 review follow-up
+    - b2ecc105f1 fix(cli): keep the post-refresh device fix-up inside its budget (#14081 review L1/L2)
+    - 9b69a41380 Add the changelog fragment for the thread SDK SDK_VERSION removal
+    - e363e6f479 chore(knip): keep the FIRST_PAINT_BACKSTOP_MS note above its own row
+    - c9781fdd9c fix(thread): #14087 review - thread_close answers not_live, and the wording says what is fixed
+    - e9d97f510e Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - dda99008d9 Merge pull request #14085 from code-yeongyu/fix/13873-close-remaining-remote-test-ports
+    - 5ccc364c13 docs(changelog): fold the #14085 fragment into the release train top
+    - 4b8d085113 Merge commit '2f4ea43d28a573d177ba43a9cd57f26db729f81b' into release-train/omo-20261117
+    - 898f94e829 docs(changes): fragment for #14087
+    - a49385d388 fix(thread): read and controls find a session another device holds but runs nowhere (#13215)
+    - 73a3d71b28 docs(changelog): fold the member fragments into the release train top
+    - b4c8dbc5f0 fix(thread): only self or a durable id held here is local; names, aliases and remote fork sources still ask (#14082 review)
+    - 8c2a35cea3 test(thread): thread failure details and inputs say thread
+    - b584e39358 Merge commit 'b4018b0ae48284020547a1c47340920c78815718' into fix/reply-remote-sender
+    - b4018b0ae4 fix(knip): the train's three unused exports, at their causes
+    - 95dc695b24 Merge commit '0864698d8b2cc58941fdb6686c247d562f9b600f' into fix/reply-remote-sender
+    - f1a1807b31 Merge remote-tracking branch 'origin/release-train/omo-20261117' into fix/reply-remote-sender
+    - 18422994cb Merge commit '0864698d8b2cc58941fdb6686c247d562f9b600f' into rt/send-queued-not-uncertain
+    - 70e1213fcd Merge commit '0864698d8b2cc58941fdb6686c247d562f9b600f' into chore/drop-thread-bind-hints
+    - f21e92c5f0 Merge remote-tracking branch 'origin/release-train/omo-20261117' into rt/send-queued-not-uncertain
+    - 0864698d8b docs(thread): restore the thread_send result line the train merge dropped
+    - 77bb1e9ad3 Merge remote-tracking branch 'origin/release-train/omo-20261117' into chore/drop-thread-bind-hints
+    - 16785bc785 fix(thread): a paged thread_read answers the thread field
+    - 86523e4674 Merge remote-tracking branch 'origin/release-train/omo-20261117' into feat/thread-read-wait-local
+    - 439d17c7a3 Merge remote-tracking branch 'origin/perf/thread-read-paging' into feat/thread-read-wait-local
+    - 08dacf2001 Merge commit 'c097605dcb220ff484ed6ad5c5fa327652eb45f7' into release-train/omo-20261117
+    - 1440b3beef Merge commit 'c8abcc7b4e8a0474a42d3d138654809812e63bd6' into release-train/omo-20261117
+    - 2a6eba2c1d Merge remote-tracking branch 'origin/dev' into release-train/omo-20261117
+    - ee8d34a338 Merge commit '49e886f4af658c530352b2a83eb35f9d866710f0' into release-train/omo-20261117
+    - f88fb12d4b Merge commit 'e22b008a263562354efee03d70db0b6dff2ce1ac' into release-train/omo-20261117
+    - 34086a7e49 chore(changes): fragment for #14084
+    - 5fbb0127e3 Merge pull request #14078 from code-yeongyu/fix/14074-remote-verbs-close-sessions
+    - 70ef1edc3e fix(thread): a cached row is not answered as already live by thread_create (#14043)
+    - 2f4ea43d28 docs(changes): fragment for #14085
+    - 179f6a5e77 test(remote): close every port in the remaining device-service test files (#13873)
+    - 4299f1d601 docs(skills): carry the edge-reason wave rule into ulw-loop and log the backoff removal
+    - da65dadb9f Merge remote-tracking branch 'origin/dev' into fix/reply-remote-sender
+    - c5aba140a1 Merge remote-tracking branch 'origin/dev' into rt/send-queued-not-uncertain
+    - 7d1259742c docs(changes): add #14081 fragment
+    - 89d4f3b8f9 chore(omo-native): regenerate service-auth bundle for #13651 review fixes
+    - 5b1f227f30 fix(cli): bound the post-refresh device fix-up, remember machine_exists, read only this device's row (#13651)
+    - 44a989bdbe fix(account): devices refuses the stored device's own id and reports session outcomes like token (review L1, L2)
+    - abcbb2b6f0 Merge remote-tracking branch 'origin/dev' into chore/drop-thread-bind-hints
+    - 8656a2f693 fix(thread): a cached listing row of an unreachable device is not live (#14043)
+    - 03d70ab00d fix(thread): keep all_scope in the direct form of the cwd description
+    - 0f33409342 docs(changes): fragment for #14083
+    - 49e886f4af Merge remote-tracking branch 'origin/feat/thread-one-field' into feat/thread-prefix-ids
+    - fd9f4d70ec fix(thread): local thread tool calls inside an approved eval cell ask for no approval of their own (#14079)
+    - e22b008a26 Merge remote-tracking branch 'origin/dev' into feat/thread-one-field
+    - e99bd8759b docs(skills): name each plan edge's reason and write set in ulw-plan
+    - 77f6487204 chore(omo-native): regenerate service-auth bundle for #13651
+    - 81abc09994 fix(cli): bind an unbound device to its machine and rename a generated label after refresh (#13651)
+    - 582b8fbd35 Merge origin/feat/thread-one-field into feat/thread-tool-tui-render
+    - 90ffd77b63 docs(changes): omo account devices and devices revoke (#14080)
+    - eeed611c4f feat(account): list the account's devices and revoke another one by id (#13189)
+    - af12f7576f Merge remote-tracking branch 'origin/dev' into feat/thread-read-wait-local
+    - c097605dcb Merge remote-tracking branch 'origin/dev' into perf/thread-read-paging
+    - c8abcc7b4e Merge remote-tracking branch 'origin/dev' into fix/thread-verb-field-deadline
+    - d4fcf60e0c Merge pull request #14075 from code-yeongyu/fix/14064-idle-timer-counting-wrapper
+    - 099c24d250 docs(changes): add the fragment for #14078
+    - a3a21dd7c6 fix(omo-native): close the sessions port when an omo remote session verb returns
+    - e770186496 docs(changelog): fold the #14057 fragment into the release train top
+    - 31c0da2ee2 docs(changes): fragment for #14075
+    - bd5ef244a7 test(remote): the first idle-timer test uses the shared counting wrapper (#14064)
+    - 0f5fdcd381 Merge origin/dev into fix/sdk-hint-guard-13446
+    - 97f8d4500f Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - d07327dbe1 Merge pull request #14046 from code-yeongyu/fix/device-name-is-machine
+    - 26f804dfe6 fix(thread): a send or handoff leaves its caller out of id-prefix candidates; tighten the prefix shape (#14067 review)
+    - 4869736056 docs(changes): add the fragment for #14070
+    - 4f0bf13ccb Merge pull request #14007 from code-yeongyu/fix/runner-pin-format-template-legs
+    - bc1861d72d Merge pull request #14005 from code-yeongyu/fix/umask-agent-dir-13958
+    - 01a07a3424 Merge pull request #13963 from code-yeongyu/fix/native-parser-restart
+    - a9c5e8e909 Merge pull request #13926 from code-yeongyu/test/publish-detector-review-lows
+    - 26e3f8e530 Merge pull request #13778 from code-yeongyu/docs/13757-keychain-custody-design
+    - c74143c6de Merge pull request #14038 from code-yeongyu/fix/14034-evalonly-prompt-mentions
+    - 5974452980 fix(thread): name both the direct and the eval form in the thread descriptions
+    - 5e99e665e6 fix(thread): name the create from a non-empty name or alias; the durable-id miss names only what was checked; list reopen-exited in the QA runner
+    - 3ac4afa5db test(qa): list create-prompt-authority in the thread-tools runner and knip entries
+    - 696a335c72 fix(thread): replay receipts stored before #14044 in the current shape
+    - 2e3dbd80cc docs: changelog fragment for #14067
+    - 0b7bdeeaa1 feat(thread): address a thread by a unique id prefix; typed SDK options error
+    - e13ca8b11e fix(thread): the component's host forwards the session watch; a turn id only from the run seen starting
+    - 2df64ca7f6 test(device-service): published device-service-v0.1.40 fixtures and digests
+    - 7266dc7b79 Merge pull request #13991 from code-yeongyu/fix/13974-packed-install-once
+    - 873484161d Merge pull request #13992 from code-yeongyu/rt/13980-daemon-real-engine-budget
+    - 743ec74f6f Merge remote-tracking branch 'origin/dev' into fix/14049-reopen-exited-thread
+    - e75289c7bc Merge remote-tracking branch 'origin/dev' into fix/14045-create-prompt-authority
+    - e4503b3e81 docs(changes): paged remote thread_read projects the engine's context (#14053)
+    - 5154bea7a7 Merge pull request #13970 from code-yeongyu/docs/remote-devices-json-shape
+    - 4f95cd9cd3 build: regenerate the service auth bundles
+    - ae0d46c8a5 Merge origin/dev (0cdfb6042a) into fix/session-host-unit-oneshot
+    - 54ca43b272 build(omo-native): regenerate the service-auth bundle with the promptless Secret Service unlock (#14039)
+    - 64a8e4957c Merge remote-tracking branch 'origin/dev' into fix/linux-secret-service-promptless-unlock
+    - c9a81c7d18 fix: never activate a leftover sign-in when enabling OmO's keychain
+    - 83850dfdca fix: clear crashed partial stores and let a damaged OmO keychain be turned off
+    - 45836b6e21 fix(skills): keep the checked-in frontend skill byte-equal and qualify html_render in ulw-research
+    - 9a01ad3202 Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - 0cdfb6042a Merge pull request #13892 from code-yeongyu/fix/attach-pool-idle-timer-teardown
+    - eec2e8edac docs(changes): add the #14063 fragment
+    - 0bab4b4c6d fix(thread): thread_create reopens an exited thread from its session file, refuses an empty create (#14049, #14050)
+    - 87cffa40f7 fix(service-auth): the browser sign-in's machine_exists offers the same replacement (#14055 review L2)
+    - 37428168b1 fix(service-auth): only the device-token reply schema accepts replacedDeviceId (#14055 review L1)
+    - 5fc7338926 Observe the turn-id get_state of a same-device wait
+    - ecdbea5651 docs: changelog fragment covers the review fixes
+    - 3a27f935cc fix(thread): name the session as thread in failures too; drop the endpoint kind (#14056 review)
+    - f4115fe5bb perf(thread): close a paged tail on the messages after its compaction
+    - 525f2fe6b3 test(remote): move the closing-ports helper under testing/ so the remote import guard exempts it (#13873)
+    - 2ef119d5cf Merge remote-tracking branch 'origin/dev' into oms/14005
+    - a50b638562 Merge remote-tracking branch 'origin/dev' into oms/13778
+    - 5463803781 docs(changes): fragment for #14062
+    - a2dbb8a7b8 Merge remote-tracking branch 'origin/dev' into oms/14007
+    - c637d2f40f Merge remote-tracking branch 'origin/dev' into oms/13963
+    - 69965826a7 Merge remote-tracking branch 'origin/dev' into oms/13926
+    - 0f56bb2aaf Merge remote-tracking branch 'origin/dev' into oms/13991
+    - 31bf8f772b Merge remote-tracking branch 'origin/dev' into oms/13992
+    - 6acc043a16 Merge remote-tracking branch 'origin/dev' into oms/13970
+    - c026bdd54e fix(thread): project the paged remote read with the engine's own context builder
+    - 49a1a2ff71 docs(changes): fragment for #14061
+    - 504b1e20f2 feat(thread): thread_read wait_ms waits on a thread on this device too
+    - 4200dfc52f chore(thread): format, regenerate bundles, add the #14058 changes fragment
+    - 9f56fcf3a3 Merge remote-tracking branch 'origin/dev' into fix/13757-keychain-helper-lock-custody
+    - 6cbd3e7830 Merge origin/dev into fix/sdk-hint-guard-13446
+    - ac4d5faf24 Merge remote-tracking branch 'origin/dev' into feat/13116-dedicated-keychain
+    - d7c7f12d5e Merge remote-tracking branch 'origin/dev' into fix/attach-pool-idle-timer-teardown
+    - d9f67dc12d chore(omo-native): regenerate service-auth.generated.js for the eval-form thread descriptions
+    - bdb5019561 Merge origin/dev into fix/14034-evalonly-prompt-mentions
+    - 45ae115bbe fix(thread): close the default remote surface on session_shutdown so omo -p exits (#14054)
+    - 9e67addf11 Read LocalHostName from /usr/sbin/scutil, quietly, with a hard kill
+    - ccf4c2d071 fix(thread): thread_create delivers its first prompt with the creator authority (#14045)
+    - f2758c22a4 Name a Mac by its LocalHostName
+    - 513c184bf2 docs(changes): fragment for the device service 0.1.40 pin (#14057)
+    - 3c8af469dd chore(device-service): pin device service 0.1.40
+    - b79e74d480 Merge origin/dev into fix/sdk-hint-guard-13446
+    - f9d5862126 test(thread): pin the local-plus-remote and unreadable-listing unattested replies
+    - 11e613ddb7 docs: changelog fragment for #14056
+    - 5bd765090b feat(thread): one field names a session across the thread tools (#14044 4a)
+    - df2c859643 test(remote): prove the per-test teardown clears the idle detach timer in one test (#13873)
+    - 2db296ac98 docs: add the changelog fragment for omo login --replace (#14055)
+    - a40aa9c5ea test(service-auth): the login option list includes --replace
+    - 24e89c267c fix(service-auth): after a promptless Unlock, read Locked again instead of matching the unlocked path (#14039)
+    - 57285ced87 feat(service-auth): omo login replaces this computer's earlier device on machine_exists (#14032)
+    - bed8c6e873 feat(service-auth): parse replacedDeviceId and the replace_mismatch refusal (#14032)
+    - 8592d9459d Merge pull request #14026 from code-yeongyu/fix/fmt-bunshin-ts-eval-sdk-qa
+    - a196d6813e test(thread): size the paging fixture past one 512 KiB page
+    - e36c25c9c4 Merge remote-tracking branch 'origin/dev' into fix/attach-pool-idle-timer-teardown
+    - 5ec6592a1f docs(skills): describe the inline-page tool instead of naming unregistered ones
+    - 030e444deb fix(thread): name the thread tools in their eval form in the parameter descriptions
+    - d77fde285e docs(changes): paged remote thread_read (#14053)
+    - bf3ee3e196 perf(thread): page a remote thread_read from the holder's newest entries (#14047)
+    - e2591a75d8 fix(thread): refuse an unattested reply when more than one device lists the sender id
+    - ab3013de3c docs(changes): add the #14052 fragment
+    - 93eaa45fd8 test(omo-native): pin the lock probe's gdbus call sites after the Unlock request (#14039)
+    - b35e51e037 fix(thread): resolve a reply account-wide when its sender's device is unattested
+    - de3dd6e1d9 fix(device-service-core): the #13669 review findings (oneshot start timeout, unknown when the host cannot be read, macOS ensure exit)
+    - 0d73449506 Pin the queued answer when the read after an admission fails
+    - 63fd4bcb47 Forget a timed-out command's reply and give the attach terminal a person-sized wait
+    - c04d2cac8d Merge remote-tracking branch 'origin/dev' into rt/send-queued-not-uncertain
+    - cc6d024ab8 docs(changes): name all four dev reds in #14026's fragment and attribute the goldens to #14023 and #14024
+    - 480000b02b Add the changelog fragment for the CLI device name
+    - 78f84c4773 Register a CLI device under its machine name
+    - e8465177d3 Drop registerRemovedToolHint from the thread tool host port
+    - 8d527138c1 Add the changelog fragment for dropping the bind-tool hints
+    - 606192a5a9 fix(device-service-core): omo remote status reads the session host running when its ensure reused an unpinned host (#13668)
+    - 785babb574 Add the changelog fragment for the remote command deadline
+    - 5a2af5aa65 Bound the wait for a remote command's final state
+    - 76bb431c06 Drop the removed-tool hints for the chat-binding tools
+    - fdf07d554f build: regenerate the service auth bundles
+    - 795e78fef0 fix: keep row 8b recovery for an unreadable item in OmO's keychain
+    - 321925ac90 docs(changes): note the promptless Secret Service unlock (#14040)
+    - 5edab5215e fix(service-auth): unlock a Linux Secret Service that needs no prompt before calling it locked (#14039)
+    - 24c5d6c3fc fix(device-service-core): the #13669 review findings
+    - a5d467a964 docs(changes): the fragment for #13669
+    - e440b62cbd fix(device-service-core): the session host unit runs its ensure once per start, not every 30 s (#13668)
+    - 1ce71d9d1a build: regenerate the service auth bundles
+    - 0642ce526f fix: report an unreadable item in OmO's keychain instead of signing out
+    - 5a445b750f build: regenerate the service auth bundles
+    - c0a39061be fix: let disable finish a store left half-erased
+    - 077c79bce7 test(eq): re-record the EQ.omo linux-x64 goldens for the eval-form thread guideline
+    - b2a8cf4d87 docs(skills): name eval-only and host-registered tools as the session can call them
+    - 6f9385de37 fix(thread): name the thread tools in their eval form in the family guideline and descriptions
+    - dd4045535e build: regenerate the service auth bundles
+    - e105c9efc1 fix: never copy an inactive OmO keychain over the login sign-in
+    - f0179549ab fix: harden OmO's keychain erase and HOME checks from review
+    - 5c4b57b4d3 fix(service-auth): read the lock holder's name through memory-core process-identity (#14029)
+    - 7b572080ad fix(keychain-helper): monotonic deadlines and a poll fallback; CI: fmt, bundle inputs, a multicall-safe lock holder (#14029)
+    - d87ade9a5e docs: add the changelog fragment for the opt-in OmO keychain
+    - a5ba761bb7 build: regenerate the service auth bundle
+    - 0bc9223434 feat: add omo account store for an opt-in OmO keychain on macOS
+    - 253b313b65 feat: let the keychain helper keep the sign-in in OmO's own keychain
+    - bb958ac3b0 test(eq): re-record the linux-x64 EQ.omo goldens at dev e060760dd2
+    - 2c92217b5e fix(keychain-helper): end the helper with its caller, with a bounded grace and lifetime (#14029)
+    - 50d6dd6c55 fix(service-auth): sign-out names an access-control refusal, not a locked keychain (#13757)
+    - d87bf8422d fix(service-auth): name the credential lock holder instead of an unexpected error (#14029)
+    - 16cbbe1a80 docs(changes): fragment for #14026
+    - e060760dd2 Merge pull request #14024 from code-yeongyu/cursor/thread-session-alias-3106
+    - f793bdf668 Merge remote-tracking branch 'origin/dev' into cursor/thread-session-alias-3106
+    - d289d4cbac Merge pull request #14021 from code-yeongyu/cursor/account-show-expired-keychain-ed66
+    - f029976200 Add the changelog fragment for thread session-id rename and close
+    - dfb8db827b Resolve session ids when renaming or closing a thread
+    - 893bf6075c Merge pull request #14023 from code-yeongyu/cursor/bunshin-ts-sdk-kernel-2b64
+    - 644f28776c Add the changelog fragment for the bunshin-ts SDK path and JS kernel exit guard.
+    - 10b8d36a54 Keep the bunshin-ts SDK path usable from bash and stop cell process.exit from killing the JS kernel.
+    - 7db2ccb1ab Merge remote-tracking branch 'origin/dev' into cursor/account-show-expired-keychain-ed66
+    - 86463036b4 docs: point the changelog fragment at the native package log
+    - 418d5caad4 Merge pull request #14019 from code-yeongyu/cursor/macos-shard2-split-bb5e
+    - bae715948b Merge pull request #14020 from code-yeongyu/cursor/windows-ci-fix-6205
+    - 3b5bc12f76 Keep the vendored DACL client pinned and fix the owner in our wrapper
+    - fd8bc7ff5b style: format the keychain helper pin
+    - 54cf1f9061 docs: add the changelog fragment for the expired refresh fix
+    - 82c5bc32ad fix: say when keychain access was refused by the item ACL
+    - 222eb48394 fix: delete a helper-owned keychain item without decrypt access
+    - 6a71be7f0b fix: keep the keychain helper on a content-stable path
+    - 8179fd1d89 fix: report an unrecoverable account refresh as expired
+    - 702e743703 Format the Windows CI fix so bun fmt passes
+    - d4842ea38a Add the changelog fragment for the Windows DACL fix
+    - 68bc7b830f Fix the Windows CI failures on dev
+    - 1d3010af49 style: format the macOS CI contract assertion
+    - ae1b8be64d fix(ci): split the macOS root shard 2 step that exceeds 20 minutes
+    - 974664a723 Merge pull request #13758 from code-yeongyu/rt/13414-u5-tools
+    - 9f3f705986 Merge pull request #14009 from code-yeongyu/rt/send-auto-steer-docs
+    - a7dcbce205 Merge branch 'dev' into rt/13414-u5-tools
+    - 52d0e95b3b Merge branch 'dev' into rt/send-auto-steer-docs
+    - ac602d95c7 Merge pull request #14016 from code-yeongyu/gorky/fix-main-ci-1754
+    - 69d89e306c fix(ci): drop the stale operator-darwin-verify knip-forced row
+    - 1754bcd63c Merge pull request #13993 from code-yeongyu/fix/13955-waiver-ascii-windows
+    - ec569269f2 chore(bundles): regenerate this PR's own bundle delta on the dev merge (#13758)
+    - 17a8b0497c fix(thread): a queued admission on another device answers queued, not idempotency_uncertain (fixes #14012)
+    - 86ffb30cfd test(omo-native): keep this PR's runSessionOn spawn site in the reachability ledger (#13758)
+    - 28adbbb9f8 test(omo-native): the reachability ledger is dev's again (#13971 made this PR's extra sessions.ts line obsolete) (#13758)
+    - 593c1ba0dd Merge remote-tracking branch 'origin/dev' into rt/13414-u5-tools
+    - 20119d37ed Merge pull request #13964 from code-yeongyu/ci/publish-operator-darwin-lows
+    - 382a60da3e chore(bundles): regenerate this PR's own bundle delta (agent-dir.js feeds omo-onboarding-scan) (#14005)
+    - 59401968a6 Merge pull request #13971 from code-yeongyu/rt/remote-local-graph
+    - 392cefbf8e test(ci): runner-pin inventory treats legs inside a format() template as unresolved (#13981 review LOW)
+    - 0a0255cf8d Merge remote-tracking branch 'origin/dev' into fix/umask-agent-dir-13958
+    - c40eb1bd4b docs(thread): the default delivery mode steers the running turn
+    - 417e54487c Merge remote-tracking branch 'origin/dev' into fix/runner-pin-format-template-legs
+    - 7cf632144b Merge remote-tracking branch 'origin/dev' into rt/remote-local-graph
+    - 2309643bf7 Merge pull request #13981 from code-yeongyu/fix/runner-pin-format-matrix
+    - 0a48aaf65b test(ci): placeholder for runner-pin format() template legs follow-up (#13981 review LOW)
+    - bd9b70c239 docs(changes): fragment for #14005
+    - 4484d7a784 fix(omo-native): the launcher creates the agent dir owner-only, so a fresh install boots under umask 002 (#13958)
+    - 20a6c5a0c6 Merge pull request #13972 from code-yeongyu/rt/13942-nextaction
+    - a26b185868 Merge pull request #13998 from code-yeongyu/rt/conformance-resume-token-placeholder-style
+    - 978eba7fc1 Merge pull request #13883 from code-yeongyu/fix/13722-windows-login-remote-dev
+    - 8de1773312 Merge remote-tracking branch 'origin/dev' into rt/remote-local-graph
+    - aea22da461 chore(bundles): regenerate omo.js on dev 76812ac661 with this PR's relay next actions
+    - 3fa4192246 Merge branch 'dev' into rt/13942-nextaction
+    - 76812ac661 Merge pull request #13977 from code-yeongyu/rt/wording-guard-init-ids
+    - c1e6cb5e1a test(omo-native): keep the 30 s budget; fail a stalled spawn as a typed error inside the test
+    - 50d347e9bc fix(omo-native): the omo remote CLI imports the remote module's public entry by its index path (G2) (#13758)
+    - 7d49f16c7f test(computer): use the corpus placeholder per-process-random for the v3 diff resumeTokens
+    - 3da7ee1d40 Merge pull request #13982 from code-yeongyu/rt/conformance-synthetic-resume-tokens
+    - eb958d1e4b test(omo-native): bound each cold engine spawn inside its test budget
+    - 732a9a137d fix(publish): refuse a non-ASCII ci_basis_receipt on Git Bash too (#13955)
+    - 497108b583 fix(audits): close() is queued behind the parses and a closed parser refuses to parse (#13963 review L1)
+    - df724758ed test(audits): close() during a restart leaves no native process, and no parse reopens one after close (#13963 review L1)
+    - c1c1400b3c changes: one fragment for #13467, folding #13863's (changelog gate: one fragment per PR)
+    - aab7d7226d Merge origin/dev (28cd87c250) into fix/13722-windows-login-remote-dev; regenerate service-auth.generated.js on the merge result
+    - 24873a5be4 fix(omo-native): pack and download once per packed-install file, with bounded async steps (#13974)
+    - a9c7720148 test(omo-native): RED - the packed-install file downloads its dependency tree once for both installs (#13974)
+    - 28cd87c250 Merge pull request #13825 from code-yeongyu/rt/create-options-review-lows
+    - 456fd14b26 fix(publish): run only the pinned default-branch verifier, outside the checkout, with a clean environment
+    - ed7b6762b4 Merge pull request #13875 from code-yeongyu/docs/13761-open-session-comment
+    - 0b537e0b68 chore(bundle): regenerate this PR's own bundle delta on dev 8832fa7e
+    - 32458056e5 Merge pull request #13775 from code-yeongyu/rt/13414-u6-cli-lows
+    - 6fac9ecb85 test(ci): runner-pin inventory reads format() matrix includes (Fixes #13978)
+    - 91bddd7215 Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - 6e467b7db1 Merge branch 'dev' into rt/13942-nextaction
+    - 7a489387f9 fix(skill-pointers): the owner fleet form fires only as the request's object; pointer text moves to its own module (#13467 review L2, L3)
+    - 8832fa7e85 Merge pull request #13942 from code-yeongyu/rt/thread-bind-remove
+    - 9e3c9d3793 fix(thread): per-path next actions for not_found the code alone does not explain
+    - e6918871dd test(skill-pointers): non-device owner-fleet phrasings must not fire the bunshin pointer (#13467 review L3)
+    - 5d16e8161f Merge #13863 (fleet plural and host-name triggers) into #13467
+    - fb47add4f1 test(native-wording-guard): excuse bundler init_ identifiers inside generated bundles only (#13973)
+    - ae8482268b test(computer): record synthetic resumeTokens in the v3 diff conformance fixtures
+    - 247f0f8a15 Merge branch 'dev' into rt/thread-bind-remove
+    - d219d87754 chore(bundles): take the CI-identical build of the thread bundles (same code; the source-digest marker covers installed inputs) (#13758)
+    - e3835af22e chore(changes): fold #13959's fragment into #13942's (one PR, one fragment)
+    - 88ef7c61fc chore(bundle): regenerate this PR's own bundle delta on dev d7024bc2
+    - b4dd45d6b6 fix(publish): keep ref-supplied Bun config out of the verifier, pin the guard order, exact depth cap
+    - 1d610f6677 docs(changes): name the fragment for #13972, the number GitHub assigned
+    - 0df3a34a88 Merge remote-tracking branch 'origin/dev' into ci/publish-operator-darwin-lows
+    - 060263adbb Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - d7024bc2c6 Merge pull request #13945 from code-yeongyu/ci/publish-operator-darwin-followups
+    - 8c00cd5f16 docs(remote): every devices --json row has caps, only this device's has self, and the local row without a service (review of #13970)
+    - 33a5f5b0d7 fix(audits): the native parser runs one parse at a time, so a restart never closes an API another parse is using (#13963 review L1)
+    - 7100c040c7 Merge origin/dev (1a939d5381) into fix/13722-windows-login-remote-dev; regenerate service-auth.generated.js on the merge result
+    - 3803883f02 fix(remote): inject this device's operator endpoint leg so omo remote's local-only graph reaches no socket (#13968)
+    - e39a42e805 fix(thread): session-facing relay next actions point at thread_report, not the shell
+    - 9f21ca5f7d test(audits): two parses failing on one dead connection start one replacement and leak none (#13963 review L1)
+    - da252e84f6 docs(remote): describe devices --json rows and the sessions --device refusal in the remote sessions reference
+    - 65b8134cda chore(bundles): regenerate this PR's own bundle delta (#13758)
+    - 52434a6097 fix(publish): bound every verifier lookup per call and name the bound on a body stall
+    - 3e2aa9f234 chore(bundle): regenerate service-auth.generated.js for #13775's omo-native delta on dev c07c1ad0f4 (Linux, node 24, bun 1.4.4)
+    - a5a12d2fe5 Merge remote-tracking branch 'origin/dev' into rt/13414-u5-tools
+    - 1a939d5381 Merge pull request #13957 from code-yeongyu/rt/13868-local-closed-followup
+    - 941d07ce1f Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - a484cee8fd test(publish): read the slice cpu subtype from the Mach-O header
+    - cbecbdfbd8 fix(publish): typed refusals for every verifier failure and an explicit arm64 slice check
+    - 5708666cbb Merge pull request #13956 from code-yeongyu/fix/daemon-real-engine-test-umask
+    - 6b437dcb4f Merge remote-tracking branch 'origin/dev' into rt/13414-u6-cli-lows
+    - ee1d8db7ea Merge commit 'a850a8b5ca9c884d687561ffa60a425bc44963ee' into ci/publish-operator-darwin-lows
+    - c07c1ad0f4 Merge pull request #13950 from code-yeongyu/rt/13934-not-asked-doc
+    - 043c57ff76 docs(changes): fragment for #13963
+    - 7cf97d1142 chore(publish): open the operator darwin #13945 review follow-up
+    - a850a8b5ca test(publish): pin the operator-darwin job timeout
+    - 6d85628686 fix(publish): bound the notarization ticket lookup with a typed refusal
+    - 3201514619 docs(changes): #13959 in the fragment's log heading
+    - cc9e1b2ba2 Merge branch 'dev' into rt/13934-not-asked-doc
+    - e31e46fa5b docs(changes): name the fragment for #13959, the number GitHub assigned
+    - d505683f08 test(omo-native): a failed host ensure shows the engine reason (#13956 review LOW)
+    - 542d0d8a16 fix(thread): hint the removed chat-binding tools, drop the self-bind next action (#13942 follow-up)
+    - 6a2b373d8b Merge pull request #13868 from code-yeongyu/rt/13414-local-watch
+    - 8e7246f9d1 chore(changelog): name the fragment for #13957
+    - c83c60d6f3 fix(remote): a local attach the engine ended answers not_found, not host_unavailable (#13868 L1)
+    - a7bafb1c01 test(omo-native): the daemon real-engine sandbox creates its rpc dirs 0700, so a umask-002 host does not trip the engine's unsafe_key_record refusal
+    - 463e9ef34c chore(knip): allow pgrep, which the native parser restart test uses (#13951)
+    - 3f6025a3f3 Merge pull request #13947 from code-yeongyu/rt/13787-l3-deadline-pin
+    - da6a9fb100 Merge origin/dev (84e9a8922a) into fix/native-parser-restart
+    - d3559384ed Merge remote-tracking branch 'origin/dev' into ci/publish-operator-darwin-followups
+    - 84e9a8922a Merge pull request #13952 from code-yeongyu/fix/operator-darwin-dev-reds
+    - 6d6d28135d fix(audits): the native parser starts a new process when its connection is gone (#13951)
+    - 294c8067ce test(audits): a killed native parser process fails every later audit with Connection is closed (#13951)
+    - 7cf502ddb7 chore(bundles): regenerate this PR's own bundle delta (#13758)
+    - 6f1d610ecc Merge pull request #13934 from code-yeongyu/rt/13923-alias-move
+    - ba711f5747 style(publish): format the #13945 operator darwin files and keep the doc clear of command-shaped prose
+    - 10a23b7275 Merge remote-tracking branch 'origin/fix/operator-darwin-dev-reds' into ci/publish-operator-darwin-followups
+    - 17f6e1e890 Merge pull request #13746 from code-yeongyu/rt/13414-u6-cli
+    - 7de3975890 Merge branch 'dev' into rt/13923-alias-move
+    - dcf952f37f style(publish): format the operator darwin files and reword a doc line the command audit flags
+    - 92e0ad3e1c chore(changes): leave #13934's fragment as reviewed; the clarification is in this PR's own fragment
+    - 66448d08be fix(publish): operator darwin follow-ups from the #13928 reviews
+    - 5f4ebb3c98 docs(thread): not_asked also covers a plan without a relay (#13934 review L1)
+    - e103b8a9aa Merge pull request #13922 from code-yeongyu/fix/memory-sync-boundary-blank-reread
+    - 81d5b2e2e6 Merge pull request #13787 from code-yeongyu/rt/13414-selfrow
+    - e294200af0 chore(bundle): regenerate this PR's own omo.js on dev 89cf78ef
+    - 5fd01bc779 Merge remote-tracking branch 'origin/dev' into ci/publish-operator-darwin-followups
+    - 6ffe64d206 Merge pull request #13655 from code-yeongyu/fix/memory-sync-unknown-failure-cause
+    - 8f8f4d1076 Merge pull request #13928 from code-yeongyu/ci/publish-operator-built-darwin
+    - 31e7fa6de9 chore(changes): fragment for the local list bound test (#13947)
+    - 93893107ce Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - 1b0e792ce7 chore(bundle): regenerate service-auth.generated.js for #13746's omo-native delta on dev 89cf78ef0e (Linux, node 24, bun 1.4.4)
+    - 9b9a379feb test(remote): pin the 10 s local list bound in the hung-host listing test
+    - 053d212d46 chore(publish): open the operator darwin follow-up (#13943)
+    - 7a54b558ee test(omo-native): pin the person client's open provenance stamp as a reachable process site (#13414 4c-1, after U2 in dev)
+    - 0b721b1c5b chore(bundles): regenerate service-auth for this PR's omo remote changes (#13758)
+    - 19f24d7e5e Merge remote-tracking branch 'origin/dev' into rt/13414-u6-cli
+    - 83afcceaea Merge remote-tracking branch 'origin/dev' into rt/13414-local-watch
+    - 508886ce8c fix(thread): thread_list flags aliases as not_asked while the device service is not connected (#13923 review M1)
+    - 89cf78ef0e Merge pull request #13753 from code-yeongyu/rt/13414-u2-streams
+    - dd7e0e60fe fix(remote): this device's list answers within its own bound, and no idempotency store drops an in-flight key
+    - 70816ffd81 fix(publish): pin the operator darwin manifest at dispatch and re-check the dispatcher in the verifier
+    - 37f61a6985 chore(bundles): regenerate this PR's own bundle delta on current dev (#13758)
+    - 8923dfb9f4 fix(publish): verify the operator darwin signer cryptographically and keep the release guards green
+    - 7ea2f59d91 fix(remote): local attach read fails fast once ended and answers a bad page invalid_arguments (#13868 review)
+    - c6f9710b43 docs(changes): fragment for #13942 (chat-binding tools leave the session tool list)
+    - 6d554d8650 Merge remote-tracking branch 'origin/dev' into rt/13414-u5-tools
+    - 8e29627afd Merge remote-tracking branch 'origin/dev' into rt/13414-selfrow
+    - 82af60442b test(omo-native): pin this device's row as dev's #13402 tests did: 'this device' kind column, no kind in --json (#13746 review L1)
+    - c4829368f7 Merge remote-tracking branch 'origin/rt/13414-u6-cli' into rt/13414-u6-cli-lows
+    - 22d189dda7 feat(thread)!: remove thread_bind/unbind/rebind/bindings from the session tool list
+    - c9e87ec4da Merge pull request #13368 from code-yeongyu/feat/cu-v3-row18-references
+    - da7ac8f44f Merge remote-tracking branch 'origin/rt/13414-u2-streams' into rt/13414-local-watch
+    - 4878fdb108 Merge branch 'dev' into rt/13414-u2-streams
+    - f818e359ad Merge origin/dev into fix/memory-sync-boundary-blank-reread
+    - 76ffc7f2e7 chore(bundle): regenerate service-auth.generated.js for #13746's omo-native delta on dev 31e08cb319 (Linux, node 24, bun 1.4.4)
+    - f40817588c chore(changes): fragment for the aliases_unavailable flag (#13923)
+    - a992057e8e Merge origin/dev into fix/memory-sync-unknown-failure-cause
+    - f4b6410cb5 test(remote): this device's own id opens here, and its rows carry devices.list's identity
+    - a27559032f fix(remote): the client's send receipts keep the newest 256 settled ones
+    - 893aa3c7ad test(remote): a first prompt after sessions.open goes on an attach of the shared connection
+    - 3e849eb99f Merge remote-tracking branch 'origin/dev' into rt/13414-selfrow
+    - 179a004f6f Merge branch 'rt/13414-u2-streams' into rt/13414-local-watch
+    - 37397521ca Merge remote-tracking branch 'origin/dev' into docs/13761-open-session-comment
+    - 02a9ae9a42 chore(bundle): regenerate this PR's own omo.js on dev 31e08cb3 (5 wave-3 stale bundles left as dev has them)
+    - e5d7bf8225 fix(thread): thread_list says when the alias registry could not be read (#13923)
+    - 157621f408 test(publish): refuse an ad-hoc signed operator artifact; list the workflow-run verifier as a knip-forced entry
+    - adda0167c1 Merge pull request #13924 from code-yeongyu/release/v5.1.75-source-state
+    - 04ad1bf45e test(remote): a test's teardown leaves no idle detach timer for the next test (#13873)
+    - 867597c3d0 chore(bundles): regenerate this PR's own bundle delta on dev 36b4ba13cb+ (#13758)
+    - 1bd25e2cc2 test(publish): guard the operator darwin gate and verifier; add the operator build script and docs
+    - 901f446dc6 ci(publish): accept verified operator-built darwin artifacts instead of the hosted macOS legs
+    - b474847b4b test(publish): classify each shell command, read glued flags, and assert the pre-tag guards
+    - b96403fa56 Merge pull request #13919 from code-yeongyu/ci/publish-tag-publisher-detector
+    - 28fb0aff20 Merge remote-tracking branch 'origin/dev' into ci/publish-tag-publisher-detector
+    - f793007c62 Merge pull request #13915 from code-yeongyu/ci/publish-tag-before-platform-publish
+    - a328c7daa8 fix(remote): attach and follow on a mistyped or durable id answer not_found
+    - a380efaeb8 Merge remote-tracking branch 'origin/dev' into rt/13414-u5-tools
+    - 256e1e5cfa Merge remote-tracking branch 'origin/dev' into ci/publish-tag-before-platform-publish
+    - 36b4ba13cb Merge pull request #13756 from code-yeongyu/rt/13414-u1-sessions
+    - 293cff006e fix(memory-sync): re-read a transiently empty credential once in the boundary check too
+    - 356aebfa50 Merge remote-tracking branch 'origin/dev' into rt/13414-u5-tools
+    - 787fe31c8d Merge origin/dev into fix/memory-sync-unknown-failure-cause
+    - 29a4142b99 Merge dev (83422463da) into row 18 (dev-red-zero: no named dev reds left on dev)
+    - 10779bf7c0 Merge branch 'rt/13414-u2-streams' into rt/13414-local-watch
+    - b3d2332f94 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - 1c486c0d81 Merge branch 'dev' into rt/13414-u2-streams
+    - 6e22cf197c Merge origin/dev (31e08cb319) into fix/13722-windows-login-remote-dev; regenerate service-auth.generated.js on the merge result
+    - 5ea9833d63 Merge remote-tracking branch 'origin/dev' into rt/13414-u6-cli
+    - 387949ee51 Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - 0e4742c560 Merge origin/dev (31e08cb319) into fix/attach-pool-idle-timer-teardown
+    - 3b4b7e1e96 Merge branch 'dev' into rt/13414-u1-sessions
+    - 89afe7bf50 test(publish): find every publishing job, and fail closed on an unknown publish form
+    - 033eeb1074 Merge branch 'rt/13414-u2-streams' into rt/13414-local-watch
+    - 651c415e1a Merge origin/dev into fix/memory-sync-unknown-failure-cause
+    - 64aead39ec fix(memory-sync): keep the sync repo's git output off the warning line
+    - 272e314949 test(omo-native): the read verbs render the client's device rows after the #13402 parity move (#13414 4c-1)
+    - f852023030 Merge commit 'add0ca2bc297f4e0dec12372319acc3f1fa678a0' into rt/13414-u6-cli
+    - 119df1e43f Merge remote-tracking branch 'origin/dev' into docs/13761-open-session-comment
+    - aa714a06f3 Merge remote-tracking branch 'origin/dev' into rt/13414-u1-sessions
+    - c305345549 fix(remote): open dials its own connection (dev #13761 parity)
+    - ba516343d0 Merge branch 'dev' into rt/13414-u2-streams
+    - f31b31c287 Merge remote-tracking branch 'origin/dev' into ci/publish-tag-before-platform-publish
+    - 975ba48c6c Merge remote-tracking branch 'origin/dev' into rt/13414-u6-cli
+    - 4e6e404576 ci(publish): tag the prepared source before any platform package is published
+    - 48e59fb7f8 fix(remote): local attach pages history through the engine and drops records its snapshot holds (#13868 review)
+    - ff4ea4a450 test(audit): categorize remote-background.test.ts's /bin/omo fixture paths as literal labels
+    - 0cce32d2da Merge origin/dev into fix/memory-sync-unknown-failure-cause
+    - 3196320588 fix(memory-sync): review LOWs on ab916d1d
+    - 8e112c127e Merge branch 'rt/13414-u2-streams' into rt/13414-local-watch
+    - dcbb2442b0 test(remote): follow and attach address a well-formed listing key the device does not hold
+    - 49849beeaf Merge remote-tracking branch 'origin/dev' into rt/13414-u6-cli
+    - f0f491c151 Merge branch 'dev' into rt/13414-u2-streams
+    - ec57150f22 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - 6473ed9490 Merge branch 'rt/13414-4a2-types' into rt/13414-u1-sessions
+    - fe176da5fc test(remote): the idle-bound test asserts the released attach is detached, not only re-attached (#13892 review LOW)
+    - cfe0223279 docs(changelog): file #13875 under Changed and say it changes no behavior (review LOW)
+    - 7f3a37e336 docs(remote): login's two outcomes in the remote-sessions reference; the fragment names #13883 (#13883 review L1, L4)
+    - 5138948ef3 fix(remote): close every test port and give its attach doubles a detach, so no attach-pool idle timer outlives its test (#13873)
+    - e80160a454 test(remote): reproduce the attach-pool idle detach on an incomplete double (#13873)
+    - 9e38126fe8 docs(changelog): fragment for #13875
+    - 6c86b400b5 fix(remote): sessions on #13747 fa05c41edd: dev's preset narrowing, the {conn, owned} dial, a well-formed unheld key
+    - 5b7baab799 docs(security): make the field-finding measurement step executable and qualify the step-9 row (#13757)
+    - ce86230c77 docs(changes): name the fragment for its PR (#13883)
+    - 0458c9aebb Merge branch 'rt/13414-4a2-types' into rt/13414-u1-sessions
+    - 89d3c217aa chore(omo-native): regenerate service-auth.generated.js for the after-login background enable (#13722)
+    - 65aad08bad chore(knip): drop the stale SyncCommitError pre-existing export rows
+    - 0cd387353e fix(remote): the background enable login starts re-reads the opt-out after its install, so an omo remote disable typed meanwhile keeps remote off and stays recorded (#13724 review M1); pin the older-service login hand-off (L1)
+    - 56280eb79d fix(remote): an opted-out login with no current service hands the install to a background omo remote bootstrap, which keeps remote off (#13724 review M1); pin the background spawn options (L2)
+    - 4acf40d566 docs(changes): fragment for #13724
+    - fae29075e4 fix(remote): login hands the device service install to a background omo remote enable, so remote turns on after login on Windows too (#13722)
+    - 3b642024e6 docs(remote): only open_session rides a per-call connection (review LOW of #13761)
+    - 62e7b852ce docs(security): revise keychain custody threat model for the second review (#13757)
+    - f8923bec85 docs(changes): fragment for local session watch (#13868)
+    - ab916d1d0c chore(memory-sync): regenerate this PR's own bundle delta on current dev
+    - 47f0366a76 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - b37284743b feat(remote): attach, follow and wait reach a session on this device through its engine's operator endpoint (#13414 local watch)
+    - 7462099085 test(remote): clients under test reach no real operator endpoint
+    - 7efa9b15d8 Merge origin/dev into fix/memory-sync-unknown-failure-cause
+    - f3f270a36d changes: fragment for the plural fleet and host-name triggers (#13863)
+    - cbedb7a6a7 fix(remote): sessions.list reads this device's own sessions from its operator endpoint (#13787)
+    - 29c61e7068 fix(skill-pointers): my fleets and fleet-node-3 fire the bunshin pointer (#13467 review L1)
+    - 81d36d55a3 test(skill-pointers): plural owner fleets and hyphenated fleet host names fire the bunshin pointer (#13467 review L1)
+    - 56d72a327e chore(bundle): regenerate this PR's own omo.js on dev 7e0c6da7 (1,498,808 B, within 1,501,843); the 5 wave-3 stale bundles left as dev has them
+    - 3ace9978a3 Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - e8d328470d fix(remote): a Stop, a hold or a provider retry never ends a turn; a re-attach's state waits for the turn's own end (#13753 review)
+    - c93c37b2f6 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - 433a44d1fa fix(remote): a send's turn also ends when its run goes on to an id-less input or ends without a stamped end (#13753 review)
+    - 5499006270 chore(bundle): regenerate this PR's own bundle delta on dev b9be6e58 (omo.js 1,498,030 B, within the 1,501,843 budget; service-auth.generated.js)
+    - 3907069ccf fix(remote): #13787 review LOWs on the local leg
+    - 27d0cc672f Merge row 17 (e1e40d969c) into this branch (row 17 Windows poison-record fix, merge only)
+    - f6ce515d01 Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - 5c4f1a5b3b feat(remote): a person's send stamps its prompt with a client message id, returned as delivery_id
+    - 165348f2b4 fix(remote): #13787 review LOWs: a retried key reaches the host, local model refusal details, uncertain worktree open
+    - b13cc6b60e feat(remote): follow and wait from one send: anchored on the client message id the engine stamps on its turn (#13753)
+    - 4e4dc8125e Merge row 17 (99fbf85c67) into this branch (row 17 Windows poison-record fix, merge only)
+    - 4f10fc3a1b chore(remote): engineRefusal stays private to local-wire.ts (knip)
+    - 021e9d3b5e fix(remote): every session member on this device takes the local leg, never the relay to itself (#13787)
+    - 1ac87a190b fix(remote): a newer lease alone does not make the snapshot's own run follow's (#13753 review M3)
+    - eb8dc45862 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - ad81ace6f3 chore(changes): fragment takes PR number #13825
+    - 8139dd97e2 fix(remote): judge a failed local open by the wire: unreached, refused, or uncertain (#13787 review)
+    - 4a0d801e78 fix(remote): wait reads through follow's anchor; a run that ends before the baseline answers is follow's (#13753 review)
+    - 0fca5bfd03 chore(changes): fragment names the restored open --json model field
+    - 729fbb86fb Merge remote-tracking branch 'origin/dev' into rt/create-options-review-lows
+    - 1f5b73f126 docs(security): revise keychain custody threat model for review (#13757)
+    - 9237507b3a Merge row 17 (7ef996e143) into this branch (row 17 Windows poison-record fix, merge only)
+    - d6561be541 changes: one fragment for #13467, folding #13780s line
+    - 9fa7c13317 Merge #13780 (CLEAR at 69287aff1c) into fix/sdk-hint-guard-13446: review LOW L1 (AGENTS.md triggers) and the fleet box trigger
+    - 4fe3edd8d4 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - b13f8e8049 fix(remote): open --model --json names the model again (review LOW of #13748 at c09a616)
+    - b58943e465 fix(remote): an open on this device takes the local leg, never the relay to itself (#13787)
+    - 5e933cd86f Merge remote-tracking branch 'origin/rt/create-options-model-prompt' into rt/create-options-review-lows
+    - 6757c3fe71 Merge commit '7ce8080acb3368456cd2e46fb531e23fb7ff8c4b' into rt/13414-selfrow
+    - b8436364eb Merge branch 'rt/13414-4a2-types' into rt/13414-u2-streams
+    - 7ce8080acb Merge branch 'rt/13414-4a2-types' into rt/13414-u1-sessions
+    - 975c9f02b8 Merge remote-tracking branch 'origin/dev' into fix/memory-sync-unknown-failure-cause
+    - eed6d9217f fix(remote): a secret raised on this connection's own channel settles, and stays answerable for its raiser (#13753)
+    - 6be0fbf81c fix(remote): the run in flight at follow's baseline is its turn (U6 opens follow and sends without waiting)
+    - 85c311aa05 fix(remote): follow is anchored at its open; replayed turns never produce text or an end (#13753)
+    - 97043636d1 Merge row 17 (a685bd5768) into this branch (row 17 Windows poison-record fix, merge only)
+    - 2b6a72d626 docs(changes): fragment for the self-row and just-opened get fixes (#13787)
+    - 69c4e35fef test(omo-native): the spawn call-site ledger names runSessionOn (#13758)
+    - b29ab397f4 fix(remote): open on this device through a connected service; get reads an unlisted session from its device
+    - e03aab8b74 Merge branch 'dev' into fix/sdk-hint-guard-13446
+    - f037bc8423 fix(computer): refusals built from the typed Reason dev #13137 introduced (Refusalnew takes a Reason; the wire token is reason.wire(); tests compare Some(Reason...)); no behaviour change
+    - 5f6066a4ad Merge row 17 (21050ac09c) into this branch (W2 D1 dev take: dev a6901c2ebc with #13137's typed Reason, merge only)
+    - ea7cf4fba7 fix(remote): a run end observed while compacting or asking is reported once the session goes idle (#13753)
+    - 096c4923aa chore(changes): fragment for the #13748 review LOW follow-up
+    - 5da959ffcb docs(omo-native): the not-running comment names the client's connect tag, not the failure kinds (#13775 review LOW)
+    - 69287aff1c changes: fragment for the fleet box trigger (#13780)
+    - c4a2400879 fix(remote): a session or connector open not told its own mode asks for ask, never the device default (#13756 M1)
+    - 3c67dc1db5 Merge remote-tracking branch 'origin/rt/create-options-model-prompt' into rt/create-options-review-lows
+    - ca04892b77 fix(thread): a first prompt whose delivery throws is the prompt's outcome, never the create's (review L1/L2 of 0571de8)
+    - 77f00a32cd docs(security): macOS keychain helper custody threat model (#13757)
+    - 4f34768545 fix(skill-pointers): fleet box fires like fleet boxes; AGENTS.md states the bunshin triggers (#13467 review L1, L2)
+    - d22b75e355 test(skill-pointers): a singular machine noun after fleet fires the bunshin pointer (#13467 review L2)
+    - 2db24bf333 docs(changes): name the fragment for its PR (#13775)
+    - e6631316a3 docs(changes): fragment for the #13746 review LOW follow-up
+    - e9e5a6b40a Merge commit 'bce2e47cf67ce3ad6d4e31a4bc93629346488e82' into rt/13414-u6-cli-lows
+    - bce2e47cf6 test(omo-native): G2 allows the remote module's types module, as the design's rule says (#13414 4c-1)
+    - a7aa11e382 fix(remote): #13753 second review: wait never settles idle on an unread baseline; frame_settled only for shown requests
+    - c815a9d5b6 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u2-streams
+    - d50b183a9e Merge commit '248d459d54607e625edd75575033199802231b6a' into rt/13414-u6-cli-lows
+    - c35d7618d4 fix(omo-native): omo remote read failures keep their message and exit code (#13746 review LOWs)
+    - c82a03626f chore(omo-native): format (#13758)
+    - 5e474a6390 fix(remote): #13753 review M2, L1, L2: raiser-only requests move the turn; an answer moves it back; one events reader
+    - 248d459d54 Merge commit '28635830a5ae6eedda1e0f95e05dc0f3cd99a5e0' into rt/13414-u6-cli
+    - bd7e802130 Merge row 17 (9396f0aef3) into row 18 (row 17 Windows lock-dir fix, merge only)
+    - cbeb76e814 fix(remote): serveEndpoint uses the injected serveAttach, attach reaches nothing of omo-native; sessionStatusOf for sessions.get (#13753)
+    - 657c20a074 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u2-streams
+    - f2d325dc45 test(remote): attach has landed (U2); drop its row from the not-landed pin
+    - 648b98d2dc chore(remote): U1 members are landed in client-members; the preset table takes PERMISSION_PRESETS from types.ts
+    - 34d2ede84b Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u1-sessions
+    - 07f2104fd7 fix(remote): #13756 review: cli opens ungated, one person identity, bounded open replays, one deadline per call
+    - abc506b386 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u2-streams
+    - 381adfc396 fix(remote): close served endpoints when the attach ends from the far side; serveRemoteAttach loaded only when serving (#13753)
+    - 6bbad15823 fix(remote): the fresh get_state record is a JsonObject (typecheck)
+    - 9857f2320e fix(remote): sessions.wait and follow settle only on an observed turn end, never on an idle snapshot (#13753)
+    - 91bbeb1cbd docs(changes): name the fragment for its PR (#13758)
+    - b00c9cf2ce docs(changes): fragment for the remote session members (#13756)
+    - f51505c38c fix(remote): session members resolve a handle's durable id to its listing key; permissionPreset and open warnings
+    - a6db65ef98 Merge branch 'rt/13414-4a2-types' of https://github.com/code-yeongyu/oh-my-openagent into rt/13414-u5-tools
+    - 768331f6e5 docs(changes): fragment for remote attach, follow and wait (#13753)
+    - d7e5c8485e Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u1-sessions
+    - b2e8b1f00a Merge branch 'rt/13414-4a2-types' into rt/13414-u2-streams
+    - 54cf2975ea refactor(omo-native): omo remote builds its client with remoteClientForPerson (#13414 4c-1)
+    - 6b98a345e2 fix(remote): bound an attach's unread events at 1024; past it the oldest go and the reader gets channel_lost events_overflow first (#13414 U2)
+    - 1baa9b17b3 Merge remote-tracking branch 'origin/rt/13414-u3-factories' into rt/13414-u6-cli
+    - 98c2801526 Merge commit 'a957ac4c3f3a29968c43090c0a47d5cfd2751264' into rt/13414-u5-tools
+    - c8bd571e04 test(remote): sessions.open answers an engine's model_unavailable refusal as model_not_found
+    - 98b391c3f4 feat(omo-native): omo remote wake on the person client (#13414 4c-1)
+    - 0202b66e51 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u2-streams
+    - aa67417093 test(remote): keep the attach push helper module-private (knip)
+    - 520adeee75 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u1-sessions
+    - 202525d820 feat(remote): session members of #13414 U1 (open, send, read, close, interrupt, setModel, setReasoning, get, archive)
+    - 2290777f80 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u6-cli
+    - feab5bff67 Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u2-streams
+    - 057ac1c4c2 feat(remote): attach, sessions.follow and sessions.wait on the device-service attach (#13414 U2)
+    - 058a04484c Merge row 17 (b594441080) into row 18 (cascade: dev taken once at row 14; row 17 carries A-IS-65)
+    - 3a55076685 Merge commit '582167ed44f0ce6fcd785352101ea55e38f11903' into rt/13414-u5-tools
+    - 036f94f44e Merge remote-tracking branch 'origin/rt/13414-4a2-types' into rt/13414-u6-cli
+    - a26b1df4cb docs(changes): name the fragment for its PR (#13746)
+    - 9a34484eb9 feat(omo-native): omo remote read verbs on the one remote client (#13414 4c-1)
+    - 4d03a5170d fix(memory-sync): warn once per shown failure; keep git detail off the warning
+    - afd9edcc1e fix(memory-sync): log a failed sync cycle at warn so it reaches stderr
+    - aaec728faf fix(memory-sync): settle a failed cycle before logging it; name error classes by class only
+    - a22e666ec9 test(omo-native): a spawn that throws leaves no signal listener behind (#13652 review L1)
+    - ce1e9bd633 fix(omo-native): the launcher listens for signals before it starts the child (#13652 review M1, L1)
+    - 4c77fa750d docs(changes): note the named memory sync failure cause (#13655)
+    - 75eeb05aa5 test(omo-native): the signal test fails for the reason it names (#13652 review L1, L2)
+    - 6d6b0e6706 docs(changes): launcher relays SIGUSR2 (#13652)
+    - 149d40ba20 fix(omo-native): the waiting launcher relays SIGUSR2 too; the signal test leaves no orphan (#13650)
+    - 72a9ca44e0 docs(changes): limit the #13639 fragment to desktop sign-out and closed channels, and state the CLI limit (#13624 review)
+    - efe55cb712 test(memory-sync): cover the wake retry's timer cleanup and an account signal aborted before the wait (#13624 review)
+    - 2efcf1594e fix(memory-sync): name the cause of a sync failure instead of one unexpected error
+    - f46653297c docs(changes): add the #13639 fragment (#13624)
+    - 0df2becb80 fix(memory-sync): end the wait for the memory repository when the waiting account's signal aborts (#13624)
+    - fd26c634de test(memory-sync): a sign-out or lost channel while waiting for the memory repository goes idle (#13624)
+    - bcb015f6e3 changes: fragment for the bunshin SDK hint guard (#13446)
+    - 212b9084e4 fix(skill-pointers): give the bunshin SDK hint the only-discussed guard and drop bare fleet (#13446)
+    - ae462a1272 test(skill-pointers): pin that the plain word fleet injects no hidden pointer (#13446)
+    - ebad50af59 fix(computer): the AmbiguousTarget candidates' sub-generation is minted under the stored window key (review M1 of #13368 at d8305695c6)
+    - 44bd6bff0d test(computer): RED - an ambiguous resolve after a relaunch does not rebind the window key (review M1 of #13368 at d8305695c6)
+    - d8305695c6 Merge row 17 (d68eaa25fe) into row 18 (R70v: rows 15-17's fixes, merge only)
+    - 132280c899 fix(computer): the observe diff applies back to its baseline: runs of added siblings carry their place, a moved survivor gives the full tree (review M1 of #13368, amendment A-IS-59)
+    - 0cf8e48fb4 test(computer): RED - a diff applied to the baseline rebuilds the current tree; a moved survivor is reordered (review M1 of #13368, amendment A-IS-59)
+    - 83a73e541d fix(computer): an AmbiguousTarget marks the window needs_observe; the candidates' sub-generation does not lift it (review L2 of #13368, ruling R70z)
+    - 5cac833a57 test(computer): RED - after AmbiguousTarget the window's refs act only after a new observe (review L2 of #13368, the checker's falsifier)
+    - 635fd87eae fix(computer): live AmbiguousTarget candidates carry fresh tokens in a sub-generation; a secure candidate shows role + ref only (review L2 of #13368)
+    - 69e42db7b0 test(computer): RED - live AmbiguousTarget candidates carry fresh distinct tokens, a secure one role + ref only (review L2 of #13368)
+    - deceb3d681 fix(computer): a hit on a drill refreshes the full observation it hangs under (review L3 of #13368)
+    - 0566b89e19 test(computer): RED - heavy drill use keeps its parent observation through a prune (review L3 of #13368)
+    - ad7d800cbf fix(computer): the per-window ref maps are pruned with the generations they index (review L1 of #13368)
+    - 79120cb049 test(computer): RED - element churn keeps the per-window ref maps to the kept generations (review L1 of #13368)
+    - 0d5fe6e686 Merge row 17 (7abf0fe78e) into row 18 and add the #13368 changelog fragment (R70m)
+    - add1701304 Merge row 17 (ff4ffdab20) into row 18 (R70 cascade)
+    - 7faa575e75 Merge remote-tracking branch 'origin/dev' into fix/13261-team-messaging-flake
+    - 03543b0977 Merge row 17 into row 18
+    - d0b000ee8c Merge row 17 into row 18
+    - 2976d956b5 Merge row 17 into row 18
+    - 3dc04cb944 Merge row 17 into row 18
+    - cfa507fad9 Merge row 17 into row 18
+    - 36581d750b Merge row 17 into row 18
+    - 8c2e205db1 Merge row 17 into row 18
+    - ef07d87829 Merge row 17 into row 18
+    - 06804b14c7 Merge row 17 into row 18
+    - 6b776704c5 docs(changes): add fragment for #13262
+    - 26ef076e09 test(team-mode): hold fallback-wake blockers on a frozen clock
+    - e52a88272f Merge row 17 into row 18
+    - 0dac009817 Merge row 17 into row 18
+    - d1a3720a46 test(memory-core): derive the B01 cap budget from the fixture, not a live re-measure
+    - 6d90bd137a Merge row 17 into row 18
+    - d5123a5986 Merge row 17 into row 18
+    - d63d5cb258 test(computer): the A1 oracle sees an object-less holder inside the drilled subtree (case C4)
+    - 1bf1e9f08e test(computer): tighten the A1 fuzz oracle so no drill breach hides behind a refinement
+    - ba083a1265 fix(computer): a drill's lookalike never inherits a number live in any valid generation
+    - 1f23cd60df test(computer): v3 refs RED - drills of drills and of older generations, fuzz over every valid generation
+    - d038554f6e fix(computer): A1 inheritance is an identity verdict - unique tuple matches, live entries and drill parents
+    - c423b85abb test(computer): v3 refs RED - unique tuple matches only, drill lookalikes, seeded A1 property test
+    - aac02f908f fix(computer): A1 numbering settles every live native object before any role + native id match
+    - 424ff0089c test(computer): v3 refs RED - A1 precedence across the whole read, bare refs on object mode
+    - 786a1e2871 Merge commit '12cc267d65059571e9ab3acd70741813825be8b2' into feat/cu-v3-row18-references
+    - 697c5bd69f Merge commit 'e4706cad9b' into feat/cu-v3-row18-references
+    - ac5d3aa047 feat(computer): v3 observation model - stable refs, generations, lossless-or-full diff
+    - cbe6803444 test(computer): v3 observation model RED - refs, generations, re-identification, lossless-or-full diff, skeleton
+    - 17b7263a30 Merge origin/dev into feat/thread-tool-tui-render
+    - f5d1573d1e docs(changes): name the thread-tool-render fragment for PR 12997
+    bun add -g omo-ai
+
+    Note: 5.1.76 was tagged but never published to npm. Its publish was held on Windows platform-CI reds, which are now fixed. 5.1.77 is the first published release since 5.1.75 and includes everything that was in 5.1.76.
+    Highlights
+    - GPT-6.2 Astra / Sol routing: GPT lanes, Obsessive profiles and plan-reviewer lead with GPT-6.2, with GPT-6 models behind them; the bundled engine is senpi 2026.11.18, which adds the GPT-6.2 catalog, prompt preset and defaults (#14149, #14126).
+    - Thread tools: thread_create survives a lost open reply and retries exactly once (#14060, #14066). It names a device by display name, id or unique id prefix (#14072). Reopening an exited thread by id answers that thread (#14049, #14063). Signed-out callers get no approval storm (#14082). Permission-review fixes (#14089). Thread SDK version note (#14088).
+    - Windows credential lock: the lock holder is named on Windows, so a held lock no longer hangs (#14118, fixes #14154). Keychain-doctor Windows fix (#14168).
+    - Dedicated keychain: OmO keeps its own keychain (#14033, #13116). Removing an item from another binary is fixed (#14102).
+    - Memory sync: the sync engine now declares the recovery-phrase capability on every request, ahead of recovery-phrase support (fixes #13691).
+    Known test reds still tracked: #14120.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.77
+ReleaseTime: 2026-11-18T11:56:28.0000000Z

@@ -1,34 +1,41 @@
-$Object = Invoke-RestMethod -Uri 'https://altstore.io/altserver/sparkle-windows.xml'
+$Object1 = Invoke-RestMethod -Uri 'https://altstore.io/altserver/sparkle-windows.xml'
 
 # Version
-$Task.CurrentState.Version = $Object[0].enclosure.version
+$this.CurrentState.Version = $Object1[0].enclosure.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object[0].enclosure.url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1[0].enclosure.url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object[0].pubDate | Get-Date -AsUTC
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1[0].pubDate -replace '^.+?,\s+?' | Get-Date -AsUTC
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
-}
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1[0].description.'#cdata-section' | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromMsi
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

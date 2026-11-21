@@ -1,0 +1,307 @@
+Version: 0.1.913-beta
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/unslothai/unsloth/releases/download/v0.1.913-beta/Unsloth-Desktop-Windows.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/unslothai/unsloth/releases/download/v0.1.913-beta/Unsloth-Desktop-Windows-ARM64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Make Unsloth your own with custom backgrounds and a improved UI/UX. This release also cuts app update times and speeds up Linux app and Qwen-Image gen when VRAM is limited. Also new: DeepSeek-V4.1-Flash-1017 in Unsloth Dynamic v3.1 GGUFs (preview), FLUX.2-klein-9B on low-RAM machines, smoother chats and batched MoE fine-tuning.
+    Highlights
+    - Custom backgrounds to personalize your chats (more customization options coming next week)
+    - DeepSeek-V4.1-Flash-1017 new Unsloth Dynamic v3.1 GGUFs (preview), the most accurate for their size on nearly all benchmarks Blog
+    - 14 new languages for Unsloth
+    - App updates finish twice as fast
+    - Linux much less lag and improved performance
+    - Qwen-Image renders up to 2x faster under a 16 GB VRAM limit
+    - Updated interface with consistency and cleaner UI
+    - MoE fine-tuning runs compatible API jobs together
+    Customization and interface
+    - Move the chat box to the bottom of new chats with Composer at the bottom in Settings > Chat.
+    - Hide the greeting entirely for a simpler new-chat screen.
+    - The Library gets shorter chat cards, clearer tooltips and consistent sort and filter icons.
+    - Copy images between input slots by dragging a filled slot onto an empty one.
+    - Pinned models stay saved across Unsloth Desktop restarts.
+    - Each browser tab keeps its own unsent message.
+    - Scrolling long chats is smoother on Linux with NVIDIA, X11 and driver 610+. Our high-resolution test improved from about 17 to 60 fps.
+    Images and video
+    - FLUX.2-klein-9B now loads and renders on Linux with 12.7 GB of system RAM and a supported GPU.
+    - Qwen-Image-2512 renders up to 2x faster under a 16 GB VRAM limit.
+    - Qwen-Image-Edit-2511 renders about 1.3x faster under the same limit.
+    - MiniMax-H3 clips finish about 1.7x faster in our memory-limited NVIDIA test.
+    Performance
+    - App updates take about half as long by skipping Python precompilation. The tradeoff is a longer first launch afterwards, as before v0.1.912.
+    - Long replies stream more smoothly, even with unfinished math formatting. Parsing an 83 KB reply with a stray $$ took 0.7 seconds instead of 71 seconds.
+    - Previewing a 1 GB local Parquet file uses about 300 MB of peak memory, down from 1.5 GB.
+    - Unsloth stays responsive as Transformers and MLX models finish loading.
+    Chat and API
+    - GGUF models reload in the background after a llama-server crash.
+    - Failed or cancelled GGUF downloads leave your current model loaded.
+    - Very long GGUF chats can compact and keep going.
+    - Claude Code connected directly to a local GGUF reuses cached prompts across new sessions.
+    - Rejected GGUF requests show llama-server’s explanation instead of a generic error.
+    Mac
+    - Claude Code, Codex and OpenCode requests can share an MLX batch. In our test, four simultaneous requests finished up to 2.3x faster.
+    - Experimental Neural Engine Prefill processes prompts up to 31% faster in our Qwen3.8-27B-4bit test on M3 Max. It is opt-in and can slightly change replies.
+    - Auto context starts GGUF models at no more than 65,536 tokens, reducing upfront memory use. You can still set a larger context manually.
+    - Send LFM3-Audio or LFM3-Omni a voice clip on MLX and hear its answer alongside the text.
+    Training
+    - Compatible LoRA and QLoRA jobs on MoE models such as Qwen3.6-35B-A3B train together through the fine-tuning API, each with its own adapter.
+    - Use via API on the Train page opens Python, JavaScript and curl examples for your setup.
+    - Single-column text datasets are recognised automatically, with no manual column mapping.
+    What's Changed
+    - Bump install.sh / install.ps1 pins to unsloth>=2026.10.10, unsloth-zoo>=2026.10.10 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15785
+    - Tensor parallel x FSDP2: average trainable TP parameters left out of FSDP2 over the data parallel ranks by @danielhanchen in https://github.com/unslothai/unsloth/pull/15748
+    - Flash impl: warn about an explicit fa3 / fa4 fallback on the Trainer path too by @danielhanchen in https://github.com/unslothai/unsloth/pull/15750
+    - FSDP2 block CUDA graphs: free the gathered weights of flex BlockMask blocks by @danielhanchen in https://github.com/unslothai/unsloth/pull/15756
+    - Installer downloads: report progress on whole 1 MiB chunks again by @danielhanchen in https://github.com/unslothai/unsloth/pull/15789
+    - Studio export: skip the GPU cache clear when nothing was loaded since the last one by @danielhanchen in https://github.com/unslothai/unsloth/pull/15737
+    - Studio video: read an LTX-2 checkpoint header once per file when probing for 2.3 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15738
+    - Tensor parallel: batch_rebalance and group_by_length samplers give tp peers the same rows by @danielhanchen in https://github.com/unslothai/unsloth/pull/15752
+    - CI: hold the unpinned version-compat lanes below torch 2.15 until torchvision 0.30 is published by @danielhanchen in https://github.com/unslothai/unsloth/pull/15774
+    - Studio: give each batched fine-tuning job its own fp16 loss scale by @danielhanchen in https://github.com/unslothai/unsloth/pull/15741
+    - Studio: list a Qwen-Image-2.1-Turbo base pipeline cached in its FP8 mirror On Device by @danielhanchen in https://github.com/unslothai/unsloth/pull/15772
+    - Multi-LoRA: per-adapter LoRA on fused MoE experts by @danielhanchen in https://github.com/unslothai/unsloth/pull/15742
+    - Frontend tests: follow the desktop quit hiding the window by @danielhanchen in https://github.com/unslothai/unsloth/pull/15801
+    - Cross entropy: 8192-wide chunks at 4 warps for the chunked forward on sm120 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15744
+    - Run packed rows of head-dim-routed flex decoders through varlen SDPA by @danielhanchen in https://github.com/unslothai/unsloth/pull/15514
+    - Tests: allow the zoo's padded logits row stride in the fused linear adapter check by @danielhanchen in https://github.com/unslothai/unsloth/pull/15803
+    - studiobench: seed the browser with update notifications off by @danielhanchen in https://github.com/unslothai/unsloth/pull/15805
+    - Flex small-smem tiles: keep float32 Gemma 3 off flex on sm86 / sm89, tile forced no-grad calls by @danielhanchen in https://github.com/unslothai/unsloth/pull/15529
+    - SDPA decode: keep the caller's backend policy when avoiding cuDNN by @danielhanchen in https://github.com/unslothai/unsloth/pull/15525
+    - MoE heuristic dW config: 128-wide N tile for gpt-oss K = 2880 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15505
+    - FP8: skip the compiled wrapper for rowwise FP8 inference linears by @danielhanchen in https://github.com/unslothai/unsloth/pull/15584
+    - Studio: size FLUX.1 Kontext guard, preview and compile shape from its ~1 MP render by @danielhanchen in https://github.com/unslothai/unsloth/pull/15797
+    - Keep image and video models loaded beside chat models on Apple Silicon by @Lyxot in https://github.com/unslothai/unsloth/pull/15693
+    - Block CUDA graphs: turn on automatically for fixed-shape, launch-bound LoRA runs by @danielhanchen in https://github.com/unslothai/unsloth/pull/15768
+    - Studio: batch MoE fine-tuning jobs with per-job expert LoRA by @danielhanchen in https://github.com/unslothai/unsloth/pull/15809
+    - Studio: raise the startup bundle budget by the Trick or treat row's growth by @danielhanchen in https://github.com/unslothai/unsloth/pull/15822
+    - Studio: test that a batched fine-tune stays in its own account by @danielhanchen in https://github.com/unslothai/unsloth/pull/15825
+    - Studio: keep MiniMax-H3's streamed top-level group on the card between denoise steps by @danielhanchen in https://github.com/unslothai/unsloth/pull/15796
+    - Studio native cache write: recapture when an offload moves weights before the live-read swap by @danielhanchen in https://github.com/unslothai/unsloth/pull/15776
+    - checkpoint_skip_layers="auto": skip the planning collective under DDP.join() by @danielhanchen in https://github.com/unslothai/unsloth/pull/15779
+    - FP8 scaled_mm backend: send 17-64 rows to torch._scaled_mm when the 16-bit weight spills L2 (sm89) by @danielhanchen in https://github.com/unslothai/unsloth/pull/15791
+    - CI: turn update checks off in every job that drives a browser by @danielhanchen in https://github.com/unslothai/unsloth/pull/15815
+    - Studio tests: drain the background sandbox mover between tests by @danielhanchen in https://github.com/unslothai/unsloth/pull/15830
+    - Studio: emit no legacy load flag when the llama-server --help probe is inconclusive by @danielhanchen in https://github.com/unslothai/unsloth/pull/15828
+    - Mamba LoRA: apply a trained dt_proj / x_proj / out_proj adapter in eval and cached decode by @danielhanchen in https://github.com/unslothai/unsloth/pull/15730
+    - Studio diffusion: load the int8 GEMM operands through TMA descriptors on sm120 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15829
+    - Block CUDA graphs: only release the cudagraph pool for tree functions the block backend compiled by @danielhanchen in https://github.com/unslothai/unsloth/pull/15777
+    - Tests: FP8 routing tests pin the NVIDIA path so they pass on ROCm runners by @danielhanchen in https://github.com/unslothai/unsloth/pull/15838
+    - Studio: skip the Keep resident page-lock when the llama-server --help probe is inconclusive by @danielhanchen in https://github.com/unslothai/unsloth/pull/15833
+    - Backend CI: split the fsdp2 Repo tests shard in two by @danielhanchen in https://github.com/unslothai/unsloth/pull/15851
+    - Fix OpenCode Go session headers in Studio by @Aafimalek in https://github.com/unslothai/unsloth/pull/15780
+    - Desktop: re-enable GPU compositing on NVIDIA X11 with driver 610 or newer by @oobabooga in https://github.com/unslothai/unsloth/pull/15546
+    - Studio tests: skip rag_conn where this Python's sqlite3 cannot load extensions by @danielhanchen in https://github.com/unslothai/unsloth/pull/15862
+    - GRPO: take the per-step host syncs out of the loss path by @danielhanchen in https://github.com/unslothai/unsloth/pull/15855
+    - Studio: keep refusing a symlinked spill where there is no O_NOFOLLOW (Windows) by @danielhanchen in https://github.com/unslothai/unsloth/pull/15887
+    - Studio: show the real error when a Responses stream fails by @NilayYadav in https://github.com/unslothai/unsloth/pull/15816
+    - Studio: show why llama-server rejected a chat request by @NilayYadav in https://github.com/unslothai/unsloth/pull/15817
+    - Packed attention: varlen probes under fullgraph + dynamic=True compile by @danielhanchen in https://github.com/unslothai/unsloth/pull/15891
+    - Studio tests: keep GGUF loads off the host's Metal budget unless a test asks by @danielhanchen in https://github.com/unslothai/unsloth/pull/15910
+    - Studio tests: measure the int8 / fp8 dequant and nibble-swap peaks in a fresh process by @danielhanchen in https://github.com/unslothai/unsloth/pull/15912
+    - Studio: restore the #15731 login layout by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15903
+    - Studio: lead the Live monitor tiles with the reading, unrounded by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15897
+    - Studio: put a just-created API token in the Agents command and API examples by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15890
+    - Studio: Images icon for Reference, file search icon for Chat with files by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15806
+    - Studio: Qwen-Image-2.1 eager renders before the deferred compile now match ComfyUI by @danielhanchen in https://github.com/unslothai/unsloth/pull/15908
+    - Studio diffusion: let a 12.7 GB host load FLUX.2-klein-9B by spilling the int8 denoiser to a scratch file by @danielhanchen in https://github.com/unslothai/unsloth/pull/15911
+    - Studio: stop the first Wan2.2-A14B render from waiting for the second expert's pin by @danielhanchen in https://github.com/unslothai/unsloth/pull/15906
+    - Studio tests: give managed engines ports another worker cannot be handed by @danielhanchen in https://github.com/unslothai/unsloth/pull/15915
+    - Studio: add a Quickstart heading over the API example tabs by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15898
+    - Studio: one text and control width for every settings row by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15905
+    - Studio: Decision tab loads at once, System and settings polish, main-theme borders restored by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15919
+    - Studio: decode format-check preview rows once per request by @danielhanchen in https://github.com/unslothai/unsloth/pull/15867
+    - Studio: index the training history's resumed-later check by @danielhanchen in https://github.com/unslothai/unsloth/pull/15872
+    - Studio: copy Whisper timestamp tokens to the host once per window by @danielhanchen in https://github.com/unslothai/unsloth/pull/15860
+    - Studio: fetch up to four Hub files at once over HTTP when partials resume by @danielhanchen in https://github.com/unslothai/unsloth/pull/15781
+    - Studio: reuse the VLM URL probe's downloads in the conversion by @danielhanchen in https://github.com/unslothai/unsloth/pull/15870
+    - Studio: fetch ShareGPT+image row images concurrently, in row order by @danielhanchen in https://github.com/unslothai/unsloth/pull/15786
+    - Studio desktop: ask desktop-capabilities in the launch probe on a capability cache miss by @danielhanchen in https://github.com/unslothai/unsloth/pull/15823
+    - Studio: find a code block's backtick runs by regex when picking its fence by @danielhanchen in https://github.com/unslothai/unsloth/pull/15913
+    - GRPO PrefixGrouper: import cleanly on torch 2.6 and keep it off below 2.7 with a log line by @danielhanchen in https://github.com/unslothai/unsloth/pull/15836
+    - Studio: write transcoded WAV blocks raw and fix the header once on close by @danielhanchen in https://github.com/unslothai/unsloth/pull/15917
+    - Studio: find VLM rows without an image or caption from Arrow validity by @danielhanchen in https://github.com/unslothai/unsloth/pull/15787
+    - Studio: score unclosed Markdown link destinations in linear time by @danielhanchen in https://github.com/unslothai/unsloth/pull/15811
+    - Studio: write each training metrics flush and its run progress in one transaction by @danielhanchen in https://github.com/unslothai/unsloth/pull/15871
+    - GRPO PrefixGrouper: build the shared-prefix layout from one host copy instead of per-token loops and per-segment device fills by @danielhanchen in https://github.com/unslothai/unsloth/pull/15835
+    - Studio: reuse recipe shard row counts while no shard changed by @danielhanchen in https://github.com/unslothai/unsloth/pull/15869
+    - Studio: make Recipes lint validators run on Windows and under a gitignored temp root by @danielhanchen in https://github.com/unslothai/unsloth/pull/15929
+    - Studio: wake admission waits on queue state changes instead of their next poll by @danielhanchen in https://github.com/unslothai/unsloth/pull/15885
+    - Studio: treat unknown parent liveness as alive in the llama-server reaper by @danielhanchen in https://github.com/unslothai/unsloth/pull/15921
+    - Studio: stop re-hashing kept spills and re-reading the record on every prune by @danielhanchen in https://github.com/unslothai/unsloth/pull/15884
+    - Studio: adopt the WAV save_from_media already transcoded instead of decoding it again by @danielhanchen in https://github.com/unslothai/unsloth/pull/15916
+    - Cleanup: remove 5 redundant pass statements that leave bytecode unchanged by @danielhanchen in https://github.com/unslothai/unsloth/pull/15790
+    - Studio setup.ps1: install bun only when the frontend is built by @danielhanchen in https://github.com/unslothai/unsloth/pull/15933
+    - Studio: keep the Markdown block split linear after an unmatched $$ by @danielhanchen in https://github.com/unslothai/unsloth/pull/15886
+    - Tokenizer loading: skip the unused slow tokenizer load when the fast one is returned as is by @danielhanchen in https://github.com/unslothai/unsloth/pull/15834
+    - Import fixes: disable a torchao too new for the installed torch instead of failing import unsloth by @danielhanchen in https://github.com/unslothai/unsloth/pull/15850
+    - Studio: make the install-time bytecode precompile opt-in by @danielhanchen in https://github.com/unslothai/unsloth/pull/15923
+    - Studio: read the file digest cache once per reuse estimate by @danielhanchen in https://github.com/unslothai/unsloth/pull/15914
+    - GGUF export: write the intermediate conversion inside the output folder so placing it is a rename by @danielhanchen in https://github.com/unslothai/unsloth/pull/15783
+    - Studio: build the MCP apps on first use instead of at backend import by @danielhanchen in https://github.com/unslothai/unsloth/pull/15814
+    - Studio: read only the run state for chunk-only chat run event batches by @danielhanchen in https://github.com/unslothai/unsloth/pull/15807
+    - Studio: skip the article and main scope passes when the page has no such tag by @danielhanchen in https://github.com/unslothai/unsloth/pull/15812
+    - Studio: preview local Parquet from its leading rows instead of loading it whole by @danielhanchen in https://github.com/unslothai/unsloth/pull/15868
+    - Studio: store float32 RAG vectors from their buffer and pack the query once by @danielhanchen in https://github.com/unslothai/unsloth/pull/15859
+    - Studio: share one in-flight /api/health read between the startup and route platform checks by @danielhanchen in https://github.com/unslothai/unsloth/pull/15794
+    - Studio tests: use a portable fake llama-server in the load cancel tests by @danielhanchen in https://github.com/unslothai/unsloth/pull/15826
+    - install-kernels: skip the torch import when a kernel's extension is absent, and probe torch only when a wheel is needed by @danielhanchen in https://github.com/unslothai/unsloth/pull/15896
+    - Studio: validate a recipe job's OXC batches in one Node process by @danielhanchen in https://github.com/unslothai/unsloth/pull/15925
+    - Studio: walk the sandbox once per tool call boundary for the files card and file history by @danielhanchen in https://github.com/unslothai/unsloth/pull/15793
+    - Studio: keep audio gallery operations in the folder they resolved by @danielhanchen in https://github.com/unslothai/unsloth/pull/15875
+    - Studio: skip the escaped-math parse when no escaped dollar pair can be math by @danielhanchen in https://github.com/unslothai/unsloth/pull/15808
+    - Studio: quantise an offloaded native int8 denoiser on the card, one linear at a time by @danielhanchen in https://github.com/unslothai/unsloth/pull/15936
+    - GRPO PrefixGrouper: fit the flex kernel on 101 KB shared-memory GPUs and stop its silent eager fallback by @danielhanchen in https://github.com/unslothai/unsloth/pull/15854
+    - Studio: skip the route's GPU probe when the GGUF fits in RAM by @danielhanchen in https://github.com/unslothai/unsloth/pull/15902
+    - Studio desktop: skip the device type read while the backend port is still unknown by @danielhanchen in https://github.com/unslothai/unsloth/pull/15824
+    - Studio Desktop: sync pinned models and overrides after the backend port is known by @danielhanchen in https://github.com/unslothai/unsloth/pull/15821
+    - Studio: matching Hugeicons permission icons, larger and top-aligned by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15944
+    - Tests: baseline the torchao import probe from #15850, gate the PrefixGrouper CUDA test on a real card by @danielhanchen in https://github.com/unslothai/unsloth/pull/15948
+    - Tests: follow the media header's MediaHeaderActions row from #15919 by @danielhanchen in https://github.com/unslothai/unsloth/pull/15946
+    - Studio: accent update buttons, standard switches, one icon per meaning by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15939
+    - Studio: greeting setting hides the whole greeting, composer at the bottom option, no model disclaimer by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15904
+    - Studio: write plain recipe export rows with one json.dumps call by @danielhanchen in https://github.com/unslothai/unsloth/pull/15926
+    - Studio: reuse the cached TLS context for llama-server health probes by @danielhanchen in https://github.com/unslothai/unsloth/pull/15792
+    - Studio: read the run history once per checkpoint listing by @danielhanchen in https://github.com/unslothai/unsloth/pull/15873
+    - Studio: keep an appearance edit made while the personalization load is in flight by @danielhanchen in https://github.com/unslothai/unsloth/pull/15953
+    - Studio diffusion: run both guidance branches per streamed block upload for Qwen-Image-Edit under a VRAM budget by @danielhanchen in https://github.com/unslothai/unsloth/pull/15930
+    - Tests: read _gpu_init.py as UTF-8 in the torchao-too-new test by @danielhanchen in https://github.com/unslothai/unsloth/pull/15957
+    - Studio: encode a batch's gallery PNGs concurrently by @danielhanchen in https://github.com/unslothai/unsloth/pull/15909
+    - Studio: skip the audio gallery prune's sidecar pass under both caps and list prepared inputs once per sweep by @danielhanchen in https://github.com/unslothai/unsloth/pull/15874
+    - Tests: mac tab walk waits for the sidebar to mount before judging a pinned row by @danielhanchen in https://github.com/unslothai/unsloth/pull/15959
+    - Studio video: MiniMax-H3 conditioner pin yields to a streamed denoiser on a small host by @danielhanchen in https://github.com/unslothai/unsloth/pull/15955
+    - Studio video: MiniMax-H3 unfused Q / K / V share one ConvRot rotation and act quant by @danielhanchen in https://github.com/unslothai/unsloth/pull/15956
+    - CI: split Repo tests (CPU, rest) and (CPU, gloo) before they reach their 2100 s cap by @danielhanchen in https://github.com/unslothai/unsloth/pull/15951
+    - Studio: say when remote access Start automatically opens a public URL by @NilayYadav in https://github.com/unslothai/unsloth/pull/15849
+    - Studio: encode each recall query once per compaction and let archive widening widen by @danielhanchen in https://github.com/unslothai/unsloth/pull/15960
+    - Studio: answer dense RAG search from an in-memory numpy matrix kept in sync by SQLite triggers by @danielhanchen in https://github.com/unslothai/unsloth/pull/15961
+    - Studio: match linked-folder paths against .gitignore runs, not rule by rule by @danielhanchen in https://github.com/unslothai/unsloth/pull/15949
+    - Studio: link to image training from the Train page by @NilayYadav in https://github.com/unslothai/unsloth/pull/15391
+    - Studio diffusion: a first load downloads the weights before the small-host decision reads them by @danielhanchen in https://github.com/unslothai/unsloth/pull/15974
+    - Let decision models export to GGUF on a fresh install by @NilayYadav in https://github.com/unslothai/unsloth/pull/15864
+    - Studio: stop Auto context from reserving a model's whole window on a Mac by @NilayYadav in https://github.com/unslothai/unsloth/pull/15843
+    - Tests: keep tqdm's monitor thread out of the ShareGPT no-threads count by @danielhanchen in https://github.com/unslothai/unsloth/pull/15992
+    - Studio: keep the user's git identity and gh login in unsloth start pi by @NilayYadav in https://github.com/unslothai/unsloth/pull/15865
+    - Studio: let unsloth start vibe start with smaller context windows by @NilayYadav in https://github.com/unslothai/unsloth/pull/15863
+    - Studio: restart a crashed GGUF model instead of showing it loaded by @NilayYadav in https://github.com/unslothai/unsloth/pull/15847
+    - Tests: make unsloth_cli/tests/test_start.py pass on Windows by @danielhanchen in https://github.com/unslothai/unsloth/pull/15987
+    - Studio: keep the loaded model if a GGUF download fails or is cancelled by @NilayYadav in https://github.com/unslothai/unsloth/pull/15846
+    - Studio: test that escaped currency keeps long replies streaming fast by @NilayYadav in https://github.com/unslothai/unsloth/pull/15820
+    - Studio: stop re-uploading the whole chat while a reply streams by @NilayYadav in https://github.com/unslothai/unsloth/pull/15818
+    - Studio: nvfp4 safetensors twins: converter 0-dim compare, refuse a twin the installed torchao cannot unflatten by @danielhanchen in https://github.com/unslothai/unsloth/pull/15977
+    - Studio: keep the app responsive as an MLX or Transformers load finishes by @NilayYadav in https://github.com/unslothai/unsloth/pull/15842
+    - Studio: stop the KV cache type following the last model to the next one by @NilayYadav in https://github.com/unslothai/unsloth/pull/15819
+    - Studio: share one edge index for Recipe Studio node connection status by @danielhanchen in https://github.com/unslothai/unsloth/pull/15942
+    - Studio: load downloaded models with fewer Hugging Face requests by @NilayYadav in https://github.com/unslothai/unsloth/pull/15844
+    - Tests: plant uv.exe on Windows in the MLX repair minimal-PATH lookup test by @danielhanchen in https://github.com/unslothai/unsloth/pull/15995
+    - Studio: reuse lexical passes and branch checks across a compaction and prune branch-run starts by @danielhanchen in https://github.com/unslothai/unsloth/pull/15972
+    - Studio: recommend a Hub GGUF quant that fits the Mac's Metal budget by @NilayYadav in https://github.com/unslothai/unsloth/pull/15848
+    - Studio: stop the Claude CLI billing line from breaking prompt caching by @NilayYadav in https://github.com/unslothai/unsloth/pull/15845
+    - Studio video: stage an fp32 encoder on the card when its dense cast would not fit host RAM by @danielhanchen in https://github.com/unslothai/unsloth/pull/15975
+    - Studio setup: skip the OXC validator npm ci when its installed tree is unchanged by @danielhanchen in https://github.com/unslothai/unsloth/pull/15947
+    - Studio diffusion: use an installed HIP SDK for the Windows ROCm sd.cpp build when its bin dir is not on PATH by @oobabooga in https://github.com/unslothai/unsloth/pull/15853
+    - Studio: train single-string-column datasets as raw text by @YakshithK in https://github.com/unslothai/unsloth/pull/15899
+    - Unsloth Studio: LFM3-Audio / LFM3-Omni on MLX, with spoken replies by @Lyxot in https://github.com/unslothai/unsloth/pull/15889
+    - fix(studio): attach an explicitly chosen MLX drafter even when it is priced not to fit by @Lyxot in https://github.com/unslothai/unsloth/pull/15813
+    - Tests: keep the RAG query-packing test on vec0 while the in-memory cache builds in the background by @danielhanchen in https://github.com/unslothai/unsloth/pull/16013
+    - Studio: load the chat page on first use instead of in the startup bundle by @danielhanchen in https://github.com/unslothai/unsloth/pull/15943
+    - Move the Unsloth Studio MLX pins to mlx-vlm 0.7.11 by @Lyxot in https://github.com/unslothai/unsloth/pull/15861
+    - Tests: price the auto-context fit floor as the layer-split path on any host by @danielhanchen in https://github.com/unslothai/unsloth/pull/16014
+    - Collapse blank line runs with a literal-led pattern (about 10x faster) by @danielhanchen in https://github.com/unslothai/unsloth/pull/15950
+    - Studio diffusion: Qwen-Image text-to-image activation seeds keep part of the int8 DiT resident under a VRAM budget by @danielhanchen in https://github.com/unslothai/unsloth/pull/15985
+    - Studio video: request a hosted .safetensors twin before each declared prequant .pt by @danielhanchen in https://github.com/unslothai/unsloth/pull/15980
+    - Studio: batch MLX tool-protocol, response_format and video replies; several clips and Gemma 4 video on MLX by @Lyxot in https://github.com/unslothai/unsloth/pull/15920
+    - Studio: Use via API button on the Train page by @danielhanchen in https://github.com/unslothai/unsloth/pull/15996
+    - Studio: say why AI Assist cannot map a dataset with no prompt/response split by @danielhanchen in https://github.com/unslothai/unsloth/pull/15991
+    - T4: hand batch-4 NF4 decode to the bitsandbytes gemm_4bit where it runs by @danielhanchen in https://github.com/unslothai/unsloth/pull/15988
+    - Tests: read the training API job bodies fixture as UTF-8 by @danielhanchen in https://github.com/unslothai/unsloth/pull/16025
+    - Studio: hand the audio route's heal gate the request's contract, and follow the hoisted audio_base64 in the turn-scope check by @danielhanchen in https://github.com/unslothai/unsloth/pull/16023
+    - Studio: Neural Engine Prefill toggle for MLX models by @Lyxot in https://github.com/unslothai/unsloth/pull/15954
+    - Studio video: compare streamed frames without chunk-sized temporaries (H3 export stalls) by @danielhanchen in https://github.com/unslothai/unsloth/pull/16024
+    - Studio video: streamed mp4 byte-identical to the stock export on every render (cap libx264 at AVX2 on AVX-512 hosts) by @danielhanchen in https://github.com/unslothai/unsloth/pull/16030
+    - Studio: int8 Qwen-Image text stream when the denoiser is streamed (1.24x under a 16 GiB budget) by @danielhanchen in https://github.com/unslothai/unsloth/pull/16027
+    - Studio MCP: bound get_job wait_s with a fixed limit, not the patchable MAX_WAIT_S by @danielhanchen in https://github.com/unslothai/unsloth/pull/16033
+    - Batched MoE LoRA: every job's expert LoRA in one grouped pass on Zoo's kernels by @danielhanchen in https://github.com/unslothai/unsloth/pull/16012
+    - Studio: toast icons centred on one line, top-aligned on longer toasts by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16050
+    - Studio: one set of sort and filter icons, shorter chat cards, toolbar tooltips by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/15958
+    - Desktop: Add GPU rendering setting with a Linux launch-crash fallback by @Etherll in https://github.com/unslothai/unsloth/pull/15482
+    - GRPO: keep masking completions cut by the vLLM context limit by @danielhanchen in https://github.com/unslothai/unsloth/pull/16057
+    - Packed mRoPE flash attention: cover a padded tail, same decision when compiled by @danielhanchen in https://github.com/unslothai/unsloth/pull/16058
+    - Cross entropy: trace under torch.compile(dynamic=True) by @danielhanchen in https://github.com/unslothai/unsloth/pull/16059
+    - Scope WavLM's 4-bit attention skip to WavLM's own layers by @danielhanchen in https://github.com/unslothai/unsloth/pull/16060
+    - gpt-oss: accept an absolute transformers_weights inside the local model dir by @danielhanchen in https://github.com/unslothai/unsloth/pull/16061
+    - MXFP4 torch decode fallback: run ldexp on the operands' GPU by @danielhanchen in https://github.com/unslothai/unsloth/pull/16062
+    - FP8 scaled_mm: keep native fp16 output on torch >= 2.14 by @danielhanchen in https://github.com/unslothai/unsloth/pull/16063
+    - Context parallelism: refuse it beside tensor parallelism instead of training the wrong loss by @danielhanchen in https://github.com/unslothai/unsloth/pull/16068
+    - Studio video: batch the CFG pair into one call on a compiled resident Wan denoiser by @danielhanchen in https://github.com/unslothai/unsloth/pull/16067
+    - Context parallel: allow text-only Qwen3.5 checkpoints that carry a vision_config by @danielhanchen in https://github.com/unslothai/unsloth/pull/16072
+    - Studio: keep the composer still when switching chats in WebKit by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16076
+    - Studio: stop the chat composer draft mirroring into other open tabs by @debojyoti-dev in https://github.com/unslothai/unsloth/pull/15795
+    - float16: agree on GradScaler skips across pipeline stages, scale the CP start, probe the float16 FP8 GEMM by @danielhanchen in https://github.com/unslothai/unsloth/pull/16070
+    - Studio: scale the token count timeout so long chats can compact by @oobabooga in https://github.com/unslothai/unsloth/pull/15900
+    - fix(studio): list approved custom-code models in /v1/models by @Lyxot in https://github.com/unslothai/unsloth/pull/15945
+    - Studio: drag an image from one slot to another by @NilayYadav in https://github.com/unslothai/unsloth/pull/15876
+    - Studio: name a too-short context length when completion masking drops rows by @danielhanchen in https://github.com/unslothai/unsloth/pull/16000
+    - Studio: align the Images and Video preset dropdown with the title's top by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16081
+    - Tests: stub @/lib/folder-icons in the Hub GGUF card Metal budget test by @danielhanchen in https://github.com/unslothai/unsloth/pull/16082
+    - Studio: fill locale gaps and translate the sign-in, consent and Desktop startup screens by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16069
+    - Studio: no text selection from the clicks that follow a dropdown dismissal by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16077
+    - Studio: let conversation search return every earlier turn that fits by @NilayYadav in https://github.com/unslothai/unsloth/pull/16036
+    - Desktop: run the AppImage on the host's WebKitGTK 2.54+ when available by @Etherll in https://github.com/unslothai/unsloth/pull/15503
+    - Studio: add Spanish (Latin America) as a display language by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/16089
+    - Studio: include Schema transform output in recipe dataset downloads by @NilayYadav in https://github.com/unslothai/unsloth/pull/16039
+    - Studio: strip only harmony protocol tokens from gpt-oss answers by @danielhanchen in https://github.com/unslothai/unsloth/pull/16004
+    - Studio chat: publish held stream text on the next frame instead of waiting for the next chunk by @danielhanchen in https://github.com/unslothai/unsloth/pull/15998
+    - Studio: stop skipping scheduled runs right after Studio starts by @NilayYadav in https://github.com/unslothai/unsloth/pull/16037
+    - Studio: batch the raw text blank row filter and EOS append for map-style datasets by @danielhanchen in https://github.com/unslothai/unsloth/pull/15978
+    - Studio: read a JSON body inside <function=...> instead of running the call with no arguments by @danielhanchen in https://github.com/unslothai/unsloth/pull/16008
+    - Tests: run the MXFP4 operand device guard check on CPU-only torch too by @danielhanchen in https://github.com/unslothai/unsloth/pull/16088
+    - Report measured model loading and 4-bit conversion during image training by @Imagineer99 in https://github.com/unslothai/unsloth/pull/15536
+    - Studio: let managed accounts use local MCP servers when allowed by @NilayYadav in https://github.com/unslothai/unsloth/pull/16044
+    - Studio: int8 Qwen-Image streamed modulations through a fused GEMV (1.23x under a 16 GiB budget) by @danielhanchen in https://github.com/unslothai/unsloth/pull/16087
+    - Studio: size a cached DFlash sidecar from disk instead of asking the Hub on every load by @danielhanchen in https://github.com/unslothai/unsloth/pull/15986
+    - Bump trufflesecurity/trufflehog in / by @dependabot[bot] in https://github.com/unslothai/unsloth/pull/15968
+    - fix(studio): keep a long MLX vision chat's prompt snapshot past the cache budget by @Lyxot in https://github.com/unslothai/unsloth/pull/16079
+    - Bump swatinem/rust-cache in / by @dependabot[bot] in https://github.com/unslothai/unsloth/pull/15966
+    - Bump github/codeql-action init and analyze to v4.39.1 by @dependabot[bot] in https://github.com/unslothai/unsloth/pull/15964
+    - Bump actions/setup-python in / by @dependabot[bot] in https://github.com/unslothai/unsloth/pull/15963
+    - Bump the npm-oxc-validator group in /studio/backend/core/data_recipe/oxc-validator with 3 updates by @dependabot[bot] in https://github.com/unslothai/unsloth/pull/15962
+    - Studio: keep a resident GGUF's repo identity for Hub shared-blob cache files by @danielhanchen in https://github.com/unslothai/unsloth/pull/16086
+    - fix(eval): reserve explicit YAML task names by @hsusul in https://github.com/unslothai/unsloth/pull/15984
+    - Studio: offer video input only when llama-server can launch ffmpeg and ffprobe by @danielhanchen in https://github.com/unslothai/unsloth/pull/16094
+    - Tests: follow the localized update banners from #16069 by @danielhanchen in https://github.com/unslothai/unsloth/pull/16090
+    - Studio: keep attached documents in Deep Research reports by @NilayYadav in https://github.com/unslothai/unsloth/pull/16019
+    - Desktop: switch the theme without a view transition on Linux by @oobabooga in https://github.com/unslothai/unsloth/pull/16040
+    - Studio: recover Deep Research from provider JSON validation failures by @alkinun in https://github.com/unslothai/unsloth/pull/15788
+    - Studio: ask llama-server again with its tool parser off when it rejects a reply before streaming by @danielhanchen in https://github.com/unslothai/unsloth/pull/16002
+    - Studio: default Deep Research to no time limit per model request by @NilayYadav in https://github.com/unslothai/unsloth/pull/15983
+    - Studio installer (Windows): avoid unavailable CUDA torchao wheels by @oobabooga in https://github.com/unslothai/unsloth/pull/16016
+    - Studio: share one in-flight media model index build so the startup checks do not scan twice by @danielhanchen in https://github.com/unslothai/unsloth/pull/16075
+    - Add custom hourly intervals for scheduled tasks by @Imagineer99 in https://github.com/unslothai/unsloth/pull/15799
+    - Studio Images: enable GGUF LoRAs on MLX and diffusers, and explain when unavailable by @oobabooga in https://github.com/unslothai/unsloth/pull/16053
+    - Studio: read streamed dataset slices in batches instead of row by row by @danielhanchen in https://github.com/unslothai/unsloth/pull/16083
+    - Studio diffusion: test-launch sd.cpp binaries without the Windows missing-DLL box by @oobabooga in https://github.com/unslothai/unsloth/pull/16031
+    - Studio diffusion: Qwen-Image text-to-image streamed placement uses its own activation figure under a VRAM budget by @danielhanchen in https://github.com/unslothai/unsloth/pull/16095
+    - Studio: download the commit the manifest was planned from by @danielhanchen in https://github.com/unslothai/unsloth/pull/16047
+    - Studio: vector cache in float32 unit rows with streamed builds, in-place appends and bounded block scans by @danielhanchen in https://github.com/unslothai/unsloth/pull/16093
+    - Studio: add customizable chat background images and effects by @wasimysaid in https://github.com/unslothai/unsloth/pull/15973
+    - Studio: keep a bare-JSON tool call out of the final answer after the tool loop by @danielhanchen in https://github.com/unslothai/unsloth/pull/16003
+    - Studio: add OpenCode Zen and OpenCode Go to Connections by @NilayYadav in https://github.com/unslothai/unsloth/pull/16010
+    - Studio: honour speed on /v1/audio/speech by @NilayYadav in https://github.com/unslothai/unsloth/pull/16020
+    - Studio: compile the SDXL U-Net per block so the 4th image no longer waits for the whole compile by @danielhanchen in https://github.com/unslothai/unsloth/pull/16085
+    - Studio: stop offering the VibeVoice q4-ios GGUF that audio.cpp cannot load by @oobabooga in https://github.com/unslothai/unsloth/pull/16048
+    - Studio: recover a closed tool call whose single code argument has unescaped quotes by @danielhanchen in https://github.com/unslothai/unsloth/pull/16006
+    - Studio: add MiniMax to Connections by @NilayYadav in https://github.com/unslothai/unsloth/pull/16011
+    New Contributors
+    - @YakshithK made their first contribution in https://github.com/unslothai/unsloth/pull/15899
+    - @hsusul made their first contribution in https://github.com/unslothai/unsloth/pull/15984
+    Full Changelog: https://github.com/unslothai/unsloth/compare/v0.1.912-beta...v0.1.913-beta
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/unslothai/unsloth/releases/tag/v0.1.913-beta
+ReleaseTime: 2026-10-30T14:46:03.0000000Z

@@ -1,0 +1,142 @@
+Version: 18.4.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.4.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added Agent.replaceQueue() to replace one pending queue without changing the other queue (#11872 by @andrebrait).
+    - Added queued-message grouping so owned companion records and their user prompt are dequeued together in one-at-a-time mode (#11872 by @andrebrait).
+    - Added Agent.onQueueChange(), a listener called whenever a steering/follow-up queue mutator (enqueue, dequeue on delivery, clear, or restore) runs, so hosts can observe queue changes without polling (#11872 by @andrebrait).
+    Fixed
+    - Fixed GPT models on Amazon Bedrock's OpenAI routes (bedrock-runtime and bedrock-mantle /openai/...) falling back to a local summary instead of OpenAI's native remote compaction; set remoteCompaction.enabled: false to opt out (#13311 by @mustafaabidali).
+    - Fixed native compaction on Amazon Bedrock's OpenAI routes skipping the provider's request setup, which sent Bedrock Mantle compaction to an unresolved {region} host and skipped configured headers and proxies; other providers' compaction requests are unchanged (#13311 by @mustafaabidali).
+    @oh-my-pi/pi-ai
+    Added
+    - Added the ultrafast service tier. It is sent to the OpenAI API as-is, and to Codex only for models that list it in their discovered service tiers; other providers never receive it. On Codex websockets, switching into or out of ultrafast starts a new response chain instead of reusing previous_response_id, matching the Codex CLI. Ultrafast turns are costed at standard rates because no Ultrafast price is published yet (#13782 by @H4vC).
+    Changed
+    - Changed to fall back to adaptive thinking when between_tools is used with xhigh effort
+    - xAI requests (xai, xai-oauth chat and image generation) honor XAI_BASE_URL again when the model uses the bundled https://api.x.ai/v1 endpoint; a custom baseUrl from models.yml still wins, and xai-oauth OAuth access tokens always stay on the bundled endpoint.
+    Fixed
+    - Fixed Claude on Amazon Bedrock's Anthropic Messages routes (/anthropic on bedrock-runtime and bedrock-mantle): runtime requests no longer fail with a request-metadata 400, and both routes use Anthropic's on-demand compaction (#13311 by @mustafaabidali).
+    - /usage no longer shows an always-empty gpt-4 requests row for Cursor accounts on usage-based plans; the Cursor Models and Other Models meters remain (#13726 by @will-bogusz).
+    - Cursor turns routed through an HTTP proxy now finish instead of hanging after the response completes (#13724 by @will-bogusz).
+    - Fixed Codex requests sending priority (and scale) to models whose discovered service tiers list other tiers but not that one, matching the Codex CLI; an empty or missing list is treated as not reported, so priority is still sent and /fast keeps working on accounts whose /models lists no tiers (flex is always allowed) (#13782 by @H4vC).
+    - Fixed Codex priority cost: a turn the backend reports as served at default is no longer billed at the priority multiplier (#13782 by @H4vC).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added compat.bedrockMessagesApi for anthropic-messages models: detected from a Bedrock /anthropic base URL under any provider id, it drops tool strict, fits metadata.user_id to Bedrock's pattern, and enables on-demand compaction; set it in models.yml to opt a proxy or an ANTHROPIC_BASE_URL reroute in, or false to opt out (#13311).
+    - Added GPT-6.1 Sol pricing for openai-codex (gpt-6.1-sol, gpt-6.1-sol-wm: $2 input, $10 output, $0.10 cached input), so Codex usage shows cost instead of $0 (#13782 by @H4vC).
+    - Added Model.serviceTiers, the service tiers a provider advertises for a model; Codex discovery fills it from service_tiers (e.g. priority, ultrafast) (#13782 by @H4vC).
+    - Added the documented 922K input maximum for openai-codex/gpt-6.1-sol with extended context on (Codex reports a stale 872K), matching GPT-6 Astra; the default window stays 272K (#13782 by @H4vC).
+    Fixed
+    - Fixed openai-codex/gpt-6.1-sol not appearing in Codex discovery even on accounts where the Codex CLI lists it: the backend hides it from client version 0.155.1, so Codex requests now report 0.159.0, the current Codex CLI release (#13782 by @H4vC).
+    - Fixed on-demand compaction staying off for Claude models on the amazon-bedrock and bedrock-mantle providers when they use Bedrock's /anthropic routes (#13311 by @mustafaabidali).
+    - Fixed Claude models on Bedrock's /anthropic routes resolving compat.disableStrictTools: false, although those routes reject the tool strict field (#13311 by @mustafaabidali).
+    - Fixed Bedrock's FIPS (bedrock-runtime-fips) and AWS PrivateLink (vpce-….vpce.amazonaws.com) hostnames, and Mantle's documented /v1 OpenAI base, not being recognized as Bedrock routes, which left them without native compaction and the /anthropic request fixes (#13311 by @mustafaabidali).
+    - Added supportsBetweenToolsThinking Anthropic compat flag (supports-between-tools-thinking KDL axis), enabled for Claude Sonnet 5.5
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added compat.bedrockMessagesApi to models.yml, so Claude reached through a proxy or an ANTHROPIC_BASE_URL reroute to Bedrock's /anthropic API gets Bedrock request shaping and on-demand compaction; false opts a Bedrock URL out (#13311).
+    - Submitting exactly exit, quit, or q (any case, no leading /, nothing else in the input) in a session with no messages now quits; turn off with input.bareExitOnEmptySession (#13755 by @H4vC)
+    - Added the opt-in input.bareSlashCommands setting (Interaction > Input): submitting exactly a command name without the leading / (e.g. model, compact, a skill or extension command) runs that slash command. Before the first message it runs at once; after that, the first Enter asks for confirmation and a second Enter runs it (a leading space sends the word as a message) (#13780 by @H4vC)
+    - Extensions can now rewrite finalized assistant-message text through the awaited assistant_message hook before it reaches context, history, and message_end (#13769 by @NaC-L)
+    - In Tern (TERM_PROGRAM=tern), omp reports its session file to the terminal (OSC 1337 user variable omp_session_file) at start and whenever the session changes, so an agent pane Tern's daemon restores after a crash or restart resumes the same session with --resume
+    - Added additionalContext to extension and hook tool_result results, so success- and failure-specific post-tool guidance reaches the model through the trusted developer channel instead of altering tool output (#13267 by @andrebrait).
+    - The ask tool's custom-answer and note prompts accept pasted images, which reach the model with the answer (#13774 by @DrFaustus-vic)
+    - Added /fast ultra to select OpenAI's Ultrafast service tier on models that offer it (OpenAI API with preview access, or Codex models that advertise it, such as GPT-6.1 Sol once Ultrafast rolls out); /fast off clears it and /fast status reports ultra. ultrafast is also accepted by tier.openai, tier.subagent, tier.advisor, and --service-tier (#13782 by @H4vC).
+    - RPC clients can now cancel one pending steering or follow-up message with remove_queued_message, including its hidden attachment context, without aborting the turn or changing other queued work (#11872 by @andrebrait).
+    - Added typed queued-message removal to the official Python RPC client, including validated success and refusal results (#11872 by @andrebrait).
+    - RPC clients can now render the actual pending-message queue instead of tracking it themselves: get_state reports a queuedMessages snapshot and a new queue_update event reports it live as steering/follow-up messages are queued, delivered, removed, or cleared (#11872 by @andrebrait).
+    Changed
+    - omp stats --summary now labels costs as API-equivalent estimates and shows subscription usage that has no reference price as N/A instead of $0.0000, matching omp-stats.
+    Fixed
+    - Fixed the mnemopi.polyphonicRecall and mnemopi.enhancedRecall settings (and MNEMOPI_POLYPHONIC_RECALL / MNEMOPI_ENHANCED_RECALL) having no effect: polyphonic recall now surfaces graph- and fact-linked memories, enhanced recall caches repeated recalls until the next memory write, and both apply per session instead of through process-wide defaults (#2323)
+    - Fixed computer.window(74) matching every open window and computer.window({ id: 74 }) matching none; a numeric id now resolves the same window as "74" (#13649 by @will-bogusz)
+    - Fixed /fast on showing fast mode as active on Codex models whose discovered service tiers list others but not priority; it now reports that fast mode is unavailable for the current model. Models whose tier list is empty keep /fast (#13782 by @H4vC).
+    - Cancelling a concurrently queued prompt now preserves the other prompt's hidden keyword context instead of removing it with the cancelled message (#11872 by @andrebrait).
+    - Hidden attachment context and its queued prompt are now claimed together in one-at-a-time mode, preventing successful cancellation after only the companion has been delivered (#11872 by @andrebrait).
+    - Queued RPC skill commands retain their original invocation for cancellation, and queue editing no longer treats agent-attributed user-role messages as user input (#11872 by @andrebrait).
+    - Builtin slash commands (including /record and /skills) no longer erase a draft typed after Ctrl+Enter detached its submission from the editor (#13026 by @andrebrait)
+    - Failed detached submissions, including Ctrl+Enter /queue, and failed Enter /plan, /vibe, /goal, or /guided-goal commands now restore their text and attachments beside newer typing, with image markers remapped (#13026 by @andrebrait)
+    - Native extension input handlers now intercept main-session Ctrl+Enter, including queued input, with consistent transformations (#11834 by @andrebrait)
+    - /plan, /vibe, /goal, or /guided-goal with attachments that starts no turn (for example /plan while goal mode is active) now restores its text and attachments beside newer typing instead of re-attaching only its images ahead of the newer draft's own (#11834 by @andrebrait)
+    - Same-named skills from different sources are no longer silently discarded. A duplicate with identical content still collapses without a warning; otherwise the higher-precedence skill (an authored skill over an installed package, a custom-directory skill over a provider skill, else whichever loaded first) keeps its bare name and the other stays reachable as <namespace>/<name> via skill://<namespace>/<name> and /skill:<namespace>/<name>, with a collision warning naming both files. Skill names containing / or \ are now rejected for every provider and custom directory, since / is reserved for that addressing (#12151 by @andrebrait)
+    - Added native HUD and UI elements (status, tool cards, usage heatmap) for TSP terminals
+    - Added support for native-only session info and job dashboard views in TSP terminals
+    - Inside a Tern pane, the browser tool opens tabs as browser picture-in-pictures over omp's pane and drives their native web view (trusted input, ARIA snapshots, screenshots, PDF, dialogs, downloads, cookies, console, fetch/XHR routes and HAR, recording); it falls back to Chromium when no Tern window can host them. Opt out with browser.tern, PI_BROWSER_TERN=0 or app.tern: false; app.tern: true requires it
+    - Fixed the startup "what's new" notice dropping the last unseen release when it was the final section of a changelog ending in a newline.
+    - xAI web search honors XAI_BASE_URL again when the selected model uses the bundled https://api.x.ai/v1 endpoint; a custom baseUrl from models.yml still wins, and official xai-oauth OAuth credentials always stay on the bundled endpoint (API keys, including command-backed ones, follow the override as in chat and image generation).
+    Removed
+    - Removed the bash tool's env parameter; services inherit the configured shell environment
+    @oh-my-pi/pi-mnemopi
+    Added
+    - Added per-instance polyphonicRecall and enhancedRecall options to Mnemopi and BeamMemory, so memories opened side by side can use different recall policies; configureRecallFeatures remains the process-wide default and the env vars still win
+    Fixed
+    - Fixed MNEMOPI_POLYPHONIC_RECALL / polyphonicRecall having no effect: recallEnhanced now fuses its ranking with the vector, graph, fact and temporal voices, and extracted subject/predicate/object facts are consolidated so the fact voice has data (#2323)
+    - Fixed MNEMOPI_ENHANCED_RECALL / enhancedRecall having no effect: recallEnhanced now caches results, keyed on every recall option so a different limit, fact inclusion, channel, query time or bank never reuses another call's ranking, and any database write clears it (#2323)
+    - Fixed polyphonic recall's graph voice taking seconds on densely linked banks (proactiveLinking): it now walks from at most 16 seeds in one batched edge query per hop and reports at most 64 memories, and recallEnhanced no longer drops rows below topK to a token budget
+    - Fixed a failed consolidated_facts backfill never being retried; backfill and fact consolidation failures are now logged
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed computer.window(id).ax() and find() failing with AxFailed on macOS sheets, popovers and open menus that computer.windows() lists, such as TextEdit's Save sheet or a Calendar event popover (#13659 by @will-bogusz).
+    - Fixed macOS 26 background scrolls moving twice the requested distance; background hovers, scrolls and right or middle clicks are now delivered once (#13739 by @will-bogusz).
+    - Fixed macOS takeover clicks and scrolls failing with AX action 'AXRaise' failed (AXError(-25205)) on covered windows that do not support AXRaise, such as iPhone Mirroring, even when activation brings them forward; a window that stays covered still refuses before any input is sent (#13737 by @will-bogusz).
+    - Fixed ps -r in the in-process ps builtin: it now sorts by CPU usage, highest first, as on macOS/BSD, instead of filtering to running processes. Also added ps -m, which sorts by memory usage.
+    - Fixed process states on macOS in the ps, top, and pgrep/pkill -r builtins: idle processes showed as running (R), which made ps r list nearly every process. States now come from each process's threads, as Apple ps does.
+    - Removed the procps-only l (multithreaded) STAT flag from ps on macOS; Apple ps doesn't print it.
+    @oh-my-pi/omp-stats
+    Added
+    - Added the printStatsSummary export, shared by omp-stats --sync and omp stats --summary.
+    @oh-my-pi/pi-tui
+    Added
+    - Added Tern Surface Protocol (TSP) integration for native terminal rendering
+    - Redesigned transcript, chat, dashboard, and picker UI components for native wire representation
+    - HookEditorComponent accepts pasted images when constructed with acceptImages; the ask dialog returns them as customInputImages / noteImages (#13774 by @DrFaustus-vic)
+    - Added formatFileMatches and FileMatchSection to tools/grouped-file-output for rendering per-file grep/ast-grep matches in grouped or flat mode.
+    @oh-my-pi/pi-utils
+    Added
+    - Added normalizePremiumRequests (also still exported from @oh-my-pi/pi-tui).
+    @oh-my-pi/pi-wire
+    Added
+    - Added the Tern Surface Protocol wire contract (@oh-my-pi/pi-wire): message framing constants, the component vocabulary, document ops, frames, the handshake and terminal events that let omp render natively in terminals that speak it
+    What's Changed
+    - fix(ai): finish Cursor turns through HTTP proxies by half-closing on the end frame by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13724
+    - fix(natives): let macOS takeover reach windows that reject AXRaise by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13737
+    - fix(computer): resolve numeric window ids by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13649
+    - fix(scripts): excluded vendored napi-rs from the cargo dev tasks by @sjawhar in https://github.com/can1357/oh-my-pi/pull/13639
+    - docs: correct shell cancellation grace window to 5s on Windows by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13715
+    - docs: document find tool's 20s wall-clock timeout and error by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13708
+    - docs: list overflow detection as a contextTokens consumer by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13713
+    - docs(web_search): remove stale default-chain model references by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13710
+    - docs(tools/computer): correct prompt path after computer-safety→computer-use rename by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13707
+    - docs(retry): note text-only committed-text-stream-stall continuation by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13712
+    - docs: corrected read tool to reference summarizeCodeAsync by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13711
+    - docs(tui-runtime): noted per-frame retirement budget in peekFinalizedBatch by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13706
+    - fix(natives): stopped macOS background scrolls moving twice as far by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13739
+    - fix(ai): drop the empty legacy gpt-4 row from Cursor usage by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13726
+    - fix(natives): resolve macOS sheets, popovers and menus as computer windows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13659
+    - feat(coding-agent): quit on bare exit/quit/q in an empty session by @H4vC in https://github.com/can1357/oh-my-pi/pull/13755
+    - fix(bedrock): enable native Claude and GPT compaction by @mustafaabidali in https://github.com/can1357/oh-my-pi/pull/13311
+    - Expose finalized assistant message rewrite hook by @NaC-L in https://github.com/can1357/oh-my-pi/pull/13769
+    - fix(coding-agent): run native input hooks for Ctrl+Enter by @andrebrait in https://github.com/can1357/oh-my-pi/pull/11834
+    - feat(coding-agent): support post-tool additional context by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13267
+    - feat(skills): keep differing same-name skills under a namespace by @andrebrait in https://github.com/can1357/oh-my-pi/pull/12151
+    - feat(ask): accept pasted images in ask answers and notes by @DrFaustus-vic in https://github.com/can1357/oh-my-pi/pull/13774
+    - test(coding-agent): fix stubs broken by tern surface protocol by @H4vC in https://github.com/can1357/oh-my-pi/pull/13784
+    - fix(mnemopi): wired polyphonic recall and enhanced recall cache to their settings by @H4vC in https://github.com/can1357/oh-my-pi/pull/13778
+    - feat(coding-agent): opt-in bare slash commands with confirm outside empty sessions by @H4vC in https://github.com/can1357/oh-my-pi/pull/13780
+    - chore: removed internal dead code, merged duplicate helpers, and dropped tests that assert nothing by @H4vC in https://github.com/can1357/oh-my-pi/pull/13777
+    - fix(coding-agent): bound bare-command confirmation to the session it was armed in by @H4vC in https://github.com/can1357/oh-my-pi/pull/13788
+    - feat(ai): GPT-6.1 Sol support and ultrafast service tier by @H4vC in https://github.com/can1357/oh-my-pi/pull/13782
+    New Contributors
+    - @DrFaustus-vic made their first contribution in https://github.com/can1357/oh-my-pi/pull/13774
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.4.3...v18.4.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.4.4
+ReleaseTime: 2026-09-29T19:35:17.0000000Z

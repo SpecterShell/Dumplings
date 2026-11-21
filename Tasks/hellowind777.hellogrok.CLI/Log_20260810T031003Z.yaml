@@ -1,0 +1,44 @@
+Version: 0.1.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.5/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.5/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.5
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Channel-scoped endpoints for every Grok Build backend: /responses, /messages, and /chat/completions, backed by one capability-aware protocol facade.
+    - Protocol-specific tool-history validation for Responses function_call pairs, immediately adjacent Messages tool_use/tool_result batches, and Chat Completions tool calls/results. Invalid history returns a deterministic non-retryable 400 before reaching the provider.
+    - chat_search_dialect channel setting for selecting Chat web_search_options, Chat search_parameters, or an explicit Messages/Responses search bridge.
+    - A 180-second response-header wait and SSE idle timeout, without a total request deadline. Any upstream data, including heartbeats, renews the idle window.
+    - Raw upstream response-model observation for Responses, Messages, and Chat Completions, with terminal declaration precedence and mismatch/conflict diagnostics that do not affect routing.
+    Changed
+    - Channels with supports_backend_search = true are exposed to Grok Build as Responses while retaining their real upstream protocol. Responses passes through, Messages receives web_search_20250305, and Chat uses its configured hosted-search dialect or protocol bridge; every route returns canonical web_search_call items, citations, and source counts to Build.
+    - Channels with supports_backend_search = false keep their configured Grok Build consumer and use client web_search, resolved from [models].web_search, GROK_WEB_SEARCH_MODEL, or Build's authenticated official fallback. The fixed non-streaming WebSearchClient request can use a selected Responses, Messages, or Chat channel through the same facade.
+    - Configuration rewrite state is version 8. It records the provider protocol separately from the protocol projected to Grok Build, preserves the effective search capability, and can restore version 5, 6, and 7 recovery transactions.
+    - Client-search aliases are rewritten only in protocol-defined tool declarations, choices, and call-name fields; tool arguments, results, response text, URLs, and other business JSON are never traversed.
+    - A provider that ignores stream=true now falls back to buffered SSE in the protocol Grok Build is consuming, including canonical Responses events for capability-projected Messages and Chat channels.
+    - Channel-owned HTTP headers are parsed as strings and validated before routes are activated; authentication headers remain configurable while proxy-controlled request headers are reserved.
+    Fixed
+    - SSE frames with a private heartbeat event name and an empty data: payload are recognized before empty-payload handling and normalized to : keepalive comments.
+    - Native Messages history is rejected locally when an assistant tool_use batch is not resolved by leading tool_result blocks in the immediately following user message, preventing provider errors such as "tool_use ids were found without tool_result blocks immediately after" from entering repeated retries.
+    - Messages thinking block starts from compatible relays now receive a missing empty signature field while later signature_delta values remain unchanged, preventing Grok Build's native decoder from failing before the real signature arrives.
+    - Client-search adaptation now rejects upstreams that return ordinary answer text without independent evidence of a completed search, preventing ignored Chat or Messages search extensions from being reported as successful WebSearchClient results.
+    - Official DeepSeek Chat channels use /anthropic/messages with X-Api-Key for hosted search, while official xAI Chat channels use Responses. Search calls, results, citations, and deduplicated sites are converted back without exposing provider credentials.
+    - Parallel Responses function calls are converted into one assistant tool_use batch followed by one adjacent user tool_result batch, preventing valid concurrent tool history from becoming an invalid Messages sequence.
+    - Configuration restore now preserves a model channel deleted while the proxy is active and still restores every remaining managed field; edits to individual proxy-owned fields continue to fail closed.
+    - A stalled upstream now returns retryable 504 before response headers or emits the receiving protocol's stream error after streaming begins, instead of leaving Grok Build waiting indefinitely.
+    Removed
+    - The process-local provider search-replay cache. Responses search history is reconstructed statelessly from each web_search_call query and source list, with the DeepSeek action.queries repair retained where required.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#015-2026-08-10
+ReleaseTime: 2026-08-10T01:55:01.0000000Z

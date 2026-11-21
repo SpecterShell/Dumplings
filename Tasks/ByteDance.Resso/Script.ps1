@@ -1,28 +1,29 @@
-$Object = Invoke-RestMethod -Uri 'https://tron-sg.bytelemon.com/api/sdk/check_update?pid=7094553681491663140&uid=1&branch=master&buildId='
+$Object1 = Invoke-RestMethod -Uri 'https://tron-sg.bytelemon.com/api/sdk/check_update?pid=7094553681491663140&uid=1&branch=master&buildId='
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.data.manifest.win32.version, '(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.data.manifest.win32.version.Split('.')[0..2] -join '.'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object.data.manifest.win32.extra.installers.ia32
+  InstallerUrl = $Object1.data.manifest.win32.extra.installers.ia32
 }
-if ($Object.data.manifest.win32.extra.installers.ia32 -ne $Object.data.manifest.win32.extra.installers.x64) {
-  $Task.CurrentState.Installer += [ordered]@{
+if ($Object1.data.manifest.win32.extra.installers.ia32 -ne $Object1.data.manifest.win32.extra.installers.x64) {
+  $this.CurrentState.Installer += [ordered]@{
     Architecture = 'x64'
-    InstallerUrl = $Object.data.manifest.win32.extra.installers.x64
+    InstallerUrl = $Object1.data.manifest.win32.extra.installers.x64
   }
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

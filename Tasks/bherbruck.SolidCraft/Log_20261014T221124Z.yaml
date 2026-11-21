@@ -1,0 +1,27 @@
+Version: 0.11.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.11.1/solidcraft-0.11.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.11.1/solidcraft-0.11.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/bherbruck/solidcraft/releases/download/v0.11.1/solidcraft-0.11.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SolidCraft is open-source parametric 3D CAD in Rust. Documentation · try it in the browser · issues
+    Patch release for Windows startup crashes. Same design file format as 0.11.0 (20), so files move freely between 0.11.0 and 0.11.1.
+    Fixed
+    - SolidCraft closes right after launch on some Windows PCs (#1190). On Windows SolidCraft now starts on Direct3D 12 first and only tries Vulkan, then OpenGL, if Direct3D 12 has no GPU. Before, it started Vulkan alongside the others, and on some machines the graphics driver's Vulkan part crashed as soon as it loaded: Intel's igvk64.dll on older drivers, and Vulkan overlay layers from tools like OBS, RivaTuner or Overwolf. That driver is now never loaded when Direct3D 12 works. With no GPU at all, SolidCraft uses Windows' built-in software renderer.
+    - You can still choose: set WGPU_BACKEND to dx12, vulkan or gl, or put "backend": "dx12" | "vulkan" | "gl" in graphics.json in your settings folder.
+    - A new CI check starts the real app on Windows in six setups (default, MSAA, a damaged settings file, safe mode and others) and fails the build unless each one draws and quits cleanly.
+    Still can't start it? Run solidcraft.exe --safe-mode, and please send %LOCALAPPDATA%\SolidCraft\crashes\report.json (or the "Application Error" entry for solidcraft.exe from Event Viewer) on Discord or in an issue.
+    Thanks to everyone who sent crash reports and Event Viewer logs.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/bherbruck/solidcraft/releases/tag/v0.11.1
+ReleaseTime: 2026-10-14T21:38:58.0000000Z

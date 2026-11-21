@@ -1,0 +1,55 @@
+Version: 0.4.18
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.18/Snow-App-Setup-0.4.18.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Memo Multi-Select Batch Delete: The memo panel gains a multi-select mode with select-all / deselect-all and a selected count, deleting the chosen memos in one confirmed action.
+    - Three-Tier Responses Fast Mode: Fast Mode is no longer a boolean — off sends nothing, Fast sends service_tier: priority and UltraFast sends ultrafast; the API settings and the chat input picker both switch it.
+    - System Log Retention: System logs are pruned automatically (once at startup, then every 6 hours), with a retention setting of 7 / 30 / 90 days or never (default 7 days) that reports how many expired entries were deleted.
+    Improvements
+    - The file reader was reworked for performance: in-file search locates lines by binary search on the line index (545x faster), code folding resolves in O(log K), column estimation samples in strides (8.1x), lines over 10,000 characters are truncated with a badge, search highlighting is scheduled via requestAnimationFrame, and the syntax-highlight cache grows to 128 entries with LRU refresh.
+    - Rust text reading compares UTF-8 buffers without a second copy and caps raw reads at 64 MiB.
+    - Read-only call protection is now mutation-aware: duplicate calls probe the file fingerprint and Git dirty / commit state so legitimate re-reads pass, mutating-tool detection covers terminals, sub-agents and LSP renames, and duplicate-recovery rounds emit a fallback notice instead of a stream cutoff.
+    - Tool errors are localized: 30 error render points across 23 tool cards show translated messages in all three languages, while protocol and audit fields in tool results keep their original text.
+    - The compact theme gained a full native form-dialog style set (card, header, footer, drop zone, input, buttons) with unified read-only and disabled states; form dialogs now focus the choose button instead of a read-only path field.
+    - Plugin message-footer eligibility is decided precisely, keeping ordinary footers and task-history footers mutually exclusive.
+    Bug Fixes
+    - Fixed file viewer search positioning in edit mode: the editor textarea does not scroll itself, so scrolling is driven by the outer container.
+    - Fixed MCP settings JSON mode needing two clicks to save (stale draft closure); parse and save errors are localized and no longer hidden behind the modal overlay.
+    - Fixed the file-change tracking memory peak: Git output and file contents are read in chunks with checked allocation, so an allocation failure degrades coverage instead of aborting the app.
+    What's Changed
+    - feat: Agent 状态感知只读守卫、阅读器性能重构与原生及 MCP 稳定性修复 by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/184
+    - feat(i18n/ui/theme): 工具错误码本地化、表单对话框与紧凑主题完善、文件追踪内存优化 by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/185
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.17...v0.4.18
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.18
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 备忘多选批量删除：备忘面板新增多选模式，支持全选已加载 / 取消全选与已选计数，确认后一次性删除所选备忘。
+    - Responses Fast Mode 三态：Fast Mode 由开关改为三档——关闭不发 service_tier，Fast 发 priority，UltraFast 发 ultrafast；API 设置与聊天输入区选择器均可切换。
+    - 系统日志自动清理：系统日志自动清理（启动时执行一次，之后每 6 小时复查），保留期可选近 7 / 30 / 90 天或不清理（默认近 7 天），并提示本次删除了多少条过期日志。
+    改进
+    - 文件阅读器全链路性能重构：文内搜索按行索引二分定位（提速 545 倍），代码折叠按区间二分（O(log K)），列宽估算改为跨步采样（提速 8.1 倍），超过 10,000 字符的单行截断并加徽标，搜索高亮改用 requestAnimationFrame 异步调度，语法高亮缓存扩容至 128 并加入 LRU 热度刷新。
+    - Rust 原生文本读取改为零拷贝比对，并对原始文本读取增加 64 MiB 熔断。
+    - 只读调用保护升级为状态感知：重复调用时探测文件指纹与 Git 脏状态 / 提交变化，放行合法重读；可变工具识别扩展到终端、子代理与 LSP 重命名；重复恢复轮补兜底提示，避免流被截断。
+    - 工具错误文案本地化：23 个工具卡片共 30 处错误渲染点统一按语言展示，工具结果中的协议与审计字段仍保留原文。
+    - 紧凑主题补齐原生表单对话框体系样式（卡片、页头、页脚、拖放区、输入框、按钮），统一只读输入框与禁用态；表单对话框初始焦点改落在选择按钮，而非只读路径输入框。
+    - 插件消息 Footer 渲染资格判定精准化，普通 Footer 与任务历史 Footer 互斥隔离。
+    修复
+    - 修复文件阅读器编辑模式下搜索定位与滚动容器错误：编辑器 textarea 自身不滚动，改由外层容器承担滚动。
+    - 修复 MCP 设置 JSON 模式保存需点击两次（闭包读到旧草稿）；解析与保存错误接入国际化，且不再被弹窗遮罩遮挡。
+    - 修复文件变更追踪内存峰值：Git 输出与文件内容改为分块读取并做分配检查，分配失败时降级为覆盖率缺口，而不是中断整个应用。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0418
+ReleaseTime: 2026-10-09T07:25:08.0000000Z

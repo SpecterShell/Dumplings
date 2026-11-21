@@ -1,0 +1,35 @@
+Version: 0.9.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TreeX-xx/JanusX/releases/download/v0.9.5/JanusX-0.9.5-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    JanusX v0.9.5
+    统一管理本地、WSL 与 SSH Linux 工作区，在同一桌面中使用 AI 编程终端、文件编辑与预览、Git、会话管理和蓝图。
+    Local / WSL / SSH 工作区
+    - 从左侧“添加工作区”选择本地目录、WSL 发行版或 SSH 主机，连接后浏览并选择目标目录；导入只登记工作区，不复制仓库。
+    - WSL 工作区中的文件、Git 和终端在所选 Linux 发行版执行；SSH 工作区在远端 Linux 执行，避免误用 Windows 路径或工具。
+    - 支持目标侧文件树、编辑保存、文件增删改移、基础 Git 与 worktree 操作，以及文本、图片、Markdown、HTML 和 Office 文件预览。
+    - Linux 服务持有终端进程。关闭 JanusX 或连接断开后，已启动的终端任务可以继续运行，重新打开后附着原终端；主动结束终端才终止任务。
+    - 新建 Agent 终端先检测目标环境的 CLI；缺失时提供“安装并打开”、日志与重试入口，也可打开普通 Linux 终端。安装使用目标用户目录，不要求 sudo；登录和模型配置仍在目标 CLI 中完成。
+    - 会话管理可读取目标侧 Claude、Codex、OpenCode 和 Pi 历史，按工作区来源隔离；恢复时检查目标目录、CLI 和历史，仍在运行的终端直接附着。
+    使用前提与当前边界：Windows 需已准备 WSL 或系统 OpenSSH。SSH 当前面向 Linux，复用 OpenSSH 配置、密钥/agent 与已信任的 known_hosts；应用内密码、密钥口令及首次主机信任尚未支持。目标需 Python 3.9+、tar/xz 和兼容 glibc，部分能力会按需准备私有 Node。真实验证以 Ubuntu 24.04 x64 为主，尚未覆盖全部发行版、异地网络、各 Agent 账号恢复和远端 Hook/回合遥测；手机对 WSL/SSH 工作区的完整适配仍在推进。
+    蓝图官方插件
+    - 蓝图是按需安装的独立签名插件，提供工程 Notes 阅读、架构导航、模型讨论、维护与独立 Note MCP。
+    - 当前官方包为 Blueprint 1.0.8（Windows x64）：下载插件包。可从“设置 → 插件 → 发现插件”刷新目录安装，也可在“已安装 → 导入插件包”离线安装；已有旧包需先停用再更新。
+    - 插件默认可访问所有已登记工作区，后来加入的工作区也自动可用，移除逐项目授权步骤。首次启用仍需审阅插件声明的能力权限；Chat 与维护需要可用的模型配置。
+    - “入口与快捷键”采用正向显示开关，分别控制工具箱和工作区添加菜单入口；隐藏入口后不会额外生成替代入口，相关快捷键集中展示。
+    - 官方资源返回 404/410 时显示下载源未发布或已移除。签名目录每日自动续期，插件包仍需通过签名与内容校验。
+    工作台、终端与会话
+    - 会话管理与备忘录默认可用，移除创新功能中对应开关；旧配置关闭状态不再隐藏这些功能。
+    - Island 下滑展开通知，移除旧副黑板入口与工作区让位布局。
+    - 终端管理支持自定义 Shell 命令、启动后缀、显隐与默认项；终端入口可按使用习惯整理。
+    - 模型设置采用共享渠道与各 Agent 独立选择，支持官方 API、自定义服务及 CPA；外部 CLI 的原生登录由各 CLI 自身管理。
+    - 更新应用图标、主题细节及工作台工具交互，优化构建归档复用、依赖差异诊断和发布续传验证。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/TreeX-xx/JanusX/releases/tag/v0.9.5
+ReleaseTime: 2026-10-28T17:18:49.0000000Z

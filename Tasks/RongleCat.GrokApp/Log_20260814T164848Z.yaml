@@ -1,0 +1,62 @@
+Version: 0.2.18
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.18/Grok_0.2.18_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.18
+    Highlight: TUI-parity Usage limit (/usage, /cost) with this-session spend plus heatmap Tokens / Cumulative stats; long image and tool turns no longer die at 4 hours; Windows Settings Agent tab no longer flashes a black console; chat image cards survive remount.
+    中文 · 亮点： 对齐 TUI 的用量限制（/usage / /cost，含本会话花费）+ 热力图 Tokens / 累计视图；长图/工具回合不再 4 小时被掐；Windows 设置 Agent 页不再闪黑框；聊天图片卡片回合结束后仍能显示。
+    Added
+    - Usage limit (/usage, /cost): TUI-parity weekly SuperGrok bar plus this session’s token spend since start or last resume (input/cached, output/reasoning, total, cache hit, model calls, API time, cost). Also from the composer context-chip menu. Official route only for the weekly quota; custom routes stay honest.
+    - Account heatmap call log Tokens column: Each recent session row now shows billing usage (same turn_completed sum as the heatmap) next to context occupancy.
+    - Account heatmap stats strip: Codex-style totals — cumulative tokens, peak day, longest chat, current / longest streak — plus a Cumulative calendar view (running-total color).
+    中文 · 新增
+    - 用量限制（/usage / /cost）：对齐 TUI 的本周 SuperGrok 额度条，加上本会话（自开始或上次续跑）的 token 花费（输入/缓存、输出/推理、合计、缓存命中、模型调用、API 时长、费用）。也可从 Composer 上下文芯片菜单打开。周额度只走官方路由；自定义路由保持诚实空态。
+    - 账号热力图通话记录 Tokens 列：最近会话每一行在上下文占用旁显示计费用量（与热力图同一套 turn_completed 汇总）。
+    - 账号热力图统计条：Codex 风格合计 — 累计 tokens、峰值日、最长聊天、当前/最长连续天数 — 以及 累计 日历视图（按累计总量上色）。
+    Fixed
+    - Long image / tool turns no longer die at 4 hours: session/prompt wait is silence-only (30 minutes with no session/update). Fresh progress re-arms the clock; there is no absolute turn-age ceiling. Batch image jobs that were still working used to get TURN_TIMEOUT at 4h.
+    - Windows Settings → Agent no longer flashes a black box: Opening the Agent tab (and other similar surfaces) no longer pops a console window (git / rg / tasklist / taskkill / reg) and no longer paints native number/date/time inputs with the OS dark scheme. WebView2 now boots with the same light/dark theme as the page.
+    - Usage modal cache > input, then empty: Session spend only sums turn_completed snapshots. Cache-heavy fragments (cache > input, no modelCalls) are dropped so cached cannot exceed input; a real turn without modelCalls still counts. Totals persist in sessionStorage, and an in-flight turn says usage updates when it finishes.
+    - Chat image cards no longer die after the turn ends: Leftover remote https thumbs (web-fetch charts, etc.) first-paint from the in-memory thumb cache on journal remount. Swapping src mid-load used to abort the original <img> and lock broken_blob (“preview failed”). Abort / stale-src errors are ignored; a working https original is not wiped when thumb resolve returns empty.
+    中文 · 修复
+    - 长图 / 工具回合不再 4 小时被掐：session/prompt 只按静默超时（30 分钟没有任何 session/update）。有新进度就重新计时，没有绝对回合年龄上限。以前还在跑的批量出图会在 4 小时拿到 TURN_TIMEOUT。
+    - Windows 设置 → Agent 不再闪黑框：打开 Agent 页（以及类似表面）不再弹出控制台窗口（git / rg / tasklist / taskkill / reg），也不再用系统深色方案画原生数字/日期/时间输入。WebView2 启动主题与页面一致。
+    - 用量弹层缓存大于输入然后变空：会话花费只汇总 turn_completed 快照。缓存大于输入且没有 modelCalls 的碎片会被丢掉，避免 cached 超过 input；没有 modelCalls 的真实回合仍计入。合计写入 sessionStorage；进行中的回合会提示结束后再更新。
+    - 聊天图片卡片回合结束后不再挂掉：journal 重挂时远程 https 缩略图先从内存缓存首屏。中途改 src 以前会中止原来的 <img> 并锁成 broken_blob（「预览失败」）。中止 / 过期 src 错误会被忽略；缩略图解析为空时不会抹掉还能用的 https 原图。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.18
+    Highlight: TUI-parity Usage limit (/usage, /cost) with this-session spend plus heatmap Tokens / Cumulative stats; long image and tool turns no longer die at 4 hours; Windows Settings Agent tab no longer flashes a black console; chat image cards survive remount.
+    中文 · 亮点： 对齐 TUI 的用量限制（/usage / /cost，含本会话花费）+ 热力图 Tokens / 累计视图；长图/工具回合不再 4 小时被掐；Windows 设置 Agent 页不再闪黑框；聊天图片卡片回合结束后仍能显示。
+    Added
+    - Usage limit (/usage, /cost): TUI-parity weekly SuperGrok bar plus this session’s token spend since start or last resume (input/cached, output/reasoning, total, cache hit, model calls, API time, cost). Also from the composer context-chip menu. Official route only for the weekly quota; custom routes stay honest.
+    - Account heatmap call log Tokens column: Each recent session row now shows billing usage (same turn_completed sum as the heatmap) next to context occupancy.
+    - Account heatmap stats strip: Codex-style totals — cumulative tokens, peak day, longest chat, current / longest streak — plus a Cumulative calendar view (running-total color).
+    中文 · 新增
+    - 用量限制（/usage / /cost）：对齐 TUI 的本周 SuperGrok 额度条，加上本会话（自开始或上次续跑）的 token 花费（输入/缓存、输出/推理、合计、缓存命中、模型调用、API 时长、费用）。也可从 Composer 上下文芯片菜单打开。周额度只走官方路由；自定义路由保持诚实空态。
+    - 账号热力图通话记录 Tokens 列：最近会话每一行在上下文占用旁显示计费用量（与热力图同一套 turn_completed 汇总）。
+    - 账号热力图统计条：Codex 风格合计 — 累计 tokens、峰值日、最长聊天、当前/最长连续天数 — 以及 累计 日历视图（按累计总量上色）。
+    Fixed
+    - Long image / tool turns no longer die at 4 hours: session/prompt wait is silence-only (30 minutes with no session/update). Fresh progress re-arms the clock; there is no absolute turn-age ceiling. Batch image jobs that were still working used to get TURN_TIMEOUT at 4h.
+    - Windows Settings → Agent no longer flashes a black box: Opening the Agent tab (and other similar surfaces) no longer pops a console window (git / rg / tasklist / taskkill / reg) and no longer paints native number/date/time inputs with the OS dark scheme. WebView2 now boots with the same light/dark theme as the page.
+    - Usage modal cache > input, then empty: Session spend only sums turn_completed snapshots. Cache-heavy fragments (cache > input, no modelCalls) are dropped so cached cannot exceed input; a real turn without modelCalls still counts. Totals persist in sessionStorage, and an in-flight turn says usage updates when it finishes.
+    - Chat image cards no longer die after the turn ends: Leftover remote https thumbs (web-fetch charts, etc.) first-paint from the in-memory thumb cache on journal remount. Swapping src mid-load used to abort the original <img> and lock broken_blob (“preview failed”). Abort / stale-src errors are ignored; a working https original is not wiped when thumb resolve returns empty.
+    中文 · 修复
+    - 长图 / 工具回合不再 4 小时被掐：session/prompt 只按静默超时（30 分钟没有任何 session/update）。有新进度就重新计时，没有绝对回合年龄上限。以前还在跑的批量出图会在 4 小时拿到 TURN_TIMEOUT。
+    - Windows 设置 → Agent 不再闪黑框：打开 Agent 页（以及类似表面）不再弹出控制台窗口（git / rg / tasklist / taskkill / reg），也不再用系统深色方案画原生数字/日期/时间输入。WebView2 启动主题与页面一致。
+    - 用量弹层缓存大于输入然后变空：会话花费只汇总 turn_completed 快照。缓存大于输入且没有 modelCalls 的碎片会被丢掉，避免 cached 超过 input；没有 modelCalls 的真实回合仍计入。合计写入 sessionStorage；进行中的回合会提示结束后再更新。
+    - 聊天图片卡片回合结束后不再挂掉：journal 重挂时远程 https 缩略图先从内存缓存首屏。中途改 src 以前会中止原来的 <img> 并锁成 broken_blob（「预览失败」）。中止 / 过期 src 错误会被忽略；缩略图解析为空时不会抹掉还能用的 https 原图。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.18
+ReleaseTime: 2026-08-14T16:19:00.0000000Z

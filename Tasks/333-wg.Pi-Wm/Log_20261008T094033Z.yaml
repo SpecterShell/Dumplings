@@ -1,0 +1,55 @@
+Version: 0.1.18
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/333-wg/pi-wm/releases/download/v0.1.18/Pi-Wm-0.1.18-Setup-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Pi-Wm v0.1.18 — 手机远程对话与长任务上下文压缩
+    已于 **2026-10-08 15:12（北京时间）**正式发布并设为 Latest：GitHub Release。Windows x64、macOS Apple Silicon 与 Intel 已完成构建和定向验证，9 个正式附件已核对。应用源码与标签提交：4ef5e65091dcdecbadc3552fa752b83c12d294a9。
+    本次更新
+    手机远程对话工作台
+    - 设置新增「手机访问」，通过一次性二维码和电脑确认配对。默认关闭，重启后需手动开启；支持设备撤销和授权到期。
+    - 可使用自行安装的 cloudflared 建立临时 HTTPS 隧道，或接入已有固定 HTTPS 反向代理。首次使用指引可复制安装提示词，但不会自动发送指令、安装程序或开启公网入口。
+    - 手机可查看项目和会话、继续电脑上的对话、停止任务及处理普通工具审批。任务仍在电脑执行，手机关闭页面不会主动取消任务。
+    - 经电脑明确授予「完整对话能力」后，可新建、重命名、归档和恢复会话，选择已有模型、思考强度和已安装 Skill，上传附件。旧设备不会自动扩大权限。
+    - 独立移动界面提供项目会话抽屉、Markdown、代码与消息复制、图片及附件展示、工具与思考过程折叠、深浅主题、字号设置和关联团队只读状态。
+    - 增加草稿及待发送附件恢复、协议握手检查、断线重连和幂等提交；结果未知时不会自动重放写入。手机与桌面入口拆分加载，手机不需下载桌面工作台模块。
+    - 隧道采用有限重试和传输协议/IP 策略切换，展示连接阶段与脱敏错误，不修改系统代理、DNS、路由、防火墙或 TLS 校验。
+    - 手机入口独立监听回环地址，配对后使用安全 Cookie；不开放桌面管理令牌、直接终端或模型密钥管理。新建手机会话固定使用工作区写入及风险审批。手机指令仍可驱动 Agent 使用原会话已授权的工具，不是额外的操作系统沙箱。
+    长任务执行中自动压缩上下文
+    - 自动压缩开启时，在整批工具完成后、下一次模型请求前检查预算，不再仅等待整个任务结束。
+    - 保留最新工具调用与整批结果，恢复当前参考快照并继续同一任务，不重放已执行工具。
+    - 摘要失败、取消或压缩后仍超预算时停止后续推理，避免同一轮无限压缩。显式关闭自动压缩时不启用此检查。
+    - 兼容层针对 Pi 0.84.3；升级 Pi 时须重新验证其自动摘要生命周期。
+    本轮验证
+    - npm run check 通过：源码、E2E 和 12 个工作区测试类型检查，以及 8 套主题各 80 对颜色对比检查。
+    - 8 个定向 Vitest 文件、67 项测试通过：手机鉴权、配对、越权拒绝、撤销、隧道与真实子进程恢复、客户端重连、Gateway 原有鉴权/终端路径、上下文压缩生命周期。压缩回归覆盖并行工具、大结果、排队指令、关闭自动压缩、摘要失败、取消及压缩后仍超预算。
+    - npx --no-install playwright test e2e/phone-access.spec.ts e2e/phone-reliability.spec.ts --workers=1 --output=test-results/release-0.1.18-phone：5 项通过。覆盖配对授权、手机对话、刷新接续、撤销、新建及管理会话、模型/思考/Skill、附件、显示偏好、普通审批、只读团队状态和布局。
+    - 已人工检查本轮 1440×900 对话截图、390×844 手机工作台截图和 390×540 技能候选截图：正文与输入区分离，附件和技能标签可见，候选面板未遮住发送控件，未发现所查状态的明显重叠或横向溢出。截图保留在上述 test-results 目录。phone-workbench-desktop.png 实际为 390×844，不用其文件名作为宽屏证据；宽屏证据为 phone-chat-desktop.png。
+    - 通用浏览器实际检查了桌面入口的设置切换、手机入口本地配置及桌面/窄屏页面；清除历史诊断并重新加载后，无控制台错误、页面异常、失败请求或 HTTP 错误。手机 HTTPS 夹具使用自签名证书，通用浏览器报 ERR_CERT_AUTHORITY_INVALID，未绕过证书验证；完整手机流程由仅在隔离测试上下文接受该证书的 Playwright 验证。历史 GitHub 导航资源 404 不属于应用错误。
+    - npm run desktop:dist 通过。包内 Node/SQLite/PTY 导入、15,807 个运行时文件清单与路径预算校验通过。
+    - npm run verify:desktop:release 通过：安装包 SHA-512、大小、blockmap 和 latest.yml 一致，包内更新源正确。三件附件另计算 SHA-256，记录见上表。
+    - node scripts/verify-desktop.mjs --packaged=release/win-unpacked/Pi-Wm.exe 通过：移出源码目录后的隔离包内启动、鉴权 API/WebSocket、原生 PTY 命令、渲染器隔离、单实例、项目/主题保留、令牌轮换及正常退出。未执行产品安装器。
+    - Get-AuthenticodeSignature 检查安装包状态为 NotSigned，不能把构建工具的 signing 日志视为发布者签名成功。
+    - 新增忽略规则保护本地预览数据、私钥、工具二进制和临时备份；保留共享技能目录。未删除这些本地文件。构建使用既有受控暂存流程，不复制本地预览数据。
+    定向单测命令：
+    npx --no-install vitest run apps/gateway/test/phone-access.test.ts apps/gateway/test/phone-gateway.test.ts apps/gateway/test/phone-tunnel.test.ts apps/gateway/test/phone-tunnel-process.test.ts apps/gateway/test/auth.test.ts apps/gateway/test/server.test.ts apps/web/test/phone-client.test.ts packages/pi-adapter/test/prompt-cache-lifecycle.test.ts
+    提交钩子仅调整两处源码排版；提交后再次通过类型检查、67 项单测和手机配对完整流程复测。Windows 包已按最终标签源码重新构建并重新通过包内启动和附件一致性验证。
+    macOS CI 37740139265 的 arm64、x64 构建与上传任务均成功，覆盖归档、ad-hoc 签名、原生运行时和包内应用启动；按精简策略跳过完整桌面回归。9 个正式附件已核对：Windows 大小及 SHA-256 与本地一致，Mac DMG/ZIP 与校验文件及 GitHub SHA-256 一致。发布后已匿名下载公开 latest.yml，与本地元数据逐字一致；此检查不等于旧客户端完整安装包下载或真实升级验收。
+    本地最终构建日志：test-results/release-0.1.18-final-build.log；包内验收日志：test-results/release-0.1.18-final-packaged.log；最终 Windows 摘要：test-results/release-0.1.18-final-assets.json。这些本地证据不作为安装包附件发布。
+    已知限制与未执行检查
+    - 未执行真实 Cloudflare 公网隧道、蜂窝网络、相机扫码、真实 iOS/Android 软键盘或安装包中的手机远程访问实机验收。电脑必须运行且未休眠；临时域名变化可能需要重新配对，隧道服务商可能接触传输内容。
+    - 手机端尚不包含消息编辑/Fork、即时补充和队列、完整团队管理、文件/Git 浏览、后台推送、PWA 或原生 App；Computer Use 人工审批仍需电脑端处理。
+    - Windows 安装包未签名，系统可能提示未知发布者。本轮包内启动不替代真实安装或 N→N+1 升级测试。
+    - macOS 使用 ad-hoc 签名，未经 Apple Developer ID 签名与公证；干净系统 Gatekeeper 安装验收尚未完成。
+    - 未运行全仓库测试、完整 E2E、完整桌面测试、收费模型或旧客户端完整公开安装包下载验收；按受影响行为执行定向验证。源码全量 CI 主动省略，采用本地定向验证与 Mac 专项 CI。
+    - 生产构建仍提示桌面主包超过 500 kB；Node SQLite 实验性提示和 Windows PTY 编码提示未导致测试失败，不将结果表述为无警告。
+    源码与发布范围
+    仅提交本次源码、测试、依赖、文档、版本和忽略规则，未包含本地会话数据、私钥、预览脚本、备份或工具二进制。旧 Git 地址 333-wg/wuming-agent 已重定向至 333-wg/pi-wm，源码、标签和安装包发布最终位于同一仓库。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/333-wg/pi-wm/releases/tag/v0.1.18
+ReleaseTime: 2026-10-08T07:12:13.0000000Z

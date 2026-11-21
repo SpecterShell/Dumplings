@@ -1,0 +1,48 @@
+Version: 3.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.5.0/MotrixNext_3.5.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    A major release packed with new features, quality-of-life improvements, and deep stability hardening across all platforms. This is the most significant update since v3.4.x, delivering a completely enhanced task management experience, robust update infrastructure, and comprehensive cross-platform reliability.
+    ✨ New Features
+    - All-tasks unified view — Merge active, stopped, and history records with GID-based deduplication and intelligent sorting
+    - Task sorting — Configurable sort fields (name, size, progress, speed, added time) with full i18n support
+    - Task birth tracking — Stable ordering by added_at timestamp via new task_birth database table
+    - InfoHash-based task deduplication — Prevent duplicate BitTorrent downloads by detecting identical info hashes
+    - Download completion toasts — Actionable notifications with Open File / Reveal in Folder buttons
+    - Show in Folder — New task action to reveal downloaded files in the system file manager
+    - Custom tracker sources — Add your own tracker list URLs with granular per-source synchronization error reporting
+    - Per-task proxy toggle — Enable/disable proxy on individual tasks with dedicated UI and state management
+    - Global proxy toggle — Simplified proxy configuration replacing manual URL input
+    - Task lifecycle service — Background monitor for task completion, error detection, and BT seeding state
+    - Copy-to-clipboard for RPC settings — One-click copy for RPC listen port and other advanced fields
+    - Download split & BT max peers — New configurable preferences, decoupled from max connections per server
+    - Pre-flight DB migration guard — Native OS dialog on version downgrade prevents database corruption with 26-locale i18n
+    - Platform-specific tray icons — macOS template icon (white silhouette) + Windows/Linux full-colour icon
+    🛠 Improvements
+    - Fast engine termination on exit — Dual-path shutdown: instant TerminateProcess for app exit, thorough taskkill /T for restart. Saves ~900ms on Windows
+    - Robust update infrastructure — Version-pinned package caching, channel drift detection, exponential backoff for engine recovery, and reordered updater sequence to prevent data loss
+    - Engine recovery during updates — Rust-side event emission + frontend Aria2 client reconnection for seamless update installation
+    - Multi-file task restart — Complete URI preservation with per-file snapshots and grouped mirror submission
+    - Deferred migration toasts — Config and DB schema upgrade notifications wait for locale initialization before display
+    - Sanitized diagnostic exports — Sensitive data (RPC secrets, proxy credentials) scrubbed from user-submitted logs
+    - Autostart reliability — Diagnostic logging and workaround for Windows registry issue (auto-launch crate #771)
+    🐛 Bug Fixes
+    - Fixed magnet confirm race by fetching task status via RPC
+    - Fixed magnet poll overwriting newly added GIDs
+    - Fixed addRecord using INSERT OR REPLACE instead of INSERT OR IGNORE
+    - Fixed lastCheckUpdateTime only updating on successful checks
+    - Fixed proxy URL validation in advanced preferences
+    - Fixed matchMedia listener accumulation in useTheme
+    - Fixed individual tracker URL deduplication across sources
+    - Fixed shared isDark ref across all useTheme callers
+    - Fixed port input sanitization in engine cleanup to prevent injection
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.5.0
+ReleaseTime: 2026-03-30T12:20:21.0000000Z

@@ -1,0 +1,76 @@
+Version: 0.13.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.13.1/FylloCode-0.13.1-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.13.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release continues to tighten project governance and the Chat experience while improving ACP Agent extensibility and main-process stability. You can now register additional ACP Agents through a custom agent configuration file. The Chat execution plan panel has been merged into a session event rail, and Overview further unifies proposal navigation, archived commit clues, and active-change titles. Main-process architecture was also reorganized to make storage, process communication, and error handling more reliable.
+    Added
+    - Support custom ACP agents via custom-agents.json, enabling integration of third-party or internal agents
+    - Chat session event rail that incorporates the ACP execution plan panel into the session event timeline, keeping the input area clean and execution progress readable
+    - New lineage tool in the fyllo-cortex MCP server with trace-file mode for tracing requirement subjects and returning proposal paths
+    - Archive commit hashes are now persisted for requirement proposals and displayed in the Overview lineage view
+    - Custom agent editor moves the save button to the top for easier one-click saving on long forms
+    Changed
+    - Proposal navigation moved from a standalone page into Overview, reducing context switching across project workspace
+    - Chat now clears stale active session state when entering the page, preventing old state from interfering with new conversations
+    - Hide the Chat audio input button until the related capability is ready
+    - Renamed the fyllo-skills MCP server to fyllo-cortex to align with project docs and conceptual model
+    - Optimized Overview stats bar grid columns to preserve information density in narrower windows
+    - Unified ACP stream parsing through a shared driver, reducing duplicated mapping across main, preload, and renderer layers
+    - Normalized agent error construction onto ipcError, with agent error codes maintained by a single event-mapping function
+    - Relocated IO-bound pseudo-domain modules into the infra layer and routed agent-service broadcasts through an event bus, aligning the main-process layering with the id factory spec
+    Fixed
+    - Corrected inconsistent proposalStatus derivation between overview and lineage
+    - Guarded ACP binary archive extraction against zip-slip path traversal
+    - Restricted external navigation to http/https schemes to prevent unintended protocol jumps
+    - Fixed main-process infra continuing to broadcast to closed windows and failing to cancel restart timers on dispose
+    - Used atomic synchronous writes for integration and window-state stores to prevent data corruption
+    - Hardened storage parsing, startup flow, and log redaction against malformed input and log leakage
+    - Fixed active change title formatting in Overview
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0131---2026-06-17
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个补丁版本继续收敛项目治理与 Chat 体验，同时提升 ACP Agent 的扩展性与主进程稳定性。你现在可以通过自定义 Agent 配置文件接入更多 ACP Agent；Chat 的执行计划面板被整合到会话事件轨，Overview 则进一步把 proposal 导航、归档提交线索和活跃变更标题聚合到统一视图。主进程架构也完成了重要整理，使存储、进程通信和错误处理更加稳定可靠。
+    新增
+    - 支持通过 custom-agents.json 配置自定义 ACP Agent，扩展第三方或内部 Agent 的接入方式
+    - Chat 新增会话事件轨，把 ACP 执行计划面板整合到会话事件时间线，保持输入区简洁并强化执行进度的可读性
+    - fyllo-cortex MCP server 新增 lineage 工具，支持按 trace-file 模式追踪需求线索并返回 proposal 路径
+    - Overview 新增归档提交线索展示，需求 proposal 的 archive commit hash 现在会被持久化并呈现在 lineage 视图中
+    - 自定义 Agent 编辑器将保存按钮置顶，方便长表单一键保存
+    调整
+    - Proposal 导航入口从独立页面迁移到 Overview，减少项目空间的跳转成本
+    - Chat 进入页面时自动清空已失效的活跃会话状态，避免旧状态干扰新对话
+    - 隐藏 Chat 音频输入按钮，直到相关能力准备就绪
+    - fyllo-skills MCP server 重命名为 fyllo-cortex，与项目文档和概念模型保持一致
+    - Overview 统计栏网格布局优化，在较小窗口下也能保持信息密度
+    - ACP 流式事件解析统一为共享驱动，减少主进程、preload 与渲染层之间的重复映射
+    - 主进程错误构建统一收敛到 ipcError，Agent 相关错误码由单一事件映射函数维护
+    - IO 密集型模块从 domain 层下沉到 infra 层，配合事件总线广播与 ID 工厂规范对齐主进程分层
+    修复
+    - 修复 overview 与 lineage 中 proposalStatus 推导逻辑不一致的问题
+    - 修复 ACP 二进制归档解压可能受到的 zip slip 路径遍历风险
+    - 限制外部导航只允许 http/https 协议，防止非预期 scheme 跳转
+    - 修复主进程在窗口销毁后仍向已关闭窗口广播以及重启定时器未取消的问题
+    - 修复 integration 与 window-state 存储写入非原子化可能导致的数据损坏
+    - 强化存储解析、启动流程与日志脱敏，提升异常输入与日志安全边界
+    - 修复 Overview 活跃变更标题的格式化问题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0131---2026-06-17
+ReleaseTime: 2026-06-17T10:57:15.0000000Z

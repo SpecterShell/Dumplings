@@ -1,0 +1,63 @@
+Version: 2.2.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/try2love/codex-mobile-bridge/releases/download/v2.2.1/Codex-Mobile-Bridge-2.2.1-Windows-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Updating is recommended for native connections to the latest Codex App.
+    v2.2.1 adds Antigravity integration and interactive charts in chats, improves CLI connection management, model caching and file browsing, and fixes newer Codex connections, long-history reads and mobile recovery.
+    Features and improvements
+    - Antigravity workbench: browse local App, IDE and CLI history and use supported native connections for chats, project creation, models, attachments and approvals. Handle native questions and waiting interactions, manage child tasks, preview historical images and add them to drafts. Display model quotas and context usage supplied by the native service. Supported default local profiles can save account snapshots and switch after idle-state checks. PR #150 · PR #170
+    - Interactive charts: render Codex visualize content with controls, themes and full-screen viewing. Restore saved widget state when reopening a chat; place chart follow-up prompts in the composer for review and manual sending. #166 · PR #167
+    - CLI management: group connections by agent, runtime and profile, release individual or profile-scoped connections, and preview shared-service impact. Check supported local account and proxy changes and recover network access while retaining task, approval and uncertain-send checks. #122
+    - Side chats and wide layouts: preserve native parent-child relationships, provide explicit temporary side chats with shared controls, and collapse the chat list without leaving the conversation. #149
+    - Files and chat controls: browse authorized host directories, navigate by full path, return to the project, and locate linked files. Add a / command menu, optional new-chat names, native interaction timestamps, authorized media playback and simpler reminders. #160 · #154 · #161 · #148 · #158 · #141
+    - Desktop and network: custom HTTPS ports for SSH server entries and a monochrome macOS menu-bar icon. #145 · PR #146 · #156 · PR #157
+    - WSL status and startup: distinguish stopped distributions from unavailable status queries, and expose Start and connect WSL in gateway and direct-connection management lists for Codex and Claude, and fix navigation from WSL Claude entries to their chat list.
+    Fixes
+    - Restore Codex Desktop v13 synchronization and validate structurally compatible later versions. Preserve history and drafts while pausing controls when critical task or approval state cannot be understood. #168 · PR #169
+    - Preserve Antigravity port discovery in large logs with bounded head-and-tail reads and process ownership checks. PR #171
+    - Bound long Antigravity turns in history pages. Keep persisted Claude stream history out of recent pages while preserving completion anchors outside the page.
+    - Reuse account-scoped model caches, retain explicit manual choices and drafts during catalog failures, and distinguish account changes from temporary discovery errors.
+    - Improve Windows Store Codex startup, Claude initialization retries, native runtime compatibility, DSH connector recovery and ZCode window matching. #153
+    - Improve iOS entry, foreground recovery and safe areas. Allow Android users to return to the computer list during connection probing, and improve cookie migration and gateway identity preservation. #159
+    - Relaunch macOS updates through the system launcher to improve accessibility identity continuity. Check Windows update blockers before downloading, and refresh dynamic login messages when changing languages.
+    Notes
+    Android installation: The new Bridge app installs alongside the old v2.2.0 app and cannot replace it in place. Install Bridge, add your computers and verify the connections first. Preserve any drafts you need from the old app before uninstalling it; old bindings and drafts do not migrate automatically. Users of the separate v2.2.1-preview.1 Bridge Preview app can upgrade in place and retain that preview app’s connections and drafts.
+    Update the mobile app for native chart navigation and connection recovery improvements. iOS source and unsigned IPA packages require your own signing.
+    Antigravity account switching, independent profiles and WSL features depend on platform and integration support. Temporary side chats are limited to supported local desktop integrations, do not enter native history and do not survive gateway restart. Browsing outside the project remains read-only. Unknown sends, approvals and switches are not automatically replayed.
+    Thanks to @windowmmk for Antigravity contributions in #150, #170 and #171; and @heiqiu47 for HTTPS ports, the menu-bar icon, interactive charts and Codex compatibility in #146, #157, #167 and #169.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    建议更新以适配最新版 Codex APP 原生连接。
+    v2.2.1 新增 Antigravity 接入与聊天内交互图表，完善 CLI 连接管理、模型缓存和文件浏览，并修复新版 Codex 连接、长会话读取及手机连接恢复中的问题。
+    新增与改进
+    - Antigravity 远程工作台。 在手机和 Web 查看 App、IDE、CLI 的本机历史，通过受支持的原生连接继续聊天、新建项目聊天、切换模型、发送附件和处理审批。补充原生问题与等待交互、子任务管理、历史图片预览及添加到草稿；展示原生服务实际提供的模型额度与上下文用量。受支持的默认本机配置可保存账号副本，并在核验空闲后切换。PR #150 · PR #170
+    - 聊天内交互图表。 Codex 回复中的 visualize 内容可直接展示，支持滑块、按钮、主题适配与全屏查看；重新打开聊天时恢复图表已保存的交互状态。图表追问可放入输入框，编辑后由用户发送。#166 · PR #167
+    - CLI 连接与网络管理。 按 Agent、运行环境和配置查看连接，支持单条或配置范围释放，并展示共享服务操作的影响范围。增加受支持本机接入的账号、代理变化核验及网络恢复入口；任务、审批或发送结果不明时保留核对流程。#122
+    - 侧边聊天与宽屏阅读。 保留原生侧聊的父子关联，提供明确的临时侧聊入口，复用输入、附件、模型和审批界面。宽屏可收起聊天列表，为当前会话腾出更多阅读空间。#149
+    - 文件浏览与聊天操作。 支持经授权的宿主机目录、完整路径导航和返回项目文件夹，聊天文件链接可定位到目标。增加 / 命令入口、可选的新建聊天名称、原生交互时间及授权音视频附件播放，精简提醒入口。#160 · #154 · #161 · #148 · #158 · #141
+    - 网络与桌面体验。 自有服务器＋SSH 入口支持自定义 HTTPS 端口；macOS 菜单栏使用单色图标。#145 · PR #146 · #156 · PR #157
+    - WSL 状态与启动入口。 区分发行版停止与状态暂未确认，避免查询失败时误报停止；Codex 和 Claude 的网关及直连应用管理列表提供“启动并连接 WSL”，并修复 WSL Claude 的“查看聊天”跳转失败。
+    修复与优化
+    - 恢复新版 Codex 会话连接。 适配桌面端 v13 同步协议，并对结构兼容的后续版本进行校验后继续同步。无法识别关键任务或审批结构时，保留历史与草稿，暂停控制并提示升级。#168 · PR #169
+    - 修复 Antigravity 运行一段时间后被误判离线。 日志较大时同时读取头尾端口信息，并限制日志读取量，继续核验端口和目标进程的归属。PR #171
+    - 改善长会话读取。 限制 Antigravity 单个超长回合进入历史页的数据量；避免 Claude 已持久化的流式历史挤入最近消息页，并保留页外完成状态的关联信息。
+    - 模型列表更稳定。 复用当前账号与接入的模型缓存；列表获取失败时保留明确的手动模型选择与草稿。区分账号变化和临时获取失败，避免错误清空选项或跨账号复用旧列表。
+    - 改善连接恢复与应用启动。 修复 Windows 商店版 Codex 启动和就绪判断、Claude 初始化失败后的重试状态及部分原生运行时兼容问题；改善 DSH 连接器恢复与 ZCode 窗口识别。#153
+    - 修复手机连接与导航。 改善 iOS 进入电脑、后台恢复和连接页安全区域；Android 在信道探测过程中可返回电脑列表，完善 Cookie 迁移和网关身份保留。#159
+    - 改善更新与界面细节。 macOS 更新后通过系统启动机制重新打开 App，改善辅助功能授权身份衔接；Windows 下载更新前先检查应用占用。修复登录状态提示未完整随中英文切换的问题。
+    使用说明
+    Android 安装说明： 新版 Bridge 与旧版 v2.2.0 App 独立安装，不能直接覆盖旧版。请先安装新版、重新添加电脑并确认连接正常，保留好旧版中需要的草稿后，再卸载旧版。旧版绑定和草稿不会自动迁移。已安装 v2.2.1-preview.1 独立 Bridge Preview 的用户可直接覆盖升级，保留该预览 App 的连接和草稿。
+    手机原生导航、交互图表与连接恢复改进需要同步更新对应手机 App。iOS 源码和未签名 IPA 仍需自行签名安装。
+    Antigravity 账号切换、独立客户端及 WSL 相关能力以当前平台和接入支持为准。临时侧聊仅适用于受支持的本机桌面入口，不写入原生历史，网关重启后不会恢复。项目外文件浏览为只读；发送、审批及切换结果不明时，不自动重放操作。
+    贡献
+    感谢 @windowmmk 在 PR #150、PR #170 和 PR #171 中贡献 Antigravity 接入、账号管理、原生交互与日志发现修复；感谢 @heiqiu47 在 PR #146、PR #157、PR #167 和 PR #169 中贡献自定义 HTTPS 端口、菜单栏图标、交互图表和 Codex 协议兼容改进。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/try2love/codex-mobile-bridge/releases/tag/v2.2.1
+ReleaseTime: 2026-11-14T17:21:34.0000000Z

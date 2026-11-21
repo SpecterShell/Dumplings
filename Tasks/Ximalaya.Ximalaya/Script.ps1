@@ -1,24 +1,22 @@
-$Prefix = 'https://pc.ximalaya.com/ximalaya-pc-updater/api/v1/update/full/'
-$Headers = @{
-  platform     = 'win32'
-  buildversion = '0'
-  version      = '0.0.0'
-  uid          = ''
+$InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.ximalaya.com/down/lite/v2?client=win&channelId=99&subChannelId=100001'
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl | Split-Uri -LeftPart 'Path'
 }
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" -Headers $Headers | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+# Version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-# InstallerUrl
-$Task.CurrentState.Installer.ForEach({ $_.InstallerUrl = Get-RedirectedUrl -Uri $_.InstallerUrl -Headers $Headers })
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

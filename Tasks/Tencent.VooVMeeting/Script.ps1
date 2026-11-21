@@ -1,29 +1,68 @@
-$Object = Invoke-RestMethod -Uri 'https://voovmeeting.com/wemeet-webapi/v2/config/query-download-info' -Method Post -Body (
-  @{
-    instance = 'windows'
-    type     = '1410000197'
-  } | ConvertTo-Json -Compress -AsArray
-)
+# Download
+$Version1 = @($Global:DumplingsStorage['VooVMeeting1'].Keys)[-1] ?? '0'
+# Upgrade
+$Version2 = @($Global:DumplingsStorage['VooVMeeting2'].Keys)[-1] ?? '0'
 
-# Version
-$Task.CurrentState.Version = $Object.data[0].version
+if ([ChunkVersion]$Version1 -ge [ChunkVersion]$Version2) {
+  # Version
+  $this.CurrentState.Version = $Version = $Version1
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data[0].url.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $Global:DumplingsStorage['VooVMeeting1'].$Version1.InstallerUrl
+  }
+  # $this.CurrentState.Installer += [ordered]@{
+  #   Architecture = 'x64'
+  #   InstallerUrl = $Global:DumplingsStorage['VooVMeeting1'].$Version1.InstallerUrlX64
+  # }
+} else {
+  # Version
+  $this.CurrentState.Version = $Version = $Version2
+
+  # Installer
+  $this.CurrentState.Installer += [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $Global:DumplingsStorage['VooVMeeting2'].$Version2.InstallerUrl
+  }
+  # $this.CurrentState.Installer += [ordered]@{
+  #   Architecture = 'x64'
+  #   InstallerUrl = $Global:DumplingsStorage['VooVMeeting2'].$Version2.InstallerUrlX64
+  # }
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data[0].sub_date | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage['VooVMeeting1'].Contains($Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage['VooVMeeting1'].$Version.ReleaseTime
+      } else {
+        $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+      }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+      if ($Global:DumplingsStorage['VooVMeeting2'].Contains($Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['VooVMeeting2'].$Version.ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

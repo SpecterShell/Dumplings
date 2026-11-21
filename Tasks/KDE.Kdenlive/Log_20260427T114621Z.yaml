@@ -1,0 +1,352 @@
+Version: 26.04.0
+Installer:
+- InstallerUrl: https://download.kde.org/stable/kdenlive/26.04/windows/kdenlive-26.04.0.exe
+  InstallerSha256: 2DE6FD3E7F0A606DAF55BE7B1FBD08D8D066C5AC20BE03C183100F1AC997BA2B
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/more_information/whats_new.html
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/zh_CN/more_information/whats_new.html
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kdenlive.org/news/releases/26.04.0/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    For the first time in Kdenlive's history, this version includes features implemented by so many different contributors. Our developer community is growing, don't hesitate to join us building a free and open source video editing program that respects the users privacy and provides a tool to democratize communication.
+    In case you missed it, check out the State of Kdenlive to learn more about the project's health and the nifty features coming soon.
+    MONITOR MIRRORING
+    This feature allows you to mirror any monitor while working in fullscreen mode. It’s especially useful when working with multiple displays or collaborating with others in the editing room, making it easier to share what you're doing without disrupting your workspace.
+
+    EFFECTS AND TRANSITIONS
+    This release improves effect and transition workflow. We improved the logic for luma files to adapt to different project profiles and automatically reload previews of downloaded lumas. We added a dedicated tab in the transitions list to browse luma files and added the ability to drag-and-drop transitions directly onto timeline clips. This release also comes with a new Euclid Eraser transition and a Heatmap effect. We also fixed issues with audio TAP effects and improved internationalization support, fixed a bug in the Video Noise Generator effect and scaling issues in the Transform effect.
+    ANIMATED PREVIEWS
+    Transitions now include animated previews, making it much easier to visualize how they will look before applying them. Additionally, dropping a transition onto the timeline can now automatically adjust its duration to match the clips above and below, saving time and reducing manual tweaking. The first version of this feature was originally written by Swastik Patel, during KDE's SoK 2025.
+
+    AUTOMATIC ADJUSTMENT
+    Transitions automatically adjust to the length of the clip they are being applied to.
+
+    MATH EXPRESSIONS
+    Added basic math expression support in effect spinboxes.
+
+    NEW HEATMAP EFFECT
+    Added a new frei0r heatmap0r effect.
+
+    INTERFACE AND USABILITY IMPROVEMENTS
+    TIMELINE
+    This release comes with many usability and workflow improvements to the timeline, such as a Disable Timeline Effects function to timeline hamburger menu, the ability to import and add clips directly from the timeline context menu with a smart length detection function, and sequences now have audio thumbnails. Other highlights include:
+    CONTINUOUS PANNING
+    Hold the middle mouse button and drag to contimuously pan the timeline even when going outside of the screen edges. Implemented by Abdias J Moya Perez.
+
+    FIXED PLAYHEAD
+    Added the option to lock the playhead at the center of the timeline during playback, scrubbing or seeking. Implemented by Abdias J Moya Perez.
+
+    PLAYHEAD/MOUSE ZOOM
+    Added a button in the Staus Bar to toggle between zooming to the mouse cursor position or the playhead position. Implemented by the mrfantastic.
+
+    MULTI-CLIP SPEED CHANGES
+    Added the abiity to change the playback speed of multiple clips at once either by directly ctrl + dragging in the timeline or by using the Clip Speed tool. Implemented by Vineet Tiwari.
+
+    AUDIO CAPTURE
+    Improved support for external recording devices, now the channel count and sample rate combo boxes only display values supported by the selected hardware. Also added the option to choose the sample format (8bit, 16bit, 32bit, and float) as well as a button to use the hardware's default settings.
+
+    SUBTITLES AND SPEECH TOOLS
+    This release fixes issues with cutting, moving, and saving subtitles, and solves a crash cutting subtitle clips. It also fixes a problem where searching for multiple words in the Speech Editor did not work correctly. We also improved the installation process for the Whisper and SeamlessM4T plugins and updated their requirements.
+    OTHER NOTEWORTHY FEATURES
+    - Added Clear Undo History option in the Edit menu
+    - Added HD-ready (1366×768) resolution to project profiles
+    - Added Add to Project Bin option to Render Widget to directly add rendered file for the Project Bin
+    - Hide mouse cursor when placed over monitor in fullscreen and not moving for 2 seconds
+    - Added option to edit a video clip with external program (useful for programs like Gyroflow)
+    - Rearranged Marker menu tiems into groups and added a Delete All Timeline Markers action
+    - Ability to directly add clips to folders from the context menu in the Project Bin
+    - Added AMF encoding profile for Windows
+
+    Give back to Kdenlive
+    Releases are possible thanks to donations by the community.
+
+    Donate
+    Need help ?
+    As usual, you will find very useful tips in our documentation website. You can also get help and exchange your ideas in our Kdenlive users Matrix chat room.
+    Get involved
+    Kdenlive relies on its community, your help is always welcome. You can contribute by :
+    - Helping to identify and triage bugs
+    - Contribute to translating Kdenlive in your language
+    - Promote Kdenlive in your local community
+    Full Changelog
+    Click to see the full changelog (English)
+    - Windows: proper fix for monitor image offset on zoom. Commit.
+    - Windows: fix monitor image offset on zoom. Commit.
+    - Fix incorrect image position when enabling force monitor size option. Commit.
+    - Fix effect zones cannot be moved/resized from timeline ruler. Commit. Fixes bug #513278
+    - Fix the issue where if keyboard tracking is set to false for the spinbox, emit the value changed signal correctly when editing finished while still keeping the scrolling and arrow key behaviour for changing the values. Commit.
+    - Fix effect zone on cut clips. Commit. Fixes bug #509096
+    - Mark frei0r.sleid0r compositions as transitions as they don't handle alpha. Commit. See bug #512263
+    - Fix mirror monitor aspect ratio. Commit. Fixes issue #2170
+    - Use thumbnails from the documentation for blend mode compositing instead of the current useless thumbs. Commit.
+    - Enable screen mirroring on MacOS as it works in our tests. Commit.
+    - Cleanup. Commit.
+    - Fix transform ui offset in monitor. Commit.
+    - Include transition previews in sources, switch to webp to save space. Commit.
+    - Fix dropping luma at clip start creates invalid transition. Commit.
+    - Fix screen mirroring on Windows. Commit.
+    - Cleanup proxy parameters. Commit.
+    - Fixed ranges 0-255 and gamma 0-4. Commit.
+    - Ensure Math expressions tooltip does not hide parameter descriptive tooltip. Commit.
+    - Ensure item does not move when scaling with transform from effect stack. Commit. Fixes bug #518363
+    - Fix mirrored monitor incorrectly showing both Clip and Project monitor images. Commit.
+    - Ensure mirror monitors are destroyed on close and not incorrectly restored on open. Commit.
+    - Fix clips added twice when dropping from bin to timeline. Commit.
+    - Show blocked icon on tracks where we cannot insert the clip from bin. Commit.
+    - Improve drag and drop preview to different tracks on the timeline. Commit.
+    - Fix subtitle cut broken. Commit. Fixes bug #514341
+    - Fix crash copying text in the effects/composition info panel. Commit.
+    - Fix precision spin box for setting speed value from speed dialog. Fix issues with. Commit.
+    - Set speed to timewarp producer with full precision so that later when we compare it for reusing the timewarp producer, it should be able to fuzzy compare correctly with the double value. Commit.
+    - Only resize (change speed) of the selected clips if the primary clip being resized is part of the selection. Commit.
+    - Fix marker with duration end pos not added to snap points. Commit. See issue #614
+    - Multiple fixes for proxy clips: fix bin overlay icon not always updating, fix failed proxy still showing as created. Commit.
+    - Disable fullscreen mirror option on Windows and macOS. Commit.
+    - Apply 1 suggestion(s) to 1 file(s). Commit.
+    - Fix image sequence losing its length on track switch. Commit.
+    - Fix tab order in Render dialog. Commit. Fixes bug #487883
+    - Improved math for clip in and out calculation for speed change. Commit.
+    - Change speed of multiple items when multiple items are selected and then speed is changed by ctrl+drag. Commit.
+    - Splash: ensure loading progress info is on top. Commit.
+    - Fix proxying of clip without audio but containing an attached pic stream. Commit.
+    - Show feedback in welcome screen when opening project. Commit. Fixes issue #2125
+    - Fix possible crash in curveeditor. Commit. See issue #2150
+    - Fix crash clicking in fullscreen mirrored monitor. Commit.
+    - Fix speech editor search not working when searching for multiple words. Commit. Fixes bug #517762
+    - Fix STT translation seamless install with more recent python. Commit. See issue #2153
+    - Fix moving clips in timeline when subtitle track is visible. Commit.
+    - Fix crash downloading seamless translation model. Commit. Fixes issue #2153
+    - Ensure saved file always have a correct extension. Commit.
+    - Fixed multiple issues with undo and redo of sequence creation. Major fixes: 1. Undo of sequence created by "Add sequence" results in the other sequence tab being unusable. Fixed by triggering connectCurrent(currentIndex) at the end of closeTimelineTab. 2. Force recompositing of timeline when it is reopened by a redo action. Use forceCompositingForExistingModel in openTimeline(). 3. Pass the finalMove variable correctly when inserting new sequence clip in the original sequence. This will trigger updateDuration properly in TrackModel::requestClipDeletion_lambda() when undo is triggered to remove the seqeunce clip. Commit.
+    - Fix appium tests. Commit.
+    - Improve clip drop in timeline (adjust pos when dropping in limited space), and fix overwrite/insert mode. Commit.
+    - Fix crash on clip cut when using subtitles. Commit.
+    - Fix removing last subtitle item not saved. Commit.
+    - Fix composition animation preview not always triggered on hover. Commit.
+    - Add "Add to Project Bin" option to Render Widget. Commit. Fixes bug #509908
+    - Set 1x speed duration or current speed duration based on if speed is same or not across clips. Commit.
+    - Removed log statement. Commit.
+    - If duration of the clips is also same, then show the common duration. Commit.
+    - Changed logs to debug. Commit.
+    - Download and use clip for testing. Commit.
+    - Added real mp4 clip for testing clip speed change. Commit.
+    - Correct typo. Commit.
+    - Added tests. Few optimizations and refactoring for clip speed change for single/multiple clips. Commit.
+    - Change speed of multiple clips selected from timeline. Keep behaviour for single clip speed change and partner pair speed change same. Commit.
+    - Add HD ready category, related to !824. Commit.
+    - Fix incorrect colorspace description in new project dialog. Commit.
+    - Add missing HD-ready (1366x768) project profiles. Commit.
+    - Allow to mirror monitor on full-screen instead of detaching. Commit.
+    - Minor refactoring for monitor fullscreen code. Commit.
+    - Implementing togglable mouse zoom on playhead feature instead of cursor position in timeline. Commit.
+    - Fix timeline zoom on ruler. Commit.
+    - Fix dragging audio clips from clip monitor button. Commit.
+    - Fix Whisper plugin install on Python 3.14. Commit.
+    - Adjust transitions preview colors to be less disturbing, make animation slightly faster. Commit.
+    - When dragging a composition into timeline, dynamically resize to fit the related clips. Commit.
+    - When dragging a composition to timeline, auto adjust to clip duration. Commit.
+    - Show transition name in tooltip. Commit.
+    - Adding XMLs for effects i18n. Commit.
+    - Make mix more visible when selected. Commit.
+    - Ensure transition preview parameters don't appear in effect track. Commit.
+    - Cleanup, make preview size relative to font size. Commit.
+    - Disable preview for effects, fix luma don't stay in favorite transitions. Commit.
+    - Reload luma and preview after downloading a new luma, remember asset info height. Commit.
+    - Use transitions xml to generate preview instead of MLT + txt config file. Fix luma not correctly added to timeline. Commit.
+    - Fix crash exiting while preview generation was running, auto build previews on startup if not found. Commit.
+    - Stop transition animation when mouse exits transition list, don't store all gif, just read on demand. Commit.
+    - Improve dragging transition to create mix. Commit.
+    - Switch to passive popup to notify about transition preview. Commit.
+    - Fix and cleanup luma previews and reuse. Commit.
+    - Fix HEVC export issues. Commit.
+    - Generate video preview for lumas too. Commit.
+    - Cleanup transition preview, remember view type (list, icon). Commit.
+    - Add tab in transitions list to view luma files, allowing to directly drop them to timeline. Commit.
+    - Include "Add Clip" actions in context menu for folders in Project Bin. Commit. Fixes bug #379409
+    - Devel doc: point to First Task issues on invent. Commit.
+    - When hiding a dockwidget with hidden title bar, ensure freed space is reused. Commit.
+    - Correctly handle shortcuts with Shift modifier when in fullscreen mode. Commit. Fixes bug #516326
+    - Fix possible crash un curve editor. Commit.
+    - Improve logic for lumas depending on project profile. Commit. Fixes bug #503443
+    - Fix mix not invalidating preview on change. Commit.
+    - Shutdown after rendering: don't shutdown after abort, show prompt before shutting down on KDE. Commit. Fixes bug #513510
+    - Expose more parameters for audio recording device, add "Use default setting" button. Commit. See bug #493308
+    - Kdenlive Settings: fix apply button disabled after changing audio rec device. Commit.
+    - Fix import of clips with multiple video streams. Commit.
+    - Fix small mem leak in Render Widget. Commit. See bug #514763
+    - Fix insertion of multistream clips. Commit.
+    - Fix otiotest. Commit.
+    - Fix timeline preview invalidates full track when adding clip. Commit. Fixes bug #514541
+    - Don't highlight Cancel button in Titler Widget. Commit. See bug #515384
+    - Never raise the effect stack on item selection if Effect Stack is docked with Timeline. Commit. Fixes bug #514547
+    - Fix resize Item start in ripple mode. Commit. Fixes bug #516099
+    - Fix ripple moving playhead. Commit. Fixes bug #516098
+    - Fix insert video clips from timeline context menu. Commit.
+    - Add missing animatedrect parameter type in effects doc. Commit.
+    - Moved avfilter.gradfun to Image Adjustment category. Commit.
+    - Changed parameter type to 'constant'. Commit.
+    - Allow disabling Breeze drag on non KDE platform. Commit. Fixes bug #480072
+    - Make cppcheck happy. Commit.
+    - Add delete all timeline markers action. Commit. Fixes issue #2140
+    - Fix Ctrl+drag to change speed, broken again by an incorrect merge 7a655c1a reverting the original fix. Commit. Fixes issue #2131
+    - Ensure the track audio levels are always checked after the other track effects. Commit. Fixes bug #441452
+    - Fix audio scrubbing when Pause on Seek is disabled. Commit. Fixes bug #509667
+    - Add clear undo history in Edit menu. Commit. See bug #433601
+    - Remove unused var. Commit.
+    - Refactor disabling clip, fixes audio stream lost on disable/enable. Commit. Fixes bug #474139
+    - Ensure no audio frame stays in the queue when switching clip in Clip Monitor. Commit. See bug #433601
+    - Don't scroll up on bin drag when entering timeline. Commit. Fixes bug #439323
+    - Timeline qml optimization: ensure loaders for invisible clips are not loaded. Commit.
+    - Fix timeline double click. Commit. Fixes bug #514874
+    - Update/Add some effects XML. Commit. See bug #473086
+    - Fix incorrect audio tracks count when timeline preview is enabled, breaking copy-paste. Commit. Fixes bug #515124
+    - Fix missing variable in split screen overlay. Commit.
+    - Fix crash opening multi sequence projects and trying to create audio thumbs. Commit.
+    - Grouping menu items logically. Commit.
+    - Add Disable Timeline Effects function to timeline hamburger menu. Commit.
+    - Fix regression breaking rotoscoping in git master. Commit.
+    - Enable clip editing for videos. Commit. Fixes issue #1818
+    - Fix loading of sequence audio thumbs on project open, only save to disk when saving project. Commit.
+    - When switching to another timeline sequence, auto update previous sequence audio thumb if necessary. Commit.
+    - Add code to invalidate audio thumbnails in sequence clips. Currently only rebuilds manually or on project opening. Show a refresh button on top of the monitor audio wave when not synced. Commit.
+    - Hide mouse cursor when placed over monitor and not moving for 2 seconds. Commit. Fixes bug #434386
+    - Fix tests. Commit.
+    - Remember and restore render widget size. Commit.
+    - Add xml prolog to fix translations. Commit. Fixes bug #502297
+    - When performing Find Clip in Bin, disable all filters if the clip was hidden to ensure the find operation succeeds. Commit. Fixes bug #509816
+    - First fixes for sequence audio waveform. Commit. See issue #2134
+    - Don't extract appdata xml for translations. Commit.
+    - Try to locate asset XMLs in QT_DATA_DIR too. Commit.
+    - Fix mlt detection for CI tests on Windows. Commit.
+    - Fix mlt detection for CI tests on Windows. Commit.
+    - Refactor detection of MLT profiles and melt executable. Commit.
+    - Fix typo. Commit.
+    - Add render category id so that we can easily change category names without breaking everything. Add map of old names / ids for backwards compatibility. Commit.
+    - Translate render preset categories. Commit. See bug #502297
+    - Edit Clip.qml when dragging the effect either copying or adding to the clip, the needle moves to the destination clip, following the settings. Commit.
+    - Fix typos in data/effects/copychannelstostereo.xml. Commit. Fixes bug #463340
+    - Documentation.yml is no more needed. Commit.
+    - Fix typo in timelinefunctions.cpp. Commit.
+    - Fix recent minor error in fixed param handling. Commit.
+    - Fix typos in Manage Layouts Window tooltips. Commit. See bug #515137
+    - Fix timeline regressions: clicking on selected clip and Ctrl+click to adjust speed. Commit.
+    - Add documentation for fakerect and fakepoint. Commit.
+    - Cleanup effect doc: sort param types alphabetically. Commit.
+    - Switch to left/top for fake rect top left corner. Commit.
+    - Code cleanup. Commit.
+    - Make FakeAnimatedPoint parameter type work. Commit.
+    - Adjust XSD file for new *fakerect and *point params. Commit.
+    - Cleanup and update code following review. Commit.
+    - Store our fake animated point. Commit.
+    - Add point parameter type, possibly animated. Commit. See issue #2060
+    - Enforce the correct keyframe type in animatedfakerect. Commit.
+    - Correctly convert old project files not yet using animatedfakerect. Commit.
+    - Introduce new fakerect and animatedfakerect parameter types that handle multiple params, like x, y, w, h. Commit. See issue #2063
+    - Modernize cmake for MLT dependency. Commit.
+    - Enable /bigobj compilation on MSVC. Commit.
+    - Add Windows CI. Commit.
+    - Snapcraft: Add to ci and prepare a beta release. Commit.
+    - Refactor: Access centeredplayhead setting directly in QML. Commit.
+    - Add centered playhead feature to timeline settings. Commit.
+    - BugFix: Restore custom shortcuts when resetting toolbars. Commit. Fixes bug #376053
+    - Fix typo. Commit.
+    - [Feature] Implement basic math expression evaluation support for effect spinbox. Commit.
+    - Added the new feature to right click on timeline and add clips directly where you clicked which was a bit of a pain to get the coordinates right and make sure it didn't crash on empty tracks. i also added some smart logic so it checks how much room is left on the track and sets the dialog duration so it fits perfectly in gaps without jumping to the bin. had to fix drag and drop too since i broke it while moving stuff around but its all good now and seems to work fine across the board. Commit.
+    - Standardize codespell ignore list (lowercase and sort). Commit.
+    - Update codespell ignore list to include initialY and initialX variables. Commit.
+    - Update codespell ignore list and fix minor typos in QML files. Commit.
+    - Refactor mouse area interactions to improve panning behavior. Commit.
+    - Enhance timeline scrolling and dragging functionality. Commit.
+    - Fix clip drag by correcting mouse scope issues in moveItem and onReleased. Commit.
+    - Ensure drag cursor is visible even if isCursorHidden is true. Commit.
+    - Fix timeline panning cursor restore and improve clip drag stability. Commit.
+    - Fix jumpy timeline panning by improving cursor warp handling. Commit.
+    - CI: Add virtualX/Y to codespell ignore list. Commit.
+    - Timeline: Fix infinite dragging/panning warp issues. Commit.
+    - Feat: Implement continuous timeline panning and dragging with cursor warping. Commit.
+    - Standardize codespell ignore list (lowercase and sort). Commit.
+    - Update codespell ignore list to include initialY and initialX variables. Commit.
+    - Update codespell ignore list and fix minor typos in QML files. Commit.
+    - Refactor mouse area interactions to improve panning behavior. Commit.
+    - Enhance timeline scrolling and dragging functionality. Commit.
+    - Fix clip drag by correcting mouse scope issues in moveItem and onReleased. Commit.
+    - Ensure drag cursor is visible even if isCursorHidden is true. Commit.
+    - Fix timeline panning cursor restore and improve clip drag stability. Commit.
+    - Fix jumpy timeline panning by improving cursor warp handling. Commit.
+    - CI: Add virtualX/Y to codespell ignore list. Commit.
+    - Timeline: Fix infinite dragging/panning warp issues. Commit.
+    - Feat: Implement continuous timeline panning and dragging with cursor warping. Commit.
+    - Clicking on a clip marker in timeline should select its clip. Commit.
+    - Normalize: add details how to use it. Commit.
+    - Titler: apply grid on item move. Commit.
+    - [CI] Add third-party/kddockwidgets dependency. Commit.
+    - Docs: Update build docs. Commit.
+    - Minor cleanup media capture. Commit.
+    - Audio capture: minor cleanup, ensure we use a channel count/sample rate compatible with mic. Commit. See bug #493308
+    - Add heatmap0r effect. Commit.
+    - Fix OpenBSD support. Commit.
+    - Use Qt native method to fetch audio level in capture. Commit. See issue #2116
+    - [flatpak] Remove exiv2. Commit.
+    - [flatpak] Update FFmpeg and fix build. Commit.
+    - [flatpak] Remove unused patches. Commit.
+    - [flatpak] Enable frei0r facebl0r and facedetect. Commit.
+    - [flatpak] Update OpenCV. Commit.
+    - [flatpak] Update OpenTimelineIO. Commit.
+    - [flatpak] Remove unused mediainfo dependency. Commit.
+    - Fix x265 build with newer CMake. Commit.
+    - Fix Frei0r build with newer CMake. Commit.
+    - CI - Flatpak - Upgrade extensions to 25.08. Commit.
+    - CI - Flatpak - Sort finish arguments. Commit.
+    - CI - Flatpak - Upgrade LLVM to 21. Commit.
+    - CI - Flatpak - Update Runtime to 6.10. Commit.
+    - Fix typos in qDebug messages in abstractpythoninterface. Commit.
+    - Remove option to fetch OTIO. Commit.
+    - Recommend at least OTIO 0.18.0. Commit.
+    - Restore OTIO metadata functionality on FreeBSD. Commit. Fixes issue #1992
+    - Fix possible crash on incorrect clip duration. Commit.
+    - Update GAVL to latest commit - hopefully fixing flatpak build. Commit.
+    - Flatpak: use same GAVL version as AppImage. Commit.
+    - Keep duration info when moving ranged markers. Commit.
+    - Fix several effects. Commit.
+    - Update gavl to fix compilation. Commit.
+    - Fix incorrect flatpak syntax in prev commit. Commit.
+    - Fix incompatible old CMAKE version requirement. Commit.
+    - CI: Add documentation build. Commit.
+    - Update vidstab to latest git. Commit.
+    - Add AMF encoding profile for Windows. Commit.
+    - Fix typo. Commit.
+    - When copy/paste between 2 kdenlive windows, correctly load bin clip effects. Commit.
+    - Fix jq syntax for 1.6 version. Commit.
+    - Extract layout names from json for translation. Commit.
+    - Fix TAP effects. Commit.
+    - Remove duplicate RuntimeDependencies section from kde-ci.yml. Commit.
+    - Fix first start crash when clicking on Start Editing too fast and UI is not yet ready. Commit.
+    - Re-enable incorrectly disabled CDATA stripping. Commit.
+    - Added filename and basename as possible parameters. Commit.
+    - Fix xml filename for frei0r euclid_eraser. Commit.
+    - Add xml for euclid eraser transition. Commit. See issue #2054
+    - Fix docking of undocked widgets on Windows. Commit.
+    - Fix recent files sorting on Welcome screen. Commit.
+    - Fix Video Noise Generator Effect. Commit.
+    - Fix TAP Reverb for I18n. Commit.
+    - Apply tab orientation change without restarting app. Commit.
+    - Update shift parameter to range -180.0 to 180.0. Commit.
+    - Adding XML files for LADSPA TAP effects. Commit.
+    - Add Welcome Screen. Commit.
+    - Switch Kdenlive layouts to separate json files for each layout. Commit.
+    - Disable Qt-next CI until all deps are ready. Commit.
+    - Cleanup temporary usage data check. Commit.
+    - Update file CMakeLists.txt. Commit.
+    - Update KDDockWidgets min version. Commit.
+    - Cleanup Timeline mixes. Commit.
+    - Refactor: Improve transition preview handling. Commit.
+    - Improve transition preview generation. Commit.
+    - Merge master branch from upstream, resolving conflicts in asset list widget. Commit.
+    - Add animated transition preview support. Commit.

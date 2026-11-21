@@ -1,0 +1,61 @@
+Version: 0.44.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.44.1/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.44.1/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.44.1/bicep-setup-win-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.44.1.10279
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - Extendable Params are now GA! (#19697)
+      Extendable Bicep Parameter Files (enabled with the extend keyword) allows you to reuse parameters from one .bicepparam file in another .bicepparam file.
+      root.bicepparam This is your main bicepparam file, which can be reused by multiple extended .bicepparam files and in multiple deployments.
+      using none
+      // Notice that the first line of this .bicepparam file declares `using none` which tells the compiler not to validate this against any       particular .bicep file.
+
+      param namePrefix = 'Prod'
+      leaf.bicepparam This is your extended bicepparam file, which will refer to one main.bicep file and one main .bicepparam file. Any parameter value in this file will override all previous values.
+      using 'main.bicep'
+
+      extends 'root.bicepparam'
+
+      param namePrefix = 'Dev' // this will override the 'Prod' value we assign in our root.bicepparam file
+    - ThisNamespace and NullIfNotFound are now GA! (#19639)
+      When applied to an existing resource, using the @nullIfNotFound() decorator for existing resources will return null if it doesn't exist at deployment time instead of failing.
+      @nullIfNotFound()
+      resource exampleResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
+        name: 'test'
+      }
+      For 'ThisNamespace': this.exists() returns a bool indicating the existence of the current resource. this.existingResource() returns null if the resource does not exist and returns the full resource if the resource exists.
+      resource usingThis 'Microsoft...' = {
+        name: 'example'
+        location: 'eastus'
+        properties: {
+          property1: this.exists() ? 'resource exists' : 'resource does not exist'
+          property2: this.existingResource().?properties.?property2
+          property3: this.existingResource().?tags
+        }
+      }
+    Features and Bug Fixes
+    - Remove old Cytoscape.js visualizer (#19747)
+    - Migrate to System.CommandLine library for CLI commands for enhanced discoverability (#19312)
+    - Trim mcp tools returned resource schema (#19645)
+    - fix vs code generate params json output path (#19755)
+    - Fix BCP120 on extension Required+DTC identifier properties (#19637)
+    Diagnostics and Tests
+    - Add diagnostics and tests for spread operator limitations with for-expressions (#19516)
+    - Add snapshot regression test for roleDefinitions (#19638)
+    - add getSecret parameter reference regression coverage (#19714)
+    - add regression coverage for bicepparam completions (#19703)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.44.1
+ReleaseTime: 2026-06-09T23:50:11.0000000Z

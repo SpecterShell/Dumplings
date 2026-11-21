@@ -1,0 +1,29 @@
+Version: 0.79.9
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/earendil-works/pi/releases/download/v0.79.9/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Chat-template thinking compatibility - OpenAI-compatible custom providers can map Pi thinking levels into chat_template_kwargs, enabling vLLM/Hugging Face chat-template models such as DeepSeek to use provider-native thinking controls. See Custom Provider API Types and OpenAI Compatibility.
+    - GLM-5.2 provider improvements - GLM-5.2 now has corrected Fireworks OpenAI-compatible routing and OpenRouter xhigh thinking support, improving /model behavior and high-effort reasoning for GLM-5.2 users. See Model Options.
+    Added
+    - Added inherited configurable chat-template thinking support for OpenAI-compatible providers that use chat_template_kwargs, such as DeepSeek models behind vLLM (#5673).
+    Fixed
+    - Fixed inherited Fireworks GLM-5.2 metadata to use the OpenAI-compatible Chat Completions endpoint with reasoning_effort support (#5923).
+    - Fixed same-directory session switches to reuse imported extension modules while preserving fresh extension instances and lifecycle events (#5905).
+    - Fixed deep session branches taking quadratic time to build context or branch paths (#5909).
+    - Fixed inherited OpenRouter GLM-5.2 metadata to expose xhigh reasoning and send OpenRouter's native xhigh effort (#5770).
+    - Fixed inherited Markdown streaming code fence rendering so partial closing fences no longer make code blocks shrink or flicker while content streams (#5846 by @xl0).
+    - Fixed fuzzy edit matches to preserve untouched line blocks instead of rewriting the whole file through normalized content (#5899).
+    - Fixed bash commands through legacy WSL bash.exe to pass scripts over stdin so shell variables expand in the target bash (#5893).
+    - Fixed /model to hide GitHub Copilot models that are unavailable to the authenticated account (#5897).
+    - Fixed /model selector search to rank exact provider-prefixed matches before proxy-provider model ID matches (#5892).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/earendil-works/pi/releases/tag/v0.79.9
+ReleaseTime: 2026-06-20T20:17:09.0000000Z

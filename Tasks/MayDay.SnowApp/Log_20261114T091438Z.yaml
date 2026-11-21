@@ -1,0 +1,64 @@
+Version: 0.5.17
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.17/Snow-App-Setup-0.5.17.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Usage Activity Insights: the usage panel gains KPI cards with sparklines, profile filter pills, a weekday × hour heatmap with click-to-filter, and activity facts (active days, streaks, busiest day). The daily trend chart stacks uncached input, cache reads and output, with an option to hide cache reads so the other series stay readable.
+    - Chat Input Editing: undo / redo now covers the contenteditable input, including inserted chips and attachments; dropped files and pasted images land at the drop caret, the editor auto-scrolls near its edges, and the in-app drag preview no longer covers the caret.
+    - API Model Test: each API profile can send a short streaming test request using its own request method, system prompts and custom headers; the result is stored as model health data and shown from the API settings table.
+    - Sensitive Command Preference Learning: allow / deny choices made in command prompts are recorded locally (latest 1000 kept) and the most similar past choices are passed to the decision model as a reference; the new "Learn my preferences automatically" setting shows the record count and can clear it.
+    - Editable Wiki Generation Settings: an existing Repo Wiki's language, profile, model, diagrams and retry settings can be changed without regenerating; generated pages stay as they are and later updates use the new settings.
+    - Gemini Decisions Provider: Gemini (gemini-decision-1) joins TypeSafe Jev and OpenAI Decisions as a third decision provider, with a 200k character context budget.
+    - Background Reply Prediction: reply prediction is scheduled after every completed turn even when the conversation is not active, and cached predictions are restored when switching back.
+    Improvements
+    - Thinking strength is picked with a gradient drag slider (per-level ticks, keyboard support, level-tinted icons) that stays open while adjusting.
+    - The eight terminal-* tools are consolidated into a single terminal-manage tool selected by action, shrinking the tool surface injected into the model context.
+    - The Anthropic prompt cache TTL (5m or 1h) is configurable in API settings and honored at every cache_control breakpoint, including file search.
+    - Model tables share a model name cell with custom brand icons for brands missing from LobeHub icons (TypeSafe, SubQ).
+    - Provider failure details are stored and shown verbatim instead of being redacted and truncated, and filenames or technical terms such as README.md, ASP.NET and design.ai are no longer turned into fake links.
+    - The native backend is split into layered workspace crates (crates/*); the root package keeps only the N-API export surface and bootstrap wiring.
+    Breaking Changes
+    - Approvals recorded for the removed terminal-* tools are not migrated: read-only actions share one terminal-manage approval and write actions are recorded separately as terminal-manage:<action>. Legacy tool names in history still render.
+    Bug Fixes
+    - Aborting a sub-agent clears its pending authorizations, questions and hook decisions and rejects questions arriving after the abort, so the session no longer stays marked as busy or awaiting input.
+    - The SSH Git panel waits for the connection to become ready and rediscovers repositories, showing explicit scanning, waiting, failed and unavailable states with retry / reconnect actions.
+    What's Changed
+    - fix(ssh): 远程 Git 仓库在连接就绪后重新扫描 by @LNemo05 in https://github.com/MayDay-wpf/snow-app/pull/347
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.16...v0.5.17
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.17
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 用量活跃度分析：用量面板新增带迷你趋势图的 KPI 卡片、按配置文件筛选的标签、星期 × 小时热力图（可切换、点击筛选）与活跃事实（活跃天数、最长连续、最忙的一天）；每日趋势图改为未缓存输入 / 缓存读取 / 输出的堆叠柱，可隐藏缓存读取以免压平其他序列。
+    - 输入框编辑增强：输入框支持完整的撤销 / 重做，包含附件与提及块的插入删除；拖入的文件与粘贴的图片按落点插入并显示插入光标，靠近边缘自动滚动，应用内拖拽预览不再遮挡光标。
+    - API 模型连通性测试：每个 API 配置文件可按自身的请求方式、系统提示词与自定义请求头发送一条流式测试请求，结果随模型健康数据保存，并从设置表格中发起。
+    - 敏感命令偏好学习：命令确认中的允许 / 拒绝会记录在本地（保留最近 1000 条），最相似的历史选择会作为参考交给判定模型；新增「自动学习我的偏好」设置，显示记录数量并可清空。
+    - Wiki 生成配置可编辑：已生成的 Repo Wiki 可直接修改语言、配置文件、模型、图表与重试设置，无需重新生成；已有页面保持不变，之后的更新使用新配置。
+    - Gemini 决策模型：Gemini（gemini-decision-1）作为第三个决策模型服务商加入，与 TypeSafe Jev、OpenAI Decisions 并列，上下文预算 200k 字符。
+    - 后台会话回复预测：每个完成的轮次都会安排回复预测，即使会话不在前台；切回会话时恢复缓存的预测结果。
+    改进
+    - 思考强度改用渐变拖拽滑块（含分级刻度、键盘操作、图标随等级着色），调节时菜单保持展开。
+    - 8 个 terminal-* 工具合并为按 action 分派的 terminal-manage，减少注入模型上下文的工具定义。
+    - API 设置中可选择 Anthropic 提示词缓存 TTL（5 分钟 / 1 小时），所有 cache_control 断点（含文件搜索）都按该设置生效。
+    - 模型表格共用模型名称单元格，并为 LobeHub 图标缺失的品牌（TypeSafe、SubQ）提供自定义图标。
+    - 服务商失败详情按原样保存与展示，不再脱敏与截断；README.md、ASP.NET、design.ai 等文件名与技术术语不再被误识别为链接。
+    - 原生后端拆分为分层工作区 crate（crates/*），根包只保留 N-API 出口与启动装配。
+    破坏性变更
+    - 已移除的 terminal-* 工具授权不会迁移：只读动作共用一次 terminal-manage 授权，写动作单独记录为 terminal-manage:<action>；历史记录中的旧工具名仍可正常显示。
+    修复
+    - 中止子代理时清理待处理的授权、提问与钩子决策，并拒绝中止后到达的提问，会话不再一直显示为忙碌或等待输入。
+    - SSH 的 Git 面板会等连接就绪后重新扫描仓库，并给出扫描中、等待连接、失败与不可用状态，提供重试 / 重连操作。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0517
+ReleaseTime: 2026-11-14T07:54:43.0000000Z

@@ -1,0 +1,43 @@
+Version: 0.47.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.47.0/codeg_0.47.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.47.0/codeg_0.47.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release lets you add pi-ai provider models to DeepSeek from the settings page, updates Codex to 2.8.0 with the GPT-6.2 models and Claude Code to 0.109.0, keeps Claude Code's plan visible after a turn ends, makes OpenCode more reliable while it is starting, and further reduces memory use and background work.
+    New
+    - You can now set up pi-ai provider routes for DeepSeek on the settings page. Each provider's models show up as their own group in the model picker. (#1188, @ker2xu)
+    Improved
+    - Updated Codex (codex-acp) to 2.8.0 and Claude Code (claude-agent-acp) to 0.109.0. Codex now offers GPT-6.2 Sol (the new default) and GPT-6.2 Astra, and the model placeholder in the input box shows GPT-6.2. Switching a Codex conversation's model provider now shows a clear message instead of quietly starting a new conversation and losing its history.
+    - When OpenCode is still starting up, codeg now waits briefly and retries opening the conversation instead of showing a generic error. If it is still not ready, the original conversation is kept rather than replaced by an empty one. (#1190, @ker2xu)
+    - Less background work while the app is open: the "time ago" labels in the sidebar update without re-rendering the whole list, multiple desktop windows connected to a remote server no longer process each other's events, and connection keepalive checks no longer pile up when a reply is slow. (#1191, #1199, #1201, @kogekiplay)
+    Fixed
+    - Claude Code's plan checklist no longer disappears from Session Details after a turn ends or when you reopen a conversation. (#1203 reported by @xhaozhuo-eng)
+    - A Claude sub-agent still running in the background no longer gets cut off when the main agent ends its turn, so automated tasks wait for it to finish. (#1198 reported by @ttxhxz)
+    - Reduced memory retained when you scroll long conversations, close terminals, browse the pet marketplace or change custom agent icons, and after replies with large tool outputs. (#1189, #1192, #1193, #1195, #1197, #1205, @kogekiplay)
+    Thanks to @kogekiplay and @ker2xu for contributing to this release, and to @ttxhxz and @xhaozhuo-eng for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版支持在设置页为 DeepSeek 添加 pi-ai 供应商的模型；Codex 更新至 2.8.0，新增 GPT-6.2 模型，Claude Code 更新至 0.109.0；Claude Code 的计划在回合结束后不再消失；OpenCode 启动期间打开会话更稳定；同时继续减少内存占用和后台开销。
+    新增
+    - 支持在设置页为 DeepSeek 配置 pi-ai 供应商路由，各供应商的模型会在模型选择器中分组显示。（#1188，@ker2xu）
+    改进
+    - Codex（codex-acp）更新至 2.8.0，Claude Code（claude-agent-acp）更新至 0.109.0。 Codex 新增 GPT-6.2 Sol（新默认模型）和 GPT-6.2 Astra，输入框的模型占位提示也换成了 GPT-6.2。给 Codex 会话切换模型供应商时，现在会明确提示，不会再悄悄新开一个会话、丢掉原来的历史。
+    - OpenCode 还在启动时，codeg 会稍等片刻再重新打开会话，不再显示笼统的错误；如果仍未就绪，会保留原会话，不会被一个空会话替换。（#1190，@ker2xu）
+    - 减少应用运行时的后台开销：侧边栏的「多久以前」标签更新时不再重新渲染整个列表；多个桌面窗口连接同一远程服务器时，不再互相处理对方的事件；回复较慢时，连接保活检查也不会再越积越多。（#1191、#1199、#1201，@kogekiplay）
+    修复
+    - 修复 Claude Code 的计划清单在回合结束或重新打开会话后，从会话详情中消失的问题。（#1203 由 @xhaozhuo-eng 反馈）
+    - 修复主智能体结束回合时，后台仍在运行的 Claude 子智能体被一起中断的问题，自动化任务现在会等它完成。（#1198 由 @ttxhxz 反馈）
+    - 减少滚动长会话、关闭终端、浏览宠物市场、更换自定义智能体图标后，以及工具输出较大的回复之后残留的内存。（#1189、#1192、#1193、#1195、#1197、#1205，@kogekiplay）
+    感谢 @kogekiplay 和 @ker2xu 为本次发布做出的贡献，也感谢 @ttxhxz 和 @xhaozhuo-eng 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.47.0
+ReleaseTime: 2026-11-20T02:12:35.0000000Z

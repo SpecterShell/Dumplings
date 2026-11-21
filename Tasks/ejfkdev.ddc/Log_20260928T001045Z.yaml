@@ -1,0 +1,41 @@
+Version: 0.1.17
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.17/ddc-v0.1.17-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.17/ddc-v0.1.17-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc v0.1.17
+    Single fix, largest per-corpus error drop recorded for the project:
+    WhatsApp full-tree javac 30,890 → 6,690 errors (-78%).
+    Shadowed ancestor field refs now carry an upcast witness. WhatsApp's
+    obfuscator renames bundled-androidx superclass fields into the same
+    A0x namespace as subclass fields, so a dex write to the ANCESTOR's
+    field (iput ... Fragment.A02:I) rendered as this.A02 = 2131624197
+    — Java resolves field access on the receiver's static type downward
+    and silently bound the subclass's ImageView A02: incompatible-types
+    errors when the types differ, wrong-field access when they don't.
+    jadx renders super.A02; ddc's IR has no super-field form, so the new
+    fix_shadowed_super_fields pass witnesses with the always-legal static
+    upcast ((Fragment) this).A02, firing only when a class between the
+    receiver's compile-time type and the dex owner actually declares a
+    same-display-name field (unshadowed ancestor refs keep inheriting
+    through this.X).
+    WhatsApp family deltas: incompatible-types 16,245 → 2,386,
+    cannot-find-symbol 7,499 → 738, final-field-assign 1,015 → 286 —
+    correct field binding cuts the type-contagion cascade at the root.
+    Gate: battery unchanged to the digit (reqable 603 / weibo 5,125 /
+    lark 2,149 / weixin 6,882 = 14,759; the A0x cross-hierarchy collision
+    shape is WhatsApp-specific, zero churn elsewhere), determinism
+    double-run 0-diff, 74 tests green, clippy 0, getclass timing
+    unchanged. Found via the progressive-workflow random quality review
+    (listclasses 100,350 classes in 0.18s; 7 sampled classes now compile
+    with zero non-dependency errors).
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.16...v0.1.17
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.17
+ReleaseTime: 2026-09-28T00:00:31.0000000Z

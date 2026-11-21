@@ -1,0 +1,34 @@
+Version: 1.1.0
+Installer:
+- InstallerType: wix
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.1.0/playit-windows-x86-signed.msi
+- InstallerType: wix
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.1.0/playit-windows-x86_64-signed.msi
+- InstallerType: portable
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.1.0/playit-windows-x86-signed.exe
+- InstallerType: portable
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.1.0/playit-windows-x86_64-signed.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Added Windows portable mode: run a single EXE with a terminal interface, without installing a service.
+    - Windows automatically connects to the installed service when available. Closing the interface keeps service-managed tunnels online.
+    - Improved the Windows tray with clearer connection status, enabled/disabled tunnel counts, service controls, and shortcuts to logs and the dashboard.
+    - Added clearer tray startup preferences and a safer “Reset Agent” confirmation that defaults to Cancel.
+    - Improved Windows installation, repair, and upgrades while preserving existing agent configuration.
+    - Improved terminal readability and messages for reconnections, account verification, and disabled tunnels.
+    - Docker now runs without a TUI and writes plain logs to stdout, accessible through docker logs.
+    - Added Docker secret-file support through SECRET_KEY_FILE and fixed shutdown handling for docker stop.
+    - Fixed Linux service controls for non-root users and added clearer guidance for socket permissions.
+    - Linux upgrades now preserve stopped services and services disabled at boot.
+    - Fixed shutdown hangs affecting portable mode and connected command-line clients.
+    - Added agent-side Minecraft Bedrock NetherNet support.
+    - Increased TCP connection rate and burst limits to better handle busy servers.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/playit-cloud/playit-agent/releases/tag/v1.1.0
+ReleaseTime: 2026-10-27T18:36:00.0000000Z

@@ -1,35 +1,51 @@
-$Object = Invoke-RestMethod -Uri 'https://api.adguard.org/api/2.0/checkupdate.html?app_id=64dbc91754f34b0ebcc6eecadf83eb81&channel=Release&appname=adguard_ru&version=7.0.0.0&force=1'
+$Object1 = Invoke-RestMethod -Uri 'https://api.adguard.org/api/2.0/checkupdate.html?app_id=64dbc91754f34b0ebcc6eecadf83eb81&channel=Release&appname=adguard_ru&version=7.0.0.0&force=1&os_version=10.0.22000.0'
 
 # Version
-$Task.CurrentState.Version = $Object.response.version.'#cdata-section'
+$this.CurrentState.Version = $Object1.response.version.'#cdata-section'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.response.'update-url'.'#cdata-section'
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.response.'update-url'.'#cdata-section'
 }
 
-# ReleaseNotes (en-US)
-# TODO: Select corresponding ReleaseNotes
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.response.'release-notes'.'#cdata-section' | Format-Text
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = $Object1.response.'more-info-url'.'#cdata-section'
+      }
 
-# ReleaseNotesUrl
-$Task.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object.response.'more-info-url'.'#cdata-section'
-}
+      $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@class='versions__item' and contains(./*[contains(@class, 'versions__item-title')], '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
+      if ($ReleaseNotesNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesNode.SelectSingleNode('./*[contains(@class, "versions__item-date")]').InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode.SelectSingleNode('./*[contains(@class, "versions__item-desc")]').Attributes[':content'].Value | ConvertTo-HtmlDecodedText | ConvertFrom-Json | ConvertFrom-Html | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

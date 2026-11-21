@@ -1,0 +1,110 @@
+Version: 1.4.205
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.205/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Thank you so much for using Orca and for your continued support! ❤️
+    Please note: It usually takes 48–72 hours for a landed PR to be released (except P0+ fixes). We have many more exciting PRs and features coming in later versions!
+    The short version
+    Agents & chat: Native chat adds a message rail for jumping between your prompts, keeps a resumed transcript pinned to its end, holds a detached reader in place as messages grow, and cancels pending prompts precisely. OMP conversations resume from session history under their saved names, agent-status ingress moves behind a single admission point, and a timed-out hook now actually terminates its process tree.
+    Workspaces, editor & source control: A failed archive hook blocks worktree removal instead of deleting anyway, and worktree registrations survive prunable git-file states. Stage, unstage and discard failures surface with retry, automations repair cron step expansion and stop tick latency counting against the missed-run grace, code blocks gain a copy button, and Tiptap moves up behind Markdown compatibility guards.
+    Terminal & remote: Terminal renames survive pane hydration, handles persist across PTY incarnation rotation, and PTY child-process checks preserve an unverifiable verdict instead of guessing. Relay failures become diagnosable by acquisition versus execution phase, and streamed remote records are bounded.
+    Performance: Codex usage scans do far less work — attribution resolved once per scan, and grown rollouts resumed at the last parsed byte — which takes a large cold scan from minutes to under a minute. They still run on the main process; the worker-thread move lands in a later release.
+
+    Product experience
+    Workspaces, tabs & editor
+    Safer worktree removal, clearer failure reporting, and a Tiptap upgrade with Markdown compatibility guards.
+    - Add copy button to code blocks by @AmethystLiang in https://github.com/stablyai/orca/pull/20357
+    - fix(composer): clarify failed attachment drops by @AmethystLiang in https://github.com/stablyai/orca/pull/20704
+    - Distinguish pane load failures from empty states by @AmethystLiang in https://github.com/stablyai/orca/pull/20735
+    - fix(worktrees): safely remove prunable git-file registrations by @nwparker in https://github.com/stablyai/orca/pull/20617
+    - fix(worktrees): preserve unverifiable disk witness by @AmethystLiang in https://github.com/stablyai/orca/pull/20713
+    - fix(worktree): block removal when the archive hook fails by @nwparker in https://github.com/stablyai/orca/pull/20153
+    - fix(automations): repair cron step expansion and day restriction [HELD — semantic half] by @nwparker in https://github.com/stablyai/orca/pull/20202
+    - fix(automations): stop tick latency counting against the missed-run grace by @nwparker in https://github.com/stablyai/orca/pull/20819
+    - Improve microphone permission errors and drop failure reporting by @AmethystLiang in https://github.com/stablyai/orca/pull/20801
+    - Report clipboard and composer drop failures by @AmethystLiang in https://github.com/stablyai/orca/pull/20795
+    - fix(deps): migrate Tiptap security updates with Markdown compatibility guards by @OrcaWin in https://github.com/stablyai/orca/pull/19376
+    - feat(design-system): gate renderer UI with @shadcn/lint by @nwparker in https://github.com/stablyai/orca/pull/20731
+    - fix(ui): contain idle caret paint so agent panes stop burning CPU by @innocarpe in https://github.com/stablyai/orca/pull/10554
+    Source control
+    Staging failures are recoverable and Git spawn errors say what actually went wrong.
+    - Surface stage, unstage and discard failures with retry capability by @AmethystLiang in https://github.com/stablyai/orca/pull/20423
+    - fix(source-control): prevent text wrapping in section headers and action buttons by @AmethystLiang in https://github.com/stablyai/orca/pull/20046
+    - fix(git): distinguish binary absence from missing cwd on spawn ENOENT by @AmethystLiang in https://github.com/stablyai/orca/pull/20798
+    Agents & workflow
+    Agent reliability & native chat
+    Chat navigation and transcript positioning improve, and agent state is reported through one ingress point.
+    - fix(native-chat): bound a dispatch reason before it reaches the journal row by @brennanb2025 in https://github.com/stablyai/orca/pull/20654
+    - fix(native-chat): keep a resumed transcript pinned to its end by @brennanb2025 in https://github.com/stablyai/orca/pull/20651
+    - fix(codex): settle a structured send on admission, and stop minting a colliding identity by @brennanb2025 in https://github.com/stablyai/orca/pull/20138
+    - fix(omp): preserve status after terminal title owner rewrite by @nwparker in https://github.com/stablyai/orca/pull/20610
+    - fix(agents): find OMP by its full project name by @nwparker in https://github.com/stablyai/orca/pull/20647
+    - fix(omp): preserve saved conversation names in session history by @nwparker in https://github.com/stablyai/orca/pull/20636
+    - fix(agent-session): honour the backup-recovery fence floor on surface release by @brennanb2025 in https://github.com/stablyai/orca/pull/20708
+    - fix(hooks): actually terminate a timed-out hook's process tree by @nwparker in https://github.com/stablyai/orca/pull/20576
+    - fix(native-chat): cancel pending prompts precisely by @brennanb2025 in https://github.com/stablyai/orca/pull/20601
+    - fix: resume OMP child conversations from session history by @nwparker in https://github.com/stablyai/orca/pull/20629
+    - fix(ai-vault): expand nested OMP session history by @nwparker in https://github.com/stablyai/orca/pull/20663
+    - fix(native-chat): let a reader park just above the latest message by @brennanb2025 in https://github.com/stablyai/orca/pull/20709
+    - fix(native-chat): preserve detached transcript position during growth by @brennanb2025 in https://github.com/stablyai/orca/pull/20710
+    - feat(native-chat): add a message rail for jumping between your prompts by @brennanb2025 in https://github.com/stablyai/orca/pull/20719
+    - refactor(agent-status): isolate legacy status ingress behind one admission point by @brennanb2025 in https://github.com/stablyai/orca/pull/20716
+    - fix(runtime): apply the tui-idle evidence ranking to mailbox delivery by @nwparker in https://github.com/stablyai/orca/pull/20578
+    - fix(orchestration): require the registered pane key to prove structured worker identity by @brennanb2025 in https://github.com/stablyai/orca/pull/20664
+    Terminal
+    Renames, handles and PTY verdicts survive rotation, hydration and uncertainty.
+    - fix(omp): preserve zsh startup with global aliases by @nwparker in https://github.com/stablyai/orca/pull/20621
+    - fix(terminal): retain renames before renderer pane hydration by @nwparker in https://github.com/stablyai/orca/pull/20619
+    - fix: keep OMP terminals when folder workspaces become Git repos by @nwparker in https://github.com/stablyai/orca/pull/20653
+    - Fix PTY child process verdict to preserve unverifiable state by @AmethystLiang in https://github.com/stablyai/orca/pull/20729
+    - fix(runtime): preserve terminal handles across PTY incarnation rotation by @nwparker in https://github.com/stablyai/orca/pull/20779
+    - fix(pty): preserve child-process inspection uncertainty by @AmethystLiang in https://github.com/stablyai/orca/pull/20756
+    Mobile
+    Mobile continues its typed-RPC migration.
+    - Bump mobile app.json to 0.0.50 by @brennanb2025 in https://github.com/stablyai/orca/pull/20661
+    - refactor(mobile): migrate the small domains onto RpcOperation (step 4) by @Jinwoo-H in https://github.com/stablyai/orca/pull/20705
+    Relay & cloud
+    Relay failures are diagnosable by phase, and streamed remote records are bounded.
+    - fix(ai-vault): bound streamed remote JSONL records by @nwparker in https://github.com/stablyai/orca/pull/20700
+    - feat(runtime): stream file uploads instead of buffering whole files by @mmarabel in https://github.com/stablyai/orca/pull/16106
+    - Expose preloaded PostgreSQL statement statistics for relay diagnostics by @Jinwoo-H in https://github.com/stablyai/orca/pull/20712
+    - Diagnose relay PostgreSQL failures by acquisition versus execution phase by @Jinwoo-H in https://github.com/stablyai/orca/pull/20749
+    - fix(relay): open the real null device when detaching Windows stdio by @nwparker in https://github.com/stablyai/orca/pull/20808
+    Quality & delivery
+    Nothing here changes what you see — it changes how smoothly Orca behaves under real workloads. Expanded below if you want the detail.
+    Performance improvements
+    Targeted optimizations remove repeated work from the Codex, OpenCode and Claude usage scanners and from no-op store updates. These reduce the cost of a scan; they do not yet move it off the main process.
+    Highlights include resolving each cwd's worktree once per scan rather than per event, resuming grown Codex rollouts at the last parsed byte behind a boundary digest and inode check, and preserving state identity across no-op updater paths so selectors stop re-running.
+    - fix(store): stop two no-op writes from re-running every selector in the app by @OrcaWin in https://github.com/stablyai/orca/pull/20641
+    - fix(store): preserve state identity across no-op updater paths by @nwparker in https://github.com/stablyai/orca/pull/20703
+    - perf(usage): resolve each cwd's worktree once per scan by @Jinwoo-H in https://github.com/stablyai/orca/pull/21130
+    - perf(codex-usage): resume rollout scans at the last parsed byte by @Jinwoo-H in https://github.com/stablyai/orca/pull/21102
+    Reliability, tests & delivery
+    - fix(ci): stop hourly versions dropping below a tagged or already-shipped build by @nwparker in https://github.com/stablyai/orca/pull/20699
+    - test: add a verified OMP native-chat mock scenario by @nwparker in https://github.com/stablyai/orca/pull/20655
+    - test(mobile): pin each RPC golden to the recorder inputs that can reach it, not the whole directory by @Jinwoo-H in https://github.com/stablyai/orca/pull/20662
+    - ci: keep the baseline Git build off the compatibility matrix lanes by @nwparker in https://github.com/stablyai/orca/pull/20733
+    - fix(ci): stop defining pilot mutant tests inside a conditional by @nwparker in https://github.com/stablyai/orca/pull/20755
+    - test(native-chat): split the windowing test harness out of the suite by @nwparker in https://github.com/stablyai/orca/pull/20773
+    - chore(lint): add anti-slop oxlint plugin (pinned, all rules off) by @nwparker in https://github.com/stablyai/orca/pull/20726
+    - chore(lint): enable anti-slop no-reduce-accumulator-copy and no-widen-then-assert by @nwparker in https://github.com/stablyai/orca/pull/20780
+    - fix(lint): keep root postinstall as the sole Electron binary install owner by @nwparker in https://github.com/stablyai/orca/pull/20788
+    - test(package): let the postinstall contract allow unrelated chained steps by @nwparker in https://github.com/stablyai/orca/pull/20787
+    - fix(lint): enable anti-slop/no-unknown-type-aliases by @nwparker in https://github.com/stablyai/orca/pull/20784
+    - refactor(lint): enable anti-slop/no-reflect-apply by @nwparker in https://github.com/stablyai/orca/pull/20782
+    - fix(lint): enable anti-slop/no-module-mocking by @nwparker in https://github.com/stablyai/orca/pull/20783
+    - test(package): reject an Electron install takeover by exact command by @nwparker in https://github.com/stablyai/orca/pull/20799
+    - fix(lint): enable anti-slop/no-reflect-get by @nwparker in https://github.com/stablyai/orca/pull/20786
+    - fix(lint): enable anti-slop/no-object-parameters by @nwparker in https://github.com/stablyai/orca/pull/20781
+    - fix(lint): enable anti-slop/no-shape-in-symbol-names by @nwparker in https://github.com/stablyai/orca/pull/20785
+    - fix(git): avoid Windows tree kills after the command has exited by @nwparker in https://github.com/stablyai/orca/pull/20606
+    - build(release): compile the Windows relay process-table addon by @nwparker in https://github.com/stablyai/orca/pull/20809
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.204...v1.4.205
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.205
+ReleaseTime: 2026-09-17T04:59:43.0000000Z

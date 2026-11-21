@@ -1,0 +1,31 @@
+Version: 1.2.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/generalaction/emdash/releases/download/v1.2.9/emdash-x64.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/generalaction/emdash/releases/download/v1.2.9/emdash-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds GitLab repository and merge request workflows, with browser and device sign-in for GitLab.com. It also adds support for Apple silicon Mac remotes and improves terminal links, account reconnection, and project dialogs.
+    Highlights
+    - Create GitLab repositories in personal namespaces or existing groups, including nested groups, and publish an existing project through Add Remote. Connected self-hosted instances are supported, and task creation uses GitLab's work-item terminology.
+    - Browse, create, and merge GitLab merge requests from Emdash. View approvals, pipeline jobs, discussions, commits, and changed files, mark drafts ready, and start or review tasks from merge requests, including those from forks.
+    - Connect GitLab.com through your Emdash account or with a device code, with automatic token renewal. Device sign-in stays inside the connection dialog with copy, open, retry, and cancel controls. Self-hosted GitLab instances continue to use access tokens.
+    - Remote workspace server installation now supports Apple silicon Macs using the tools included with macOS. Terminal sessions on those hosts start correctly after installation.
+    Fixes
+    - Wrapped terminal hyperlinks open their full destination, including links printed by Claude Code. Copy Link uses the hyperlink's destination or joins lines wrapped by the terminal, while normal selection copying preserves line breaks and keeps separate URLs apart.
+    - Clicking a terminal hyperlink opens it locally without also asking the remote agent to launch a browser. Link handling preserves text selection and cancels pending clicks when dragging or switching focus. IPv6 URLs retain their closing brackets.
+    - Long directory paths stay within project dialogs, keeping the directory chooser visible at narrow window widths.
+    - Add Remote creates an empty repository before publishing the current branch, preserving existing history. Repository creation, fetching, and publishing consistently use the selected account.
+    - Creating a task from a branch opens the workspace settings directly, with no issue or merge request preselected.
+    - GitLab merge request reviews recover missing commits from the correct source, including fork merge requests. Refreshing the merge request list retains cached details, and unavailable diff counts remain unknown instead of appearing as zero.
+    - Expiring integration credentials renew before Git operations use them. Tokens replaced on another device are refreshed after rejection, and temporary renewal failures can be retried.
+    - Reconnecting preserves the selected account, and background token renewal cannot restore a disconnected account or overwrite a newer connection. Cancelled device sign-in saves nothing, and newly issued tokens are retried if the provider briefly rejects them.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/generalaction/emdash/releases/tag/v1.2.9
+ReleaseTime: 2026-10-23T17:04:53.0000000Z

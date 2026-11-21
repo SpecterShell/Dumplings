@@ -1,0 +1,116 @@
+Version: 5.1.59
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.59/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.59/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runs on senpi 2026.11.2-3: the first message of a new session no longer stalls for several seconds, and agent kill/pkill/killall commands that would hit protected processes are refused. (#12200)
+    Fixed
+    - Memory sync refuses a received item on Windows whose working path git cannot stage (at or past MAX_PATH, which git for Windows opens without core.longpaths), dropping it with a receipt before anything is rendered instead of failing the sync commit and wedging the device on every resume (#12199). POSIX behaviour is unchanged. (#12201)
+    - The task widget no longer keeps finished team members as process completed rows. A member that completes its turn leaves the widget even while its handle stays resident; /tasks still lists it and task_send still revives it. (#12160)
+    - Memory sync validates an item key before it reaches the working tree, the item store or git, so a peer can no longer land a path outside the memory root or inside the repository's own metadata. A key must be a normalized relative path: .. and . segments, absolute paths, drive and UNC prefixes, backslashes, control and format code points, non-NFC text, over-long keys and segments, Windows device names, trailing dots or spaces, and any component git or a file system would fold to .git are refused. A refused item is dropped on its own with a receipt, a log line that carries the key's byte length and the rule rather than the key, and a rejectedItems count, while the rest of its batch applies and the cursor advances, so one bad item never pauses a device. Local capture uses the same grammar, never follows a symlink out of the memory root, and a file whose name the grammar refuses is reported instead of sent. A path that is valid but spelled with a different Unicode normalization no longer forks one item into two. (#12152, fixes #12147)
+    - After a session starts or resumes, workflow (DAG) views now always receive the current run list before the first turn begins, and a client that reconnects to a running session gets it again, so the desktop workflow view no longer stays empty or stale until something changes. A workflow that was still running when the session closed resumes in the background: its state is shown as soon as it is recovered, and the session's first turn no longer waits for the whole workflow to finish. (#12122, fixes #12113)
+    - Memory git commands no longer start git's builtin fsmonitor daemon when your git config turns core.fsmonitor on. Every git command memory runs now carries -c core.fsmonitor=false, the clean-tree status, add and diff included, so no background daemon outlives git and keeps the memory repository busy. (#12097, part of #10391)
+    - fact verify no longer skips text inside SVG <foreignObject>: the ulw-research tokenizer now parses foreignObject subtrees as HTML (the rest of the SVG stays raw), so fact unit/value mutations there are caught and bare numerals must trace to a chart CSV plot value. (#12040, fixes #11570)
+    - task_output no longer replays an unchanged status snapshot to the same caller: a repeated peek at a task whose status has not moved returns no_progress instead of the full record again, which keeps polling loops from refilling the context with identical output. Thanks to @codeg-dev. (#7662)
+    Changed
+    - Every built-in reasoning default that sat at medium or xhigh now sits at high: the default lane daily-normal runs claude-opus-5-5 at high (was medium), daily-heavy and the Fable 5.5 launch rungs drop xhigh for high, and geeky-normal, the deep-low/unspecified/quick category chains, the OpenCode category catalogs, the builtin agent fallback chains and the model-fallback default move with them. Model ids, provider orders and the low/max/off levels are untouched. (#12094, fixes #12085)
+    Added
+    - Add omo trust ensure --json [--wait] [--lease-pid <pid>], answered by the launcher trust stage: it imports within the launch budget, writes the private generation and leases it, so the retention sweep never removes a generation a running process still uses. (#11969, part of #10762)
+    - Add the eval-integrity shared skill: a read-only audit of whether an eval, benchmark, metric, A/B test, holdout, LLM judge, or user study can support its stated claim, reported under one PASS / FAIL / INCONCLUSIVE verdict line. Thanks to @realsigridjin. (#7593)
+    - 6428c2a25b Merge pull request #12122 from code-yeongyu/fix/12113-dag-snapshot-on-attach
+    - b38dfeabbe Merge origin/dev into fix/12113-dag-snapshot-on-attach
+    - 37c0448f4d Merge pull request #12201 from code-yeongyu/fix/12199-sync-tests-windows
+    - 0ef1af9d23 Merge pull request #7593 from realsigridjin/feat/eval-integrity-skill
+    - 0af30e0323 Merge pull request #12040 from surlymochan/fix/11570-foreignobject-fact-verify
+    - 8499b2e58e Merge origin/dev into feat/eval-integrity-skill
+    - 6af40212b1 Merge origin/dev into fix/11570-foreignobject-fact-verify
+    - 053ce97861 Merge pull request #7662 from codeg-dev/codeg/task-output-polling-guard-minimal
+    - 0e046bcea4 test(memory-sync): assert each platform's landing verdict for a key past MAX_PATH
+    - c706b13ae0 chore(changes): fragment for 12201
+    - 0b985ee78f fix(memory-sync): refuse a key whose working path git cannot stage on Windows
+    - e3ca0a34bd Merge origin/dev into feat/eval-integrity-skill
+    - ab501609ac Merge origin/dev into codeg/task-output-polling-guard-minimal
+    - 0d80470e42 Merge pull request #12097 from code-yeongyu/fix/10391-windows-job-helper
+    - 351dcd12fa docs(changelog): add the 7662 changelog fragment
+    - a3013e19d0 Merge pull request #12160 from code-yeongyu/fix/widget-drop-completed-team-members
+    - 4cb2a12551 Merge origin/dev into feat/eval-integrity-skill (#7593)
+    - 3ce66122c6 Merge origin/dev into fix/10391-windows-job-helper
+    - 04cf166763 Merge pull request #12152 from code-yeongyu/fix/12147-sync-key-validation
+    - 33e008724c Merge remote-tracking branch 'origin/dev' into fix/widget-drop-completed-team-members
+    - 66d884d09b test(eq): re-record E21-E24 goldens for the task_output description
+    - d971726868 test(eq): re-record E21-E24 goldens for eval-integrity
+    - 8bcfcc378d Merge origin/dev into fix/10391-windows-job-helper
+    - ab43b74e9a Merge origin/dev into codeg/task-output-polling-guard-minimal (#7662)
+    - 19190d78d4 Merge origin/dev into fix/12147-sync-key-validation
+    - 09b6e5a6da Merge pull request #12094 from code-yeongyu/fix/12085-builtin-reasoning-high
+    - 2619d46c3d Merge origin/dev into fix/10391-windows-job-helper
+    - 4aecbc2ce5 Merge pull request #12101 from code-yeongyu/fix/12098-loro-scan-source-set
+    - 408f57f04e docs(changelog): add the eval-integrity fragment for #7593
+    - c2d79822fa Merge origin/dev into feat/eval-integrity-skill (#7593)
+    - 4da4c42fed Merge remote-tracking branch 'origin/dev' into fix/12098-loro-scan-source-set
+    - 35421ad5d7 Merge remote-tracking branch 'origin/dev' into fix/widget-drop-completed-team-members
+    - 8df6c3983c Merge pull request #11979 from code-yeongyu/fix/11963-global-fs-spies
+    - 55ea53753e Merge pull request #11969 from code-yeongyu/feat/10762-trust-ensure
+    - ed57d368d2 docs(changes): fragment for received-key validation (#12152)
+    - f685cee269 chore(knip): drop the sha256Hex row the received-key tests now use
+    - 5653399026 docs: move the #12160 change note into a changelog fragment
+    - cd4c181986 Merge remote-tracking branch 'origin/dev' into fix/11963-global-fs-spies
+    - 5ed3bf5039 Merge remote-tracking branch 'origin/dev' into fix/12085-builtin-reasoning-high
+    - 990780f4ec Merge remote-tracking branch 'origin/dev' into feat/10762-trust-ensure
+    - f83208fdad Merge pull request #12135 from code-yeongyu/release/v5.1.58-source-state
+    - b66fe5dabf fix(memory-sync): symlinked paths and non-NFC on-disk names never wedge or fork sync
+    - 0de79793a1 test(memory-sync): symlinked paths, non-NFC on-disk names and Windows device names never wedge or fork sync
+    - f08fbb8e0e fix(memory-sync): validate received item keys before they reach the filesystem or git
+    - d08f7be5e2 test(memory-sync): received item keys must never reach repository metadata or leave the memory root
+    - 7f61df8f59 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 6d7d8f86e3 Merge remote-tracking branch 'origin/dev' into feat/10762-trust-ensure
+    - 38dcf3a538 changes: fragment for #12122
+    - 39ee0703d7 Update the remaining reasoning pins, the no-sisyphus-gpt gpt-5.5 fallback and the plugin bundles (#12085)
+    - d5dd644ff9 Merge remote-tracking branch 'origin/dev' into fix/11963-global-fs-spies
+    - 564c07e2fd test(memory-core): use a neutral git user in the fsmonitor prefix-order case
+    - 192d78941f Merge remote-tracking branch 'origin/dev' into fix/10391-windows-job-helper
+    - b268e1256d Merge remote-tracking branch 'origin/dev' into fix/12098-loro-scan-source-set
+    - 18ed304ee5 test(memory-core): scan only git-listed package source in the loro import guard
+    - 5c77a832b4 docs(changes): add #12097 fragment
+    - 47131a8e3a fix(memory-core): disable fsmonitor for every memory git command
+    - cdd1ebfc24 Raise the builtin-agents hephaestus variant fallback to high (#12085)
+    - c9baa6c88c Update agent factory test pins and the sisyphus-junior fallback to high (#12085)
+    - bbc34741c4 Raise the OpenCode agent factory reasoningEffort defaults to high (#12085)
+    - d5a798fa76 test(omo-native): trust-ensure tests hold on macOS and Windows (#10762)
+    - 4de6743ef1 Add changes fragment for #12094
+    - d5575ccb8a Raise every built-in medium/xhigh reasoning default to high (#12085)
+    - 5a6ddaf6b3 Merge remote-tracking branch 'origin/dev' into feat/10762-trust-ensure
+    - 753631e9b9 Add changes fragment for #12040
+    - e20966e839 Fix #11570: tokenize SVG foreignObject in fact verify
+    - 5576c4ecc0 Merge remote-tracking branch 'origin/feat/10762-trust-stage' into feat/10762-trust-ensure
+    - 12aabe8ad9 Merge remote-tracking branch 'origin/feat/10762-trust-stage' into feat/10762-trust-ensure
+    - 495ba866d0 test(omo-native): replace non-null assertions in trust ensure tests with explicit guards (#10762)
+    - 5c63e00fea Merge remote-tracking branch 'origin/feat/10762-trust-stage' into feat/10762-trust-ensure
+    - 5cbd6ce939 Merge remote-tracking branch 'origin/dev' into fix/11963-global-fs-spies
+    - d718af1150 test(knip): register the trust-ensure probe fixture as an entry (#10762)
+    - 8985165773 docs(changes): record omo trust ensure (#11969)
+    - bb6ffa3ab6 feat(omo-native): omo trust ensure with generation leases (#10762)
+    - 11be051062 test(memory-core): scope global fs rename spies to the fixture's own paths (#11963)
+    - 1dc502a6d1 fix(skill-sync): scope ignored directories to sources
+    - 87fadbf321 fix(eval-integrity): enforce a single verdict line
+    - d2e921010a feat(skills): add evaluation integrity audit
+    Thank you to 2 community contributors:
+    - @realsigridjin:
+      - feat(skills): add evaluation integrity audit
+      - fix(eval-integrity): enforce a single verdict line
+      - fix(skill-sync): scope ignored directories to sources
+    - @surlymochan:
+      - Fix #11570: tokenize SVG foreignObject in fact verify
+      - Add changes fragment for #12040
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.59
+ReleaseTime: 2026-11-03T09:08:03.0000000Z

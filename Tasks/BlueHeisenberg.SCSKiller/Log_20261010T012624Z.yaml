@@ -1,0 +1,31 @@
+Version: 1.2.5
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/BlueHeisenberg/SCSKiller/releases/download/v1.2.5/SCSKiller-Setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    This build isn't code-signed yet, so the first run will probably show SmartScreen's "Windows protected your PC".
+    Click More info, then Run anyway. Updates never show it.
+    Signing through the SignPath Foundation is in progress for stable releases. Alpha and beta builds stay unsigned. To
+    check the download arrived whole, compare its SHA-256 with the one at the end of these notes (PowerShell:
+    Get-FileHash <file>). These notes aren't signed, so that doesn't prove who built it. The source: https://github.com/BlueHeisenberg/SCSKiller/tree/v1.2.5.
+    Smart App Control (Windows 11) blocks unsigned apps outright. If it's on, wait for a signed release.
+    Some users saw slower compiles on 1.2.4. This update fixes the problems we found while looking into it, each one below with why it happened.
+    - Compiles with long chains of ray tracing pipelines keep going (The Callisto Protocol and Black Myth: Wukong with a community recording). Each pipeline in such a chain waits for the one it builds on, and 1.2.4 counted that wait as a driver hang, so the compile restarted the same stretch again and again.
+    - A compile no longer stays at about 100% without finishing. At its end, the driver could hang while letting go of a ray tracing pipeline, and the compile waited for it forever. That step now has a time limit.
+    - Compile clicked while SCSKiller checks a game's plan in the background now runs with your compile settings. 1.2.4 kept it as background work, at idle priority and with fewer threads.
+    - Reading a game's shaders in the background no longer slows a compile. It ran at a higher priority than the compile and took up to a fifth off its speed. It now runs below it and waits until the queue is done.
+    - The cache size shown is the size on disk again (NVIDIA). 1.2.4 opened the driver's cache files to measure how full they were, and showing a size doesn't need that.
+    - "Not compatible" for games whose shaders the driver keeps under a different cache than the one SCSKiller fills (Black Myth: Wukong on AMD). 1.2.4 kept offering to compile such a game again, which could never help. The game page now says so and suggests clearing its cache. A driver update offers it again.
+    - Cleaning up after an offline session deletes only SCSKiller's own files. After a session that ended abnormally, it could delete a mod's d3d12.dll or your own steam_appid.txt put in the game's folder later.
+    - The recorder no longer crashes games that load a dxgi.dll mod like OptiScaler. It treated the mod's swap chain as Windows' own.
+    - NetEase Protect (Aniimo) and Halo Infinite's Arbiter are recognised as anti-cheat, so the recorder stays out of them.
+    - Special K beside a game is no longer taken for ReShade. Compiles of games that load RenoDX through Special K failed. They now show why they can't compile.
+    Installed copies update on their own.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BlueHeisenberg/SCSKiller/releases/tag/v1.2.5
+ReleaseTime: 2026-10-09T22:22:23.0000000Z

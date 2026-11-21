@@ -1,0 +1,76 @@
+Version: 0.13.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.13.3/FylloCode-0.13.3-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.13.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release improves how project governance artifacts are read and traced inside the app. Overview can now drill into a read-only capability specs browser, Proposal details open as an in-context Slideover, and the new Specs tab shows how a proposal changes capability contracts. Chat also reduces tool-call noise, makes session title actions more consistent, and restores proposal associations after app restarts.
+    Added
+    - Read-only /specs capability specs browser, reachable from the Overview Capability Specs stat card, showing Purpose, Requirements, Scenarios, source path, update time, and counts from openspec/specs/*/spec.md
+    - Requirement quick navigation and Scenario timeline rendering in specs details, while continuing to use the shared Markdown renderer for body content
+    - Specs tab in Proposal details, showing capability deltas from specs/<capability>/spec.md with added, modified, removed, and renamed badges
+    - Controlled specs browser and proposal specs delta IPC, preload APIs, renderer stores, and shared DTOs for the read-only specs and proposal delta surfaces
+    - Expandable tool groups for consecutive assistant tool calls in Chat, with summaries and icons based on toolMetadata.toolKind for read, write, edit, search, and execute actions
+    - Newly generated assistant tool parts now preserve ACP tool-kind metadata; older messages without that metadata still collapse and fall back to a generic tool-run summary
+    Changed
+    - Proposal details now open in a right-side Slideover instead of navigating to a standalone route, preserving context from the proposal list, Overview active changes, and Chat EventRail
+    - Proposal detail Slideover keeps Proposal/Design/Tasks reading, implementation start, archive, run history, and applying-run recovery, and switches to the archived proposal id after archive
+    - Proposal list routing is consolidated into the top-level /proposal page, removing the previous shell page used only for nested detail routes
+    - Chat session item menu copy changed from rename to title editing, with title edits handled inline inside the session item
+    - Chat session deletion now uses the app confirmation dialog instead of a native browser confirmation prompt
+    - Chat session item overflow buttons no longer reserve permanent title space, so normal browsing shows longer session titles
+    - Overview's Capability Specs stat card is now clickable; Guidelines and Lineage Coverage stats remain display-only
+    - Documentation site adds the bilingual "Using Plan and SDD to Triage Agent Workflows" blog post, Google site verification, and gtag configuration
+    Fixed
+    - Fixed historical proposals not being backfilled into Chat EventRail from lineage after restarting or reopening a session
+    - Fixed archived proposals failing to match lineage change ids when archive directory names include a date prefix, causing the session proposal panel to disappear
+    - Fixed archived backfilled proposals still starting proposal status watches; only non-terminal proposals are watched now
+    - Fixed several Chat display details around reasoning content, tool calls, and normal text interleaving, and preserved Fyllo action part indexes after consecutive tool-call grouping
+    Notes
+    - The standalone /proposal/:id detail route has been removed. Open Proposal detail Slideover from the /proposal list, Overview active changes, or Chat EventRail detail entry points.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0133---2026-06-29
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个补丁版本继续强化项目治理的阅读与回溯体验。Overview 现在可以下钻到只读能力规约浏览页，Proposal 详情改为在当前上下文中打开的 Slideover，并新增 Specs 变更视图，方便直接查看 proposal 对能力规约的影响。Chat 侧进一步降低工具调用噪音，优化会话标题操作，并修复重启后历史 proposal 关联可能丢失的问题。
+    新增
+    - 新增 /specs 只读能力规约浏览页，可从 Overview 的「能力规约」统计卡进入，按 capability 展示 openspec/specs/*/spec.md 中的 Purpose、Requirement、Scenario、源路径、更新时间和统计数量
+    - 能力规约详情新增 Requirement 快速定位栏与 Scenario timeline 展示，正文继续使用项目统一 Markdown 渲染能力
+    - Proposal 详情新增 Specs tab，展示 proposal 中 specs/<capability>/spec.md 的 capability delta，并用新增、修改、移除、重命名 badge 区分变更类型
+    - 新增受控的 specs browser 与 proposal specs delta IPC、preload API、renderer store 和共享 DTO，为只读规约浏览与 proposal delta 展示提供稳定边界
+    - Chat assistant 消息支持将连续工具调用折叠为可展开工具组，并基于 toolMetadata.toolKind 展示读写、编辑、搜索、执行等概况和图标
+    - 新生成的 assistant tool part 会保留 ACP 工具类别 metadata；历史消息缺少该字段时仍可折叠，并降级显示为通用工具运行概况
+    调整
+    - Proposal 详情从独立路由改为右侧 Slideover，从 proposal 列表、Overview 进行中变更和 Chat EventRail 打开时不再离开当前页面上下文
+    - Proposal 详情 Slideover 保留 Proposal/Design/Tasks 阅读、开始实现、归档、运行历史和 applying 自动恢复能力，并在归档后自动切换到 archived proposal id 继续读取详情
+    - Proposal 列表路由收敛为顶层 /proposal 页面，移除仅承载子路由的空壳页面
+    - Chat 会话条目的更多菜单中，“重命名”改为“修改标题”，并改为在条目内就地编辑标题
+    - Chat 会话删除改为使用应用内确认弹窗，替代浏览器原生确认框
+    - Chat 会话条目的更多按钮不再长期占用标题右侧空间，正常浏览列表时可显示更长的会话标题
+    - Overview 的能力规约统计卡改为可点击入口；项目准则和溯源覆盖统计仍保持纯展示
+    - 文档站新增中英文博客文章《Using Plan and SDD to Triage Agent Workflows》，并补齐 Google 站点验证与 gtag 配置
+    修复
+    - 修复重启或重新进入 session 后，Chat EventRail 可能无法从 lineage 回填历史 proposal 的问题
+    - 修复已归档 proposal 因目录名包含日期前缀而无法匹配 lineage 原始 changeId，导致会话 proposal 面板不显示的问题
+    - 修复已归档 proposal 回填后仍尝试启动 proposal 状态监听的问题；现在仅对非终态 proposal 启动 watch
+    - 修复 Chat 推理内容、工具调用和普通文本交错时的部分展示细节，并补齐连续工具调用分组后的 Fyllo action partIndex 稳定性
+    备注
+    - /proposal/:id 独立详情路由已移除；请通过 /proposal 列表、Overview 进行中变更或 Chat EventRail 的详情入口打开 Proposal 详情 Slideover。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0133---2026-06-29
+ReleaseTime: 2026-06-29T02:39:42.0000000Z

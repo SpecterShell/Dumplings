@@ -1,0 +1,43 @@
+Version: 0.10.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.3/Mini-Term_0.10.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.10.3/Mini-Term_0.10.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    本版集中修两件长期烦人的事：AI 徽章莫名卡在「处理中」、以及开久了渲染进程被内存压垮整页重载。另外状态栏图标（Windows 托盘 / macOS 菜单栏）现在点一下就能直接落到该处理的那个会话上。
+    新增
+    - 状态栏图标点击定位到会话 — 左键点图标不再只是切项目，而是切项目 + 激活到具体分屏 + 聚焦终端，优先级为「待确认 / 异常 > 最先跑完 > 还在处理中」，与标题栏状态灯同一套落点；右键菜单里点某个项目则定位到该项目内最该处理的那个分屏，目标已经安静下来时退回只切项目，不会点了没反应。不想让它改变当前视图的话，设置里新增了开关可以关掉（默认开）
+    - 终端回滚行数可调 — 设置里新增「回滚缓冲行数」，默认 1 万行，改小当场生效并立即释放内存
+    修复
+    - AI 徽章不再卡在「处理中」 — Stop hook 在若干情形下压根不触发，此前这些情形下徽章会一直顶着 ai-working 直到下一轮对话：
+      - 回合因 API 错误结束（限流 / 超载 / 鉴权失败）时官方发的是 StopFailure，现已注册并映射为「等你处理」，同时点亮托盘黄灯提示回来重发
+      - 你自己按 Esc / Ctrl+C 打断时官方不发任何事件，改由输入检测收敛
+      - 工具失败、并行工具批收尾、auto 模式拒绝、MCP 表单回填四个时刻此前没有任何事件覆盖，现已补齐
+      - 以上都覆盖不到的残余情况，再由停摆判定兜底：状态与终端输出双双静默 10 秒即把徽章摘下来，此前若已触发过退出（Ctrl+D / 连按两次 Ctrl+C / /exit）则直接判为已退出
+      - 四条路径的结论都一次性写定、不会来回摆动，也都不会被当作「任务完成」播报；正等你批准的面板（如 Codex 的权限请求）豁免停摆判定，托盘黄灯不会被误灭
+    - 权限提醒不再被文案误判 — Notification 改用官方的结构化类型判定（权限请求 / 闲置提醒 / 表单等），不再靠中英文关键词猜；顺带修掉权限文案里恰好出现 "rate limit" 字样就被当成 API 重试的隐患
+    - 老用户升级后自动补齐 hook 注册 — 注册是一次性手动动作，不补的话已注册用户的配置里永远是旧事件集，而他们没有任何理由知道要再点一次注册
+    - 消除渲染进程内存崩溃 — 终端回滚缓冲此前硬编码 10 万行，而 xterm 按列数逐行分配内存，120 列下单个终端最高能吃掉两百多 MB，且终端只在关闭分屏时才销毁（切项目、切标签都不销毁），多项目多分屏叠加足以把渲染进程推到 OOM。除了把行数改成可配置，本版还：
+      - 打通 PTY → 前端的全链路背压：cat 大文件或 AI 刷屏时，前端积压过高会一路顶回刷屏进程本身——慢终端拖慢进程，而不是把数据全堆进内存
+      - 页面加载时先回收上一轮遗留的 PTY：渲染进程被系统杀掉后页面重载，恢复出的分屏是全新 id 并各自新建 PTY，旧的 shell / AI 进程却无人引用地继续跑着——崩一次漏一整套，内存压力递增形成正反馈，现已掐断
+      - 终端写入加异常保护，并让 PTY 自然退出与手动关闭共用同一套清理，不再有旁路表要等你手动关分屏才回收
+    下载
+
+    | 平台    | 文件                                          | 说明                                                                     |
+    | ------- | --------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.10.3_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.10.3_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.10.3_amd64.AppImage / .deb / .rpm | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.10.2...v0.10.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.10.3
+ReleaseTime: 2026-08-05T13:26:45.0000000Z

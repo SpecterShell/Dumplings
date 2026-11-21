@@ -1,0 +1,40 @@
+Version: 7.7.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.4/kilo-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.7.4
+    Minor Changes
+    - #14233 b07646f - Open Mermaid diagrams in a fullscreen zoom viewer with zoom in/out, reset, mouse-wheel zoom, and drag-to-pan
+    - #14255 4881829 - Leftover worktree folders now show a count and total size in the warning banner, with a "Resolve…" action that opens a dialog listing each folder's path, size, and whether it still holds a git checkout. While the total is still being measured the banner says so, and if the measurement fails it reports the count alone instead of claiming 0 B. Measuring stops as soon as you start a delete, or whenever the folder list changes, rather than walking folders that are on their way out, and then re-measures whatever is left. The dialog's explanation starts collapsed to its first paragraph behind a "Show more" link, and its checkboxes are drawn the way each IDE draws its own. Deletion runs in the background so the UI never freezes, folders that still contain a checkout are unchecked by default, and a completion notification reports how many were removed. Worktree deletion is also more thorough: JetBrains now tears down backend state and removes the snapshot repository for a deleted worktree the same way VS Code already does, and a directory that reappears immediately after deletion is cleaned up once more automatically.
+    Patch Changes
+    - #14230 6b5e8a0 - Add an experimental Programmatic Tool Calling setting under Settings > Experimental. When enabled, the agent calls MCP tools from a confined JavaScript program and discovers tools on demand, so fewer MCP tool definitions are sent to the model. The KILO_EXPERIMENTAL_CODE_MODE environment variable still enables it.
+    - #14231 7e0ce5e - Generate chat session titles after a turn provides enough context instead of from the first message alone. A short first message now keeps the placeholder title until the session has a longer request, a second message, or real tool work, so titles describe the actual task rather than a bare URL or a truncated first line.
+    - #14225 88d2315 - Prevent failed status notifications from leaving completed sessions marked busy and blocking reload.
+    - #14015 12b44cb Thanks @intentionally-left-nil! - Fix "missing x-opencode-session" errors from memory consolidation, prompt enhancement, and the roll-call diagnostic command when using an OpenCode-managed model.
+    - #14255 8bc3e84 - Move the Agent Manager leftover worktree folder notice to the top of the worktree list and rework its cleanup dialog to match VS Code, including an explanation of what the listed folders are before any bulk delete
+    - #14221 6c066a5 - Hide voice input in remote VS Code windows, where microphone capture runs on the remote machine and fails, and explain the limit in the Speech to Text settings
+    - #14226 9f45df5 - Explain sandbox escalation prompts accurately: approval runs the whole command outside the sandbox for that command only, and Bash allow rules and auto-approve never cover it.
+    - #14237 9d2a46f - Improve chat responsiveness when switching sessions and sending prompts, and keep the transcript pinned without flicker while a turn streams
+    CLI
+    7.7.4
+    Patch Changes
+    - #14262 7467f7a - Keep the current turn's reasoning variant when an Agent Manager task names the same model.
+    - #14236 74869c8 Thanks @hdcodedev! - Recover shared board reads when their cursor is no longer valid.
+    - #14230 6b5e8a0 - Add an experimental Programmatic Tool Calling setting under Settings > Experimental. When enabled, the agent calls MCP tools from a confined JavaScript program and discovers tools on demand, so fewer MCP tool definitions are sent to the model. The KILO_EXPERIMENTAL_CODE_MODE environment variable still enables it.
+    - #14231 7e0ce5e - Generate chat session titles after a turn provides enough context instead of from the first message alone. A short first message now keeps the placeholder title until the session has a longer request, a second message, or real tool work, so titles describe the actual task rather than a bare URL or a truncated first line.
+    - #14225 88d2315 - Prevent failed status notifications from leaving completed sessions marked busy and blocking reload.
+    - #14195 864831e - Keep the pull request link a session reports available to kilo pr status after the session exits, so GitLab merge requests and Bitbucket pull requests link the same way GitHub pull requests do.
+    - #14195 864831e - Link CLI sessions to GitLab merge requests and Bitbucket pull requests, not only GitHub PRs.
+    - #14223 13e05d0 - Allow read-only gh commands such as gh pr view and gh issue list in Plan and Ask modes and the Explore agent without a prompt.
+    - #14214 a728fbf - Log the remote sessions kilo remote runs: one line when a session starts and one when it ends, with the session id, start time, model, working directory, exit reason and duration.
+    - #14226 9f45df5 - Explain sandbox escalation prompts accurately: approval runs the whole command outside the sandbox for that command only, and Bash allow rules and auto-approve never cover it.
+    - #14222 f90dc84 - Stop asking to leave the sandbox for read-only git commands such as git remote -v, git stash list, and git branch -v.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.7.4
+ReleaseTime: 2026-09-18T06:48:34.0000000Z

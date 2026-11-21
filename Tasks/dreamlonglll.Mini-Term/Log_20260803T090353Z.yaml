@@ -1,0 +1,31 @@
+Version: 0.9.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.2/Mini-Term_0.9.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.9.2/Mini-Term_0.9.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - 修复外部删除 worktree 后项目列表残留失效子项目的问题：AI agent（或你自己）在终端里执行 git worktree remove 之后，挂在主项目下面的 worktree 子项目仍留在列表里，点进去是个已经不存在的目录，只能手动删。现在项目列表在启动与窗口重获焦点时探测子项目目录是否还在，目录已消失的子项目会连同它的终端资源一起自动移除
+      - 只在父项目目录仍然存在时才清理，盘符掉线、整棵目录树暂时不可见的情况不会误删项目；SSH 远程项目与 UNC(WSL) 路径不参与探测
+      - worktree 管理弹窗的「清理失效条目」也对齐了这个口径：清理成功后，指向那些确已消失的 worktree 的项目一并移除
+    - 修复**⎇ 分支徽章在外部切分支 / 删 worktree 后不刷新**：徽章探测改为窗口重获焦点时重跑，回到 Mini-Term 就能看到当前真实分支
+    下载
+
+    | 平台    | 文件                                         | 说明                                                                     |
+    | ------- | -------------------------------------------- | ------------------------------------------------------------------------ |
+    | Windows | Mini-Term_0.9.2_x64-setup.exe / .msi         | 主要支持平台                                                             |
+    | macOS   | Mini-Term_0.9.2_aarch64.dmg（Apple Silicon） | 首次打开如被 Gatekeeper 拦截，执行 xattr -cr /Applications/Mini-Term.app |
+    | Linux   | Mini-Term_0.9.2_amd64.AppImage / .deb        | 实验性支持                                                               |
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.9.1...v0.9.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.9.2
+ReleaseTime: 2026-08-03T05:47:55.0000000Z

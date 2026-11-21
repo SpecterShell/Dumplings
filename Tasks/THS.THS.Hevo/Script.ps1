@@ -1,39 +1,43 @@
-$Object = Invoke-RestMethod -Uri 'https://ai.10jqka.com.cn/java-extended-api/voyageversion/getDefaultVersionInfo'
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/275/' -Method GET
+}
 
 # Version
-$Task.CurrentState.Version = $Object.data.version
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Value
 
-# Installer
-$InstallerUrl = Get-RedirectedUrl1st -Uri 'https://download.10jqka.com.cn/index/download/id/275/'
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('THSHevo') -and $Global:DumplingsStorage.THSHevo.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesCN
+        }
 
-if (!$InstallerUrl.Contains($Task.CurrentState.Version)) {
-  throw "Task $($Task.Name): The InstallerUrl`n${InstallerUrl}`ndoesn't contain version $($Task.CurrentState.Version)"
-}
+        # ReleaseNotesUrl (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotesUrl'
+          Value  = $Global:DumplingsStorage.THSHevo[$this.CurrentState.Version].ReleaseNotesUrl
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.data.description | Format-Text
-}
-
-# ReleaseNotesUrl
-$Task.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $Object.data.introductionLink
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

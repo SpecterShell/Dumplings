@@ -1,0 +1,104 @@
+Version: 15.7.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.7.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added shake compaction primitives (collectShakeRegions, applyShakeRegion, applyShakeRegions, summarizeShakeRegions, DEFAULT_SHAKE_CONFIG, AGGRESSIVE_SHAKE_CONFIG, plus the ShakeRegion/ShakeConfig/ShakeSummaryItem/ShakeSummaryComplete/ProtectedToolMatcher types) under @oh-my-pi/pi-agent-core/compaction. These detect heavy context regions — whole tool-call results plus large fenced/XML blocks — and either elide them with placeholders or extractively compress them through an injected completion backend (no LLM summary cut-point). The compressor is provider-agnostic: callers wire it to a local on-device model. Pure detection/mutation; no I/O.
+    Fixed
+    - Fixed tool-output pruning and shake protection for read: ordinary file/URL reads are now eligible for compaction, while read calls whose path starts with skill:// remain protected like native skill results.
+    @oh-my-pi/pi-ai
+    Changed
+    - Throttled per-delta streaming JSON re-parsing of OpenAI Responses/Codex tool-call arguments (bounding mid-stream parse cost from O(N²) to O(N)). Finalization via response.output_item.done now writes the authoritative full arguments back to the persisted assistant-message block, so tool calls finalized without a trailing response.function_call_arguments.done no longer retain stale/empty ({}) arguments. (#1507)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added support for decimal and k/m suffix turn-budget directives, enabling budgets like +1.5k and +2m in eval message parsing
+    - Changed eval budget resolution to honor a user +Nk directive over an active Goal Mode limit while falling back to Goal Mode when no per-turn ceiling is set
+    - Added agent() eval options agent_type/agentType, model, context, and label, and returned structured JSON when schema is provided in JS and Python eval cells
+    - Added a live, Task-tool-style progress tree for eval agent() calls, drawn below the notebook (code cell) box. Each subagent surfaces as a status line (icon · id · tool count · context · cost, plus duration on completion) with its current tool/intent while running, and updates mid-execution rather than only at the cell's final result. Progress events coalesce per subagent id so the persisted event list stays bounded across many throttled ticks.
+    - Added agent() to the eval runtime so JS and Python cells can spawn one subagent through the existing task executor; JS eval also gained bounded parallel() and pipeline() helpers for orchestrating subagent calls.
+    - Added a workflow magic keyword (mirrors orchestrate/ultrathink): the standalone word glows amber→green in the editor and appends a hidden notice steering the model to author deterministic multi-subagent fan-outs in eval (agent/parallel/pipeline). Matching is whitespace-delimited and case-sensitive (lowercase only); the singular and plural both trigger, but capitalized forms, inflections like workflowed, and path-embedded occurrences like workflow.ts do not.
+    - Added parallel() and pipeline() to the Python eval runtime (thread-pool over the synchronous agent() bridge), mirroring the JS helpers: bounded pool (default 4, max 16), input-order preservation, a barrier between every pipeline stage, and contextvar propagation so agent() works inside worker threads.
+    - Added log(), phase(), and a budget object to both eval runtimes (Python and JS). log/phase emit progress/phase status lines; budget.total/budget.spent()/budget.remaining()/budget.hard expose a real per-turn output-token budget. A +Nk directive in the user's message sets an advisory budget (the model self-limits via budget.remaining()); +Nk! (or an active Goal Mode budget) makes it a hard ceiling that blocks further eval agent() spawns once reached. budget.spent() counts output tokens spent this turn across the main loop and all eval-spawned subagents.
+    - Added search support for virtual internal URLs (including omp:// roots) by resolving and scanning in-memory internal resources as search targets alongside filesystem paths
+    - Added expansion of virtual internal URL search targets so search can match multiple internal documents when given omp://
+    - Added /omfg <complaint> slash command that drafts a TTSR rule from a complaint, validates it against the current conversation, saves it to project or ~/.omp/agent/rules, and registers it live.
+    - Added /shake slash command and the shake / shake-summary compaction strategies that reduce context by mechanically dropping heavy content instead of LLM summarization. /shake (alias /shake elide) strips heavy tool-call results and large fenced/XML blocks, offloads the originals to one session artifact, and leaves a recoverable artifact://<id> placeholder; /shake summary compresses the same regions with a local on-device model (providers.shakeSummaryModel, default qwen3-1.7b) and falls back to elide per region when the model is unavailable; /shake images strips image blocks. Auto-maintenance honors the shake / shake-summary strategies (16k protect window); on context overflow a shake that reclaims nothing falls back to context-full summarization.
+    - Added providers.shakeSummaryModel setting selecting the local on-device model used by /shake summary and the shake-summary compaction strategy. Runs entirely on-device (downloads on first use) and never calls a remote/cloud LLM.
+    Changed
+    - Changed the eval cell timeout from a hard wall-clock deadline to an inactivity (idle) budget: a cell is now interrupted only after going the full window with no progress signal, and every status event — agent() progress snapshots, log()/phase(), and tool-bridge activity — re-arms the watchdog. Long agent()/parallel() fanouts that keep reporting progress no longer time out mid-run (previously the kernel was killed at the fixed deadline even while subagents were actively progressing). Raw print/stdout does not reset the watchdog, so pure-compute runaway loops stay bounded; the timeout is driven entirely by the abort signal, so neither runtime arms a competing fixed timer.
+    - Fixed turn-budget parsing to match +Nk directives only at token boundaries, preventing values like version 1.2.3, c++, and +500kfoo from triggering a budget rule
+    - Changed overflowing provider, hook-option, branch-message, agent, extension, and session-tree pickers to support fuzzy type-to-filter search.
+    - Changed Shift+Ctrl+P to cycle role models backward instead of cycling forward without persisting.
+    - Changed empty prompt input so ? inserts a literal question mark instead of opening /hotkeys; use /hotkeys explicitly for the shortcut reference.
+    - Changed search output to preserve full virtual and internal URL paths in grouped results and details.files instead of collapsing them to file basenames
+    - Changed /omfg to run up to three generation attempts with validation feedback and only prompt saving when no draft matches assistant history
+    - Changed /omfg to show a live draft panel with generation/validation/saving status and allow canceling an active rule request with Esc
+    - Changed keybindings config to use ~/.omp/agent/keybindings.yml, with automatic migration from legacy keybindings.json and continued support for keybindings.yaml.
+    - Changed the local SQLite memory backend identifier from mnemosyne to mnemopi. Existing configs are migrated automatically on load: memory.backend: mnemosyne becomes mnemopi and the mnemosyne.* settings block is renamed to mnemopi.* (skipped when an explicit mnemopi block already exists).
+    - Changed the ultrathink/orchestrate/workflow magic keywords to be markdown-aware: the standalone word now also glows in the rendered user message bubble (matching the live editor), and neither the glow nor the hidden steering notice triggers when the keyword sits inside a fenced code block, an inline `code` span, or an XML/HTML section.
+    Fixed
+    - Fixed Ctrl+O tool-result expansion on POSIX terminals so offscreen tool blocks rebuild native scrollback instead of leaving stale collapsed rows above the viewport.
+    Removed
+    - Removed the /drop-images slash command; use /shake images, which strips every image from the session through the same dropImages() path.
+    Fixed
+    - Fixed final agent() completion status emissions in eval cells so the last live progress snapshot now preserves accumulated subagent metrics such as tool count and cost
+    - Fixed agent() in eval to enforce plan-mode, spawn allowlist, and disabled-agent checks before launching subagents
+    - Fixed recursive agent() calls from eval by enforcing the existing max subagent depth limit
+    - Fixed runtime model switches (Ctrl+P cycling, --model, /model, model picker selections, and programmatic changes) so they no longer overwrite the persisted modelRoles.default; only the model picker's explicit "Set as default" action and settings changes persist the default.
+    - Fixed search to honor line-range suffixes on virtual internal URL targets so matches outside the requested ranges are no longer returned
+    - Fixed search to handle internal URLs without source files without incorrectly reporting Path not found, returning matches from virtual content instead
+    - Fixed /omfg parsing to tolerate fenced or noisy model output, normalize generated rule names, and reject invalid regex conditions before saving
+    - Fixed auto-thinking sessions to persist the concrete resolved effort after classification, so resuming the session restores that level instead of returning to pending auto.
+    - Fixed extension-registered CLI flags (e.g. --spawn-peer <value>) leaking into the initial prompt: argv is re-parsed once the extension flag set is known so flag values are consumed instead of becoming messages or being misread as @file arguments. Registered flags shadow same-named built-ins, so a colliding flag (e.g. plan-mode's --plan) is parsed with the extension's semantics rather than being consumed by the built-in branch (which would otherwise eat the following message and corrupt the built-in field). Extension flags and @file arguments are now resolved before the session is created, so an unreadable initial @file exits without leaving a junk session/terminal breadcrumb behind. (#1503)
+    - Fixed footer status-line truncation: the left stats and right model segments now truncate by terminal cell width (via truncateToWidth) and strip all VT/ANSI escapes (via stripVTControlCharacters) instead of a SGR-only regex plus code-point substring, so wide glyphs, OSC hyperlinks, and non-SGR sequences can no longer overflow the line.
+    - Fixed the streaming edit diff preview rendering a tall, half-empty box (and the earlier "box grows and shrinks repeatedly" stutter). A whole-file Myers re-diff is recomputed on every streamed chunk and its alignment is not monotonic in payload length, so a hunk-aware window that kept whole change segments gained and lost rows tick to tick; the prior high-water row reservation hid that stutter but padded the reserved height with blank rows, leaving a large empty rectangle whenever the diff shrank below its peak. The preview now pins a fixed-height trailing window to the bottom of the diff ("accept from the back"), so the box stays a steady, full window of real diff context instead of blank padding.
+    - Fixed duplicated/stale scrollback above a streaming tool result on POSIX terminals (macOS/Linux). A tool whose output grows and re-lays-out (e.g. an edit diff gaining hunks) re-renders rows that already scrolled into native scrollback; the unknown-viewport anti-yank deferral left the old copy in place while the new one rendered below, showing the block twice. The event controller now enables the TUI's eager native-scrollback rebuild while a foreground tool is executing (setEagerNativeScrollbackRebuild), so those offscreen re-renders rebuild history cleanly — a snap to the tail is acceptable mid-tool. Background-running tools and plain assistant-text streaming keep the no-yank deferral; the mode resets at each turn start.
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Changed embedding result normalization to return Float32Array vectors so embed and embedQuery now cache and emit float32 rows
+    - Changed the embedding provider contract to a single typed EmbeddingOutput (AsyncIterable<number[][]>) instead of unknown, matching fastembed's embed(), so EmbeddingProvider.embed and the provider runtime option stream the embedding matrix as async batches (async *embed(texts) { yield texts.map(embedOne); })
+    - Changed local model cache directory resolution for fastembed to use getFastembedCacheDir instead of the hard-coded ~/.hermes/cache/fastembed path
+    Fixed
+    - Fixed cosine similarity behavior across retrieval, clustering, and caching to consistently handle mismatched vector lengths as zero-padded and ignore non-finite values
+    - Fixed embedding API requests to retry transient failures with backoff via shared retry logic before returning null
+    - Fixed compiled omp binaries losing local Mnemopi embeddings by keeping fastembed and onnxruntime-node reachable to Bun's static compiler while preserving lazy runtime loading.
+    @oh-my-pi/pi-tui
+    Added
+    - Added overflowSearch to SelectListLayoutOptions to let consumers enable or disable type-to-filter search and search-status rendering per SelectList instance
+    - Added fuzzy type-to-filter search to overflowing SelectList pickers, with search status and result counts.
+    - Added TUI.setEagerNativeScrollbackRebuild(enabled) — while enabled, live render frames rebuild native scrollback on offscreen/structural changes even when the viewport position is unobservable (POSIX), instead of deferring to a non-destructive repaint. Trades the anti-yank guarantee for clean, duplicate-free history; intended for windows where output above the fold is actively re-laying out (e.g. a tool whose result is still streaming). A terminal that reports a known-scrolled viewport still defers.
+    Changed
+    - Disabled interactive search filtering for editor autocomplete and slash-command SelectLists by passing overflowSearch: false in their layout options
+    Fixed
+    - Preserved hidden tmux overlays in the live viewport by removing overlay content from view when an overlay was hidden while keeping pane history intact
+    - Preserved native scrollback when forced TUI renders coalesce with content growth, and deferred pure tail appends while readers are scrolled into history.
+    - Preserved existing terminal scrollback during forced and structural TUI renders so preexisting shell lines remained visible after component mutations
+    - Rebuilt native scrollback for safe bottom-anchored offscreen edits and high-water preview collapses instead of repainting only the viewport, preventing stale or duplicated rows above the live viewport.
+    - Stripped internal cursor marker sentinels from all rendered lines so offscreen focus markers no longer leak into terminal output
+    - Truncated all painted lines to terminal width during viewport repaints and append-tail updates so long content no longer overflows or wraps unexpectedly
+    - Fixed tui.select.cancel handling in SelectList so pressing Escape or Ctrl+C closes the list even when no matches are currently shown
+    - Fixed native scrollback corruption when an offscreen row edit and repeated-tail append land in one render frame; ambiguous appended tails now rebuild history instead of splicing stale rows into the buffer.
+    - Fixed scrolled-up readers being yanked back to the tail whenever streaming content arrived on POSIX terminals (macOS/Linux). Native viewport position is unobservable there (isNativeViewportAtBottom() returns undefined), and the planner optimistically treated "unknown" as "at bottom", so every offscreen streaming edit ran a destructive historyRebuild that cleared scrollback and snapped the view to the bottom. Live render frames now treat an unknown viewport as unsafe for a destructive rebuild — they defer to a non-destructive viewport repaint and reconcile native scrollback at the next explicit checkpoint (prompt submit). Resize and checkpoint replays keep the prior behavior.
+    - Fixed native scrollback not rewrapping when the terminal widens on POSIX. A width increase reflows the transcript to fewer lines, which the shrink-across-boundary branch intercepted and (after the unknown-viewport deferral) repainted only the viewport — leaving committed history wrapped at the old width and duplicated above the live viewport. Width changes now rebuild native scrollback at the new geometry even when the viewport position is unknown (a yank is acceptable on an explicit resize); a terminal that can report a scrolled viewport still defers.
+    @oh-my-pi/pi-utils
+    Added
+    - Added getFastembedCacheDir to return the FastEmbed model cache directory under ~/.omp/cache/fastembed
+    Fixed
+    - Fixed $flag environment parsing to accept lowercase truthy values such as y, true, yes, and on
+    What's Changed
+    - feat(coding-agent): accept GitHub/git URLs in plugin install by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1527
+    - audit: fix top 5 perf/correctness findings + honorable mentions by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1507
+    - fix(coding-agent): strip extension flags from the initial prompt by @erik-sv in https://github.com/can1357/oh-my-pi/pull/1503
+    New Contributors
+    - @erik-sv made their first contribution in https://github.com/can1357/oh-my-pi/pull/1503
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.7.2...v15.7.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.7.3
+ReleaseTime: 2026-05-31T12:03:50.0000000Z

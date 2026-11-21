@@ -1,0 +1,23 @@
+Version: 0.1.11
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.11/ddc-v0.1.11-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.11/ddc-v0.1.11-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc v0.1.11 — recompilability focus: gold-standard javac battery 54,914 → 35,467 errors (−35%) across four real-world APKs (reqable / weibo / lark / weixin, full decompile + javac with android.jar classpath).
+    Highlights:
+    - Synthetic-accessor access widening (biggest win, −12.5k): ddc renders nestmates (Outer$1, Outer$Inner) as separate files and inlines access$NNN bridges, which exposed cross-class private accesses javac rejects. The widening scan now records members accessed from static-synthetic accessor methods, so the enclosing private member is rendered public. The "X is private in Y" family dropped 12,371 → ~155.
+    - Inherited-constructor bridges (−1.6k): dex resolves refs up the superclass chain (FunctionReferenceImpl m.(int,Object,Class,String,String,int) → super l), which Java cannot express. Referenced-but-undeclared ancestor ctors are now mirrored as thin super(..) delegations, ref-gated by a method-id-table scan (pool ancestors, plus framework ancestors when the direct super is off-pool: g3 extends SAXException).
+    - Kotlin coroutine capture fields (−2.0k): a $ lambda local that owns a field access keeps its concrete declared type instead of the SAM-interface fallback — v.L$0 = obj in create() now compiles (jdc-core 0.2.6: force_concrete_vars).
+    - Generation-split phi repair (−1.5k): a diverged write-only generation at an If join is renamed back to the base var (triple-gated), restoring Kotlin default-arg bridge ctors so they fold to clean ternary delegations.
+    - Null sentinels + array-dim bridges (−1.9k): refVar = const 0 retypes to null before generation splitting (try-with-resources finally v.close()), and new T[boolVar] bridges to new T[b ? 1 : 0] like array indexes already did.
+    No regressions on any corpus; weixin decompile ~25s. Requires jdc-core 0.2.6.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.10...v0.1.11
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.11
+ReleaseTime: 2026-09-23T20:38:02.0000000Z

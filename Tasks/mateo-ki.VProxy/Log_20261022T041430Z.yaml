@@ -1,0 +1,26 @@
+Version: 1.8.11
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.8.11/vpn-parser-1.8.11-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.8.11 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.8.11！本次更新把测速改回真正的二阶段淘汰：TCP 预筛没过的节点不再占用真实连接测试的名额，把"预筛跑满全库却不做任何决定"那段时间收回来，同时让进度条上那个数字重新有意义。
+
+    🌟 新特性与核心更新
+    ⚡ 1. 测速二阶段淘汰：先 TCP 过滤，剩下的节点才做真实连接测试
+    - 修掉的问题：标准/深度模式下，进入真实握手的条件是 TCP 通过 || 是公网主机，而"公网主机"只排除 localhost / 私网 / 保留地址 ⇒ 所有公网域名一律去握手。证据就在库里：16,066 个节点中 15,329 个的 latency_test_kind 是 google_proxy —— TCP 预筛以并发 128、超时 1500ms 跑完整库（约 1.5~3 分钟），却一个都不淘汰，还在进度条上报出一个"成功 10000"这种不该被理解成"可用"的数字。
+    - 现在的行为：解出了地址但 TCP 连不上的节点，直接按 tcp_prefilter 落库标为不可用（理由写 connect error 或 timeout 1500ms），不再进入内核握手。按上面那个库的量级，握手候选从 16,066 降到约 10,000（−37%），一整轮测速随之缩短。
+    - 保留的例外：DNS 在我们这一侧压根没解出地址的节点仍然交给内核 —— 内核有自己那条解析路（DoH / 经代理），解析结果可能完全不同，不能替它判死。UDP/QUIC 类协议（hysteria2 / tuic / wireguard / masque）本就不该由 TCP 探测决定生死，照旧"能解析即放行"。
+
+    🧯 2. 判据抽成纯函数 + 回归闸
+    - reaches_proxy_stage：握手候选的取舍现在是一条可读、可测的判据 —— TCP 通 → 进；私网 / 端口 0 → 淘汰；公网主机名但本地解不出地址 → 交给内核；解出地址却连不上 → 淘汰。
+    - 两条反向对照：tcp_failure_with_a_resolved_address_is_eliminated 钉住"二阶段淘汰"本身；private_hosts_never_reach_the_kernel 是被仓库里那条跑了好几个月的老测试 persists_tcp_prefilter_failure_as_unavailable 教出来的 —— 第一版判据把"DNS 表里没这个键"和"私网主机"混成一类，让 127.0.0.1:80 复活去握手，那条老测试当场变红。
+    - 全量测试 405 passed / 0 failed，Windows / macOS / Linux / OpenWrt 四条 CI 全绿。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.8.11
+ReleaseTime: 2026-10-22T03:30:13.0000000Z

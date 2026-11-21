@@ -1,0 +1,35 @@
+Version: 2026.46.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/OpenAEC-Foundation/open-office-studio/releases/download/v2026.46.2/Open.Email.Studio_2026.46.2_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Open Office Studio 2026-W46.2
+    New installers for all seven apps, updated from 2026-W46.1.
+    Windows installers are Authenticode signed and timestamped and include the WebView2 bootstrapper. macOS apps are Developer ID signed, notarized and stapled. Linux packages have detached OpenPGP signatures (.asc).
+    OpenPGP fingerprint: 13F6D414ADEE4ED4CD09AC60601D86C93C504D29.
+    Changes since 2026-W46.1
+    - Presentation: preserve manually paused media (#336).
+    - Presentation: keep asynchronous poster captures attached to the correct media (#345).
+    - Presentation: refuse incomplete searches when results are truncated (#339).
+    - Office: restore editor focus after switching tabs with the mouse (#340).
+    - Writer: preserve internal destinations in exported PDFs (#338).
+    - Spreadsheet: use the updated app logo.
+    These fixes were integrated in PR #348. Each app has a separate installer and profile.
+    Scope and limitations
+    This is a development release of the existing Tauri/React apps. macOS downloads support Apple Silicon; no separate Intel build is included. Older file formats may still require a local conversion program. The parallel native UI migration (#116), converter bundling (#317), performance candidate (#349) and in-progress issue bundle (#350) are excluded. Drawing-module research does not add a drawing editor.
+    Source: cf65adf4b2ca76e4affd89f6f8812bfa4b8bec67; version PR #351. Build, signing and package verification.
+    Verification
+    - All 60 release assets were downloaded and SHA256-verified; the signed checksum manifest was verified against the published OpenPGP key.
+    - Windows: all seven apps were installed; 21 installer, installed-program and uninstaller Authenticode signatures and timestamps passed verification.
+    - macOS: all seven apps passed code-signature, Gatekeeper and stapled-notarization checks.
+    - Linux: all seven apps passed native startup, version, theme, settings and icon checks in both DEB and AppImage form. Their tested package hashes match the signed release assets.
+    These checks complement the automated application and package tests; they are not a full editor acceptance matrix on every platform.
+    The published Windows Office installer also passes native Writer dark-view and highlight-control acceptance, including an actual process restart and unchanged stored document colours. All 28 public installer links return HTTP 200 without authentication and the expected file sizes.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/OpenAEC-Foundation/open-office-studio/releases/tag/v2026.46.2
+ReleaseTime: 2026-11-13T00:20:54.0000000Z

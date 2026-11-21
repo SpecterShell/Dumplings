@@ -1,0 +1,26 @@
+Version: 1.16.16
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.16/vproxy-1.16.16-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.16 发布说明 / Release Notes
+    🎉 VProxy v1.16.16 正式发布！本版本重点带来测速引擎与管线的全面重构（自定义测速目标 URL、NAT 洪峰与死节点双重超时消除、三阶段分流进度、P2P 延迟复测）与节点卡片交互缺陷修复：
+    ⚡ 测速引擎与管线重构
+    - 自定义测速目标 URL：常规设置中开放测速目标 URL 配置项（默认 http://cp.cloudflare.com/generate_204），备用目标探测机制完善且全局超时时间真实生效；
+    - 消除死节点双重超时：重构探活流程，消除原本在内核代理层与 HTTP 探测层的串行重叠超时；Hysteria2 与 AnyTLS 协议改由 Mihomo 极速并发握手探活；
+    - 消除端口与 NAT 洪峰：优化批量测速并发窗口与连接复用机制，防止瞬间海量 socket 耗尽 Windows 动态端口或撑爆路由器 NAT 连接表；
+    - 测速后代理自检与自愈：全量测速完成后自动触发当前代理实例健康状态自检，遇异常自动恢复重启，保障代理长效稳定；
+    - 消减 TCP 预筛瓶颈：优化预筛选超时上限与并发调度，彻底消除海量超时节点堆叠导致的 400s 慢速卡顿瓶颈；
+    - 三阶段测速进度分流：「测速全部」明确区分 DNS 预解析、TCP 预筛 与 真实代理验证 三阶段，实时动态反馈精准进度与状态；
+    - P2P 冷路径延迟二次复测：针对冷启动握手较慢的 P2P 型网络（如 URnetwork 等节点），当首测延迟 > 500ms 时自动触发二次复测并取最小值，快节点免等双倍时间，结果更真实可靠；
+    - 统一延迟与口径对齐：启用 unified-delay 统一延迟计算机制，修复探测回退时的计时偏差。
+    🖱️ GUI 交互与细节修复
+    - 节点卡片交互冲突修复：修复在同名或相似指纹节点场景下 egui ID 碰撞导致的文本捕获与点击穿透冲突，全面恢复卡片双击切换、点击聚焦与悬停动效。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.16
+ReleaseTime: 2026-11-20T08:29:26.0000000Z

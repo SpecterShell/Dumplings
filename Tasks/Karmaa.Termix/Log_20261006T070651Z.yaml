@@ -1,0 +1,29 @@
+Version: 2.9.2
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Termix-SSH/Termix/releases/download/release-2.9.2-tag/termix_windows_ia32_nsis.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Termix-SSH/Termix/releases/download/release-2.9.2-tag/termix_windows_x64_nsis.exe
+- Architecture: x86
+  InstallerType: msi
+  InstallerUrl: https://github.com/Termix-SSH/Termix/releases/download/release-2.9.2-tag/termix_windows_ia32_msi.msi
+- Architecture: x64
+  InstallerType: msi
+  InstallerUrl: https://github.com/Termix-SSH/Termix/releases/download/release-2.9.2-tag/termix_windows_x64_msi.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Update Log:
+    - Background database saves now happen at most once every 30 seconds, so disk writes no longer grow with the number of hosts
+    - Plugin database and storage reads are now logged to the audit log once per start instead of on every read
+    - On first start, 2.9.2 clears the plugin read entries that 2.9.1 piled up in the audit log
+    Bug Fixes:
+    - The server rewriting its whole database to disk many times a second, causing very high disk writes (up to 100 GB every few hours) on 2.9.1
+    - The audit log filling up with plugin entries and pushing out real ones
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Termix-SSH/Termix/releases/tag/release-2.9.2-tag
+ReleaseTime: 2026-10-06T01:34:19.0000000Z

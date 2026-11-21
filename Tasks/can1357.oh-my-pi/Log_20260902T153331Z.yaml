@@ -1,0 +1,115 @@
+Version: 18.1.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.1.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Gemini 3 sessions on Antigravity/Cloud Code Assist and Vertex AI getting permanently stuck on 400 INVALID_ARGUMENT after a turn with parallel tool calls (#9638).
+    - Preserved Anthropic thinking now survives side requests, tool-description drift, turn-scoped reminders, and recoverable prefix mismatches without corrupting the conversation prefix.
+    - Fixed Anthropic-compatible endpoints backed by Amazon Bedrock permanently rejecting a session once an unsigned thinking block entered its history. The transport now recognizes Bedrock's ValidationException … thinking.signature: Field required as the same unsigned-thinking rejection it already heals for other signing proxies, so it demotes the unsigned block to text, retries once, and remembers the endpoint for the rest of the session instead of failing every turn and walking the model fallback chain.
+    - Fixed the DeepSeek DSML markup healer leaking orphan </｜DSML｜parameter>/</｜DSML｜invoke> close tags into visible text, which poisoned long-session history and reinforced the model's XML-protocol mimicry until tool calls stopped dispatching (#10556).
+    - Fixed repeated parallel tool-call batches bypassing the configured loop guard.
+    - Fixed Cursor tool-schema composition failures by projecting unsupported keywords only for confirmed Fable models; Grok and other Cursor models retain canonical schemas.
+    - Fixed API-key account rotation to honor provider-reported quota reset windows, including overlapping exhausted windows (#10325 by @usr-bin-roygbiv).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for Claude Fable 5.1
+    Changed
+    - Updated pricing and context limits for various Claude models
+    Fixed
+    - Claude Sonnet 5 no longer advertises unsupported mid-conversation system messages.
+    - Custom GLM 5.2 models on alibaba-coding-plan (and other blanket-GLM hosts) no longer crash startup with AmbiguousOverlapError (#10553).
+    - Gemini 3.7 Flash no longer offers the minimal thinking effort on direct google-level hosts (google, google-vertex, opencode-zen), which reject thinkingLevel: MINIMAL with a 400; budget and reasoning-effort resellers keep the tier (#10543).
+    - Fixed Alibaba Token Plan discovery for qwen3.8-flash to include its context limits, reasoning support, and image input.
+    - Z.AI GLM-5.3-Flash now uses the native API instead of failing through the unsupported Anthropic-compatible route (#10539).
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - The doubleEscapeAction setting now accepts tree, so double-Escape can open the session tree instead of the rewind selector.
+    - Updated the visual representation for the IRC tool from "irc" to "#"
+    - Rewinding to a user message (double-Escape, /branch) now branches within the current session — the old path stays reachable in /tree — instead of forking a child session; /rewind is an alias for /branch (#10565 by @anatoli-tsinovoy).
+    Fixed
+    - Active sessions now keep memory proportional to truncated raw SSE and tool outputs instead of retaining complete oversized backing strings (#10547).
+    - Anthropic sessions now keep tool-roster changes and warm-prefix pruning from invalidating preserved thinking or the prompt cache.
+    - TypeScript code intelligence now works on TypeScript 7 projects: the built-in typescript-native server runs tsc --lsp --stdio when the resolved TypeScript install no longer ships tsserver.js, replacing typescript-language-server for that project.
+    - Claude marketplace MCP servers now resolve environment placeholders in stdio environment values instead of passing strings such as ${NAME:-} literally (#10481 by @mrexodia).
+    - Fixed prewalk conflicting with todo.eager=always: the forced eager-todo prelude ("call todo first this turn") was injected alongside the prewalk plan nudge ("write a complete plan first, then todo"), giving the model contradictory instructions; the eager-todo prelude is now suppressed only when prewalk will perform a handoff (#10510).
+    - Fixed authHeader: true + command-backed apiKey discovery providers (no explicit headers: block) resending a stale bearer after a 401 force-refresh; discovered models now re-derive Authorization from the live apiKey each request (#10551).
+    - Fixed the embedded shell's command -v/-V honoring only the first operand: it now iterates every name like bash/zsh, printing one line per resolved name and skipping misses (#10544).
+    - Fixed hard-killed subagents vanishing from the agent registry under concurrent fan-out: AgentLifecycleManager.release now applies the terminal aborted transition before awaiting the tombstone sidecar write, closing a race where the dying session's own dispose-path unregister deleted the ref instead of leaving it as a tombstone (#10531).
+    - omp commit now keeps extension-provided model credentials available in its nested commit-agent session (#10528).
+    - MCP tool results now surface structuredContent: servers that return their payload in the structured channel while keeping content a terse ack (e.g. rhizome-mcp) are no longer data-less to the model (#10522).
+    - Fixed the Agent Hub roster shuffling erratically while open: rows no longer re-sort on every agent heartbeat, so the list stays stable and navigable with many active agents (#10524).
+    - Exiting Vibe mode now removes its restrictions from subsequent model turns, including restored sessions (#10500).
+    - Fixed all-sessions listing (Tab in session picker) and cross-project resume failing when sessions are stored under XDG_DATA_HOME; listAllSessions now scans the active getSessionsDir() root instead of hardcoding ~/.omp/agent/sessions.
+    - Fixed the Nerd Font context icon showing a Windows logo instead of a generic window (#10476 by @erickmazer).
+    - The debug terminal snapshot now reports Herdr (and CMUX) as the multiplexer wrapping the session, matching the TUI's pane-identity detection instead of only tmux/screen/zellij.
+    - Fixed vibe mode becoming un-exitable after branching a session (including via /btw), which previously failed with "Vibe parent session changed before mode exit could be persisted." (#10468).
+    - Fixed HTML session exports reordering interleaved assistant text, thinking, images, and tool calls in the transcript, and split matching text/tool sidebar rows with block-accurate navigation. (#10253 by @realcoderandom)
+    - Fixed the built-in grep and sed treating a basic regular expression as an extended one: a bare + is now the literal and \+ the operator, patterns like ^+ or s/^\+/ no longer match every line, ^ anchors inside \(…\) and after \|, and a repetition operator with nothing to repeat is reported instead of silently selecting the whole file (#10298 by @mruangutai).
+    - Fixed RPC prompt responses for /skill:* commands arriving only after the entire prompt-dispatch pipeline finished (usage preflight, compaction, provider calls): under provider stress that outlasts any client prompt timeout, so hosts reported the prompt as rejected while the turn was in fact running. The skill branch now builds the skill prompt eagerly (preserving the immediate error for an unreadable skill file) and dispatches the expensive pipeline asynchronously after answering, matching plain prompts; when the dispatch is cancelled before a turn starts (e.g. an abort overtakes usage preflight), the session now reports it through the non-invoked completion frame instead of leaving hosts waiting for an that never comes (#10249 by @cwr250).
+    - Fixed stale omp-plugins.lock.json entries loading leftover node_modules trees for plugins no longer declared in an existing package.json — the orphaned copy double-loaded its extensions. Lockfile-only plugins remain supported for manifest-less roots and symlinked packages (omp plugin link, marketplace runtime packages); stale entries are skipped with a warning.
+    @oh-my-pi/collab-web
+    Fixed
+    - The guest transcript now returns to the latest message after an initial connection or reconnect.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed grep and sed treating basic regular expressions as extended ones, which silently matched every line for patterns like ^+ or s/^\+/ and swapped the meanings of + and \+ (#10298 by @mruangutai).
+    @oh-my-pi/omp-stats
+    Changed
+    - Provider, tool, and project <select> dropdowns are now styled to match the dashboard design, with dark and light theme support.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed the TUI tearing in Herdr panes so the live viewport updates as one frame instead of leaving the top frozen while only the bottom refreshed. Pane identity vars (HERDR_PANE_ID / HERDR_TAB_ID / HERDR_WORKSPACE_ID) also count as inside Herdr, not only HERDR_ENV=1. A DECRPM “unrecognized” report keeps synchronized output on; a “permanently reset” report, or a custom terminal that omits the DECRPM status, still turns it off.
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed retry-hint extraction for body-level millisecond hints and absolute quota-reset timestamps (#10325 by @usr-bin-roygbiv).
+    What's Changed
+    - fix(session): suppress eager-todo prelude while prewalk is armed by @roboomp in https://github.com/can1357/oh-my-pi/pull/10511
+    - feat(coding-agent): support tree as a double-Escape action by @H4vC in https://github.com/can1357/oh-my-pi/pull/10564
+    - fix(coding-agent): stabilize Agent Hub roster ordering by @roboomp in https://github.com/can1357/oh-my-pi/pull/10525
+    - fix(commit): preserve extension provider credentials by @roboomp in https://github.com/can1357/oh-my-pi/pull/10529
+    - fix(catalog): add qwen3.8 flash token plan metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/10534
+    - fix(catalog): route Z.AI GLM-5.3-Flash through native API by @roboomp in https://github.com/can1357/oh-my-pi/pull/10541
+    - fix(catalog): drop minimal thinking effort from gemini-3.7-flash by @roboomp in https://github.com/can1357/oh-my-pi/pull/10545
+    - fix(shell): iterate all operands for command -v/-V by @roboomp in https://github.com/can1357/oh-my-pi/pull/10546
+    - fix(agent): detach truncated strings from backing storage by @roboomp in https://github.com/can1357/oh-my-pi/pull/10550
+    - fix(config): keep authHeader+apiKey discovery models' authorization live by @roboomp in https://github.com/can1357/oh-my-pi/pull/10552
+    - fix(catalog): break glm-5.2 effort overlap on blanket-glm providers by @roboomp in https://github.com/can1357/oh-my-pi/pull/10554
+    - fix(dialect): strip orphan DSML close tags from healed text by @roboomp in https://github.com/can1357/oh-my-pi/pull/10558
+    - fix(discovery): isolate CLAUDE_CONFIG_DIR in test suites by @kml93 in https://github.com/can1357/oh-my-pi/pull/10559
+    - fix(rpc): answer skill prompts and abort before the pipeline by @cwr250 in https://github.com/can1357/oh-my-pi/pull/10249
+    - fix(export): preserve assistant content timeline by @realcoderandom in https://github.com/can1357/oh-my-pi/pull/10253
+    - fix(builtins): implement POSIX BRE semantics in grep, guard sed and ERE by @mruangutai in https://github.com/can1357/oh-my-pi/pull/10298
+    - fix(auth-storage): inspect usage report for API key rate limits and parse reset timestamps by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/10325
+    - fix(ai): omit thought signature instead of sentinel on CCA/Vertex Gemini 3 by @roboomp in https://github.com/can1357/oh-my-pi/pull/10368
+    - fix(stats): theme native selects to match dashboard design by @swim233 in https://github.com/can1357/oh-my-pi/pull/10393
+    - fix(coding-agent): skip stale lockfile-only plugin entries by @sjawhar in https://github.com/can1357/oh-my-pi/pull/10409
+    - fix(cursor): scope schema projection to Fable models by @dbc-hbin in https://github.com/can1357/oh-my-pi/pull/10467
+    - fix(coding-agent): reconcile mode state after session branch by @roboomp in https://github.com/can1357/oh-my-pi/pull/10469
+    - fix(theme): use a generic window glyph for the context icon by @erickmazer in https://github.com/can1357/oh-my-pi/pull/10476
+    - fix(tui): keep synchronized output on in Herdr panes by @dbc-hbin in https://github.com/can1357/oh-my-pi/pull/10479
+    - fix(ai): recognized Bedrock thinking-signature rejections by @akhosravian in https://github.com/can1357/oh-my-pi/pull/10486
+    - fix(coding-agent): resolve all-sessions listing and resume from active sessions directory by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/10495
+    - fix(vibe): retract mode context on exit by @roboomp in https://github.com/can1357/oh-my-pi/pull/10501
+    - fix(collab): show latest message after reconnect by @graham-a11y in https://github.com/can1357/oh-my-pi/pull/10502
+    - fix(ai): count repeated multi-call tool-call batches in the loop guard by @JamieJ5926 in https://github.com/can1357/oh-my-pi/pull/10521
+    - fix(mcp): surface structuredContent in tool results by @roboomp in https://github.com/can1357/oh-my-pi/pull/10523
+    - fix(coding-agent): tombstone before awaiting sidecar write in release by @roboomp in https://github.com/can1357/oh-my-pi/pull/10533
+    New Contributors
+    - @realcoderandom made their first contribution in https://github.com/can1357/oh-my-pi/pull/10253
+    - @mruangutai made their first contribution in https://github.com/can1357/oh-my-pi/pull/10298
+    - @swim233 made their first contribution in https://github.com/can1357/oh-my-pi/pull/10393
+    - @erickmazer made their first contribution in https://github.com/can1357/oh-my-pi/pull/10476
+    - @akhosravian made their first contribution in https://github.com/can1357/oh-my-pi/pull/10486
+    - @graham-a11y made their first contribution in https://github.com/can1357/oh-my-pi/pull/10502
+    - @JamieJ5926 made their first contribution in https://github.com/can1357/oh-my-pi/pull/10521
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.1.2...v18.1.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.1.3
+ReleaseTime: 2026-09-02T14:06:10.0000000Z

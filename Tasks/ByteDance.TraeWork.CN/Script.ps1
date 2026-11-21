@@ -1,0 +1,53 @@
+$Object1 = Invoke-RestMethod -Uri 'https://api.trae.ai/icube/api/v1/native/version/trae/cn/latest'
+# $Object1 = Invoke-RestMethod -Uri 'https://api.marscode.cn/icube/api/v1/native/version/trae/cn/latest'
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.solo.win32.download.Where({ $_.region -eq 'va' }, 'First')[0].x64
+}
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl = $Object1.data.solo.win32.download.Where({ $_.region -eq 'sg' }, 'First')[0].x64
+# }
+$this.CurrentState.Installer += [ordered]@{
+  InstallerLocale = 'zh-CN'
+  InstallerUrl    = $Object1.data.solo.win32.download.Where({ $_.region -eq 'cn' }, 'First')[0].x64
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
+    try {
+      $ReleaseNotesNode = Use-PlaywrightPage -Stealth -Headless {
+        param($Page)
+
+        $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.trae.cn/changelog'
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)') and contains(.//div[contains(@class, 'metadataColumn')], 'SOLO')]"
+      } | ConvertFrom-Html
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

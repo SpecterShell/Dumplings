@@ -1,0 +1,56 @@
+Version: 1.40.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.1/skills-manager_1.40.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.40.1/skills-manager_1.40.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.40.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-09-26
+    Commit range: v1.40.0...v1.40.1
+    Release Overview
+    - Changing the central repository path now actually takes effect, and several ways a sync could delete or misplace a skill directory are closed.
+    User-facing
+    - Changing the central repository path now takes effect — Saving a new path switched the running app to it immediately while its database stayed at the old location, so the first thing written afterwards (a lock file, an install) landed in the new folder. The move at the next launch only accepts an empty folder, so it refused on every launch from then on, and Settings kept showing the old path. The running app now stays on the current library until you restart; Settings shows where it will move. If you are already stuck, restarting is enough in most cases: leftovers the app recreates by itself (the lock file, empty folders, OS metadata) no longer block the move — anything else still does, and nothing is removed then. After a move, skill links in agent and project folders are pointed at the new location, and a move across drives keeps the old copy renamed to <name>.moved-<time> instead of leaving it in place. Thanks to @ZhuYichuan, whose diagnosis in #472 this builds on (#449, #469, #393).
+    - A folder you put in place of a deployed skill is no longer deleted — Disabling an agent, changing its path, deleting a skill or a custom agent, or unchecking a skill for one agent removed whatever sat at the recorded location without checking it was still ours. They now remove it only while it still matches the deployment. Thanks to @zhirogo (#460, #435).
+    - Importing a nested skill (Hermes categories) keeps its path — It was imported at a flat top-level name, which could replace a category folder of the same name. Thanks to @GoodScholar (#482, #436).
+    - CLI --dry-run reports the conflicts the real run would hit — skills deploy, presets deploy and skills sync dry runs now run the same ownership check as the real deployment. Thanks to @GoodScholar (#483, #437).
+    - Agents that share a skills folder no longer lose each other's deployments — Disabling one of them, or unchecking a skill for it, removed the shared copy the other agent still used.
+    Developer & Governance
+    - Every process that uses the app's library (app, CLI, --skills-root) holds a shared lease for its lifetime; moving the library requires it exclusively, so a move can't run under an agent's CLI call or a second launch. Ordinary CLI commands no longer carry out a pending move; repo set-path does, unless the app is running, and refuses --skills-root.
+    - The cross-volume copy recreates symlinks instead of following them, and removes a partial copy on failure so the retry isn't blocked by its own leftovers.
+    - repo status reports pending_base_dir while a move waits for a restart.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-09-26
+    递交范围：v1.40.0...v1.40.1
+    发布概览
+    - 修改中央仓库路径现在真正生效；另外堵上了几处同步时会误删或放错技能目录的路径。
+    用户可见更新
+    - 修改中央仓库路径现在会生效 —— 以前保存新路径后，运行中的应用会立刻切到新路径，而数据库还留在旧位置，于是之后写入的第一样东西（锁文件、安装的技能）就落进了新文件夹。下次启动的迁移只接受空文件夹，因此此后每次启动都拒绝迁移，设置页也一直显示旧路径。现在运行中的应用会继续使用当前技能库直到重启，设置页会提示重启后将迁移到哪里。已经卡住的用户，多数情况下重启即可：应用自己会重建的残留（锁文件、空文件夹、系统元数据）不再阻挡迁移；除此之外的内容仍会阻挡，此时什么都不会删。迁移后，agent 与项目目录里的技能链接会改指新位置；跨磁盘迁移时，旧副本会改名为 <名称>.moved-<时间> 保留，而不是原地留着。感谢 @ZhuYichuan，本次修复基于其在 #472 中的诊断（#449、#469、#393）。
+    - 你放在技能部署位置上的文件夹不会再被删除 —— 停用 agent、修改其路径、删除技能或自定义 agent、为某个 agent 取消勾选技能时，以前会直接删除记录位置上的东西，不检查它是否仍是我们部署的。现在只有它仍与部署记录一致时才删除。感谢 @zhirogo（#460、#435）。
+    - 导入嵌套技能（Hermes 分类目录）保留原路径 —— 以前会按平铺的顶层名称导入，可能替换掉同名的分类文件夹。感谢 @GoodScholar（#482、#436）。
+    - CLI --dry-run 会报告真实运行时会遇到的冲突 —— skills deploy、presets deploy 与 skills sync 的试运行现在执行与真实部署相同的归属检查。感谢 @GoodScholar（#483、#437）。
+    - 共享同一技能目录的多个 agent 不再互相删掉部署 —— 停用其中一个，或为它取消勾选某个技能时，会删掉另一个 agent 仍在使用的共享副本。
+    开发者与治理更新
+    - 所有使用应用技能库的进程（应用、CLI、--skills-root）在整个生命周期内持有共享锁；迁移技能库需要独占锁，因此迁移不会在 agent 调用 CLI 或第二次启动应用时进行。普通 CLI 命令不再执行待定迁移；repo set-path 会在应用未运行时立即迁移，并拒绝与 --skills-root 同用。
+    - 跨卷复制会重建软链接而不是跟随它们；复制失败时清除已写入的部分，避免重试被自己的残留挡住。
+    - 迁移等待重启期间，repo status 会输出 pending_base_dir。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-09-26T17:22:09.0000000Z

@@ -1,0 +1,60 @@
+Version: 0.11.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.1/Agentero_0.11.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.1/Agentero_0.11.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release centers on a major upgrade of the LaTeX editing experience: a new LaTeX language engine brings syntax-tree-accurate highlighting, completion and folding, stacked with live linting, chktex rules and an IDE-style diagnostics footer, while compilation is now controlled entirely by manual triggers. It also adds a WebDAV cloud sync backend and a ZCode agent template, lets you ask the Agent straight from a text selection, and fixes several paper import stability issues plus the flood of macOS permission prompts when first running an agent.
+    Features
+    - WebDAV cloud sync: Cloud sync gains a WebDAV backend alongside S3-compatible object storage, so Nutstore, Nextcloud or NAS accounts work out of the box, with the sync method selectable per vault in Settings; the sync protocol and conflict merging stay unchanged and existing configs keep working. (#567 by @qychen2001)
+    - ZCode agent template: The agent catalog adds a ZCode template via the zcode-acp-server adapter, reusing catalog scanning, install onboarding and settings, with session resume and image input. (#572 by @ForeverHYX)
+    - LaTeX editor engine upgrade: The legacy stex mode is replaced by codemirror-lang-latex (built on Overleaf's Lezer grammar), bringing accurate tree-based highlighting, environment auto-close and indent, preamble/section folding, and full command, environment and math-symbol completion. (commit by @Phil-Fan)
+    - Live LaTeX linting: Unclosed environments and braces, duplicate labels and missing references show squiggles while typing, and hovering a command shows its documentation; chktex's typographic rules stack on top of the built-in linter (silently degrading when absent); an IDE-style lint footer under the editor counts diagnostics per severity and reveals a clickable problem list on hover. (commit, commit, commit by @Phil-Fan)
+    - Ask the Agent from a selection: Selecting text in the text/code editor arms a Quick chat / Add to chat toolbar; selections pin into the Agent context (Cmd+L), and context chips and prompts carry the line span (e.g. "main.tex lines 75-77") so the agent can reference line numbers directly. (commit, commit by @Phil-Fan)
+    - Editor font size toolbar: The text editor gains a font size toolbar with +/- buttons and a 12–20px dropdown, persisted per install and synced across tabs. (#568 by @byy-yby)
+    - papers/ library entry: The file tree now recognizes and renders the papers/ folder as the library entry, tying the tree to the paper library view. (commit by @Phil-Fan)
+    Improvements
+    - Manual TeX compile control: Autosave writes to disk without triggering latexmk; compilation happens only on Cmd/Ctrl+S, the compile button or Cmd+, and every manual trigger forces a full latexmk run so retrying after a fixed error no longer replays the stale error summary; the compile menu gains a "clean intermediates" action to reset the latexmk fingerprint database. (commit, commit, commit by @Phil-Fan)
+    - Vault starter layout: New vault scaffolds seed a data/ directory and a thesis/main.tex starter file. (commit by @Phil-Fan)
+    Fixes
+    - Paper import pipeline: Standalone PDF imports now validate the file bytes and actively close the metadata recognition loop, and fallback titles strip the .pdf suffix so .pdf.pdf nested files no longer appear; parse, citation and layout jobs are deferred while recognition renames the folder, removing the path race; NOTES.md H1 and aliases sync automatically after recognition or title edits without clobbering existing notes. (#578 by @bet4it)
+    - macOS agent permission prompts: Local ACP agents now spawn with the vault as the process working directory, so the first agent run no longer walks down from / and triggers a cascade of TCC prompts for Music, Desktop, iCloud and more; the fallback directory is strictly scoped to a dedicated scratch directory. (#573 by @HuangYincan)
+    - PDF zoom drift: Pages stay horizontally centered after Ctrl/Cmd + wheel zoom instead of drifting progressively left, the vertical reading position is preserved, and the behavior is stable even with the Agent sidebar squeezing the viewer width. (#565 by @longP-666)
+    Resolved Issues
+    - LaTeX file path completion: File path arguments of \input, \include, \includegraphics, \bibliography and similar commands now complete against the vault, offering directories first and drilling level by level, for both local and remote vaults. (#577, commit by @Phil-Fan)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.11.0...v0.11.1
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布围绕 LaTeX 编辑体验的全面升级展开：全新的 LaTeX 语言引擎带来基于语法树的高亮、补全与折叠，叠加实时语法检查、chktex 规则与 IDE 风格的诊断状态栏，编译时机也改为完全由手动触发控制；同时新增 WebDAV 云同步后端与 ZCode Agent 模板，在文本编辑器中划词即可向 Agent 提问。此外修复了论文导入流水线的多个稳定性问题，以及 macOS 上首次运行 Agent 触发大量系统权限弹窗的问题。
+    新功能
+    - WebDAV 云同步：云同步在 S3 兼容对象存储之外新增 WebDAV 后端，可直接使用坚果云、Nextcloud 或 NAS 账号，设置页按 Vault 切换同步方式；同步协议与冲突合并行为保持不变，旧配置自动兼容。（#567 by @qychen2001）
+    - ZCode Agent 模板：Agent 目录新增 ZCode 模板，通过 zcode-acp-server 适配器接入，复用目录扫描、安装引导与设置页的完整机制，支持会话续聊与图片输入。（#572 by @ForeverHYX）
+    - LaTeX 编辑器引擎升级：用 codemirror-lang-latex（基于 Overleaf 的 Lezer 语法）替换旧 stex 模式，提供准确的语法高亮、环境自动闭合与缩进、前言/章节折叠，以及完整的命令、环境与数学符号补全。（commit by @Phil-Fan）
+    - LaTeX 实时语法检查：输入时对未闭合环境、未闭合括号、重复标签与缺失引用显示波浪线，悬停命令可查看文档；chktex 的排版规范检查叠加在内置规则之上（未安装时自动降级）；编辑器底部新增 IDE 风格诊断状态栏，按严重级别计数，悬停展开问题列表，点击跳转到对应位置。（commit、commit、commit by @Phil-Fan）
+    - 划词问 Agent: 在文本/代码编辑器中选中文本即弹出 Quick chat / Add to chat 工具栏，选择内容自动固定到 Agent 上下文（Cmd+L），上下文芯片与提示词携带行号范围（如 "main.tex 75-77 行"），Agent 可直接引用行号。（commit、commit by @Phil-Fan）
+    - 编辑器字号工具栏：文本编辑器新增字号工具栏，支持 12–20px 的加减与下拉调节，按设备持久化并跨标签页同步。（#568 by @byy-yby）
+    - papers/ 文献库入口：文件树将 papers/ 目录识别并渲染为文献库入口，与论文库视图衔接。（commit by @Phil-Fan）
+    改进
+    - TeX 编译时机可控：自动保存只写盘不再触发编译，编译仅在 Cmd/Ctrl+S、编译按钮或 Cmd+\ 时进行；手动触发始终强制 latexmk 全量构建，修复错误后重试不再卡在旧错误摘要；编译菜单新增「清理中间文件」操作，可重置 latexmk 的指纹数据库。（commit、commit、commit by @Phil-Fan）
+    - Vault 初始结构：新建 Vault 脚手架内置 data/ 数据目录与 thesis/main.tex 论文起始文件。（commit by @Phil-Fan）
+    修复
+    - 论文导入流水线：独立 PDF 导入现在校验文件有效性并主动触发元数据识别闭环，兜底标题自动去除 .pdf 后缀（不再产生 .pdf.pdf 嵌套文件）；识别重命名期间推迟解析、引文与版面任务，消除路径竞态；识别或编辑标题后 NOTES.md 的一级标题与 aliases 自动同步，且不破坏已有笔记内容。（#578 by @bet4it）
+    - macOS Agent 权限弹窗：本地 ACP Agent 现在以 Vault 作为进程工作目录启动，首次运行不再从根目录递归扫描而连续弹出音乐、桌面、iCloud 等系统权限请求；兜底目录严格限定在专用 scratch 目录。（#573 by @HuangYincan）
+    - PDF 缩放漂移：Ctrl/Cmd + 滚轮缩放后页面保持水平居中，不再随缩放逐渐左移，垂直阅读位置保持不变，Agent 侧栏挤压查看宽度时同样稳定。（#565 by @longP-666）
+    已解决问题
+    - LaTeX 文件路径补全：在 \input、\include、\includegraphics、\bibliography 等命令的参数中补全 Vault 内的文件路径，目录优先展示并逐级深入，支持本地与远程 Vault。（#577、commit by @Phil-Fan）
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.11.0...v0.11.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.1
+ReleaseTime: 2026-09-18T05:41:05.0000000Z

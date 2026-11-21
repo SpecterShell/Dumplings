@@ -1,0 +1,19 @@
+Version: 4.2.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.6/Antigravity.Tools_4.2.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.6/Antigravity.Tools_4.2.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心修复] 修复了 Gemini 函数调用在多轮对话中缺失 thought_signature 报错 400 的 Bug (Gemini Tool Calling Fix):
+      - 问题修复：修复了在使用工具调用（Function Calling）功能时，由于代理在第二轮请求中向 /v1internal 接口发送驼峰命名的 thoughtSignature 字段，而接口实际校验蛇形命名的 thought_signature，导致 API 返回 400 INVALID_ARGUMENT 报错（Function call is missing a thought_signature）的问题。
+      - 双重兼容：优化了 OpenAI 映射器、Claude 映射器以及 Gemini 包装层，对思维链签名进行双重注入（同时发送 thoughtSignature 和 thought_signature），并在响应反序列化中添加别名兼容，确保在多轮对话中，工具调用的签名能够被安全地往返传输 (Issue #3202)。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.2.6
+ReleaseTime: 2026-06-22T23:24:10.0000000Z

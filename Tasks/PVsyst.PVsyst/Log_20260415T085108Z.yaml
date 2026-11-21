@@ -1,0 +1,52 @@
+Version: 8.1.0.48394
+Installer:
+- InstallerUrl: https://www.pvsyst.com/download/bin/PVsyst-8.1.0.48394-setup.exe
+  ProductCode: PVsyst 8.1.0
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    *** PVsyst version 8.1 contains new major features
+
+    - New assistant to import Weather Data
+    - Sub-hourly Simulation for Grid-Connected and Standalone systems (*)
+    - Weather data, Meteonorm: updated to Meteonorm DLL V9, replacing V8.2.
+
+    ** Other new features
+
+    - Grid limitation: power threshold can now be defined from a CSV file containing a time series
+    - Horizon: Meteonorm horizon import now uses the new V9 local DLL, removing the need for an internet connection
+    - Thermal model: PV module temperature is now computed using a transient thermal model for both hourly and sub-hourly simulations (*)
+    - Transposition model: sub-hourly horizontal diffuse irradiance data with the Perez model now uses coefficients adapted to each time step. These adapted coefficients aim at reducing the discrepancies between sub-hourly and hourly simulations (*)
+    - Weather data, custom file: new model to estimate diffuse horizontal irradiance from global horizontal irradiance. Dedicated coefficients for sub-hourly simulation are used in order to reduce the discrepancies with hourly simulations (*).
+
+    ** Improvements
+
+    - Optimizers, Huawei: new optimizers in the database
+    - Soiling: soiling fraction can now be defined from a CSV file containing a time series
+    - Standalone simulation: various battery management improvements
+    - Storage, power shifting: charge and discharge values can now be defined from a CSV file containing a time series
+    - Weather data, custom file: new weather data validation step added
+    - Weather data, NASA: updated to NASA POWER API, replacing NASA-SSE.
+
+    ** Corrections
+
+    - 3D scene: ground image is now stored in the user images folder to avoid issues when importing projects
+    - Bifacial: bifacial geometry is now properly defined even when pitch is irregular, instead of using default parameters for certain pitch RMSD values. Backside irradiance results may change for corresponding cases
+    - Clear sky model: the value of the solar constant has been updated from 1367 W/m² to 1361 W/m² to reflect more recent measurements. This has a slight effect on all sizing steps based on the clear sky model
+    - Grid limitation: fixed allocation of power limitation among MPPTs in case of mixed orientation sub-arrays
+    - Grid limitation: minor correction to the application of grid limitation at inverter level with AC losses
+    - Optimizers: current clipping at optimizer level is now better handled
+    - Thermal model: PV module temperature was saved as 0 at night conditions (GlobInc < 10W/m2), but is now properly stored
+    - Weather data: Linke turbidity and relative humidity are now included in the clipboard paste and import operations in the monthly weather data table
+    - Weather data, custom file: accuracy of Hay reverse transposition has been improved
+    - Weather data, known format import: fixed issue for date interpretation for PVGIS data at certain sites and retrieving site names from coordinates no longer causes crashes
+    - Weather data, known format import: importing single file data from NREL / NSRDB no longer causes crashes
+    - Weather data, Solargis: fixed issue that prevented importing certain files with non-integer time zones
+    - Weather data, Solargis: updated API key validity check.
+
+    (*) More detailed information available in PVsyst Forum (topic "Announcements - main changes - PVsyst 8.1.0").
+- Key: ReleaseNotesUrl
+  Value: https://www.pvsyst.com/help/release-notes/index.html#8.1.0
+RealVersion: 8.1.0
+ReleaseTime: 2026-04-15

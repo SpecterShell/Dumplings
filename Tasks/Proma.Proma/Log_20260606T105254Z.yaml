@@ -1,0 +1,27 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.11.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.11.0
+    对比基准：v0.10.29
+    这一版我们把 Agent 侧边栏重新组织了一遍，让项目和会话的层级更清晰；常用的「置顶」「归档」操作也从三点菜单中提到了悬停可见的图标按钮上。Agent 模式的执行过程视觉做了一轮精简，完全自动模式下的权限处理也修了一个老问题。
+    新功能
+    - Agent 侧边栏围绕项目重组 — 侧边栏整体改为「项目 + 最近会话」的两层结构，移除了原有的「工作中 / 手动完成」分组。删除项目时里面的会话会自动迁移到默认工作区，偶发出现的孤立会话（缺失或为空的 workspaceId）也会回退到默认项目下，不再凭空消失
+    - 置顶 / 归档按钮直接显示在会话项上 — 把 pin 和 archive 操作从三点菜单里提取出来，平时悬停在会话上就能看到独立的图标按钮。默认显示相对更新时间，悬停时切换为操作按钮，配合 h-[18px] 容器对齐避免布局抖动。归档新增二次点击确认：首次点击按钮变红，3 秒内再次点击才真正执行，超时自动重置；取消归档则立即生效无需确认。Chat 和 Agent 两种会话项都已统一支持
+    - 侧边栏折叠态展示所有活跃会话 — 项目分组折叠时，原本只显示最近 3 天内更新的前 5 个会话，同时存在 6 个以上活跃会话时会被截断。现在所有 running / blocked / completed 状态的活跃会话必须展示，不受 5 条上限和 3 天窗口限制；剩余槽位再按「最近 3 天 + 至多 5 条」填充非活跃会话。活跃会话内部按 blocked > running > completed 排序，更紧急的优先看到
+    - Agent 执行过程改为扁平布局 — 去掉了执行过程左侧的竖线和缩进，改为扁平视觉。流式输出时中间步骤会轻微弱化（opacity-80），最新一段保持正常亮度，视觉重心自然落在最新动作上；用户手动展开时所有内容恢复正常颜色，总结条则始终保持显示，结束瞬间不再跳动
+    Bug 修复
+    - 完全自动模式下不再误降级权限 — 此前 sdkPermissionModeForPromaMode() 会把 Proma 的 bypassPermissions 映射成 SDK 的 auto，导致 Claude Code 的 auto 分类器仍可能在 Proma 的允许路径生效之前阻止高风险的远程 shell 动作。现在保持原汁原味的 bypassPermissions 透传给 SDK，「完全自动」模式真正放开
+    - 完全自动模式下计划状态不再卡住 — EnterPlanMode / ExitPlanMode 在完全自动模式下会被视为透明操作，UI 上的「计划中」状态不会一直挂着不消失
+    - Agent 大量工具调用时折叠动画不再卡顿 — 折叠动画从 grid-template-rows（每帧触发整个 grid 布局重排、所有子元素 reflow）改为 height + overflow:hidden（仅裁剪边界插值），子元素不再反复 reflow。多工具调用、大内容量场景下折叠丝滑很多；同时把每个子项的入场动画（fade-in + slide-in-from-top）统一收敛到 ProcessBlockGroup 内部控制
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.11.0
+ReleaseTime: 2026-06-06T10:25:43.5690000Z

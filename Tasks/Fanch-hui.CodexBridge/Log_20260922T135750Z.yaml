@@ -1,0 +1,23 @@
+Version: 1.1.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Fanch-hui/codex-bridge/releases/download/v1.1.2/CodexBridge-Windows-x64-1.1.2-Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Codex Bridge 1.1.2
+    - Codex 执行引擎自动发现与指定路径配置：
+      - Windows 下服务启动后改由注册表实时刷新系统与用户环境变量（PATH 及 PNPM_HOME、NPM_CONFIG_PREFIX、BUN_INSTALL、CARGO_HOME、VOLTA_HOME 等），覆盖商店版包、用户目录及各类包管理器；
+      - 桌面工作台“连接 → Codex 执行引擎”支持用户直接指定 codex.exe 或 codex.cmd 绝对路径（提供 PE 与可执行性校验，持久化至配置，并在每次派生进程时动态解析生效）。
+    - Git 状态检测修复：
+      - 修复 ProjectGitStatus 对包含未提交改动的仓库误报“检测失败”的问题，改读原始字节输出（completeOutput）进行 NUL 判定，彻底消除转义字符干扰。
+    - Windows 打包门禁与 CI 流程加固：
+      - 打包脚本与安装器强制校验 tunnel-client.exe 存在性、PE 架构与 SHA-256 摘要，安装烟测增加 helper 存在性断言；
+      - 构建脚本解耦纯 -Test 模式与打包阶段，避免离线测试失败；
+      - 修复 GitHub Actions 中 TUNNEL_CLIENT_DIR 跨步骤传值为空的问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fanch-hui/codex-bridge/releases/tag/v1.1.2
+ReleaseTime: 2026-09-22T11:05:55.0000000Z

@@ -1,0 +1,21 @@
+Version: 0.5.21
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.21/AnyBridge_0.5.21_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.21/AnyBridge_0.5.21_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 Linux AppImage 内代理 sidecar 被 linuxdeploy patchelf 破坏导致的白屏与代理不可用（Fixes #33；自 v0.5.5 起所有已发布 AppImage 均受影响）：
+      - 根因：linuxdeploy 打 AppImage 时对 `AppDir/usr/bin` 下所有 ELF 写入 RUNPATH，patchelf 重排 ELF（LOAD 程序头 5→6）使 pkg 追加在文件尾部的 JS payload 绝对偏移错位，`readPrelude` 读到错误内容 → `SyntaxError` → sidecar 秒退、7450 端口不监听。`NO_STRIP=true` 只能阻止 strip，无法阻止 patchelf。
+      - 修复：新增 `scripts/release/repair_appimage_sidecar.py`，打包后解包 AppImage、用未 patchelf 的原始 sidecar 还原 `usr/bin/anybridge-proxy`、用 tauri 缓存的 linuxdeploy-plugin-appimage 重新打包。
+      - 发布链路：修复后 AppImage 内容变化使原 updater 签名失效，release workflow 新增重签名与 `--clobber` 覆盖上传步骤。
+      - 防复发门禁：修复后重新解包复核 sidecar hash 与原始一致，并执行启动冒烟；任一环节异常即 CI 失败，`rebuild-latest-json` 被跳过，版本停在 draft 不会推给用户。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.21
+ReleaseTime: 2026-09-20T17:22:12.0000000Z

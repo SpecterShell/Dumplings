@@ -1,0 +1,159 @@
+Version: 18.18.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.18.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Mistral discovery listing embedding, OCR, moderation, transcription, and speech models as chat models; only rows with capabilities.completion_chat are offered, with context, image input, and reasoning read from the row (#18244 by @VeigaPunk)
+    - A failed refresh no longer replaces a cached catalog whose models carry request headers with an empty snapshot; the next launch refetches it instead (#18227)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added skills.manualSkills glob patterns to keep skills available manually while hiding them from the model catalog, without editing their SKILL.md files (#18114 by @Shadorain)
+    - Added Keenable as a web search engine (web/keenable). It uses KEENABLE_API_KEY or a stored keenable credential when present; an explicit selection without a key uses Keenable's keyless public endpoint (#17953 by @KGKallasmaa)
+    - Bash commands now visualize execution incrementally in Raw or Python-like Pseudo, with variable values beside their latest setter and bounded replay history for foreground and background jobs; PTY and user-shell runs retain their plain command view.
+    - Added opt-in auto-update (update.auto, offered by a new setup wizard step): a launch that finds a newer release installs it in the background through whatever installed omp (standalone binary, Homebrew, mise, bun, npm), shows the version and download progress beside the welcome banner's version, and the next launch runs it. Quitting mid-update does not interrupt it. Skipped under Tern, which updates its omp itself, and on Nix and source checkouts
+    - omp update now refuses to start while another update (including a background auto-update) is installing, instead of running two installers at once
+    - Added none to edit.mode (and PI_EDIT_VARIANT): it removes the edit tool and keeps bash available even when bash.enabled is off
+    - Added the default-off providers.openaiResponsesWebsockets setting for catalog-supported standard Responses models, independently of Codex; model/request false always disables it (#17354 by @TatsukiMeng)
+    - Pinned sessions show a pin beside their title in the status line and the band composer's title, and /unpin [session id] unpins a session (#17848 by @SuperUserA)
+    - Extensions can choose how each tool call in the main session's transcript is drawn (full, one compact row with optional extra rows, or hidden) with pi.registerTranscriptPresenter(), in the terminal and in Tern, and ask again for specific blocks with ctx.ui.refreshTranscript(ids) (#17960 by @materemias)
+    - Transcript presenters also choose how advisor notes, skill prompts, late diagnostics, !/$ runs, background job and supervised process notices, TTSR and todo reminders are drawn (message and event blocks) (#17997 by @materemias)
+    - Consecutive compact transcript blocks draw as tight rows: no blank rows between them in the terminal (scrollback included) and no gaps in Tern. This covers blocks a transcript presenter draws compact and extension message renderers whose component implements isTranscriptBlockCompact() (#17997 by @materemias)
+    - Extensions can choose how each tool call in the main session's transcript is drawn (full, one compact row with optional extra rows, or hidden) with pi.registerTranscriptPresenter(), in the terminal and in Tern, and ask again for specific blocks with ctx.ui.refreshTranscript(ids); opt in with the extensionRenderers.transcriptPresenters setting (default off) (#17960 by @materemias)
+    - Added a fullscreen extension link browser for picking links already in terminal scrollback: press Alt+O again (or Page Up) while link tags are shown, or Alt+O with no extension link on screen (#16476 by @materemias)
+    - Added a cache status-line segment (in the full and nerd presets) showing before you send whether the next message reads the prompt cache; hover it in Tern or open /session for why not and how much it re-sends (#12677) (#17496 by @will-bogusz)
+    - Added a :level suffix to ^ model tags, such as ^openai-codex/gpt-6-astra:high, that sets the tagged subagent's initial effort. Typing : after a mention lists the model's supported levels. The task tool's effort hint and task.maxEffort do not override the tagged level, and a per-call model for that agent fails as a conflict (#17574 by @a-glapinski)
+    - Added omp zsh, omp bash and omp sh: run omp's built-in shell engine as that shell in your terminal. Every argument goes to the shell unchanged (omp zsh -c 'echo $ZSH_NAME', omp zsh ./script.zsh a b, printf 'echo hi\n' | omp zsh, omp bash --help), and omp exits with the shell's status. Ctrl-C, kill and descriptors you pass (3>file) work as with the real shells
+    - omp zsh keeps zsh's history: it reads and writes your $HISTFILE in zsh's own format and locking (shared with real zsh, extendedhistory, sharehistory, incappendhistory and the other history options), expands !!, !$, ^old^new and the rest of zsh's history syntax, runs zshaddhistory, and has full fc, history, r, print -s, $history and HISTCMD; omp bash gets history -a -n -r -w -p, HISTTIMEFORMAT, HISTIGNORE, fc editing and ! expansion
+    - omp zsh runs interactively like zsh: zsh's line editor (emacs and vi keymaps, bindkey, zle -N widgets, vared), completion (compinit, compdef, menu select), job control (Ctrl-Z, fg, bg, jobs), prompts with precmd/preexec hooks, and the zsh modules plugins load (zsh/zpty, zsh/system, zsh/terminfo, zsh/pcre, zsh/datetime, …), so oh-my-zsh and powerlevel10k configs start
+    - RPC bash results now say when the output was cut: elidedBytes/elidedLines for a dropped middle, and columnTruncatedLines, columnTruncatedRange, columnDroppedBytes and columnMax for lines cut to the column cap. The Go, Python and Rust SDKs decode them (#17957 by @H4vC)
+    - Added pi.getShortcutConflict(chord), which tells an extension whether a key chord is free or held by omp, a keybinding (an app.* action or an editing key) or another extension (#17961 by @materemias)
+    - unwrapHashlineHeaderPath is exported from @oh-my-pi/pi-coding-agent, turning a [path#TAG] write/edit target into its plain path (#17961 by @materemias)
+    - The devin-cli login imports Devin CLI credentials into a stored devin account, so the provider no longer requires DEVIN_API_KEY (#13637 by @pavel-kalmykov)
+    - The devin-windsurf login lets Windsurf Enterprise users authenticate the devin provider with their existing Windsurf account (#13288 by @pavel-kalmykov)
+    Fixed
+    - Fixed transcript output freezing after provider restarts or switching sessions mid-stream (#18358 by @JustasMasiulis)
+    - Bash tool cards for a command whose leading cd <dir> && / cd <dir>; was hoisted into the working directory show that cd again above the visualized command, with the separator the model wrote, instead of dropping where it ran
+    - Bash commands starting with cd <dir>; ... now run in <dir> as their working directory when it exists, so its direnv environment loads and the directory shows on the tool card (#18329 by @harshaygadekar)
+    - Task-file approvals show and keep the checked file target through dispatch, so retargeted symlinks cannot silently substitute another assignment; replaced files require a retry (#18314 by @iliaal).
+    - Subagents receive task instructions with their blank lines, Markdown hard breaks, and table spacing intact, whether given inline or via taskFile.
+    - Hindsight retain and learn memories are no longer lost when delivery fails or omp exits: they are kept on disk, retried, and delivered by the next session without duplicates (#18176 by @alphastorm)
+    - Fixed the session crashing with Native shell returned an invalid execution trace when a bash command assigned a long value containing multi-byte characters such as Chinese text (#18259)
+    - grep -e and rg -e in the bash tool accept patterns that start with - (e.g. grep -e "--canary") instead of failing with an unknown-option error.
+    - The bash execution visualization keeps updating, and saved traces still restore, after a command handles bytes that aren't valid UTF-8 (e.g. v=$(printf '\377'))
+    - On Windows, grep, glob and isolated subagents no longer flash a console window when they query or start the ovnfs daemon.
+    - A bash command containing a bare [ (e.g. a && [ while still streaming) no longer crashes omp in the Pseudo shell visualization (#18320)
+    - Fixed a prompt that mentions an internal-scheme URL with @ (e.g. @local://x, @vault://x) aborting the run with "uses internal scheme ... not as a filesystem path"; such a mention is now left as plain text (#16071)
+    - Fixed MCP OAuth login and token refresh failing with JSON Parse error: Unexpected identifier "access_token" against GitHub's token endpoint (#18292)
+    - MCP OAuth requests tokens for the MCP server's own resource (from its protected-resource metadata) instead of a different resource advertised by the authorization server, fixing 401 invalid_token after /mcp reauth on servers such as Firecrawl's hosted MCP (#18315)
+    - Concurrent subagent MCP calls now grant newly loaded tools to the session that made each call, even when providers reuse call IDs. (#18324 by @eggpeat)
+    - LSP document symbols now show identifier lines, so those lines work with references, definition, and rename (#18257).
+    - Subagents on worker threads no longer fail with Cannot send … instance across threads when their model comes from an extension-registered provider with its own streamSimple (#18310 by @Dangerboi)
+    - ⌘V in terminals with kitty enhanced paste (OSC 5522, e.g. Ghostty 1.4) now attaches macOS TIFF screenshots instead of reporting "Clipboard paste has no supported text or image data" (#17696, #18203 by @roboomp)
+    - Disabling display.shellVisualization now omits bash execution traces from tool updates and saved sessions, including in ACP (#18267).
+    - /quit and /exit no longer wait several seconds for an unresponsive OTLP telemetry collector (#18255).
+    - Cancelling a Python eval cell right as it starts now stops the cell cleanly instead of letting it run and killing the kernel (#18242 by @eggpeat)
+    - Thin tool images are padded to the vision model's minimum height or width instead of causing a 400 on the next turn (#18081)
+    - JSON query truncation notices now report the 50KB read budget instead of the bytes shown (#18022 by @eggpeat)
+    - Extension links stay clickable and extension-drawn replies and custom messages keep their renderers on every launch, not only the first after an edit; ctx.ui.getLinkClicksAvailable() no longer turns false on later launches (#18116 by @materemias)
+    - An AST Grep capture spanning several lines shows on one meta: row of the result card instead of one row per line, so collapsed results no longer show its later lines and a blank line inside it no longer splits the match from its file (#18105 by @JustasMasiulis)
+    - Extension shortcuts on a reserved chord spelled with a different modifier order (e.g. ctrl+shift+p) are now ignored like the reserved spelling (#17961 by @materemias)
+    - When extensions register one shortcut in different spellings (alt+ctrl+x and ctrl+alt+x, or ? and shift+?), only the last one loaded is bound, as with identical spellings, instead of the first silently winning
+    - Building from source works again instead of stopping at the dependency install (#18074 by @Maziar123)
+    - ./c continue works again after /handoff or a compaction summarized away your last prompt, instead of reporting "Nothing to resume"
+    - Fixed omp bash and omp sh starting without a visible prompt when PS1 is unset
+    - The cache miss marker (display.cacheMissMarker) now flags turns that re-send most of the conversation even when the shared system prompt block was still cached, as happens after an idle gap while other sessions keep that block warm
+    - A running session no longer falls back to a setting's default when config.yml gains a value its omp version doesn't know (such as an edit.mode a newer omp added); it keeps the value it had, so the edit doesn't change its tools and throw away every open session's prompt cache
+    - Forcing a queued message with Enter now resumes the agent even when interruption races tool completion or model preparation
+    - ./c continue no longer fails with "Nothing to resume" in a session started by a /skill: command
+    - Interrupting a Python eval cell that is waiting on a top-level await (Esc, a timeout, or an awaited tool call) now cancels the cell and keeps the kernel and its variables (#18115 by @Winston-Hsiao)
+    - Apostrophes in slash-command and prompt-template arguments, such as /fix the user's login bug or /fix don't break it, now reach $ARGUMENTS and $1, $2, … intact instead of being stripped and merging the rest of the line into one argument (#18008)
+    - Long bash output cut in the middle no longer splits a line at the […N ln elided…] marker, and its "Showing lines …" notice now names the lines actually shown, ending at the output's real last line (#17957 by @H4vC)
+    - A bash command that prints nothing and succeeds now returns (no output, exit code 0) instead of a bare (no output), so an empty diff or search no longer reads like a failed command (#17957 by @H4vC)
+    - The first frame of a new session always shows your configured default model and the thinking level a new session starts at; a session launched with --model, a model switched mid-session, or a project-only default no longer leaks into other folders' first frame
+    - Added tui.motion (full / reduced / none, also --motion and PI_MOTION), one switch over spinners, the thinking pulse, shimmer and the status-line blink/fade for many-pane or reduced-motion use; a tui.spinnerInterval you set still wins over the preset (#14240 by @mccraigmccraig)
+    - Added tui.spinnerInterval (also --spinner-interval and PI_SPINNER_INTERVAL) to slow every spinner, the terminal title included, or pin them static with 0 (#14240 by @mccraigmccraig)
+    - Skills listed in the system prompt get their compressed routing hint instead of a cut-off description when the hint runs past 12 words but fits 160 characters; skills an earlier version gave up on are compressed again
+    - Uncached skill descriptions no longer send background model requests after the session-tree cost cap is reached, and their completed spend counts toward the cap (#18016)
+    - Added tui.maxFps (also --max-fps and PI_MAX_FPS) to cap how often the TUI repaints; keystroke echo keeps 30 fps (#14240 by @mccraigmccraig)
+    - The idle recap no longer disappears when the session is resumed, restarted or its transcript is rebuilt; the latest recap stays at the end until the conversation moves on (#18113 by @materemias)
+    - Fixed a chat session that ends up on the model assigned to the web (or another model-kind) role adopting that role's retry fallback chain and cycling web/* search providers as chat models, each failing with Unhandled API in mapOptionsForApi: web-search (#18056 by @haesol-shin)
+    - Browser open now returns the same tab with a recovery notice when Chrome detaches the relay during navigation and omp successfully reattaches, instead of failing the open and closing newly opened tabs (#18252 by @will-bogusz)
+    - tab.errors() keeps the fields of plain-object and other non-Error rejections, bounded like console arguments, instead of reporting only Object (#16959) (#18251 by @Alex-Wengg)
+    - An extension provider with authHeader: true keeps its cached fetchDynamicModels catalog when omp models refresh fails, instead of showing 0 models until the next successful forced refresh (#18227)
+    - A session whose request carries no titleable text of its own — an attached @brief.md, a greeting, a bare number — is now named once from the assistant's reading of it, instead of staying untitled until the next message that happens to be titleable (which, for an agent launched from one brief and left to run, never came) (#18238 by @sjawhar)
+    - Prewalk no longer hands a subagent to its cheap model when the subagent messages its parent or another agent (write agent://…) before its first file edit (#18322 by @1vivy)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed embedding rebuilds failing on hosted APIs that cap the inputs per request: embed() now splits large lists into requests of at most MNEMOPI_EMBEDDING_BATCH_SIZE texts (default 64; set 10 for DashScope) or the embeddings.batchSize runtime option, and returns null when the API returns a different number of vectors than texts (#18278 by @aleister1102)
+    - Fixed an embedding model change deleting every stored vector when the new provider had no key, did not answer, or rejected a batch partway through: the store now embeds the whole corpus with the new model before replacing anything, keeps the old vectors if any request fails, and tries again on the next open (#18278 by @aleister1102)
+    - Fixed rejected embedding API requests leaving no trace: the status and the first 300 characters of the response body now go to the log at debug, or at warn when runtime debug is on (#18278 by @aleister1102)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed find() missing elements more than 24 levels down, such as VS Code's editor; it now searches 64 levels deep (#18221 by @will-bogusz)
+    - glob, grep, fuzzyFind, ast_grep and ast_edit now run their directory traversal on a filesystem runtime of their own, so a search over a large or cold tree can no longer take the worker threads that the embedded shell and every other native call are scheduled on. Those threads are named pi-fs-worker, so a stall in a search is tellable apart from a stall elsewhere.
+    - Fixed a workspace tree whose native addon does not match its checkout failing with undefined is not a constructor at the callsite: a class the addon lacks now throws a message naming the addon file, both releases and bun run build:native — from its constructor and from any static entrypoint — and the loader reports that mismatch once as it loads (#18230 by @sjawhar)
+    @oh-my-pi/pi-tui
+    Fixed
+    - Ctrl+J from a win32-input-mode record with VK_J and Uc=LF now decodes as ctrl+j, so Windows Terminal / mini-term insert a newline instead of submitting (#18253 by @Clannad47)
+    - The BTW history page (f on a side answer) scrolls its reader and history list with the mouse wheel, matching the other scrolling sheets (#18303 by @ImAlexBlock)
+    - The BTW history list shows the date for questions asked before today (and the year for ones from an earlier year), instead of a bare time that read as today's; a follow-up asked on a later day than its topic shows its date too (#18210 by @a-glapinski)
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed abort signals leaving command output reads blocked when a descendant keeps stdout or stderr open after the root process exits. (#18309 by @eggpeat)
+    @oh-my-pi/pi-wire
+    Changed
+    - ShellTrace fields that carry values from the run (argv, assignments, redirect targets, unlocated unit sources, diagnostics) are ShellTraceBytes: a string when the bytes are UTF-8, otherwise the raw byte values. isShellTrace accepts both forms
+    What's Changed
+    - fix(builtins): accept dash-leading patterns after grep/rg -e by @H4vC in https://github.com/can1357/oh-my-pi/pull/18287
+    - fix(shell): cut assign previews on a utf-8 character boundary by @roboomp in https://github.com/can1357/oh-my-pi/pull/18265
+    - fix(ovnfs): hide the console window when querying or starting the daemon by @H4vC in https://github.com/can1357/oh-my-pi/pull/18290
+    - obash: let the OS do teardown, where applicable by @H4vC in https://github.com/can1357/oh-my-pi/pull/18289
+    - fix(wire): accept shell trace byte values that are not UTF-8 by @H4vC in https://github.com/can1357/oh-my-pi/pull/18291
+    - fix(hindsight): persist tool retains in a durable outbox by @alphastorm in https://github.com/can1357/oh-my-pi/pull/18176
+    - fix(browser): keep the tab an open successfully reattaches by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18252
+    - fix(lsp): used identifier lines for document symbols by @roboomp in https://github.com/can1357/oh-my-pi/pull/18261
+    - fix(mnemopi): split embedding requests and keep vectors on failed model switch by @aleister1102 in https://github.com/can1357/oh-my-pi/pull/18278
+    - fix(mcp): requested json from oauth token endpoints by @roboomp in https://github.com/can1357/oh-my-pi/pull/18293
+    - fix(natives): give filesystem walks their own runtime by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18301
+    - fix(utils): retain abort handling until output collection finishes by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18309
+    - docs(task): state the subagent worker threshold the code uses by @Dangerboi in https://github.com/can1357/oh-my-pi/pull/18311
+    - fix(mcp): preferred protected-resource indicator over auth-server resource by @roboomp in https://github.com/can1357/oh-my-pi/pull/18316
+    - fix(prewalk): don't hand off on file-free coordination writes by @1vivy in https://github.com/can1357/oh-my-pi/pull/18322
+    - fix(mcp): isolate concurrent tool call attribution by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18324
+    - fix(coding-agent): fell back to native clipboard for unsupported 5522 paste by @JonasBrilz in https://github.com/can1357/oh-my-pi/pull/18203
+    - fix(coding-agent): treat @:// mentions as prose instead of aborting by @draco28 in https://github.com/can1357/oh-my-pi/pull/18208
+    - fix(tui): date btw history rows asked before today by @a-glapinski in https://github.com/can1357/oh-my-pi/pull/18210
+    - fix(natives): search 64 levels deep in find() by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18221
+    - fix(models): kept extension catalogs with auth headers on failed refresh by @roboomp in https://github.com/can1357/oh-my-pi/pull/18229
+    - fix(natives): name the stale addon when a class it predates is constructed by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18230
+    - fix(session): title a session whose request carries no titleable text by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18238
+    - fix(eval): preserve Python interrupts before cell startup by @eggpeat in https://github.com/can1357/oh-my-pi/pull/18242
+    - fix(catalog): limit Mistral discovery to chat-capable models by @VeigaPunk in https://github.com/can1357/oh-my-pi/pull/18244
+    - fix(browser): keep the fields of non-Error rejections in tab.errors() by @Alex-Wengg in https://github.com/can1357/oh-my-pi/pull/18251
+    - fix(tui): decode WSI Ctrl+J with Uc=LF as ctrl+j by @Clannad47 in https://github.com/can1357/oh-my-pi/pull/18253
+    - fix(coding-agent): bounded otlp shutdown export wait by @roboomp in https://github.com/can1357/oh-my-pi/pull/18262
+    - fix(bash): honored disabled shell visualization in acp by @roboomp in https://github.com/can1357/oh-my-pi/pull/18269
+    - fix(tui): scroll the BTW history page with the wheel by @ImAlexBlock in https://github.com/can1357/oh-my-pi/pull/18303
+    - fix(coding-agent): send only tool definitions to main for worker custom streams by @Dangerboi in https://github.com/can1357/oh-my-pi/pull/18310
+    - fix(task): bind task-file dispatch to approved targets by @iliaal in https://github.com/can1357/oh-my-pi/pull/18314
+    - fix(bash): opportunistically hoist leading cd with semicolon (#18295) by @harshaygadekar in https://github.com/can1357/oh-my-pi/pull/18329
+    - fix(tui): discard abandoned tool previews on provider replay by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18358
+    New Contributors
+    - @1vivy made their first contribution in https://github.com/can1357/oh-my-pi/pull/18322
+    - @JonasBrilz made their first contribution in https://github.com/can1357/oh-my-pi/pull/18203
+    - @draco28 made their first contribution in https://github.com/can1357/oh-my-pi/pull/18208
+    - @VeigaPunk made their first contribution in https://github.com/can1357/oh-my-pi/pull/18244
+    - @Alex-Wengg made their first contribution in https://github.com/can1357/oh-my-pi/pull/18251
+    - @Clannad47 made their first contribution in https://github.com/can1357/oh-my-pi/pull/18253
+    - @ImAlexBlock made their first contribution in https://github.com/can1357/oh-my-pi/pull/18303
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.17.0...v18.18.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.18.0
+ReleaseTime: 2026-11-07T01:49:16.0000000Z

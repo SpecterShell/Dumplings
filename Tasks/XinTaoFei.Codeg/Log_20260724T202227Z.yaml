@@ -1,0 +1,51 @@
+Version: 0.21.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.21.7/codeg_0.21.7_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.21.7/codeg_0.21.7_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(codex): Answer Codex's prompts with codeg's own cards. Plan-mode questions, MCP forms, and tool-call approvals from Codex now surface as codeg's interactive ask and permission cards — synthesized live and preserved on reload — and its plans render as a proper markdown card. (Codex updated to 1.1.7)
+    - feat(codex): Pause or clear an active goal. The goal card gains Pause and Clear buttons; resuming is just re-sending your /goal. The controls hide on history reload, for viewers, and in the read-only sub-agent dialog.
+    - feat(codex): A clearer live sub-agent card. It now shows the sub-agent's model and reasoning effort as it runs, no longer draws an empty white box when there's nothing to report, and picks up Codex's new retry banner and context-compaction card.
+    - feat(codex): Plan mode moved to the mode selector. The redundant /plan slash command is gone — toggle plan mode from the collaboration-mode selector instead.
+    - feat(grok): Grok plan mode, end to end. Leaving plan mode now shows an approval card (approve / request changes / abandon) in both the main conversation and the sub-agent dialog, and survives a mid-turn reconnect. "Approve & build" is honored correctly, request-changes notes go back as a follow-up so Grok revises, and plan calls render in the dedicated plan-mode card.
+    - fix(grok): Long file writes no longer fail. When a command line is too long to run directly, Grok now falls back to the shell instead of erroring with "File name too long."
+    - feat(grok): Context compaction shown inline. Auto-compaction now appears as a centered divider between turns with the token delta, in both the live stream and history.
+    - feat(sidebar): A more focused sidebar. Finished conversations are now hidden by default — flip on "Show completed" to see them. Imported local sessions arrive as pending review so they stay visible.
+    - feat(settings): New Claude Code privacy toggles. Two switches now control Claude Code's attribution/billing header (off by default) and non-essential network traffic (disabled by default), written straight to your native config.
+    - fix(settings): A cleaner skill import picker. Built-in expert, office, and science skills no longer clutter the agent skill-import list.
+    - fix(pet): Pet marketplace images load everywhere. Thumbnails and previews are now fetched through the backend, so they show up even where the marketplace host is unreachable from the webview.
+    - fix(chat): Snappier session switching. The outgoing tab hides immediately, and the new-session welcome controls no longer linger and animate over the conversation you just opened.
+    - fix(messages): Right-sized message bubbles. Your messages and ask-question results now hug their content instead of stretching to full width.
+    - feat(layout): Smarter branch search. The branch selector now ranks matches by relevance, with exact matches first.
+    - chore(experts): Updated expert skills to superpowers 6.2.0. Brings a rules-based "writing good tests" guide, a plan-scoped subagent workspace whose review-fix loop routes back to the original implementer, and forge-agnostic PR creation, among other refinements.
+    - chore(acp): Refreshed the bundled agents. CodeBuddy 2.127.0, Kimi Code 0.29.1, Pi 0.0.32, Cursor 2026.07.23, and Codex 1.1.7.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(Codex)：用 codeg 自己的卡片回应 Codex 的提问。 Codex 的计划模式提问、MCP 表单与工具调用授权，现在都以 codeg 的交互式提问卡与授权卡呈现——实时合成、重载后仍保留——其计划也渲染为规范的 markdown 卡片。（Codex 升级至 1.1.7）
+    - 功能(Codex)：暂停或清除进行中的目标。 目标卡片新增「暂停」与「清除」按钮；重新发送 /goal 即可恢复。这些按钮在历史重载、旁观者视角以及只读子智能体对话中会自动隐藏。
+    - 功能(Codex)：更清晰的实时子智能体卡片。 运行时即显示子智能体的模型与推理强度；无内容可展示时不再画出空白「白框」；并接入 Codex 新的重试提示与上下文压缩卡片。
+    - 功能(Codex)：计划模式移至模式选择器。 移除多余的 /plan 斜杠命令，改从协作模式选择器切换计划模式。
+    - 功能(Grok)：Grok 计划模式，端到端可用。 离开计划模式时，主对话与子智能体对话中都会弹出审批卡（批准 / 请求修改 / 放弃），并可在回合中途重连后恢复。「批准并构建」被正确执行，「请求修改」的意见会作为后续提示回传让 Grok 修订，计划调用也渲染进专属的计划模式卡片。
+    - 修复(Grok)：长文件写入不再失败。 当命令行过长无法直接执行时，Grok 现在会回退到 shell 运行，而不再报「文件名过长」。
+    - 功能(Grok)：上下文压缩内联显示。 自动压缩现在以居中分隔线的形式显示在两回合之间，并标注 token 变化，实时流与历史均可见。
+    - 功能(侧边栏)：更专注的侧边栏。 已完成的会话现在默认隐藏，需要时打开「显示已完成」即可查看。导入的本地会话以「待评审」状态进入，保持可见。
+    - 功能(设置)：新增 Claude Code 隐私开关。 两个开关分别控制 Claude Code 的归属/计费标头（默认关闭）与非必要网络请求（默认禁用），直接写入原生配置。
+    - 修复(设置)：更清爽的技能导入选择器。 内置的专家、办公与科研技能不再出现在智能体的技能导入列表中。
+    - 修复(宠物)：宠物市场图片处处可加载。 缩略图与预览现在改由后端代理拉取，即便 webview 直连市场主机不通也能正常显示。
+    - 修复(聊天)：切换会话更利落。 切出的标签立即隐藏，新会话的欢迎控件不再滞留、也不再在你刚打开的会话上继续动画。
+    - 修复(消息)：大小合适的消息气泡。 你的消息与提问结果现在按内容自适应宽度，不再撑满整行。
+    - 功能(布局)：更聪明的分支搜索。 分支选择器现在按相关度排序，精确匹配优先。
+    - 维护(专家)：专家技能升级至 superpowers 6.2.0。 带来基于规则的「编写优质测试」指南、按计划隔离且将「评审—修复」环路回交给原实现者的子智能体工作区，以及不依赖特定托管平台的 PR 创建等改进。
+    - 维护(智能体)：刷新内置智能体版本。 CodeBuddy 2.127.0、Kimi Code 0.29.1、Pi 0.0.32、Cursor 2026.07.23、Codex 1.1.7。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.21.7
+ReleaseTime: 2026-07-24T18:48:34.0000000Z

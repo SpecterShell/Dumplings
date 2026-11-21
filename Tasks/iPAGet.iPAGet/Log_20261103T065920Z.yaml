@@ -1,0 +1,110 @@
+Version: 1.0.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/ipaget/ipaget/releases/download/v1.0.0/iPAGet_1.0.0_windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ipaget/ipaget/releases/download/v1.0.0/iPAGet_1.0.0_windows-x64.msi
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ipaget/ipaget/releases/download/v1.0.0/iPAGet_1.0.0_windows-x86-setup.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ipaget/ipaget/releases/download/v1.0.0/iPAGet_1.0.0_windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What changed
+    All 72 commits in this release.
+    - ci(release): build the macOS disk image from a mounted sparse image (f95a5e6, 2026-11-02, zetxtech)
+    - ci(release): drop the duplicated platform prefix from the windows job name (77dde8f, 2026-11-02, zetxtech)
+    - docs: document the platform-prefixed download names (b27b73b, 2026-11-02, zetxtech)
+    - ci(release): name every artifact for its platform and generate release notes (15935e9, 2026-11-02, zetxtech)
+    - docs: rewrite the intro around what the app gives you (dcd0fac, 2026-10-29, zetxtech)
+      The previous paragraph listed features in one flat sentence. It now leads with ownership of the apps you already installed, names the outcomes users actually want (old versions, backups, reinstall, self-signed installs) and keeps the local, no-third-party promise as its own line.
+    - docs: link the stars badge to the repository (8c6a2b4, 2026-10-29, zetxtech)
+    - docs: use a static prs badge (4e33a19, 2026-10-29, zetxtech)
+    - docs: use tag based badges that resolve before the release is published (1bcc0c3, 2026-10-29, zetxtech)
+    - docs: add bilingual readme with screenshot placeholders (707814a, 2026-10-29, zetxtech)
+      The screenshots are neutral svg placeholders so the layout is complete before real captures exist; replacing a file and its link in the readme section is all that is needed.
+    - chore(release): reset app version to 1.0.0 (c9dd773, 2026-10-29, zetxtech)
+    - ci(release): give portable artifacts distinct names (fbd3a1d, 2026-10-28, zetxtech)
+      The release job publishes every downloaded file by base name, so the x64 and x86 portable executables both named ipaget.exe overwrote each other and the linux binary arrived as a bare ipaget. Each portable artifact now carries its platform in the file name.
+    - chore(release): set app version to 1.0.1 (fa0614f, 2026-10-28, zetxtech)
+    - ci(release): merge macos apps on an intel runner (15edc9e, 2026-10-28, zetxtech)
+      The universal job needs no arm64 hardware, yet it sat in the arm64 queue and was cancelled twice by capacity limits with zero steps executed. The intel macOS runner used by the x64 build has been reliable in every run.
+    - ci(release): free disk space before building the universal dmg (40dde47, 2026-10-28, zetxtech)
+      The universal job hit "hdiutil: create failed - No space left on device" while the two architecture copies and both zips were still on disk. The zips are now deleted right after unpacking and the per-architecture apps before the image is created, the free space is logged, and the job falls back to a zip of the universal app if the disk image still cannot be written.
+    - fix(bundle): ship png icons required by appimage (e7475e8, 2026-10-28, zetxtech)
+      The bundle icon list only had icns and ico, so tauri-bundler could not find a square icon and aborted AppImage creation with an expect panic. The standard png set is now bundled, which Linux packaging needs.
+    - ci(release): fix macos artifact paths and fail on missing files (4a715d8, 2026-10-28, zetxtech)
+      The .app lookup relied on **, which macos bash 3.2 does not expand as globstar, so no zip was ever produced; the dmg upload also pointed at bundle/macos while tauri writes dmg bundles to bundle/dmg. Uploads now fail loudly instead of silently skipping, which is what made the universal job fail far away from its cause.
+    - ci(release): add the linux graphics and input dev libraries (22a50d0, 2026-10-28, zetxtech)
+      Linker could not find -lgbm, and the xcap/pipewire stack also needs drm, wayland, xkbcommon, EGL, xcb-shm/xfixes/shape and libxdo headers. libfuse2 is installed under its 24.04 name and only for running AppImages, instead of the fuse package that removed the runner fuse3.
+    - chore(release): set app version to 1.0.0 (1c6769a, 2026-10-28, zetxtech)
+    - ci(release): build linux on ubuntu 24.04 for newer pipewire (be26969, 2026-10-28, zetxtech)
+      xcap unconditionally pulls pipewire, libwayshot and zbus on Linux, and the pipewire headers shipped with ubuntu 22.04 lack the spa_video_info_raw fields those bindings expect, so the crate cannot compile there. The 24.04 image provides them; the produced AppImage now requires the newer glibc, which is a deliberate trade-off documented with the run.
+    - ci(release): give unix jobs a valid config and system libs (6aafae7, 2026-10-28, zetxtech)
+      TAURI_CONFIG expects inline JSON, so pointing it at tauri.ci.conf.json made tauri-build fail with "expected value at line 1 column 1" on both macOS jobs, while Windows passed because it never set the variable. The hook already builds the frontend and the Go service on every platform, so the patch step and the jq dependency are gone. Linux also needs the pipewire, dbus, xcb and xrandr headers that xcap compiles against.
+    - ci(release): pass flags to the tauri cli, not cargo (5c7c76c, 2026-10-28, zetxtech)
+      The -- separator tells the tauri CLI that the remaining arguments belong to the underlying cargo command, so --bundles, --target and --ci were forwarded to cargo and every platform failed with cargo build --bundles. The Go cache path also pointed at the repository root while the module lives in go-service.
+    - chore(release): align app version with tag (6907c53, 2026-10-28, zetxtech)
+    - ci(release): fix platform bundles and runners (2242f8d, 2026-10-28, zetxtech)
+      The go-ios module was never initialized, so every platform failed at the Go build step. Windows rejects the app bundle type, Linux has no app bundle, go.mod requires Go 1.25, and the macos-13 runner is retired. Portable Windows output now comes from the release binary instead of a bundle directory that never existed.
+    - fix(service): build without cgo on unix and 32-bit windows (58172a6, 2026-10-28, zetxtech)
+      onepassword-sdk-go v0.4.1-beta.1 fails to compile by design when CGO is disabled on darwin/linux, which broke the whole root package on those targets; v0.4.1 defers that check to a runtime error instead. ppmd v0.1.0 overflows int on 386, and the simulated IMEI/IMSI ranges exceeded a 32-bit int.
+    - chore(ref): update iloader snapshot (f192b8a, 2026-10-28, zetxtech)
+    - feat(ui): refine authentication and dialogs (23229c7, 2026-10-28, zetxtech)
+    - feat(desktop): improve startup and restart (352586c, 2026-10-28, zetxtech)
+    - feat(apps): improve device and download flows (328c723, 2026-10-28, zetxtech)
+    - feat(search): prioritize visible app metadata (d5343a3, 2026-10-28, zetxtech)
+    - feat(editor): restore IPA and plist editing (2a7d14e, 2026-10-28, zetxtech)
+    - feat(service): expand app and store workflows (1cb7f7d, 2026-10-28, zetxtech)
+    - build(deps): add ipatool 2.7 source (176b91e, 2026-10-28, zetxtech)
+    - build: map reference submodules (bd657db, 2026-08-08, zetxtech)
+    - chore: add reference repositories (f3e1b7d, 2026-08-08, zetxtech)
+    - chore(vendors): update dependency revisions (11759da, 2026-08-08, zetxtech)
+    - chore: track codegraph ignore rules (0c5d711, 2026-08-08, zetxtech)
+    - feat(device): enrich device information (b70abae, 2026-08-08, zetxtech)
+    - docs: add project steering docs (2285d51, 2026-08-08, zetxtech)
+    - chore: add license and app icon (133c765, 2026-08-08, zetxtech)
+    - ci: add build workflow and device info export scripts (5872ee0, 2026-08-03, zetxtech)
+    - chore(i18n): add UI strings for library, signing, editor and debug flows (1740b8a, 2026-08-03, zetxtech)
+    - refactor(ui): extract shared UI components and rework app layout (ba18633, 2026-08-03, zetxtech)
+    - feat(settings): add settings page for language and network configuration (ac222d8, 2026-08-03, zetxtech)
+    - feat(debug): add debug window with logs, store inspector, and device simulation (3e96a0c, 2026-08-03, zetxtech)
+    - feat(download): replace downloads page with app library and downloads popup (c77a6f4, 2026-08-03, zetxtech)
+    - feat(editor): add plist/xml editor and IPA structure inspector (1a5ad81, 2026-08-03, zetxtech)
+    - feat(signing): add certificate management and IPA signing flow (d50e273, 2026-08-03, zetxtech)
+    - feat(ipa): add certificate and device selection to IPA preview and installer (7824de1, 2026-08-03, zetxtech)
+    - feat(devices): add connection badges, shared library markers, and async app sizing (e09bc74, 2026-08-03, zetxtech)
+    - feat(search): rebuild search with suggestions, top apps, and version history (777f2cc, 2026-08-03, zetxtech)
+    - feat(auth): migrate login to Go service with multi-account and 2FA (c6b6c80, 2026-08-03, zetxtech)
+    - feat(store): add certificate, debug and settings stores and enrich device metadata (4a90c2f, 2026-08-03, zetxtech)
+    - feat(store): add download, install, sign and IPA stores synced with task store (6950c39, 2026-08-03, zetxtech)
+    - feat(account): replace authStore with multi-account store and token-expiry handling (10940cd, 2026-08-03, zetxtech)
+    - refactor(task): generalize task model to generic data payload (058cb41, 2026-08-03, zetxtech)
+    - feat(client): extend Go service client with cert, signing, IPA and debug APIs (31ca1ce, 2026-08-03, zetxtech)
+    - feat(tauri): wire dynamic service port and fs scopes in main (705fa60, 2026-08-03, zetxtech)
+    - fix(tauri): use IPv4 loopback for go-service connection (93a382f, 2026-08-03, zetxtech)
+    - refactor(tauri): drop ipatool dependency from backend (dcae0d3, 2026-08-03, zetxtech)
+    - feat(tauri): support importing IPA and TIPA files (76f1746, 2026-08-03, zetxtech)
+    - feat(tauri): add file system and debug window commands (b8b5a3e, 2026-08-03, zetxtech)
+    - feat(tauri): add app settings persistence and commands (78fa167, 2026-08-03, zetxtech)
+    - chore(tauri): add app icons and update bundle resources (306859f, 2026-08-03, zetxtech)
+    - chore(vendors): bump go-ios and ipatool submodules for new features (3cd55b7, 2026-08-03, zetxtech)
+    - feat(api): expose routes for accounts, certificates, IPA tools and debug simulation (42f394b, 2026-08-03, zetxtech)
+    - feat(logger): buffer logs and stream them over websocket (f47d08e, 2026-08-03, zetxtech)
+    - feat(app): detect shared app-group libraries and compute sizes asynchronously (04d42f9, 2026-08-03, zetxtech)
+    - feat(device): enrich device info with battery, SIM, hardware and connection type (2a365fb, 2026-08-03, zetxtech)
+    - feat(ipa): parse IPA details with dylibs, frameworks and signing metadata (cd30742, 2026-08-03, zetxtech)
+    - feat(certifi): manage signing certificates via developer portal free-signing (4d38f32, 2026-08-03, zetxtech)
+    - feat(store): add GSA authentication with anisette, SRP and 2FA flows (ee304d2, 2026-08-03, zetxtech)
+    - Initial Commit (6a98b62, 2025-10-21, zetxtech)
+    Full history: https://github.com/ipaget/ipaget/commits/v1.0.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ipaget/ipaget/releases/tag/v1.0.0
+ReleaseTime: 2026-11-02T07:52:36.0000000Z

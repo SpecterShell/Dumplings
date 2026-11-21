@@ -1,0 +1,21 @@
+Version: 4.84.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.84.3/fleetctl_v4.84.3_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.84.3_windows_amd64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+- Architecture: arm64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.84.3/fleetctl_v4.84.3_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.84.3_windows_arm64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug fixes
+    - Reduced database load from GET /api/latest/fleet/device/{token}/desktop and other Fleet Desktop endpoints when invalid or expired device auth tokens are presented, by resolving the token to a host id with a single-table indexed lookup before running the multi-join host-details query.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fleetdm/fleet/releases/tag/fleet-v4.84.3
+ReleaseTime: 2026-05-07T16:55:58.0000000Z

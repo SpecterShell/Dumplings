@@ -1,46 +1,70 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://www.yxcal.com/')
-
-# Version
-$Task.CurrentState.Version = [regex]::Match(
-  $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form[1]/p[1]')).Text,
-  '最新版本: ([\d\.]+)'
-).Groups[1].Value
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $EdgeDriver.FindElement([OpenQA.Selenium.By]::XPath('//*[@id="home"]/div/div[1]/form/a')).GetAttribute('href')
+function Read-Installer {
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    # $Object = Invoke-WebRequest -Uri 'https://www.youxiao.cn/wordpress/index.php/yxcalendar/version-log/' | ConvertFrom-Html
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://static.youxiao.cn/yxcalendar/yxcalendar_latest.exe'
+}
 
-    # try {
-    #   $ReleaseNotesTitleNode = $Object.SelectSingleNode("//*[@id='post-350']/div[2]/ul[contains(./li/text(), '$($Task.CurrentState.Version)')]")
-    #   if ($ReleaseNotesTitleNode) {
-    #     # ReleaseTime
-    #     $Task.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '(\d{4}年\d{1,2}月\d{1,2}日)').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Hash
+$this.CurrentState.Hash = $Object1.Headers.'Content-MD5'[0]
 
-    #     # ReleaseNotes (zh-CN)
-    #     $Task.CurrentState.Locale += [ordered]@{
-    #       Locale = 'zh-CN'
-    #       Key    = 'ReleaseNotes'
-    #       Value  = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::ol[1]') | Get-TextContent | Format-Text
-    #     }
-    #   } else {
-    #     $Task.Logging("No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
-    #   }
-    # } catch {
-    #   $Task.Logging($_, 'Warning')
-    # }
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
 
-    $Task.Write()
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
+}
+
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+
+  $this.Print()
+  $this.Write()
+  return
+}
+
+# Case 2: The hash is unchanged
+if ($this.CurrentState.Hash -eq $this.LastState.Hash) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+switch -Regex ($this.Check()) {
+  # Case 5: The hash and the version have changed
+  'Updated|Rollbacked' {
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
-  }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  # Case 4: The hash has changed, but the version is not
+  Default {
+    $this.Log('The hash has changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
 }

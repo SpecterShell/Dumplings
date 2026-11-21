@@ -1,0 +1,27 @@
+Version: 0.30.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.30.0/Prometheus_0.30.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.30.0/Prometheus_0.30.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 独立工作树模式：每个对话可以在自己的 git 工作树里改代码，你点「合并」之前，项目文件夹一个字节都不会变。同一个项目里可以同时开多个对话，互不干扰
+      - 设置 → 独立工作树：关闭 / 每次询问 / 总是开启；可按项目单独覆盖；默认合并方式（压缩为一个提交 / 保留历史 / 只应用不提交）
+      - 新对话页的开关（模式为「每次询问」时出现）；对话里的面板显示分支、改动文件、领先/落后提交，可审查 diff、同步基础分支、合并或丢弃
+      - 合并前预检：项目文件夹是否仍在原分支、是否有同文件的未提交改动、对话是否仍在运行；冲突留在工作树里解决，项目文件夹不会出现冲突标记
+      - 提示与另一个对话改了相同文件；工作树对话不能直接写项目文件夹的绝对路径
+    说明
+    - 只对 git 仓库生效，其他文件夹照常直接修改；关闭后新对话与以前完全一样，已有对话不受影响
+    - 隔离是路径级的，不是沙箱：agent 在 bash 里主动操作别的路径无法拦住
+    - .prometheus/worktree.json 目前只支持 link / copy；自动化任务不走隔离
+    - 设计说明见 docs/worktree-mode.md
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.30.0
+ReleaseTime: 2026-11-06T01:05:21.0000000Z

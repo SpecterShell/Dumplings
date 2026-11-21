@@ -1,0 +1,52 @@
+Version: 1.43.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.43.4/skills-manager_1.43.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.43.4/skills-manager_1.43.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.43.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.43.4
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-11-10
+    Commit range: v1.43.3...v1.43.4
+    Release Overview
+    - Three fixes: TRAE CN project skills land in the folder TRAE CN reads, a stuck backup no longer blocks update checks indefinitely, and a skill in a folder several agents share appears once when scanning local skills.
+    User-facing
+    - TRAE CN project skills go where TRAE CN reads them — In a project workspace, skills for TRAE CN were deployed to <project>/.trae-cn/skills, which TRAE CN does not read; only its global folder is ~/.trae-cn/skills. They now go to <project>/.trae/skills, and TRAE CN shares that row with TRAE IDE, which reads the same folder. Skills that earlier versions put in .trae-cn/skills are left there: add them to the project again, and the old folder can be deleted. Thanks to @zhirogo (#645, #632, #247).
+    - A stuck backup no longer blocks update checks indefinitely — When the backup remote stopped answering during a background backup (for example an SSH connection that never replies), the backup kept the library locked, and every update check failed with "skills repository is busy" for as long as it stayed stuck. Git commands that reach the backup remote now give up after 300 seconds and report an error, so update checks wait at most five minutes. Your own SSH configuration is used as before. Thanks to @Carlo1911 (#585).
+    - Each skill appears once when scanning local skills — Several agents read the same folder; Codex, GitHub Copilot, Pi and others all read ~/.agents/skills. Scan Local Skills listed a skill in that folder once for each of them, so one skill showed up with six identical locations. Each folder is now listed once, under the first agent that finds it (#646, #641).
+    Developer & Governance
+    - Network git in the backup repository (fetch, push, pull, ls-remote, clone) now runs through a killable wait with a 300s deadline, matching the clone timeout, with GIT_TERMINAL_PROMPT=0, a closed stdin and an HTTP low-speed abort. No GIT_SSH_COMMAND is injected. The auto-backup fetch stays inside RepoLock, because a fetch outside it races a clone that replaces the directory, so this bounds the hang rather than removing the busy errors (#585).
+    - scanner::push_discovered skips a path that is already recorded, so the scan's skills_found and discovered list count each path once, under the first adapter that finds it. Later adapters no longer hash the same directory again (#646).
+    - The trae_cn adapter now has project_relative_skills_dir = ".trae/skills"; it used to fall back to its global .trae-cn/skills. Nothing is migrated (#645).
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-11-10
+    递交范围：v1.43.3...v1.43.4
+    发布概览
+    - 三项修复：TRAE CN 的项目 Skill 放进它实际读取的目录；备份卡住时不再无限期挡住检查更新；扫描本地 Skill 时，几个 Agent 共用目录里的 Skill 只出现一次。
+    用户可见更新
+    - TRAE CN 的项目 Skill 放进它读取的目录 — 在项目工作区里，TRAE CN 的 Skill 之前部署到 <项目>/.trae-cn/skills，TRAE CN 并不读这个目录；~/.trae-cn/skills 只是它的全局目录。现在部署到 <项目>/.trae/skills，TRAE CN 和读同一目录的 TRAE IDE 合成一行。旧版本放进 .trae-cn/skills 的 Skill 不会被移走：请在项目里重新添加，旧目录可以删除。感谢 @zhirogo（#645、#632、#247）。
+    - 备份卡住不再无限期挡住检查更新 — 后台备份时，如果备份远端不再响应（例如 SSH 连接一直没有回应），备份会一直锁着技能库，期间每次检查更新都报「skills repository is busy」。现在连接备份远端的 git 命令超过 300 秒就放弃并报错，检查更新最多等五分钟。你自己的 SSH 配置照常生效。感谢 @Carlo1911（#585）。
+    - 扫描本地 Skill 时每个 Skill 只出现一次 — 有些目录被好几个 Agent 共用，例如 Codex、GitHub Copilot、Pi 等都读 ~/.agents/skills。「扫描本地 Skills 并导入」会为每个 Agent 各列一次这个目录里的 Skill，一个 Skill 能显示六个相同的位置。现在每个目录只列一次，记在最先找到它的 Agent 名下（#646、#641）。
+    开发者与治理更新
+    - 备份仓库里的联网 git（fetch、push、pull、ls-remote、clone）改为走可强制结束的等待，期限 300 秒，与克隆超时一致；同时设置 GIT_TERMINAL_PROMPT=0、关闭 stdin，并在 HTTP 速度过低时中止。不注入 GIT_SSH_COMMAND。自动备份的 fetch 仍在 RepoLock 内执行，因为锁外的 fetch 会和替换整个目录的克隆竞争，所以这次改动是给卡住设了上限，而不是消除「busy」报错（#585）。
+    - scanner::push_discovered 会跳过已经记录过的路径，扫描结果里的 skills_found 和发现列表对每个路径只计一次，记在最先找到它的 adapter 名下。后面的 adapter 不再重复计算同一目录的哈希（#646）。
+    - trae_cn adapter 新增 project_relative_skills_dir = ".trae/skills"，之前回落到它的全局目录 .trae-cn/skills。不做迁移（#645）。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-11-10T06:10:58.0000000Z

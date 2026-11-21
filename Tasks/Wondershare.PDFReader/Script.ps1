@@ -1,24 +1,26 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['13142']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['13142']
 
 # Installer
-$Task.CurrentState.Installer.Clear()
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_$($Task.CurrentState.Version)_full13142.exe"
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = "https://download.wondershare.com/cbs_down/pdfreader_64bit_$($Task.CurrentState.Version)_full13142.exe"
-}
+$this.CurrentState.Installer = @(
+  [ordered]@{
+    Architecture = 'x86'
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl.Replace('_64bit', '')
+  }
+  [ordered]@{
+    Architecture = 'x64'
+    InstallerUrl = $this.CurrentState.Installer[0].InstallerUrl
+  }
+)
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

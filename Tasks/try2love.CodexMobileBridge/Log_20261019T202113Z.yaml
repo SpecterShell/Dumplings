@@ -1,0 +1,49 @@
+Version: 2.1.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/try2love/codex-mobile-bridge/releases/download/v2.1.2/Codex-Mobile-Bridge-2.1.2-Windows-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v2.1.2 focuses on mobile and Web terminals: direct input, Chinese composition, touch scrolling, font sizing and reconnection, together with complete Windows terminal components and mouse interaction support.
+    Features and improvements
+    - Direct terminal input: enabled by default on mobile and wide-screen Web, with optional Compose & send mode. Improve keyboard activation, focus, Chinese composition and cursor visibility.
+    - Enter and Tab: a dedicated Enter button confirms commands and CLI menus. Direct mode forwards Tab to the current shell or CLI; compose mode supports common-prefix completion and candidate selection, including paths with Chinese characters or spaces.
+    - Touch and mouse interaction: improve touch scrolling in terminal CLIs such as OpenCode while retaining normal terminal scrollback. Forward supported mouse interaction without substituting history-navigation arrow keys for scrolling.
+    - Smoother connections: persistent duplex transport reduces request and queueing overhead; reconnect automatically to valid sessions after temporary disconnections. Remote echo still depends on actual network latency.
+    - Independent terminal size: use minus/plus controls from 6–24px, shared across terminals on the current device. Move the shell label to the footer to free content space.
+    - Reading settings: place theme and language first; expand text size to 10–32px and code size to 8–28px.
+    Fixes
+    - Fix mobile keyboards opening without delivering terminal input, and ineffective terminal focus in compose mode.
+    - Correct cell alignment for Chinese, Latin, bold and block characters, overlapping small fonts and uneven CLI sidebar backgrounds.
+    - Keep terminal output inside its viewport after exiting an interactive CLI, resizing or showing/hiding the keyboard, without covering controls or the scrollbar.
+    - Correct UTF-8 terminal locale selection and automatic reconnection when returning to a terminal.
+    - Fix lost mouse signals in Windows 10 system ConPTY. Official Windows installers and ZIPs contain all required ConPTY files, without manual copying or system-component replacement.
+    - Fix installer extraction compatibility that omitted some Windows terminal components.
+    Updating
+    Desktop and mobile version 2.1.2, Android/iOS build 34. Install over the existing app and retain its data directory. Android keeps the existing signing identity; iOS retains the official bundle IDs and requires your own signing. Refresh Web pages after updating the gateway, and update the mobile app for the complete terminal experience.
+    Packages cover Apple Silicon/Intel macOS, Windows x64, experimental Linux x64/ARM64, Android and self-signed iOS. Bundled ConPTY does not replace Windows system components. Linux uses manual package upgrades. Verify downloads with SHA256SUMS.txt.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v2.1.2 重点改善手机与 Web 终端体验，让直接输入、中文输入、触摸滚动、字号调整和断线恢复更顺畅，并补齐 Windows 终端组件的安装与鼠标交互支持。
+    新增与优化
+    - 终端直接输入：手机与宽屏 Web 默认直接在终端输入，保留可选的“编写后发送模式”；改善键盘唤起、输入焦点、中文组合输入和光标显示。
+    - Enter 与 Tab：新增独立 Enter 按钮，可确认终端 CLI 菜单和命令；直接模式的 Tab 交给当前 shell 或 CLI，编写模式支持公共前缀补全及候选选择，兼容中文与空格路径。
+    - 触摸与鼠标交互：改善 OpenCode 类终端 CLI 的触摸滚动，保留普通终端历史滚动；支持程序启用的鼠标交互，避免用上下方向键代替翻阅。
+    - 更连贯的终端连接：持续双向传输减少逐次请求与排队等待；临时断线后自动恢复仍有效的会话。高延迟网络下减少额外等待，远端回显仍受实际网络延迟影响。
+    - 独立终端字号：通过加减按钮在 6–24px 调整，当前设备的终端共享该设置；shell 路径移至底部，为终端正文留出更多空间。
+    - 阅读设置：主题与语言放在设置顶部，正文字号范围扩大为 10–32px，代码字号扩大为 8–28px。
+    Bug 修复
+    - 修复手机终端调出键盘后输入无效，以及编写模式点击正文出现无效输入焦点。
+    - 修复中文、英文、粗体与方块字符混排时的网格错位，小字号文字重叠，以及 CLI 分栏背景边界不齐。
+    - 修复终端退出交互式 CLI、收放键盘或调整尺寸后，内容覆盖底部按钮及右侧滚动条。
+    - 修复部分环境下终端未使用 UTF-8 导致中文显示异常，以及重新进入终端需要手动重连。
+    - 修复 Windows 10 系统 ConPTY 丢失鼠标信号；正式 Windows 安装包和 ZIP 携带完整 ConPTY 组件，无需手动补文件或替换系统组件。
+    - 修复 Windows 安装器遗漏部分终端组件的解压兼容性问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/try2love/codex-mobile-bridge/releases/tag/v2.1.2
+ReleaseTime: 2026-10-19T19:55:16.0000000Z

@@ -1,0 +1,18 @@
+Version: 0.3.16
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/LBEILC/Multiplane/releases/download/v0.3.16/Multiplane-Setup-0.3.16-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A fix for jobs that looked stuck forever after their process had exited.
+    Desktop app
+    - Exited renders no longer look stuck. The app decides whether a running job's process is still there by its process ID, then checks the process's start time. When the render's process had exited and Windows (or another system) later gave the same ID to an unrelated program, that check could only say "unknown", so the job showed "possibly stuck" forever, its elapsed time kept growing, and a hosted job held the queue. A process that started after the job began cannot be its executor, so such a job is now shown as lost and the queue moves on. A failed check is still treated as unknown, and Stop still never kills a process it cannot verify.
+    Renderer
+    - multiplane wait no longer hangs on a reused process ID. In the same situation, wait (and the hosted handoff that follows a job) kept waiting; it now ends with internal_error ("Job process exited without a result"). The process start time is checked at most every 10 seconds while waiting.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LBEILC/Multiplane/releases/tag/v0.3.16
+ReleaseTime: 2026-11-15T09:47:17.0000000Z

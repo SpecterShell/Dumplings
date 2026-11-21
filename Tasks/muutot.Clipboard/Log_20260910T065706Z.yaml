@@ -1,0 +1,41 @@
+Version: 1.5.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/muutot/Clipboard/releases/download/v1.5.2/Clipboard_1.5.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/muutot/Clipboard/releases/download/v1.5.2/Clipboard_1.5.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Clipboard Desktop v1.5.2
+    macOS 构建修复、密钥链存储与卡片高度打磨
+    Released: 2026-09-10
+
+    macOS 构建与性能修复
+    - 构建修复 — libc::mach_task_self 已废弃，改用 mach2 trap，修复 -D warnings 下 macOS 编译失败 | ac5241f
+    - 内存采样 — 经 task_info（MACH_TASK_BASIC_INFO）进程内查询 RSS，失败时回退到 ps，替代每次快照 fork 与 CSV 解析 | c1a8e0d
+
+    安全与隐私
+    - 密钥链存储 — 同步密钥在 macOS 走钥匙串、Linux 走 Secret Service，统一经平台 secret-store 门面路由 | 170765c 2e720ca
+    - 审计日志脱敏 — 审计日志打码，剪贴板原文不再输出到控制台 | 9e996f6
+    - 图标来源校验 — 替换图标仅接受真实图片输入 | bc0eb8c
+
+    设置与主题打磨
+    - 卡片高度 — 紧凑布局改为常开默认并移除开关；卡片高度设置统一为内容高度+内边距展开，自定义标题卡片接入 cardCustomTitleHeight 滑条 | a427b85 7aef5e9 b44e086 589395d
+    - 主题 — 内置主题显示只读颜色列表，仅自定义主题可编辑；应用 prettier 格式化 | 6fcd204 3524852
+    - 主界面 — 筛选按钮内边距、搜索头垂直内边距、工具栏分组间隙与筛选下拉右置分组等细节对齐 | f5ec4c5 08a2ee2 0548502 f42eb8f 67841ba
+
+    工程与文档
+    - 平台重构 — X11/Wayland 共用 uri-list 解析器；移除无用 TEXT_HEIGHT/IMAGE_HEIGHT 常量 | 3019868 37c1f87
+    - 路线图 — 落定 1.5.2–1.6 已验证路线，MinIO/SBOM 延期并注明原因；提交信息强制英文 | b1ee17f 89df404 9fe097e 0c32143
+
+    构建产物
+    - MSI 安装包：Clipboard_1.5.2_x64_en-US.msi
+    - NSIS 安装包：Clipboard_1.5.2_x64-setup.exe
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/muutot/Clipboard/releases/tag/v1.5.2
+ReleaseTime: 2026-09-10T03:33:58.0000000Z

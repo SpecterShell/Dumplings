@@ -1,0 +1,120 @@
+Version: 18.1.6
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.1.6/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added support for streaming tool argument updates, providing more responsive tool-call progress.
+    Changed
+    - Improved steering behavior so queued steering commands preserve already-emitted non-interruptible tool calls while aborting or skipping only interruptible waits.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Renamed claudeCodeSessionId to sessionId in AnthropicClientOptionsArgs.
+    - Renamed openAISessionId to sessionId in OpenAIRequestSetupOptions.
+    Added
+    - Added Amazon Bedrock requestMetadata support for cost and usage attribution in AWS invocation logs.
+    Changed
+    - Codex GPT-5.6 requests now use full Responses by default, enabling independent tool calls to run in parallel; provider-native compaction continues to use catalog-selected Responses Lite.
+    - Inference requests now identify as omp by default while preserving explicit provider and OAuth User-Agent fingerprints. Amazon Bedrock requests use an omp/<version> User-Agent by default and honor configured User-Agent overrides.
+    Fixed
+    - Fixed Antigravity usage reporting to match the official client's five-hour and weekly quota buckets.
+    - Anthropic and OpenRouter credit-exhaustion errors now automatically switch to a sibling account instead of stopping the turn with a retry hint.
+    - Fixed OpenCode Go and Zen requests by including the required stable per-conversation session identification.
+    - Improved Anthropic prompt caching so explicit cache breakpoints preserve reusable tools and system prompts when the message tail changes.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added catalog-delivered model intelligence scores and estimated output throughput to help compare model capabilities and performance.
+    Changed
+    - Improved model search and selection so configured roles, provider preferences, and recent usage are prioritized while browsing and filtering models.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Replaced the local session-title model choices with LFM2.5 230M, LFM2.5 350M, and Falcon H1 Tiny 90M.
+    - Reserved main and sub as built-in subagent definition names; custom agents can no longer use these names.
+    Added
+    - Added agent reactions: a reply that opens with a lone emoji line shows the emoji as a badge on your message bubble instead of in the text; toggle the prompt invitation with the tui.reactions setting.
+    - Added video attachment and reading support through ffmpeg, including preview grids with metadata and timestamp/frame selectors such as :412 and :1h5m42s.
+    - Enhanced the model picker with intelligence indicators, catalog TPS estimates, provider-aware ranking, and provider-supplied badges and descriptions.
+    - Added detailed, non-summarized findings for scout agents through the report definition field, and subagent result relay so read-only agents can return data to their originating agent.
+    - Added agent-scoped rules using an agents frontmatter field with glob matching, including support for inspecting applicable rules with omp ttsr list and omp ttsr test --agent.
+    - Added non-interrupting extension messages through deliverAs: "aside" for pi.sendMessage and pi.sendUserMessage.
+    - Added copy and open controls for rendered blocks and links, including /copy link and the /open command.
+    - Added option-click cursor positioning in the prompt entry box.
+    - Added the configurable opencode display layout, with a corresponding first-run and upgrade setup option.
+    - Added the skillful prompt setting and /skillful command to control whether available skills are listed in the system prompt.
+    - Added Firecrawl as an optional providers.fetch backend for URL reading, configurable with FIRECRAWL_API_KEY and FIRECRAWL_BASE_URL.
+    - Added provider request metadata configuration for usage and cost attribution, including Amazon Bedrock request headers and User-Agent customization.
+    - Added the :-N read selector for reading the last N lines from files, directories, archives, artifacts, internal URLs, and web URLs, including combinations such as :raw:-60.
+    - Added an opt-in extension status-line segment for displaying custom statuses inline.
+    - Added injectV1: false to openai-models-list discovery for OpenAI-compatible gateways whose model endpoint is rooted at a versioned URL.
+    - Added provider-reported credits and routed-model counts to /session statistics.
+    - Added CLINE_API_KEY to the CLI environment help for native ClinePass subscription inference.
+    - Expanded Devin model selectors to support native CLI aliases, dotted upstream names, and dynamic effort-route identifiers.
+    - Standalone CLAUDE.md files in the project root and ancestor directories are now loaded as project context alongside AGENTS.md files.
+    Changed
+    - Session history is now sorted by modification time, then creation time, then file path.
+    - Increased the maximum file snapshot size to 4 MB.
+    - Edit tools now provide streamed diff previews while applying changes.
+    - Approved plan content is included directly in agent history, reducing redundant reads.
+    - power.sleepPrevention now works on Linux and Windows. Its idle default keeps long-running sessions awake on those platforms; set it to off to restore the previous behavior.
+    - Unsupported-model errors no longer include incorrect retry instructions.
+    Fixed
+    - Fixed local title models receiving unsupported online examples and failing with certain tokenizer templates.
+    - Fixed model picker search selection so it moves to the best matching result after results change.
+    - Fixed /new sometimes reviving the previous conversation in the current process or after a restart.
+    - Fixed raw text escaping in agent responses.
+    - Fixed structured subagent result previews being truncated incorrectly.
+    - Fixed /usage taking several seconds to become responsive on large statistics databases.
+    - Fixed the status line not appearing correctly in the first startup frame.
+    - Fixed shell builtins reporting broken-pipe errors when downstream commands exit early.
+    - Fixed provider-qualified model roles with dotted revisions resolving to the wrong provider or model.
+    - Fixed agent-scoped rules being lost when subagents are restored, and fixed rule:// URLs and rule inspection to consistently use the calling agent's applicable rules.
+    - Fixed extension and user asides being stranded, delivered to the wrong session, or incorrectly interrupting or restarting turns during session changes and image processing.
+    - Fixed parent steering messages arriving during a subagent's final result from preventing that result from being committed.
+    - Fixed messages typed while an edit or write tool was streaming from discarding the completed tool call and triggering unnecessary regeneration.
+    - Fixed self-hosted Firecrawl URLs with origin-only base URLs from gaining an extra slash.
+    - Fixed omp commit auto-staging from including macOS Unicode-normalization duplicates or files ignored by nested .gitignore rules.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Renamed MacOSPowerAssertion to PowerAssertion and MacOSPowerAssertionOptions to PowerAssertionOptions; the options and handle shapes are unchanged.
+    Added
+    - Added edit-session and edit-store types and utilities for managing edit states, snapshots, hashline operations, edit modes, edit descriptions, editable notebook text, and inline sloppy regions.
+    - Added cross-platform sleep inhibition to PowerAssertion on Linux and Windows.
+    Changed
+    - PowerAssertion.start now reports acquisition failures on Linux and Windows instead of returning a handle that silently does nothing; platforms without an implementation continue to receive a no-op handle.
+    Fixed
+    - Fixed native git add so staging an empty file list no longer stages macOS filename-normalization duplicates of tracked paths or files ignored only by a nested .gitignore.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed the band composer layout so the status line remains visible and no longer causes the prompt to shift unexpectedly when the top border is empty.
+    @oh-my-pi/pi-utils
+    Added
+    - Added IncomingDoc (@oh-my-pi/pi-utils/incoming-json) for incrementally reading path-addressed JSON data as text arrives, including string chunks and lines, array elements, and keyed object values, with structured errors for missing, incomplete, aborted, malformed, or mismatched data.
+    - Added Serial for running asynchronous operations sequentially in call order.
+    Fixed
+    - Fixed relaxed JSON parsing for single-quoted strings followed by line or block comments.
+    What's Changed
+    - feat(coding-agent): add Firecrawl scrape as a fetch reader backend by @erikengervall in https://github.com/can1357/oh-my-pi/pull/10451
+    - feat(ai): bedrock-runtime user agent and requestMetadata support by @jzhn in https://github.com/can1357/oh-my-pi/pull/10487
+    - feat(natives): make PowerAssertion work on Linux and Windows by @ParadaCarleton in https://github.com/can1357/oh-my-pi/pull/10492
+    - feat(ai): anchor prompt-cache breakpoint on the stable request head by @khrm in https://github.com/can1357/oh-my-pi/pull/10603
+    - feat(copy): clickable copy/open controls and link blocks in /copy, plus /copy link and /open by @mustafaabidali in https://github.com/can1357/oh-my-pi/pull/10606
+    - feat(status-line): render extension statuses inline by @Visvaldis in https://github.com/can1357/oh-my-pi/pull/10622
+    - feat(coding-agent): add agent scoping to ttsr rules by @andyhite in https://github.com/can1357/oh-my-pi/pull/10624
+    - feat(coding-agent): add deliverAs "aside" for non-interrupting extension messages by @andyhite in https://github.com/can1357/oh-my-pi/pull/10629
+    New Contributors
+    - @erikengervall made their first contribution in https://github.com/can1357/oh-my-pi/pull/10451
+    - @jzhn made their first contribution in https://github.com/can1357/oh-my-pi/pull/10487
+    - @khrm made their first contribution in https://github.com/can1357/oh-my-pi/pull/10603
+    - @mustafaabidali made their first contribution in https://github.com/can1357/oh-my-pi/pull/10606
+    - @Visvaldis made their first contribution in https://github.com/can1357/oh-my-pi/pull/10622
+    - @andyhite made their first contribution in https://github.com/can1357/oh-my-pi/pull/10624
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.1.5...v18.1.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.1.6
+ReleaseTime: 2026-09-03T11:54:23.0000000Z

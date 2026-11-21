@@ -1,0 +1,22 @@
+Version: 0.19.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.19.3/Prometheus_0.19.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.19.3/Prometheus_0.19.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 关闭会话后，该会话启动的 MCP 进程不会退出，会一直残留到整个服务退出：现在关闭会话时会先通知扩展收尾，MCP 连接和子进程随之关闭，且只影响被关闭的那个会话。
+    - 客户端与服务端经常断连、断开后无法重新连上：登录握手超时（4001）不再被当作"未授权"而停止重连；新增心跳（ping/pong）与看门狗，能发现休眠、代理空闲超时、网络掉线造成的假连接并自动重连；网络恢复或页面回到前台时立即重连；重连前清理旧连接，避免服务端残留僵尸客户端。
+    - 服务端补上 WebSocket 错误处理、消息处理异常兜底和全局异常捕获，单个坏帧或插件错误不再拖垮整个服务；握手超时放宽到 15 秒。
+    改进
+    - Android：常驻通知新增"释放/获取唤醒锁"和"退出"按钮；唤醒锁同时持有 Wi-Fi 锁；首次启动时请求忽略电池优化，减少后台被休眠后断连。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.19.3
+ReleaseTime: 2026-11-02T07:01:04.0000000Z

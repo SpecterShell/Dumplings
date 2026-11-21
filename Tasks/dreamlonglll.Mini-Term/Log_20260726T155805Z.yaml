@@ -1,0 +1,35 @@
+Version: 0.8.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.1/Mini-Term_0.8.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.8.1/Mini-Term_0.8.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    单修复版：解决状态栏对 AI 会话退出的判定问题——在 Claude Code 里双击 Ctrl+C 退出后，pane 状态有概率不回 idle，而是弹回并永久卡在 ai-idle。
+    问题修复
+    - Claude 双击 Ctrl+C 退出后状态有概率卡回 ai-idle — 一次修掉三个叠加的成因：
+      - 状态事件双发射源打架 — pty-status-change 由 hook 直推和后台轮询两处发出，各自维护去重表。Claude 收尾的 Stop hook 若比 SessionEnd 晚到（hook 是独立进程、POST 顺序无保证），会把前端推回 ai-idle，而轮询算出的纠正值与自家去重表相同、被吞掉不发——前端就永远停在错误状态。现在两个发射源共用同一份去重表，任何误推都会在下一个轮询周期（≤500ms）被纠正。
+      - 迟到的旧会话事件缺少拦截 — SessionEnd 后给该会话 id 打墓碑，旧会话迟到的 Stop / Notification 直接丢弃，从根上挡住乱序；退出后立刻重开新会话的场景有专门守卫，不会误伤新会话。
+      - 双击间隔超过 1 秒时输入检测漏判 — 两次 Ctrl+C 间隔拉长时，输入侧的退出检测可能没触发，AI 会话标记卡住，轮询降级后稳定输出 ai-idle。现在解析 SessionEnd 的 reason 字段作为权威退出信号自愈（/clear 换会话不受影响）。
+      - 顺带堵住一个小漏洞：退出瞬间 ConPTY 重绘可能把 scrollback 里的 > claude 命令回显再吐一遍，被输出扫描误判成新会话又标回去；现在退出时同步关闭扫描窗口。
+    内部变更
+    - 新增 6 个单元测试覆盖墓碑机制、过时 SessionEnd 守卫与会话标记清理，桌面端 Rust 测试增至 381 个（合计 419）。
+    下载
+
+    | 平台                  | 产物                                                                                      |
+    | --------------------- | ----------------------------------------------------------------------------------------- |
+    | Windows               | Mini-Term_0.8.1_x64-setup.exe（推荐）· Mini-Term_0.8.1_x64_en-US.msi                      |
+    | macOS (Apple Silicon) | Mini-Term_0.8.1_aarch64.dmg · Mini-Term_aarch64.app.tar.gz                                |
+    | Linux                 | Mini-Term_0.8.1_amd64.AppImage · Mini-Term_0.8.1_amd64.deb · Mini-Term-0.8.1-1.x86_64.rpm |
+
+    macOS 提示：产物未经 Apple Developer ID 签名，双击可能提示「已损坏，移到废纸篓」。把 .app 拖入 /Applications 后执行一次 xattr -cr /Applications/Mini-Term.app 即可正常启动，每次升级后需重新执行。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.8.1
+ReleaseTime: 2026-07-26T13:38:57.0000000Z

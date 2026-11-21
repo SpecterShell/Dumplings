@@ -1,0 +1,33 @@
+Version: 18.1.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.teleport.dev/teleport-v18.1.7-windows-amd64-bin.zip
+  InstallerSha256: E31154E855ACFC7923E56F37705B22922D8B8A13BAFEA73BFB9AB50C60D6662E
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed an issue where VNet could not start because of "VNet is already running" error. #58388
+    - Fix MCP icon displaying as white/black blocks. #58347
+    - Fix crash when running 'teleport backend clone' on non-Linux platforms. #58332
+    - Disabled MySQL database health checks to avoid MySQL blocking the Teleport Database Service for too many connection errors. MySQL health checks can be re-enabled by setting max_connect_errors on MySQL to its maximum value and setting the environment variable TELEPORT_ENABLE_MYSQL_DB_HEALTH_CHECKS=1 on the Teleport Database Service instance. #58331
+    - Fixed incorrect scp exit status between OpenSSH clients and servers. #58327
+    - Fixed sftp readdir failing due to broken symlinks. #58320
+    - Added "MCP Servers" filter in resources view for Web UI and Teleport Connect. #58309
+    - Enable separate request_object_mode setting for MFA flow in OIDC connectors. #58281
+    - Allow a namespace to be specified for the tbot Kubernetes Secret destination. #58203
+    - MWI: tbot now supports managing Argo CD clusters via the kubernetes/argo-cd output service. #58200
+    - Fixed failure to close user accounting session. #58163
+    - Add paginated API ListDatabases, deprecate GetDatabases. #58105
+    - Prevent modifier keys from getting stuck during remote desktop sessions. #58103
+    - Fixed AWS app access signature verification for AWS requests that use an unsigned payload. #58085
+    - Windows desktop LDAP discovery now auto-populates the resource's description field. #58082
+    Enterprise:
+    - For OIDC SSO, the IdP app/client configured for MFA checks is no longer expected to return claims that map to Teleport roles. Valid claim to role mappings are only required for login flows.
+    - Fix SSO MFA method for applications when Teleport is the SAML identity provider and Per-Session MFA is enabled.
+    - Added an optional session recording summarizer that uses OpenAI or a compatible API.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gravitational/teleport/releases
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gravitational/teleport/releases/tag/v18.1.7
+ReleaseTime: 2025-08-28T03:43:55.0000000Z

@@ -1,0 +1,144 @@
+Version: 18.4.10
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.4.10/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - streamProxy no longer finalizes a cut-off tool-call argument buffer into an executable auto-closed preview; such a call gets the parse-error arguments, so the tool is not run and the model receives the parse error (#13868 by @alphastorm)
+    - OpenAI remote compaction no longer sends stored native tool calls whose names are blank, longer than 128 characters, or contain whitespace or control characters. The outputs that answer those calls are dropped as well (#13985 by @Xytronix).
+    @oh-my-pi/pi-ai
+    Fixed
+    - Factory Droid login now reports the account's organization error instead of accepting a credential that every request rejects (#14032).
+    - Fixed Cursor turns being aborted with "Provider stream stalled while waiting for the next event" right after a long local tool finished; the provider now gets a full idle window once local tool work completes (#13682 by @eggpeat)
+    - Tool calls whose final argument JSON is cut off or followed by trailing text are no longer executed from an auto-closed preview. OpenAI Completions, Anthropic, Bedrock, Responses, Codex, Devin, Ollama, Apple, Cursor, GitLab Duo, and the in-band JSON dialects now give such a call the existing parse-error arguments, so the tool is not run and the model receives the parse error and can resend the call (#13868 by @alphastorm)
+    - Fixed Cursor "prepaid balance is used up" (USAGE_PRICING_REQUIRED) failures repeating on the same account instead of rotating to a sibling Cursor credential (#14053)
+    - Sessions no longer get stuck on 400 string_above_max_length after a model writes its whole tool invocation into the tool name. Tool calls with blank names, names longer than 128 characters, or names containing whitespace or control characters are dropped from replayed history, together with their tool results. This also applies when OpenAI Responses replays its stored native history (#13985 by @Xytronix).
+    - Fixed Bedrock Converse requests failing with a "bound to a different conversation" 400 after the system prompt changed under signed thinking: the request is retried once without replayed reasoning (#14019 by @nick-maderight)
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed MiniMax Token Plan (minimax-code, minimax-code-cn) usage showing as free; turns now show the pay-as-you-go equivalent cost, with MiniMax-M3.1-Flash-Preview estimated at the MiniMax-M3 rate since it has no published price (#13695 by @eggpeat)
+    - Fixed namespaced LiteLLM models such as azure/gpt-5.6-sol-pro showing raw IDs instead of catalog display names when the proxy supplies no friendly name (#13964 by @gabrielrinaldi).
+    - Bundled prompt-cache lifetimes are recomputed from current policy instead of being inherited from previous generated models (#13966 by @anatoli-tsinovoy).
+    - Fixed HTTP 400 messages.N.output_config: Extra inputs are not permitted on later turns with Claude Sonnet 5.5, Opus 5, Opus 5.5, and Fable 5.1 on Google Vertex AI (#13994)
+    - Fixed Claude Opus 5.5 conversations failing with a "bound to a different conversation" 400 after the system prompt changed. Opus 5.5 now gets Sonnet 5.5's prefix-bound thinking handling on every provider, and Bedrock asks the server to drop stale signed thinking instead of rejecting the request (#14019 by @nick-maderight)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added global and per-advisor review cadence, including final-yield reviews and intervals that accumulate skipped transcript updates (#12385 by @olegpulatov).
+    - Added per-advisor catch-up policy and cancellable strict waiting, so asynchronous turn reviewers can run beside synchronous final reviewers (#12385 by @olegpulatov).
+    - Added /jobs full to show each background bash job's full command line; plain /jobs still shortens it to fit the terminal (#13980 by @rickythefox)
+    Changed
+    - Advisor notes merge at final boundaries with age markers and at most one permitted continuation per batch; advisor continuations no longer trigger recursive reviews (#12387 by @olegpulatov).
+    Fixed
+    - Fixed read of an executable and ida hanging indefinitely while IDA's initial analysis of a large binary runs; they now give up after two minutes with an error naming the still-analyzing host, which keeps analyzing for later calls
+    - Fixed await completion(...), await agent(...) and asyncio.gather(*handles) in Python eval cells failing with Missing session/run/name (#13999)
+    - Fixed isolated tasks picking up edits that other agents or merges made in the parent checkout while the task was starting, which put unrelated changes on task branches
+    - Fixed releasing a kept-alive isolated agent creating a duplicate omp/task/* branch for work that had already been merged
+    - Fixed isolated task branch capture leaving full-checkout temporary worktrees and empty omp/task/* branches behind when interrupted
+    - Fixed merging isolated task branches stashing the entire working tree, which rewrote every Git LFS file and left omp-task-merge stash entries; merges now touch only the picked files and combine them with your unstaged edits
+    - Fixed openai-models-list discovery to honor nested OpenAI model-list input/output token limits while preserving explicit top-level context precedence (#13988 by @github-nicolas-stadler)
+    - Fixed importing @oh-my-pi/pi-coding-agent source from an installed package (SDK, extension loader, bun-global omp) failing with Export named 'createRatchetPrelude' not found (#14027)
+    - Fixed finished subagent runs staying in memory for as long as the session that spawned them, through an abort listener left on the session's signal (#14038 by @theolundqvist).
+    - Fixed print, RPC and ACP runs recording startup timing spans for their whole lifetime, which grew memory with every session and subagent they started (#14039 by @theolundqvist).
+    - Fixed parked subagents keeping their spawn-time run state and settings in memory until the process exits, which grew memory with every subagent a long session spawned (#14040 by @theolundqvist).
+    - Fixed parked and disposed agent sessions keeping their persistent shell (about 70 KB of native memory each) for the life of the process; a revived subagent now starts with a fresh shell (#14042 by @theolundqvist).
+    - Fixed discovered models' request headers nesting one level deeper on every model refresh, which grew memory and per-request work in long sessions with many subagents (#14041)
+    - RPC prompt, steer, and follow_up run native input handlers in submission order and acknowledge prompt only after admission, so a later prompt cannot overtake an idle image skill during vision description, an abort accepted during an earlier hook cancels that frame instead of letting it start a new turn, and a skill failure after the acknowledgement rejects RpcClient.promptAndWait instead of being dropped (#13027 by @andrebrait).
+    - Fixed test suite failures on non-FHS hosts and under ambient terminal and Git configuration (#12358 by @olegpulatov).
+    - Fixed late TTSR matches on short tool calls ending a run before the rule interrupt reaches the model (#14018).
+    - Fixed omp gc --apply holding history.db and stats.db open until exit, which left an empty history.db-wal behind after a WAL checkpoint (#14043).
+    - Fixed coding-agent session and gc tests failing on Windows (#14043).
+    - Fixed background skill-description compression requests emitting no OTLP chat span or token usage (#14056 by @xaviergmail).
+    - Fixed same-ID runtime API replacements carrying a prior route's prompt-cache lifetime into a route without a cache policy (#13966 by @anatoli-tsinovoy).
+    - Hashline edits no longer reject fully read lines below an earlier same-file edit as "never displayed" when that edit left them at the same line number (#13983)
+    - Fixed read agent://<id> returning Not found for a running agent (dotted child ids and agents that only submitted non-terminal yield sections included) while write agent://<id> reached it; the read now shows the agent's status, its yields so far, and its latest text, an unknown id suggests at most five near ids instead of listing every output, and bare read history:// refreshes the caller's persisted roster like history://<id> does (#14000 by @radkawar)
+    - Fixed enabledModels/--models entries naming a judge, search, image, or speech model logging No models match pattern on every startup (#14016)
+    - Fixed local-memory startup consolidation rebuilding the system prompt of a conversation that had already sent requests, which invalidated its signed thinking blocks; the new summary now applies from the next session (#14019 by @nick-maderight)
+    - Fixed the Darwin Nix flake / NixOS module build producing an omp that fails to start after nix-collect-garbage with Library not loaded: /nix/store/…-libiconv-… by repointing the embedded native addon's libiconv install name at the system library and failing the build if the addon references any /nix/store path (#13992 by @krzysztofkusmierczyk).
+    - Fixed /context and clicks on the status-line context meter stacking a new Context Usage card every time; the existing card is refreshed in place, or moved to the bottom if newer blocks follow it
+    - Fixed the jevify keyword notice teaching the removed judge() handle API, so agents following it failed on the first judge cell; it now uses judge_batch() (#13588, #13698 by @holny)
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed long transcript paragraphs slowing Markdown rendering: a 44 KB paragraph with no blank line now parses in about 3 ms instead of 100 ms (#13961 by @sjawhar).
+    - Fixed transcript paragraphs with many unclosed $, \( or \[, slowing Markdown rendering for seconds (#13961 by @sjawhar).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed the embedded shell sometimes hanging on a pipeline with a stage that stopped (for example with kill -STOP $$) before the shell began waiting on it; the pipeline now becomes a stopped job (#14023 by @sjawhar)
+    @oh-my-pi/pi-tui
+    Added
+    - Added ContextUsageView.setBreakdown to refresh usage card without recreating it
+    - Added support for change events with flexible values in native TUI
+    Fixed
+    - Keep settled responses reachable in scrollback while an ask panel is open, and keep the editor at the bottom after answering (#12398, #13993 by @Dante-dan).
+    - Fixed a finished wait whose jobs were all still running going blank, and the next wait removing it while its turn's usage row stayed; the card now keeps its job snapshot (#12248, #13978 by @Dante-dan).
+    - Hidden thinking blocks no longer leave a faint "Thought for Ns" row in Tern's native transcript; only the live "Thinking…" indicator shows while the model reasons.
+    - Fixed long Markdown paragraphs, such as a read preview of a file with no blank line, stalling rendering: a 44 KB paragraph now renders in about 8 ms instead of 95 ms (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs with many unclosed [, * or _, or with a long address-like word, stalling rendering for seconds (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs with many unclosed ~~, $, \( or \[, nested brackets or emphasis, or unclosed HTML, stalling rendering for seconds: 40 KB of unclosed ~~ took 85 s. Emphasis or links nested a thousand levels deep still render slowly, for seconds per few KB: each level restyles the text inside it (#13961 by @sjawhar).
+    - Fixed arrow keys acting as Escape and terminal query replies appearing as typed text when running omp on Windows over SSH (#14034).
+    - Fixed /model under an enabledModels/--models scope hiding every judge, search, image, and speech model and dropping their configured role assignments (JUDGE, WEB, IMAGE, …) (#14016)
+    Removed
+    - Removed the internal urlTokenPossible export (#13961 by @sjawhar).
+    - Removed the internal autolinkSchemeScanIndex export (#13961 by @sjawhar).
+    @oh-my-pi/pi-utils
+    Added
+    - Added startFrom(src, from) to inline Markdown tokenizer extensions: a start hint that returns the first match at or after from (or undefined), so long paragraphs stay linear (#13961 by @sjawhar).
+    - Added this.source and this.end for inline Markdown tokenizer extensions: the whole inline source and where the text being lexed ends in it, with one this per source that the link labels and emphasis inside it share, so a tokenizer can remember what it already scanned (#13961 by @sjawhar).
+    - Added mathSpanInContext and MathSpans to math-delimiters, which find math spans without rescanning a run of unclosed openers (#13961 by @sjawhar).
+    Fixed
+    - Fixed long Markdown paragraphs lexing slowly: a 44 KB paragraph with no blank line now parses in about 3 ms instead of 100 ms (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs with many unclosed [, * or _, or with a long address-like word and no dotted domain, lexing slowly: a 40 KB paragraph of each now lexes in 4-24 ms instead of 2-12 s (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs of deeply nested emphasis, links or images lexing slowly: 32 KB now lexes in about 50 ms instead of 7 s, and a long word inside every level no longer costs its length once per level, except in nested image labels that hold a backslash escape (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs with long or many unclosed runs of backticks, or <http:// autolinks with no space or > after them, lexing slowly: 80 KB of each now lexes in about 50-60 ms instead of seconds (40 KB of one unclosed run took 10 s) (#13961 by @sjawhar).
+    - Fixed Markdown paragraphs of nested brackets, URLs with long trailing punctuation, or unclosed HTML tags or comments lexing slowly: 80 KB of each now lexes in under 40 ms instead of 4-30 s (#13961 by @sjawhar).
+    - Fixed deeply nested Markdown links and emphasis overflowing the stack early: in a fresh process links now nest about three times as deep before a stack overflow, and emphasis twice as deep (#13961 by @sjawhar).
+    What's Changed
+    - fix(robomp): install local rpc dependency by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/12463
+    - test: make fixtures portable across non-FHS hosts by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/12358
+    - feat(advisor): add review cadence and per-advisor catch-up by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/12385
+    - feat(advisor): merge final review notes without recursive reviews by @olegpulatov in https://github.com/can1357/oh-my-pi/pull/12387
+    - fix(ai): refuse tool calls with incomplete argument JSON by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13868
+    - feat(jobs): add /jobs full to show untruncated background command lines by @rickythefox in https://github.com/can1357/oh-my-pi/pull/13980
+    - fix(rpc): run native input hooks for RPC submissions in order by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13027
+    - fix(ai): restarted the idle window when local tool work finishes by @eggpeat in https://github.com/can1357/oh-my-pi/pull/13682
+    - fix(coding-agent): retarget jevify notice at the judge_batch API by @holny in https://github.com/can1357/oh-my-pi/pull/13698
+    - perf(markdown): make inline scans linear by @sjawhar in https://github.com/can1357/oh-my-pi/pull/13961
+    - fix(catalog): resolve namespaced LiteLLM Sol display names by @gabrielrinaldi in https://github.com/can1357/oh-my-pi/pull/13964
+    - fix: rebuild intrinsic prompt-cache policy during generation and replacement by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/13966
+    - fix(edit): carry read provenance past line-neutral edit hunks by @roboomp in https://github.com/can1357/oh-my-pi/pull/13984
+    - fix(ai): drop invocation-text tool names from replayed history by @Xytronix in https://github.com/can1357/oh-my-pi/pull/13985
+    - fix(coding-agent): read nested OpenAI model-list token limits by @github-nicolas-stadler in https://github.com/can1357/oh-my-pi/pull/13988
+    - fix(nix): repoint darwin addon libiconv install name to system library by @krzysztofkusmierczyk in https://github.com/can1357/oh-my-pi/pull/13992
+    - fix(tui): preserve response scrollback while ask panels are open by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/13993
+    - fix(catalog): dropped per-message effort for vertex claude models by @roboomp in https://github.com/can1357/oh-my-pi/pull/13996
+    - fix(coding-agent): resolve agent:// reads for running agents by @radkawar in https://github.com/can1357/oh-my-pi/pull/14000
+    - fix(tui): kept non-chat models in scoped model hub by @roboomp in https://github.com/can1357/oh-my-pi/pull/14017
+    - fix(ai,coding-agent): keep signed thinking valid when memory rewrites the system prompt by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/14019
+    - fix(session): retried late ttsr interrupt continuations by @roboomp in https://github.com/can1357/oh-my-pi/pull/14020
+    - fix(brush-core): don't hang on pipeline stages that stop before the shell waits by @sjawhar in https://github.com/can1357/oh-my-pi/pull/14023
+    - fix(coding-agent): renamed ratchet prelude module to resolve from node_modules by @roboomp in https://github.com/can1357/oh-my-pi/pull/14029
+    - fix(ai): rejected unusable Factory Droid logins by @roboomp in https://github.com/can1357/oh-my-pi/pull/14035
+    - fix(tui): skipped win32-input-mode for windows consoles over ssh by @roboomp in https://github.com/can1357/oh-my-pi/pull/14036
+    - fix(task): drop a SpawnRun's owner-signal listener once the run settles by @theolundqvist in https://github.com/can1357/oh-my-pi/pull/14038
+    - fix(cli): stop startup timing before print, RPC and ACP runs by @theolundqvist in https://github.com/can1357/oh-my-pi/pull/14039
+    - fix(session): release an agent session's persistent shells on dispose by @theolundqvist in https://github.com/can1357/oh-my-pi/pull/14042
+    - fix(coding-agent): released gc sqlite handles for windows teardown by @roboomp in https://github.com/can1357/oh-my-pi/pull/14050
+    - fix(coding-agent): trace skill-description compression requests by @xaviergmail in https://github.com/can1357/oh-my-pi/pull/14056
+    - fix(ai): rotate cursor credentials on prepaid balance exhaustion by @roboomp in https://github.com/can1357/oh-my-pi/pull/14057
+    - fix(task): park subagents without pinning their run state by @theolundqvist in https://github.com/can1357/oh-my-pi/pull/14040
+    - fix(catalog): priced MiniMax Token Plan models at pay-as-you-go rates by @eggpeat in https://github.com/can1357/oh-my-pi/pull/13695
+    New Contributors
+    - @rickythefox made their first contribution in https://github.com/can1357/oh-my-pi/pull/13980
+    - @github-nicolas-stadler made their first contribution in https://github.com/can1357/oh-my-pi/pull/13988
+    - @krzysztofkusmierczyk made their first contribution in https://github.com/can1357/oh-my-pi/pull/13992
+    - @theolundqvist made their first contribution in https://github.com/can1357/oh-my-pi/pull/14038
+    - @xaviergmail made their first contribution in https://github.com/can1357/oh-my-pi/pull/14056
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.4.9...v18.4.10
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.4.10
+ReleaseTime: 2026-10-02T01:35:53.0000000Z

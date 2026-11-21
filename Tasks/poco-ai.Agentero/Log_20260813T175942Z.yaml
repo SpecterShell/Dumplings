@@ -1,0 +1,78 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.0/Agentero_0.6.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.6.0/Agentero_0.6.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.0 polishes first-run experience and the paper workflow: a brand-new onboarding wizard, optional remote Paddle layout analysis, drag-and-drop PDF import, citation hover cards, two new agent templates (dsh and Kimi Code), agent uninstall, and on-demand same-version CLI install — plus stability fixes for Windows CLI startup, updater proxy, local PDF parsing, and a batch of UI issues.
+    Features
+    - First-run onboarding wizard: A new onboarding wizard walks through Agent setup, network proxy, translation service, and layout analysis engine, replacing the old splash page. (6f33e5f3 by @Phil-Fan · #312)
+    - Remote Paddle layout analysis: A new Layout pane in Settings switches between on-device ONNX and remote PP-StructureV3; remote analysis runs as an async whole-PDF job on demand. (8b8008d0 by @Phil-Fan · #304)
+    - Drag-and-drop PDF import: Drop one or more PDFs onto the library to run the existing metadata confirmation flow; the dialog is now a scrollable list. Also restores dragging images from Finder into the Agent input and stops the image overlay from hijacking file-tree drags. (#317 by @ffy6511 · #309)
+    - Citation hover cards: Hovering a citation in a PDF shows extracted text and the matched reference (with its BibTeX key), plus shortcuts consistent with the References panel. (6eb57ee4 by @Phil-Fan)
+    - New agent templates: dsh and Kimi Code: The catalog gains dsh (DeepSeek Harness) and Kimi Code (native ACP kimi acp) templates with logos and silent install/update flows. (08db120f, 3052311d by @Phil-Fan · #318, #319)
+    - Agent uninstall: Settings gains an uninstall entry and confirmation dialog; best-effort npm uninstall with managed-directory cleanup and registry entry removal. (73a7e2f7 by @Phil-Fan)
+    - On-demand same-version CLI install: Desktop installers no longer embed the CLI (notably smaller packages); install a same-version CLI in one click from Settings → About. (#305 by @ffy6511 · #285)
+    - Inline HTML rendering in Markdown: The editor renders embedded HTML content blocks. (13e1878a by @Phil-Fan · #307)
+    - PostHog product analytics with opt-out: PostHog analytics is integrated with an opt-out switch, replacing the built-in diagnostics reporting. (cdde9fde by @QiyuanChen)
+    - Code block wrapping: Code block content wraps automatically instead of scrolling horizontally. (ea185b64 by @Phil-Fan)
+    Improvements
+    - Isolated headless CLI builds: Desktop-only dependencies now sit behind a desktop feature, so headless CLI builds no longer pull in Tauri desktop dependencies and start normally on Windows. (5f154184 by @Phil-Fan)
+    - Settings and About polish: Sidebar dividers, About layout, provider config cards, and redundant explainer text refined. (aa0b3cfe by @Phil-Fan)
+    Fixes
+    - Windows CLI startup failure / Agent tool call interruption: Fixed CLI startup failures caused by desktop library dependencies and the resulting interrupted Agent sessions. (f18c4d0e by @Phil-Fan · #292, #293)
+    - Local PDF parsing failure: PDFium now ships with the app, fixing the broken direct PDF import pipeline. (29324d33 by @Phil-Fan · #303)
+    - Update checks bypassing the proxy: The updater now uses the configured network proxy, so update checks no longer fail in proxied environments. (73d06102 by @Phil-Fan · #302)
+    - pi-acp startup banner leaking into chat: pi's CLI startup info no longer renders as an agent reply. (664e766d by @Phil-Fan · #308)
+    - User-Agent preset could not be re-selected: Native datalist selection was broken under WKWebView; replaced with a DropdownMenu. (56ad4b74 by @Phil-Fan)
+    - Notes panel overflow in narrow widths: The bottom status bar no longer wraps and overflows in narrow panels. (f11b570f by @Phil-Fan · #313)
+    - Stale cache after external edits to PDF/TeX/PAPER.md: CapsCache is invalidated so external edits show up immediately. (52fe13d4 by @Phil-Fan)
+    - Background job pipeline: JobCenter runner now actually executes tasks and the renderer offer chain is fixed, making async analysis jobs reliable. (f58ee087 by @Phil-Fan)
+    - Sidebar rendering without a path: Fixed rendering when no path is selected. (770478d9 by @Phil-Fan)
+    Full changelog v0.5.5...v0.6.0
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 全新 onboarding 引导向导
+    - 可选的远程 Paddle API 进行版面解析，延迟缩短至～4-8s
+    - PDF 拖拽入库
+    - 悬停可查看引用文献
+    - 新增 dsh 与 Kimi Code 预制 Agent、
+    - 同时修复 Windows CLI 启动、更新代理、本地 PDF 解析及一批界面问题。
+    新功能
+    - 首次运行引导向导：全新 onboarding 向导，逐步引导设置 Agent、网络代理、翻译服务与版面解析引擎，替代原开屏页。（6f33e5f3 by @Phil-Fan · #312）
+    - 远程 Paddle 版面解析：设置页新增「版面解析」面板，可在本地 ONNX 与远程 PP-StructureV3 之间切换；远程解析作为异步整篇 PDF 任务运行，可按需触发。（8b8008d0 by @Phil-Fan · #304）
+    - PDF 拖拽入库：将一个或多个 PDF 直接拖入论文库即可走既有元数据确认流程导入，确认弹层改为可滚动列表；同时恢复从 Finder 拖图片到 Agent 输入框，文件树拖动不再被图片 overlay 抢走。（#317 by @ffy6511 · #309）
+    - 引用悬停卡片：悬停 PDF 中的引用即显示提取文本与匹配的参考文献（含 BibTeX key），并提供与 References 面板一致的导入等快捷操作。（6eb57ee4 by @Phil-Fan）
+    - 新增 Agent 模板：dsh 与 Kimi Code: 目录新增 dsh（DeepSeek Harness）与 Kimi Code（原生 ACP kimi acp）接入模板、logo 与静默安装/更新流程。（08db120f、3052311d by @Phil-Fan · #318、#319）
+    - Agent 卸载：设置页新增卸载入口与确认对话框，best-effort 卸载 npm 包并清理受管目录，联动移除注册项。（73a7e2f7 by @Phil-Fan）
+    - 同版本 CLI 按需安装：桌面安装包不再内嵌 CLI（显著减小体积），可在设置 → 关于一键安装与 App 同版本的 CLI。（#305 by @ffy6511 · #285）
+    - Markdown 内嵌 HTML 渲染：编辑器支持渲染 HTML 内容块。（13e1878a by @Phil-Fan · #307）
+    - PostHog 产品分析（可退出）: 集成 PostHog 分析并提供退出开关，同时移除内置诊断上报。（cdde9fde by @QiyuanChen）
+    - 代码块自动换行：代码块内容支持自动换行显示，避免横向滚动。（ea185b64 by @Phil-Fan）
+    改进
+    - headless CLI 构建隔离：桌面专用依赖收敛到 desktop feature 之后，headless CLI 构建不再拉入 Tauri 桌面依赖，Windows 上可正常启动。（5f154184 by @Phil-Fan）
+    - 设置与关于页细节优化：侧边栏分割线、关于页布局、服务商配置界面与冗余解释文案等细节打磨。（aa0b3cfe by @Phil-Fan）
+    修复
+    - Windows 下 CLI 无法启动、Agent 工具调用中断：修复 CLI 依赖桌面库导致的 Windows 启动失败与 Agent 会话中断。（f18c4d0e by @Phil-Fan · #292、#293）
+    - 本地 PDF 解析失败：随包分发 PDFium，修复直接导入 PDF 链路解析失败。（29324d33 by @Phil-Fan · #303）
+    - 更新检查不走代理：更新器现在使用配置的网络代理，代理环境下检查更新不再失败。（73d06102 by @Phil-Fan · #302）
+    - pi-acp 启动横幅混入聊天流：不再把 pi 的 CLI 启动信息当作 Agent 回复渲染。（664e766d by @Phil-Fan · #308）
+    - User-Agent 预设无法换选：WKWebView 下原生 datalist 选中后无法再选，改用 DropdownMenu 修复。（56ad4b74 by @Phil-Fan）
+    - 窄宽度笔记面板溢出：底部状态栏在窄面板下不再换行溢出。（f11b570f by @Phil-Fan · #313）
+    - 外部改动 PDF/TeX/PAPER.md 后缓存不刷新：失效 CapsCache，外部编辑即时反映。（52fe13d4 by @Phil-Fan）
+    - 后台任务链路：JobCenter runner 真正执行任务、渲染进程 offer 链路修复，异步解析任务可靠运行。（f58ee087 by @Phil-Fan）
+    - 侧边栏无路径时渲染异常：修复空路径下的渲染问题。（770478d9 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.6.0
+ReleaseTime: 2026-08-13T17:15:11.0000000Z

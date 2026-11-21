@@ -1,0 +1,89 @@
+Version: 22.22.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-arm64.msi
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-win-x86.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v22.22.0-win-x86/node.exe
+    PortableCommandAlias: node
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-win-x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v22.22.0-win-x64/node.exe
+    PortableCommandAlias: node
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://nodejs.org/dist/v22.22.0/node-v22.22.0-win-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: node-v22.22.0-win-arm64/node.exe
+    PortableCommandAlias: node
+Locale:
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Learn
+    DocumentUrl: https://nodejs.org/learn/
+  - DocumentLabel: Documentation
+    DocumentUrl: https://nodejs.org/docs/v22.22.0/api/
+  - DocumentLabel: About
+    DocumentUrl: https://nodejs.org/about/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: 学习
+    DocumentUrl: https://nodejs.org/zh-cn/learn/
+  - DocumentLabel: 文档
+    DocumentUrl: https://nodejs.org/docs/v22.22.0/api/
+  - DocumentLabel: 关于
+    DocumentUrl: https://nodejs.org/zh-cn/about/
+- Locale: en-US
+  Key: LicenseUrl
+  Value: https://github.com/nodejs/node/blob/v22.22.0/LICENSE
+- Locale: en-US
+  Key: PublisherSupportUrl
+  Value: https://github.com/nodejs/node/blob/v22.22.0/.github/SUPPORT.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This is a security release.
+    Notable Changes
+    lib:
+    - (CVE-2025-59465) add TLSSocket default error handler
+    - (CVE-2025-55132) disable futimes when permission model is enabled
+      lib,permission:
+    - (CVE-2025-55130) require full read and write to symlink APIs
+      src:
+    - (CVE-2025-59466) rethrow stack overflow exceptions in async_hooks
+      src,lib:
+    - (CVE-2025-55131) refactor unsafe buffer creation to remove zero-fill toggle
+      tls:
+    - (CVE-2026-21637) route callback exceptions through error handlers
+    Commits
+    - [6badf4e6f4] - deps: update c-ares to v1.34.6 (Node.js GitHub Bot) #60997
+    - [37509c3ff0] - deps: update undici to 6.23.0 (Matteo Collina) nodejs-private/node-private#791
+    - [eb8e41f8db] - (CVE-2025-59465) lib: add TLSSocket default error handler (RafaelGSS) nodejs-private/node-private#797
+    - [ebbf942a83] - (CVE-2025-55132) lib: disable futimes when permission model is enabled (RafaelGSS) nodejs-private/node-private#748
+    - [6b4849583a] - (CVE-2025-55130) lib,permission: require full read and write to symlink APIs (RafaelGSS) nodejs-private/node-private#760
+    - [ddadc31f09] - (CVE-2025-59466) src: rethrow stack overflow exceptions in async_hooks (Matteo Collina) nodejs-private/node-private#773
+    - [d4d9f3915f] - (CVE-2025-55131) src,lib: refactor unsafe buffer creation to remove zero-fill toggle (Сковорода Никита Андреевич) nodejs-private/node-private#759
+    - [25d6799df6] - (CVE-2026-21637) tls: route callback exceptions through error handlers (Matteo Collina) nodejs-private/node-private#796
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nodejs/node/releases/tag/v22.22.0
+ReleaseTime: 2026-01-12

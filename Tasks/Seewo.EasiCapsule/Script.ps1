@@ -1,21 +1,22 @@
-$Object = $Temp.SeewoApps['EasiCapsule']
+$Object1 = Invoke-RestMethod -Uri 'https://e.seewo.com/download/fromSeewoEdu?code=EasiCapsule'
 
 # Version
-$Task.CurrentState.Version = $Object.softInfos[0].softVersion
+$this.CurrentState.Version = $Object1.data.softVersion
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.softInfos[0].downloadUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.downloadUrl
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

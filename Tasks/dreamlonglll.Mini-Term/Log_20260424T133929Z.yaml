@@ -1,0 +1,21 @@
+Version: 0.2.26
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.26/Mini-Term_0.2.26_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.26/Mini-Term_0.2.26_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.2.26,修复 git 面板网络操作弹黑框卡顿 + Files 新增刷新按钮 - 修复 git 面板 pull/push/commit 时弹 cmd 黑框与页面卡顿：git.rs 两处 stdprocessCommand::new("git") 漏设 Windows CREATE_NO_WINDOW,Tauri GUI 应用(windows_subsystem = "windows")下 spawn git.exe 会被自动分配 conhost 弹黑框，窗口创建 + 焦点切换 + DWM 动画让 UI 感知 100-300ms 卡顿；新增模块私有 helper hide_console_window 在 cfg(target_os = "windows") 下给 Command 加 creation_flags(0x08000000),run_git_network_command(git_pull / git_push)和 git_commit 两处改为 let-binding 统一调用，非 Windows 是 no-op,风格对齐 editor.rs 已有实现 - Files 面板 header 新增刷新 icon:右侧 action 容器从"只在 editors.length > 0 时渲染"升级成始终渲染的 flex-shrink-0 gap-1 组，"↻"按钮常驻并复用 loadRootEntries + loadGitStatus 两个已有函数；editors 按钮组仍按条件渲染在其后，rounded-l / rounded-r 组合视觉不受干扰；宽度兜底保持 minSize=150 下不被挤没，标题侧 truncate 先压缩 - package.json / src-tauri/Cargo.toml / src-tauri/tauri.conf.json 同步到 0.2.26,Cargo.lock 跟随；README 顶部 version badge 同步
+    - feat: Files 面板 header 新增刷新 icon - FileTree.tsx header 右侧新增"↻"刷新按钮，点击同时触发 loadRootEntries + loadGitStatus,与自动刷新链路复用同两个函数 - 右侧 action 容器从"只在 config.editors.length > 0 时渲染"升级成始终渲染的 flex items-center flex-shrink-0 gap-1 组，刷新按钮常驻，editors 按钮组仍按条件渲染在其后，原有 rounded-l / rounded-r 组合视觉不受干扰 - 宽度兜底：所有 action 按钮放在外层 flex-shrink-0 内，Files 面板 minSize=150px 窄拖拽时不会被挤没；左侧"Files — 项目名"保留 truncate 先被压缩；刷新按钮用 ↻ 字符与 GitChanges 刷新按钮保持一致风格，复用 text-muted / hover:text-primary / px-1.5 py-0.5 / rounded-[var(--radius-sm)] / hover:bg-[var(--border-subtle)] 等 design token
+    - fix: 消除 git 面板 pull/push/commit 时弹 cmd 黑框与页面卡顿 - git.rs 两处 stdprocessCommand::new("git") 漏设 Windows CREATE_NO_WINDOW 标志，Tauri GUI 应用(windows_subsystem = "windows")下 spawn git.exe 会被 Windows 自动分配 conhost 弹出黑框，窗口创建 + 焦点切换 + DWM 动画让 UI 线程感知 100-300ms 卡顿 - 新增模块私有 helper hide_console_window(&mut Command),#[cfg(target_os = "windows")] 块内给 Command 加 creation_flags(0x08000000),非 Windows 是 no-op,风格对齐项目内已有的 editor.rs 实现 - run_git_network_command(被 git_pull / git_push 调用)和 git_commit 两处改为 let-binding + hide_console_window(&mut cmd) + .output(),原有仓库校验 / 独立线程 / 30s 超时 / stdin null 等逻辑保持不变 - cargo build 通过，cargo test 63/63 通过，无回归
+    - fix: 禁用 projects/files/sessions/git 面板中点击拖拽选中文本 - ProjectList/FileTree/SessionList/GitHistory 根容器加 select-none,避免点击列表项时意外选中文本，影响拖拽排序和点击体验 - 项目/分组重命名 input 和 commit message textarea 显式加 select-text,防止被父级 select-none 继承(user-select: auto 在父级为 none 时会回落成 none) - DiffModal/FileViewerModal/CommitDiffModal overlay 加 select-text,保证从 files/git 面板打开的弹窗内文件内容、diff、commit 信息仍可选中复制
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.2.26
+ReleaseTime: 2026-04-24T12:31:37.0000000Z

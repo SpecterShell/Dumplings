@@ -1,0 +1,47 @@
+Version: 7.2.129
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/router-for-me/CLIProxyAPI/releases/download/v7.2.129/CLIProxyAPI_7.2.129_windows_amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Linux release assets
+    - CLIProxyAPI_<version>_linux_<arch>.tar.gz is the default Linux build. It supports dynamic library plugins and is built against a GLIBC 2.17 baseline.
+    - CLIProxyAPI_<version>_linux_<arch>_no-plugin.tar.gz is the portable Linux build for musl-based or older systems such as OpenWrt. It does not support dynamic library plugins.
+    FreeBSD release assets
+    - CLIProxyAPI_<version>_freebsd_aarch64_no-plugin.tar.gz is the FreeBSD arm64 build. It is built without CGO and does not support dynamic library plugins.
+    Changelog
+    - fix(runtime): close per-request uTLS HTTP/2 connections with request context (5d9b6299)
+    - feat(plugin): add schema-v3 stream chunk contract to omit payload request bodies (ba5ab795)
+    - perf(antigravity): index reasoning replay requests (9eedbc27)
+    - refactor(antigravity): document replay index lifecycle and align empty-contents semantics (0e4c0dab)
+    - refactor(antigravity): route replay merge through the request index (984836ba)
+    - perf(antigravity): skip replay index rebuilds no item can observe (bb7278a1)
+    - test(antigravity): clear credits state in place to fix a cleanup data race (177c7619)
+    - perf(antigravity): batch pre-upstream JSON rewrites (d5f68856)
+    - perf(antigravity): translate each upstream request once (cf8c27fe)
+    - fix(antigravity): preserve request plugin hook semantics (5fa66293)
+    - perf(antigravity): reuse native upstream connections (c33a33e1)
+    - fix(antigravity): harden per-credential transport pooling (516ec3a0)
+    - fix(claude): restore cloaked prompt-cache ownership and native shape (f0034ca6)
+    - fix(claude): recognize and pass through native Haiku helpers (a8bbbea2)
+    - fix(claude): drop auto context_management without eligible thinking (8638f28d)
+    - fix(claude): validate legacy-model system turns before sending (189776aa)
+    - fix(codex): make input ID sanitization collision-resistant and deterministic (db143aeb)
+    - fix(kimi): treat [reasoning unavailable] as unusable reasoning in message normalization (a59caebc)
+    - fix(codex): fall back to current tool-call state when item IDs don’t match (e9c44ae2)
+    - fix(openai): preserve structured and stringified custom tool outputs during Responses conversion (934da237)
+    What's Changed
+    - perf(antigravity): index reasoning replay requests to remove O(items × payload) scans by @sususu98 in https://github.com/router-for-me/CLIProxyAPI/pull/4880
+    - perf(antigravity): batch pre-upstream JSON rewrites by @sususu98 in https://github.com/router-for-me/CLIProxyAPI/pull/4895
+    - perf(antigravity): reuse native upstream connections by @sususu98 in https://github.com/router-for-me/CLIProxyAPI/pull/4900
+    - fix(claude): align cloaked cache placement and native Haiku helper passthrough by @sususu98 in https://github.com/router-for-me/CLIProxyAPI/pull/4897
+    - fix(claude): validate legacy-model system turns before sending by @sususu98 in https://github.com/router-for-me/CLIProxyAPI/pull/4906
+    Full Changelog: https://github.com/router-for-me/CLIProxyAPI/compare/v7.2.128...v7.2.129
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/router-for-me/CLIProxyAPI/releases/tag/v7.2.129
+ReleaseTime: 2026-08-12T04:07:34.0000000Z

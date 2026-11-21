@@ -1,0 +1,46 @@
+Version: 0.16.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://zsync.eu/zfontmanager/releases/ZFontManager_0.16.0_x64_en-US.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://zsync.eu/zfontmanager/releases/ZFontManager_0.16.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Hungarian. ZFontManager now speaks Magyar, complete with every text in
+      the app. It's picked automatically when your system is set to Hungarian, and
+      you can choose it any time under Settings → Language or from the command
+      palette.
+      Translated by teherauto. (#50)
+    Fixed
+    - Fonts switched off on Windows still showed up in Inkscape and Krita.
+      These apps find fonts through fontconfig, and since 0.13.0 ZFontManager keeps
+      a rules file for them that hides the fonts you've switched off. On Windows,
+      though, fontconfig writes a font's path with a forward slash for the folder
+      and a backslash before the file name, so it never matched the rules, and the
+      fonts stayed visible. Fonts from a watched folder were affected the same way:
+      the ones you had switched on showed up, but so did the ones you hadn't. The
+      rules now match a path whichever slash it uses. Checked against fontconfig's
+      own matching code with the exact rules file sort0m sent: the switched-off
+      font is hidden, and the fonts around it aren't. Restart Inkscape or Krita
+      once after updating.
+      Reported by sort0m. (#46)
+    - Longer languages no longer cut off the top bar. The buttons in the top
+      bar switched to their compact, icon-only form at a fixed window width that
+      was tuned for English. In languages with longer words, like Hungarian or
+      German, the labels could push the last buttons out of view first. The bar
+      now checks whether everything actually fits and switches to the compact form
+      as soon as it doesn't.
+    - Long labels in the detail panel overlapped their values. Labels such as
+      "Írásrendszerek" (Scripts) were wider than their fixed column and ran into
+      the text next to them. The label column now grows to fit the longest label.
+    - Shortened sidebar entries show their full name. Hovering over an entry
+      in the sidebar that is cut off with "…" now shows the whole text.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/TheHolyOneZ/ZFontManager/releases/tag/v0.16.0
+ReleaseTime: 2026-11-16T19:34:22.0000000Z

@@ -1,0 +1,26 @@
+Version: 3.8.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.0/MotrixNext_3.8.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    v3.8.0 introduces the browser extension HTTP API for seamless integration with the companion browser extension, along with critical fixes for the auto-archive file classification system and deep-link handling on all platforms.
+    ✨ New Features
+    - Browser extension API — New HTTP API server enables the companion browser extension to submit downloads directly to Motrix Next, with user confirmation dialog and localized settings
+    - Runtime API port reconfiguration — The extension API listen port can be changed at runtime with user confirmation, without requiring app restart
+    - Pending deep-link queue — Deep links received during frontend window recreation are now queued and replayed, preventing lost downloads on macOS lightweight mode
+    🛠 Improvements
+    - Eliminated silent catch blocks — Added mandatory structured logging throughout stores, components, and composables for full production observability
+    - Config v4 migration — Automatic path separator normalization and empty file-category auto-population for Windows users upgrading from earlier versions
+    🐛 Bug Fixes
+    - Fixed file-missing detection after auto-archive — Archived files are now correctly tracked across all UI operations (Open File, Show in Folder, file-missing badge) via a centralized path resolver with cross-session persistence
+    - Fixed Windows path separator inconsistency — All path comparisons in auto-archive now normalize / vs \ before matching, and move_file returns forward-slash paths consistently
+    - Fixed magnet link auto-submit — Magnet links no longer bypass the file selection dialog, ensuring correct frontend processing flow
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.0
+ReleaseTime: 2026-04-21T10:22:04.0000000Z

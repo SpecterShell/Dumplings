@@ -1,20 +1,20 @@
 # Installer
-$InstallerUrl = Get-RedirectedUrl -Uri 'https://www.effie.co/downloadfile/win'
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://www.effie.co/downloadfile/win'
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '_(\d+\.\d+\.\d+)[_.]').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

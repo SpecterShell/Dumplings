@@ -1,0 +1,196 @@
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.15.0/crystal-1.15.0-windows-x86_64-gnu-unsupported.zip
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.15.0/crystal-1.15.0-windows-x86_64-msvc-unsupported.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Breaking changes
+    lang
+    - Allow constants to start with non-ascii uppercase and titlecase (#15148, thanks @nanobowers)
+    Features
+    lang
+    - (macros) Crystal Not operators do not need parens for stringification (#15292, thanks @Blacksmoke16)
+    - (macros) Add MacroIf#is_unless? AST node method (#15304, thanks @Blacksmoke16)
+    stdlib
+    - (collection) Add Iterator(T).empty (#15039, thanks @spuun)
+    - (collection) Add Enumerable#find_value (#14893, thanks @jgaskins)
+    - (concurrency) Implement the ARM64 Windows context switch (#15155, thanks @HertzDevil)
+    - (concurrency) Add optional name parameter forward to WaitGroup#spawn (#15189, thanks @spuun)
+    - (crypto) Enable bindings for functions in LibreSSL (#15177, thanks @straight-shoota)
+    - (log) Add Log overloads for logging exceptions without giving a block (#15257, thanks @lachlan)
+    - (networking) Better handle explicit chunked encoding responses (#15092, thanks @Blacksmoke16)
+    - (networking) Support OpenSSL on MSYS2 (#15111, thanks @HertzDevil)
+    - (networking) Add Socket::Address.from without addrlen (#15060, thanks @mamantoha)
+    - (networking) Add stringification for HTTP::Cookie (#15240, thanks @straight-shoota)
+    - (networking) Add stringification for HTTP::Cookies (#15246, thanks @straight-shoota)
+    - (networking) Add HTTP::Cookie#expire (#14819, thanks @a-alhusaini)
+    - (numeric) Implement fast_float for String#to_f (#15195, thanks @HertzDevil)
+    - (runtime) Support call stacks for MinGW-w64 builds (#15117, thanks @HertzDevil)
+    - (runtime) Support MSYS2's CLANGARM64 environment on ARM64 Windows (#15159, thanks @HertzDevil)
+    - (runtime) Improve Crystal::Tracing (#15297, thanks @ysbaddaden)
+    - (runtime) Add Thread#internal_name= (#15298, thanks @ysbaddaden)
+    - (runtime) Add Thread::LinkedList#each to safely iterate lists (#15300, thanks @ysbaddaden)
+    - (system) Add Process::Status#exit_code? (#15247, thanks @straight-shoota)
+    - (system) Add Process::Status#abnormal_exit? (#15266, thanks @straight-shoota)
+    - (system) Improve Process::Status#to_s for abnormal exits on Windows (#15283, thanks @straight-shoota)
+    - (system) Add Process::Status#exit_signal? (#15284, thanks @straight-shoota)
+    - (system) Change Process::Status#to_s to hex format on Windows (#15285, thanks @straight-shoota)
+    - (system) Add Process::Status#system_exit_status (#15296, thanks @straight-shoota)
+    - (text) Add Regex::CompileOptions::MULTILINE_ONLY (#14870, thanks @ralsina)
+    - (text) Add type restrictions to Levenshtein (#15168, thanks @beta-ziliani)
+    - (text) Add unit_separator to Int#humanize and #humanize_bytes (#15176, thanks @CTC97)
+    - (text) Add String#byte_index(Regex) (#15248, thanks @Zeljko-Predjeskovic)
+    - (text) Add Colorize::Object#ansi_escape (#15113, thanks @devnote-dev)
+    compiler
+    - Basic MinGW-w64 cross-compilation support (#15070, #15219, thanks @HertzDevil, @BlobCodes)
+    - (cli) Support building from a MinGW-w64-based compiler (#15077, thanks @HertzDevil)
+    - (codegen) Add indirect branch tracking (#15122, thanks @ysbaddaden)
+    - (codegen) Emit position dependent code for embedded targets (#15174, thanks @RX14)
+    - (interpreter) Support "long format" DLL import libraries (#15119, thanks @HertzDevil)
+    - (interpreter) Add cc's search paths to Unix dynamic library loader (#15127, thanks @HertzDevil)
+    - (interpreter) Basic MinGW-w64-based interpreter support (#15140, thanks @HertzDevil)
+    - (parser) Add ECR::Lexer::SyntaxException with location info (#15222, thanks @nobodywasishere)
+    tools
+    - (formatter) Enable pending formatter features (#14718, thanks @Blacksmoke16)
+    - (unreachable) Implement codecov format for unreachable tool (#15059, thanks @Blacksmoke16)
+    Bugfixes
+    lang
+    - (macros) Add location information to more MacroIf related nodes (#15100, thanks @Blacksmoke16)
+    stdlib
+    - LibC bindings and std specs on NetBSD 10 (#15115, thanks @ysbaddaden)
+    - (files) Treat WinError::ERROR_DIRECTORY as an error for non-existent files (#15114, thanks @HertzDevil)
+    - (files) Replace handle atomically in IO::FileDescriptor#close on Windows (#15165, thanks @HertzDevil)
+    - (llvm) Fix find-llvm-config to ignore LLVM_CONFIG's escape sequences (#15076, thanks @HertzDevil)
+    - (log) [regression] Fix Log to emit with exception even if block outputs nil (#15253, thanks @lachlan)
+    - (macros) Avoid identifier naming collision in getter, setter, and property macros (#15239, thanks @jgaskins)
+    - (networking) [regression] Fix UNIXSocket#receive (#15107, thanks @straight-shoota)
+    - (numeric) Fix Complex#/ edge cases (#15086, thanks @HertzDevil)
+    - (numeric) Fix Number#humanize printing of (-)Infinity and NaN (#15090, thanks @lachlan)
+    - (runtime) Fix Deadlock with parallel stop-world/fork calls in MT (#15096, thanks @ysbaddaden)
+    - (runtime) [regression] Protect constant initializers with mutex on Windows (#15134, thanks @HertzDevil)
+    - (runtime) use uninitialized LibC::SigsetT (#15144, thanks @straight-shoota)
+    - (runtime) Fix static linking when using MinGW-w64 (#15167, thanks @HertzDevil)
+    - (runtime) register GC callbacks inside GC.init (#15278, thanks @ysbaddaden)
+    - (runtime) Cleanup nodes in Thread::LinkedList(T)#delete (#15295, thanks @ysbaddaden)
+    - (runtime) Make Crystal::EventLoop#remove(io) a class method (#15282, thanks @ysbaddaden)
+    - (system) Raise on abnormal exit in Procss::Status#exit_code (#15241, thanks @straight-shoota)
+    - (system) Fix Process::Status for unknown signals (#15280, thanks @straight-shoota)
+    - (system) Fix error handling for LibC.clock_gettime(CLOCK_MONOTONIC) calls (#15309, thanks @compumike)
+    - (text) Fix libiconv build on Windows (#15095, thanks @HertzDevil)
+    - (text) Change sprintf "%c" to support only Char and Int::Primitive (#15142, thanks @nanobowers)
+    - (time) Fix proper error handling for early end in HTTP_DATE parser (#15232, thanks @straight-shoota)
+    compiler
+    - OpenBSD: fix integration and broken specs (#15118, thanks @ysbaddaden)
+    - (interpreter) setup signal handlers in interpreted code (#14766, #15178, thanks @ysbaddaden, @straight-shoota)
+    - (parser) Fix SyntaxHighlighter delimiter state (#15104, thanks @straight-shoota)
+    - (parser) Disallow weird assignments (#14815, thanks @FnControlOption)
+    tools
+    - Improve man and shell completion for tools (#15082, thanks @Blacksmoke16)
+    - (docs-generator) Fix first doc comment inside macro yield (#15050, thanks @RX14)
+    - (implementations) Fix tool implementations to handle gracefully a def with missing location (#15273, thanks @straight-shoota)
+    Chores
+    stdlib
+    - Fix various typos (#15080, thanks @kojix2)
+    - (runtime) Make Enum an abstract struct (#15274, thanks @straight-shoota)
+    - (system) [deprecation] Deprecate Process::Status#exit_status (#8647, thanks @jwoertink)
+    - (system) Redefine Process::Status#normal_exit? on Windows (#15255, #15267, thanks @straight-shoota)
+    - (system) [breaking] Redefine Process::Status#signal_exit? (#15289, thanks @straight-shoota)
+    compiler
+    - (codegen) Link i128 constants internally if possible (#15217, thanks @BlobCodes)
+    - (parser) Add location to RegexLiteral (#15235, thanks @straight-shoota)
+    Performance
+    stdlib
+    - (collection) Optimize Slice#<=> and #== with reference check (#15234, thanks @straight-shoota)
+    - (concurrency) Do not over-commit fiber stacks on Windows (#15037, thanks @HertzDevil)
+    - (text) Pre-compute String size after #chomp() if possible (#15153, thanks @HertzDevil)
+    - (text) Optimize String#rchop?() (#15175, thanks @HertzDevil)
+    - (text) Optimize String#== taking character size into account (#15233, thanks @straight-shoota)
+    compiler
+    - (semantic) Inline ASTNode bindings dependencies and observers (#15098, thanks @ggiraldez)
+    Refactor
+    stdlib
+    - Use Win32 heap functions with -Dgc_none (#15173, thanks @HertzDevil)
+    - (collection) Refactor Enumerable#map to delegate to #map_with_index (#15210, thanks @straight-shoota)
+    - (concurrency) Drop Crystal::FiberChannel (#15245, thanks @ysbaddaden)
+    - (runtime) Refactor uses of LibC.dladdr inside Exception::CallStack (#15108, thanks @HertzDevil)
+    - (runtime) Introduce Crystal::EventLoop namespace (#15226, thanks @ysbaddaden)
+    - (runtime) Change libevent event loop to wait forever when blocking (#15243, thanks @ysbaddaden)
+    - (runtime) Refactor the IOCP event loop (timers, ...) (#15238, thanks @ysbaddaden)
+    - (runtime) Explicit exit from main (#15299, thanks @ysbaddaden)
+    - (serialization) Use per-thread libxml2 global state on all platforms (#15121, thanks @HertzDevil)
+    - (system) Assume getrandom on Linux (#15040, thanks @ysbaddaden)
+    - (system) Refactor Lifetime Event Loop (#14996, #15205, #15206, #15215, #15301, thanks @ysbaddaden)
+    - (system) Refactor use of Process::Status#exit_code to #exit_code? (#15254, thanks @straight-shoota)
+    - (system) Refactor simplify Process::Status#exit_reason on Unix (#15288, thanks @straight-shoota)
+    compiler
+    - (semantic) Replace uses of AliasType#types? by Type#lookup_name (#15068, thanks @straight-shoota)
+    Documentation
+    stdlib
+    - Add docs for lib bindings with supported library versions (#14900, #15198, thanks @straight-shoota)
+    - (concurrency) Make Fiber.timeout and .cancel_timeout nodoc (#15184, thanks @straight-shoota)
+    - (concurrency) Update example code for ::spawn with WaitGroup (#15191, thanks @BigBoyBarney)
+    - (numeric) Clarify behavior of strict for String-to-number conversions (#15199, thanks @HertzDevil)
+    - (runtime) Make Box constructor and object getter nodoc (#15136, thanks @straight-shoota)
+    - (runtime) Fix EventLoop docs for Socket read, write (#15194, thanks @straight-shoota)
+    - (system) Add example for Dir.glob (#15171, thanks @BigBoyBarney)
+    - (system) Adjust definition of ExitReason::Aborted (#15256, thanks @straight-shoota)
+    - (text) Improve docs for String#rindex! (#15132, thanks @BigBoyBarney)
+    - (text) Add note about locale-dependent system error messages (#15196, thanks @HertzDevil)
+    Specs
+    stdlib
+    - Fix failing specs on FreeBSD (#15093, thanks @ysbaddaden)
+    - Disable specs that break on MinGW-w64 (#15116, thanks @HertzDevil)
+    - (networking) DragonFlyBSD: std specs fixes + pending (#15152, thanks @ysbaddaden)
+    - (networking) Close some dangling sockets in specs (#15163, thanks @HertzDevil)
+    - (networking) Update specs to run with IPv6 support disabled (#15046, thanks @Blacksmoke16)
+    - (networking) Add specs for invalid special characters in Cookie (#15244, thanks @straight-shoota)
+    - (system) Improve System::User specs on Windows (#15156, thanks @HertzDevil)
+    - (system) Make cmd.exe drop %PROCESSOR_ARCHITECTURE% in Process specs (#15158, thanks @HertzDevil)
+    - (system) Add specs for signal exit (#15229, thanks @straight-shoota)
+    compiler
+    - (cli) Remove the entire compiler code base from external_command_spec (#15208, thanks @straight-shoota)
+    - (interpreter) [regression] Fix Crystal::Loader.default_search_paths spec for macOS (#15135, thanks @HertzDevil)
+    tools
+    - Use empty prelude for compiler tools specs (#15272, thanks @straight-shoota)
+    - (docs-generator) Allow skipping compiler tool specs that require Git (#15125, thanks @HertzDevil)
+    Infrastructure
+    - Changelog for 1.15.0 (#15277, thanks @straight-shoota)
+    - Update previous Crystal release 1.14.0 (#15071, thanks @straight-shoota)
+    - Fix remove trailing whitespace from CRYSTAL definition (#15131, thanks @straight-shoota)
+    - Make utilities posix compatible (#15139, thanks @nanobowers)
+    - Update shell.nix to nixpkgs-24.05 and LLVM 18 (#14651, thanks @straight-shoota)
+    - Makefile: Allow custom extensions for exports and spec flags (#15099, thanks @straight-shoota)
+    - Merge changelog entries for fixups with main PR (#15207, thanks @straight-shoota)
+    - Update link to good first issues (#15250, thanks @BigBoyBarney)
+    - Update distribution-scripts (#15291, thanks @straight-shoota)
+    - Bump NOTICE copyright year (#15318, thanks @straight-shoota)
+    - Merge release/1.14@1.14.1 (#15329, thanks @straight-shoota)
+    - Update distribution-scripts (#15332, thanks @straight-shoota)
+    - Make bin/crystal work on MSYS2 (#15094, thanks @HertzDevil)
+    - Make Makefile work on MSYS2 (#15102, thanks @HertzDevil)
+    - Support .exe file extension in Makefile on MSYS2 (#15123, thanks @HertzDevil)
+    - Support dereferencing symlinks in make install (#15138, thanks @HertzDevil)
+    - (ci) Extract deploy_api_docs job into its own Workflow (#15022, thanks @straight-shoota)
+    - (ci) Remove pin for ancient nix version (#15150, thanks @straight-shoota)
+    - (ci) Migrate renovate config (#15151, thanks @renovate)
+    - (ci) Update GH Actions (#15052, thanks @renovate)
+    - (ci) Update msys2/setup-msys2 action to v2.26.0 (#15265, thanks @renovate)
+    - (ci) Update shards 0.19.0 (#15290, thanks @straight-shoota)
+    - (ci) [security] Restrict GitHub token permissions of CI workflows (#15087, thanks @HertzDevil)
+    - (ci) Do not link against DbgHelp for MinGW-w64 CI build (#15160, thanks @HertzDevil)
+    - (ci) Use MSYS2's upstream LLVM version on MinGW-w64 CI (#15197, thanks @HertzDevil)
+    - (ci) Add CI workflow for cross-compiling Crystal on MSYS2 (#15110, thanks @HertzDevil)
+    - (ci) Add MinGW-w64 CI workflow for stdlib and compiler specs (#15124, thanks @HertzDevil)
+    - (ci) Make MinGW-w64 build artifact a full installation (#15204, thanks @HertzDevil)
+    - (ci) Use official Apt respositories for LLVM CI (#15103, thanks @HertzDevil)
+    - (ci) Drop LLVM Apt installer script on WebAssembly CI (#15109, thanks @HertzDevil)
+    - (ci) Run interpreter specs on Windows CI (#15141, thanks @HertzDevil)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/crystal-lang/crystal/releases/tag/1.15.0
+Version: 1.15.0
+ReleaseTime: 2025-01-10T11:39:55.0000000Z

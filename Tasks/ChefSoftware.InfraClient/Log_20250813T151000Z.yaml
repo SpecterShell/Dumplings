@@ -1,0 +1,64 @@
+Version: 18.8.9.1
+Installer:
+- InstallerUrl: https://packages.chef.io/files/stable/chef/18.8.9/windows/10/chef-client-18.8.9-1-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features
+    - We added support for recipes in JSON format. This builds on earlier work that allows you to define recipes in YAML. This provides a low-code syntax for simple use cases. To write recipes in JSON, Chef resources and any user-defined parameters can be added as elements in a resources object, such as the example below:
+      {
+            "resources": [
+                {
+                    "type": "package",
+                    "name": "httpd"
+                },
+                {
+                    "type": "template",
+                    "name": "/var/www/html/index.html",
+                    "source": "index.html.erb"
+                },
+                {
+                    "type": "service",
+                    "name": "httpd",
+                    "action": [
+                        "enable",
+                        "start"
+                    ]
+                }
+            ]
+        }
+      Thanks dafyddcrosby! (#15106)
+    Compliance Phase improvements
+    - We updated the inspec-core and train-core gems. (#15042)
+    Resource updates
+    - We added the environment property to the apt_package, dnf_package, dpkg_package, package, rpm_package, and yum_package resources. This allows you to customize package installation using environment variables for packages that don’t use preseed files.
+      For example:
+      apt_package "percona-xtradb-cluster-server" do
+          environemnt({"PERCONA_TELEMETRY_DISABLE" => "1"})
+      end
+      Thanks kristofvandam! (#15091)
+    - We fixed an idempotency bug when dearmoring keys in the apt_repository resource. (#15056)
+    - We fixed a bug with the apt_repository resource where it was erroneously accepting empty keys. (#15043)
+    Bug fixes
+    - We fixed a bug in the irb prompt that caused the cursor to jump. (#15069)
+    - We fixed a bug where Chef Infra Client was not handling Ohai custom plug-ins correctly. The plug-in name would return an Ohai::Exceptions::AttributeNotFound error. (#15115)
+    - We fixed the error NoMethodError: undefined method 'present?' for nil:NilClass when running knife bootstrap. (#15108)
+    Packaging
+    - We now build packages for Ubuntu 24.04 on x86-64 and ARM64 platforms and no longer support packages for Ubuntu 16.04. (#15062)
+    - We now build packages for Windows Server 2025 on x86_64 platforms. (#15165)
+    Security
+    - Chef Infra Client now supports the openssl Ruby gem version 3.3.0. (#15147)
+    - We updated the uri Ruby gem to 1.0.3. (#15131)
+    - We updated the rack gem in chef-zero because it was vulnerable to a CVE. (#332)
+    - We updated the json gem to 2.13.2 (7bc6001)
+    - We updated the thor gem to 1.4.0 (#15196
+    - We updated chef-zero to update dependencies and fix CVEs. (#15117)
+    - We updated activesupport support in Chef to fix a CVE. (#15189)
+    - We updated chef-foundation to 3.2.32 to incorporate the following:
+      - nokogiri gem updated to 1.18.9
+      - cgi gem bumped to 0.3.7
+      - libxml2 updated to 2.13.8
+      - libxslt updated to 1.1.43
+      - rbs and typeprof bundled gems removed to reduce attack surface
+      - OpenSSL 3.2.4 library and executables and OpenSSL 3.1.2 FIPS bump

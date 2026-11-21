@@ -1,0 +1,29 @@
+$Object1 = Invoke-WebRequest -Uri 'https://download-electron.aircall.io/aircall-workspace/RELEASES' | Read-ResponseContent | ConvertFrom-SquirrelReleases | Where-Object -FilterScript { -not $_.IsDelta } | Sort-Object -Property { [ChunkVersion]($_.Version) } -Bottom 1
+
+# Version
+$this.CurrentState.Version = $Object1.Version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = "https://download-electron.aircall.io/aircall-workspace/Aircall-Workspace-$($this.CurrentState.Version)-x64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'wix'
+  InstallerUrl  = "https://download-electron.aircall.io/aircall-workspace/Aircall-Workspace-$($this.CurrentState.Version)-x64.msi"
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

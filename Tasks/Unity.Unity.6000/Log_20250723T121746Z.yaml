@@ -1,0 +1,133 @@
+Version: 6000.0.54f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/4c506e5b5cc5/Windows64EditorInstaller/UnitySetup64-6000.0.54f1.exe
+  ProductCode: Unity 6000.0.54f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/4c506e5b5cc5/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.54f1.exe
+  ProductCode: Unity 6000.0.54f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.54
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.54f1
+    - 2D: UI is not rendering and an error is thrown when FXAA is enabled and cameras are stacked in a 2D URP project (UUM-110338)
+    - Asset - Database: Warnings appear in the Console window when opening a new project (UUM-109594)
+    - Asset Store / Publisher portal: Fix for 6000.0.X: Accepting Asset Store EULA endless loop in Package Manager window (UUM-83711)
+    - Cloud Diagnostics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - Environment Effects: [HDRP] Water displacement fades when camera move far in worldspace. (UUM-111903)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (UUM-103995)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (licensing client path is not found) (UUM-103996)
+    - Lighting: All baked data for all scenes using APV is always loaded in Editor (UUM-104833)
+    - Mono: Crash on mono_domain_jit_foreach when performing various Unity operations (UUM-112001)
+    - SRP XR: GameObjects are transparent when a custom fog renderer feature is enabled (UUM-104832)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    - UI Toolkit Controls: Persisted event listeners are reset when collapsing and expanding a component in the Inspector (UUM-111210)
+    - Video: VideoPlayer freezes or stops on certain Android devices when enabling and disabling the Video multiple times (UUM-111599)
+    - Vulkan: [Android] Runtime performance deteriorates on certain Android devices when Graphics API is set to Vulkan on an upgraded project (UUM-107530)
+    6000.0.54f1 Release Notes
+    Improvements
+    - QNX: Enabled shader caching.
+    API Changes
+    - Asset Pipeline: Added: Added FindAssetGUIDs methods that return an array of GUIDs instead of strings.
+    - Asset Pipeline: Added: Added LoadAssetByGUID method that accepts a GUID as an input argument.
+    Changes
+    - Documentation: Added link to relevant area of Discussions on the multiplayer landing page.
+    - Editor: The game view rendering statistics window now displays a warning of incorrect triangle and vertex count when indirect draw calls are issued, such as is the case with GPU Occlusion Culling. (UUM-102572)
+    - XR: Updated com.unity.xr.openxr package version to 1.15.0.
+    Fixes
+    - 2D: Fixed artifacts occurring on Metal when using Rendergraph pipeline. (UUM-109986)
+    - 2D: Fixed UI rendering when FXAA is enabled with camera stack. (UUM-110338)
+    - 2D: Fixed URP 2D lighting with meshes in Rendergraph. (UUM-109312)
+    - 2D: Improved validation of RefreshTile Tilemap argument signature in Editor. (UUM-109125)
+    - Accessibility: Set a minimum width on HierarchyViewer panes to fix resizing issues. (UUM-109362)
+    - AI: Agent was not progressing past a corner between polygons of different area types. (UUM-72975)
+    - AI: Agent was some times getting stuck in its movement along axis-aligned NavMesh edges. (UUM-18593)
+    - AI: Agent was taking steps back while trying to correct the path it had computed through the NavMesh. (UUM-79120)
+    - Android: Fixed a bug where calls lead to a state where starting new audio streams caused a main thread stall. (UUM-103525)
+    - Android: Fixed crash on GameActivity, when touching screen with 9 fingers or more. GameActivity only supports up to 8 fingers touching screen at the same time. (UUM-108743)
+    - Android: Fixed the problem with installing AAB to some Samsung devices which have Secure Folder. (UUM-110694)
+    - Android: Fixed warning showing libraries as not 16 KB page aligned when they have been updated externally. (UUM-111393)
+    - Animation: Fixed an issue where a state machine state's name would be extending beyond the bounds of the node if the name was too long. (UUM-107423)
+    - Asset Import: Detect a corrupt library when loading a project in the Unity Editor, and present an error message with instructions on how to delete the corrupt library, with documentation URL. (UUM-109873)
+    - Asset Import: Fixed indeterminism of artifact ids which could occur when importers set dependencies to other assets. (UUM-107448)
+    - Asset Pipeline: Asset Import workers could get out of sync with their main editor process, rendering them unable to load assets. (UUM-100493)
+    - DX12: Fixed for crash when running with Native Jobs. (UUM-110198)
+    - Editor: "Asset Labels" section should not appear when a non-asset is being selected. (UUM-110356)
+    - Editor: Avoid rare crash while sending Analytics during Licensing operations. (UUM-111546)
+    - Editor: Changed the TextInputBaseField Blur behaviour so that it now resets and scrolls the text back to the start when focus is lost. (UUM-73005)
+    - Editor: Exception thrown when renaming component with symbols in UIBuilder. (UUM-107901)
+    - Editor: Fixed a bug where ctrl + left click would not open the contextual menu for the Orientation Gizmo and added support for Mac's two-finger click. (UUM-102749)
+    - Editor: Fixed an exception when accessing the toolbar of the animator window with a deleted animator. (UUM-107430)
+    - Editor: Fixed Cursor.visible ignoring CursorLockMode.Locked. (UUM-85853)
+    - Editor: Fixed distorted TagManagerInspector pop up window if tag confirmed using Enter. (UUM-110586)
+    - Editor: Fixed IMGUI EditorGUIUtility.labelWidth value being changed by the Scene View UI. This could impact other windows drawn afterwards. (UUM-110450)
+    - Editor: Fixed prefab stage applying changes too early. (UUM-107890)
+    - Editor: Fixed renaming profiles adding a suffix '1' with capitalization only edits. (UUM-104025)
+    - Editor: Fixed SerializedProperty errors that could occur when editing and canceling the edit for an int2 followed by float2. (UUM-110524)
+    - Editor: Fixed the method to get object picker control ID while avoiding creating a new instance. (UUM-110121)
+    - Editor: Fixed Underline with font fallback chain. (UUM-110065)
+    - Editor: LaunchScreen for Windows Editor only closed with Esc key and not also Enter. (UUM-111095)
+    - Editor: Random crash in BatchRendererGroup rendering fixed. (UUM-105252)
+    - Editor: Removed redundant NUnit include from SRP Core code. (UUM-110025)
+    - Editor: Updated 7-Zip to 25.00.
+    - GI: Fixed case where custom properties on a Renderer are not taken into account, leading to incorrectly baked lightmaps. (UUM-108565)
+    - Graphics: Fixed additional separator in menu when the VolumeComponent is in the default VolumeProfile. (UUM-108517)
+    - Graphics: Fixed additional separator in menu when there is no advanced properties in the VolumeComponent. (UUM-108543)
+    - HDRP: Fixed material debug view when path tracing is enabled. (UUM-103401)
+    - HDRP: Fixed the position node in ShaderGraph with the fog volume material type not working as intended. (UUM-83347)
+    - IL2CPP: Ensure macOS .dSYM debug symbol bundles are reliably copied to the build output on clean builds when detailed stacktraces are enabled. (UUM-108362)
+    - IL2CPP: Fixed issue where Linux was running out of memory pages due to them not being returned. (UUM-110285)
+    - IL2CPP: Prevent possible shutdown deadlock when using waits with zero time out. (UUM-104910)
+    - IMGUI: Fixed fallback font weight for Roboto-Mono in IMGUI. (UUM-110337)
+    - Kernel: Fixed rare deadlock on Windows in Resources.UnloadUnusedAssets. (UUM-100691)
+    - Mono: Fixed crash on incorrectly optimized calls to EqualityComparer<T>.Default in Generic Record Type Equals implementations. (UUM-99151)
+    - Mono: Fixed crash on some default interface method calls. (UUM-99049)
+    - Mono: Fixed crash that would occur due to symbol collision between builtin Brotli compression and system installed versions. (UUM-108000)
+    - Mono: Fixed issue where mono's debugger agent thread would not restart when a connection issue was encountered. (UUM-107431)
+    - Player: The DeveloperConsole now correctly opens after being re-enabled, fixing an issue where it would remain stuck in a closed state. (UUM-109718)
+    - Profiler: Align profiler frame duration of Edit mode profiling with Play mode when playing. (UUM-74665)
+    - Scene/Game View: Fixed an issue where Focus Pan command would often set an impractical zoom pivot if Canvas object was picked. (UUM-108790)
+    - Scripting: Optimized the Main Thread times of InstantiateAsync and added a new OriginalImmutable flag to reduce the times even more. (UUM-102307)
+    - TextCore: Make sure disabled TextField do not collapse. (UUM-103184)
+    - uGUI: Updated Image raycast behavior to ensure consistent handling of screenPoints outside bounds, preventing parent Images from blocking child Images. (UUM-110769)
+    - UI Toolkit: Clicking on Spacing/Border Widget values in the UI Builder now selects these values. (UUM-105818)
+    - UI Toolkit: Clicks in dead zones of the canvas selection header won't select the element underneath in UI Builder. (UUM-107380)
+    - UI Toolkit: Ensure margin gizmo stays visible while dragging. (UUM-105900)
+    - UI Toolkit: Fixed an exception thrown by the runtime dropdown field when choices list is empty. (UUM-105552)
+    - UI Toolkit: Fixed an exceptions when displaying PropertyFields bound to an array named "Array" in the inspector. (UUM-110573)
+    - UI Toolkit: Fixed an issue in UI Builder where clicking the scrollbar buttons in the code preview would focus and select the content. (UUM-105775)
+    - UI Toolkit: Fixed an issue where the IMGUI TreeView's context menu option to rename wouldn't work when the containing view was not focused. (UUM-110067)
+    - UI Toolkit: Fixed an issue with PropertyFields bound to an array named "Array" throwing an exception when the add button was clicked. (UUM-110572)
+    - UI Toolkit: Fixed bound fields not showing an indication if they were animated or driven. (UUM-105089)
+    - UI Toolkit: Fixed change events being sent when the text had not changed, but the precision of the text value did not exactly match the float value. (UUM-100527)
+    - UI Toolkit: Fixed crash when stroking rounded joins with Painter2D. (UUM-110455)
+    - UI Toolkit: Fixed elements sometimes still referenced in memory after being removed from their panel. (UUM-109369)
+    - UI Toolkit: Fixed focus in UI Builder code preview when clicking on ScrollView controls. (UUM-105775)
+    - UI Toolkit: Fixed ListView bug where a drag operation would select the item even with SelectionType.None. (UUM-107346)
+    - UI Toolkit: Fixed property field indentation. (UUM-108741)
+    - UI Toolkit: Fixed QuickSearch warning from removing an element during its AttachToPanel event. (UUM-107328)
+    - UI Toolkit: Fixed runtime dropdown checkmark styling. (UUM-109393)
+    - UI Toolkit: Fixed the argument exception when docking a window that contains a RadioButtonGroup control. (UUM-105010)
+    - UI Toolkit: Text in the new selector field in UI Builder is no longer covered by the pseudo states button. (UUM-109121)
+    - URP: Avoid persistent memory allocation (_CameraTargetAttachmentX and _CameraUpscaledTargetAttachmentX) in RenderGraph when possible (single camera), and use a RenderGraph texture instead. (UUM-99384)
+    - URP: RP converter was not displaying the results of the converters execution in the console. (UUM-97117)
+    - Video: Fixed an issue where the VideoPlayer component failed to play MP4 files from StreamingAssets on some Android devices using Vulkan. The required NV12 decode shaders are now correctly included, restoring video playback on affected hardware. (UUM-105019)
+    - Video: [Android] VideoPlayer leaks memory when repeating Play and Stop on a Video. (UUM-77668)
+    - Windows: Fixed SystemInfo.deviceType to correctly return the type of device the Windows Standalone player is running on. (UUM-110392)
+    - XR: Fixed for the background motion vectors being generated incorrectly for spacewarp.
+    Package changes in 6000.0.54f1
+ReleaseTime: 2025-07-23T11:28:35.7140000Z

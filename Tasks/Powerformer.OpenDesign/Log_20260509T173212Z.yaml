@@ -1,0 +1,197 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.6.0/open-design-0.6.0-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🎉 136 PRs · ~2 days — Open Design 0.6.0 turns the corner from "iterate forever" to "ship anywhere": Cloudflare Pages deployment for generated artifacts, an external MCP client with daemon-managed OAuth and 39 design-focused templates, Critique Theater Phase 6, a redesigned top bar, vector PDF export, agent-callable research / /search, Orbit activity summaries, plus six new design systems, eight new skills, BYOK Ollama Cloud, opt-in Langfuse telemetry, Turkish + Thai locales, and a long fix queue across web, desktop, daemon, packaged, and connectors. 🚀
+    🔥 Highlights
+    - 🌐 External MCP client + daemon-managed OAuth + 39 design-focused templates. Open Design becomes fully bidirectional — it ships its own MCP server and now consumes external MCP servers through a managed OAuth flow. (#898) Thanks @pftom.
+    - ☁️ Cloudflare Pages artifact deployment + custom domains. One-shot publish of generated artifacts to Pages, then bind your own domain. (#729, #851, #958) Thanks @bulai0408.
+    - 🎭 Critique Theater Phase 6.1. Critique runs are now interruptible per-project via a new daemon endpoint and a project-keyed run registry; shared types moved into @open-design/contracts. (#819, #1016) Thanks @Nagendhra-web.
+    - 🧰 Top bar redesign. Share/Present lifted to the top bar, zoom dropdown, explicit focus toggle. (#1048) Thanks @qiongyu1999.
+    - 📄 Direct PDF export for artifacts. No more "print to PDF" workarounds. (#532) Thanks @tenderpooh.
+    - 🔍 Agent-callable research command + /search. Agents can ground themselves without leaving the chat. (#615) Thanks @pftom.
+    - 🛰️ Orbit activity summaries. (#681) Thanks @mrcfps.
+    - 🪟 Hyperframes learns the HTML-in-Canvas API for richer in-canvas previews. (#852) Thanks @pftom.
+    - 📁 Import existing local folder as a project. (#624) Thanks @infinity-nft.
+    - 🧱 Six new design systems — BMW M, Slack, Cisco, Webex, Mission Control, Urdu Modern (Indus Script). (#579, #899, #991, #858, #714) Thanks @Sohaibcodecrafter, @MubashirYaqoob, @rahulbsw, @Ayush-Mahadik, @muhammad-anas-15.
+    - 🎨 Eight new skills — ib-pitch-book, github-dashboard, clinical-case-report, social-media-matrix-tracker, trading-analysis, otd-operations-brief, after-hours-editorial, plus 32 zhangzara HTML deck templates and 7 example dashboards. (#888, #666, #581, #810, #824, #794, #1053, #704, #716)
+    - 🤖 BYOK: Ollama Cloud as a first-class provider. (#923) Thanks @aronheredi.
+    - 📊 Opt-in Langfuse telemetry. (#800) Thanks @lefarcen.
+    - 🇹🇷🇹🇭 Turkish README + full Thai (th) UI locale. (#843, #1018) Thanks @esadomer, @Tatsuyato.
+    📥 Download: the table below points at the final asset URLs — links go live once this PR is merged and the release-stable workflow finishes. Tag: open-design-v0.6.0.
+    Platform Architecture Asset
+    macOS Apple Silicon (arm64) open-design-0.6.0-mac-arm64.dmg
+    macOS (auto-update feed) Apple Silicon (arm64) open-design-0.6.0-mac-arm64.zip
+    Windows x64 (unsigned) open-design-0.6.0-win-x64-setup.exe
+    ✨ What's New
+    🌐 MCP, deployment & connectors
+    - 🌐 External MCP client with daemon-managed OAuth + 39 design-focused templates. (#898) Thanks @pftom.
+    - ☁️ Cloudflare Pages artifact deployment. (#729) Thanks @bulai0408.
+    - 🌍 Cloudflare Pages custom domains. (#851) Thanks @bulai0408.
+    - 🔁 Preserve OAuth state and advertised tool counts when reconnecting MCP/connector providers. (#1036) Thanks @alchemistklk.
+    - 🧩 Optimized Composio connector previews. (#907) Thanks @alchemistklk.
+    🎭 Critique Theater
+    - 🎯 Phase 6.1: critique interrupt endpoint + project-keyed run registry. (#819) Thanks @Nagendhra-web.
+    - 📦 Move CritiqueRoundSummary / CritiqueRunStatus into @open-design/contracts. (#1016) Thanks @Nagendhra-web.
+    🖥️ Web / UI
+    - 🧭 Top bar redesign — Share/Present, zoom dropdown, focus toggle. (#1048) Thanks @qiongyu1999.
+    - 🪄 Draggable file tab reordering. (#936) Thanks @Romantin.
+    - 🗂️ Batch delete for selected design files. (#783) Thanks @yinjialu.
+    - 📊 Sortable Design Files table columns. (#804) Thanks @paulstean.
+    - 🔒 Privacy consent choices made explicit. (#1031) Thanks @lefarcen.
+    - 🆕 Differentiate "recent" vs "your designs" sorting. (#845) Thanks @Priyanshudotdev.
+    - 👀 Render an empty-annotation state for Inspect / Picker. (#1005) Thanks @Sid-Qin.
+    - 🗝️ Toggle to reveal saved media-provider API keys. (#867) Thanks @nettee.
+    🖼️ Desktop & artifacts
+    - 📄 Direct PDF export for artifacts. (#532) Thanks @tenderpooh.
+    - 🪟 HTML-in-Canvas API in the hyperframes skill. (#852) Thanks @pftom.
+    - 🎞️ Consolidated hyperframes video template updates. (#1079) Thanks @Tuola-waj.
+    - 🪟 Inspect overlay support on Windows packaged builds. (#944) Thanks @Priyanshudotdev.
+    - 🪟 Allow od:// URLs through setWindowOpenHandler so live-artifact previews open in a child window. (#933) Thanks @Sid-Qin.
+    🤖 Daemon, agents & runtime
+    - 📁 Import existing local folder as a project. (#624) Thanks @infinity-nft.
+    - 🔍 Agent-callable research command + /search. (#615) Thanks @pftom.
+    - 🛰️ Orbit activity summaries. (#681) Thanks @mrcfps.
+    - 📦 Finalized the design-package endpoint (closes #450). (#832) Thanks @bankielewicz.
+    - 🧰 Closed pi adapter parity gaps (imagePaths, extraAllowedDirs, error events, sendAgentEvent routing). (#763) Thanks @monotykamary.
+    - 🗣️ Language-boost support for Minimax TTS. (#773) Thanks @terencewlc.
+    - 🧠 Expose Gemini 3 preview models + 2.5 Flash Lite in the picker. (#986) Thanks @Nagendhra-web.
+    - 🧠 GPT-5.1 entries in the Codex picker. (#946) Thanks @leprincep35700.
+    - 🧠 Expand Codex picker coverage. (#757) Thanks @leprincep35700.
+    - 🌙 Stable nightly promotion gate for [codex]. (#962) Thanks @PerishCode.
+    - 🛣️ VP_HOME env var support in agent resolution. (#859) Thanks @AmbitionsXXXV.
+    - 🛠️ Auto-rebuild better-sqlite3 on Node.js ABI mismatch postinstall. (#813) Thanks @VikingOwl91.
+    - ⏱️ Increase agent inactivity timeout. (#1071) Thanks @alchemistklk.
+    - ⏱️ Reset inactivity watchdog on raw stdout bytes, not just parsed events. (#976) Thanks @ButterHost69.
+    🔌 BYOK & integrations
+    - 🦙 Ollama Cloud as a BYOK provider. (#923) Thanks @aronheredi.
+    - 📊 Opt-in Langfuse telemetry. (#800) Thanks @lefarcen.
+    - ☁️ Make Azure API version optional. (#941) Thanks @haocn-ops.
+    🎨 Skills, design systems & prompt templates
+    - 💼 ib-pitch-book skill — investment-banking strategic-alternatives pitch book (Anthropic financial-services Pitch Agent port). (#888) Thanks @ashleyashli.
+    - 📈 github-dashboard skill. (#666) Thanks @joeylee12629-star.
+    - 🩺 clinical-case-report skill. (#581) Thanks @syedali254.
+    - 📱 social-media-matrix-tracker skill. (#810) Thanks @Tuola-waj.
+    - 💹 trading-analysis live-artifact dashboard skill. (#824) Thanks @Tuola-waj.
+    - 🛰️ otd-operations-brief live-artifact template. (#794) Thanks @joeylee12629-star.
+    - 🃏 32 zhangzara HTML deck templates. (#704) Thanks @pftom.
+    - 📊 7 example dashboards + contract demo for the live-artifact skill. (#716) Thanks @pftom.
+    - 🌃 after-hours-editorial template skill. (#1053) Thanks @Tuola-waj.
+    - 🇨🇭 swiss-user-research-video template skill. (#1054) Thanks @Tuola-waj.
+    - 🍷 editorial-burgundy-principles template skill. (#1065) Thanks @Tuola-waj.
+    - 🇨🇭 swiss-creative-mode template skill. (#1068) Thanks @Tuola-waj.
+    - 🚗 BMW M design system. (#579) Thanks @Sohaibcodecrafter.
+    - 💬 Slack design system. (#899) Thanks @MubashirYaqoob.
+    - 🌐 Cisco and Webex design systems. (#991) Thanks @rahulbsw.
+    - 🚀 Mission Control design system. (#858) Thanks @Ayush-Mahadik.
+    - 📜 Urdu Modern (Indus Script) design system. (#714) Thanks @muhammad-anas-15.
+    - 🧠 Craft laws-of-ux so generated UIs respect working-memory limits. (#809) Thanks @MohamedAbdallah-14.
+    - 🔠 Craft typography-hierarchy and typography-hierarchy-editorial rules. (#975, #979) Thanks @itsmeved24.
+    🌍 Internationalization
+    - 🇹🇷 Turkish README translation. (#843) Thanks @esadomer.
+    - 🇹🇭 Full Thai (th) UI locale. (#1018) Thanks @Tatsuyato.
+    - 🈚 Renamed live-artifact tab label in zh-CN and zh-TW. (#969) Thanks @zhujie007.
+    - 🇮🇩 Default id locale to English for keys not yet translated. (#822) Thanks @Sid-Qin.
+    - 🇨🇳 Trim BYOK proxy fallback line from zh-CN intro. (#915) Thanks @qiongyu1999.
+    📦 Packaging & deployment
+    - 🐳 Docker Compose deployment workflow. (#65) Thanks @wangwanjie.
+    - 📊 Preserve beta e2e spec reports in R2. (#812) Thanks @PerishCode.
+    - 🐳 Document the Colima build-swap helper. (#967) Thanks @wangwanjie.
+    🤝 Community
+    - 🏅 Vaunt contributor recognition (5-tier system). (#908) Thanks @ashleyashli.
+    🛡️ Stability & Reliability
+    - 🔐 Hardened security scan findings and upgraded dependencies. (#806) Thanks @ferasbusiness666.
+    - 🧪 Strengthened e2e PR coverage and entry/settings automation. (#796, #811) Thanks @mrcfps, @shangxinyu1.
+    - 🧰 Settle completed runs and clean up shutdown children. (#924) Thanks @Siri-Ray.
+    - 🧰 Fix stuck chat runs and unintended cancels. (#896) Thanks @shangxinyu1.
+    - 🧪 Type-check core server paths and leaf modules. (#943, #952) Thanks @nettee.
+    - 📡 Write SSE events atomically in createSseResponse.send. (#972) Thanks @jnalv414.
+    - 💾 Media generation task state survives daemon restart (#648). (#884) Thanks @pmasadali20776-ui.
+    - ⚙️ Sync Orbit last run with the selected prompt template. (#937) Thanks @Derrick-xn.
+    - 🖼️ Image template creations execute the selected prompt automatically. (#752) Thanks @arijiiiitttt.
+    🐛 Bug Fixes
+    MCP & connectors
+    - 🔌 MCP install snippet survives daemon port changes. (#846) Thanks @emilneander.
+    - 🍎 Pin OD_DATA_DIR in /api/mcp/install-info env so the macOS-packaged MCP server stops EPERM'ing. (#857) Thanks @Nagendhra-web.
+    - 🪟 Reserve clearance for the MCP server Copy button so it stops overlapping the snippet. (#847) Thanks @Nagendhra-web.
+    - 🪟 Give the MCP server Copy button a solid surface against the code block. (#840) Thanks @Nagendhra-web.
+    - 🔢 Stable curated tool count in the connector card badge. (#767) Thanks @Sid-Qin.
+    - 🧹 Remove redundant "Connect GitHub" placeholder from the import menu. (#964) Thanks @xxiaoxiong.
+    - 🪟 Connector "Close window" button always gives feedback. (#995) Thanks @Nagendhra-web.
+    - 🔑 Confirm before clearing the saved Composio API key. (#877) Thanks @Nagendhra-web.
+    - 🔑 Keep saved Composio API key indicator visible while typing a replacement. (#751) Thanks @Nagendhra-web.
+    - 🔑 Confirm before clearing a saved Media provider API key. (#875) Thanks @Nagendhra-web.
+    Cloudflare Pages
+    - 🌍 Cloudflare Pages custom-domain lookup. (#958) Thanks @bulai0408.
+    Web UI
+    - ⚠️ Surface explicit error/retry state when example preview HTML fails to load. (#863) Thanks @Nagendhra-web.
+    - ✏️ Confirm before closing a dirty sketch so unsaved strokes are not lost. (#988) Thanks @Nagendhra-web.
+    - 💬 Keep chat auto-scroll glued to bottom across streaming chunks. (#989) Thanks @Nagendhra-web.
+    - 💬 Preserve Chat scroll position across Chat/Comments tab switches. (#841, #886) Thanks @Nagendhra-web, @lefarcen.
+    - 🌐 Differentiate selected/hover/focus in the language switcher. (#987) Thanks @Nagendhra-web.
+    - 📐 Scroll the active workspace tab into view when the strip overflows. (#990) Thanks @Nagendhra-web.
+    - 📐 Keep the Design Files tab visible when workspace tabs scroll. (#842) Thanks @Nagendhra-web.
+    - 💬 Wrap long note text inside picker/comment popovers. (#830) Thanks @Nagendhra-web.
+    - 💬 Wrap comment-popover action row so the Save/Sending button can't exceed the popover edge. (#829) Thanks @Nagendhra-web.
+    - 💬 Prevent comment popover header overflow when the label is too long. (#833) Thanks @nmsn.
+    - 🔬 Truncate long Inspect-panel labels. (#838) Thanks @Nagendhra-web.
+    - 🔬 Keep Inspect-panel close button on a stable single-line layout. (#839) Thanks @Nagendhra-web.
+    - 📐 Increase project meta line-height to prevent descender clipping. (#834) Thanks @zhujie007.
+    - ✨ Give the deploy modal primary action more breathing room. (#992) Thanks @Nagendhra-web.
+    - 🧱 Hide the unsupported "Save comment" button on Pods selections. (#993) Thanks @Nagendhra-web.
+    - 🧹 Clear stale upload error banner when previewing existing files. (#994) Thanks @Nagendhra-web.
+    - 👆 Expand design file row click target. (#1039) Thanks @lefarcen.
+    - 🧷 Keep entry footer pills compact. (#1045) Thanks @lefarcen.
+    - 🧹 Hide stale upload error banner when previewing other files. (#994) Thanks @Nagendhra-web.
+    - ⚙️ Scope settings save validation + sanitize payload to the active sidebar section. (#827) Thanks @Nagendhra-web.
+    - ❌ Ensure the Settings close button is always clickable. (#971) Thanks @xxiaoxiong.
+    - 🧩 Correct srcdoc injection and deck bridge for JS strings containing closing </script>. (#938) Thanks @Morzorz.
+    - 🌐 Unbreak the Create button on plain HTTP / LAN-IP deployments. (#900) Thanks @Sid-Qin.
+    - 🔢 Keep examples filter counts consistent. (#949) Thanks @leprincep35700.
+    Desktop & packaging
+    - 🍎 Cleanly quit the macOS packaged app. (#422) Thanks @fuyizheng3120.
+    - 🪟 Keep modal controls clickable in drag regions. (#1032) Thanks @mrcfps.
+    - 🛰️ Improve Orbit and packaged data-dir startup errors. (#1067) Thanks @mrcfps.
+    - 🪟 Fix desktop preview interactions and connector auth feedback. (#864) Thanks @shangxinyu1.
+    - 🪟 Fix desktop preview and packaged app interactions. (#879) Thanks @shangxinyu1.
+    - 🪟 Fix desktop prompt template close hitbox. (#1056) Thanks @Siri-Ray.
+    - 🪟 Pack/win: close detection gaps that let Open Design.exe stay locked at install time. (#823) Thanks @Nagendhra-web.
+    - 🍎 Tools-pack: mark blake3-wasm as external in the macOS prebundle. (#844) Thanks @marcoandreom.
+    - 🪟 Packaged: swallow harmless setTypeOfService EINVAL from undici. (#906) Thanks @Sid-Qin.
+    Codex / OpenCode
+    - 📝 OpenCode todowrite footer state. (#1046) Thanks @alchemistklk.
+    Daemon
+    - 🐍 Serve Python files as text. (#947) Thanks @leprincep35700.
+    📚 Documentation
+    - 🧭 Repository-wide code review guidelines. (#927) Thanks @mrcfps.
+    - 🎨 Design system authoring guide. (#961) Thanks @Ayush-Mahadik.
+    - 🛠️ Skills contributing guide. (#1035) Thanks @lefarcen.
+    - 🐳 Docker setup instructions in QUICKSTART, CONTRIBUTING, and README. (#935) Thanks @Priyanshudotdev.
+    - 🔗 Re-add awesome-design-md reference to QUICKSTART. (#940) Thanks @zoltanszogyenyi.
+    - 📖 Update prompts path from web to daemon in README files. (#756) Thanks @thientu.
+    - 🔗 Fix stale internal links across docs. (#950) Thanks @leprincep35700.
+    🔨 For Developers
+    Click to expand
+    - 🧪 Test: cover model option rendering. (#948) Thanks @leprincep35700.
+    - 🧪 Test: de-flake chat-scroll-preservation across tab switches. (#886) Thanks @lefarcen.
+    - 📊 Auto-generated metrics + contributors wall refreshes. (#853, #998, #856, #1004)
+    - 📦 Release: 0.5.0 changelog landing. (#820) Thanks @lefarcen.
+    ✅ System Requirements
+    - 🍎 macOS — Apple Silicon (arm64) only, macOS 11 Big Sur or newer. Intel macs are not supported.
+    - 🪟 Windows — x64, Windows 10 / 11. Installer is unsigned (SmartScreen will warn on first launch — choose "More info → Run anyway").
+    - 🐧 Linux — headless lifecycle (install, start, stop) supported via CLI. A packaged Linux desktop GUI artifact is still deferred while the release lane is hardened.
+    - 🧑‍💻 From source — Node.js 24.x and pnpm 10.33.2+ (per engines in package.json).
+    ⚠️ Known Issues
+    - 🪟 Windows installer is unsigned. SmartScreen / antivirus warnings are expected. Code signing is still follow-up work.
+    - 🍎 No macOS Intel (x64) build. Apple Silicon only.
+    - 🐧 No Linux desktop GUI package in 0.6.0 stable — use headless mode or run from source.
+    - 🐚 od CLI shadows POSIX od when installed globally. Use /usr/bin/od or command od for the system tool.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.6.0
+ReleaseTime: 2026-05-09T11:56:13.0000000Z

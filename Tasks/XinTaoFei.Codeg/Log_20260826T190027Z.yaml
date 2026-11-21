@@ -1,0 +1,73 @@
+Version: 0.28.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.28.2/codeg_0.28.2_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.28.2/codeg_0.28.2_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Diffs can be read side by side.
+    Mermaid diagrams get a viewer of their own.
+    New
+    - Diffs open side by side, with a toggle on every preview and each side scrolling on its own. (#537, #570, @asteroida123)
+    - Mermaid diagrams get their own viewer — sharp at any zoom, draggable, fullscreen, and saveable as SVG, PNG or .mmd.
+    - Select a passage in a message and ask about it in a new conversation, pinned to the agent that wrote it.
+    - The repository panel shows an item's comments, not just its description.
+    - Remote workspace connections can carry custom HTTP headers, for a codeg-server behind a proxy that demands one. (#577, @codebutler)
+    - The window zooms to 300%, and Ctrl/Cmd + and − step it. (#484, #569, @Adam-Dalloul)
+    - Custom Codex models work on OpenAI-compatible gateways, through a template that sends plain Responses requests.
+    - Codex can ask you questions in Default mode, via a new switch in its settings panel.
+    - A delivered task can remove its worktree on the spot, with the same checkbox merge and complete already offer.
+    Improved
+    - Updated bundled agents: OpenCode 1.18.23, Cline 3.0.60, CodeBuddy 2.139.0, DeepSeek Harness 0.7.0, Qoder 1.1.31.
+    - DeepSeek Harness resumes by resolved path, so /var against /private/var or a Windows short name no longer fails.
+    - The Recent list folds back to its first page instead of staying long for the rest of the session.
+    - An issue task has to confirm the problem before fixing it, and the separate "investigate only" mode retires.
+    - Copy image works on pictures staged in the composer. (#556, @Adam-Dalloul)
+    Fixed
+    - A task counts its own work, not the pull request it started from or the new files it never committed.
+    - A task waiting on your answer stops reading as "running". (#567, @lizzjin)
+    - A session renamed in Claude Code keeps its name. (#566, @Adam-Dalloul)
+    - Closing settings brings back a workspace hidden to the tray, instead of leaving nothing on screen. (#565, @Adam-Dalloul)
+    - The add-to-chat pill stays inside the editor on selections near the top of a file. (#576, @dawNotPoi)
+    - Windows paths stop mixing separators, like the clone dialog's C:\work/codeg.
+    - Connection secrets stay out of the logs, where raising the level used to dump the whole WebSocket handshake.
+    Thanks to @Adam-Dalloul, @asteroida123, @codebutler, @dawNotPoi and @lizzjin for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    差异对比支持左右双栏。
+    Mermaid 图表有了自己的查看器。
+    新增
+    - 差异可以左右对照着看，每个预览都有切换开关，两栏各自独立滚动。（#537、#570，@asteroida123）
+    - Mermaid 图表有了自己的查看器——放到多大都清晰，可拖动、可全屏，能存成 SVG、PNG 或 .mmd。
+    - 选中消息里的一段话就能另开会话追问，新会话自动绑定写出这段话的智能体。
+    - 仓库面板里能看到条目的评论了，不再只有描述。
+    - 远端工作区连接可以携带自定义 HTTP 请求头，适用于 codeg-server 前面挡着一层需要特定请求头的代理。（#577，@codebutler）
+    - 窗口缩放上限提到 300%，Ctrl/Cmd + 与 - 可直接调整。（#484、#569，@Adam-Dalloul）
+    - 自定义 Codex 模型可以用在 OpenAI 兼容网关上了，新模板会按标准 Responses 协议发送请求。
+    - Codex 在默认模式下也能向你提问，设置页新增了对应开关。
+    - 任务交付时可以顺手删掉工作树，和合并、完成用的是同一个勾选项。
+    改进
+    - 内置智能体版本更新： OpenCode 1.18.23、Cline 3.0.60、CodeBuddy 2.139.0、DeepSeek Harness 0.7.0、Qoder 1.1.31。
+    - DeepSeek Harness 改按解析后的真实路径恢复会话，/var 与 /private/var、Windows 短路径名不再导致失败。
+    - 「最近」列表可以收回第一页了，不必展开后一直占着屏幕。
+    - 议题任务必须先确认问题真的存在再动手，原先单列的「仅分析验证」模式随之取消。
+    - 输入框里待发送的图片也能右键复制了。（#556，@Adam-Dalloul）
+    修复
+    - 任务统计的是它自己干的活，不再把来源 PR 的改动算进去，也不再漏掉没提交的新文件。
+    - 停下来等你回答的任务不再一直显示「运行中」。（#567，@lizzjin）
+    - 在 Claude Code 里改过的会话名不会被自动标题顶掉。（#566，@Adam-Dalloul）
+    - 收进托盘后关掉设置窗口，主界面会回来，不再是屏幕上什么都没有。（#565，@Adam-Dalloul）
+    - 在文件靠顶部选中文字时，「添加到聊天」气泡不会跑出编辑器了。（#576，@dawNotPoi）
+    - Windows 路径不再混用分隔符，比如克隆对话框里的 C:\work/codeg。
+    - 连接密钥不会再写进日志，此前调高日志级别会把整个 WebSocket 握手原样落盘。
+    感谢 @Adam-Dalloul、@asteroida123、@codebutler、@dawNotPoi 与 @lizzjin 为本次发布做出的贡献。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.28.2
+ReleaseTime: 2026-08-26T17:10:53.0000000Z

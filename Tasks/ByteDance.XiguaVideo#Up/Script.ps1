@@ -1,28 +1,37 @@
-$Object = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=6922326164589517070&branch=master&buildId=&uid='
+$Object1 = Invoke-RestMethod -Uri 'https://tron.jiyunhudong.com/api/sdk/check_update?pid=6922326164589517070&branch=master&buildId=&uid='
 
 # Version
-$Task.CurrentState.Version = $Object.data.manifest.win32.version
+$this.CurrentState.Version = $Object1.data.manifest.win32.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.data.manifest.win32.urls
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.manifest.win32.urls[0] | ConvertTo-Https
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.manifest.win32.extra.uploadDate | ConvertFrom-UnixTimeMilliseconds
 
-# ReleaseNotes (zh-CN)
-# $Task.CurrentState.Locale += [ordered]@{
-#   Locale = 'zh-CN'
-#   Key    = 'ReleaseNotes'
-#   Value  = $Object.data.releaseNote | Format-Text
-# }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.releaseNote | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
   }
 }

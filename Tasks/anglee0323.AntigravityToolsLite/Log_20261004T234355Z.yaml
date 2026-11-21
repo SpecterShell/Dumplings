@@ -1,0 +1,29 @@
+Version: 4.8.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/antigravity-tools-lite/releases/download/v4.8.0/Antigravity-Tools-Lite-4.8.0-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Antigravity Tools Lite 4.8.0
+    Source commit: 4c01890722aef8a115cacd93857eb6cabeb92bd7
+    Packages: macOS Apple Silicon ZIP, Windows x64 NSIS installer, Linux amd64 deb, Windows console ZIP and Linux console tarball. Checksums and source manifest are attached.
+    These builds are not Developer ID signed/notarized or Windows Authenticode signed. Homebrew installation becomes available after the generated cask is verified and merged into the repository's Casks directory.
+    v4.8.0 — Windows and Linux delivery
+    - Windows now includes a dedicated console agy-switch.exe. PowerShell can invoke it directly, wait normally and receive the exit code; the desktop program keeps its GUI subsystem.
+    - All three platforms share terminal navigation and masked credential entry. Windows/Linux receive separate console downloads in addition to the desktop packages; the Linux deb also installs /usr/bin/agy-switch.
+    - The Windows/Linux tray dashboard follows the Mac dashboard’s three sections, with opaque surfaces, consistent identity/action alignment, neutral percentage text, yellow reset labels, and prewarmed window reuse. Preferences remain in Settings.
+    - Windows packaging builds the console executable before assembling the installer, which offers English/Simplified Chinese and current-user installation. The release includes checksums and source provenance for all five payloads.
+    - English and Chinese READMEs are reorganized around installation and desktop/terminal workflows, with separate Windows and Linux guides. Router dependencies include the current compatible security patches.
+    Acceptance and limits
+    Local Mac regression checks passed 126 backend tests (two isolated helper cases ignored), 28 browser UI cases, 14 actual CLI read checks and 13 real PTY checks. The three-platform Build run and Windows/Linux release CLI run passed at product source 8f14803e9a7ceeb8293b3a9f75739eb3e8ed7de2. Both Windows and Linux native reports record seven actual WebView captures, real IPC, persisted themes, compact/narrow layouts and completed cleanup. Selected unchanged images and hashes are recorded in screenshot provenance.
+    The candidate package run built the Mac app, Windows installer and Linux deb from the corresponding PR merge source 7e9639a9e864a6f19097774110b442dfaea9d9a6. Mac bundle sealing/ZIP extraction passed; the real Windows NSIS and Linux APT installation fixtures passed, including installed CLI reads and test uninstallation. The Windows console passed direct PowerShell waiting/error-code checks and 13 real ConPTY checks. Tagged release jobs repeat package and checksum validation before publication; the release manifest identifies the actual published source commit. These installation fixtures do not launch an installed-package GUI or authenticate real accounts.
+    Linux console commands do not initialize a display, but the binary still requires GTK3/WebKitGTK runtime libraries. APP switching requires an installed Antigravity client and its credential backend; no file-only CLI switch or background CLI daemon is provided. Desktop smart switching remains optional and does not guarantee every running task has completed or migrate tasks.
+    Native WebDriver acceptance uses synthetic accounts and an opt-in debug test feature. The Windows test passes only a driver port through the supported WebView2 API on elevated hosts; production builds cannot enable that path. Native viewport tests do not establish tray placement on every monitor, Wayland/KDE behavior, login startup, real authorization or authenticated switching on every OS.
+    Mac packages remain ad-hoc signed without Developer ID/notarization; Windows packages remain unsigned. The prior Brew installation/upgrade worked, but quarantined Mac launch failed platform-trust checks. No OS security settings or quarantine checks are removed by this release.
+    Detailed acceptance and screenshot provenance
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/antigravity-tools-lite/releases/tag/v4.8.0
+ReleaseTime: 2026-10-04T23:34:34.0000000Z

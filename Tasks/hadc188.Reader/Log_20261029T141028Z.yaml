@@ -1,0 +1,33 @@
+Version: 1.6.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hadc188/reader/releases/download/v1.6.1/Reader-v1.6.1-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    依赖登录的网页改用独立窗口
+    - 登录页、注册页、用户后台、RSS 二级页面、段评 / 本章说改为在独立窗口打开。
+    - 窗口关闭时把 Cookie 回传到书源（仅 Windows）。
+    - 段评 / 本章说这类空壳 SPA（<div id="app"> + 打包 JS）按形态自动判断走窗口；带实质内容的 HTML 仍走面板，内嵌设置页不会突然弹窗。
+    书源脚本 API 补齐
+    - java.startBrowser 对纯网址的判定与 startBrowserAwait 统一。
+    - JCA 加密语义：Mac、GCMParameterSpec、ByteBuffer、SecureRandom、java.lang.reflect.Array、Inflater（raw deflate）。
+    - 字符集处理：encodeURI 支持指定字符集。
+    优化
+    - 超时对齐 legado：连接 15s、读 60s。
+    - TLS 策略：与 legado 一致，接受站点自签名证书。
+    修复
+    - 换域跳转死循环：跨域重定向时显式 Host 头被原样带到新请求，导致无限重定向（too many redirects）—— 现在会识别并去掉 Host 重试一次。某书源由报错恢复为正常出 22 本书。
+    - 发现页空白、搜索 0 条、目录 / 正文加载失败：对齐 legado 运行期语义（脚本完成值、let/const 遮蔽、JSONPath 递归下降、URL 选项 ,{"body":…,"method":"POST","charset":"gbk"} 等）。
+    - 详情页封面不显示。
+    其它
+    - 版本号 1.6.0 → 1.6.1。
+
+    完整变更：https://github.com/hadc188/reader/compare/v1.6.0...v1.6.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hadc188/reader/releases/tag/v1.6.1
+ReleaseTime: 2026-10-29T13:59:18.0000000Z

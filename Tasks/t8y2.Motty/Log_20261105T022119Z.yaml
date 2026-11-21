@@ -1,0 +1,32 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/t8y2/motty/releases/download/v0.3.2/motty-0.3.2-windows-amd64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/t8y2/motty/releases/download/v0.3.2/motty-0.3.2-windows-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - RDP 远程桌面可以粘贴本机的文件和文件夹：在远程桌面里按 Ctrl+V 即可，支持多层文件夹和中文文件名，超出限制的选择会明确拒绝，不会截断。
+    - 文件窗口内置代码编辑器：行号、当前行、括号匹配、自动缩进和成对括号；查找替换支持大小写、整词和正则，F3 逐个跳转，Ctrl+G 跳到指定行。
+    - 密钥库可以粘贴私钥或直接生成新的 Ed25519 密钥，并复制公钥；粘贴和生成的密钥加密保存在保险库中，随同步和备份一起走。
+    - 终端工具栏新增「发送快捷命令」：搜索后发给当前终端。
+    - 传输进度会显示在应用图标上。
+    改进
+    - 对比保存窗口与代码编辑器改用同一套等宽字符网格和制表宽度，右侧可以直接编辑并支持编辑器的快捷键。
+    - 新增日文 README。
+    修复
+    - AI 助手的 terminal_exec 在 PowerShell 会话里能正确执行；cmd、fish、nushell 等尚未适配的 shell 会直接报错，而不是等到超时。
+    - 没有 BOM 的 GB18030 会话文件现在按中文读取。
+    - 导出连接日志不再把提示写进终端画面，输入不再看起来像卡住。
+    - 数据目录经链接访问（例如 Scoop 的 current）时不再启动失败。
+    - 新建标签与快捷命令列表的滚动条改为细线样式，可以拖动和点击跳转，不再盖住行。
+    - 标签标题恢复为默认显示主机名，撤销 0.3.1 的默认变更；需要跟随终端标题可以在设置里打开。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/t8y2/motty/releases/tag/v0.3.2
+ReleaseTime: 2026-11-05T02:07:16.0000000Z

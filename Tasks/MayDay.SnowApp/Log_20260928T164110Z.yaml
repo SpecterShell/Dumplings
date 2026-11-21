@@ -1,0 +1,56 @@
+Version: 0.4.10
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.10/Snow-App-Setup-0.4.10.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Typography and UI Zoom: Theme settings gain typography controls (interface font size, weight, chat font size / line height, code font size); the interface font size uses full-page zoom, with new mod+= / mod+- / mod+0 shortcuts to zoom in, out and reset.
+    - Project Grid View and Switch Targeting: A grid view dialog in the sidebar project area (search, browse by collection group); switching projects jumps to the project's running session, creating a new one when none is running.
+    - Script Data APIs and CORS-Free Requests: Client scripts support the @snow-privacy declaration and reuse panel-plugin metadata and write capabilities via snow.metadata / snow.write; new snow.fetch sends CORS-free requests from the main process, and sandboxed scripts get it as their global fetch.
+    - Language-Server Symbol Addressing and Runtime Controls: LSP tools resolve targets directly from symbol names (hover, definition, references, rename, call/type hierarchy need no file coordinates; omitting the path resolves across the workspace with ambiguity candidates); the LSP settings panel shows per-server status with start / stop / restart.
+    - Mac Platinum Theme: A new macOS-style theme preset (light and dark palettes).
+    Improvements
+    - Git panel refactor: the commit graph is permanent, walks only the current branch and marks unpushed commits; diffs open in a new tab.
+    - Settings pages move their title and actions to the top bar.
+    - LSP semantic tooling hardened: the advertised tool list follows the final tool snapshot (permissions, workspace, server capabilities, health); diagnostics accept 1–30 files (deduplicated, concurrency 3, per-file outcomes and totals); renames require a preview plus a single-use previewId; the persistent diagnostic cache is gone, and result cards show complete / partial / failed counts with truncation warnings.
+    - AI commit messages use the Conventional Commits format and strip code fences automatically.
+    - Faster startup: the storage-ready gate is released earlier, so window, workspace and Git IPC no longer wait.
+    - Plugin and script creation entries share one AI prompt box.
+    Bug Fixes
+    - Fixed Git branch parsing: local branches containing / are no longer misread as remotes, and the symbolic refs/remotes/*/HEAD no longer appears as a branch.
+    - Fixed the macOS traffic-light alignment offset when the sidebar is collapsed.
+    What's Changed
+    - feat(lsp)!: add symbol addressing and capability-aware safe diagnostics by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/168
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.9...v0.4.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.10
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 排版与界面缩放：主题设置新增排版项（界面字号、字重、聊天字号 / 行高、代码字号），界面字号按整页缩放实现，并新增 mod+= / mod+- / mod+0 放大 / 缩小 / 重置快捷键。
+    - 项目网格视图与切换定位：侧栏项目区新增网格视图（搜索、按分组浏览）；切换项目自动定位该项目正在运行的会话，没有则新建。
+    - 脚本数据能力与无 CORS 请求：客户端脚本支持 @snow-privacy 声明，经 snow.metadata / snow.write 复用面板插件的元数据与写能力；新增 snow.fetch（主进程发出、绕过 CORS），沙箱脚本的全局 fetch 即为该实现。
+    - 语言服务器符号寻址与运行时控制：LSP 工具可直接按符号名寻址（悬停 / 定义 / 引用 / 重命名 / 调用与类型层级无需文件坐标，省略路径时按工作区解析并返回歧义候选）；LSP 设置面板新增各服务器状态与启动 / 停止 / 重启操作。
+    - Mac Platinum 主题：新增 macOS 风格主题预设（含明暗配色）。
+    改进
+    - Git 面板重构：提交图常驻、只遍历当前分支并标记未推送提交，diff 改为新标签页打开。
+    - 设置页标题与操作区统一迁移到顶栏。
+    - LSP 语义工具强化：工具清单按最终工具快照（权限 / 工作区 / 服务器能力 / 健康状态）生成；批量诊断支持 1–30 个文件（去重、并发 3、逐文件结果与汇总）；重命名须先预览并携带一次性 previewId；不再使用持久化诊断缓存，结果卡片显示完整 / 部分 / 失败统计与截断提示。
+    - AI 生成提交信息改用 Conventional Commits 规范，并自动剥离代码围栏。
+    - 启动提速：存储就绪门控提前释放，窗口与工作区 / Git IPC 不再等待。
+    - 插件与脚本的新建入口统一为同一 AI 生成输入框。
+    修复
+    - 修复 Git 分支解析：本地分支名含 / 时不再被误判为远程分支，远端符号引用 refs/remotes/*/HEAD 不再显示。
+    - 修正折叠侧栏时 macOS 窗口红绿灯的对齐偏移。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0410
+ReleaseTime: 2026-09-28T09:30:09.0000000Z

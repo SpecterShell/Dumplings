@@ -1,47 +1,61 @@
 $Object1 = Invoke-RestMethod -Uri 'https://downloads.sparkmailapp.com/Spark3/win/dist/appcast.xml'
 
 # Version
-$Task.CurrentState.Version = $Object1.enclosure.version
+$this.CurrentState.Version = $Object1.enclosure.version
 
 # RealVersion
-$Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '^(\d+\.\d+\.\d+)').Groups[1].Value
+$this.CurrentState.RealVersion = [regex]::Match($this.CurrentState.Version, '^(\d+\.\d+\.\d+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.enclosure.url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
-
-# ReleaseNotesUrl
-$ReleaseNotesUrl = $Object1.releaseNotesLink
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      if ($Object2.SelectSingleNode('/html/body/p[1]/strong').InnerText.Contains($Task.CurrentState.RealVersion)) {
-        # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $Object2.SelectNodes('/html/body/text()[2]/following-sibling::node()[count(.|/html/body/p[2]/preceding-sibling::node())=count(/html/body/p[2]/preceding-sibling::node())]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
-      }
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.pubDate | Get-Date -AsUTC
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    try {
+      $Object2 = Invoke-WebRequest -Uri $Object1.releaseNotesLink | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h2[@class='item-title' and contains(text(), '$($this.CurrentState.RealVersion)')]")
+      if ($ReleaseNotesTitleNode) {
+        if ($ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[@class="date"]')) {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::p[@class="date"]/following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        } else {
+          # ReleaseNotes (en-US)
+          $this.CurrentState.Locale += [ordered]@{
+            Locale = 'en-US'
+            Key    = 'ReleaseNotes'
+            Value  = $ReleaseNotesTitleNode.SelectNodes('./following-sibling::node()') | Get-TextContent | Format-Text
+          }
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

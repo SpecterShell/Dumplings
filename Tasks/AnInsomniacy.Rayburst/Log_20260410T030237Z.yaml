@@ -1,0 +1,22 @@
+Version: 3.6.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.7/MotrixNext_3.6.7_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release introduces a dual-layer file deletion architecture that automatically cleans up internal aria2 engine metadata files (.aria2, hex40 .torrent, .meta4) after BT tasks finish seeding. Previously, these files would accumulate in the user's download directory as persistent garbage due to the force-save=true configuration required for seeding resumption.
+    🛠 Improvements
+    - Dual-layer deletion architecture — User-downloaded content continues to be moved to the OS trash (recoverable), while internal aria2 metadata is now permanently deleted to eliminate storage clutter
+    - Automatic .aria2 control file cleanup — .aria2 piece bitmap files are now cleaned up when BT seeding ends, whether by manual stop or automatic seed-ratio/seed-time threshold
+    - .meta4 metalink metadata support — Extended cleanup coverage to include aria2-generated .meta4 files alongside hex40 .torrent metadata
+    - System UI font stack — Replaced custom web fonts with the native system font stack for improved performance and a more native look across platforms
+    🐛 Bug Fixes
+    - Fixed orphaned hex40 .torrent metadata files not being cleaned up for session-restored tasks that auto-complete seeding
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.6.7
+ReleaseTime: 2026-04-10T02:26:05.0000000Z

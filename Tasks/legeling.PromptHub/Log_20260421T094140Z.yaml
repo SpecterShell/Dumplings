@@ -1,0 +1,35 @@
+Version: 0.5.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/legeling/PromptHub/releases/download/v0.5.4/PromptHub-Setup-0.5.4-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/legeling/PromptHub/releases/download/v0.5.4/PromptHub-Setup-0.5.4-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/legeling/PromptHub/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复 / Fixed
+    - 🧩 GitHub Skill 仓库导入改为先扫描再选择：Install from GitHub 不再把整个仓库误当成单个 Skill；现在会先扫描仓库中的多个 SKILL.md，支持多选导入，并在没有 SKILL.md 时回退到根目录 README.md
+      - GitHub Skill Repo Import Now Scans Before Selection: Install from GitHub no longer treats the whole repository as a single Skill. It now scans for multiple SKILL.md entries, supports multi-select import, and falls back to the root README.md when no SKILL.md exists
+    - 🖼️ Skill README 相对图片与链接修复：来自 GitHub 仓库的 README / Markdown 相对图片和相对链接现在会自动解析成可访问的 GitHub/blob/raw 地址，商店详情页和已安装 Skill 预览都能正常显示
+      - Skill README Relative Images and Links Fixed: Relative Markdown image/link paths from GitHub repositories are now resolved to accessible GitHub blob/raw URLs, so both store detail pages and installed Skill previews render correctly
+    - 🪟 GitHub 导入弹窗布局修复：扫描结果很多时，弹窗会切到标准宽弹窗，底部操作区固定可见，只让结果列表区域滚动，避免 footer 被内容挤出视口
+      - GitHub Import Dialog Layout Fix: When many results are found, the dialog now uses a standard wide layout with a fixed footer and an independently scrollable results area, preventing actions from being pushed out of view
+    - 🌍 Skill 多语言资源补齐：补齐了 skill.* 命名空间在 6 个非英文 locale 中缺失的文案，修复删除弹窗、GitHub 扫描导入和安全报告出现中英混杂回退的问题，并新增 locale key 对齐回归测试
+      - Skill Localization Coverage Completed: Filled missing skill.* keys across all 6 non-English locales, fixing mixed-language fallback in delete dialogs, GitHub import scanning, and safety reporting, with a regression test that enforces locale-key parity
+    - 🛡️ 安全扫描静态规则降噪：修复 process.env / import.meta.env 被误判为读取 .env 文件、export function / export type 被误判为环境变量修改的问题；同时将脚本文件告警改为汇总展示，避免重复刷屏
+      - Static Safety Scan Noise Reduced: Fixed false positives where process.env / import.meta.env were treated as .env file access and export function / export type were treated as environment mutation; script-file warnings are now aggregated instead of repeated per file
+    - 📋 安全报告前端分组展示：商店详情页与 Skill 详情页的安全 findings 改为按规则分组显示，突出问题类别、出现次数和受影响文件，降低重复告警对可读性的影响
+      - Frontend Safety Report Grouping: Safety findings in store and skill detail views are now grouped by rule, surfacing issue category, occurrence count, and affected files instead of flooding the UI with repeated entries
+    - 🌙 Skill 图标选择器暗色模式修复：创建 / 编辑 Skill 时，图标选择器现在会根据主题切换深浅两套预设色板，自定义背景图标前景色也会自动计算，避免 dark mode 下整块区域看起来像未适配的亮色面板
+      - Skill Icon Picker Dark-Mode Fix: The icon picker for create/edit Skill now switches between light and dark preset palettes, and custom icon backgrounds compute readable foreground colors automatically, preventing the dark-mode view from looking like an unadapted light panel
+    维护 / Maintenance
+    - 🔖 版本与发版文档同步到 v0.5.4：更新项目版本号、CHANGELOG、README/多语言 README 与官网 release metadata，统一本次修复说明和下载版本
+      - Version and Release Docs Synced to v0.5.4: Updated the project version, changelog, README/localized READMEs, and website release metadata so release notes and download references align with this patch release
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/legeling/PromptHub/blob/HEAD/CHANGELOG.md#054---2026-04-21
+ReleaseTime: 2026-04-21T09:31:54.0000000Z

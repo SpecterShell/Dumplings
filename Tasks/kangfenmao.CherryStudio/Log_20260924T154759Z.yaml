@@ -1,0 +1,161 @@
+Version: 2.1.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/CherryHQ/cherry-studio/releases/download/v2.1.3/Cherry-Studio-2.1.3-win-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/CherryHQ/cherry-studio/releases/download/v2.1.3/Cherry-Studio-2.1.3-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Downloads (v2.1.3)
+
+    | Platform | Architecture          | Download             |
+    | -------- | --------------------- | -------------------- |
+    | Windows  | x64                   | Installer · Portable |
+    | Windows  | arm64                 | Installer · Portable |
+    | macOS    | Apple silicon (arm64) | DMG · ZIP            |
+    | macOS    | Intel (x64)           | DMG · ZIP            |
+    | Linux    | x64                   | AppImage · DEB · RPM |
+    | Linux    | arm64                 | AppImage · DEB · RPM |
+
+    Release Notes
+    Cherry Studio 2.1.3 - New Features, Performance, and Reliability
+    ✨ New Features
+    - [Remote] Device Connections: pair a compatible mobile client to import providers and use desktop Agents over an encrypted LAN connection, with reconnect recovery, execution failures, approvals and questions. Action required: legacy devices must pair again for the new identity-based protocol.
+    - [Document] Support self-hosted MinerU 4 document parsing while retaining compatibility with legacy Open MinerU servers.
+    - [Screenshot] Use system OCR on macOS and Windows to select and copy screenshot text without downloading a local model.
+    - [Models] Add Claude Opus 5.5 to API chat with updated model limits, pricing, reasoning controls, and web-tool eligibility.
+    - [Models] Add GPT-6 Sol and Luna catalog metadata, OpenAI web-search eligibility, and OpenAI Codex model entries.
+    - [Models] Add Grok 4.7 to the model catalog (xAI, OpenRouter, Vercel AI Gateway, OpenCode, Copilot) with the xhigh reasoning effort; Grok CLI now lists Grok 4.6, Grok 4.7 and Grok 4.7 Fast; Grok 4.6 gains the xhigh reasoning effort.
+    - [Models] Add Xiaomi MiMo V2.6 Flash, Pro and Pro-UltraSpeed to the model catalog for the MiMo, OpenRouter, Vercel AI Gateway and OpenCode providers, with the thinking on/off switch.
+    - [Skills] Adds protected automatic file saving and manual remote updates for Skills installed from exact supported paths.
+    - [Skills] Adds dedicated Skill detail pages, source labels, safer removal, and one-click launch into an Agent session.
+    - [Settings] Add an “Agent reply language” setting (default: follow the conversation language) with preset and custom values, plus a per-agent override with an effective-language preview, so users can pin the language agents reply in.
+    - [Shortcuts] On macOS, Command+W now closes the active tab instead of the window; closing the window moved to Command+Shift+W.
+    🐛 Bug Fixes
+    - [Settings] Restore scrolling the provider model list from outside the list and let group headings scroll with the page.
+    - [Settings] English search terms now find the V2 conversation style setting.
+    - [Settings] Automatically verify and enable providers after adding models, and prevent model-selection dialogs from jumping when large lists load.
+    - [Proxy] Fixed local services such as DeepSeek Harness failing to connect when IPv4 or IPv6 loopback requests were routed through a proxy.
+    - [Proxy] Fix model list synchronization failing behind a corporate proxy or with an intercepted TLS certificate, which previously failed even though the provider itself worked for chat.
+    - [Proxy] Fix proxy bypass rules written as bare IPv6 literals (::1, fe80::1, 2001:db8::1) never matching, and match IPv6 addresses by value so equivalent notations are recognized.
+    - [Agent] Scheduled tasks can now be edited in place through the cron tool, with session-reuse controls and clearer name-conflict guidance.
+    - [Agent] The bundled Cherry tool guide now describes when the notify tool is available and how scheduled tasks get their notification recipients.
+    - [Agent] Fixed dsh-type Agent sessions failing on proxy-only networks by inheriting the configured proxy into the agent runtime process.
+    - [Agent] Keep multi-agent requests in one reply until all work finishes, with compact subtask lists and reliable nested-task navigation.
+    - [Agent] Fixed sent-message link chips and website hover previews opening separate tabs instead of using the Agent conversation's browser pane.
+    - [Chat] Improve the thinking panel height, scrolling, and text readability for long reasoning content.
+    - [Chat] Keep unsubmitted AskUserQuestion answers when switching conversations, so returning to a pending question resumes where the user left off.
+    - [Chat] Fixed token usage not being calculated or displayed for some models after message refresh.
+    - [Chat] Fixed chat messages failing to stay at the bottom after scrolling down with the mouse wheel or dragging the scrollbar.
+    - [Chat] Fixed Responses continuations that sent a UUID as an input item id and were rejected because the id must begin with rs or msg.
+    - [Chat] Fix migrated managed images that still point to an old data directory.
+    - [Skills] Fix skill ZIP import refusing a within-limit skill because the repository archive around it exceeded the old shared ceilings; skill packs may now hold up to 20,000 files.
+    - [Skills] Fixed ClawHub skill installation failing because the download size limit was undefined.
+    - [Skills] Skill installs from Claude Plugins and skills.sh now download only the skill's directory instead of the whole repository, and installing a larger skill from a GitHub link no longer times out.
+    - [Skills] Improve name readability in the two-column settings layout while preserving card size, and show full names and descriptions in tooltips.
+    - [Skills] Fix slash-command and Skills menus while editing messages and after cancelling edits.
+    - [Skills] Fixed CLI cards stuck on “Installing…” when no install was actually running; the status now reconciles against live operations instead of trusting leftover markers.
+    - [Screenshot] Fixed the screenshot toolbar being partly pushed off screen when the selection is near the left edge of a display.
+    - [File] Fixed workspace file trees stopping after a transient Windows file-lock watcher error.
+    - [File] Preserve directory state across brief page switches without keeping the page active.
+    - [AI] Fixed Gemini requests failing with unknown-field 400 errors when a tool schema contains propertyNames or additionalProperties keywords.
+    - [AI] Show clear HTTP 400 request-failure messages and preserve Claude Agent SDK HTTP status codes for accurate error classification.
+    - [AI] Explain HTTP 413 agent request failures and suggest reducing payload size before retrying.
+    - [Windows] Fixed a Windows startup crash when application control blocks the native shutdown handler.
+    - [Linux] Linux AppImages no longer require the system libfuse2 library.
+    - [Mini Apps] Fix the Add mini app dialog width so installation content remains within the dialog.
+    - [History] Chat and Agent history now use archive icons and labels that accurately describe their recoverable archive actions.
+    - [UI] Fixed tooltip content sometimes lingering pinned to the top-left corner after clicking a file path in agent sessions.
+    - [UI] Fixed tooltips lingering at the window's top-left corner after switching right-pane panels.
+    - [UI] Keep message, conversation, and clear actions accessible on devices without hover support, including Windows tablets with detached keyboards.
+    - [Error] Render error causes as text instead of HTML for safer display.
+    - [Citations] Citation panel sources now open in the sidebar browser on left click and in a separate application tab on middle click.
+    What's Changed
+    - fix(api-gateway): project native Anthropic effort onto resolved model vocabulary by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20811
+    - feat(code-cli): add MiniMax Code CLI management by @angri450 in https://github.com/CherryHQ/cherry-studio/pull/20849
+    - feat(agent-session): edit and resend the last user message by @WhiteZeek in https://github.com/CherryHQ/cherry-studio/pull/20833
+    - chore(release): sync v2.1.2 metadata by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20895
+    - fix(history): align archive action icons and labels by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20890
+    - fix(error-detail): render error cause as text instead of HTML by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20883
+    - fix(api-gateway): include client ID in pairing response by @zhangjiadi225 in https://github.com/CherryHQ/cherry-studio/pull/20899
+    - fix(release-notes): clarify macOS download labels and order by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20901
+    - fix(ui): make tooltip close deterministic and sweep closed remnants by @tommyzhang100504 in https://github.com/CherryHQ/cherry-studio/pull/20100
+    - fix(chat): preserve bottom following across native scroll gestures by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20914
+    - fix(e2e-regression): align CherryIN OAuth and workflow controls by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20898
+    - fix(ai-core): scope internal resolver plugins to the request by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20921
+    - perf(image-export): render SVG to canvas through a blob URL instead of base64 by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20919
+    - fix(power): tolerate blocked Windows shutdown addon by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20923
+    - ci(gitcode-sync): reuse local signed Windows artifacts by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20905
+    - refactor(preload): type dataApi bridge with shared DataRequest/DataResponse by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20928
+    - fix(agent): honor configured Pi shell path by @Dante-dan in https://github.com/CherryHQ/cherry-studio/pull/20322
+    - fix(chat): resolve migrated managed image paths at render time by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20803
+    - fix(citations): open sources in the sidebar browser by default by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20929
+    - feat(provider-registry): add Xiaomi MiMo V2.6 models by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20927
+    - feat(agent-language): expose agent reply language in Settings UI by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20438
+    - fix(skill-install): bound installed skill, not surrounding archive by @SiinXu in https://github.com/CherryHQ/cherry-studio/pull/20770
+    - fix(main-window): don't reload a destroyed webContents on render-process-gone by @LXD-8 in https://github.com/CherryHQ/cherry-studio/pull/20894
+    - fix(provider-setup): auto-verify models and stabilize dialog layout by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20926
+    - fix(mini-apps): prevent add dialog content overflow by @AtomsH4 in https://github.com/CherryHQ/cherry-studio/pull/20935
+    - feat(provider-registry): add Grok 4.7 and Grok CLI 4.6/4.7 models by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20934
+    - fix(right-pane): drop tooltips anchored in panels hidden by panel switching by @NatsUIJM in https://github.com/CherryHQ/cherry-studio/pull/20879
+    - fix(settings-search): expose conversation style search terms by @ActiveSky in https://github.com/CherryHQ/cherry-studio/pull/20728
+    - test(chat-attachments): pin code/script/config upload support and document allowlist by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20805
+    - feat(skill-management): add dedicated Skill pages and launch flow by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/19743
+    - feat(skill-management): add authoring and remote updates by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/19744
+    - fix(chat): improve thinking panel layout and readability by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20924
+    - feat(shortcuts): close the active tab with Command+W by @NatsUIJM in https://github.com/CherryHQ/cherry-studio/pull/20690
+    - fix(ai-sdk): omit UUID ids from Responses continuation input by @gokay-ai in https://github.com/CherryHQ/cherry-studio/pull/20414
+    - Add 'video' for Qwen3.8-Flash-Next in models.json by @whao in https://github.com/CherryHQ/cherry-studio/pull/20936
+    - perf(message-renderer): isolate content from topic status updates by @SiinXu in https://github.com/CherryHQ/cherry-studio/pull/20185
+    - fix(release): show only English notes and global downloads by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20965
+    - fix: explain HTTP 413 agent request failures by @lorenzozanee in https://github.com/CherryHQ/cherry-studio/pull/20959
+    - feat(provider-registry): add Claude Opus 5.5 API support by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20956
+    - fix(billing-hook): normalize flat provider usage for token persistence by @404-Page-Found in https://github.com/CherryHQ/cherry-studio/pull/20958
+    - fix(file): recover directory trees after watcher errors by @Dante-dan in https://github.com/CherryHQ/cherry-studio/pull/20950
+    - feat(provider-registry): add GPT-6 Sol and Luna models by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20957
+    - fix(ai-sdk): strip propertyNames and additionalProperties for Gemini tools by @Bruce-Yii in https://github.com/CherryHQ/cherry-studio/pull/20955
+    - fix(agent-composer): restore slash and skill menus during message editing by @WhiteZeek in https://github.com/CherryHQ/cherry-studio/pull/20932
+    - fix(skill-install): bound git output from remote skill sources by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20973
+    - fix(agent-links): preserve conversation navigation for link cards by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20972
+    - fix(proxy): bypass localhost for Node requests by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20969
+    - fix(agent-session): unify subagent replies and task navigation by @kangfenmao in https://github.com/CherryHQ/cherry-studio/pull/20922
+    - fix(skill-install): fetch only the skill directory for marketplace installs by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20977
+    - fix(binary-manager): reconcile stale installing/removing against live mutations by @Bruce-Yii in https://github.com/CherryHQ/cherry-studio/pull/20970
+    - fix(appimage): remove system libfuse2 dependency by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20980
+    - fix(screenshot): keep toolbar inside the display's left edge by @0xfullex in https://github.com/CherryHQ/cherry-studio/pull/20981
+    - fix(skills): improve two-column card readability by @ousugo in https://github.com/CherryHQ/cherry-studio/pull/20982
+    - fix(chat-actions): keep controls accessible without hover by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20983
+    - fix(provider): list models over the Chromium network stack by @xianhongtao in https://github.com/CherryHQ/cherry-studio/pull/20906
+    - fix(claude-code): preserve API error status and classify HTTP 400 by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20984
+    - fix(composer): keep unsubmitted AskUserQuestion answers across remounts by @NatsUIJM in https://github.com/CherryHQ/cherry-studio/pull/20785
+    - chore(system-ocr): bump native OCR packages to 1.2.0 by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20985
+    - fix(skill-install): bound clawhub responses before buffering by @kovsu in https://github.com/CherryHQ/cherry-studio/pull/20975
+    - fix(skill-install): import archive download size limit by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20988
+    - fix(dsh-runtime): inherit applied proxy env into the dsh child by @Bruce-Yii in https://github.com/CherryHQ/cherry-studio/pull/20946
+    - fix(i18n): translate two untranslated zh-cn backup error messages by @hemingliangasdfghjkl-workbuddy in https://github.com/CherryHQ/cherry-studio/pull/20986
+    - fix(chat-layout): isolate detached pane state by @NatsUIJM in https://github.com/CherryHQ/cherry-studio/pull/20828
+    - fix(directory-tree): retain mirrors across brief activity suspension by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20367
+    - fix(agent-cron): support task updates and session reuse by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20991
+    - docs(agent-notify): describe the trusted-recipient contract in the bundled tool guide by @lianshuang-photo in https://github.com/CherryHQ/cherry-studio/pull/20990
+    - feat(screenshot): use system OCR line bounds by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20987
+    - fix(proxy): bypass IPv4 and IPv6 loopback for local services by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/21003
+    - chore(build-tooling): upgrade pnpm to 12.6.0 and Vite to 8.2.2 by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/20989
+    - feat(file-processing): support MinerU 4 self-hosted API by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/21004
+    - fix(proxy): match unbracketed IPv6 bypass rules as addresses by @c020627 in https://github.com/CherryHQ/cherry-studio/pull/21005
+    - docs(api-gateway): remote agent access design proposal by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/16567
+    - feat(remote-access): let paired devices use desktop Agents over an encrypted LAN channel by @zhangjiadi225 in https://github.com/CherryHQ/cherry-studio/pull/20717
+    - chore: version packages by @github-actions[bot] in https://github.com/CherryHQ/cherry-studio/pull/14493
+    - fix(package-release): remove changesets for ignored UI package by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/21008
+    - fix(provider-settings): restore unified model list scrolling by @DeJeune in https://github.com/CherryHQ/cherry-studio/pull/21011
+    New Contributors
+    - @angri450 made their first contribution in https://github.com/CherryHQ/cherry-studio/pull/20849
+    - @whao made their first contribution in https://github.com/CherryHQ/cherry-studio/pull/20936
+    - @Bruce-Yii made their first contribution in https://github.com/CherryHQ/cherry-studio/pull/20955
+    - @hemingliangasdfghjkl-workbuddy made their first contribution in https://github.com/CherryHQ/cherry-studio/pull/20986
+    Full Changelog: https://github.com/CherryHQ/cherry-studio/compare/v2.1.2...v2.1.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/CherryHQ/cherry-studio/releases/tag/v2.1.3
+ReleaseTime: 2026-09-24T11:53:27.0000000Z

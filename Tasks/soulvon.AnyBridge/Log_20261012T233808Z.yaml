@@ -1,0 +1,42 @@
+Version: 0.5.29
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.29/AnyBridge_0.5.29_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.29/AnyBridge_0.5.29_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复本地代理「模型列表」保存被静默丢弃的问题：
+      - 启动时模型列表加载失败（配置文件损坏、ID/UID 重复、启用了但没有上游目标等）会让保存被一道守卫拦下，界面完全没有提示，表现为"点了添加模型但存不进去"。
+      - 现在加载失败会自动修复：先把原配置隔离备份为 proxy-routes.json.corrupt.<时间戳>，再抢救出可用条目（按 ID 去重、停用没有上游目标的条目、清掉非法的接口格式/解锁组合）重写，修复后立刻恢复可用，只给一条"已自动修复"的提示，不再弹错误框。
+      - 只有自动修复也失败（例如配置目录不可写）才显示错误并暂停保存，界面给出真实原因与「重试加载」入口。
+      - 保存时若列表仍未加载成功，明确报出真实原因，不再静默返回。
+    - 「从供应商添加模型」时如果一个都没加进去，会逐个列出被跳过的模型和真实原因（已在列表中 / 供应商模型列表里查不到 / 模型 ID 冲突），不再统一提示"所选模型均已在列表中"。
+    - 修复本地代理配置多个上游模型做故障转移时，下游只收到一个没有任何信息的 403 (empty response body) 的问题：
+      - 「显示供应商原始错误」原来会把上游响应原样透传，遇到中转站/风控常见的「403 + 空 body（或 HTML 拦截页）」时，客户端只能看到空响应，既不知道是哪个上游目标失败，也看不到备用目标的结果。
+      - 现在上游响应体为空、是拦截页、或没有可读 message 时不再透传，改为返回聚合错误：写明是哪个模型、每个上游目标（含备用）分别返回了什么，并给出「换渠道 / 核对上游模型名」的建议。
+      - 上游响应带真实错误信息时行为不变，仍然原样透传。
+    - 修复「测试连接」的几处设计问题：
+      - 去掉 gpt-4o-mini / claude-3-haiku-20240307 这类硬编码兜底模型：只卖国模的中转站根本没有这些模型，会把一个正常的渠道测成 "Invalid model id: gpt-4o-mini"（假阴性）。现在没指定模型时改用该供应商自己配置的模型；该供应商连一个模型都没有就直接提示先添加模型，不再发无意义的请求。
+      - 空白模型名一律当"没选模型"处理，不再把空 ID 发进请求体或 gemini 路径（此前会换来上游一句 Invalid model id: ）。
+      - gzip 重发收窄为"疑似 WAF 拦截明文 body"才做：状态码 403/406 且响应不是标准 JSON 错误（空响应 / HTML 拦截页）。像 "Invalid model id" 这类明确的业务错误不再白试第二次。
+      - 测试失败的报错补齐上下文：写明本次用的测试模型、目标地址和协议，并把原来的 HTTP 403 / Gzip HTTP 400 改成「上游返回错误：HTTP 403：{上游原文}」，一眼能看出是上游拒绝而不是 AnyBridge 故障。
+    - 修复 Antigravity（桌面端）接入后斜杠命令面板缺少 boost / teamwork-preview / browser / plan 的问题：
+      - 语言服务器的「实验配置」请求（listExperiments）被本地代理误当作遥测请求拦截并返回空数据，boost、teamwork-preview 等 preview 功能因此被隐藏。现在该请求会透传官方，与直连官方的行为一致。
+      - Antigravity 现在通过本地 HTTPS 端点接入（与官方直连同为 https），语言服务器对明文 HTTP 端点会降级部分高级能力。
+      - 修正账号套餐（tier）数据的格式兼容性，避免客户端把账号当作无套餐处理。
+      - 本地代理对官方握手请求改用多通道竞速，修好后此前「接入后语言服务器反复重试登录握手」的不稳定现象。
+    - 修复 MITM 证书被新版客户端判为不合规（TLS alert 42 bad certificate，表现为「模型代理失败、还是原模型」）的问题：
+      - 此前生成的证书有效期是 1975-01-01 ~ 4096-01-01（2121 年，来自 rcgen 默认值），违反 Apple / Chromium「TLS 服务器证书有效期 ≤ 825 天」策略。老客户端不校验所以一直能用，新系统 / 新版客户端开始严格校验后直接拒绝握手，MITM 断开导致模型改写不生效。
+      - 现在显式设置有效期 365 天（含 1 天时钟偏差容错），并补上 Authority Key Identifier 扩展（openssl -x509_strict 链校验通过）。
+      - 证书结构版本号 2 → 3：启动代理时会自动换新证书并重装信任库，存量用户升级后无需手动操作（换新时连带重装，避免"同 CN 旧指纹验不了新链"把正在用的人搞挂）。
+      - 新增临近到期自动换证（文件生成超过 300 天即换新），避免一年后证书过期再次静默失效。
+      - MITM 握手出现「客户端拒绝证书」时，日志直接给出排查指引，不再只甩 OpenSSL 内部错误。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.29
+ReleaseTime: 2026-10-12T19:03:15.0000000Z

@@ -1,0 +1,85 @@
+Version: 0.9.23
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.23/Varin-0.9.23-win-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.23/Varin-0.9.23-win-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Release highlights
+    Varin 0.9.23 adds user-editable Agent instructions and scoped lightweight memory, separates
+    ordinary Agent memory from Bot memory, and improves tool execution and long-session performance.
+    Agent instructions and memory
+    - Edit the built-in system instructions in Settings, with global, project and conversation scopes.
+      Density, style and autonomy presets insert editable text; the full preview includes project
+      instructions, skills and memory. Inspect the last model request's system text and restore defaults.
+    - Add, edit, delete and move ordinary Agent notes between global, project and conversation scopes.
+      Matching notes load directly into each subsequent model request. Selected chat text can be saved
+      without a background model call, and concurrent settings edits report conflicts.
+    - Keep Bot instructions, long-term recall and automatic memory organization independent. Ordinary
+      Agents no longer expose recall or run background memory organization.
+    - Remove Magic Prompts, prompt-template editors and command-template expansion, along with their
+      obsolete configuration and tests. Git, review and plan actions, skills and native instruction files remain.
+    - Simplify default model instructions and tool descriptions while preserving parsed output contracts.
+    - Remove the four built-in configuration Skills and their startup generator; configuration guidance
+      is provided by the settings tools on demand.
+    - Filter native Agent choices, dispatch/send parameters and generated team instructions by work focus
+      and enabled state. Refresh them at run boundaries; disabled research roles cannot bypass the switch by inheriting a model.
+    Tool reliability and performance
+    - Let quick retrieval run independently of file reads and writes; cancel abandoned context preparation.
+      Yield background association refreshes between files so plan updates and environment observations
+      are not held behind one workspace-wide association pass.
+    - Decouple file-write completion from language diagnostics and index checkpoints, and preserve
+      request-stage, queue and late-completion diagnostics for investigating remaining timeouts.
+    - Fix persisted webpage/PDF snapshot reads, storage record contracts, user-memory storage ownership,
+      optional tool parameters, diagnostic line numbers and live-session MCP settings access.
+    - Keep research tools scoped to research work focus. Recover completed Responses reasoning text
+      when needed and hide empty thinking disclosures.
+    - Reduce repeated document/thread catalog scans, IPC serialization and cross-process retrieval data.
+      Isolate live chat updates from historical rows; reuse captured file hashes and compiled language queries.
+    Upgrade notes
+    - Ordinary Agent notes use a new independent store. Existing knowledge records are not automatically
+      imported into the new memory list; Bot long-term memory remains on its existing storage path.
+    - System-instruction and note changes take effect at the next model request. Native instruction files
+      keep their normal Pi loading behavior.
+    - Earlier builds generated varin-research-environment, varin-multi-agent-models,
+      varin-retrieval-setup and varin-remote-experiments in the Pi skills directory.
+      Delete these guides manually if present; this release stops generating them.
+
+    更新摘要
+    Varin 0.9.23 开放系统提示词编辑和分范围轻记忆，将普通 Agent 与 Bot 的记忆分开，
+    并改善工具执行、后台存储和长会话性能。
+    Agent 提示词与记忆
+    - 在设置中编辑官方内置系统提示词，支持全局、项目和会话范围。信息密度、语言风格、自主程度预设
+      会插入可编辑文字；完整预览包含项目指令、技能和记忆，可查看上次模型请求的系统文本并恢复默认。
+    - 普通 Agent 记忆支持新增、编辑、删除和调整范围；每次后续模型请求直接加载适用的记忆。
+      选中的聊天文字可直接保存，无需后台模型提取；并发编辑会明确报告冲突。
+    - Bot 保留独立指令、长期召回与自动整理。普通 Agent 不再暴露 recall，不再后台整理记忆。
+    - 移除魔法提示词、提示词模板编辑与命令模板展开，清理对应配置和过时测试。
+      Git、审阅、计划操作、技能及原生指令文件继续可用。
+    - 精简默认模型指令和工具描述，保留实际需要解析的输出契约。
+    - 移除四份内置配置 Skill 及启动生成器；配置说明由设置工具按需提供。
+    - 子 Agent 派发参数和自动团队提示词按工作侧重与启用状态筛选，在运行边界刷新；
+      关闭的科研角色也无法通过继承模型绕过开关。
+    工具可靠性与性能
+    - 快速检索与文件读写独立执行，取消已放弃的上下文准备；后台关联刷新在文件之间让出执行机会，
+      避免计划更新和环境观察一直排在整工作区关联解析之后。
+    - 文件写入完成不再同步等待语言诊断与索引检查点；保留请求阶段、排队和迟到完成诊断，便于定位剩余超时。
+    - 修复网页/PDF 快照持久化后的读取、存储记录契约、用户记忆库归属、可选工具参数、诊断行号和实时会话 MCP 设置读取。
+    - 科研工具仅在科研工作侧重下提供；补取 Responses 完成事件中的思考文本，隐藏空的思考折叠项。
+    - 减少文档/线程目录重复扫描、IPC 重复序列化和跨进程检索数据搬运；隔离流式聊天更新与历史行，
+      复用文件捕获哈希与已编译的语言查询。
+    升级说明
+    - 普通 Agent 轻记忆使用独立存储，旧知识库记录不会自动导入新记忆列表；Bot 长期记忆继续使用原存储。
+    - 提示词与记忆修改从下一次模型请求生效，原生指令文件保持 Pi 的加载行为。
+    - 旧版在 Pi 技能目录生成的 varin-research-environment、varin-multi-agent-models、
+      varin-retrieval-setup、varin-remote-experiments 需手动删除；新版不再自动生成。
+    完整提交记录 / Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.23
+ReleaseTime: 2026-10-05T09:14:49.0000000Z

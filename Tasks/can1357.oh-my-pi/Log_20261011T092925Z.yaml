@@ -1,0 +1,279 @@
+Version: 18.9.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.9.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed stale queue updates when queued steering is adopted, withdrawn, or added to the transcript, ensuring queue listeners consistently receive the latest state.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Removed the retainTextSignature option from consumeGoogleStream and streamGoogleGenAI; Google routes now consistently preserve text reply signatures.
+    - Custom SessionsApi implementations must implement permits(provider, sessionId, credentialId).
+    Added
+    - Exported matchesReplacementCredential and isSameOAuthAccount to help identify credential replacement and account ownership.
+    - Added AuthStorage.sessions.permits(provider, sessionId, credentialId) for checking whether a stored account may serve a session restricted to an account pool.
+    - Added judgeQuestions() for loading judge questions from JSON with inferred choice labels and answer types, plus renderQuestion() for templated instructions.
+    Changed
+    - Devin chat turns now use the native Devin CLI sampling settings by default, while continuing to honor explicitly configured temperature, top-p, and stop sequences.
+    - Added parentSessionId and minimizeEffort stream options. Branched side requests can reuse a conversation's prompt cache, and supported models can run them at their lowest effort without losing cache reuse.
+    - Improved cross-host continuation for supported models so confirmed prior reasoning is preserved as reasoning context rather than exposed as <think> text in replies.
+    Fixed
+    - Fixed Anthropic subscription quota not appearing in /usage when an OAuth token is supplied through ANTHROPIC_API_KEY.
+    - Fixed custom OpenAI-compatible Responses streams truncating reasoning and incorrectly invoking custom tools with empty input.
+    - Fixed Codex WebSocket prewarming so optional service tiers and model routing are handled consistently with normal requests.
+    - Fixed OAuth sign-in result pages breaking or rendering injected markup when provider errors or callback values contain special characters.
+    - Fixed Anthropic requests failing when tools are added to a conversation or when resumed sessions no longer include earlier tools.
+    - Fixed Anthropic requests rejecting tall or oversized historical screenshots by resizing or re-encoding images to the host's limits.
+    - Improved compatibility with Anthropic-compatible endpoints that reject prompt-cache options by retrying without unsupported caching features and reporting the disabled capability.
+    - LiteLLM proxy logs now group requests by omp conversation instead of displaying a separate session for each request.
+    - Fixed Gemini-family integrations echoing prior thinking as visible fenced thinking blocks; thinking is now restored as model reasoning across Google, Vertex, Antigravity, Gemini CLI, and Factory Droid routes.
+    - Fixed Gemini-family integrations losing text reply signatures needed for subsequent requests across Google, Vertex, Antigravity, Gemini CLI, and Factory Droid routes.
+    - Fixed Cursor integrations losing previously recorded reasoning, including signed and redacted reasoning, when continuing or resuming a conversation.
+    - Fixed invalid auth.accountPolicies entries referring to unavailable accounts from preventing startup, account selection, or login; such entries are now skipped with a warning.
+    - Fixed Factory Droid Claude turns with thinking disabled from replaying unsupported earlier thinking blocks, and aligned high-effort Sonnet 5.5 thinking behavior with the native client.
+    - Fixed side requests for GPT-6 Responses and Codex models from losing prompt-cache context or applying unsupported reasoning-effort configuration changes.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed GLM-5.3-FlashX on Zhipu Coding Plan so bundled context, image, and reasoning-level capabilities are reported correctly.
+    - Fixed OpenRouter Decisions endpoint derivation when the chat base URL has a trailing slash.
+    - Fixed GPT-6.1 Sol Ultrafast usage pricing to apply OpenAI's published premium rates for the OpenAI API and Codex included usage.
+    - Fixed GPT-6 Sol, GPT-6.1 Sol, and GPT-6 Luna so changing reasoning effort preserves prompt caching.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added browser target discovery and control, allowing agents to list the user's available pages and operate an already-open Tern browser block instead of opening a new view.
+    - Added the ctx.annotations extension API for submitting and collecting /annotate feedback on text and diffs.
+    - Added configurable Extra Context Files under /settings → Context, allowing custom instruction filenames without editing YAML.
+    - Added optional composer predictions via composer.predictions, which suggest the user's next message as ghost text after each turn and support Tab or Right to accept the suggestion. Predictions use an additional model request and are included in session usage and /stats.
+    - Added structured async job metadata exposing native job status and child-agent identity alongside the job ID.
+    - Enhanced tui.autoGraph: smart with data-aware chart recommendations, including labels, grouping, ordering, shading, reference rows, measure direction, and suitable chart types.
+    - Added retry.fallbackOn to restrict model fallback to quota errors (usage-limit) or to non-quota errors (except-usage-limit), while retaining any as the default.
+    - Added omp usage reset commands to list saved Codex and Claude rate-limit resets and redeem a selected reset from the CLI, scripts, or auth-broker clients.
+    - Added warnings for saved Codex and Claude resets that are nearing expiry, including affected accounts and redemption targets; interactive sessions also show a one-time conversation warning.
+    - On macOS, the computer tool now keeps the display awake while operating and reports when the screen is locked or asleep.
+    - Tern browser open results now indicate when a page is not currently visible, helping agents direct users to hidden picture-in-picture or omp-tab views.
+    Changed
+    - Improved computer.window() failure messages by listing open windows grouped by application, with the requested application shown first.
+    - Standalone binary updates and installers now use Stencil's build service with SHA-256 verification; recent updates use substantially smaller verified patches, and --binary --ref accepts release tags.
+    - After an omp upgrade, an unused older browser relay started by omp is automatically replaced on the next browser call so relay fixes take effect without manual shutdown.
+    - Saved Codex and Claude resets in non-interactive sessions are now automatically redeemed when they are about to expire, unless autoRedeem: no is configured.
+    - Background Claude reset salvage now checks only accounts with eligible usage, reducing unnecessary usage-limit traffic.
+    - Reasoning provenance is preserved when /btw answers are promoted or turns are moved, preventing provider summaries from being sent as model-generated reasoning.
+    Fixed
+    - Fixed unconfigured judge roles incorrectly falling back to a Google Vertex Claude model instead of the configured tiny, smol, or default models.
+    - Fixed omp --resume -p continuing stale todos instead of printing the answer and exiting.
+    - Fixed /btw, IRC, and composer-prediction requests losing the conversation prompt cache on Codex and after thinking-level changes on GPT-6 models.
+    - Fixed Tern browser operations on about:blank and no-op navigations hanging until timeout.
+    - Fixed SDK and RPC sessions using stale MCP tool lists when servers changed during extension loading.
+    - Fixed installing plugins from non-GitHub Git URLs and prevented inline credentials from being persisted in plugin metadata or lockfiles.
+    - Improved recovery from repeated OpenAI Responses request timeouts during productive long-running sessions.
+    - Fixed JavaScript eval syntax errors lacking source location and a useful code frame.
+    - Fixed Collab sessions failing to reconnect after network interruptions or device sleep.
+    - Fixed ACP and browser diagnostics and SSH listings using default paths instead of configured paths.
+    - Fixed advisors repeatedly returning to models that refused reviewed content; they now remain on the fallback until the conversation changes state.
+    - Plugin registry discovery warnings are now reported instead of silently ignored.
+    - Fixed OpenRouter Decisions judge requests through custom provider base URLs returning 404 errors.
+    - Fixed Codex configuration files being rejected and prevented supported settings from being ignored.
+    - Fixed secrets appearing in advisor previews when a preview was truncated.
+    - Restored public compatibility exports required by tools, legacy Pi extensions, and plugins.
+    - Fixed slow completions ignoring explicitly configured thinking levels, including :max and :off.
+    - Fixed session writes failing on Windows FSLogix profile disks.
+    - Limited persisted eval status history so long-running eval cells do not excessively enlarge session files or slow resume.
+    - Fixed Codex session prewarming from using a different model or service tier than the resolved session.
+    - Fixed subagent completion-probe usage disappearing after parking or restarting.
+    - Fixed Python eval processes hanging while waiting on the kernel control channel.
+    - Corrected the custom-tool quickstart to use the supported discovery flow and shipped example.
+    - Fixed browser screenshots providing incorrect coordinate-scaling guidance on high-device-scale displays.
+    - Fixed browser calls hanging when a tab renderer crashed; they now fail promptly and reload or close the affected tab as appropriate.
+    - Fixed sessions becoming permanently busy when retry-related session writes failed.
+    - Fixed collapsed todo lists wasting a row on the hidden-item indicator.
+    - Fixed concurrent SDK sessions interfering with one another's async jobs and subagent follow-up results.
+    - Fixed duplicate accessibility-tree output from computer-use eval cells.
+    - Fixed chained element actions such as win.ref("e5").click() throwing errors; element interaction options are now supported and documented.
+    - Fixed JavaScript and Python read("artifact://N") calls returning a capped preview instead of the artifact's selected text.
+    - Improved guidance for retrieving complete lines when read, eval, or bash output is truncated by the column limit.
+    - Fixed resumed, switched, and forked sessions losing the prompt cache when Mnemopi or Hindsight auto-recall was enabled.
+    - Fixed the first prompt losing provider prompt-cache coverage while MCP servers were still starting.
+    - Fixed coordinate clicks being dropped after password-form submission in omp-launched Chromium.
+    - Fixed classifier refusals ending fallback chains prematurely when the retry budget was exhausted.
+    - Fixed reading MCP-advertised skill:// resources and other MCP resources, including discovery order, loading state, and clean shutdown of stalled servers.
+    - Fixed smart unexpected-stop detection missing slow judge results, allowing premature stops to recover correctly.
+    - The cfg:// settings approval prompt now honors ask.timeout rather than always expiring after ten seconds.
+    - Fixed custom LiteLLM providers not receiving the built-in provider behavior and model/session handling.
+    - Fixed resumed Cursor sessions losing earlier reasoning after transcript truncation.
+    - Fixed computer.window() failing to find windows by ID or application when many windows were open.
+    - Fixed grep hiding matches that appeared beyond the first 512 bytes of a long line.
+    - Fixed snapcompaction leaving too little context room after compaction.
+    - Fixed usage-limited account pools redeeming saved resets for accounts outside the configured pool.
+    @oh-my-pi/pi-mnemopi
+    Added
+    - Exported clipRecallContent for applications that need to format content consistently with Mnemopi recall previews.
+    Fixed
+    - Fixed memory-save performance degradation and excessive memory-database growth when date-related terms such as “today” appeared in otherwise unrelated memories.
+    @oh-my-pi/pi-natives
+    Added
+    - Added applyBinaryPatch(oldPath, patchPath, outPath) for applying HDiffPatch single-stream delta patches, including zstd-compressed patches, to files.
+    - macOS desktop sessions now keep the display awake while in use and expose screen-lock and display-sleep state through capabilities, screenState, and screen captures.
+    Changed
+    - Improved Linux embedded-shell startup performance for external commands.
+    - Improved macOS computer-use performance, including faster screenshots and accessibility queries, with better handling of large numbers of off-screen windows.
+    - Updated grep() and search() to truncate matching lines around the first match when they exceed maxColumns, mark truncated sides with ..., and report the match's character column.
+    Fixed
+    - Fixed macOS accessibility and window-management operations requiring Screen Recording permission; only screenshots and display listing now require that permission, and window listing includes windows beyond the frontmost 48. Window titles from other applications remain unavailable without Screen Recording permission.
+    - Fixed macOS menu inspection and selection for menus containing items whose titles cannot be read; those items are now skipped safely.
+    - Fixed syntax highlighting and language detection for several languages, including TOML, PowerShell, SCSS, Less, Vim script, GraphQL, Protobuf, Terraform/HCL, Dockerfile, CMake, INI, gitignore, Kotlin, Swift, Elixir, Sass, Python f-strings, Julia interpolations, and Elixir interpolations.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed the stats dashboard favicon so dashboard tabs and bookmarks display the OMP icon correctly.
+    @oh-my-pi/pi-tui
+    Added
+    - Added opt-in JSON editing for free-form array settings while keeping credential values masked; settings editors now surface submission and validation errors.
+    - Added ghost-text predictions to the editor via the new Editor.prediction callback. Press Tab or Right at the end of a line to accept the suggested text without submitting.
+    - Expanded table-chart support with stacked, waterfall, timeline, dots, range, slope, butterfly, bullet, ladder, histogram, and stat charts, including error whiskers, share bars, status matrices, and richer before/after visualizations.
+    - Added richer table-chart planning and presentation controls, including titles, ordering, grouping, shading, normalization, reference lines, polarity, rivals, focus rows, and model-driven selection for smart mode. Charts now identify key findings, highlight best values and changes, and adapt scales and labels for clearer comparisons.
+    - Added the optional assistantMessageText theme token for coloring assistant reply prose while preserving the terminal default when unset or empty.
+    - Added optional status-line support for showing saved usage resets that expire soon and warning once per conversation when a reset expires within 24 hours.
+    Changed
+    - Improved table-chart planning to prefer waterfall charts over share bars for complex data sets and enforce segment limits for share-chart legibility
+    - Reduced the time required to rebuild long sessions on resume, particularly sessions with repeated wait polls or todo updates.
+    - Output summaries now identify the first and last lines omitted by column limits, and truncation notices point to the :raw selector for retrieving complete lines.
+    Fixed
+    - Fixed session model selection and setup displaying role chips for roles that resolve to a non-chat runner rather than the model used by the session.
+    - Improved table-chart parsing and rendering across repeated labels, grouped and paired values, percentages, units, currency, durations, model sizes, links, identifiers, and sparse or side-by-side tables. Charts now avoid duplicate or misleading plots and preserve meaningful comparisons.
+    - Fixed table-chart scaling for outliers, stacked groups, zeros, logarithmic shading, and values spanning multiple orders of magnitude.
+    - Fixed /tree stalling or using excessive memory when opened on long sessions with many branch points.
+    - Fixed extension status messages losing SGR colors and text styles in the status line.
+    - Fixed the eval status list omitting status events discarded from long-running cells.
+    - Fixed loop-blocked diagnostics to attribute stalls to the correct work phase or terminal writes instead of reporting misleading unknown causes.
+    - Fixed Agent Hub and status-line spending totals losing cumulative subagent costs after compaction, parking, or follow-up turns.
+    - Fixed dead-key input on older Windows Terminal versions so quotes are entered correctly with Space, Enter, and Tab.
+    - Fixed SIXEL graphics detection on terminals, including native Windows Terminal, so SVG figures and inline images work without forcing a graphics protocol.
+    - Fixed overflow transcript rendering so user messages no longer appear as blank padding bars or leave stray prompt markers across terminal rows.
+    @oh-my-pi/pi-utils
+    Breaking Changes
+    - Renamed takeRecentLoopPhase() to takeLoopPhaseAttribution(). The new API returns a LoopPhaseAttribution object ({ label, ms }) and reports a label only when it accounts for more time than unlabeled work within an armed measurement window.
+    Added
+    - Added withLoopPhase(label, fn) for attributing synchronous work to a named loop phase, with automatic cleanup even when the callback throws.
+    Changed
+    - Improved streaming JSON parsing performance for long tool-argument payloads.
+    Fixed
+    - Fixed archive extraction on Windows systems without symlink privileges by allowing symlink entries to be extracted using supported fallbacks, while skipping unresolvable dangling links instead of failing the entire archive.
+    What's Changed
+    - feat(settings): expose extra context filenames in the TUI by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15252
+    - feat(coding-agent): expose /annotate to extensions as ctx.annotations by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15260
+    - perf(tui): bound linear session tree projection by @azain47 in https://github.com/can1357/oh-my-pi/pull/12527
+    - perf(tui): drop redundant full passes from transcript block removal by @sjawhar in https://github.com/can1357/oh-my-pi/pull/13767
+    - perf(utils): bulk-skip ordinary chars in streaming JSON string scan by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/14297
+    - feat(natives): speed up external command launches in the embedded shell by @farnoy in https://github.com/can1357/oh-my-pi/pull/14858
+    - fix(sdk): refresh changed MCP tools before returning the session by @aktanazat in https://github.com/can1357/oh-my-pi/pull/11315
+    - fix(ai): keep closed summary parts and completed custom input on lossy Responses streams by @moodiness in https://github.com/can1357/oh-my-pi/pull/11863
+    - fix(tui): stop /tree from exhausting memory on long sessions by @ParadaCarleton in https://github.com/can1357/oh-my-pi/pull/12622
+    - fix: re-arm Responses request-body timeout recovery on turn output by @hellofrommorgan in https://github.com/can1357/oh-my-pi/pull/12654
+    - fix(coding-agent): report cell line and column with a code frame for JS eval syntax errors by @tahakotil in https://github.com/can1357/oh-my-pi/pull/14376
+    - fix(collab): reconnect a relay socket that went silent by @andrewleech in https://github.com/can1357/oh-my-pi/pull/14387
+    - fix(tui): keep SGR styling in extension hook statuses by @sandboiii in https://github.com/can1357/oh-my-pi/pull/14500
+    - fix(coding-agent): show resolved diagnostic and SSH config paths by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/14558
+    - fix(coding-agent): keep advisors off a model that refused their context by @mvid in https://github.com/can1357/oh-my-pi/pull/14743
+    - fix(coding-agent): log plugin registry discovery warnings by @tahakotil in https://github.com/can1357/oh-my-pi/pull/14788
+    - fix(utils): keep archive extraction going on Windows without the symlink privilege by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/14820
+    - fix(coding-agent): keep OpenRouter Decisions on /api/alpha under a provider-wide baseUrl by @jerryfane in https://github.com/can1357/oh-my-pi/pull/14848
+    - fix(coding-agent): loaded Codex config.toml as valid settings items by @mottopanikeiku in https://github.com/can1357/oh-my-pi/pull/14850
+    - fix(advisor): redact one-line previews before cutting them by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/14863
+    - fix(coding-agent): export withFileMutationQueue in tools barrel and legacy shim by @twotnguyen in https://github.com/can1357/oh-my-pi/pull/14892
+    - fix(coding-agent): stop auth-broker migrate skipping accounts that share a project or workspace by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14901
+    - fix(coding-agent): bridge upstream pi 1.x shim gaps for legacy extensions by @Frenchy2k1 in https://github.com/can1357/oh-my-pi/pull/14909
+    - fix: honor explicit effort for slow completions by @xiangnan0811 in https://github.com/can1357/oh-my-pi/pull/14961
+    - fix(coding-agent): compare session lock identity handle-to-handle by @astrosloth in https://github.com/can1357/oh-my-pi/pull/14973
+    - fix(eval): keep only the newest status events per eval cell by @azain47 in https://github.com/can1357/oh-my-pi/pull/14992
+    - fix(catalog): billed GPT-6.1 Sol Ultrafast at 6x on the API and 8x on Codex by @eggpeat in https://github.com/can1357/oh-my-pi/pull/15000
+    - fix(mnemopi): stop linking memories by shared time scope alone by @tickernelz in https://github.com/can1357/oh-my-pi/pull/15013
+    - fix(loop-watchdog): name a stall's phase only when it outweighs unlabeled time in the late window by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/15019
+    - fix(codex): align prewarm routing with the resolved session by @xiangnan0811 in https://github.com/can1357/oh-my-pi/pull/15022
+    - test(mcp): wait for delayed incremental tool discovery by @xiangnan0811 in https://github.com/can1357/oh-my-pi/pull/15023
+    - fix(tui): label synchronous terminal writes for the loop watchdog by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/15029
+    - fix(ai): keep OAuth callback state inert in the result page by @BAKocska in https://github.com/can1357/oh-my-pi/pull/15037
+    - test(stats): bound the non-loopback connect probe by @alphastorm in https://github.com/can1357/oh-my-pi/pull/15050
+    - fix(coding-agent): give python eval code /dev/null as stdin by @kimprap in https://github.com/can1357/oh-my-pi/pull/15061
+    - feat(catalog): enable supports-prompt-cache-key for the mistral provider by @richardotomislav in https://github.com/can1357/oh-my-pi/pull/15079
+    - fix(coding-agent): give browser screenshot notes the factor clickAt needs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15106
+    - fix(tui): type dead-key text carried on Space, Enter and Tab win32-input-mode records by @davide-butera in https://github.com/can1357/oh-my-pi/pull/15138
+    - fix(browser): fail fast and reload when a tab's renderer crashes by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15142
+    - fix(stats): serve the omp icon at /favicon.ico by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/15162
+    - fix(coding-agent): end an automatic retry whose session write fails by @sjawhar in https://github.com/can1357/oh-my-pi/pull/15177
+    - fix(tui): show lone hidden todo instead of a '… 1 more todo' row by @ravshansbox in https://github.com/can1357/oh-my-pi/pull/15189
+    - fix(tui): detect DA1-advertised SIXEL on native Windows Terminal by @pgkim42 in https://github.com/can1357/oh-my-pi/pull/15226
+    - fix(sdk): isolated async jobs for concurrent roots by @roboomp in https://github.com/can1357/oh-my-pi/pull/15232
+    - fix(ai): load tools instead of deferring all of them on Anthropic by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15233
+    - fix(coding-agent): print a trailing computer observe() tree once by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15270
+    - fix(coding-agent): chain element calls on computer ref() handles by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15274
+    - fix(coding-agent,tui): return artifact text from Eval read() and name the raw range in cut-line notices by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15279
+    - perf(natives): list only on-screen windows before a macOS screenshot by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15291
+    - fix(plugins): install git specs from non-GitHub hosts via git protocol by @blindcat-10835 in https://github.com/can1357/oh-my-pi/pull/11810
+    - docs: fix custom-tool quickstart flag and example by @danzaio in https://github.com/can1357/oh-my-pi/pull/15088
+    - feat(coding-agent): add composer next-message predictions by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/15137
+    - fix(coding-agent): place composer predictions next to word autocomplete and drop the duplicate usage warning by @H4vC in https://github.com/can1357/oh-my-pi/pull/15294
+    - fix(async): expose retained status and agentId by @joebenberry-afk in https://github.com/can1357/oh-my-pi/pull/10928
+    - feat(theme): add assistantMessageText token for assistant prose by @oleg494 in https://github.com/can1357/oh-my-pi/pull/11260
+    - fix(ai): retry without prompt-cache breakpoints when an endpoint rejects cache_control by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11812
+    - feat(models): route OpenCode Zen's Jev models to the System One API by @jpds in https://github.com/can1357/oh-my-pi/pull/14446
+    - fix(coding-agent): reuse a transcript's memory recall when it is resumed by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14656
+    - fix(coding-agent): wait briefly for MCP startup before the first turn by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14780
+    - fix(agent): emit the queue change when live steering is adopted or withdrawn by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/14821
+    - fix(browser): turn off password leak dialogs in owned profiles by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/14862
+    - fix(coding-agent): let a classifier refusal keep walking the fallback chain by @sjawhar in https://github.com/can1357/oh-my-pi/pull/14905
+    - fix(tui): render content line in user message emergency row and omit prompt marks by @twotnguyen in https://github.com/can1357/oh-my-pi/pull/14910
+    - fix(coding-agent): read MCP-advertised skill:// resources when no loaded skill matches by @sandboiii in https://github.com/can1357/oh-my-pi/pull/14977
+    - fix(coding-agent): stop aborting slow unexpected-stop judge verdicts before the nudge by @YounesRahimi in https://github.com/can1357/oh-my-pi/pull/14993
+    - fix(mnemopi): label Mnemopi work that can block the event loop by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/15001
+    - fix: cfg:// approval honors ask.timeout instead of hardcoded 10s by @danzaio in https://github.com/can1357/oh-my-pi/pull/15085
+    - fix(ai): send x-litellm-session-id to the litellm provider by @occ in https://github.com/can1357/oh-my-pi/pull/15096
+    - fix(ai): stop Gemini echoing fenced thinking and keep its text reply signatures by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15152
+    - fix(ai,coding-agent): keep Cursor models' earlier reasoning across turns and resumes by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15154
+    - fix(natives,coding-agent): resolve macOS windows without Screen Recording or the 48-window list cap by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15158
+    - fix(natives): skip untitled macOS menu items instead of failing the menu by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15223
+    - fix(grep): show the match on a line wider than the column budget by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15278
+    - anthropic: clamp image dimensions and payload size to the API limits by @aktanazat in https://github.com/can1357/oh-my-pi/pull/10633
+    - docs: document command-backed extension providers by @aminamos in https://github.com/can1357/oh-my-pi/pull/11798
+    - feat(computer): list open windows by app when computer.window() misses by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/13655
+    - fix(ai): ignore account policies whose account is absent instead of failing by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14233
+    - fix(coding-agent): size snapcompact archives by the room under the compaction trigger by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14345
+    - fix(coding-agent): replace an older browser relay omp started once no session uses it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15108
+    - feat(ai,catalog): bring Factory Droid up to droid 0.237 (Haiku 5.5, Mistral Large 4, thinking Off, EU routes) by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15116
+    - feat(ai,catalog): carry reasoning natively when the same model moves between hosts by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15123
+    - feat(coding-agent): add retry.fallbackOn to limit fallback chain switches to usage limits by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15125
+    - fix(coding-agent): stop each session's Claude reset sweep from listing every account when nothing is due by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15129
+    - feat(coding-agent): spend a saved reset in its last 5 minutes when no prompt can ask by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15131
+    - feat(coding-agent): list and spend saved rate-limit resets with omp usage reset by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15132
+    - feat(coding-agent,tui): warn before saved rate-limit resets expire by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15134
+    - fix(coding-agent,ai): stop pooled sessions spending saved resets on accounts outside their pool by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15135
+    - feat(computer): keep the macOS display awake while acting and report a locked screen by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15188
+    - perf(natives): read each macOS AX element's attributes in one round trip by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15275
+    - fix(ai): sample Devin turns with the native CLI's settings by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/10234
+    - fix(catalog): bundle GLM-5.3-FlashX on Zhipu Coding Plan by @roboomp in https://github.com/can1357/oh-my-pi/pull/15315
+    - fix(ai): restored claude quota for env oauth tokens by @roboomp in https://github.com/can1357/oh-my-pi/pull/15319
+    - fix(session): stopped print-mode todo reminder continuations by @roboomp in https://github.com/can1357/oh-my-pi/pull/15321
+    New Contributors
+    - @azain47 made their first contribution in https://github.com/can1357/oh-my-pi/pull/12527
+    - @andrewleech made their first contribution in https://github.com/can1357/oh-my-pi/pull/14387
+    - @mottopanikeiku made their first contribution in https://github.com/can1357/oh-my-pi/pull/14850
+    - @twotnguyen made their first contribution in https://github.com/can1357/oh-my-pi/pull/14892
+    - @Frenchy2k1 made their first contribution in https://github.com/can1357/oh-my-pi/pull/14909
+    - @astrosloth made their first contribution in https://github.com/can1357/oh-my-pi/pull/14973
+    - @richardotomislav made their first contribution in https://github.com/can1357/oh-my-pi/pull/15079
+    - @davide-butera made their first contribution in https://github.com/can1357/oh-my-pi/pull/15138
+    - @yuzu-octopus made their first contribution in https://github.com/can1357/oh-my-pi/pull/15162
+    - @pgkim42 made their first contribution in https://github.com/can1357/oh-my-pi/pull/15226
+    - @blindcat-10835 made their first contribution in https://github.com/can1357/oh-my-pi/pull/11810
+    - @joebenberry-afk made their first contribution in https://github.com/can1357/oh-my-pi/pull/10928
+    - @jpds made their first contribution in https://github.com/can1357/oh-my-pi/pull/14446
+    - @YounesRahimi made their first contribution in https://github.com/can1357/oh-my-pi/pull/14993
+    - @occ made their first contribution in https://github.com/can1357/oh-my-pi/pull/15096
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.8.9...v18.9.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.9.0
+ReleaseTime: 2026-10-11T08:08:01.0000000Z

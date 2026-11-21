@@ -1,0 +1,22 @@
+Version: 3.7.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.7.2/MotrixNext_3.7.2_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release fixes critical reliability issues in the auto-shutdown feature and unifies all confirmation dialog styling to a consistent NDialog design language.
+    🐛 Bug Fixes
+    - Fixed auto-shutdown not re-triggering after cancellation — The shutdown_triggered flag reset was trapped inside its own guard, making it unreachable dead code. Active-download tracking now runs unconditionally so the flag properly resets when new downloads appear
+    - Fixed BT/magnet downloads bypassing shutdown detection — An early return in the torrent cleanup handler was preventing the shutdown condition check from ever being called
+    🛠 Improvements
+    - Unified confirmation dialog styling — Migrated both the exit confirmation and auto-shutdown countdown dialogs from NModal preset="card" to NModal preset="dialog" type="warning", matching the engine restart dialog's visual style (⚠️ icon in title, larger bold title, native action buttons)
+    - Dual-action shutdown dialog — Two clear choices: "Disable Auto-Shutdown" permanently turns off the setting; "Skip This Time" dismisses the current countdown while keeping the preference enabled for future tasks
+    - Added i18n keys for shutdown actions — shutdown-disable and shutdown-skip-once localized across all 26 supported languages
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.7.2
+ReleaseTime: 2026-04-18T23:36:51.0000000Z

@@ -1,0 +1,15 @@
+Version: "9.69"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-969.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#969
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SFTP:
+      - Fixed compatibility with SFTP servers affected by stricter checks in version 9.67, including AIX and Diplomat MFT. The SSH Client now tolerates unexpected permission and file-type bits where these can be safely ignored.
+      - SFTP protocol errors now close the affected SFTP channel while leaving the SSH connection and its other channels available. Previously, an invalid SFTP response could also disconnect terminal sessions, port forwarding, and other SFTP sessions. If SFTP opened automatically after login, this could appear as an immediate SSH disconnection.
+      - Improved reporting of SFTP startup and transfer failures. The graphical SFTP window now opens while the SFTP connection is being established, so startup errors remain visible. Error messages preserve the underlying cause when an SFTP channel closes, including failures to activate an SFTP drive.
+ReleaseTime: 2026-11-16

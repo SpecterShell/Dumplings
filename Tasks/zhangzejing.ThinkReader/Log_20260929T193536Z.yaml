@@ -1,0 +1,27 @@
+Version: 0.9.56
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/zhangzejing/ThinkReader/releases/download/v0.9.56/ThinkReader-Setup-0.9.56-win_x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ThinkReader 0.9.56 · Windows x64
+    本版修复已安装 Windows App 下载更新后重启仍显示旧版本的问题。点击“安装并重启”后，ThinkReader 会保存草稿、退出，在原安装目录静默执行已校验的完整安装包，并核对安装器退出码与最终版本。正常流程不显示安装向导。失败时会提示并写入 update-install.log。
+    旧版更新代码无法追溯修复。如果旧版点击安装后仍显示原版本，请用下方 Windows 安装版覆盖安装 0.9.56 一次。之后 App 内更新会使用新流程。下载缓存中的安装包也是完整安装包，通常位于 %LOCALAPPDATA%\thinkreader-desktop-updater\pending\。
+    English: Installed Windows updates now run the verified full installer silently in the running App's directory after ThinkReader exits, then verify the installed version. If an older client reopens at the old version, install 0.9.56 once with the Windows installer below.
+    验证范围：Windows 11 x64；完整源码回归、打包检查、冻结后端/桌面冒烟，以及隔离目录中的真实 App 内 0.9.55 → 0.9.56 下载、安装、数据保留和重启。更新源使用本地 loopback。未测试全新 Windows 系统、真实外部服务或 macOS。本次 Windows 二进制未签名。
+    私有源码实现提交：ef209efd62da2bf4a27760362ed82c74e1e002fc。原 0.9.42 故障没有留下当时的 NSIS 退出码；旧客户端复验确认，当安装登记位置与运行位置不一致时，旧流程会将新版装到登记位置，原 App 仍显示旧版本。不能据此断言原 0.9.42 故障只有这一原因。
+
+    | 文件                                          | SHA-256                                                          |
+    | --------------------------------------------- | ---------------------------------------------------------------- |
+    | ThinkReader-Setup-0.9.56-win_x64.exe          | d06bff5b444e7200d338d3cf7955bbdee685e141f614e97d69c2d8d420cadfd4 |
+    | ThinkReader-0.9.56-win_x64.exe                | 95d46f485e7969fbce63c5117f12d8ca67c63636e525ba61c3cc79af54e54715 |
+    | ThinkReader-0.9.56-win_x64.zip                | 86e159039be42522c9d77ffea1c5a00163d1e5459585524e8af8ad8b5d90cf91 |
+    | latest.yml                                    | 6793b74295d909fec9c720a0c4e2551a70ce5997f9f9b97b1ef0f3454361b944 |
+    | ThinkReader-Setup-0.9.56-win_x64.exe.blockmap | 7cc3e500378790bdf4719c8013107f7dcd7281bf300678186fa980d1e0f2968b |
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhangzejing/ThinkReader/releases/tag/v0.9.56
+ReleaseTime: 2026-09-29T14:54:15.0000000Z

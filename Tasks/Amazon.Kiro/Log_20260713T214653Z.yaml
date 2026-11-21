@@ -1,0 +1,26 @@
+Version: 1.0.138
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/1.0.138/kiro-ide-1.0.138-stable-win32-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kiro.dev/changelog/ide/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Faster Sessions, Compaction Fixes, and PowerShell Trust
+    Note: To get the latest 1.0.x release, download it directly from kiro.dev/downloads. Auto-updates are being rolled out gradually to users.
+    This release delivers faster session startup, fixes the compaction loop that caused repeated Context limit exceeded errors on large sessions, and adds full PowerShell trust support on Windows. MCP tools now also recover from transient network failures instead of failing silently.
+    Improvements
+    - Faster session startup and shell commands: Permission checks are now significantly faster, especially for sessions with many saved trust rules. Sessions start quicker and each shell command runs with less overhead before execution
+    - MCP tool resilience: MCP tools and profile lookups now recover gracefully from transient network failures. A brief connectivity interruption no longer permanently disables tools for the rest of the session
+    - PowerShell command trust: Always allow rules now work correctly for piped and compound PowerShell commands on Windows. Previously, PowerShell substitutions ($(...)) were opaque to the trust system and re-prompted indefinitely
+    - Per-agent hooks: Inline hooks declared on custom agent profiles now register and fire correctly. Previously they were silently dropped
+    - Copy Request IDs — A new Copy Request ID(s) option in the message copy menu lets you grab backend request IDs from any turn for support tickets
+    Fixes
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kiro.dev/changelog/ide/1-0-138/
+ReleaseTime: 2026-07-13

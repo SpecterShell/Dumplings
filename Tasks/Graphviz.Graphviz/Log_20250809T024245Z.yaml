@@ -1,0 +1,20 @@
+Version: 13.1.2
+Installer:
+- Architecture: x86
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/windows_10_cmake_Release_graphviz-install-13.1.2-win32.exe
+- Architecture: x64
+  InstallerUrl: https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/13.1.2/windows_10_cmake_Release_graphviz-install-13.1.2-win64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - DFLT_GVPRPATH, a $PATH-like variable that gvpr uses to locate user-referenced files, is now computed at runtime instead of build time. This removes a barrier to relocating a Graphviz installation from one directory to another.
+    - In the CMake build system, whether GDK-dependent components are built or not can now be controlled by the -DWITH_GDK={AUTO|ON|OFF} option. #2714
+    Fixed
+    - Gvedit and Smyrna on MinGW can now correctly locate their supporting runtime data directories.
+    - The gvpr options -v for printing verbose messages is documented. This has been supported since Graphviz 2.30 but undocumented.
+    - When using the CMake build system, DFLT_GVPRPATH is no longer incorrectly missing a ".:" prefix.
+    - On macOS, processing graphs involving URLs with the Quartz plugin is once again possible. Previously this would crash. This was a regression in Graphviz 13.0.1. #2712
+    - In gvpr, updating a map or deleting items from the map no longer triggers a use-after-free. #2707
+ReleaseTime: 2025-08-09T02:24:48.7920000Z

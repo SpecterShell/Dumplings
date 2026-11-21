@@ -1,0 +1,66 @@
+Version: 1.14.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.1_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.1/cpa-manager-plus_v1.14.1_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.1_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.1/cpa-manager-plus_v1.14.1_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.1 is a stability patch for v1.14.0 that fixes Usage Maintenance failing to open in some reverse-proxy deployments.
+    The Manager Server natively returns 204 No Content for HEAD /v0/management/usage/maintenance, but some reverse-proxy paths normalize that HEAD request to 200 OK. The v1.14.0 frontend required an exact 204 response for capability detection, so a working maintenance endpoint could be incorrectly reported as This Manager Server does not support usage maintenance..
+    v1.14.1 accepts either 200 or 204 for the capability probe while retaining the existing real GET response and schema validation that determines whether the maintenance API is actually supported. Legacy or incompatible Manager Server payloads therefore remain rejected.
+    Highlights
+    Fixes
+    - Fix Usage Maintenance being incorrectly reported as unsupported when a Docker / Nginx or other reverse-proxy deployment returns 200 for the HEAD capability probe. (Web)
+    - Preserve the existing GET payload schema validation, so a HEAD 200 does not make legacy or malformed maintenance responses appear supported. (Web)
+    - Add regression coverage for a proxied HEAD 200 while retaining the native 204 capability path. (Web / Tests)
+    Upgrade Notes
+    - No database migration or configuration change is required.
+    - Users following the documented Nginx reverse-proxy deployment do not need to change proxy configuration for this fix.
+    - Usage Maintenance still requires the corresponding CPAMP Manager Server maintenance API.
+    - The full Muse / Meta compatibility baseline remains CPA v7.3.4+; this release does not raise the minimum CPA compatibility baseline.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.0...v1.14.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.1-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.1 是 v1.14.0 的稳定性补丁版本，修复部分反向代理部署下 Usage Maintenance（用量维护）无法打开的问题。
+    Manager Server 原生的 HEAD /v0/management/usage/maintenance 返回 204 No Content，但部分反向代理链路会将该 HEAD 请求归一化为 200 OK。v1.14.0 前端把“必须精确返回 204”作为能力探测条件，因此会在实际接口可用时错误显示 This Manager Server does not support usage maintenance.。
+    v1.14.1 允许能力探测接受 200 或 204，同时继续使用后续真实 GET 响应和现有 schema 校验确认功能支持，避免把旧版或不兼容的 Manager Server 误判为可用。
+    Highlights
+    Fixes
+    - 修复 Docker / Nginx 等反向代理部署中，Usage Maintenance 的 HEAD 能力探测返回 200 时被错误判定为“不支持用量维护”的问题。（Web）
+    - 保留现有 GET payload schema 校验；即使 HEAD 返回 200，旧格式或无效 maintenance 响应仍会进入 unsupported 状态，不扩大实际能力边界。（Web）
+    - 增加反向代理 HEAD 200 的回归测试，继续覆盖原生 204 能力探测路径。（Web / Tests）
+    Upgrade Notes
+    - 无需数据库迁移或配置变更。
+    - 使用官方 Nginx 反向代理部署的用户无需为此修复调整代理配置。
+    - Usage Maintenance 仍然只在 CPAMP Manager Server 提供对应维护接口时可用。
+    - 完整 Muse / Meta 功能的 CPA 基线继续为 v7.3.4+；本版本没有提高 CPA 最低兼容基线。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.0...v1.14.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.1-zh.md
+ReleaseTime: 2026-09-26T02:26:07.0000000Z

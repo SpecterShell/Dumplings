@@ -1,0 +1,40 @@
+Version: 1.5.3
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.3/DeskBox_Setup_1.5.3_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.3/DeskBox_Setup_1.5.3_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.3 improves startup reliability and notification activation. Direct installations gain a standard startup method with an optional scheduled task, and both distribution channels register notifications before decoding activation arguments.
+    Released on September 16, 2026.
+    Highlights
+    - Choose a startup method on direct installations. New installations default to the standard Windows Run entry, which shows up in Windows "Startup apps". Existing installations retain their active method. Scheduled tasks remain optional; a failed task registration falls back only after the standard entry is verified and alternative entries are cleaned up. Failed switches preserve the previous registration, Windows opt-outs are respected, and choosing a method while startup is off does not enable it.
+    - Preserve Unicode task paths. Task definitions and rollback snapshots are read directly as Unicode through Task Scheduler COM. Chinese account names and installation paths no longer depend on guessing a redirected console code page — "start with Windows" can be enabled reliably on non-ASCII accounts (reported through the in-app feedback channel).
+    - Fix notification activation initialization. The notification manager is registered before rich activation arguments are read, startup-task detection uses the platform activation API, early notifications use the durable activation queue until the main instance is ready, and unsupported or failed notification registration keeps ordinary startup available.
+    - Recover from early startup failures. Tray creation retries while the desktop shell starts, and fatal initialization failures terminate instead of leaving a headless process that swallows every later launch while holding the instance lock (issue #373). The startup watchdog also covers constructor initialization, and the logon task requests automatic retries for failed launches.
+    - Keep diagnostic checks readable. Boolean verification results such as path matching and execution-limit checks survive diagnostics redaction, while actual paths and account identifiers remain hidden.
+    See CHANGELOG.md for the complete list.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.3 改善开机自启与通知激活的可靠性。直装版增加标准自启和可选的计划任务，两种发行渠道都会先注册通知，再读取通知激活参数。
+    2026 年 9 月 16 日发布。
+    主要更新
+    - 直装版可选择自启方式。 新安装默认使用标准 Windows Run 启动项（可在 Windows"启动应用"中管理），已有安装保留实际生效的方式。计划任务作为可选项；注册失败时，只有标准入口验证和替代入口清理成功才报告回退成功。切换失败保留旧注册，尊重 Windows 禁用状态，关闭自启时改选方式只保存偏好。
+    - 完整读取 Unicode 任务路径。 计划任务定义与回滚快照直接通过 Task Scheduler COM 读取，不再猜测重定向输出的代码页——非 ASCII（如中文）账户名和安装路径下"开机自启"可以可靠开启（经应用内反馈渠道报告）。
+    - 修复通知激活初始化顺序。 先注册通知管理器，再读取激活参数；自启来源识别使用平台激活 API。初始化期间的通知先进入持久队列，等主实例就绪后处理；通知不受支持或注册失败时仍保留普通启动。
+    - 改善登录早期的启动恢复。 桌面外壳启动期间重试托盘创建；不可恢复的初始化失败会退出，不再残留占用实例锁、吞掉后续所有启动的无界面进程（issue #373）。看门狗覆盖构造阶段，登录任务对失败启动登记自动重试。
+    - 保留有用的诊断检查结果。 路径匹配、执行时限等布尔检查结果不再被误脱敏，实际路径与账户信息仍会隐藏。
+    完整条目见 CHANGELOG.md。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.3
+ReleaseTime: 2026-09-16T05:53:21.0000000Z

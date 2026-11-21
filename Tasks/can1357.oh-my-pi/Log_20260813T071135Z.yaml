@@ -1,0 +1,182 @@
+Version: 17.3.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.3.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Improved the manual /shake command to retain a small history of recent tool results, preventing the agent from losing its active working context.
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Renamed withGeminiThinkingLoopGuard to withThinkingLoopGuard; the guard applies to Gemini, DeepSeek, and Grok model-id families.
+    Changed
+    - Updated OpenCode Go integration to use the official usage endpoint, removing hardcoded caps, enabling real-time credential validation, and routing multi-key pools based on rolling and weekly headroom.
+    - Optimized Anthropic prompt caching with rolling 5-minute breakpoints and idle refreshes to keep the prompt prefix warm.
+    Fixed
+    - Fixed Ollama chat adapter to correctly forward sampling parameters like temperature and topP to the provider.
+    - Fixed OpenAI agent turns ending prematurely after a web search with no visible answer, ensuring the agent continues processing the search results.
+    - Fixed a resource leak where completed model streams retained provider concurrency permits longer than necessary.
+    - Fixed image input support for qwen3.8-max and newer models when using DashScope compatible-mode.
+    - Fixed xAI usage reporting falling back to a stale cache when a new weekly cycle starts with 0% consumed credits.
+    - Fixed Together AI login validation failures by querying the authenticated models list instead of a hardcoded model.
+    - Fixed credential-health probes and usage fetches failing when using reference-stored API keys (such as environment variables or commands) by ensuring secrets are correctly resolved.
+    - Fixed Perplexity email-OTP login by preserving the session cookies required for verification.
+    - Fixed thinking configuration for OpenAI and Daybreak models to correctly send reasoning.effort: "none" when thinking is disabled.
+    - Fixed Grok runaway thinking streams bypassing the thinking-loop guard.
+    Removed
+    - Removed legacy local request-cost estimation machinery and database schemas previously used for OpenCode Go estimates.
+    @oh-my-pi/pi-catalog
+    Breaking Changes
+    - Removed OpenAICompat.enableGeminiThinkingLoopGuard; thinking-loop eligibility is derived solely from the model.id family.
+    Added
+    - Added first-party OpenAI Daybreak Blue, Daybreak Red, and GPT-5.6 Cyber models with full support for their documented API pricing (including long-context rates above 272K input), token limits, tools, and reasoning effort controls (off/low/medium/high/xhigh/max).
+    - Added calculateUncachedInputCost() to calculate prompt pricing against active context-length tiers without prompt caching.
+    Fixed
+    - Fixed Anthropic cache-write pricing to correctly honor mixed 5-minute and 1-hour TTL usage instead of incorrectly charging all writes at the 5-minute rate.
+    - Fixed Ollama Cloud DeepSeek V4 Flash and older reasoners to correctly apply the DeepSeek effort contract (e.g., low/high/max) instead of the generic effort ladder.
+    - Added a default request timeout to OpenAI-compatible model discovery to prevent stalled provider endpoints from hanging startup indefinitely.
+    - Fixed Anthropic cache-write pricing to honor mixed 5-minute and 1-hour TTL usage instead of charging every write at the 5-minute rate.
+    - Fixed Ollama Cloud DeepSeek V4 Flash (including dated/preview tags like deepseek-v4-flash:0731) exposing the generic minimal/low/medium/high/xhigh effort ladder without max; the ollama-chat transport now applies the DeepSeek effort contract (Flash → low/high/max, older reasoners → high/max), matching the direct API and every other host (#8334).
+    - Exposed the low reasoning-effort tier for DeepSeek V4 Pro on the direct API and faithful aggregator routes, matching DeepSeek's updated API contract advertising reasoning_effort low/high/max for both V4 SKUs; OpenRouter's non-Flash route still exposes only high, and the older V3.x/R1 reasoners remain high/max (#8405).
+    - Bounded OpenAI-compatible model discovery with a default request timeout so a stalled provider /models endpoint can no longer hang startup indefinitely in resolveModelDiscoveryFallback (#8315).
+    - Fixed Codex-discovered gpt-daybreak-* aliases being treated as unknown models, restoring the GPT-5.6 low/medium/high/xhigh/max effort ladder and its 372K fallback only when the Codex registry omits context_window.
+    - Fixed first-party OpenAI GPT-5.6 aliases to preserve wire-level off through generated pro aliases and to price requests above 272K input at each SKU's documented long-context rates.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed the global advisor.subagents setting. Subagent advisors are now configured per agent via frontmatter or task.agentAdvisor. Existing configurations of advisor.subagents: true will automatically migrate to task.agentAdvisor: { task: "on" }.
+    Added
+    - Added Astral ty as a built-in fallback Python LSP server (ty server), ordered behind pyright, basedpyright, and pylsp.
+    - Added first-party Nix support, including reproducible source builds for Linux and macOS, a pinned development shell, NixOS and Home Manager modules, and offline Bun dependency support.
+    - Added support for per-agent advisors configured via the advisor frontmatter field or the task.agentAdvisor settings, allowing different agents to be advised by different models.
+    - Redesigned the /agents interface as a fullscreen hub featuring a scope sidebar, type-to-filter search, a pinned detail pane, mouse support, and interactive property chips for configuring agent settings.
+    - Prepared for the upcoming npm package rename by updating omp update and startup version checks to follow the omp.rename pointer in the published manifest.
+    Changed
+    - Updated /usage, omp usage, and the status line to display authoritative OpenCode Go quota usage directly from the official endpoint, replacing estimated costs with actual usage across three time windows (5h, 7d, and monthly).
+    - Documented the source-available local protocol relay and clarified that production collaboration relay binaries are not currently published.
+    - Enabled bounded Anthropic prompt-cache refreshes for the main agent loop while isolating advisor and side-channel requests from the shared refresh timer.
+    Fixed
+    - Fixed multiple Language Server Protocol (LSP) issues, including concurrent sessions sharing backend overlays, stale document overlays after workspace edits, incorrect transactional edit advertisements, unhandled snippet placeholders in rust-analyzer, and failing to restore overwritten targets during failed file renames.
+    - Fixed LSP diagnostics incorrectly reporting success when all language servers failed.
+    - Fixed Hindsight memory scoping splitting repositories across multiple scopes on case-sensitive filesystems by lowercasing the project label.
+    - Fixed the CLI crashing at startup with a raw AuthBrokerError when the configured auth broker is unreachable, replacing it with an actionable error message.
+    - Fixed various resource and process leaks, including idle launch brokers staying alive indefinitely, stale MCP connections leaving child processes open, and undrained stdout in DAP runInTerminal requests.
+    - Fixed custom STB-backed vision providers failing to decode WebP images by automatically detecting image formats from bytes and normalizing WebP blocks.
+    - Fixed command-backed provider API keys (!command) staying pinned to cached values after receiving an HTTP 401 error.
+    - Fixed the /agents Control Center failing to open when model overrides are configured as YAML arrays.
+    - Fixed session-title generation regressions by restoring plain-sentence phrasing and name-fidelity instructions.
+    - Fixed agent-facing prompts and system instructions mentioning tools that are absent from the current session catalog.
+    - Fixed manual /shake discarding all tool results; it now retains a small recent tail of results to preserve active working context.
+    - Fixed omp install failing validation for extensions importing legacy is<Tool>ToolResult event guards.
+    - Fixed profile aliases generated by standalone binaries invoking Bun's embedded virtual script instead of the installed omp command.
+    - Fixed /skill:<name> tokens in /plan or /vibe inline prompts being treated as literal text instead of executing the skill.
+    - Fixed long streaming write previews stalling the TUI by optimizing file scanning and splitting.
+    - Fixed the Windows console disappearing when running commands like /stats.
+    - Fixed retry-fallback selection switching to a fallback model with a context window too small to hold the current session context.
+    - Fixed OpenCode discovery ignoring opencode.jsonc files and rejecting comments in opencode.json.
+    - Fixed WSL2 startup hanging forever when the Windows interop pipe is wedged: the WSL host-home discovery probes (cmd.exe, wslpath) now run under a 500ms hard timeout and fall back to the Linux $HOME/~/.omp candidates (#8402).
+    @oh-my-pi/hashline
+    Fixed
+    - Repaired mis-set replacement ranges using exact outside-row matches, indentation, tree-sitter structure, and a narrow pure-closer shape: opening comment fences and other syntax-essential edges are retained only when a parse-valid candidate satisfies those constraints; ambiguous placements are rejected.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed an issue where shell-internal background jobs (such as yes >/dev/null &) could survive a one-shot shell session and consume CPU indefinitely after the command returned.
+    @oh-my-pi/omptype
+    Added
+    - Added type.withJsonSchema(schema, json) to wrap a validation-only schema, ensuring JSON Schema emission yields the provided json verbatim even when nested inside objects, arrays, or unions. Schemas with defaults or output-changing morphs are rejected to prevent transformed outputs from being discarded.
+    @oh-my-pi/omp-stats
+    Added
+    - Added cost-weighted cacheSavings metric alongside cacheRate, accounting for cache-read discounts and write premiums against equivalent uncached prompt costs.
+    Fixed
+    - Ensured the embedded dashboard archive is byte-reproducible by sorting entries and zeroing tar and gzip timestamps during compilation.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed an issue where repeated pane-width adjustments or terminal resizing could corrupt native scrollback and soft-wrap behavior.
+    - Fixed an issue where scaled OSC 66 Markdown headings (such as "Large Headings" on Kitty) would render as invisible placeholders or get partially cleared after a redraw or terminal resize.
+    @oh-my-pi/pi-utils
+    Fixed
+    - Optimized performance of partial JSON parsing for long streaming tool-call arguments.
+    - Fixed Mermaid ASCII multi-word edge labels where routed lines would show through spaces.
+    What's Changed
+    - fix(tui): preserve scrollback across multiplexer width changes by @shawnkoh in https://github.com/can1357/oh-my-pi/pull/8072
+    - fix(session): forward retry fallback events to extensions by @roboomp in https://github.com/can1357/oh-my-pi/pull/8080
+    - fix(cli): surface actionable error when auth broker is unreachable by @roboomp in https://github.com/can1357/oh-my-pi/pull/8097
+    - fix(utils): mask routed lines beneath edge labels by @roboomp in https://github.com/can1357/oh-my-pi/pull/8101
+    - fix(discovery): support OpenCode JSONC configs by @roboomp in https://github.com/can1357/oh-my-pi/pull/8106
+    - fix(launch): rearm broker idle shutdown on terminal settlement by @roboomp in https://github.com/can1357/oh-my-pi/pull/8122
+    - fix(agent): reject cold revive that finishes after lifecycle dispose by @roboomp in https://github.com/can1357/oh-my-pi/pull/8123
+    - fix(dap): drain runInTerminal debuggee stdout by @roboomp in https://github.com/can1357/oh-my-pi/pull/8125
+    - fix(coding-agent): show scope in /ssh add hint by @kevcube in https://github.com/can1357/oh-my-pi/pull/8128
+    - fix(coding-agent): ship omp:// docs to npm consumers by @roboomp in https://github.com/can1357/oh-my-pi/pull/8136
+    - fix(coding-agent): interpret inline /skill in mode-command prompts by @roboomp in https://github.com/can1357/oh-my-pi/pull/8138
+    - fix(extensions): preserve unsafe schemas during plugin install by @roboomp in https://github.com/can1357/oh-my-pi/pull/8144
+    - fix(ai): preserve perplexity otp session cookies by @roboomp in https://github.com/can1357/oh-my-pi/pull/8157
+    - fix(coding-agent): lowercase the hindsight project label by @alvorithm in https://github.com/can1357/oh-my-pi/pull/8159
+    - fix(coding-agent): restore is*ToolResult guards on legacy pi shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/8163
+    - docs(collab): clarify relay self-hosting availability by @roboomp in https://github.com/can1357/oh-my-pi/pull/8166
+    - fix(rpc): strip snapcompact archive from compact result by @roboomp in https://github.com/can1357/oh-my-pi/pull/8169
+    - fix(session): resolve wire-name aliases in hasBuiltInTool by @roboomp in https://github.com/can1357/oh-my-pi/pull/8185
+    - feat(lsp): add Astral ty as built-in Python primary LSP server by @FNDEVVE in https://github.com/can1357/oh-my-pi/pull/8186
+    - fix(coding-agent): gate prompt tool mentions on session tool availability by @szavadsky in https://github.com/can1357/oh-my-pi/pull/8199
+    - fix(agent): support array model overrides in dashboard by @roboomp in https://github.com/can1357/oh-my-pi/pull/8202
+    - fix(cli): handle standalone profile aliases by @roboomp in https://github.com/can1357/oh-my-pi/pull/8236
+    - chore: force refresh provider api key command by @djjorjinho in https://github.com/can1357/oh-my-pi/pull/8253
+    - fix(ai): continue after answerless hosted search by @kfxhjz in https://github.com/can1357/oh-my-pi/pull/8263
+    - fix(omp): prevent false reset fireworks by @oleksoleksoleks in https://github.com/can1357/oh-my-pi/pull/8266
+    - fix(coding-agent): skip idle mid-turn persistence waits by @ethancawse in https://github.com/can1357/oh-my-pi/pull/8283
+    - fix(ai): release provider permit before stream completion by @ethancawse in https://github.com/can1357/oh-my-pi/pull/8284
+    - Fix open browser behaviour on Windows by @x86matthew in https://github.com/can1357/oh-my-pi/pull/8288
+    - fix(ai): stop stripping images from multimodal qwen3.8-max on DashScope by @roboomp in https://github.com/can1357/oh-my-pi/pull/8307
+    - fix(coding-agent): suppress circular plan-yolo startup note by @roboomp in https://github.com/can1357/oh-my-pi/pull/8313
+    - fix(mcp): show config source in startup failures by @jeffscottward in https://github.com/can1357/oh-my-pi/pull/8316
+    - fix(catalog): bound openai-compatible model discovery with default timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/8317
+    - fix(tui): keep scaled OSC 66 heading reserved rows intact on repaint by @roboomp in https://github.com/can1357/oh-my-pi/pull/8320
+    - fix(ai): handle omitted creditUsagePercent in fresh xAI weekly periods by @bubua12 in https://github.com/can1357/oh-my-pi/pull/8325
+    - fix(ai): validated together login against models endpoint by @roboomp in https://github.com/can1357/oh-my-pi/pull/8333
+    - fix(catalog): apply DeepSeek effort contract on Ollama Cloud by @roboomp in https://github.com/can1357/oh-my-pi/pull/8335
+    - fix(usage): use authoritative OpenCode Go quotas by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/8337
+    - fix(coding-agent): normalize WebP for STB-backed models by @ethancawse in https://github.com/can1357/oh-my-pi/pull/8339
+    - fix(natives): stop detached internal shell jobs by @roboomp in https://github.com/can1357/oh-my-pi/pull/8343
+    - fix(eval): allow awaiting Python workflow helpers by @Kigbnajd in https://github.com/can1357/oh-my-pi/pull/8348
+    - fix(mnemopi): contain lifecycle hook failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/8352
+    - fix(bash): resolve msys drive paths in utility builtins by @roboomp in https://github.com/can1357/oh-my-pi/pull/8356
+    - docs: reconcile session dir layout with the 17.2.9 hashed-scheme revert by @tenequm in https://github.com/can1357/oh-my-pi/pull/8359
+    - test(coding-agent): fix pre-existing session-manager legacy migration test failure by @szavadsky in https://github.com/can1357/oh-my-pi/pull/8016
+    - fix(tui,utils): remove O(N²) hot paths when streaming long tool-call args by @AmecoCoding in https://github.com/can1357/oh-my-pi/pull/8040
+    - fix(coding-agent): preserve ArkType command API compatibility by @evandrodevbr in https://github.com/can1357/oh-my-pi/pull/8049
+    - fix(compaction): manual /shake keeps a recent tail of tool results by @zhang17-24 in https://github.com/can1357/oh-my-pi/pull/8067
+    - fix(agent): fit-check retry fallback before switching models by @roboomp in https://github.com/can1357/oh-my-pi/pull/8068
+    - fix(advisor): preserve advisor fallback role ownership by @roboomp in https://github.com/can1357/oh-my-pi/pull/8076
+    - fix(build): set CMAKE_POLICY_VERSION_MINIMUM for audiopus_sys in cargo env by @szavadsky in https://github.com/can1357/oh-my-pi/pull/8088
+    - fix(mcp): close stale initial connections by @roboomp in https://github.com/can1357/oh-my-pi/pull/8124
+    - fix(tui): keep large transcript rebuilds responsive by @roboomp in https://github.com/can1357/oh-my-pi/pull/8135
+    - fix(lsp): correct workspace edit failure handling by @roboomp in https://github.com/can1357/oh-my-pi/pull/8391
+    - fix(lsp): isolate document overlays across sessions by @roboomp in https://github.com/can1357/oh-my-pi/pull/8392
+    - fix(lsp): preserve workspace resource options by @roboomp in https://github.com/can1357/oh-my-pi/pull/8393
+    - fix(lsp): reject unsupported rust-analyzer snippet edits by @roboomp in https://github.com/can1357/oh-my-pi/pull/8394
+    - fix(lsp): roll back rename_file edits when the move fails by @roboomp in https://github.com/can1357/oh-my-pi/pull/8395
+    - fix(lsp): abort rename_file when willRenameFiles fails on a supporting server by @roboomp in https://github.com/can1357/oh-my-pi/pull/8396
+    - fix(lsp): fail diagnostics when every applicable server fails by @roboomp in https://github.com/can1357/oh-my-pi/pull/8397
+    - fix(lsp): synchronize applied workspace edits by @roboomp in https://github.com/can1357/oh-my-pi/pull/8399
+    - fix(discovery): bound WSL host-home probe with a hard timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/8403
+    New Contributors
+    - @kevcube made their first contribution in https://github.com/can1357/oh-my-pi/pull/8128
+    - @alvorithm made their first contribution in https://github.com/can1357/oh-my-pi/pull/8159
+    - @FNDEVVE made their first contribution in https://github.com/can1357/oh-my-pi/pull/8186
+    - @djjorjinho made their first contribution in https://github.com/can1357/oh-my-pi/pull/8253
+    - @kfxhjz made their first contribution in https://github.com/can1357/oh-my-pi/pull/8263
+    - @ethancawse made their first contribution in https://github.com/can1357/oh-my-pi/pull/8283
+    - @x86matthew made their first contribution in https://github.com/can1357/oh-my-pi/pull/8288
+    - @bubua12 made their first contribution in https://github.com/can1357/oh-my-pi/pull/8325
+    - @Kigbnajd made their first contribution in https://github.com/can1357/oh-my-pi/pull/8348
+    - @tenequm made their first contribution in https://github.com/can1357/oh-my-pi/pull/8359
+    - @AmecoCoding made their first contribution in https://github.com/can1357/oh-my-pi/pull/8040
+    - @evandrodevbr made their first contribution in https://github.com/can1357/oh-my-pi/pull/8049
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.15...v17.3.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.3.0
+ReleaseTime: 2026-08-13T07:02:57.0000000Z

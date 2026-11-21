@@ -1,0 +1,70 @@
+Version: 17.2.6
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.6/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed an issue where peer-IRC interrupts (such as subagent messages) incorrectly skipped non-interruptible tool calls queued in the same batch.
+    - Improved interruption messaging to clearly distinguish between parent-agent steering and system-advisory interruptions.
+    @oh-my-pi/pi-ai
+    Added
+    - Added profile-aware Bedrock Mantle region selection, authenticated model discovery, bearer-token or SigV4 authentication, and credential refresh handling for OpenAI Responses models.
+    Fixed
+    - Fixed an issue where Ollama requests without a user-role message would fail to generate output or silently fail with a misleading error.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the bedrock-mantle provider with authenticated model discovery for OpenAI GPT-5.4, GPT-5.5, and GPT-5.6 models (including Luna and Terra variants with corrected pricing) served through Amazon Bedrock's Responses endpoint.
+    Fixed
+    - Fixed dynamic discovery for the deepseek-v4 model family (such as deepseek-v4-flash-0731) under alibaba-token-plan missing reasoning configuration and maximum thinking effort.
+    - Fixed GitHub Copilot dynamic discovery retaining stale bundled prices for default-context models instead of using the provider's reported default-tier prices.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the /reset slash command to reset the conversation context in place: it drops the live messages, queued turns, and pending tool calls (and cancels the turn's async jobs, post-prompt continuations, and checkpoint/plan runtime state) while keeping the session id, title, cwd, model, and on-disk transcript. It records a durable reset boundary so the live transcript stays cleared across rebuilds (theme change, focus attach, /shake, resume) instead of resurrecting the pre-reset messages, while the full pre-reset history stays on disk (#3580).
+    Fixed
+    - Fixed extension slash commands appearing as user prompts after being handled locally.
+    - Preserved explicit session titles when branching from an earlier conversation turn.
+    - Fixed an issue where unhandled JavaScript rejections in the browser guest could crash the main process and active sessions, converting them into tool errors instead.
+    - Fixed a critical issue on Windows where cancelling a timed-out bash tool command could mistakenly terminate the main process due to PID recycling.
+    - Fixed an issue where supervised processes reaching a terminal state failed to notify their launching session, requiring polling; the broker now actively notifies the session upon process completion.
+    - Fixed crashes on macOS when using PCRE2-only grep patterns with Bun by defaulting to the interpreted PCRE2 engine instead of JIT, and introduced the OMP_PCRE2_JIT environment variable to manually control JIT compilation.
+    - Fixed issues with /btw branch promotion where branches could park behind active turns, cut from outdated session leaves, or leave rejected branch keys indistinguishable from composer input.
+    - Fixed database bloat by ensuring archived main and nested session rows are properly cleaned up from stats.db during garbage collection.
+    - Fixed startup hanging during local model discovery when a timed-out transport left its request pending, which blocked the CLI before OAuth login could finish (#7482).
+    @oh-my-pi/pi-mnemopi
+    Added
+    - Added opt-in SQLite page-size configuration for file-backed databases, configurable via the MNEMOPI_DB_PAGE_SIZE environment variable or the pageSize option in openDatabase. Existing databases retain their original page size.
+    @oh-my-pi/pi-natives
+    Added
+    - Added non-blocking, process-owned FileLock bindings using abstract Unix sockets on Linux, named mutexes on Windows, and persistent flock(2) sidecars on other Unix platforms.
+    @oh-my-pi/pi-utils
+    Added
+    - Added a shared file-lock utility backed by process-owned native OS locks with automatic crash release and bounded asynchronous retry.
+    What's Changed
+    - fix(ai): add authenticated Bedrock Mantle routing by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/7080
+    - fix(browser): guard cmux guest rejections by @roboomp in https://github.com/can1357/oh-my-pi/pull/7368
+    - fix(pi-shell): spare host process from run-cancellation sweeps by @roboomp in https://github.com/can1357/oh-my-pi/pull/7453
+    - fix(agent): distinguish parent steering from advisories by @fatihaziz in https://github.com/can1357/oh-my-pi/pull/7460
+    - fix(ai): guarantee ollama user turn and surface done_reason load by @roboomp in https://github.com/can1357/oh-my-pi/pull/7466
+    - fix(catalog): add reasoning config for deepseek-v4 family in alibaba-token-plan by @21307369 in https://github.com/can1357/oh-my-pi/pull/7468
+    - fix(catalog): use live Copilot default-tier prices by @roboomp in https://github.com/can1357/oh-my-pi/pull/7473
+    - fix(session): preserve title when branching by @lemonleks in https://github.com/can1357/oh-my-pi/pull/7477
+    - fix(tui): consume extension slash commands locally by @lemonleks in https://github.com/can1357/oh-my-pi/pull/7481
+    - fix(agent): keep queued non-interruptible tools alive on peer-IRC interrupt by @roboomp in https://github.com/can1357/oh-my-pi/pull/7495
+    - feat(mnemopi): add opt-in SQLite page-size selection by @bradmccormack in https://github.com/can1357/oh-my-pi/pull/7215
+    - fix(coding-agent): prune archived session stats by @alphastorm in https://github.com/can1357/oh-my-pi/pull/7287
+    - fix(hub): wake owners when supervised processes exit by @paralin in https://github.com/can1357/oh-my-pi/pull/7377
+    - fix(grep): disable pcre2 jit on macos by @roboomp in https://github.com/can1357/oh-my-pi/pull/7469
+    - fix(session): prevent stale /btw branch promotion by @roboomp in https://github.com/can1357/oh-my-pi/pull/7475
+    New Contributors
+    - @lemonleks made their first contribution in https://github.com/can1357/oh-my-pi/pull/7477
+    - @bradmccormack made their first contribution in https://github.com/can1357/oh-my-pi/pull/7215
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.5...v17.2.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.6
+ReleaseTime: 2026-08-03T15:10:31.0000000Z

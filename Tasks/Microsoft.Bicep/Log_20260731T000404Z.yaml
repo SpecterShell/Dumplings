@@ -1,0 +1,53 @@
+Version: 0.46.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.46.1/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.46.1/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.46.1/bicep-setup-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - New no-unused-types linter rule to warn on unused type declarations (#20035)
+      Example:
+      type usedType = {
+          name: string
+      }
+
+      type unusedType = string   // Warning: Type "unusedType" is declared but never used.
+
+      param person usedType
+      output personName string = person.name
+    - [Experimental] Runtime values in tags and sku (#20059)
+      A new experimental feature that allows runtime values to be used in tags and sku properties — useful for preserving existing values during redeployment.
+      Example usage:
+      resource example 'Microsoft...' = {
+          name: 'example'
+          location: resourceGroup().location
+          sku: {
+             name: this.existingResource().?sku.name ?? 'Standard'
+          }
+          tags: this.existingResource().?tags ?? {}
+      }
+    Features and Bug fixes
+    - Restore YAML alias and anchor handling behavior (#20070)
+    - Fix concurrency issue in RPC Client (#20071)
+    - Fix brm startup crash caused by verbose option alias parsing (#20069)
+    - Fix external inputs breaking base parameter spreads (#20062)
+    - Validate deployment-context functions in parameter file imports (#20063)
+    - Only return list-prefixed functions in Az types (#20106)
+    - Harden webview not-found pages against HTML injection (#20108)
+    - Use public JSONRPC client for e2e tests (#20080)
+    - Bump System.Security.Cryptography.Xml (#20101)
+    - Harden webview not-found pages against HTML injection (#20108)
+    Community contributions
+    - Revise grpcurl and grpcui installation methods (#20061) - Thanks @samirbanjanovic!
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.46.1
+ReleaseTime: 2026-07-30T23:35:23.0000000Z

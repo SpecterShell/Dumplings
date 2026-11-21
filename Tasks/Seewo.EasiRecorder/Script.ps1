@@ -1,21 +1,22 @@
-$Object = $Temp.SeewoApps['EasiRecorder']
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl = $Object.softInfos[0].downloadUrl
-}
+$Object1 = $Global:DumplingsStorage.SeewoApps['EasiRecorder']
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, '([\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = $Object1.softInfos[0].softVersion
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.softInfos[0].downloadUrl
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

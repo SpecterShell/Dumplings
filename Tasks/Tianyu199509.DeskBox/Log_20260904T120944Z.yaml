@@ -1,0 +1,46 @@
+Version: 1.4.9
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.4.9/DeskBox_Setup_1.4.9_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.4.9/DeskBox_Setup_1.4.9_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.4.9 is a stability release for file dragging, stack interactions, empty-state refresh, memory lifecycle, and Windows 10 Native AOT compatibility.
+    Released on September 3, 2026.
+    Highlights
+    - Reliable drag operations on Windows 10 and Windows 11. A drag now advertises one preferred shell operation through RequestedOperation, while AllowedOperations remains the capability mask. This avoids the Windows 10 Copy/Move/Create shortcut chooser without narrowing the destinations that DeskBox supports.
+    - Internal feedback is separated from drag completion. Hover feedback no longer reports an internal move as though the filesystem transfer had completed. This prevents .lnk items from being moved to the Recycle Bin during an in-grid or in-stack reorder and preserves the final drop route.
+    - Stack routes are explicit in both display modes. Inline stacks and stack popovers support reorder, stack-to-parent-grid, grid-to-stack, other-grid, desktop, and File Explorer routes without relying on one shared visual-tree assumption.
+    - Reorder completion is more resilient. Drag-session metadata and cache entries are validated per drag, and pointer-release fallback only completes a pending internal reorder when the normal drop event did not do so.
+    - Empty-state refresh follows the underlying model. Empty placeholders are refreshed from the real item count after external imports and after the last item leaves a grid or stack.
+    - Windows 10 Native AOT packaging is complete. Direct packages include the required Windows App Runtime Insights resource, and the Native AOT audit verifies the retained binding and drag-surface contracts.
+    - Settings window no longer leaks. The Settings window is reused so repeated open/close cycles do not retain complete native XAML trees.
+    - Idle cleanup and memory compression are reliable again. Deep cleanup retries after cooldown vetoes, backdrop resources are reused, and the opt-in setting remains enabled by default.
+    - Safer file interactions. File opening is gated and traced, extension-changing renames require confirmation, and stack popovers support in-place rename.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.4.9 主要修复文件拖拽、叠放交互、空状态刷新、内存生命周期和 Windows 10 Native AOT 兼容问题。
+    2026 年 9 月 3 日发布。
+    主要更新
+    - Windows 10 和 Windows 11 的拖拽更加可靠。 拖拽现在通过 RequestedOperation 提供首选操作，同时保留 AllowedOperations 作为可用能力范围。Windows 10 普通拖出不再弹出复制、移动或创建快捷方式的选择菜单，其他目标仍可按原有方式接收文件。
+    - 内部悬停反馈与文件操作结果分开处理。 格子或叠放内调整顺序时，悬停反馈不会再被当成文件系统移动已经完成。这项修复避免 .lnk 快捷方式在内部拖动后进入回收站，也能保留最终选择的拖放路径。
+    - 两种叠放展示模式拥有一致的拖放能力。 格子内展开和弹窗展开均支持内部排序、叠放移回上级格子、格子移入叠放、移动到其他格子、桌面及文件资源管理器。
+    - 排序提交更加稳定。 每次拖拽分别验证会话数据和缓存。正常 Drop 事件没有完成内部排序时，鼠标释放恢复逻辑只会处理仍在等待的那一次操作，避免出现插入线已经显示但顺序没有改变的问题。
+    - 空状态跟随真实文件数量刷新。 从外部拖入第一个文件，或者从格子和叠放中移走最后一个文件后，空状态会立即按当前数据更新。
+    - 补齐 Windows 10 Native AOT 发布内容。 直接安装包包含 Windows App Runtime Insights 所需资源，Native AOT 审计也会检查对应绑定和拖拽界面契约。
+    - 设置窗口不再持续占用整套 XAML 资源。 设置窗口改为复用，反复打开和关闭不会不断保留新的原生 XAML 树。
+    - 空闲清理与内存压缩恢复稳定。 深度清理在冷却条件解除后会继续重试，背景材质资源得到复用，空闲内存压缩仍默认开启。
+    - 文件操作更加安全。 文件打开增加拦截与日志，重命名导致扩展名变化时会调用 Windows 确认，叠放弹窗也支持就地重命名。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.4.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.4.9
+ReleaseTime: 2026-09-03T02:03:03.0000000Z

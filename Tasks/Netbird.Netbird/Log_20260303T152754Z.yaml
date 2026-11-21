@@ -1,0 +1,62 @@
+Version: 0.66.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.66.1/netbird_installer_0.66.1_windows_amd64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.66.1/netbird_installer_0.66.1_windows_amd64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.66.1.22627318967
+    Publisher: Netbird
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.66.1/netbird_installer_0.66.1_windows_arm64.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.66.1/netbird_installer_0.66.1_windows_arm64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.66.1.22627318967
+    Publisher: Netbird
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    Client Improvements
+    - Fixed server mutex being held across waitForUp in Up(), preventing potential blocking behavior.
+      #5460
+    - Fixed close-of-closed-channel panic in ConnectClient retry loop.
+      #5470
+    - Fixed deadlock in route peer status watcher.
+      #5489
+    - Fixed profile config directory permissions.
+      #5457
+    - Lowered socket auto-discovery log level from Info to Debug.
+      #5463
+    Management Improvements
+    - Prevented deletion of groups linked to flow groups.
+      #5439
+    - Fixed user update permission validation.
+      #5441
+    - Added reverse proxy services REST client.
+      #5454
+    - Added explicit target deletion on service removal.
+      #5420
+    Proxy Improvements
+    - Flushed buffer immediately to improve gRPC support.
+      #5469
+    Self-Hosted Enhancements
+    - Added support for Embedded IdP PostgreSQL database.
+      #5443
+    - Allowed specifying SQL file locations for auth, activity, and main stores.
+      #5487
+    Security
+    - Upgraded Alpine Linux from 3.23.2 to 3.23.3.
+      #5217
+    New Contributors
+    - @artivis made their first contribution in #5457
+    Full Changelog: v0.66.0...v0.66.1
+- Key: ReleaseNotesUrl
+  Value: https://github.com/netbirdio/netbird/releases/tag/v0.66.1
+ReleaseTime: 2026-03-03T13:51:23.0000000Z

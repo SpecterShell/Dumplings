@@ -1,0 +1,350 @@
+Version: dev-2026-11
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/odin-lang/Odin/releases/download/dev-2026-11/odin-windows-amd64-dev-2026-11.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    BREAKING Changes
+    - [#7724] core:fmt: Make fmt pad widths with spaces unless the 0 flag is given, keeping to C-style printf rules
+    - [#8153] core:compress: Deflate compression added, rewritten Inflate, core:compress overhaul.
+    - Speed (Silesia, 5950X / M4 Pro):
+      - Inflate: 2.1-2.2x the old core inflate; 1.26-1.33x / 1.39-1.46x vendor:zlib 1.3.2.
+      - Deflate L1-9: 1.54-2.43x / 1.18-1.86x zlib 1.3.2, sizes 3% smaller to 1.1% larger than vendor:zlib.
+      - Level 10 (new Best): 0.64% smaller than zlib -9 over the corpus, at about 1.4x the time of level 9. Adds 3-byte matches and cost-based block splitting.
+      - Image.pixels and Context.output are [dynamic]byte (was bytes.Buffer);
+      - Image savers take ^[dynamic]byte.
+      - core:compress/zlib and gzip are @(deprecated) wrappers around core:compress/deflate.
+      - Removed: The old LSB bit-reader helpers in core:compress, COMPRESS_OUTPUT_ALLOCATE_MIN, and the unused error values Resize_Failed, Payload_Size_Exceeds_Max_Payload, Unsupported_Compression_Level and Inflate_Error.
+    New Language Features
+    - [#7809] General Feature Improvements
+      - @(align=N) for variables: globals, locals, @(static), @(thread_local)
+      - New intrinsics: return_address, frame_address, stack_pointer, address_of_return_address
+    - [#7816] Rejects atomics that LLVM cannot lower, and checks atomic memory orderings across the whole program (which many C/C++ compilers do not do).
+      - #+analysis, e.g. #+analysis escape !atomic
+      - @(futex=.Wait) / @(futex=.Wake), marking core:sync's futex procedures, so the analysis checks futex words instead of skipping them.
+    New Compiler Improvements
+    Speedups
+    - [#7823] Debug Info Improvements. Both faster to generate and easier to read in debuggers.
+      - Each record type is defined once, in one of eight debug types modules generated in parallel; every other module only forward declares it.
+      - Debug info is finalized per module in parallel, and work for unused debug info is skipped.
+    - [#8070] Add a fast path to for in over string and string16
+    - [#8136] Inline small run-time-length mem_copy at -o:speed
+    - [#8146] Drop redundant zeroing of literals and declarations
+    High Impact
+    - [#8006] Add Android support: core, NDK and Java bindings, and APK/AAB bundling
+      - Adds Android as a target: -subtarget:android for arm64, arm32, amd64, and i386, at API level 29 or higher.
+        - An app starts at main, just like on every other platform.
+        - odin bundle android makes a signed APK or AAB.
+      - Android target triples now name a vendor. Without one, LLVM got the ABI wrong (x86 stack alignment, arm64's x18).
+      - Links use --no-undefined: a symbol newer than the target API level is a link error.
+      - odin bundle android runs aapt2, adds a prebuilt classes.dex, aligns, and signs.
+      - examples/android: a minimal app, with how to build, bundle, and run it.
+      - A CI job that checks, builds , and bundles it for all four ABIs.
+      - (more)
+    - [#7878] Update Windows' version of LLVM to 22.1.8
+    - [#7809] General Feature Improvements
+      - Matrices now align to the largest power of two dividing their column (row if #row_major) stride, capped at 16, still with no padding (e.g. matrix[4, 4]f32 is 16-byte aligned)
+      - Fixed-capacity [dynamic; N]T is now padded to its full size when T is over-aligned
+      - Naming a @(deprecated) procedure in a procedure group no longer warns; only a call that selects it does
+      - #const parameters can now use their default values
+    - [#7802] Flow-based Escape Analysis of Stack Memory + Show where parapoly procedures and records were instantiated in errors within them
+      - Tracks where stack memory can end up
+      - Replaces the bodgy syntactic approach that check_unsafe_return did previously
+      - An explicit rawptr/uintptr conversion or transmute opts out
+      - Interprocedural
+      - The entry point is skipped for executables
+      - Store warnings suggest clearing the store
+    - [#7816] Rejects atomics that LLVM cannot lower, and checks atomic memory orderings across the whole program (which many C/C++ compilers do not do).
+      - Atomic Ordering Analysis. On by default, -no-atomic-analysis to disable
+      - Warns on .Release writes only ever loaded .Relaxed, and .Acquire reads only ever stored .Relaxed, per global, static, or struct field.
+      - -vet-atomic-access (opt-in) errs on plain reads of what is accessed atomically, outside of core:sync locks.
+    - [#7819] Improved Atomic Analysis: Fences, Weak Compare-Exchange, Futex Wakes, and Volatile Memory Access
+      - Fences: Only order what they are reached after (acquire) or before (release), including across calls.
+        Warnings:
+      - Weak compare-exchange with its second result unused.
+      - Futex woken before it is written.
+      - Atomics on a local nothing else can access; suggests volatile_*.
+      - volatile_* on what is accessed atomically.
+      - atomic_signal_fence where atomic_thread_fence would pair.
+        Errors:
+      - Atomics on what may be misaligned, e.g. a u32 converted to ^u64.
+    - [#7823] Debug Info Improvements. Both faster to generate and easier to read in debuggers.
+      - Procedures and globals are named by package and enclosing procedure (pkg::proc, pkg::[file.odin]::name for file-private, proc@line for literals).
+      - Polymorphic instances share one name; exported and custom link names are kept.
+      - typeid is an enum of the type table, so debuggers show which type it is
+      - bit_sets are flag enums on DWARF.
+      - RAD Debugger views for unions, string16, #soa and other generated types; big-endian types keep their names in CodeView, and the integer ones are byte-swapped by RAD views.
+      - gdb and lldb pretty printers (base/runtime/odin_debugger.py) for maps, unions, strings, slices, dynamic and #soa arrays, allocators and any. T
+        - They load automatically: embedded in .debug_gdb_scripts on ELF, copied into the .dSYM on macOS.
+      - Optimized procedures are marked, and assignment tracking is on unless -o:none, so more variables keep a location.
+      - DWARF 5 on Darwin and Linux, unique type identifiers, and MD5 file checksums on LLVM 22+.
+    - [#7828] Atomic analysis: add `@(synchronizes=...)``, wrapper inference, and more atomic memory model checks
+      - Fences in callees and callers count; fences in other branch arms don't
+      - Error on atomic writes to @(rodata)
+      - Warn on atomics on an unshared @(thread_local)
+      - Warn on Dekker-style store/load pairs not ordered by .Seq_Cst
+      - Warn on mixed-size atomics on one location
+      - -vet-atomic-access
+        - Checks plain writes too
+        - @(synchronizes=<Atomic_Memory_Order>) and @(synchronizes_shared=...) replace the lock-name heuristic
+        - Unmarked procedures are inferred from their calls
+      - Please read the PR's description for how Odin's atomic memory ordering analysis works
+    - [#7848] Error Reporting/Recovery Improvements for Editors and External tooling (e.g. OLS)
+      - -overlay:<file>: Go-style JSON overlays for unsaved buffers
+      - odin check <dir> <dir2>: Check several packages at once
+      - odin check -export-semantics:<json|cbor> -export-semantics-file:<file>
+      - (more)
+    - [#7871] Record the enum field an implicit selector picks in -export-semantics
+    - [#7876] General fixes in the odin parser to improve -export-semantics
+    - [#7877] More Type Inference Improvements
+    - [#7874] Publish the backend's entity names atomically so parallel modules never read a half-written name
+    - [#7886] Reduce Type and Polymorphic instantiation Memory Usage in the Checker
+    - [#7887] Reduce Checker Memory Usage
+      - Scope: 568 → 104 bytes
+      - AST nodes: 40 bytes smaller
+      - Fewer constant-value allocations
+      - DeclInfo: 560 → 312 bytes
+      - odin check now totals around 16.5% less memory on large projects, and is also a smidge faster
+    - [#7905] Bounds Checking Analysis: Leave out bounds checks that are proven to pass
+      - Elides bounds checks that are proven will pass by an earlier check, see PR for details
+    - [#7828] Atomic analysis: add @(synchronizes=...)``, wrapper inference, and more atomic memory model checks, adds -vet-atomic-access`
+    - [#8068] Only add type info for union type assertions when the assertion can panic
+    - [#8101] Add enum support to #config and properly check types
+    - [#8162] Fix Windows i386 executables, DLLs and threading. Add to CI to catch 32-bit cleanliness issues.
+    General fixes and improvements
+    - [#7795] Fixes #7737 and #7727: Regressions caused by temp copy of underaligned values
+    - [#7796] Parapoly: Fix regression with proc group containing parapoly enumerated array specialization
+    - [#7800] Make @(static) locals visible in the debug info
+    - [#7761] LLVMBr opcode split to LLVMCondBr and LLVMUncondBr in LLVM >= 23
+    - [#7068] Fixes (@fast_math) plumbing to LLVM
+    - [#7805] Fix #7798: Sort link_names with Procedures before ForeignProcedures
+    - [#7804] Make vendor collection optional
+    - [#7807] Upgrade vendor:zlib to 1.3.2
+    - [#7808] Fix #7806: -lto:thin / -lto:thin-files no longer defaulted to -linker:lld on Windows
+    - [#7814] Update -vet flag help message
+    - [#7821] Fix #7820: Keep only the origins of what a call's flow loads from memory of an unknown type in the escape analysis
+    - [#7826] Fix debug info printers
+    - [#7825] Fix LLVM backend bugs:
+      - core:simd/x86: replace 35 intrinsics that LLVM has removed (link errors like undefined reference to llvm.x86.sse41.pmaxsb) with generic ops, as clang's headers do.
+      - core:simd/x86: fix _mm_cvtsd_ss, _mm_cvtss_sd, _mm_prefetch and __rdtscp ("Intrinsic has incorrect argument type"), and AVX wrappers that did not compile.
+      - A multi-value call in a matrix literal hit an assertion. In a #simd literal it put later values in the wrong lanes.
+      - Slicing a [dynamic; N]T with constant indices skipped the bounds check against its length.
+      - string16 map keys hashed only half their bytes. cstring16 keys crashed.
+      - Casting an unspecialized polymorphic procedure, e.g. rawptr(avl.init_cmp), is now an error. It used to hang the build or give nil.
+      - rawptr(assert) with -disable-assert failed with "missing procedure 'assert'".
+      - odin test -debug crashed when build tags exclude every file, e.g. test_issue_7547.odin off Windows.
+      - tests/issues/run.sh: pass -microarch:native to the two split_globals lines, as every other line does. Without it the NetBSD job fails whenever its VM gets a CPU older than x86-64-v2.
+    - [#7824] Fix the debug info for indirect parameters that get a callee copy
+    - [#7837] Fix the compiler incorrectly treating the alignment of address storage as the alignment of the address
+    - [#7841] Enable evex512 with explicit AVX-512 target features
+    - [#7829] Fix LLVM asm imm64
+    - [#7840] Let %k registers fill opmask slots in asm templates
+    - [#7845] Merge @(static) and @(thread_local) locals across modules
+    - [#7831] Find an any's named type in lldb on DWARF
+    - [#7842] Fix LLVM Objc varargs
+    - [#7847] Fixes the compiler incorrectly treating the alignment of address storage as the alignment of the address, part 2
+    - [#7861] Fix escape analysis for init statements of ranged loops
+    - [#7872] Fix compiler error from alias of named union
+    - [#7865] Fixes array loads alignment in conversions and matrix-vec multiplication
+    - [#7879] Fixes alignment of #packed field zero stores
+    - [#7880] Use newer LLVM C API where it helps; exact float constants
+    - [#7884] Give switch range bounds the type of the switch tag
+    - [#7893] Fixes #7817: Skip variant checking for a union instantiated with polymorphic operands
+    - [#7892] Fixes #7889: Compiler panic when indexing or selecting through a swizzle
+    - [#7891] Fixes #7741: Compiler segfault for foo :: proc() -> (foo, i32)
+    - [#7897] Fixes field access alignment in custom #align structs/raw unions
+    - [#7881] Fixes #7875 + #7471: Hash matrix and #simd map keys with float elements
+    - [#7896] Fixes #7781: Test a wide shift amount against the bit width before narrowing it
+    - [#7900] Never re-check a constant assigned to a union variant (procedure literals within it had their bodies checked twice)
+    - [#7907] Fix unreachable built-in errors
+    - [#7919] Fixes alignment of union variant loads with custom #align
+    - [#7944] Fixes by-reference type switches on custom #align unions
+    - [#7933] Fix TLS segment underalignment in ARM64 Bionic (Android subtarget)
+    - [#7955] Defer checking asm template bodies and fix target feature checks
+    - [#7952] Fixes #7948: Asm instruction-form selection
+    - [#7956] Fixes #7938: Propagate viral state flags through or_else, or_return and or_branch
+    - [#7988] Fixes #7975 + #7976: Unify the types of constant arguments to min, max and clamp
+    - [#7981] Fixes #7560: Fix runtime indexing of a global matrix
+    - [#7984] Fixes #2039: Follow 'using' pointer fields when converting to a subtype
+    - [#7982] Fixes #7980: Explicitly handle missing receivers in Objective-C selector calls instead of asserting
+    - [#7974] Fix SIMD shift LLVM error and negative overflow behavior
+    - [#7994] Fixes transmuting from aggregate types less aligned than the destination type
+    - [#7842] Fix/llvm objc varargs
+    - [#8022] Fix iterating over a map index expression with a missing key
+    - [#8029] Apply sanitizer attributes to procedure literals
+    - [#8004] Add @(fast_math) to polymorphic procs
+    - [#7997] Debug info: Fix or_return debug location of the "continue_block"
+    - [#7993] Make min(T) / -1 wrap instead of trapping on x86-64
+    - [#8048] Track usage of Objective-C frameworks via used methods
+    - [#8075] Fixes #8074: Do not run the defers again from an exit within a defer in the escape analysis
+    - [#8078] Fixes #8072: Emit return cleanup before a #must_tail call
+    - [#8082] Specialize polymorphic procedures passed to $ procedure parameters
+    - [#8100] Fix race caused by thread_pool_queue_push
+    - [#8110] Fix wrong code when asm template clobbers overlap pinned operands
+    - [#8090] Allow MSVC-mangled link names starting with ? and @
+    - [#8084] Fix the warning that happens when you return #load'ed strings
+    - [#8007] Fixes #7327: codegen not honoring max_simd_align
+    - [#8121] Fix under-aligned addresses passed by pointer and in any
+    - [#8123] Fixes #5335: Fix constant casts to any; reject any constants
+    - [#8122] Copy small indirect params by field to avoid stalls
+    - [#8127] Enable RVO for x := call() and fix sret-ignoring calls
+    New Packages
+    - [#7963] core:diff
+      - Inputs:
+        - Slices of any comparable type
+        - Slices with your own equality and hash
+        - Text by lines, words, or runes
+        - Text can ignore carriage returns, trailing whitespace, all whitespace, or case
+      - Algorithms:
+        - .Myers (the default, with a cost cap)
+        - .Minimal
+        - .Histogram
+        - .Ratcliff_Obershelp
+          (And more. Read PR for more information.)
+    - [#8172] core:image/bng, an implementation of the BNG format.
+    - [#8157] core:compress/lz4, a cleanroom implementation of the LZ4 compression algorithm.
+    Package Improvements
+    Speedups
+    - [#7860] core:sync/chan: Lock-free buffered channels, unbuffered handoff, timeouts
+    - [#8080] core:encoding/json General improvements and speedups.
+    - [#7885] core:encoding, core:strconv and others: Simplify strings io fmt strconv interactions
+    - [#8143] core:hash: Vectorize Adler-32 using core:simd
+    - [#8148] core:fmt: Speed up; fix its byte counts; fix flush=false
+    - [#8128] core:slice: Remove redundant zeroing when allocating
+    - [#8150] core:hash: Add hardware-accelerated CRC32
+    - [#8153] core:compress: Deflate compression added, rewritten Inflate, core:compress overhaul.
+    - Speed (Silesia, 5950X / M4 Pro):
+      - Inflate: 2.1-2.2x the old core inflate; 1.26-1.33x / 1.39-1.46x vendor:zlib 1.3.2.
+      - Deflate L1-9: 1.54-2.43x / 1.18-1.86x zlib 1.3.2, sizes 3% smaller to 1.1% larger than vendor:zlib.
+      - Level 10 (new Best): 0.64% smaller than zlib -9 over the corpus, at about 1.4x the time of level 9. Adds 3-byte matches and cost-based block splitting.
+    High Impact
+    - [#7940] core:sys/darwin: Add all of the Objective-C frameworks
+      - NSError** methods return (value, err)
+      - Flag enums are bit_sets; zero, combined and multi-bit field values are constants (e.g. UI.ViewAnimationOptions_CurveEaseIn)
+      - C-style prefixes are stripped from enum members (e.g. kSecPaddingNone is .None)
+      - import NS "vendor:darwin/AppKit" gives AppKit and Foundation under one NS
+    - [#8050] vendor:OpenEXRCore: Update OpenEXRCore to 3.5.2
+    - [#8051] vendor:OpenEXRCore: Add universal macOS binary for OpenEXR 3.5.2
+    - [#8035] vendor:curl: Updated to 8.23.0. Rebuilt to add Windows support for zlib, brotli, zstd and HTTP/2
+    - [#8006] Add Android support
+      - Fixes for bionic, Android's libc.
+      - core:sys/linux makes only the system calls Android's seccomp filter allows.
+      - core:net resolves through netd.
+      - os.args, the working directory, user directories, sys/info's version, and stdio to logcat get Android defaults.
+      - core:os reads APK assets under /android_asset.
+      - core:sys/android The NDK's C APIs, generated from its headers.
+      - core:sys/android native_app_glue runs main on its own thread, once per process.
+      - core:sys/android JNI and asset helpers.
+      - core:sys/android Constants typed as enums, bit_sets, and bit_fields, here and in vendor:android.
+    - [#8124] base:runtime: Use wmain on Windows, enforcing os.args to be UTF-8
+    - [#8155] core:image/png: Add PNG saving and fixes/adds core:image helpers
+    - [#8159] core:image/jpeg: Rewrite the decoder (much faster), add progressive JPEG
+    Runtime changes
+    - [#7789] base:runtime: Context-aware bounds check handling
+    - [#7989] base:runtime: Fix #7979: Handle negative reserves for maps and dynamic arrays
+    - [#7789] base:runtime: Context-aware bounds check handling
+    - [#7989] base:runtime: Handle negative reserves for maps and dynamic arrays
+    - [#7816] base:intrinsics: Relaxed orderings which paired with nothing in core:nbio mpsc, core:container/pool, Atomic_Cond, and futex_wait's early load.
+    - [#7810] base:runtime: Fixes #7790: (Re-)Add optional allocator error to 'map_insert'
+    - [#8077] base:runtime: Fixes #8076: strings.compare returns -1 for two equal empty strings
+    - [#8109] base:runtime: Fixed #7675: Add ARM64 no-crt entry point
+    - [#8111] base:runtime: Speed up udivmod128 and fix its zero-divisor results
+    - [#8059] base:runtime: Add non_zero_make
+    General fixes and improvements
+    - [#7801] core:encoding/hex: Fix #7779: Behave well on errors
+    - [#7760] core:simd/x86: Implement simd x86 avx2 intrinsics set
+    - [#7809] core:sys/llvm: Fixed the bindings for current LLVM, added the missing ones, and added f16 variants
+    - [#7815] core:sys/llvm: Adds binding for llvm.fake.use
+    - [#7616] core:strconv: Fix #7608: strconv.parse_int no longer indicates success on overflow
+    - [#7883] core:strconv: Moves SWAR floats parsing behind the STRCONV_FAST_FLOAT #config
+    - [#7818] core/crypto/_sha3: Reset keccak_round_start in init
+    - [#7811] core:encoding/base64: Fix #7763: base64 decoder edge case
+    - [#7832] core:text/edit: Fix "word right" translation
+    - [#7848] core:odin/parser: Error Reporting/Recovery Improvements for Editors and External tooling (e.g. OLS)
+    - [#7870] core:math/big: Fix integer destruction
+    - [#7898] core:sys/linux: Add 'unspecified' linux socket protocol
+    - [#7904] core:fmt Fixes #7903: width specifiers now use rune count as previously documented, not byte count.
+    - [#7786] core:simd/arm: Implement SIMD Arm Neon intrinsics set
+    - [#7846] core:simd/x86: Implement SIMD x86 AVX2 intrinsics set
+    - [#7922] core:crypto/_chacha20: Add explicit @enable_target_feature annotations
+    - [#7925] core:unicode: Generate case mapping tables from the UCD
+    - [#7923] core:encoding/json: Fix use after scope
+    - [#7930] core:math/rand: Fixed choice_enum not behaving deterministically with set seed
+    - [#7912] core:simd/x86: Implement SIMD x86 AVX2 gather intrinsics
+    - [#7962] core:mem: Fix and improve resize in allocators
+    - [#7977] core:simd/x86: Implement SIMD x86 SSE cleanup
+    - [#8014] core:encoding/endian: Add arbitrary-width (multiple of 8 bit) get and put
+    - [#8034] core:math/big: Fix #8033: Recursive division returned wrong results
+    - [#8027] core:encoding/base64: Fix additional decoder edge cases
+    - [#8015] core:strconv: Fast float formatting with Żmij
+    - [#8043] core:encoding/xml: Fix #8030: Mishandling of CDATA.
+    - [#8056] core:sys/windows: CPU set bindings
+    - [#8064] core:sys/info: Fix handling of empty CPU brand string
+    - [#8065] core:os: Fix #8063: current_process_info({.Command_Args}) returns no arguments on Windows
+    - [#8036] core:debug/trace: Fixed type of IMAGEHLP_LINE64.FileName, and added IMAGEHLP_LINEW64
+    - [#8060] core:simd/x86: Implement SIMD x86 SSE2 cleanup
+    - [#8099] core:nbio: Fix Linux timeout crashing entire process
+    - [#8104] core:simd/x86: Implement the rest of SIMD x86 SSE cleanup
+    - [#8085] core:unicode/utf8: Fix utf8string.at
+    - [#8116] core:strings: Remove redundant zeroing when allocating
+    - [#8120] core:strings: Fix #8119: prefix_length was broken for 2- and 3-byte runes
+    - [#8126] core:simd/x86: Implement SIMD x86 SSE4a
+    - [#8125] core:sys/windows: Add win32 setupapi bindings
+    - [#8137] core:encoding/json: Unprivate marshal procs
+    - [#8142] core:text/match: Fix %g in only matching hex digits
+    - [#8147] core:testing: Fix trap and signal handling on Windows
+    - [#8173] core:compress/deflate Further hardening: Enforce output limits, bounded growth, cheaper fixed blocks
+    Vendor packages
+    - [#8006] vendor:android: Add Android support
+      - The other NDK libraries, generated from their headers.
+      - vendor:android/java, generated from android.jar.
+      - Vulkan, GLES, AAudio, and miniaudio on Androi
+    - [#8055] vendor:box2d: Update to 3.2.0
+    - [#7734] vendor:box3d: Fix quaternion RotateVector and InvRotateVector math
+    - [#8095] vendor:box3d: Fix Recording signatures
+    - [#8131] vendor:cgltf: Update to 1.15
+    - [#8046] vendor:commonmark: Update to 0.31.2
+    - [#7844] vendor:darwin/Metal: Fixed link for NSRunLoop documentation in Metal package README
+    - [#8135] vendor:directx/dxc: Update to 1.9.2609
+    - [#8054] vendor:enet: Update to 1.3.18
+      - Packet sending performance improvements.
+      - MTU negotiation fixes.
+      - A checksum alignment fix.
+      - The checksum table is no longer built by dynamic initialization.
+      - A new ENET_SOCKOPT_TTL socket option.
+    - [#8133] vendor:glfw: Update to 3.5.1
+    - [#8053] vendor:kb_text_shape: Update to 2.28g
+    - [#8037] vendor:lua/*: Fix lua bindings under wasm
+    - [#8052] vendor:miniaudio: Update to 0.11.25
+    - [#8130] vendor:miniaudio: Update to 0.11.26
+    - [#8129] vendor:OpenEXRCore: Update to 3.5.3
+    - [#8057] vendor:portmidi: Update to 2.0.8
+    - [#8058] vendor:sdl2: update to latest
+    - [#8058] vendor:sdl3: update to latest, add SDL3_net and tests
+    - [#8045] vendor:stb: Update stb_image
+    - [#8132] vendor:raylib: Update to 6.2, raygui to 5.0
+    - [#7836] vendor:wgpu: Add BlendOperation.Undefined to match webgpu.h
+    Miscellaneous
+    - [#7797] Adds regression tests for alignment work in #7720
+    - [#7812] Fix spurious error in test_issue_7547
+    - [#7827] Optimize hot paths that are slow in CI
+    - [#7859] Improve experience with shell scripts for testing
+    - [#7894] Make tests/core/nbio/net.odin poll test more reliable
+    - [#7895] Make downloading test assets skippable
+    - [#8026] Fixes #8024: Update bin\lld-link.exe to match LLMV-C's version
+    - [#8044] Allow CI to exercise vendor:stb tests on the BSDs
+    - [#8041] CI test suite reliability fixes
+    - [#8069] CI stability fixes 2
+    - [#8066] Upgrade Lua CI test to 5.5
+    - [#8154] Add SDL3_TTF to LFS, overlooked earlier
+    - [#8158] Add digests for upcoming extended JPEG test suite
+    - [#8176] Fix CI issues
+    Full Changelog: https://github.com/odin-lang/Odin/compare/dev-2026-10...dev-2026-11
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/odin-lang/Odin/releases/tag/dev-2026-11
+ReleaseTime: 2026-11-03T10:28:40.0000000Z

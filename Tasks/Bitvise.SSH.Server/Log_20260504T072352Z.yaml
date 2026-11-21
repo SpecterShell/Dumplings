@@ -1,0 +1,25 @@
+Version: "9.62"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-962.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#962
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Release notes:
+      - We are anticipating an "information security armageddon" due to increasing ability of AI to find security issues, in all software and systems, which were not previously found in human testing and code review.
+        The quality of commercially available AI tools has improved to where they are now indispensable for software correctness. We are applying available AI tools proactively, to find and fix flaws which previously missed detection.
+        Users will observe this as an increased frequency of updates with a security or reliability significance. We believe this is important to do now, before anyone can find an issue and generate an exploit just by pointing an LLM to an executable binary.
+    - Authentication:
+      - If one of the IP blocking settings Penalty threshold or Total threshold was disabled (set to 0); but not both; the SSH Server would apply an immediate block on the first failed login attempt. Fixed.
+    - FTPS:
+      - Fixed a security issue where an FTPS data connection could be matched to the wrong authenticated control connection in some circumstances.
+      - In Advanced SSH Server settings > TLS algorithms, users can configure restrictions on TLS algorithms for FTPS, in addition to restrictions configured in Windows. In previous SSH Server versions, when used on recent Windows (Windows 10 v1809, Windows Server 2019, or newer), the settings RSA and DH had the opposite effect as intended. Enabling the settings would disable RSA or DH, and disabling the settings would enable them, if they were also enabled in Windows.
+        The setting for ECDHE operated correctly and is unaffected. SSH, SFTP and SCP are unaffected. Users who disabled RSA and DH key exchange using Windows Schannel settings are unaffected.
+      - In some circumstances, valid FTPS data connections could be incorrectly rejected with a TLS resume error. Fixed.
+      - The SSH Server could send an incorrect numeric reply code for some FTPS errors. Clients could interpret the reply code to mean success. Fixed.
+    - SFTP:
+      - The SSH Server's file transfer subsystem now throttles incoming data more thoroughly while processing expensive requests.
+ReleaseTime: 2026-05-04

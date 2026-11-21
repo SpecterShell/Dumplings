@@ -1,0 +1,30 @@
+$Object1 = (Invoke-RestMethod -Uri 'https://restapiext.solidworks.com/FreeDL/v1.0/FreeAPI/Downloads2/All?api_key=972253af2214441db121b6b13b0abdce').data.Where({ $_.ID -eq 335 }, 'First')[0]
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Get-RedirectedUrl -Uri $Object1.FILEURL | Split-Uri -LeftPart Path
+}
+
+# Version
+$this.CurrentState.Version = $this.CurrentState.Installer[0].InstallerUrl -replace '.+/(\d+)\.(\d+)\.(\d+)\.(\d+).+', '$1.$2$3.$4'
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.DATERELEASED, 'MM/dd/yyyy', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

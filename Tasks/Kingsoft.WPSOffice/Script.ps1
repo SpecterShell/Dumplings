@@ -1,62 +1,57 @@
 $Object1 = (Invoke-RestMethod -Uri 'https://params.wps.com/api/map/web/newwpsapk?pttoken=newwinpackages').staticjs.website.wpsnewpackages.downloads | ConvertFrom-Base64 | ConvertFrom-Json
 
 # Installer
-$InstallerUrl = $Object1.'500.1001'.downloadurl
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $InstallerUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl = $Object1.'500.1001'.downloadurl
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($InstallerUrl, 'WPSOffice_([\d\.]+)\.exe').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+(?:\.\d+){2,})').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc').data |
-      Where-Object -FilterScript { $_.post_excerpt.Contains($Task.CurrentState.Version) }
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      if ($Object2) {
-        $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($Object2.more.slug)"
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = 'https://www.wps.com/whatsnew/pc/'
+      }
+
+      $Object2 = Invoke-RestMethod -Uri 'https://api-academy.wps.com/official/whatsnew?platform=pc'
+
+      $ReleaseNotesListObject = $Object2.data.Where({ $_.post_excerpt.Contains($this.CurrentState.Version) }, 'First')
+      if ($ReleaseNotesListObject) {
+        $Object3 = Invoke-RestMethod -Uri "https://api-academy.wps.com/official/post/detail?slug=$($ReleaseNotesListObject[0].more.slug)"
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $Object3.data.published_time | ConvertFrom-UnixTimeSeconds
+        $this.CurrentState.ReleaseTime = $Object3.data.published_time | ConvertFrom-UnixTimeSeconds
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $Object3.data.post_content | ConvertFrom-Html | Get-TextContent | Format-Text
         }
 
         # ReleaseNotesUrl
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Key   = 'ReleaseNotesUrl'
-          Value = "https://www.wps.com/whatsnew$($Object2.more.slug)/"
+          Value = "https://www.wps.com/whatsnew$($ReleaseNotesListObject[0].more.slug)/"
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
-
-        # ReleaseNotesUrl
-        $Task.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = 'https://www.wps.com/whatsnew/pc/'
-        }
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
-
-      # ReleaseNotesUrl
-      $Task.CurrentState.Locale += [ordered]@{
-        Key   = 'ReleaseNotesUrl'
-        Value = 'https://www.wps.com/whatsnew/pc/'
-      }
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,120 @@
+Version: 18.1.17
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.1.17/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Tool <name> not found now names a plausible intended target when the advertised set contains one, e.g. Tool mcp__abc123__xyz789_read not found. Did you mean read?. A model that mis-transcribes a long opaque tool name reliably keeps the trailing segment, which is the only part carrying meaning, so the miss becomes recoverable in the same turn instead of costing a round trip. Purely advisory — the suggestion is only ever a string in the error, never a dispatch target, so an unrecognized name still fails (#10109 by @oldschoola).
+    Fixed
+    - Fixed the token estimator counting developer messages as free and ignoring images in user content, which let context budgeting, pruning and the compaction trigger read a transcript as far smaller than the one sent to the provider.
+    - Fixed repeated local compaction omitting messages retained before the previous compaction record, while preserving original entry IDs and /clear boundaries.
+    - Raised remote compaction request timeout from 3 minutes to 5 minutes so long Codex/gpt-6-astra compact streams can finish before the watchdog aborts them.
+    - Fixed proxy responses dropping the cost the server reported; recorded costs are kept instead of being recomputed.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed transient Python HTTP/2 stream resets and HTTP/1.1 chunked response interruptions being treated as terminal errors when forwarded by a proxy (#11160 by @cyriusweng).
+    - Ollama cache hits now populate cached-token usage: prompt_eval_cached_count from the /api/chat done chunk maps to cacheRead, with input reduced to the uncached portion, so status-line cache_turn/cache_hit segments and cache-prefix audits report real hit rates instead of false misses.
+    - Fixed requests that run across a price change being costed at the newer rate; peak/off-peak estimates now use the rate in effect when the request started.
+    - Fixed GitHub Copilot Business seats getting HTTP 403 on every model while the same token succeeds with a Chat client identity: chat and model-policy requests now identify as copilot-chat, denied requests retry once as the Copilot CLI (copilot-developer-cli), and COPILOT_INTEGRATION_ID pins the Copilot-Integration-Id header up front; model discovery keeps the CLI identity and the 403 message names the identity and the remedies (#11372).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added DeepSeek cost estimates that follow published peak/off-peak rates.
+    - Added dated, announced price changes to the catalog, so rates switch on their effective date (e.g. DeepSeek Pro moving to Flash rates).
+    - Added Command Code as a built-in provider with API-key login, live model discovery, per-model pricing, native OpenAI/Anthropic-compatible routing, cache-aware token usage, and TTFT metrics (#11391 by @CherkaSSH).
+    Fixed
+    - Fixed Command Code models outside the verified effort registry offering unsupported reasoning effort controls, and bundled the live Command Code catalog so fresh installs resolve the default model without waiting for discovery (#11595 by @H4vC).
+    - Fixed the bundled deepseek-flash row shipping without context limits: it now carries its documented 1M context / 384K output so offline context accounting enforces the real window.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Unsent prompts cleared with Ctrl+C can now be recalled with Up, including pastes and images; disable Recall Cleared Drafts in settings to discard future clears instead (#11524 by @camjac251).
+    - Added tui.vimMode, an opt-in modal editing layer for the prompt, off by default (#3299). Escape leaves Insert; Normal mode has hjkl, 0, ^, $, w, b, e, gg, G, count prefixes, x/D/C, dd/yy, p/P and u; v/V start a Visual selection that y copies and d deletes.
+    - Added a vim status-line segment showing the current Vim mode (NORMAL/INSERT/VISUAL/V-LINE), the half-typed command beside it (Vim's showcmd, e.g. 2d), and the Visual selection height (V-LINE 4L). Included in every built-in preset and hidden entirely unless tui.vimMode is on; custom preset users can add "vim" to statusLine.leftSegments.
+    - The cursor now changes shape with the Vim mode: block in Normal/Visual, thin/underline in Insert. Applies to the software cursor, and to the real terminal cursor (DECSCUSR) when PI_HARDWARE_CURSOR is set.
+    - Added the tui.vimModeDisplay setting (text / icon / none) controlling how the Vim mode appears in the status line: the full mode name, a single glyph per mode, or nothing. Shown in /settings only while Vim mode is on.
+    - Added icon.vimNormal, icon.vimInsert, icon.vimVisual, and icon.vimVisualLine symbols, so the Vim mode icons follow the active symbol preset like every other status-line icon — Nerd Font (fa-square / fa-pencil / fa-eye / fa-bars), Unicode (■ ▎ ◉ ≡), or ascii (N/I/V/L) — and can be overridden per theme via the symbols map.
+    - Added peak ↑ / off-peak ↓ indicators to the cost display for models with scheduled pricing (DeepSeek), refreshed automatically when the tariff changes.
+    - Added plan autosave: enable plan.autosave to automatically save approved plans to <project>/.omp/plans/ when plan mode completes (customize with plan.autosaveDir, which accepts ~, absolute, and cwd-relative paths) (#11599 by @H4vC).
+    Changed
+    - Toggling tui.vimMode or tui.vimModeDisplay in /settings now takes effect immediately instead of requiring a restart; the editor, prompt border, status-line segment, and cursor shape all switch in place.
+    - The prompt border now colors Insert mode too (green), instead of falling through to the session accent. Normal and Visual were already colored, so Insert was the one mode the border could not distinguish — on themes whose accent matches the session accent it was indistinguishable from Normal. Borders outside Vim mode are unchanged.
+    Fixed
+    - Marketplace plugins that share a repository root now load only their declared skills instead of every skill in the repository (#11513).
+    - Fixed collab host UI requests raised before a writable guest joins being lost; up to 64 pending asks now replay only to writable guests, and already-aborted asks no longer consume request IDs (#9031 by @alphastorm).
+    - Collab hosts now acknowledge a writable guest's ui-response for an already-settled request with a targeted ui-request-end, so a guest that reconnected after the broadcast and resent its answer no longer waits forever (#11561 by @alphastorm).
+    - Streaming edit guard (edit.streamingAbort) no longer aborts on no-op preview results when replacement content produces no file changes, and carries the native patch diagnostic through the abort reason on genuine preview failures.
+    - Repeated soft compaction now includes messages retained by the previous pass instead of silently dropping them from model context.
+    - Fixed the ask dialog splattering option descriptions and previews one word per row when a model injects \r runs into tool-call string values (observed with GLM via OpenRouter); stray carriage returns are now sanitized in ask params, the live dialog, and ask transcript rendering (#11167 by @Giardi77).
+    - omp models now reports whether a model's images actually reach the provider, so an id stripped by a text-only catalog rule no longer shows images: yes (#9697).
+    - Custom Other answers are now applied before the Ask dialog becomes interactive again, so the next Enter is no longer discarded (#11558 by @schickling-assistant).
+    - Explicit per-model price overrides retain their configured flat rates instead of inheriting time-based pricing.
+    @oh-my-pi/collab-web
+    Fixed
+    - Transcript links are now allowed by the scheme the browser will actually resolve, so a destination that only becomes javascript: after URL normalization is dropped like any other unsafe scheme (#11562 by @alphastorm).
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed Wayland computer-use clicks landing in the wrong place on scaled monitors by mapping captures through the portal's logical monitor geometry (#11540).
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed historical cost estimates after a scheduled price change: usage is estimated at the request's own time, and charges recorded at the time are preserved.
+    - Fixed legacy requests that recorded no cost at all being stored as free usage: they are estimated at their request timestamp, and requests without a recoverable timestamp stay unpriced instead of being billed as 1970.
+    - Fixed a legacy entry whose malformed token counter was summed into an inflated request total; counters that are not finite numbers now count as absent.
+    - Fixed requests whose timestamp could not be recovered being reported as free usage: they now count as unpriced (N/A) rather than $0, in both the aggregates and the per-request list, and an existing database re-parses its sessions once so rows stored before this change are repaired.
+    - Fixed the trace summary showing $0 instead of N/A for legacy scheduled requests that omit their token total: the total is derived from the token buckets before classifying unpriced usage.
+    @oh-my-pi/pi-tui
+    Added
+    - Editor history can retain local draft snapshots with their paste expansions and host-owned attachment restoration, without writing them to persistent history (#11524 by @camjac251).
+    - Added an optional Vim-style modal editing layer to Editor, off unless setVimMode(true) is called: Insert, Normal, and Visual/Visual-Line with motions, count prefixes, and operators. j/k keep Vim's desired column, so passing over a shorter line does not collapse it, and $ sticks to end-of-line. p/P paste from an internal register; yanks are surfaced to the host through onYank so it can route them to the system clipboard.
+    - Vim mode now exposes its chrome to hosts: Editor.vimEnabled, Editor.vimPending (the half-typed command, e.g. 2d), and Editor.vimSelectedLines (Visual selection height). onVimModeChange additionally fires when the pending command or selection size changes, not only on mode switches.
+    - Vim mode now understands text objects: iw/aw (and W), quotes i"/a'/a`, bracket pairs i(/a{/i[/a< (nesting-aware and multi-line), and paragraphs ip/ap. They work under an operator (diw, ca() and in Visual mode (viw), with counts (d2aw). Previously i after an operator fell through to Insert mode, so diw typed text instead of deleting a word.
+    - Vim mode's c operator now actually enters Insert mode (cw, cip, c in Visual); it also follows Vim's cw-acts-like-ce quirk and parks the cursor correctly when the changed range is empty (ci" between bare quotes).
+    - Added Terminal.setCursorShape() (DECSCUSR), restored to the terminal's configured shape on teardown and crash cleanup.
+    Changed
+    - The software cursor now reflects the Vim mode: a reverse-video block in Normal/Visual and an underline in Insert. Both occupy one cell, so layout is unchanged, and non-modal editors keep the reverse-video block they always had.
+    What's Changed
+    - fix(tui): eliminate write preview highlighting stalls by @roboomp in https://github.com/can1357/oh-my-pi/pull/10958
+    - fix(agent): suggest the intended tool when a name miss is recoverable by @oldschoola in https://github.com/can1357/oh-my-pi/pull/11520
+    - fix(compaction): preserve retained history across soft compactions by @rpie9 in https://github.com/can1357/oh-my-pi/pull/11515
+    - Fix flaky incoming-json large-array timing bound on loaded CI runners by @JamieJ5926 in https://github.com/can1357/oh-my-pi/pull/11492
+    - feat(tui): optional Vim-style editing mode for the prompt by @Max-Levitskiy in https://github.com/can1357/oh-my-pi/pull/7658
+    - fix(agent): count developer messages and images in user content by @datrixlab in https://github.com/can1357/oh-my-pi/pull/11480
+    - fix(tools): prefer direct image reads for vision-capable models by @cagedbird043 in https://github.com/can1357/oh-my-pi/pull/11209
+    - fix(coding-agent): preserve effective limits across model overrides by @srobroek in https://github.com/can1357/oh-my-pi/pull/11186
+    - docs: clarify PR template and attribution workflow by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11102
+    - fix(coding-agent/session): do not abort streaming edit on no-op preview by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/11310
+    - fix(coding-agent): report wire image support in omp models by @soydachi in https://github.com/can1357/oh-my-pi/pull/11533
+    - feat(coding-agent): recall drafts cleared with Ctrl+C by @camjac251 in https://github.com/can1357/oh-my-pi/pull/11524
+    - fix(collab): retain host UI requests until a writer joins by @alphastorm in https://github.com/can1357/oh-my-pi/pull/9031
+    - fix(ai): map Ollama prompt_eval_cached_count into usage cacheRead by @chrisro320 in https://github.com/can1357/oh-my-pi/pull/11422
+    - fix(ai): retry proxied Python HTTP stream interruptions by @cyriusweng in https://github.com/can1357/oh-my-pi/pull/11160
+    - fix(desktop): map wayland captures through logical monitor geometry by @roboomp in https://github.com/can1357/oh-my-pi/pull/11541
+    - fix(ai): force SSE in codex retry tests via preferWebsockets by @H4vC in https://github.com/can1357/oh-my-pi/pull/11559
+    - fix(discovery): honor marketplace-root skill selection by @roboomp in https://github.com/can1357/oh-my-pi/pull/11514
+    - fix(collab): acknowledge responses to settled host UI requests by @alphastorm in https://github.com/can1357/oh-my-pi/pull/11561
+    - fix(collab-web): resolve link schemes the way the browser does by @alphastorm in https://github.com/can1357/oh-my-pi/pull/11562
+    - feat(catalog): add Command Code provider by @CherkaSSH in https://github.com/can1357/oh-my-pi/pull/11391
+    - fix(coding-agent): sanitize carriage returns in ask tool call args by @Giardi77 in https://github.com/can1357/oh-my-pi/pull/11167
+    - feat(pricing): add DeepSeek peak and off-peak accounting by @Unravl in https://github.com/can1357/oh-my-pi/pull/11542
+    - fix(coding-agent): apply Ask answer before restoring dialog by @schickling-assistant in https://github.com/can1357/oh-my-pi/pull/11558
+    - fix(agent): raise remote compaction timeout to 5 minutes by @serverinspector in https://github.com/can1357/oh-my-pi/pull/11571
+    - fix(catalog,stats): follow up DeepSeek pricing nits from #11542 by @H4vC in https://github.com/can1357/oh-my-pi/pull/11596
+    - fix(catalog): keep Command Code discovery neutral, bundle live catalog by @H4vC in https://github.com/can1357/oh-my-pi/pull/11595
+    - fix(ai): retry denied Copilot CLI-identity requests as copilot-chat by @H4vC in https://github.com/can1357/oh-my-pi/pull/11597
+    - feat(coding-agent): autosave approved plans to .omp/plans by @H4vC in https://github.com/can1357/oh-my-pi/pull/11599
+    New Contributors
+    - @Max-Levitskiy made their first contribution in https://github.com/can1357/oh-my-pi/pull/7658
+    - @datrixlab made their first contribution in https://github.com/can1357/oh-my-pi/pull/11480
+    - @soydachi made their first contribution in https://github.com/can1357/oh-my-pi/pull/11533
+    - @chrisro320 made their first contribution in https://github.com/can1357/oh-my-pi/pull/11422
+    - @cyriusweng made their first contribution in https://github.com/can1357/oh-my-pi/pull/11160
+    - @CherkaSSH made their first contribution in https://github.com/can1357/oh-my-pi/pull/11391
+    - @schickling-assistant made their first contribution in https://github.com/can1357/oh-my-pi/pull/11558
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.1.16...v18.1.17
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.1.17
+ReleaseTime: 2026-09-10T19:33:46.0000000Z

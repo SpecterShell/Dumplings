@@ -1,0 +1,15 @@
+Version: 2.0.23
+Installer:
+- InstallerUrl: https://github.com/AutoHotkey/AutoHotkey/releases/download/v2.0.23/AutoHotkey_2.0.23_setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed how key-up events are correlated to key-down events for the purpose of determining whether to suppress key-up. A key-down with SendLevel between 1 and 7 now only correlates with a key-up of the same level. When #InputLevel 1 is in effect, this fixes Right::Send "{Right}" not suppressing key-up, RShift::RAlt interfering with RAlt::RShift and vice versa. Events with SendLevel 8 and above are still grouped with non-sent events for practical reasons.
+    Fixed WinExist("A",,,"B") to not exclude windows which have no controls.
+    Fixed custom combo hotkeys with neutral modifiers (e.g. Alt & Esc::) [broken by v2.0.22].
+    Fixed key-up hotkeys to fire consistently when the key is used as both a prefix and a suffix (e.g. a & b::, b & a:: and a up::).
+    Fixed timers interrupting MsgBox after the timeout starts but before the window is shown, such as if SetTimer(MsgBox, -10) is used immediately before MsgBox(1,,"T1").
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AutoHotkey/AutoHotkey/releases/tag/v2.0.23
+ReleaseTime: 2026-04-05T08:45:48.0000000Z

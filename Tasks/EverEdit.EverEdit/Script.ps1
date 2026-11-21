@@ -1,73 +1,71 @@
 $Object1 = Invoke-RestMethod -Uri 'http://update.everedit.net/checkver.php' | ConvertFrom-Ini
 
 # Version
-$Task.CurrentState.Version = $Version = $Object1.Version.Version
+$this.CurrentState.Version = $Object1.Version.Version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $InstallerUrl1 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x86'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.everedit.net/latest.php?cpu=x86'
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl2 = Get-RedirectedUrl -Uri 'http://www.everedit.net/latest.php?cpu=x64'
+  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.everedit.net/latest.php?cpu=x64'
 }
 
-if (-not $InstallerUrl1.Contains($Version.Split('.')[3]) -or -not $InstallerUrl2.Contains($Version.Split('.')[3])) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode = $Object2 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit ${Version}") }
+      $Object2 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=en' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
+
+      $ReleaseNotesNode = $Object2.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }, 'First')
       if ($ReleaseNotesNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
+        $this.CurrentState.ReleaseTime = $ReleaseNotesNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNode.content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode[0].content | Convert-MarkdownToHtml | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
-
-    $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
 
     try {
-      $ReleaseNotesNode = $Object3 | Where-Object -FilterScript { $_.title.StartsWith("EverEdit ${Version}") }
-      if ($ReleaseNotesNode) {
+      $Object3 = (Invoke-WebRequest -Uri 'https://www.everedit.net/changelog' -Headers @{ Cookie = 'lang=zh_cn' }).Content | Get-EmbeddedJson -StartsFrom 'let rows = ' | ConvertFrom-Json
+
+      $ReleaseNotesCNNode = $Object3.Where({ $_.title.StartsWith("EverEdit $($this.CurrentState.Version)") }, 'First')
+      if ($ReleaseNotesCNNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime ??= $ReleaseNotesNode.createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
+        $this.CurrentState.ReleaseTime ??= $ReleaseNotesCNNode[0].createAt | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = ($ReleaseNotesNode.content | ConvertFrom-Markdown).Html | ConvertFrom-Html | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesCNNode[0].content | Convert-MarkdownToHtml | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

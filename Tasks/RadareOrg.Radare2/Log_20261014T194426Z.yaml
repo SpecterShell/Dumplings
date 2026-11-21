@@ -1,0 +1,599 @@
+Version: 6.2.4
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/radareorg/radare2/releases/download/6.2.4/radare2-6.2.4-w32.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: radare2-6.2.4-w32\bin\r2agent.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\r2pm.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\r2r.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rabin2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\radare2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\radiff2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rafind2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rafs2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\ragg2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rahash2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rapatch2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rarun2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rasign2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rasm2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\ravc2.exe
+  - RelativeFilePath: radare2-6.2.4-w32\bin\rax2.exe
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/radareorg/radare2/releases/download/6.2.4/radare2-6.2.4-w64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: radare2-6.2.4-w64\bin\r2agent.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\r2pm.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\r2r.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rabin2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\radare2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\radiff2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rafind2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rafs2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\ragg2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rahash2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rapatch2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rarun2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rasign2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rasm2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\ravc2.exe
+  - RelativeFilePath: radare2-6.2.4-w64\bin\rax2.exe
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/radareorg/radare2/releases/download/6.2.4/radare2-6.2.4-w64-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\r2agent.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\r2pm.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\r2r.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rabin2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\radare2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\radiff2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rafind2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rafs2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\ragg2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rahash2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rapatch2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rarun2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rasign2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rasm2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\ravc2.exe
+  - RelativeFilePath: radare2-6.2.4-w64-arm64\bin\rax2.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Authors
+    Abhi Angelo Ayton Ch1p Jon Palmisciano Mustafa Senoglu Priyanshu Kumar Suyun curoky dependabot[bot] kisnner mmustafasenoglu pancake pancake pancake phix33 potato sid xXAbieGamingXx
+    Changes
+    abi
+    - Eliminate the CbPrintf calls from RDebug
+    - Eliminate CbPrintf from RAnal
+    - Use RVec in RFlag
+    anal
+    - Avoid repeated CFG walks when chopping noreturn blocks
+    - Keep landing pads when chopping at a noreturn call
+    - Restore the stack depth when sp is set from bp
+    - Cache decoded ops to speedup backtracking type matching
+    - Stop function walks at symbols hidden behind class flags
+    - Run aae with just VAL, no more OPEX hacks
+    - Cache clobbered regs from dyncc profiles (20% faster)
+    - Cache calling convention lookups
+    - Take a split block's entry depth from the function walk
+    - Track stack frames larger than 8 KiB
+    - Add golang cc
+    - Default Swift binaries to the swift calling convention
+    - Fix the arm32 swift cc self, error and argument registers
+    - Keep swift self and error names through type propagation
+    - Fix opcode mask bit order and invalidating bits
+    - Analyze and emulate A64 consistent conditional branches
+    - Add A-key pointer authentication function preludes
+    - Don't register partial xrefs with aae
+    - Silence the noisy aae hints
+    - Fix microMIPS invalid instruction recovery in both backends
+    - Fix #21246 - Keep microMIPS instruction boundaries in pdf
+    - Fix #13850 - Recover stack strings passed to char pointer arguments
+    - Fix stack array indices across stack adjustments
+    - Read swift self and error roles from the linkage name
+    - Give the swift cc the platform clobber and preserve sets
+    - Rewind stack types with the bytes on a bbstate restore
+    - Rewind the stack with the registers on a bbstate restore
+    - Optimize trycatch analysis using binary metadata
+    - Resolve ARM64 stub island branches with a:sixi
+    - Use the active ARM configuration for pointer scans
+    - Restore incremental analysis after writes
+    - Fix Thumb ESIL scan alignment after skipped instructions
+    - Cache calling-convention argument locations per function
+    - Invalidate cached function ref counts with an xref generation counter
+    - Keep the other xrefs of an address when deleting one it does not have
+    - Recover small register arguments from shared operand metadata
+    - Share stack variable recovery and x86 access construction
+    - Fix #26760 - Refresh inferred x86-16 arguments
+    - Fix typed frame recovery and preserve renamed prototypes
+    - Preserve function prototypes during variable recovery
+    - Add fpret register names in callconvs
+    - Refer an arm64 load through the last adrp to the slot it reads
+    - Fix ARCompact branch conditions and immediate decoding
+    - Fix arm64 DWARF variable locations against sp and x29
+    - Resolve fcncc when assigned
+    - Fix arg class homing for spills, scanf and aliases
+    - Home each arg on the next free register of its class
+    - Resume switch tables from the walk instead of recursing into their cases
+    - Walk function blocks with an explicit stack instead of C recursion
+    - Dirty epoch for functions and types
+    - Fix float args from int regs home
+    - Record stack allocation, red zone and return mechanism per calling convention
+    - Number repeated DWARF locals
+    - Add the gettext family to the type database
+    - Track ARM64 switch address provenance and selected index bounds
+    - Recover complete ARM64 switches at their branch instruction
+    - Recover proven local ARM64 branch targets without fallthrough
+    - Keep unresolved indirect exits from implying noreturn
+    - Update instruction counts after noreturn block chopping
+    - Add DW_OP_call_frame_cfa location kind instead of faking a bp offset
+    - Respect anal.in bounds for bbwalk
+    - Br ends bbs even in jumptables
+    - Mov into bp is required to define frames
+    - Keep a variable's width when a signedness fact retypes it
+    - Keep a pointer's spelling instead of collapsing it to uint32_t
+    - Only type a variable as a pointer when the return is stored through it
+    - Chop a noreturn call that ends its block
+    - Don't invent new vars when accessing inside others
+    - Drop recovered variables inside a declared aggregate
+    analysis
+    - Avoid repeated CFG walks when chopping noreturn blocks
+    - Keep landing pads when chopping at a noreturn call
+    - Restore the stack depth when sp is set from bp
+    - Cache decoded ops to speedup backtracking type matching
+    - Stop function walks at symbols hidden behind class flags
+    - Run aae with just VAL, no more OPEX hacks
+    - Cache clobbered regs from dyncc profiles (20% faster)
+    - Cache calling convention lookups
+    - Take a split block's entry depth from the function walk
+    - Track stack frames larger than 8 KiB
+    - Add golang cc
+    - Default Swift binaries to the swift calling convention
+    - Fix the arm32 swift cc self, error and argument registers
+    - Keep swift self and error names through type propagation
+    - Fix opcode mask bit order and invalidating bits
+    - Analyze and emulate A64 consistent conditional branches
+    - Add A-key pointer authentication function preludes
+    - Don't register partial xrefs with aae
+    - Silence the noisy aae hints
+    - Fix microMIPS invalid instruction recovery in both backends
+    - Fix #21246 - Keep microMIPS instruction boundaries in pdf
+    - Fix #13850 - Recover stack strings passed to char pointer arguments
+    - Fix stack array indices across stack adjustments
+    - Read swift self and error roles from the linkage name
+    - Give the swift cc the platform clobber and preserve sets
+    - Rewind stack types with the bytes on a bbstate restore
+    - Rewind the stack with the registers on a bbstate restore
+    - Optimize trycatch analysis using binary metadata
+    - Resolve ARM64 stub island branches with a:sixi
+    - Use the active ARM configuration for pointer scans
+    - Restore incremental analysis after writes
+    - Fix Thumb ESIL scan alignment after skipped instructions
+    - Cache calling-convention argument locations per function
+    - Invalidate cached function ref counts with an xref generation counter
+    - Keep the other xrefs of an address when deleting one it does not have
+    - Recover small register arguments from shared operand metadata
+    - Share stack variable recovery and x86 access construction
+    - Fix #26760 - Refresh inferred x86-16 arguments
+    - Fix typed frame recovery and preserve renamed prototypes
+    - Preserve function prototypes during variable recovery
+    - Add fpret register names in callconvs
+    - Refer an arm64 load through the last adrp to the slot it reads
+    - Fix ARCompact branch conditions and immediate decoding
+    - Resolve fcncc when assigned
+    - Fix arg class homing for spills, scanf and aliases
+    - Home each arg on the next free register of its class
+    - Resume switch tables from the walk instead of recursing into their cases
+    - Walk function blocks with an explicit stack instead of C recursion
+    - Dirty epoch for functions and types
+    - Fix float args from int regs home
+    - Record stack allocation, red zone and return mechanism per calling convention
+    - Number repeated DWARF locals
+    - Add the gettext family to the type database
+    - Track ARM64 switch address provenance and selected index bounds
+    - Recover complete ARM64 switches at their branch instruction
+    - Recover proven local ARM64 branch targets without fallthrough
+    - Keep unresolved indirect exits from implying noreturn
+    - Update instruction counts after noreturn block chopping
+    - Add DW_OP_call_frame_cfa location kind instead of faking a bp offset
+    - Respect anal.in bounds for bbwalk
+    - Br ends bbs even in jumptables
+    - Mov into bp is required to define frames
+    - Keep a variable's width when a signedness fact retypes it
+    - Keep a pointer's spelling instead of collapsing it to uint32_t
+    - Only type a variable as a pointer when the return is stored through it
+    - Chop a noreturn call that ends its block
+    - Don't invent new vars when accessing inside others
+    - Drop recovered variables inside a declared aggregate
+    arch
+    - Stop treating arm64 sub to a non-sp register as a stack reset
+    - Fix arm64 shifted immediates in stack and value analysis
+    - Count only mips sp-to-sp add immediates as stack adjustments
+    - Count only immediate sp-to-sp v850 add/sub as stack deltas
+    - Fix the m68k link frame size for link.l and the pushed An
+    - Fix MIPS analysis for capstone 6
+    - Add CHKFEAT support to the A64 fallback
+    - Add GCSB DSYNC support to the A64 fallback
+    - Add CLRBHB support to the A64 fallback
+    - Add PACM support to the A64 fallback
+    - Fix A64 fallback and prelude instruction endianness
+    - Fix PAuth LR authentication with xzr operands
+    - Replace the GPL-copied bpf headers with an LGPL rewrite
+    - Relabel the v850 and stm8 arch plugins as GPL
+    - Relicense the snes pseudo plugin from MIT to LGPL-3.0-only
+    - Relicense binutils-derived arch plugins to GPL
+    - Enable BookE on 64-bit ppc with capstone 6
+    - Silently translate FEAT_PAuth_LR instructions
+    - Fix PPC analysis with capstone 6
+    - Fix SPARC analysis with capstone6
+    - Fix Capstone6 BPF analysis for BPF/JA and long jumps
+    - Simplify x86 mode access selection and cover inverse cases
+    - Add support for s1c88 cpu
+    asm
+    - Restore Zydis stack variable substitution
+    - Match complete assembler labels in equate replacements
+    bin
+    - Resolve PE exports in O(n) instead of O(n^2)
+    - Initial work eliminating cb_printf from bincmd
+    - Optimize repeated Cd metadata (30% faster)
+    - Keep the Thumb bit in ARM relocs against Thumb functions
+    - Fix iicj json output and add iicl to list imports by class
+    - Update symclass with more buffer overflow and global racist entries
+    - Bound ELF reloc parsing to avoid phantom entries
+    - Add the swift linkage name role classifier
+    - Place ARM imports on lld's 16-byte PLT entries
+    - Show all unique .comment strings in the ELF compiler field
+    - Improve sanitize symbol check in elf
+    - Improve stack check protector import detection
+    - Add 'iw.' to show trycatch blocks of current function only
+    - Fix Itanium RTTI VMI parsing on 64bit
+    - Improve c++ type parsing caps from dwarf
+    - Add compact try/catch metadata commands
+    - Fix multiarch fallback selection by requested architecture
+    - Include the final UTF-8 byte when counting string blocks
+    - Add an RBin plugin for binary project headers
+    - Check oa diagnostics on stderr
+    - Show readable try/catch regions in iw
+    - Fix rabin2 -w exception listing
+    - Apply thumb movw, movt and beq.w relocs in ELF objects
+    - Keep the Thumb bit off data symbols in ARM ELF
+    - Add Mach-O weak import writing support
+    - Implement weak/strong symbol manipulation for elf
+    - Add reversible Mach-O weak dylib load operation
+    - List symbol-less TLS module relocs in ir
+    - Skip duplicate ir* flag lines for relocs sharing one slot
+    - Write whole pointers into x86-64 GOT slots
+    - List s390 jump slot relocs named by their import
+    - Resolve s390 GOT slots to their symbol
+    - Fix RELATIVE relocs counting a non-zero link base twice
+    - Pick the s390 reloc width once in reloc_convert
+    - Stop zeroing s390 RELATIVE slots when relocs are applied
+    - Fix thumb ARM calls resolving to the wrong import
+    - Fix ARM jump slots pointing nowhere with bin.relocs.apply
+    - Fix duplicate and misplaced ELF mini debug symbols
+    - Fix baddr for dSYM sideloads
+    - Expose the relocation at an address and the named symbols through RBinBind
+    - Don’t leak relocs in corrupted bflts
+    - Stop listing a shared mach0 reloc slot once per reloc
+    - Pick the cc from the COFF machine word, not the arch default
+    - Share one helper for the mach0 load-time reloc rows
+    - Keep the load-time mach0 relocs when bin.relocs.apply is set
+    - Cap dt_android_relsz before it narrows to int
+    - Fix dropped CREL relocs from decoder static state
+    - Fix ELF import addresses for relocs found only in sections
+    - Preserve relocs listings after applying them in LE
+    - Stop listing ELF relocs found in both JMPREL and RELA
+    - Apply PPC32 ADDR32 and RELATIVE dynamic relocs
+    - Test aarch64 ET_REL GOT relocs ignore the addend
+    - Read DT_INIT and DT_FINI from the dynamic section
+    build
+    - Add libr_hide meson option to hide capstone and ssl symbols
+    - Add dynamic single libr.so option for meson
+    - Skip shared sdb installation in static builds
+    - Enforce plugin cfg for uefi and jslinux
+    - Default nogpl plugin set when ./configure --without-gpl
+    - Remove duplicated sparc_cs plugin from nogpl cfg
+    - Fix the meson -Dnogpl=true build after making qnx GPL-only
+    - Fix Windows builds of sandbox unit tests
+    - Bump sdb/qjs for nix
+    - Do the mrproper for the subprojects
+    - Generate Windows types sdbs once
+    ci
+    - Add broken but running cs6 ci job
+    config
+    - Only sort the config nodes when locking
+    core
+    - Read yanked files directly from their descriptors
+    - Release register references in custom prompts
+    - Use valid SPDX identifiers in all plugin license fields
+    - Resolve the lanai and qnx licensing conflicts
+    - Fix a one-byte heap overflow in ps with a zero length
+    crash
+    - Fix oob read parsing short mach0 CodeDirectory blobs
+    - Fix off by one read in r_core_rtr_cmds_query
+    - Limit pyc marshal nesting depth to avoid stack exhaustion
+    - Enforce http.maxsize and cap to 128M by default
+    - RapClose only the opened fd
+    - Fix null deref parsing http redirect headers
+    - Memory exhaustion bug in the gdb packet read
+    - Fix intovf in RSocket.slurp via io.tcpslurp
+    - Fix oobreads in http multipart http uploads
+    - Bound NTFS attribute parsing causing invalid read
+    - Fix oobreads in truncated ihex/srec bins
+    - Fix unbound recursion on cyclic APFS btrees
+    - Fix infinite loop in zero length UFS records
+    - Cap xz output via r_sys_unxz (xzbomb) to 256MB
+    - Dont recurse into nested .gnu_debugdata ELF sections
+    - Fix non-null terminated filenames in cpio
+    - Integer wraps before allocations in socket io plugin
+    - Fix memory exhaustion and stack overflow in the AR loader
+    - Fix oobread and divby0 in JFS bounding by node capacity
+    - Prevent wwwdir sandbox escape, harden on windows
+    - Harden xalz header and decompression (heap oobread)
+    - Fix divby0, stack overflow via negative integer in UFS
+    - Reject short lz4 output in NSO bins
+    - Bound server contents and timeouts before auth
+    - Fix shell injection in curl headers
+    - Limit recursive types in Java to avoid stack exhaustion
+    - Fix oobread in http client
+    - Fix stack overflow in JFS utf8 filenames
+    - Fix symlink stack overflow in UFS
+    - Reject path separators in filenames on recursive fs dumps
+    - Fix JFS fast symlink stack overflow
+    - Cap PE resource directory recursion depth
+    - Fix integer overflow in PE certificate bounds checks
+    - Block shell subcommands in sandbox mode
+    - Prevent raw b64 commands to bypass filters cmdfilter
+    - Fix reversed argument cache bounds
+    - Fix signed integer issue converting RJSON to PJ
+    - Fix leak and double free in dietline clipboard
+    - Keep borrowed configuration strings valid after HTTP shutdown
+    - Fix console logging crashes in background HTTP sessions
+    - Fix #26861 - Enforce sandbox restrictions across HTTP commands
+    - Block deferred execution and unsafe thread control in sandbox mode
+    - Reject writable file opens in sandbox mode
+    - Preserve sandbox restrictions during command output capture
+    - Block deferred command execution when sandbox exec is denied
+    - Fix sandbox permissions escape via e- config reset
+    - Fix #12924 - Segfault parsing PDB confused enum type
+    - Reject excess Mach-O sections before accumulation
+    - Guard binary parser allocation counts
+    - Validate PDB stream pages before reading
+    - Reject multiline type format exports
+    - Fix command injection in generated pf commands
+    - Fix #26834 - Quote generated format commands
+    - Fix filesystem read allocation and GRUB file offsets
+    - Fix use-after-free when merging analysis blocks
+    - Fix any.as selection and restore assembler regressions
+    - Fix #26810 - switch metadata ownership after jmptbl splits
+    - Fix infinite recursion formatting a cyclic typedef
+    - Don't reuse iter in the inner loop of the io.dsc and refactor that out
+    - Harden LZ4 frame block bounds
+    - Fix #26792 - LZ4 match copy overflow
+    - Fix #26791 - UAF parsing invalid GDB xml
+    - Reject oversized SEP slice allocations
+    - Bound fat Mach-O slice reads by IO length
+    - Guard short APFS directory keys
+    - Validate scanned APFS B-tree value offsets
+    - Bound APFS internal node child values
+    - Validate fixed APFS B-tree value offsets
+    - Fix #26790 - Reject APFS file sizes exceeding size_t
+    - Fix X509 certificate null signature dereference
+    - Fix #26766 - Bound LZ4 literal run lengths
+    - Fix #26758 - Infinite loop in the C++ demangler
+    - Fix a double free when closing a python3 pyc file
+    - Fix analysis plugin init instance received
+    crypto
+    - Report accurate licenses for the hash plugins and io.shm
+    debug
+    - Update breakpoint plugin when changing arch
+    - Fix breakpoint expression assignment and lifetime
+    - Preserve the stop reason when querying the debuggee base address
+    - Fix SIGINT lookup and signal stop descriptions
+    - Cleanup io.r2k and stop using CbPrintf
+    - Name registers by the stub's numbers in p, P and stop replies
+    - Read registers from lldb stubs through the generic gdb client
+    - Place target.xml registers at the offsets lldb stubs state
+    diff
+    - Fix single-function comparisons across analysis sessions
+    - Load saved project analysis for radiff2 comparisons
+    disasm
+    - Fix #24274 - Preserve access markers across disassembly xref groups
+    - Enable exception region annotations by default
+    - Annotate exception regions in disassembly
+    doc
+    - Simplify and correct coding agent guidance
+    esil
+    - Fix ESIL execution of PAuth LR returns
+    - Sign-extend x86 SAR memory operands at the decoded width
+    - Fix dalvik comparison ops with NaN sign and doubles
+    fix
+    - Restore fifty broken regression tests
+    - Restore quiet class info command permutations
+    flag
+    - Store single flags inline and stop copying vectors in r_flag_foreach
+    fs
+    - Fix performance and leaks in APFS
+    - Unify filesystem searches across mounted roots and free traversal results
+    - Release filesystem mount probes and autodetected type names
+    - Reject overflowing APFS image offsets
+    - Preserve APFS inode identity on 32-bit builds
+    - Reject APFS reads exceeding the IO length type
+    http
+    - Enable project save and load in the HTTP sandbox
+    io
+    - Check short reads in iozip
+    - Preserve IO state in descriptor cache operations
+    - Initialize descriptor storage in the IO lifecycle
+    - Reject nonnumeric bank IDs in omb
+    - Build string in RIOSundoList instead of mixed list+cbprintf
+    - Refactor some io apis into RIODescInfo struct
+    - Add iOS 27 dyldcache support via dsc://
+    lang
+    - Fix plugin paths passed to -i and #!lib
+    - Register r2pipe exports for QuickJS imports
+    - Decouple spp evaluation from global console state
+    panels
+    - Panels require mouse and wheel enabled
+    - Refactor panels into a plugin
+    - Improve panel menus and cached scrolling
+    - Context menu for the tabs
+    - Move the tabs at the bottom
+    print
+    - Add addresses and JSON tree output to fh
+    - Fix pf error propagation for invalid struct formats
+    - Sparse gaps in pxs/xs is now tied to hex.cols and hex.gaplines
+    - Fix pxs offsets and sparse lookahead
+    - Show bitfield members in pfd graph output
+    - Fix #23349 - Honor column maxWidth in RTable
+    projects
+    - Save debugger signal settings in projects
+    - Save breakpoints and watchpoints in projects
+    - Preserve project state and command output when saving
+    - Fix project names read from generated scripts
+    - Project save fails if script dump fails
+    - Open binary project files through the prj core plugin
+    pseudo
+    - Fix pdco header lines indentation
+    - Fold bt/bf/isel for ppc
+    - Witness the pdc landing pad body and callee exclusion
+    - Enable pdc.structured by default
+    - Pin the linear pdc goldens to pdc.structured=0
+    r2js
+    - Fix a couple of null derefs in the r2js lang plugin
+    - Update QjSNg fo the BigInt fix
+    r2pm
+    - Add R2PM_PLATFORMS for r2pm packages
+    - Add R2PM_BUNINSTALL for binary uninstalls
+    - Expose the R2PM_TRIPLET for os-arch-bits
+    - Add r2pm -b to install released binary packages
+    r2r
+    - Run explicitly selected platform regression tests
+    reg
+    - Check register profile duplicates with ht
+    sandbox
+    - Gate plugin loading with the exec grain
+    - Reject symlinks in any sandboxed path component
+    - Enforce exec sandbox grain for the w32 exec helpers
+    - Add configurable HTTP sandbox permissions
+    - Add immutable per-thread sandbox policies
+    - Refactor sandbox grain parsing into a reusable API
+    - Support negative sandbox grain expressions
+    search
+    - Add /xs sparse gap search
+    - Propagate disassembly search errors to shell conditionals
+    - Preserve regex bracket expressions in disassembly searches
+    - Reject truncated disassembly search patterns
+    - Fix overlapping disassembly searches across read blocks
+    - Fix #26176 - Accept quoted disassembly search patterns
+    - Add esil string scan /rs command
+    - Verify cmd.hit callback in value search
+    - Find offset zero with seek search
+    - Honor cmd.hit in hash searches
+    security
+    - Add r_file_is_symlink and stop following symlinks in rm_rf and session pidfiles
+    shell
+    - Implement the iwj. command
+    - Port mount commands to registered context handlers
+    - Move host shell commands to registered context handlers
+    - Add registered command argument policies and checked numeric helpers
+    - Shorten help messages to fit within 80 columns
+    - Make cmdctx arguments null terminated and add accessor apis
+    - Fix mount command parsing and file extraction
+    - Better mc command parsing and error code reporting
+    - Validate RNumMath errors in write commands
+    - Fix ub in @@i instruction iterator
+    test
+    - Fix sandbox subcommand regression tests
+    - Skip variable analysis in mips pdc global fold hack
+    - Run statically linked r2 to run the testsuite 40% faster
+    - Respect R2R_SKIP_ASM env var in r2r
+    - Add RISC-V aom test for capstone 6
+    - Add m680x aom test for capstone 6
+    - Add EVM aom test for capstone 6
+    - Restrict tms320 tests to capstone 5
+    - Add s390 tests for capstone 6
+    - Add tests for #12924 - PDB enum with modified underlying type
+    - Add REQUIRE=cs5/cs6 in r2r
+    - Mark legacy backslash filename regressions as broken
+    - Check stable web UI content in HTTP regressions
+    - Fix C interpreter regression scripts for parsed echo arguments
+    - Unbreak MIPS and x86 analysis regressions
+    - Keep broad Linux CI selection explicit alongside targeted signal coverage
+    - Restore 20 signal debugger regressions and run them in Linux CI
+    - Make variadic marker test independent of installed calling conventions
+    - Restore six stale command and analysis regressions
+    - Update remaining MZ section permission expectations
+    - Test the diagnostic for malformed Cf format
+    - Assert LE entrypoint and first instruction for cdogs
+    - Refresh kernel32 export count fixture
+    - Refresh PE entrypoint disassembly names
+    - Match the current ik help description
+    - Refresh Thumb symbol listing golden
+    - Refresh Mach-O entrypoint output and base address cases
+    - Test relocatable ELF objects with explicit load bases
+    - Add regression coverage for MIPS and ARM string xrefs in #8245
+    - Refresh stale r2r expectations and unbreak cases
+    - Test the fortified prototypes per OS
+    - Test the gdb client against scripted stub transcripts
+    - Improve r2r output for failing asm tests
+    - Fix s390 GOT slot goldens after JMP_SLOT listing landed
+    - Unbreak the macho reloc tests by naming the slice they assert
+    - Pin the fat macho slice where the test output depends on it
+    - Stop running the same test suite in three jobs per PR
+    - Merge the remaining r2r cases that reopen the same binary
+    - Merge r2r cases that reopen the same binary in db/anal
+    - Merge r2r cases that reopen the same binary in db/cmd
+    - Merge r2r cases that reopen the same binary in db/formats
+    - Fix #22485 - check jq in path before spawn
+    tests
+    - Run statically linked r2 to run the testsuite 40% faster
+    - Test the fortified prototypes per OS
+    - Test the gdb client against scripted stub transcripts
+    - Improve r2r output for failing asm tests
+    - Fix #22485 - check jq in path before spawn
+    tools
+    - Fix global r2pm plugin paths and uninstall environment
+    types
+    - Fix invalid json for empty enums
+    - Strip numeric suffixes only from dll_ names when guessing a prototype
+    - Declare stpcpy_chk, stpncpy_chk, strlcpy_chk and strlcat_chk
+    - Declare the Bionic fgets_chk and fread_chk prototypes for Android
+    - Move the shared fortified _chk prototypes to the generic types table
+    - Key __stack_chk_fail by its symbol in the type databases
+    - Declare the POSIX integer types as typedefs of fixed-width integers
+    - Respect unknown vs undefined prototype arg counts
+    - Declare asprintf, dprintf and their va_list forms
+    - Declare the fortified variants of snprintf/sprintf
+    - Skip keywords when resolving types by name
+    - Keep fcn signature when name conflicts with struct
+    util
+    - Handle valid descriptor, null pointer and zero length in r_sys_cmd_str_full
+    - Optimized macros to compare one string to many (2-10x faster)
+    - Teach RStrTrim about the vertical tab and form feed chars
+    - Strictier hex number parsing in rnum
+    - Add literal string unquoting to r_util
+    - Fix Windows absolute path detection
+    - Fix leaks in type link range lookups
+    - Keep the skiplist forward pointers inside the node allocation
+    - Cache the sort key in RSkipListNode to keep traversal off the payload
+    visual
+    - Fix console prompt in panels mode
+    - Improve panel title background and drawing order
+    - Hamborgar controls button to manage panels with less clutter
+    - Improve panel resize drag experience and menu
+    - Improve panel cache behaviour and better symbol listing
+    - Fix visual mark parsing, output and CI regressions
+    - Rename fV to fv, add fvj and fix parsing + listing pads
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/radareorg/radare2/releases/tag/6.2.4
+ReleaseTime: 2026-10-05T19:52:50.0000000Z

@@ -1,0 +1,100 @@
+Version: 1.9.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/temporalio/cli/releases/download/v1.9.1/temporal_cli_1.9.1_windows_amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/temporalio/cli/releases/download/v1.9.1/temporal_cli_1.9.1_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    💥 Breaking Changes
+    - temporal activity unpause no longer accepts --reset-attempts or --reset-heartbeats. Both flags were no-ops and have been removed; remove them from any scripts, which will otherwise fail on an unknown flag.
+    - temporal activity describe returns the full DescribeActivityExecutionResponse, rather than the bare ActivityExecutionInfo. Anything parsing --output json must move execution fields one level down, from .activityId to .info.activityId and so on. The response also adds a top-level runId, which is useful when --run-id was not passed. The command now requests last-failure details, so lastFailure is populated inside info, and text output gains an Activity Execution Info: heading.
+    - temporal operator namespace update now requires --active-cluster to be used on its own. Changing the active cluster is a failover operation, so it can no longer be combined with any other namespace update option — configuration changes such as --description, --retention or the archival flags, or --promote-global — and it can no longer be passed empty. Previously these combinations were accepted and silently applied. Split them into two invocations: update the namespace configuration first, then change the active cluster. Connection and output flags such as --namespace and --address are unaffected, and no other flag combination changed.
+    Highlights
+    This is the first official release in the v1.9.x series (v1.9.0 was published as pre-release only). Users upgrading from v1.8.3 should read the breaking changes above.
+    Added
+    - Standalone Activities can now be operated entirely from the CLI. temporal activity covers the full lifecycle: start or execute an activity, inspect it with describe, list, and count, wait on its result, and act on it with cancel, terminate, delete, pause, unpause, and reset. Operator actions work on a single activity or in batch across a query. They also work against the local dev server, so the whole flow can be tried without a Cloud namespace. pause, unpause, reset, and update-options remain Experimental.
+    - Nexus Operations can be started and managed directly, without wrapping them in a Workflow. The new temporal nexus operation command group provides start, execute, describe, list, count, result, cancel, and terminate. This command group is Experimental.
+    - temporal worker count reports how many workers are running in a namespace, optionally narrowed with --query (Experimental).
+    - Clearer diagnosis when a connection fails. Rather than surfacing an opaque dial error, the CLI now reports the likely cause — for example that the server requires a client certificate (mTLS) — within a short time budget. Set TEMPORAL_CLI_DISABLE_CONNECT_DIAGNOSIS to disable it.
+    - Config profile improvements: a new client-authority setting, and easier discovery of profile configuration.
+    - One-time move versioning overrides can now be applied from the CLI.
+    Changed
+    - temporal server start-dev now runs OSS Server v1.32.0, so local development picks up v1.32.0 server behavior — including the query support the new Nexus Operation commands depend on. The bundled Web UI moves to v2.54.1.
+    - Event history is easier to read for Nexus users. System Nexus Operation internals are unwrapped, so history shows the operation itself rather than the underlying machinery.
+    - temporal activity describe reports more execution detail for Standalone Activities, including attached links.
+    - update-options --start-delay now applies only to Standalone Activities and is rejected for Workflow Activities, where it had no meaning.
+    - The dev server refreshes Nexus endpoints when they are read, so endpoint changes take effect without restarting it.
+    - The published Docker image is built on Alpine 3.24.1, and the bundled Go SDK moves to v1.47.0.
+    Fixed
+    - Batch activity update-options now applies the options passed to it; previously they were dropped.
+    - operator namespace delete no longer documents --yes backwards.
+    - Help text corrections across the Standalone Activity and Nexus Operation commands, including stability labels and flag value placeholders, plus a corrected schedule update example and a clarification that --query on activity commands targets Workflow Activities rather than Standalone ones.
+    What's Changed
+    - Refresh Nexus endpoints on read in dev-server by @stephanos in https://github.com/temporalio/cli/pull/1025
+    - Bump golang.org/x/mod from 0.31.0 to 0.35.0 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1040
+    - Bump golang.org/x/mod from 0.35.0 to 0.36.0 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1052
+    - Unwrap System Nexus Operations in event history by @spkane31 in https://github.com/temporalio/cli/pull/1017
+    - Add support for Standalone Nexus Operations by @Quinn-With-Two-Ns in https://github.com/temporalio/cli/pull/1046
+    - Address Nexus Operation command issues by @Quinn-With-Two-Ns in https://github.com/temporalio/cli/pull/1087
+    - Add client-authority support to config profile settings by @NasitSony in https://github.com/temporalio/cli/pull/1084
+    - Bump google.golang.org/grpc from 1.80.0 to 1.81.1 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1063
+    - Add one-time move versioning override CLI support by @Shivs11 in https://github.com/temporalio/cli/pull/1093
+    - Bump UI server v2.52.0 by @Quinn-With-Two-Ns in https://github.com/temporalio/cli/pull/1117
+    - Fix SANO operation list description by @Quinn-With-Two-Ns in https://github.com/temporalio/cli/pull/1119
+    - ci: support merge queues by @chaptersix in https://github.com/temporalio/cli/pull/1124
+    - 💥 activity describe: return full DescribeActivityExecutionResponse by @dandavison in https://github.com/temporalio/cli/pull/1128
+    - Add start delay support for standalone activities by @fretz12 in https://github.com/temporalio/cli/pull/1113
+    - add flag for --include-system-workers for ListWorker API by @yuandrew in https://github.com/temporalio/cli/pull/1019
+    - chore: exclude UI Server from Dependabot by @chaptersix in https://github.com/temporalio/cli/pull/1123
+    - docs: fix invalid schedule update example by @chaptersix in https://github.com/temporalio/cli/pull/1120
+    - Add aggregate CI check by @chaptersix in https://github.com/temporalio/cli/pull/1129
+    - VLN-1545: remediate checkout-below-v7 by @picatz in https://github.com/temporalio/cli/pull/1136
+    - Improve config profile discoverability by @rossnelson in https://github.com/temporalio/cli/pull/1134
+    - chore(deps): bump the github-actions group across 1 directory with 6 updates by @dependabot[bot] in https://github.com/temporalio/cli/pull/1139
+    - Add temporal worker count CLI command by @rkannan82 in https://github.com/temporalio/cli/pull/1141
+    - Fix inverted --yes description on operator namespace delete by @starfleeth in https://github.com/temporalio/cli/pull/1143
+    - Add batch cancel, terminate and delete operators for standalone activities by @ks-temporal in https://github.com/temporalio/cli/pull/1100
+    - feat: add support for single SAA operator actions by @spkane31 in https://github.com/temporalio/cli/pull/1092
+    - Enable SAA operator and batch commands in dev server by @fretz12 in https://github.com/temporalio/cli/pull/1152
+    - Reject update-options --start-delay for workflow Activities by @dandavison in https://github.com/temporalio/cli/pull/1150
+    - Bump UI server v2.53.1 by @laurakwhit in https://github.com/temporalio/cli/pull/1151
+    - fix(activity): include options in batch update-options by @spkane31 in https://github.com/temporalio/cli/pull/1155
+    - docs(activity): clarify --query targets Workflow Activities by @spkane31 in https://github.com/temporalio/cli/pull/1158
+    - Render links on activity describe by @Quinn-With-Two-Ns in https://github.com/temporalio/cli/pull/1131
+    - 💥 Drop activity unpause --reset-attempts and --reset-heartbeats by @dandavison in https://github.com/temporalio/cli/pull/1159
+    - bump server for Nexus Query support by @mavemuri in https://github.com/temporalio/cli/pull/1172
+    - Bump UI server v2.53.3 by @laurakwhit in https://github.com/temporalio/cli/pull/1164
+    - Add staged connection diagnosis for opaque dial failures by @rossnelson in https://github.com/temporalio/cli/pull/1114
+    - chore(deps): bump docker/setup-buildx-action from 4.2.0 to 4.3.0 in the github-actions group by @dependabot[bot] in https://github.com/temporalio/cli/pull/1184
+    - chore(deps): bump google.golang.org/grpc from 1.82.1 to 1.83.0 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1165
+    - Fix standalone activity stability labels and polish help docs by @fretz12 in https://github.com/temporalio/cli/pull/1196
+    - feat(activity): add activity reset --clear-heartbeat-details by @ks-temporal in https://github.com/temporalio/cli/pull/1199
+    - Bump UI server v2.54.1 by @laurakwhit in https://github.com/temporalio/cli/pull/1198
+    - Enable serverless workers in DC for tests by @02strich in https://github.com/temporalio/cli/pull/1202
+    - Bump dependencies for new CLI release by @simvlad in https://github.com/temporalio/cli/pull/1201
+    - Bump Alpine base image to 3.24.1 by @simvlad in https://github.com/temporalio/cli/pull/1203
+    - Enrich standalone activity describe output with execution details by @fretz12 in https://github.com/temporalio/cli/pull/1205
+    - Fix standalone activity operator help value placeholders by @fretz12 in https://github.com/temporalio/cli/pull/1210
+    - chore(deps): bump google.golang.org/grpc from 1.82.1 to 1.83.2 in /cliext by @dependabot[bot] in https://github.com/temporalio/cli/pull/1189
+    - chore(deps): bump github.com/stretchr/testify from 1.12.0 to 1.12.1 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1207
+    - chore(deps): bump golang.org/x/mod from 0.40.0 to 0.41.0 by @dependabot[bot] in https://github.com/temporalio/cli/pull/1209
+    - 💥 Reject conflicting namespace update flags by @qyc5937 in https://github.com/temporalio/cli/pull/1187
+    New Contributors
+    - @02strich made their first contribution in https://github.com/temporalio/cli/pull/1202
+    - @mavemuri made their first contribution in https://github.com/temporalio/cli/pull/1172
+    - @qyc5937 made their first contribution in https://github.com/temporalio/cli/pull/1187
+    - @rkannan82 made their first contribution in https://github.com/temporalio/cli/pull/1141
+    - @rossnelson made their first contribution in https://github.com/temporalio/cli/pull/1134
+    - @simvlad made their first contribution in https://github.com/temporalio/cli/pull/1201
+    - @starfleeth made their first contribution in https://github.com/temporalio/cli/pull/1143
+    Contributors
+    Thanks to everyone who contributed to this release:
+    @02strich, @chaptersix, @dandavison, @fretz12, @ks-temporal, @laurakwhit, @mavemuri, @NasitSony, @picatz, @Quinn-With-Two-Ns, @qyc5937, @rkannan82, @rossnelson, @Shivs11, @simvlad, @spkane31, @starfleeth, @stephanos, @yuandrew
+    Full Changelog (public upgrade path): https://github.com/temporalio/cli/compare/v1.8.3...v1.9.1
+    Full Changelog (since v1.9.0 pre-release): https://github.com/temporalio/cli/compare/v1.9.0...v1.9.1
+- Key: ReleaseNotesUrl
+  Value: https://github.com/temporalio/cli/releases/tag/v1.9.1
+ReleaseTime: 2026-09-14T21:33:35.0000000Z

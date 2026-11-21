@@ -1,0 +1,68 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.11.0/lore-v0.11.0-x86_64-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.11.0/lore-setup-v0.11.0-x86_64-pc-windows-msvc.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changes since v0.10.1.
+    Breaking changes
+    - C API: the new LORE_EVENT_FILE_AUDIT event adds a member to lore_event_t; rebuild against the new lore.h
+    - [environment.endpoint] user_url now names a lore.user.v1.UserService (UserGet, UserFind) instead of the UrcAuthApi GetUserInfo / GetUserId calls. With user_url set, the server also lists repositories there by default ([server.auth] repository_catalog = "user_service") and registers the repositories it creates and deletes there instead of calling RebacApi. Without it, clients ask auth_url as before
+    - A client and the Lore service it relays to must come from the same build (message protocol version 2); restart the service after upgrading
+    - Data is verified by the trust of its source (ADR-00023): local store reads no longer verify hashes, and data fetched from a remote is verified on receipt unless the remote is trusted (--trust-remote). C API: skip_verify on lore_storage_open_args_t is now an alias of trust_remote and skips verifying fetched data only
+    - C API: lore_branch_merge_start_args_t gains link_paths and link_messages, changing its size; rebuild against the new lore.h. A zero-initialized struct keeps today's behavior
+    - lore-server: refuses to start if [server.auth] resource_id_template or [server.auth.oidc] resource_template / scope_template lacks {id}, since such a template let one grant match every partition
+    Features
+    - lore file audit <path> shows, for each line of a file, the revision that last changed it, grouped into ranges of consecutive lines (C API: lore_file_audit / lore_file_audit_async)
+    -  --trust-remote (C API: trust_remote on lore_global_args_t) skips hash verification of fetched data, keeping only a size check, for machines inside the remote's own infrastructure such as build servers. C callers must zero the whole struct, padding included, or stray bytes turn it on
+    - C API: fragments on lore_storage_get_resolved_item_t delivers content piece by piece as stored (LORE_EVENT_STORAGE_GET_FRAGMENT), leaving decoding and verification to the reader, which can keep payloads compressed
+    - lore auth login against an OIDC issuer uses the OAuth 2.0 device authorization grant (RFC 8628), opening the verification URL in the browser or printing it with --no-browser; --token-type <TYPE> --token <TOKEN> logs in with an existing token through RFC 8693 token exchange. Partition and repository operations send the access token, or a per-partition token when the server advertises resource_template / scope_template. ID tokens are never stored or sent; refresh and client credentials grants aren't implemented yet
+    - The user identity is read from a token by the same rule on client and server: the identity claim (or https://lore.org/claims/identity), else sub. Tokens with an empty or non-string identity are refused, and [server.auth] identity_claim is removed
+    - lore branch merge and lore branch merge start take --link-message <PATH> <MESSAGE>, as lore commit does
+    - lore clone --offline / --cache prepares a clone so staging and committing work without a connection
+    - lore service status reports the status of the running Lore service
+    - LORE_STORE_RETAIN=1 keeps a process's stores loaded between repository calls, without holding their locks, for store_keep_alive_seconds (default 10). While it's set, don't share a store directory with processes of an earlier build
+    - lore-server: [server.http] health_only = true serves only /health_check
+    - lore-server metrics: gRPC requests record rpc.server.handler.duration, excluding request upload and pre-body work such as authorization, and BranchPush records its fragment verification load under lore.branch_push
+    - contrib/bazel/: a Bazel remote execution server (Remote Execution API v2) keeping its action cache and content-addressable storage in Lore partitions
+    Fixes & Improvements
+    - lore sync --reset replaces a directory with a file at the same path instead of failing with "Is a directory", and syncs, branch switches, resets, merges and view changes report each deleted file and directory via LORE_EVENT_REVISION_SYNC_FILE. Files and directories named .urc or .lore, in any case, are ignored by every command
+    - lore commit and lore clone report the error that stopped them instead of Recursion task failed, and a failed clone no longer prints Clone complete (C API: LORE_EVENT_REPOSITORY_CLONE_END is sent only on success)
+    - lore status: --scan of many paths runs in parallel, files are listed in stable path order, and modified files are no longer missed after a scan that dropped a reverted add or after a same-size re-save
+    - Merges of divergent history (such as a sync with new local and remote revisions): lore file history attributes remote changes correctly, remote additions and earlier remote changes are kept, committing no longer fails in some cases, and the branch is reported ahead of the remote instead of diverged afterwards
+    - Layers: committing a staged layer works when the parent tree holds only unstaged dirty changes, and several commands no longer copy the current revision's metadata, such as its reviewer, onto the next revision
+    - Merge conflicts: a branch's change to a file is no longer dropped without a conflict in some add-after-delete cases, and resolving to one side no longer uses memory in proportion to the size of the tree
+    - Links: committing through a link pinned at a merge revision no longer records a spurious merge, staging inside a nested link more than once no longer pushes intermediate states, and lore commit --link-message accepts any spelling of the link path
+    - lore dirty inside a link, or on its mount, marks the change in the linked repository, so lore status and staging pick it up without a scan
+    - Lore service: commands run with the caller's configuration and credentials, lore_storage_put / lore_storage_get (and their _resolved variants) work through the service, unreadable shared stores or instances are skipped at startup, and on Linux and macOS two services started at once no longer both run
+    - Auth: the CLI sends tokens only to hosts named in their root_domains or aud claims, no longer to the iss host except for token exchange. With [server.auth] resource_claim set, repository lookups by name or id answer any verified caller, so clone, lore link add, lore layer add, repository info and repository delete no longer fail as not found before the caller holds a grant
+    - Server write checks: pushing to a protected branch requires the push-protected action and the is_service_account claim no longer bypasses protection, so grant push-protected to mirroring accounts first. Generic MutableStore / MutableCompareAndSwap requests can no longer write repository metadata, branch metadata or branch latest pointers; use RepositoryMetadataSet, BranchMetadataSet and BranchPush
+    - RevisionList: listing from a revision above the branch's latest no longer crashes the server, and paging through older history on a deep branch no longer times out with Cancelled
+    - Pushing and committing: some large files no longer fail to commit or push, and a retried push or a gRPC push copying the same content to several files no longer fails with a missing fragment
+    - Verification: caches, prefetches and immutable store queries verify fetched data unless the remote is trusted, fetching again once after asking the server to repair it, and corrupt local data is fetched again and replaced instead of crashing an unverified read
+    - Reads: streaming reads and reads into files enforce the content size limit, a corrupt fragment list with out-of-order offsets fails the read instead of returning wrong data, and reads of fragmented content do less redundant work
+    - Fetching: concurrent reads of the same missing content download it once, and caching runs at most 512 fetches at once per remote connection (LORE_CACHE_GETS), so reads a command needs right away don't queue behind it
+    - lore-server with a remote store verifies data fetched from the backend and asks it to repair failures, refuses data in a codec it's built without (such as Oodle), size-checks data from replicas and peers, and no longer crashes on a truncated replica response
+    - Oodle: the local store's Oodle migration finishes sooner, and a build without Oodle replaces such data with the remote's re-encoded copy, or reports NotSupported where there's no remote copy
+    - Commands start faster, as opening a repository lists each store's index once; lore repository create syncs to disk only with --sync-data
+    - Fix a deadlock between processes using one repository, such as the Lore service and a storage handle; stores are now locked only while in use, so idle handles no longer block other processes
+    - Local store durability: transient I/O errors, failed or interrupted flushes, obliterates and index reorganizations no longer lose data, bring back removed entries or serve another file's data, and background index flushes now follow every change
+    - A local store whose version file can't be read fails to open instead of re-migrating on every open; an affected store recovers at its next command connected to the remote
+    - Obliterate in local stores is saved to disk before the data is zeroed and waits for reads in progress, and obliterated content no longer comes back when stored again under another context or re-encoded
+    - Compaction does far less disk work and no longer stalls server stores for minutes; client stores never evict local-only data, and lore repository gc no longer swaps max_size and max_capacity
+    - Storage sessions: handles reuse one server session per partition, so long-running processes are no longer refused every later call, and an unauthorized session is retried once with fresh authorization
+    - Reconnects: storage handles and servers' remote stores reconnect after a failed connection, with a backoff of up to 30 seconds, QUIC streams that stop carrying requests reconnect instead of hanging, and reads and uploads use all the connections --max-connections allows
+    - QUIC: the vendored quinn-proto moves to 0.11.19, fixing CVE-2026-25800 (unauthenticated remote memory exhaustion) and other upstream memory-exhaustion, stream-limit, Retry-token and path MTU issues
+    - QUIC throughput: congestion control and stream ordering fixes, and the client asks for a larger UDP receive buffer; on Linux, set net.core.rmem_max to 524288 or more to allow it
+    - C API: a call reading into data_out that stops part way no longer writes the caller's buffer after completion. data_out must stay valid until completion, and lore_shutdown is safe only once every call has completed
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EpicGames/lore/releases/tag/v0.11.0
+ReleaseTime: 2026-10-22T12:37:53.0000000Z

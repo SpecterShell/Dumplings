@@ -1,0 +1,149 @@
+Version: 6000.0.57f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/b7b9860b7bbd/Windows64EditorInstaller/UnitySetup64-6000.0.57f1.exe
+  ProductCode: Unity 6000.0.57f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/b7b9860b7bbd/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.57f1.exe
+  ProductCode: Unity 6000.0.57f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.57
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.57f1
+    - 2D: Crash on "TransferPixelDataForMaskTemplate<_sprite_packing_char2>" when building for Android (UUM-113215)
+    - AI Navigation Core: NavMeshSurface ignores convex Mesh Colliders when using Physics Colliders (UUM-102676)
+    - Audio Authoring: Audio Low Pass Filter isn't working when enabled after entering Play Mode or in Player via Script (UUM-114268)
+    - Cloud Diagnostics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: [Intel] Crash on BufferD3D12::BeginWrite when opening a newly created URP project with DirectX12 set as the default graphics API (UUM-104889)
+    - GLES: [Android][GLES] The 2DLight is disproportionately bright on some Android devices when OpenGLES3 is used (UUM-114480)
+    - GPU Resident Drawer: Crash on DynamicHeapAllocator::CreateTLSFBlock when opening a specific project (UUM-108694)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (UUM-103995)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (licensing client path is not found) (UUM-103996)
+    - Lighting: All baked data for all scenes using APV is always loaded in Editor (UUM-104833)
+    - Mono: Crash on mono_domain_jit_foreach when performing various Unity operations (UUM-112001)
+    - Native Editor Window Foundation: Crash on -[NSApplication endModalSession:] when entering Play Mode in a specific project (UUM-109764)
+    - Scene Management: Crash on "TransferPixelDataForMaskTemplate<_sprite_packing_char2>" when building for Android devices (UUM-113596)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    - Video: [AMD] Crash on VerifyD3DTextureSharingCallback when creating a new project (UUM-104855)
+    - Vulkan: Artifacts appear in the Player when using Screen Space shadows with orthographic camera (UUM-116048)
+    6000.0.57f1 Release Notes
+    Features
+    - QNX: Added ability to specify the SCREEN_PROPERTY_PIPELINE property per window.
+    - Version Control: Added a new view to control labels.
+    - Version Control: Added empty states for different scenarios.
+    - Version Control: Added extra icons for known Unity file extensions.
+    - Version Control: Added the diff panel in the branches view.
+    - Version Control: Added tutorial link for Smart Locks in empty state for locks view.
+    - Version Control: Added Version Control actions to sub scenes menu in the hierarchy view.
+    - Version Control: Added Version Control actions to the scene header menu in the hierarchy view.
+    - Version Control: Enriched scene assets in the hierarchy view with status overlay icon.
+    - Version Control: Enriched sub scene assets in the hierarchy view with status overlay icon.
+    - Version Control: Implemented double-click action for pending changes view.
+    - Version Control: Implemented double-click action for the diff panel.
+    - Version Control: Implemented double-click action for the history view.
+    - Version Control: Improved checkout speed for thousands of files.
+    - Version Control: New feature to inform users about available updates in the package.
+    - Version Control: New feature to recommend to enable Manual Checkout for Unity Assets when there are Lock Rules configured for the project.
+    - Version Control: Updated all usages of TreeView to the new generic version in Unity 6000.2.
+    Improvements
+    - 2D: Increased the default alpha level of the Tile Palette Grid when the Editor is in Light mode, to make the Grid more visible. (UUM-113207)
+    - Documentation: Clarified Application.PersistentDataPath documentation regarding MacOS Editor and MacOS Player paths. (UUM-109747)
+    - IL2CPP: Improved startup time and reduced metadata memory usage by delaying the creation of generic method instances. (UUM-112775)
+    Changes
+    - XR: The Oculus XR Plugin package has been updated to 4.5.2.
+    Fixes
+    - 2D: Added warning when Sprite Outline is set to beyond the boundary of Sprite so artifacts in sprite assets can be found and fixed. (UUM-107991)
+    - 2D: Fixed Blurry and Stretched Light Type Icons in Global Light 2D Inspector. (UUM-111256)
+    - 2D: Fixed case where SpriteShapeRenderer overrides stencil settings when a custom shader is used to set stencil values. (UUM-113762)
+    - 2D: Fixed case where SpriteShapeRenderer overrides stencil settings when a custom shader is used to set stencil values. (UUM-113762)
+    - 2D: Fixed issue where the TilemapRenderer does not work as a supported Renderer for a SpriteMask. (UUM-111631)
+    - Android: Forward AKEYCODE_MEDIA_PLAY_PAUSE, AKEYCODE_MEDIA_REWIND, AKEYCODE_MEDIA_FAST_FORWARD to input system Keyboard device. See https://github.com/Unity-Technologies/InputSystem/pull/2212/files for more details. (UUM-113004)
+    - Android: Increased the wait for the first log message in Android CrashHandler tests. (UUM-102164)
+    - Animation: Disabled the Delete option from the Layer context menu if there is only one Layer in the Animator. (UUM-114213)
+    - Animation: Fixed issue where animation feedback wouldn't appear until a repaint on IMGUI inspectors. (UUM-113346)
+    - Documentation: Updated the documentation for AudioSource.time to reflect that it always returns 0 if queried while the audio source is not playing. (UUM-108753)
+    - DX12: Fixed for TileMapRenderer missing some tiles when using the SRP batcher. (UUM-113733)
+    - Editor: Clicking in scene view on objects disabled for selection when GPU Resident Drawer is set to "Instanced Drawing" is now ignored correctly without the editor getting stuck in a "Application.Message.LeftButtonUp" dialog. (UUM-96065)
+    - Editor: Disabled wrap on single line field. (UUM-79440)
+    - Editor: Editor: Fixed EditorToolbarDropdownToggle hides label when in vertical layout but shows in horizontal. (UUM-105065)
+    - Editor: Fixed a null exception for docked Search window after domain reload. (UUM-112082)
+    - Editor: Fixed carriage return in InputField on Windows. (UUM-76174)
+    - Editor: Fixed Delayed Touchscreen field with placeholder to register callback properly. (UUM-77490)
+    - Editor: Fixed EditorToolbarDropdown wrongly showing a text element in specific scenario. (UUM-107916)
+    - Editor: Fixed IME on Blur() for UIToolkit. (UUM-102003)
+    - Editor: Fixed incorrect margins for animator state inspector window. (UUM-111381)
+    - Editor: Fixed selection issue on Android when using GameActivity. (UUM-104765)
+    - Editor: Fixed TouchScreenKeyboard editing with bindings. (UUM-82827)
+    - Editor: Fixed underline generation crashing the editor when using Dynamic OS font where the glyph is not available. (UUM-88009)
+    - Editor: Fixed unstable test for preview window. (UUM-113943)
+    - Editor: Removed Unity Logo requirement from documentation. (UUM-112839)
+    - Editor: Updated selection properly for touch screen keyboard when using SelectRange. (UUM-81534)
+    - Editor: Updated validation messages of Shortcut Profiles names. (UUM-113367)
+    - GI: Ensured that the GI cache is cleaned-up according to the max size limit that is given by the user. (UUM-113152)
+    - Graphics: Fixed perpetually increasing procedural indirect draw calls in HDRP's Volumetric Fog pass when connecting a player build to the Frame Debugger. (UUM-107818)
+    - Graphics: Fixed Vulkan Validation error in vkQueueSubmit. (UUM-110090)
+    - HDRP: Color Checker - Fixed overlap of the label when the inspector width is narrow. (UUM-113853)
+    - HLSLcc: Fixed HLSL countBits function incorrectly translated to GLSL. (UUM-62653)
+    - IL2CPP: Fixed possible debug assert when a delegate type has a generic struct parameter when script debugging is enabled. (UUM-110446)
+    - License: Bundle Licensing Client [1.17.2] (UUM-113543)
+    - Mono: Fixed bug where attaching a profiler could cause Unity to crash to desktop. (UUM-112001)
+    - Networking: Updated our copy of MbedTLS to version 3.6.4 to address some security vulnerabilities. (UUM-114079)
+    - Package: Version Control: Fixed obsolete references to TreeViewState. (VCS-1007414)
+    - Physics: Fixed a crash with regards to joint gizmo drawing where having a disabled ArticulationBody as a Joint component's connected body would provide invalid data. (UUM-114481)
+    - Physics: Fixed a memory leak that would occur when resizing the internal contacts array for physics scenes. (UUM-112248)
+    - Profiler: Fixed invalid Mesh indices appearing in Memory Profiler metadata when read/write is disabled on standalone builds. (UUM-107356)
+    - Profiler: Fixed serialization system memory attribution to MonoScript and global caches. (UUM-110303)
+    - SRP Core: Clear imported textures on first use if necessary. (UUM-86099)
+    - SRP Core: Fixed async compute corner case where URP RenderGraph was waiting for a resource not written by any pass.
+    - SRP Core: Fixed pass culling corner case where resources are never deallocated when the last pass using them is culled. (UUM-90208)
+    - SRP Core: Fixed RenderGraphObjectPool and GetTempMaterialPropertyBlock() usage in URP RenderGraph.
+    - SRP Core: Removed extra manual clear operation for textures imported to Render Graph and used first as render pass attachments. (UUM-109284)
+    - Terrain: Prevents instanced details from being added to the detail texture atlas, saving memory. (UUM-112198)
+    - Text: Ensure line-breaking rules are preserved for CJK. (UUM-108849)
+    - TextMeshPro: Fixed iOS selection issue. (UUM-112457)
+    - uGUI: Fixed an issue where the canvas scaler could invalidate the canvas more times than necessary. (UUM-114214)
+    - UI Toolkit: Do not start drag and drop if the target element gets hidden after the pointer down event. (UUM-113109)
+    - UI Toolkit: Fixed the performance issues when adding a lot of items through AddItem and TryRemoveItem with rebuildTree set to false. (UUM-112202)
+    - UI Toolkit: Fixed the stylesheet button in the UI Debugger appearing to do something when no source is available for the stylesheet. (UUM-87670)
+    - UI Toolkit: Fixed UI Debugger not always updating selected panel's hierarchy when EditorWindow is moved in or out of a dock area. (UUM-113179)
+    - URP: Fixed an issue in UberPostProcessPass where invalid texture handles could be reused across execution passes, leading to a Render Graph execution error. (UUM-109708)
+    - URP: Fixed base camera not being cleared to specified color when overlay camera is active. (UUM-112729)
+    - Version Control: Fixed aesthetic shaking issue when the package view is re-dimensioned.
+    - Version Control: Fixed an issue in the Login process not allowing to retry. (VCS-1007152)
+    - Version Control: Fixed an issue provoked by the auto-refresh of the Pending changes view. (VCS-1007328)
+    - Version Control: Fixed error message when clicking the 'Incoming changes' tab. (VCS-1006281)
+    - Version Control: Fixed some empty states that flickered when resizing the splitter or scrolling the table. (VCS-1007258)
+    - Version Control: Fixed the error 'EndLayoutGroup: BeginLayoutGroup must be called first' in different scenarios. (VCS-1006653)
+    - Version Control: Fixed undo shortcut for the PendingChanges view comments TextBox.
+    - Version Control: Updated LoadingSpinner to fix VisualElement.transform becoming obsolete.
+    - Video: Fixed inconsistent imports of video files on MacOS. (UUM-104688)
+    - Video: Re-importing a WebM file generates an inconsistent result. (UUM-113154)
+    - Video: [WebGL][iOS]Erratic video playback when played on Chrome or Firefox. (UUM-102147)
+    - Web: Fixed a bug caused by the use of a deprecated windows utility. (UUM-104979)
+    - Web: Fixed an issue where window events were being registered and handled before the engine fully initialized with WebGPU. (UUM-100658)
+    - Web: Fixed an issue with texture compression that would cause webgpu errors and result in a black screen. (UUM-97275)
+    - WebGL: Fixed an issue where native and javascript AudioSource paused states would desynchronize during scene loading when Play On Awake is used and the AudioListener is paused. (UUM-96644)
+    - Windows: Changed underlying API used to retrieve touch and mouse pointer state which resolves issues where Touchscreen interaction would be sending Mouse events. (UUM-112272)
+    Package changes in 6000.0.57f1
+    Packages updated
+    - com.unity.netcode: 1.7.0 to 1.8.0
+    - com.unity.addressables: 2.6.0 to 2.7.2
+    - com.unity.collab-proxy: 2.8.2 to 2.9.2
+    - com.unity.services.analytics: 6.0.3 to 6.1.0
+    - com.unity.xr.oculus: 4.5.1 to 4.5.2
+    - com.unity.netcode.gameobjects: 1.14.0 to 1.14.1
+ReleaseTime: 2025-09-03T09:18:47.7990000Z

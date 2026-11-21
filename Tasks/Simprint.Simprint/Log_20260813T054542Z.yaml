@@ -1,0 +1,25 @@
+Version: 0.2.31
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Simprint/simprint/releases/download/v0.2.31/Simprint_0.2.31_x64-full-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.2.31: platform-neutral release orchestration
+    This release separates GitHub Release ownership from platform-specific builds and simplifies update-note rendering.
+    Changes included:
+    - Added a platform-neutral release workflow that creates one draft, waits for platform builds, generates updater manifests, and publishes only after successful completion.
+    - Converted the Windows workflow into a reusable build and upload workflow that does not create or publish releases.
+    - Generates latest.json and latest-fixed.json centrally from the complete paginated GitHub Release asset list and downloaded updater signatures.
+    - Restored complete annotated-tag release notes through the GitHub API instead of relying on the local checkout tag representation.
+    - Preserved independent embedBootstrapper and fixed-runtime update channels for x64, ARM64, and x86.
+    - Renamed workflow files and display names without a common tauri prefix so future macOS and Linux workflows follow platform-neutral naming.
+    - Removed react-markdown, remark-gfm, their transitive dependency chain, and the dedicated Markdown renderer in favor of controlled plain-text release notes.
+    Expected result:
+    Release metadata is created once, each platform only owns its build assets, both updater channels are finalized consistently, and failed builds leave an unpublished draft instead of a partial public release.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Simprint/simprint/releases/tag/v0.2.31
+ReleaseTime: 2026-08-13T05:23:25.0000000Z

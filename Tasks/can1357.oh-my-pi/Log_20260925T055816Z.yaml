@@ -1,0 +1,184 @@
+Version: 18.3.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.3.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added live steering support for Codex WebSocket transports, allowing users to provide input while a response is in progress.
+    - Added passive tool-call context support, allowing hooks and tools to supply additional context for subsequent model processing.
+    - Improved context-window handling by automatically adjusting output-token limits and supporting models that truncate output at the context-window limit.
+    Changed
+    - Improved prompt token counting for requests with anchored prefixes by using provider-reported usage and limiting local estimation to new message content.
+    @oh-my-pi/pi-ai
+    Added
+    - Added live steering support for GPT-6 models, allowing queued user messages to be delivered during an active streaming response.
+    - Added the anthropicSlowMode stream option for first-party Claude OAuth requests, enabling slow-mode rate-limit handling, per-account rate-limit reporting, and server-paced retries during capacity limits.
+    - Added support for capturing and redeeming Anthropic fallback credit tokens, including prompt-cache repricing for classifier refusals.
+    - Added Vercel AI Gateway app attribution by sending http-referer: https://omp.sh/ and x-title: omp by default; user-provided header values take precedence.
+    Fixed
+    - Fixed account selection for OpenCode Go and SuperGrok (xai-oauth) so accounts without available funds or included quota are skipped in favor of eligible accounts.
+    - Improved visibility into automatically disabled authentication credentials by logging a warning and including the affected account details in credential-disabled events.
+    @oh-my-pi/browser-relay
+    Fixed
+    - Fixed browser relay support when multiple browser instances, such as Chrome and Edge, are connected simultaneously, ensuring tabs and relay requests remain associated with the correct browser while preserving single-browser compatibility for extensions without an instance identifier.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added compatibility flags for models that stop output at the context-window limit and models that support steering, including defaults for Claude 4.5+ and GPT-6+ models.
+    Fixed
+    - Fixed forced-tool requests for Claude Opus 5.5 so tool selection falls back gracefully when necessary.
+    - Added the provider-advertised xhigh reasoning level for Yolo-Auto Qwen3.8 models.
+    - Fixed Devin Fusion pairing requests failing with no API providers are available by routing them through the lead model with the lead's limits and pricing; pairings without an available lead are no longer listed (#13000 by @DarkPhilosophy).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added native filesystem support for local:// and omp:// URLs across file-search, content-search, AST, shell, and related tools, including support for virtual working directories.
+    - Added a native cp builtin for filesystem copy operations.
+    - Added IDA Pro integration for opening executables and IDA databases, browsing pseudocode, assembly, imports, exports, strings, and cross-references, and performing database-aware actions such as renaming, commenting, type editing, function creation, saving, and persistent Python execution.
+    - Added shared, project-scoped IDA database access with broker-managed host processes, configurable concurrency and idle cleanup via ida.maxOpen and ida.idleCloseSec, automatic autosaving, and universal Mach-O architecture selection with :@<arch> syntax and host-architecture detection. IDA features can be configured with ida.enabled, ida.python, and ida.installDir.
+    - Added the /slow [on|off|status] command for opting into lower-priority service tiers on OpenAI, Google, and Anthropic subscription sessions, including automatic continuation when Anthropic session limits are reached.
+    - Added the providers.openaiLiveSteering setting to control whether input can be delivered while a response is in progress.
+    - Added session-wide approval for configuration changes through an Always for this session option in cfg:// prompts, with clear timeout handling for unanswered prompts.
+    - Added the cfg:// protocol and a configuration registry for reading, modifying, unsetting, and reactively managing layered agent settings with approval and precedence feedback.
+    - Added paged reading for large files, with metadata that allows clients to recover and continue displaying results.
+    - Added per-agent compaction thresholds for task and evaluation subagents, configurable as percentages or fixed token limits without changing the main session threshold.
+    - Added trusted additional context for extension and hook tool results, including ctx.addAdditionalContext(), allowing instructions to reach the model without altering displayed tool results.
+    - Added dictation support to /btw follow-up input.
+    - Added support for multiple simultaneous browser instances, including concurrent Chrome and Edge connections.
+    - Added detailed benchmark phases for measuring single-user throughput, parallel scaling, and prefill performance, with automatic prefill sizing based on model context limits.
+    - Added opt-in CUDA support to the Nix package for tiny-model inference through ONNX Runtime.
+    - Added reliable RPC prompt lifecycle reporting with prompt_result, structured provider errors, session-settled state, prompt identifiers, event filtering, and --no-ui support for non-interactive hosts.
+    - Added RPC session management through open_session, plus corresponding TypeScript and Python client APIs including openSession, setEventFilter, onPromptResult, onSessionSettled, and waitForSettled.
+    - Added attachment:// and conflict:// resource URL handlers.
+    - Added a per-server MCP instructions: false option to keep a server's guidance out of the system prompt while retaining its tools.
+    Changed
+    - Improved recovery from output-length and context-window limits so truncated but actionable turns can be retained and retries are handled more accurately.
+    - Shortened the default system prompt by approximately 150 tokens while preserving its guidance.
+    - Improved Anthropic fallback handling so credit tokens and signed thinking context are preserved across same-provider fallbacks.
+    - Improved filesystem safety and path consistency across virtual URL protocols, including symlink and containment validation and correct Windows long-path reporting.
+    - Improved IDA database resource management with project sharing, bounded concurrency, idle cleanup, autosave, and clearer database status in listings.
+    - Improved runtime configuration behavior with type-safe layered settings, live updates, and safe sequential saves.
+    - Improved authentication and credential management to support live broker and credential-store changes.
+    Fixed
+    - Fixed concurrent project access by enforcing file locking across processes.
+    - Fixed Windows file reads with line selectors such as :1-40.
+    - Fixed omp update and startup update checks to honor configured npm registries, including scoped registries and authentication tokens.
+    - Fixed invalid auto-QA grievance reports blocking the rest of the upload queue; rejected reports are now surfaced with the server error while other reports continue.
+    - Fixed advisor reviews making unnecessary follow-up requests, losing context after pruning, using the wrong thinking effort, or sending excessively large edit diffs.
+    - Fixed /login crashes in source-link and development installs after extension loading.
+    - Fixed retry fallback loops that could continue indefinitely when the fallback resolved to the same effective request.
+    - Fixed setup wizard detection for Gemini web search when Antigravity OAuth is active.
+    - Fixed headless print mode failing to complete an advisor review when a configured fallback reviewer was available.
+    - Fixed embedded shell startup when the inherited working directory had been deleted.
+    - Fixed Codex usage displays showing stale subscription plans and corrected usage views that combined separate quota limits.
+    - Fixed explicit model and provider selections bypassing disabledProviders; disabled providers are now refused and skipped during fallback.
+    - Fixed memory storage errors so failed items and underlying storage failures are identified.
+    - Fixed malformed user-level mcp.json files preventing valid MCP sources from loading.
+    - Fixed Anthropic server-side fallback requests using invalid model names.
+    - Fixed large-output model requests failing near the context limit by adjusting the output allowance to the remaining context.
+    - Fixed tool references in system prompts for tools exposed only through xd:// devices.
+    - Fixed dictation remaining active after a recording restart during transcription.
+    - Fixed automatic account sign-outs going unannounced; sessions now report the affected account and login action through interactive, print, JSON, and RPC output.
+    - Fixed duplicate MCP tool listings in the system prompt.
+    - Fixed supervised service exits being missed or repeatedly replayed instead of being delivered to the session that started the service.
+    - Fixed memory backend failures to identify the affected item and underlying storage error.
+    - Fixed write xd://<tool> validation behavior so devices can return precise schema-mismatch responses.
+    @oh-my-pi/collab-web
+    Fixed
+    - Improved large-session browsing and reconnect behavior: recent transcript entries load quickly, earlier entries can be loaded on demand without losing your place, and the existing transcript remains visible with download progress during reconnects.
+    @oh-my-pi/pi-natives
+    Added
+    - Added support for asynchronous file I/O and custom filesystem providers in native shell execution, including resolving arbitrary scheme:// paths through native operation options.
+    Fixed
+    - Fixed shell access to standard and special file descriptors, including /dev/stdin, /dev/stdout, /dev/stderr, /dev/fd/N, and /dev/tty, preventing heredoc commands from hanging the TUI.
+    - Fixed native operations such as grep, glob, AST, shell, and VCS calls to promptly honor an AbortSignal that was already aborted when the operation starts.
+    - Fixed Windows path formatting in the shell’s fd and find builtins so POSIX path patterns match correctly.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Replaced the CustomEditor space-hold callbacks and sttHoldEnabled option with the spaceHold.handler API.
+    - Removed Editor.cursorOverrideWidth; widths for cursorOverride glyphs are now measured automatically.
+    Added
+    - Added push-to-talk dictation to Input, with live transcription and cursorOverride support.
+    - Added visual indicators for live-steered user messages and paginated content in read-tool results.
+    - Added transcript support for cfg:// configuration read and write tool calls.
+    - Added an Anthropic slow-mode badge to the status-line model segment, showing the priority state, end time, and remaining request percentage when available.
+    Changed
+    - Updated the settings selector so clearing an input field fully unsets the corresponding setting.
+    Fixed
+    - Fixed dimmed blockquote styling after inline code spans.
+    - Fixed rendering of tool calls and results for top-level extension and MCP tools invoked through xd:// links.
+    - Fixed file links in pending Read and Write cards so they open the correct local targets, including paths in the home directory, archives, and databases.
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed log rotation near local-day boundaries so dated log files are consistently assigned to the correct local date.
+    What's Changed
+    - Port PR #8363 passive tool-call context onto current main by @H4vC in https://github.com/can1357/oh-my-pi/pull/11998
+    - fix(coding-agent): honor configured npm registry in omp update by @H4vC in https://github.com/can1357/oh-my-pi/pull/13115
+    - fix(coding-agent): clamp autoqa tool names to the collector's 128-byte limit by @NaC-L in https://github.com/can1357/oh-my-pi/pull/13119
+    - fix(shell): resolve /dev/stdin and other descriptor paths against the shell by @radkawar in https://github.com/can1357/oh-my-pi/pull/13121
+    - fix(ai): keep Google billing 429s terminal instead of retrying them by @roboomp in https://github.com/can1357/oh-my-pi/pull/13092
+    - fix: separate scoped usage capacity by @rlfleming93 in https://github.com/can1357/oh-my-pi/pull/12872
+    - fix(coding-agent): show current Codex plan in usage views by @haesol-shin in https://github.com/can1357/oh-my-pi/pull/12928
+    - fix(catalog): downgrade forced tool choice for Claude Opus 5.5 by @roboomp in https://github.com/can1357/oh-my-pi/pull/12941
+    - fix(tui): resolve xd:// device card renderers for active top-level tools by @kouhe3 in https://github.com/can1357/oh-my-pi/pull/12951
+    - fix(advisor): wait through fallback recovery in the headless drain by @aviv4339 in https://github.com/can1357/oh-my-pi/pull/12964
+    - fix(retry): a fallback that resolves to the failing model is not a switch by @Gablinas in https://github.com/can1357/oh-my-pi/pull/12976
+    - fix(tui): preserve quote styling after inline code in blockquotes by @harshaygadekar in https://github.com/can1357/oh-my-pi/pull/13016
+    - fix(coding-agent): report failed Mnemopi retain writes instead of claiming success by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13020
+    - fix(ai): rotate OpenCode Go accounts on 402 insufficient funds by @fros1y in https://github.com/can1357/oh-my-pi/pull/13038
+    - fix(natives): honor pre-aborted signals by @HeyItsGilbert in https://github.com/can1357/oh-my-pi/pull/13039
+    - fix(coding-agent): keep MCP loading alive when the user-level mcp.json is malformed by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/13040
+    - fix(coding-agent): keep the LSP mux daemon alive when a language server exits by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/13041
+    - fix(utils): name dated log paths with the local day like the rotating sink by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/13042
+    - fix(cli): refused explicit model pins to disabled providers by @roboomp in https://github.com/can1357/oh-my-pi/pull/13080
+    - fix(coding-agent): confirm Windows stream paths before dropping read selectors by @NaC-L in https://github.com/can1357/oh-my-pi/pull/13109
+    - docs: clarify model roles and assignments by @mercenarioZ in https://github.com/can1357/oh-my-pi/pull/13125
+    - fix(nix): load the onnxruntime CUDA execution provider by @lz37 in https://github.com/can1357/oh-my-pi/pull/12946
+    - fix(coding-agent): enabled hold-Space push-to-talk in the /btw follow-up composer by @HACKE-RC in https://github.com/can1357/oh-my-pi/pull/12963
+    - browser relay: support several connected browser instances (Chrome + Edge at once) by @pavel-kalmykov in https://github.com/can1357/oh-my-pi/pull/13005
+    - fix(collab-web): keep large sessions responsive in browser guests by @igasmi in https://github.com/can1357/oh-my-pi/pull/13063
+    - perf(coding-agent/prompts): deduplicate system prompt rules and fix xd:// tool refs by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13113
+    - fix(coding-agent): fit the output cap to the remaining context window by @radkawar in https://github.com/can1357/oh-my-pi/pull/13137
+    - fix(catalog): expose Yolo-Auto xhigh reasoning level by @H4vC in https://github.com/can1357/oh-my-pi/pull/13160
+    - fix(catalog): route Devin Fusion pairings through available lead models by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/13000
+    - fix(advisor): bound expanded edit diffs in advisor deltas by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13129
+    - fix(advisor): make auto-thinking advisors follow the primary's live effort by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13130
+    - fix(extensions): keep canonical pi subpath requires working and on the host copy in the legacy-pi shim by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13127
+    - fix(advisor): keep advisor context across the primary's per-turn prune by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13131
+    - fix(advisor): end the review after an advise-only turn by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13132
+    - fix(vcs): normalized windows worktree metadata paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/13163
+    - fix(shell): normalize Windows builtin paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/13167
+    - fix(windows): expand 8.3 short-name working dir and vault path to one canonical long-form spelling by @CoderTCY in https://github.com/can1357/oh-my-pi/pull/7938
+    - fix(edit): record edit response line provenance by @roboomp in https://github.com/can1357/oh-my-pi/pull/13155
+    - fix(auth): log and announce automatic credential disables by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13190
+    - feat(ai,coding-agent): support Anthropic fallback credit redemption on classifier refusals by @aliefe04 in https://github.com/can1357/oh-my-pi/pull/13157
+    - feat(coding-agent): configure compaction thresholds per task/eval agent by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/13107
+    - docs(coding-agent): document which prompt inputs reach each session type by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13193
+    - fix(advisor): give edit diffs their own line cap in advisor deltas by @alnaggar-dev in https://github.com/can1357/oh-my-pi/pull/13184
+    - fix(launch): route supervised service completions by session by @serverinspector in https://github.com/can1357/oh-my-pi/pull/13199
+    - feat(mcp): allow opting out of server instructions per server by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13196
+    - fix(mcp): list each mounted MCP tool once in the system prompt by @alphastorm in https://github.com/can1357/oh-my-pi/pull/13195
+    - fix(web): route Gemini grounding through wire ids by @roboomp in https://github.com/can1357/oh-my-pi/pull/12992
+    - fix(session): open transcript and log descriptors close-on-exec by @roboomp in https://github.com/can1357/oh-my-pi/pull/13227
+    - feat(anthropic): added subscription slow mode (/slow) by @H4vC in https://github.com/can1357/oh-my-pi/pull/13222
+    - fix(ai): closed compressed response sources on cancel by @roboomp in https://github.com/can1357/oh-my-pi/pull/13230
+    New Contributors
+    - @NaC-L made their first contribution in https://github.com/can1357/oh-my-pi/pull/13119
+    - @rlfleming93 made their first contribution in https://github.com/can1357/oh-my-pi/pull/12872
+    - @haesol-shin made their first contribution in https://github.com/can1357/oh-my-pi/pull/12928
+    - @kouhe3 made their first contribution in https://github.com/can1357/oh-my-pi/pull/12951
+    - @aviv4339 made their first contribution in https://github.com/can1357/oh-my-pi/pull/12964
+    - @fros1y made their first contribution in https://github.com/can1357/oh-my-pi/pull/13038
+    - @HeyItsGilbert made their first contribution in https://github.com/can1357/oh-my-pi/pull/13039
+    - @jchanghong023 made their first contribution in https://github.com/can1357/oh-my-pi/pull/13040
+    - @mercenarioZ made their first contribution in https://github.com/can1357/oh-my-pi/pull/13125
+    - @HACKE-RC made their first contribution in https://github.com/can1357/oh-my-pi/pull/12963
+    - @alnaggar-dev made their first contribution in https://github.com/can1357/oh-my-pi/pull/13129
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.3.0...v18.3.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.3.1
+ReleaseTime: 2026-09-25T04:16:36.0000000Z

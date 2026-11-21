@@ -1,0 +1,178 @@
+Version: 1.20.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.20.0/crystal-1.20.0-1-windows-x86_64-msvc-unsupported.zip
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.20.0/crystal-1.20.0-1-windows-x86_64-msvc-unsupported.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security
+    stdlib
+    - (networking) Fix HTTP::Server is no longer vulnerable to request smuggling (GHSA-wqh5-7w63-pm68)
+    Features
+    lang
+    - (macros) Add #select and #reject to HashLiteral and NamedTupleLiteral (#16558, thanks @Blacksmoke16)
+    - (macros) Refine error message for unsupported named arguments in macros (#16576, thanks @hahwul)
+    stdlib
+    - (cli) Add short option bundling for OptionParser (#16770, thanks @Qard)
+    - (crypto) Add Kernel TLS support to custom OpenSSL::BIO (#16646, thanks @ysbaddaden)
+    - (files) Add IO#read_greedy (#16535, thanks @BlobCodes)
+    - (files) Add FileUtils#rm_f (#12832, thanks @zw963)
+    - (files) Add IO::PrefixSuffixBuffer for capturing truncated streams (#16774, thanks @straight-shoota)
+    - (llvm) Support LLVM 22.1 and 23.0 (#16631, thanks @HertzDevil)
+    - (networking) Add Sec-WebSocket-Protocol checks to HTTP::WebSocket::Protocol (#16600, #16671, thanks @antondalgren, @straight-shoota)
+    - (networking) Add support for Sec-WebSocket-Protocol to HTTP::WebSocketHandler (#16574, thanks @antondalgren)
+    - (networking) Add HTTP::Response#content_type and #content_length as convenient accessors (#16712, thanks @CTC97)
+    - (networking) Detect OAuth error in payload (#16634, #16828, thanks @jgaskins, @Sija)
+    - (runtime) Add Fiber::ExecutionContext::ThreadPool (#15885, #16750, thanks @ysbaddaden)
+    - (runtime) Add Pointer#align_up and #align_down (#16585, thanks @BlobCodes)
+    - (runtime) Detach execution context scheduler from running thread during blocking syscall (#15871, #16679, thanks @ysbaddaden)
+    - (runtime) Forward API docs for properties in record macro (#16172, #16834, thanks @Vici37, @ysbaddaden)
+    - (runtime) Add Crystal::Lock (#16768, thanks @ysbaddaden)
+    - (runtime) Add io_uring event loop (linux) (#16264, thanks @ysbaddaden)
+    - (system) Use FdLock on all targets (#16569, thanks @ysbaddaden)
+    - (system) Add Process.new with args instead of command, args (#16681, thanks @straight-shoota)
+    - (system) Add Process.run(args) without command (#16739, thanks @straight-shoota)
+    - (system) Add Process.run? (#16738, thanks @straight-shoota)
+    - (system) Add Process.capture (#16773, thanks @straight-shoota)
+    - (text) Add StringScanner#scan, #check, and #skip overloads for Int (#16557, thanks @jneen)
+    - (text) Add StringScanner#peek_behind (#16593, thanks @jneen)
+    - (text) Add convenience methods to StringScanner (#16595, thanks @jneen)
+    - (text) Improve cursor window format in StringScanner#inspect (#16594, thanks @jneen)
+    compiler
+    - (cli) Prefer modern linker (mold or lld) (#16696, thanks @straight-shoota)
+    - (codegen) Add @[TargetFeature] annotation (#16717, #16835, thanks @stakach, @ysbaddaden)
+    - (parser) Parse ProcNotation with empty arg parenthesis: () -> (#16741, thanks @straight-shoota)
+    tools
+    - (docs-generator) Add --base-path for crystal docs (#16091, thanks @matiasgarciaisaia)
+    Bugfixes
+    stdlib
+    - (compress) Fix decode gzip MTIME as UInt32 (#16730, thanks @kojix2)
+    - (crypto) [breaking] OpenSSL sockets shouldn't flush on read (#16650, thanks @ysbaddaden)
+    - (crypto) Fix typo in digest.cr (#16808, thanks @kojix2)
+    - (files) Fix MIME.parse_media_type invalid character check (#16793, thanks @cuiweixie)
+    - (networking) [regression] Fix HTTP::Headers#merge! to not wrap key (#16624, thanks @straight-shoota)
+    - (networking) Fix forward_missing_to in HTTP::Headers (#16637, thanks @straight-shoota)
+    - (networking) Fix Socket::IPAddress IPv4 address in IPv6 with zone identifier (#16813, thanks @straight-shoota)
+    - (numeric) Fix Indexable#range_to_index_and_count with unsigned integers (#16597, thanks @jneen)
+    - (numeric) [regression] Fix Float32#abs to return Float32 (#16655, thanks @straight-shoota)
+    - (numeric) Fix signedness in GMP FFI bindings (#16799, thanks @kojix2)
+    - (runtime) Rename filename to path in WASI EventLoop#open (#16636, thanks @kojix2)
+    - (runtime) Thread.sleep is invalid when duration >= 1 minute (#16629, thanks @ysbaddaden)
+    - (runtime) Fix typos in ELF reader (#16668, thanks @kojix2)
+    - (runtime) don't terminate thread on Windows/IOCP (#16680, thanks @ysbaddaden)
+    - (runtime) Sync::ConditionVariable can hang forever (#16677, thanks @ysbaddaden)
+    - (runtime) Fix Pointer#to_s with lib typedefs (#16687, thanks @straight-shoota)
+    - (runtime) Fix race condition in Process#wait on Windows (#16766, thanks @ysbaddaden)
+    - (serialization) call xmlFree for string pointer from xmlNodeGetContent (#16688, thanks @toddsundsted)
+    - (serialization) Fix sequence_end_event_initialize return type (#16803, thanks @kojix2)
+    - (system) Fix Dir.glob matching wildcard with dot directory (#16604, thanks @straight-shoota)
+    - (system) Lenient Fiber.current access on segfault handler (#16612, thanks @bcardiff)
+    - (system) [breaking] Fix Process#wait to not close @input before waiting (#16620, #16638, thanks @straight-shoota, @ysbaddaden)
+    - (system) Fix System.cpu_count returns Int32 (#16648, thanks @straight-shoota)
+    - (system) Fix Process.new(args) etc. support Enumerable(String) args (#16784, thanks @straight-shoota)
+    - (text) Fix String#scan zero-width matches with multibyte characters (#16684, thanks @error256)
+    - (text) Fix PCRE2 FFI type declarations (#16804, thanks @kojix2)
+    - (text) Fix blink_fast reset code (#16806, thanks @kojix2)
+    compiler
+    - (codegen) Emit unreachable for inlined NoReturn returns (#16690, thanks @kojix2)
+    - (codegen) Fix alignment for fields in packed structs for x86_64 ABI (#16667, thanks @kojix2)
+    - (codegen) Fix declare_fun attribute copy (#16708, thanks @kojix2)
+    - (parser) [breaking] Ensure that heredoc lexing allows only valid identifiers (#16548, thanks @Sija)
+    - (parser) [regression] Fix lexing percent literals with | delimiter in macro context (#16672, #16716, thanks @toddsundsted, @straight-shoota)
+    - (parser) Escape quotes in the filename within the location pragmas (#16549, thanks @Sija)
+    - (semantic) Fix constant lookup in ivar initializer blocks (#16678, thanks @nobodywasishere)
+    - (semantic) Fix ICE on alias generic instance namespace lookup (#16700, thanks @nobodywasishere)
+    - (semantic) Fix tuple splat validation (#16787, thanks @kojix2)
+    - (semantic) Add arithmetic error reporting for MathInterpreter (#16809, thanks @kojix2)
+    tools
+    - (formatter) Fix formatter ProcNotation with parens around argument type (#16753, thanks @straight-shoota)
+    - (formatter) Fix track line increment when formatting macro literal only (#16761, thanks @straight-shoota)
+    - (formatter) Fix formatter indent and newlines between expression items (#16769, thanks @straight-shoota)
+    - (formatter) Fix formatter increment @line only on write (#16762, thanks @straight-shoota)
+    Chores
+    stdlib
+    - (system) Add @[Experimental] annotation to new Process API (#16816, thanks @straight-shoota)
+    Performance
+    stdlib
+    - (time) Improve performance of System::Time.monotonic on Windows (#16555, thanks @straight-shoota)
+    Refactor
+    stdlib
+    - (crypto) dust off OpenSSL::BIO (#16640, thanks @ysbaddaden)
+    - (crypto) Refactor initialization of custom OpenSSL BIO (#16651, thanks @ysbaddaden)
+    - (numeric) [experimental] Use Slice.literal for fast_float when supported, part 2 (#16261, thanks @HertzDevil)
+    - (runtime) [deprecation] Soft deprecate Mutex in favor to Sync::Mutex (#16737, #16759, #16802, thanks @ysbaddaden)
+    - (runtime) Protect Crystal::System::Env with Sync::RWLock (UNIX) (#16591, thanks @ysbaddaden)
+    - (runtime) Refactor System::Process.make_env_block into System::Env (win32) (#16605, thanks @ysbaddaden)
+    - (runtime) Use System.wstr_literal for env names on Win32 (#16669, thanks @kojix2)
+    - (runtime) Add adaptive scaling to ExecutionContext::Parallel (#16719, thanks @ysbaddaden)
+    - (runtime) Handle events in EventLoop::IOCP instead of System::IOCP (#16765, thanks @ysbaddaden)
+    - (runtime) Add internal state to Fiber::ExecutionContext::Parallel::Scheduler (#16732, thanks @ysbaddaden)
+    - (runtime) Replace Mutex use cases with Sync::Mutex (#16783, thanks @ysbaddaden)
+    - (specs) Prefer with_env helper over mutating ENV in specs (#16608, thanks @ysbaddaden)
+    - (specs) Remove unnecessary shell: true from Process.run calls (#16781, thanks @ysbaddaden)
+    - (system) Avoid deprecated Pointer.new(Int) in dlfcn (#16691, thanks @kojix2)
+    - (system) Refactor code duplication in Process.new overloads (#16782, thanks @straight-shoota)
+    compiler
+    - (parser) Refactor parsing interpolation (#16693, thanks @straight-shoota)
+    - (parser) Standardize DelimiterState#open_count to initialize with 0 (#16771, thanks @straight-shoota)
+    tools
+    - (formatter) Extract helper methods for formatter string interpolation (#16720, #16747, thanks @straight-shoota)
+    - (formatter) Refactor Formatter code for simplification (#16745, thanks @straight-shoota)
+    Documentation
+    stdlib
+    - (llvm) Fix typo (#16694, thanks @straight-shoota)
+    - (runtime) Add Safety section to ENV documentation (#16592, #16599, thanks @ysbaddaden)
+    - (runtime) Fix: thread_local macro exposes Thread class in stdlib docs (#16714, thanks @ysbaddaden)
+    - (runtime) Improve docs for Fiber::ExecutionContext (#16602, thanks @ysbaddaden)
+    - (runtime) Remove invalid Pointer.new constructor from API docs (#16734, thanks @ysbaddaden)
+    - (runtime) Document that reentrant read lock can deadlock (#16833, thanks @ysbaddaden)
+    - (system) Improve documentation for Process.run & co (#16618, thanks @straight-shoota)
+    Specs
+    stdlib
+    - (concurrency) Fix: modernize channel specs to avoid parallelism issues (#16704, thanks @ysbaddaden)
+    - (runtime) Fix: increase timeout of execution context stress test helper (#16639, thanks @ysbaddaden)
+    - (runtime) Fix: Fiber#resumable? spec must run in concurrent context (#16731, thanks @ysbaddaden)
+    - (system) Add specs for Process.run(shell: true) with PATH (#16617, thanks @straight-shoota)
+    compiler
+    - Add Crystal::Config.path= for spec helper (#16613, thanks @straight-shoota)
+    - (codegen) Rename duplicated "between 64 and 128 bits" case (#16683, thanks @kojix2)
+    - (codegen) Add "compile" spec helper (#16735, thanks @ysbaddaden)
+    - (parser) Add parser specs for escaping in delimited literals (#16703, #16709, thanks @straight-shoota)
+    - (parser) Refactor assert_syntax_error to use expect_raises (#16711, thanks @straight-shoota)
+    - (parser) Enhance parser specs for escaping delimiters [follow-up #16703] (#16721, thanks @straight-shoota)
+    - (parser) Add formatter specs for ProcNotation (#16742, thanks @straight-shoota)
+    - (parser) Add spec/syntax_spec.cr (#16749, thanks @straight-shoota)
+    - (parser) Add specs for parsing MacroVar syntax inside literals (#16778, thanks @straight-shoota)
+    - (semantic) Fix typo in Link annotation spec (#16710, thanks @kojix2)
+    tools
+    - (formatter) Improve formatter spec helper to show trailing whitespace (#16760, thanks @straight-shoota)
+    Infrastructure
+    - Changelog for 1.20.0 (#16751, thanks @straight-shoota)
+    - Update previous Crystal release 1.19.0 (#16572, thanks @ysbaddaden)
+    - Update devenv.lock (#16426, #16588, #16658, #16673, #16775, #16586, #16623, thanks @github-actions)
+    - Update previous Crystal release 1.19.1 (#16598, thanks @ysbaddaden)
+    - Drop ENV.[]= in generate_windows_zone_names (#16606, thanks @straight-shoota)
+    - Update devenv 2.0 (#16705, thanks @straight-shoota)
+    - Add changelogs for older releases (#16698, #16791, thanks @straight-shoota)
+    - Disable buggy ameba rule Lint/SpecFocus (#16740, thanks @straight-shoota)
+    - scripts/github-changelog.cr: Group PRs with same name (#16788, thanks @straight-shoota)
+    - scripts/github-changelog.cr: Sort link ref labels by PR number (#16789, thanks @straight-shoota)
+    - scripts/update-changelog.sh: Fix escape output of final command (#16790, thanks @straight-shoota)
+    - (ci) Adjust triggers for update-devenv workflow (#16587, thanks @straight-shoota)
+    - (ci) Update GH Actions (#16546, #16619, #16660, #16702, #16786, #16654, #16800, thanks @renovate)
+    - (ci) Refactor Linux CI workflows (#16615, thanks @ysbaddaden)
+    - (ci) Fix lint workflow to use prek instead of pre-commit (#16653, thanks @straight-shoota)
+    - (ci) Add fail-fast: false to all matrix strategies (#16656, thanks @straight-shoota)
+    - (ci) Drop separate lint workflows for actionlint and shellcheck (#16663, thanks @straight-shoota)
+    - (ci) Run lint workflow on all files when devenv.lock was changed (#16682, thanks @straight-shoota)
+    - (ci) Pin nixpkgs in lint workflow (#16706, thanks @straight-shoota)
+    - (ci) Update cachix/install-nix-action digest to 1ca7d21 (#16727, thanks @renovate)
+    - (ci) Test stdlib with execution contexts on Windows and macOS (#16701, thanks @ysbaddaden)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/crystal-lang/crystal/releases/tag/1.20.0
+ReleaseTime: 2026-04-17T09:40:40.0000000Z

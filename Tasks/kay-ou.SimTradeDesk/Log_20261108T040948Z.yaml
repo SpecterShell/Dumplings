@@ -1,0 +1,34 @@
+Version: 0.8.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/kay-ou/SimTradeDesk/releases/download/v0.8.0/SimTradeDesk-Setup-0.8.0.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    [0.8.0] - 2026-11-08
+    Added
+    - The strategy workspace now guides admins through a four-step flow that builds an encrypted strategy package from pasted source.
+    - Membership activation is recorded as a dated term with its seat count, and renewal, upgrade, and downgrade are handled through one flow.
+    Changed
+    - Membership activation and renewal dates and seat counts are computed by the server; the admin portal no longer accepts a client-supplied expiry date.
+    - Checkout accepts only the price IDs configured on the server; an unknown price fails instead of silently assigning a tier.
+    - Editing a user's notes or PTrade account bindings no longer changes their subscription state.
+    - Admin data access for subscriptions, orders, devices, and referrals is scoped to the admin's own brand.
+    - Device bindings can no longer bypass the per-account device limit.
+    - Sign-in, password-change, and license-verification attempts are rate limited.
+    - Subscription and license expiry are now judged against server time; changing the local system clock no longer extends access.
+    - Sign-in and device verification now require a successful online check on every launch; the offline grace period has been removed.
+    - Expired subscriptions can still sign in so users can reach the renewal entry; feature access is blocked server-side, and super admins are exempt from subscription expiry.
+    - License enforcement is hardened: license checks default on (removing the env flag no longer disables them), missing license files fail closed, customer-side admins cannot bypass a revoked license, auth-server deployments require the Supabase revocation control plane, and customer installers refuse to build without the license-verify URL.
+    - Normal deploys now target Tencent Cloud only. Supabase schema and Edge Function deploys are explicit manual commands (npm run deploy:supabase:*), and releases no longer deploy Supabase automatically.
+    - Removed the redundant root deploy.sh/deploy.cmd wrappers and duplicate deploy aliases; npm run deploy:tencent:* and npm run deploy:supabase:* are the supported entrypoints.
+    Fixed
+    - Admin portal user search now respects pagination and reports an accurate total instead of returning every match at once.
+    - Brand admins now only see their own brand's administrators in the admin list.
+    - Adding an administrator with an invalid role is now rejected instead of creating an unusable account.
+    - Strategy delivery errors no longer expose internal error details.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kay-ou/SimTradeDesk/releases/tag/v0.8.0
+ReleaseTime: 2026-11-08T02:41:41.0000000Z

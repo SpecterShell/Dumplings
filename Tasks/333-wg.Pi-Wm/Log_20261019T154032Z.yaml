@@ -1,0 +1,36 @@
+Version: 0.1.23
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/333-wg/pi-wm/releases/download/v0.1.23/Pi-Wm-0.1.23-Setup-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Pi-Wm v0.1.23：Grok 生图与媒体模型配置优化
+    已于 **2026-10-19 23:13（北京时间）**正式发布并设为 Latest。Windows x64、macOS Apple Silicon 与 Intel 构建和定向验证已通过，九个发布附件已核验。源码与版本标签提交为 5e2b3704c41abd7e2bad4f29e21f877687483d63。GitHub Release。
+    验证记录
+    - npm run check 通过：源码、前端、E2E 与 12 个工作区测试类型检查，以及 8 套主题各 80 对颜色对比检查。
+    - npx --no-install vitest run apps/gateway/test/media-image.test.ts apps/gateway/test/media-generation.test.ts apps/gateway/test/media-model-discovery.test.ts apps/gateway/test/custom-model-kinds.test.ts：4 个文件、105 项通过。
+    - 图片协议专项 E2E 1 项通过，覆盖协议选择、按模型保存、默认模型不变、重启恢复、密钥隐藏及键盘展开入口。
+    - 媒体 E2E 修正旧快照读取位置后重新运行，8 项全部通过，涵盖设置、模型发现、图片与视频展示、预览下载、自动／手动 Skill、结果恢复；包含既有 390px 媒体页面回归，不代表真实手机验收。修正后 npm run check:e2e 通过。
+    - 实际浏览器在 1440×900 检查了 Grok 协议选择和媒体入口：文字完整、无横向溢出，表单可滚动访问，空配置不可保存，键盘可展开视频表单。当前页面诊断无 console/page/network 错误。首次预览端口冲突后改用独立端口，不计为产品修复。
+    - npm run desktop:dist 通过：生产构建、15,815 个运行时文件清单、路径预算、安装包 SHA-512、blockmap 与公开更新源一致性均通过。
+    - node scripts/verify-desktop.mjs --packaged=release/win-unpacked/Pi-Wm.exe 通过：移出源码目录后验证构建 UI、鉴权 API/WebSocket、原生终端、渲染器隔离、单实例、项目／主题保存、令牌轮换和正常退出。未运行安装器。
+    - 版本修改仅更新桌面版本与锁文件版本为 0.1.23，未改变依赖版本。改动文件格式检查与 git diff --check 通过；提交钩子运行后与已验证候选无内容差异。
+    - macOS 专项工作流 39272697823 通过：Apple Silicon 与 Intel 均完成原生构建、DMG/ZIP 归档、ad-hoc 签名、原生运行时和包内启动验证，并上传六个附件；按精简策略跳过完整桌面回归。
+    - 九个发布附件已核验：Windows 三件文件大小和 SHA-256 与本地一致，远端 latest.yml 与本地逐字节一致；四个 Mac DMG/ZIP 的 GitHub SHA-256 与对应校验文件一致，校验文件自身摘要也已核验。
+    - 发布后确认 GitHub Latest 指向 v0.1.23，正式版非草稿、非预发布；匿名下载公开 latest.yml 与本地逐字节一致。
+    - Windows 大文件 CLI 上传两次超时后，先确认远端无对应附件，再通过同一 GitHub 上传接口以 HTTP/1.1 完成上传（HTTP 201），未覆盖现有发布包。该网络恢复不计为产品修复。
+    Windows 安装包 SHA-256：10a7742a22add827a566a1ed1a1bb48ac820ed4555d98357ddb8b4e45e0d7f91（249,608,883 字节）。
+    本地证据：test-results/release-0.1.23/、test-results/release-0.1.23-media-final/、test-results/release-0.1.23-build.log、test-results/release-0.1.23-packaged.log。预览数据不作为发布附件。
+    已知限制与未执行检查
+    - Grok 路径依据接口文档并使用模拟服务验证，尚未进行真实收费生成、账号权限或具体中转服务验收。保存成功不代表生成权限与额度可用。
+    - 本次不包含多参考图、异步图片任务、Gemini 原生生图、Responses 生图工具或任意中转私有 API 的通用兼容。
+    - Windows 未配置发布者签名；构建日志中的 signing 步骤不代表已完成可信发布者签名。macOS 使用 ad-hoc 签名，未经 Apple Developer ID 签名与公证，系统可能拦截安装。
+    - 按改动风险执行定向验证，未运行全仓库测试、完整 E2E、完整桌面回归或真实安装升级矩阵；安装器、更新器与依赖未改动。未发起收费模型请求。
+    - 保留前端主包超过 500 kB、SQLite 实验性与构建依赖弃用提示。附件和元数据核验不等于旧客户端完整下载或真实安装升级验收。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/333-wg/pi-wm/releases/tag/v0.1.23
+ReleaseTime: 2026-10-19T15:13:14.0000000Z

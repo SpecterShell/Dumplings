@@ -1,0 +1,53 @@
+Version: 0.10.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.4/pinvou-agent_0.10.4-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.4 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. 工作区分组跨会话模式统一：分组现在跟随工作区绑定——凡在真实目录中工作的会话，文件夹提升、移动、拖拽与文件夹重绑行为全部一致。新增重绑对话框覆盖工作区根变更的完整管线（忙碌守卫、工作区探测前加重绑栅栏、崩溃窗口经生产启动路径自愈、部分失败报告与接续重试、逐条失败隔离），侧栏新增独立的「已绑定」类别与项目视图，三语文案齐备；Web 边界继续脱敏宿主路径，Web YOLO 门按未知绑定 fail-closed。
+    问题修复
+    1. 市场应用可用性端到端门控：逐轮工具快照曾把「被隐藏但开关仍开」的包报成 enabled=true 而会话实际调不到，强制场景路由在安装成功后仍必然失败，市场安装也永远到不了已运行的 plain 会话引擎。现在快照的 enabled 与会话门控同口径（开关禁用 ∪ 不可见的并集）；场景子标签主动发送前就地重开场景所需包（companion 技能映射到所属包 id、未点名条目原样保留、重开经场景就绪提示可见）；安装/卸载/插件导入/回收站恢复递增 mcp.json 修订号，在线 plain 引擎下一轮安全重建，新装的 server 立即可见。
+    2. 模型提示词不再点名不存在的工具：技能索引、子代理目录与捆绑技能文本曾教模型调用不在当前表面上的工具（deferred 或退役名），造成「索引说有、工具列表里没有」的思维链混乱。现在各表面改教 tool_search 激活路径，退役/隐藏别名由 denylist 钉住；引擎侧注册表指令与注册 ToolSpec 名互钉，任一侧改名即红。
+    3. mcp.json 启动对账且绝不静默重置：解析失败漂移可能让 mcp.json 停留过期状态或被重置掉用户自定义条目。启动对账现在恢复缺失条目并报告重建内容；不可解析的文件备份为 mcp.json.corrupt.<ts>，整个启动期所有后续写入方（含内置 upsert）都不再触碰它，直到用户修复或删除；reconcile 恢复、重建条目与 UI 安装/卸载等全部读改写写入方统一走同一个「读不了就不重置」的加载器。
+    4. MCP 启动失败可见而非静默清空工具池：keyring 与解包失败曾沿 MCP 启动路径静默降级。失败现在经 boot receipt 透出，恢复与移除区分处理，secret 解析失败时降级重建（条目不含 secret、不整只拒建），工具不再无声消失。
+    内部改进
+    1. CodeWhale 底座收口 r2（6f780290f）：不可变 tag pinjou-v0.9.12-r2 切在合并头，恢复 gitlink / 维护分支 / tag 三方相等，过渡期豁免（fork-policy §0）就此关闭。随行内容：CNB 镜像在 token 未配置的仓库探针跳过而非红检；agent/search/vision/MCP 面与运行时对齐（handle_read 直呼兜底话术并入共享激活提示常量、MCP boot 失败/恢复简报区分处理）。fork 登记重钉 layer 0（39 个 signed-off 提交，r1 基线之上 24 个 squash 合入）。
+    2. 全仓死代码合并清理：#558/#561/#564 的合并清理移除死命令、死辅助函数、死 i18n 键与过期文档，共 352 个文件（净 −3,409 行），每项移除都有社区基线上的零引用审计背书；伴随提交移除 test-sustained Rust 死代码（#562）与被覆盖/空洞的测试断言（#560）。
+    3. 通用文档从内部仓回填（#545）。
+    注意事项
+    - r2 收口后过渡期豁免不再生效：父仓 gitlink、维护分支 pinjou3-clean 与不可变 tag 均指向 6f780290f；回退点保持 pinjou-v0.9.12-r1。窗口期内的过渡钉定提交（#568，c4e6caf94）已被本次收口取代。
+    - 场景子标签就地重开是既定语义取舍：在强制场景子标签里主动发送视为显式选择，被禁用/隐藏的所需包就地重开并经场景就绪提示可见（#563）。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 812326b6 / Actions #35559267317（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 工作区分组跨会话模式统一：分组跟随工作区绑定，重绑对话框提供忙碌守卫、崩溃窗口自愈与部分失败重试的完整管线，侧栏新增「已绑定」类别与项目视图。
+    修复
+    - 市场应用可用性端到端门控：快照与会话门控同口径，场景发送前就地重开所需包（可见），安装经 mcp.json 修订号触达已运行的 plain 会话引擎。
+    - 模型提示词不再点名不可用工具，改教 tool_search 激活路径，退役/隐藏别名由 denylist 钉住。
+    - mcp.json 启动对账；损坏文件备份为 mcp.json.corrupt.<ts> 且绝不重置；全部读改写写入方共用同一个「读不了就不重置」的加载器。
+    - MCP 启动失败经 boot receipt 透出，恢复与移除区分处理，不再静默清空工具池。
+    en-US
+    Features
+    - Workspace grouping now follows the workspace binding across all session modes, with a unified folder-rebind pipeline (busy guards, crash-window healing, partial-failure retry) and a bound-workspace sidebar view.
+    Fixes
+    - Marketplace availability is gated end-to-end: snapshots match the session gate, scene dispatch re-enables scene-required packages in place (visibly), and marketplace installs reach already-running plain engines via an mcp.json revision rebuild.
+    - Model prompts stop naming unavailable tools and teach the tool_search activation path instead, with retired/hidden aliases pinned by denylists.
+    - mcp.json is reconciled on startup; corrupt files are backed up as mcp.json.corrupt.<ts> and never reset; all read-modify-write writers share one never-reset loader.
+    - MCP boot failures surface through boot receipts with distinct recovery handling instead of silently emptying the tool pool.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.4
+ReleaseTime: 2026-09-21T07:55:06.0000000Z

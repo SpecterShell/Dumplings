@@ -1,0 +1,40 @@
+Version: 0.6.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.2/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.2/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release resolves 8 community-reported issues and ships 4 dependency bumps. All changes verified with cargo clippy clean and 2517 tests passing.
+    Security
+    - #1060 SSRF protection unified for WASM host calls. IPv6 bracket form parsed correctly. Adds Alibaba and Azure metadata IP blocks. Honours ssrf_allowed_hosts on the WASM path. CIDR allowlist support.
+    - #1132 exec_policy.mode = "full" now actually takes effect. Edits to ~/.openfang/config.toml propagate to existing agents on restart instead of being silently ignored by the cached DB value.
+    Channels
+    - #1100 Telegram errors propagate. send_message, send_photo, send_document, send_voice, send_location all return Err on HTTP failure instead of warn-and-Ok. Terminal reaction errors cached per chat to avoid retry loops.
+    - #1095 MCP stdio servers get HOME, TMP, TEMP env vars on Linux and macOS. Fixes EACCES errors with npx-based MCP servers.
+    - #1058 Trader hand dashboard CSS fixed. position: relative on .trader-chart-panel confines the empty-state overlay correctly.
+    - #1127 BindingMatchRule.channel_id field added with serde(default). Channel-scoped routing now supported. Struct also gains deny_unknown_fields.
+    Code Quality
+    - #1091 Five clippy warnings fixed. collapsible_match in gemini, openai drivers and 13 CLI files. sort_by replaced with sort_by_key + Reverse in session_repair.
+    - #1126 Provider env tests stabilised. New EnvVarGuard with shared mutex prevents the cross-test race that flaked NOVITA_API_KEY assertions.
+    Dependencies
+    - uuid 1.23.0 to 1.23.1
+    - rustls 0.23.37 to 0.23.39
+    - libc 0.2.183 to 0.2.185
+    - lettre 0.11.20 to 0.11.21
+    Stats
+    - 2517 tests passing
+    - Zero clippy warnings (--workspace --all-targets)
+    - Zero regressions
+    Full Changelog: https://github.com/RightNow-AI/openfang/compare/v0.6.1...v0.6.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.6.2
+ReleaseTime: 2026-04-29T17:41:01.0000000Z

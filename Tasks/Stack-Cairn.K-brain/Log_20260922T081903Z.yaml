@@ -1,0 +1,40 @@
+Version: 0.105.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.105.0/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.105.0/k-brain-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    氪脑 K-brain v0.105.0
+    TUI 视觉重构
+    - 统一终端界面的颜色体系，新增语义化主题调色板。
+    - 针对 256 色终端和 16 色终端增加兼容性 fallback。
+    - 重构顶部 banner 与底部状态栏布局，减少信息拥挤并提升层次感。
+    - 根据界面语言显示 K-brain、氪脑 或 氪腦 品牌名称。
+    - 统一模型与提供商显示格式为 model@provider。
+    - /model 使用独立强调色，provider 信息降级为次要样式。
+    Git 状态显示
+    - TUI 状态栏新增当前仓库、分支和工作区变更信息。
+    - 显示新增、删除和未跟踪文件数量。
+    - Git 状态读取在后台执行，并设置超时，不阻塞交互界面。
+    - 支持 detached HEAD 状态显示短提交号。
+    布局与交互
+    - 优化输入区、古人模式、命令面板、模型选择器、权限模式和子代理 dock 的布局适配。
+    - 改进不同终端尺寸下的锚点、底部状态栏和选择行渲染。
+    - 完善中英文和繁体中文界面翻译及命令帮助文本。
+    构建与验证
+    - GitHub Actions 已完成 Windows、Linux、macOS 的 x64 与 ARM64 构建。
+    - 同时构建 k-brain-computer 六个平台版本。
+    - 发布 SHA256SUMS 校验文件。
+    - 所有 GitHub Actions 构建任务通过。
+    - go test ./... -p 2（本地 TUI 仓库名称测试受工作区目录 whip 影响；CI 在 K-brain checkout 路径中已通过）。
+    - go vet ./... 已通过。
+    下载
+    - GitHub Release v0.105.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.105.0
+ReleaseTime: 2026-09-22T08:15:11.0000000Z

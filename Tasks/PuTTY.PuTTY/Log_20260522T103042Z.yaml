@@ -1,0 +1,23 @@
+Version: "0.84"
+Installer:
+- Architecture: x86
+  InstallerUrl: https://the.earth.li/~sgtatham/putty/0.84/w32/putty-0.84-installer.msi
+- Architecture: x64
+  InstallerUrl: https://the.earth.li/~sgtatham/putty/0.84/w64/putty-64bit-0.84-installer.msi
+- Architecture: arm64
+  InstallerUrl: https://the.earth.li/~sgtatham/putty/0.84/wa64/putty-arm64-0.84-installer.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Security issue: fixed a remotely triggerable double-free in RSA key exchange. (We don't know of any way it is exploitable to execute code.)
+    - Minor security issue: fixed a remotely triggerable crash in NIST ECDSA signature verification. (An assertion failure – definitely not exploitable to execute code.)
+    - Minor security issue: fixed marking of Telnet and Rlogin session data with a trust sigil after you authenticated to a proxy (possibly allowing a server to spoof a repeat proxy password prompt).
+    - Ability to run a specified command before starting the connection, e.g. to perform wake-on-LAN or a port knock.
+    - On Unix: display 'pre-edit text', showing the progress of using multiple keystrokes to compose a single Unicode character.
+    - On Unix: improved support for to running the GUI tools on Wayland (fixed startup issues and tuned performance).
+    - Bug fix: configuring a SSH certificate authority on Unix would fail unless you manually made a config directory.
+    - Bug fix: spurious "Network error: Socket is not connected" when authenticating to some HTTP proxies.
+    - Bug fix: disabling cursor blinking in the Windows Control Panel but enabling it in PuTTY would lead to a tight loop.
+ReleaseTime: 2026-05-22
+RealVersion: 0.84.0.0

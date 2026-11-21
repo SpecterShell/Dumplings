@@ -1,0 +1,23 @@
+Version: 4.82.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.82.2/fleetctl_v4.82.2_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.82.2_windows_amd64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+- Architecture: arm64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.82.2/fleetctl_v4.82.2_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.82.2_windows_arm64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug fixes
+    - Fixed the metadata extraction for .pkg macOS installers, which was introduced in 4.77.0 and could prevent updating some installers that were added in a previous Fleet version.
+      - NOTE: the fix may cause some installers that were added in Fleet 4.77.0 and later to fail to update with the message "The selected package is for different software". In this case, you will have to delete and re-add the installer. This will not only make it possible to update it successfully later, it will also create it with the correct metadata (name, version, bundle identifier).
+    - Fixed FMA apps not showing up for a fleet when added via GitOps after an automated FMA version update with an unchanged binary.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fleetdm/fleet/releases/tag/fleet-v4.82.2
+ReleaseTime: 2026-03-28T03:31:11.0000000Z

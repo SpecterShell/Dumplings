@@ -1,0 +1,63 @@
+Version: 0.15.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.15.2/Agentero_0.15.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.15.2/Agentero_0.15.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.15.2 centers on lab records and writing. Research tables now double as experiment notebooks, with stable registration numbers, timestamps, and editors per row and one validation path for people and agents; Markdown panels can switch inline to an editable source view, with a full toolbar, formatting shortcuts, and caret and line-number alignment. Full-text translation gains two persistent caches (character IR and finished PDF) and draws translated pages through the same renderer as source pages; the plaza adds Papers with Code, and paper sidebar links split into two rows with Hugging Face. Update prompts and About can open Release details, split panes no longer overwrite each other silently, and the defaults now point to Tencent Transmart translation and the local body parser.
+    Features
+    - Experiment record tables: Research tables become the record for experiment data, with a stable registration number, timestamp, and editor per row and one validation path for people and agents; agents use table_query / table_upsert / table_update_cells by registration number and field name, with revision checks on writes. Creating an experiment note produces both the Markdown note and its embedded results table; the sidebar shows names only with type icons, and the table footer reports how many notes reference it. (#951 by @qychen2001)
+    - Inline Markdown source mode: Switch between the rendered view and an editable source view in the same panel with ⌘/ / Ctrl+/. Source saves the raw text and supports Markdown/GFM, frontmatter, tables, math, and fenced-code highlighting while reusing autosave, ⌘S, save-conflict, and external-change handling; switching back keeps the caret and viewport. The source view also has a toolbar for headings, quotes, lists, images, find, and export, plus Mod-B / Mod-I / Mod-U / Mod-Shift-X formatting shortcuts. (#964 by @ffy6511)
+    - Persistent full-text translation caches: Character-level IR and finished translated PDFs persist in two tiers, keyed by PDF/layout content, actual translations, fonts, and pipeline version. On restart the prepare stage drops from about 3.1 s to 0.13 s, and with PDF caching enabled the full build is reused as well (about 25 MB per paper). Both caches have separate switches under Settings → Translate (IR on by default, PDF off by default), and About shows usage with open-folder and clear actions. (#978 by @ffy6511)
+    - Native rendering for translated pages: After a full translation, translated pages are drawn by the same renderer as source pages at display size and DPR, so zoom re-renders instead of stretching a fixed preview; hiding and showing translations no longer regenerates pages or rebuilds the PDF. (#978 by @ffy6511)
+    - Papers with Code in the plaza: The plaza gains paperswithcode.co conference pages as a proxied source, with import actions on paper cards and the detail row. arXiv papers keep their arXiv id and reuse the existing PDF/TeX asset chain, external papers land as pwc-<catalog id>, and imports fill publication, code repository, citation count, and summary from the catalog by arXiv id. (commit / commit by @Phil-Fan)
+    - Paper sidebar links and Hugging Face: Paper info links now sit on two rows, the second adding a Hugging Face page derived from the arXiv id; the OpenReview link uses a red letter O mark. (commit / commit by @Phil-Fan)
+    Improvements
+    - Release details from updates: The update prompt, title bar, and Settings → About now link to the pending version's Release details, even when the manifest has no notes, while keeping the existing install entry. (#979 by @Aschenbath)
+    - Default translation and body parsing: New installs and legacy settings without a provider default to Tencent Transmart, and body parsing defaults to the local engine; an explicitly saved valid choice is preserved. (#967 / #963 by @Aschenbath)
+    - Dependency security patches: lodash and minimatch are upgraded, and vendored tesseract-rs / realtime-tex move zip and lopdf to fixed versions, clearing the related advisories. (commit / commit by @Phil-Fan)
+    Fixes
+    - Split panes overwriting notes: Markdown save ownership is now per panel. A clean sibling refreshes automatically; a dirty panel keeps its draft and blocks saving, with an explicit choice to keep the draft or load the disk copy, in both rendered and source modes. (#970 by @Aschenbath)
+    - Selection popover size: Translate and Ask popovers no longer scale with high PDF zoom; shared selection cards keep a fixed UI size and type, while screen anchoring, flipping, and viewport clamping stay the same. (#948 by @Ryan119911)
+    - Markdown toolbar flicker: Fixed a ResizeObserver feedback loop at certain pane widths that made buttons appear and disappear and pinned buttons jump; a collapsed or not-yet-laid-out pane also no longer hides every button. (commit by @Phil-Fan)
+    Resolved Issues
+    - Source-mode caret position: Switching between source and rendered views maps the caret to its exact character position instead of resetting to the start of the document. (#977 by @ffy6511)
+    - Source-mode gutter width: Line numbers now sit inside the centered source surface in a smaller monospace face and no longer overflow the editor's max width. (#966 by @ffy6511)
+    - Windows Zcode skill indexing: When Zcode serve mode ignores the ACP session cwd, skills are scanned from the process cwd, so Vault skills under .agents are indexed on Windows. (#936 by @JiaheChen2002)
+    Full diff: https://github.com/poco-ai/Agentero/compare/v0.15.1...v0.15.2
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.15.2 围绕科研记录与写作：科研表格现在可以充当实验记录本，行有稳定注册号、时间和编辑者，人和 Agent 共用同一套校验；Markdown 面板内可直接切到源码视图编辑，并补齐工具栏、格式快捷键与光标、行号对齐。全文翻译加入字符 IR 与译文 PDF 两级持久缓存，译文页改走与原文相同的渲染路径；广场接入 Papers with Code，论文侧栏链接拆成两行并新增 Hugging Face。更新提示与关于页可以查看 Release 详情，分屏笔记不再静默覆盖，默认翻译和正文解析分别固定为腾讯交互翻译与本地引擎。
+    新功能
+    - 实验记录表格：科研表格成为实验数据的记录方式，行带稳定注册号、时间和编辑者，人和 Agent 走同一套校验；Agent 用 table_query / table_upsert / table_update_cells 按注册号和字段名读写，写入校验修订号。新建实验记录会同时生成 Markdown 笔记与内嵌的结果表，侧栏只显示名称并由图标区分类型，表格底栏显示有多少笔记在引用它。（#951 by @qychen2001）
+    - Markdown 内联源码模式：在同一面板用 ⌘/ / Ctrl+/ 在渲染视图与可编辑源码之间切换，源码直接保存原文，支持 Markdown/GFM、frontmatter、表格、公式与围栏代码高亮，复用自动保存、⌘S、保存冲突和外部改盘逻辑，切回时保留光标与视口。源码视图另有标题、引用、列表、图片、查找与导出工具栏，以及 Mod-B / Mod-I / Mod-U / Mod-Shift-X 格式快捷键。（#964 by @ffy6511）
+    - 全文翻译持久缓存：字符级 IR 与整篇译文 PDF 分两级落盘，缓存键覆盖 PDF/layout 内容、实际译文、字体与管线版本。重启后再翻译，准备阶段从约 3.1 秒降到 0.13 秒；开启译文 PDF 缓存后整篇构建也可直接复用（单篇约 25 MB）。两类缓存可在设置 → 翻译分别开关（IR 默认开、译文 PDF 默认关），关于页展示占用、提供打开缓存目录与一键清理。（#978 by @ffy6511）
+    - 译文页原生渲染：整篇翻译完成后，译文页改用与原文页相同的渲染层按显示尺寸和 DPR 绘制，缩放会重新渲染而不是拉伸固定预览图；隐藏后再显示译文也不会重走生成页面或重建 PDF。（#978 by @ffy6511）
+    - Papers with Code 广场：广场新增 paperswithcode.co 会议页面来源，论文卡片和详情操作行可直接导入；arXiv 论文保留 arXiv id 并复用现有 PDF/TeX 资产链，外部论文以 pwc-<catalog id> 入库，导入后按 arXiv id 补齐 publication、代码仓库、引用数和摘要。（commit / commit by @Phil-Fan）
+    - 论文侧栏链接与 Hugging Face: 论文信息链接拆成两行，第二行新增由 arXiv id 推导的 Hugging Face 页面；OpenReview 链接改用红色字母 O 标记。（commit / commit by @Phil-Fan）
+    改进
+    - 更新详情入口：启动更新提示、标题栏和设置 → 关于新增待更新版本的 Release 详情入口，manifest 没有 notes 时也能查看完整说明，安装入口保持不变。（#979 by @Aschenbath）
+    - 默认翻译与正文解析：新装及旧设置缺少 provider 时默认使用腾讯交互翻译，正文解析默认固定为本地引擎；用户已显式保存的有效选择保持不变。（#967 / #963 by @Aschenbath）
+    - 依赖安全补丁：升级 lodash 与 minimatch，并通过 vendored tesseract-rs、realtime-tex 把 zip 与 lopdf 移到已修复版本，清掉相关安全公告。（commit / commit by @Phil-Fan）
+    修复
+    - 分屏笔记静默覆盖：按面板区分 Markdown 保存所有权，干净的兄弟面板自动刷新；有改动的面板保留草稿并阻止保存，可明确选择保留草稿或载入磁盘版，渲染态与源码态都适用。（#970 by @Aschenbath）
+    - 选区浮窗尺寸：高 PDF 缩放下翻译与 Ask 浮窗不再跟着放大，共享浮卡固定为 UI 尺寸与字号，选区屏幕锚点、翻转与视口限位保持不变。（#948 by @Ryan119911）
+    - Markdown 工具栏闪烁：修复特定面板宽度下 ResizeObserver 自反馈导致按钮反复显隐、固定按钮左右跳动的问题；面板折叠或尚未布局时不再隐藏全部按钮。（commit by @Phil-Fan）
+    已解决问题
+    - 源码模式光标定位：源码与渲染切换时把光标映射到准确字符位置，不再重置到文档开头。（#977 by @ffy6511）
+    - 源码模式行号宽度：行号收进居中源码区并改用更小的等宽字体，不再溢出编辑器最大宽度。（#966 by @ffy6511）
+    - Windows Zcode Skill 索引：Zcode serve 模式忽略 ACP 会话 cwd 时改从进程 cwd 扫描 .agents/skills，Windows 上的 Vault skill 可正常索引。（#936 by @JiaheChen2002）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.15.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.15.2
+ReleaseTime: 2026-11-07T16:41:47.0000000Z

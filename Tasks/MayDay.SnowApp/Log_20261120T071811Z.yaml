@@ -1,0 +1,40 @@
+Version: 0.5.22
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.5.22/Snow-App-Setup-0.5.22.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Real Progress for Conversation Deletion: batch deletion reports progress from the native storage layer based on the work actually completed (preparing, deleting images, deleting conversation data and cleaning attachments) instead of an indeterminate spinner; the delete confirmation dialog, the multi-select bar and the sidebar rows (list and tree views) all show it.
+    Improvements
+    - OAuth model list and quota requests honor the profile-bound header scheme instead of hardcoded identity headers: scheme values take precedence, missing headers are filled with defaults, and tokens and account IDs always come from the current credentials; client versions are parsed from the scheme User-Agent, falling back to built-in versions.
+    - The Codex default model is now gpt-6-luna and the Antigravity default model gemini-3.1-pro-high; ChatGPT model list parsing accepts data arrays and alternate id keys.
+    - While scrolling fast, the user message rail skips visibility highlighting and recomputes once scrolling settles, and loading older messages is deferred, keeping scrolling smooth.
+    Bug Fixes
+    - Fixed long conversations dead-ending at the top without loading older messages: the older-page cursor now always moves strictly backwards, stale in-flight flags are detected and reset, and paging recovers when a completion signal is lost.
+    - Fixed the viewport staying at a stale height after the streaming growth transition was interrupted, which clipped content and shrank the scroll range.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.5.21...v0.5.22
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.5.22
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 会话删除显示真实进度：批量删除会话时由原生存储层按实际完成的工作量推送进度（准备、删除图片、删除会话数据、清理附件四个阶段），不再只显示转圈；删除确认弹窗、多选工具栏与侧边栏会话行（列表与树视图）均显示进度。
+    改进
+    - OAuth 订阅渠道的模型列表与配额查询改用档案绑定的请求头方案，不再写死身份请求头：方案中的值优先，缺失的请求头用默认值补齐，令牌与账号 ID 始终取自当前凭据；客户端版本从方案的 User-Agent 解析，解析不到时回退内置版本。
+    - Codex 默认模型更新为 gpt-6-luna，Antigravity 默认模型更新为 gemini-3.1-pro-high；ChatGPT 模型列表解析兼容 data 数组与其他 id 字段名。
+    - 快速滚动时用户消息导航暂停可见区高亮计算、滚动停下后再统一刷新，并推迟加载更早的消息，滚动更流畅。
+    修复
+    - 修复长会话滚到顶部后翻不出更早消息的问题：向前翻页的游标保证每轮严格推进，卡住的在途标志会被识别并复位，翻页完成信号丢失时也能自愈。
+    - 修复流式内容增长过渡被打断后视口停留在旧高度、裁掉内容并压缩滚动区间的问题。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0522
+ReleaseTime: 2026-11-20T06:55:29.0000000Z

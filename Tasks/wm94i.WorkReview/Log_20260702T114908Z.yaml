@@ -1,0 +1,31 @@
+Version: 1.0.54
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work-Review/releases/download/v1.0.54/Work_Review_1.0.54_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    English → | 繁體中文 →
+
+    修复
+    - 日报区块隐藏后无法恢复（#109）：apply_preferences 生成日报时不再过滤 hidden 区块，隐藏完全交给前端显示层；在「管理段落」恢复后立即可见，无需重新生成。
+    - 托盘菜单英文模式下中文残留（#115）：config 新增 locale 字段，托盘菜单文案三语映射（zh-CN/en/zh-TW），切换语言时实时刷新托盘。
+    - 助手回答不跟随提问语言（#116）：AI 增强（Agent）/ 闲聊（Direct）/ 无模型（Fast）三条路径现在都按用户提问语言回答，英文提问英文答、中文提问中文答，不管工作记录里存的是什么语言。
+    - FastPath 分类名中文残留：fast_answer 分类分布按提问语言分流，英文模式不再夹中文分类名。
+    - 更新器兜底泄漏：未识别的后端中文状态串不再原样返回，避免英文模式泄漏。
+    - Linux 编译失败（1.0.53 遗留）：修复 commands.rs 拆分后 avatar.rs 的 include_str! 路径深一层、system.rs 跨模块引用 gnome_avatar_extension_* 私有函数未补 use、avatar.rs 缺 PathBuf import。
+    - 托盘命令编译：set_app_locale 改私有（避免 #[tauri::command] pub 宏重导出冲突 E0255）+ AppHandle 所有权 clone。
+    - 日报生成闭包语法：修复 apply_preferences 闭包参数多余 >。
+    优化
+    - 静默驻留 GPU 占用（#118）：开机自启 + 静默驻留 + 轻量模式下，主窗口隐藏时暂停所有 CSS 动画（animation-play-state: paused），WebView2 GPU 占用从 7-30% 降到接近 0。
+    - 概览日期栏：删除日期选择栏下方的分隔横线（消除"内容没加载"误解）+ 收紧高度。日历式选择控件实测后保留原 text input。
+    - 桌宠设置文案：精简桌宠相关描述（两轮 + 主动 AI 提醒优化），数据说明新增"会消耗少量 token"提示。
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work-Review/releases/tag/v1.0.54
+ReleaseTime: 2026-07-02T09:21:58.0000000Z

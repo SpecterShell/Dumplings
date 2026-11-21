@@ -1,0 +1,70 @@
+Version: 0.15.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.15.0/FylloCode-0.15.0-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.15.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    FylloCode now supports Workspaces containing multiple Projects. Launcher, Chat, Overview, Specs, Guidelines, Proposal, Task, Integration, and bundled MCP server contexts use the Workspace scope. Startup and shutdown lifecycle handling is tighter, and Projects without Git history retain their governance information.
+    Added
+    - Workspace management now supports up to 16 Projects, a primary Project, missing or degraded members, directory relocation, recycle-bin deletion, restore, permanent cleanup, and recent switching
+    - Multi-root ACP Sessions now pass additional directories to capable Agents, keep a fixed Workspace snapshot, show the active scope in Chat, and cover member Projects and their worktrees for local files and attachments
+    - Specs, Guidelines, Proposal, and Overview browsers now aggregate results across Workspace Projects and filter or mark ownership by Project, status, and governance capability
+    Changed
+    - Workspace and Folder now use stable identity models. Upgrade migration settles and retires verified legacy Project storage; data with unverified ownership is not deleted blindly, and a failed settlement blocks normal runtime and retries on the next launch
+    - Proposals are now repository-owned: { folderId, changeId } forms a ProposalRef, and create, apply, and archive always resolve to the owning Project's fixed target so same-named changes in different Projects cannot be mixed
+    - Bundled MCP servers are authorized by the active Workspace activation, with one Workspace v2 context model for HTTP and stdio. Callers no longer control Proposal target paths or rely on legacy Project environment variables, request headers, or working-directory fallbacks
+    - Startup is organized into startup shell, required gate, normal runtime, and background phases. ACP/MCP warmup moves to the background, shutdown is phased and time-bounded, and single-instance startup handoff is enforced
+    - Tasks can bind Workspace members through targetFolderIds, while Integration resources use explicit Project bindings. Removed members remain identifiable as stale soft references instead of being treated as current resources
+    - Project / Workspace terminology and icon hierarchy are now consistent, and Project scope moves into a Chat header popover to reduce context ambiguity in the message area
+    Fixed
+    - Fixed Overview clearing Specs, Guidelines, and Proposal governance counts for Projects without Git history. These Projects now show only Git evolution as empty; real Git errors still report partial failure
+    - Fixed MCP grants being revoked too early on normal completion or cancellation, and removed the fixed one-hour expiry that could interrupt long-running ACP Sessions; grants now follow the actual activation lifetime
+    - Fixed ACP binary-download handling for stream interruption, idle, and timeout cases so downloads do not wait indefinitely or leave incomplete results
+    Notes
+    - The application version is now 0.15.0.
+    - The fyllo-specs MCP server is now 0.10.0. This is a breaking contract update: Proposal operations use folderId in multi-root Workspaces, create-proposal uses worktreeMode, and caller-controlled target paths and legacy Project-context fallbacks are removed.
+    - The fyllo-cortex MCP server is now 0.7.0. This is a breaking contract update: knowledge and lineage use Workspace v2, repository evidence identifies ownership with folderId, and legacy Project paths, headers, environment variables, and cwd fallbacks are removed.
+    - The first launch may run the legacy Project-storage settlement migration. A failed migration preserves data and retries on a later launch; orphaned data whose provenance cannot be confirmed is not silently deleted.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0150---2026-08-04
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    FylloCode 现在支持由多个 Project 组成的 Workspace。Launcher、Chat、Overview、Specs、Guidelines、Proposal、Task、Integration 和内置 MCP server 都使用 Workspace 作用域。本版本同时收敛启动与退出生命周期，改善没有 Git 历史的 Project 的治理信息展示。
+    新增
+    - 统一的 Project / Workspace 管理现在支持最多 16 个 Project、主 Project、缺失或降级成员、目录重定位、回收站删除、恢复、永久清理和最近列表切换
+    - 多根 ACP Session 会向具备能力的 Agent 传递额外目录，固定创建时的 Workspace 快照，Chat header 展示当前 scope，并支持在成员 Project 和其 worktree 中预览本地文件、处理附件
+    - Specs、Guidelines、Proposal 和 Overview 浏览器现在可以聚合 Workspace 内各 Project 的结果，并按 Project、状态和治理能力筛选或标记归属
+    调整
+    - Workspace 与 Folder 使用稳定身份模型，升级迁移会结算并退休已验证的旧 Project 存储；无法验证归属的数据不会被盲目删除，结算失败会阻止正常运行并在下次启动重试
+    - Proposal 改为 repository-owned：以 { folderId, changeId } 组成 ProposalRef，创建、应用和归档始终解析到所属 Project 的固定目标；同名 change 在不同 Project 中不再混淆
+    - bundled MCP server 按当前 Workspace 的激活生命周期授权，HTTP 与 stdio 统一使用 Workspace v2 上下文；调用方不再控制 Proposal 的目标路径，也不再依赖旧的 Project 环境变量、请求头或工作目录回退
+    - 启动流程采用 startup shell、必需门禁、正常运行和后台任务分阶段编排；ACP/MCP 预热转入后台，退出流程按阶段执行并受有界时限约束，同时强化单实例启动交接
+    - Task 支持以 targetFolderIds 绑定 Workspace 成员，Integration 资源改为显式绑定 Project；成员移除后保留可识别的 stale 软引用，不把历史数据误认为当前资源
+    - 统一 Project / Workspace 术语和图标层级，Project scope 移到 Chat header 的 popover，减少正文区域中的上下文歧义
+    修复
+    - 修复没有 Git 历史的 Project 在 Overview 中连 Specs、Guidelines、Proposal 等治理统计也被清空的问题；此类 Project 现在仅将 Git evolution 显示为空，真实 Git 错误仍按部分失败处理
+    - 修复 MCP grant 在正常完成或取消后被过早撤销，并移除固定一小时过期导致长时间 ACP Session 中断的问题；grant 现在跟随真实激活关闭
+    - 修复 ACP 二进制下载在流中断、空闲或超时场景下的处理，避免下载过程无限等待或留下不完整结果
+    备注
+    - 应用版本升级到 0.15.0。
+    - fyllo-specs MCP server 升级到 0.10.0。这是破坏性契约更新：多根 Workspace 下的 Proposal 操作使用 folderId，create-proposal 使用 worktreeMode，并移除调用方目标路径和旧 Project 上下文回退。
+    - fyllo-cortex MCP server 升级到 0.7.0。这是破坏性契约更新：知识与 lineage 采用 Workspace v2，repository evidence 按 folderId 标识归属，并移除旧 Project 路径、请求头、环境变量和 cwd 回退。
+    - 首次启动可能执行旧 Project 存储的结算迁移；迁移失败时应用会保留数据并在后续启动重试，不会静默删除无法确认来源的孤立数据。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0150---2026-08-04
+ReleaseTime: 2026-08-04T08:21:54.0000000Z

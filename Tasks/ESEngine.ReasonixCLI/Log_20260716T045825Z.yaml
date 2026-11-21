@@ -1,0 +1,274 @@
+Version: 1.17.13
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/esengine/DeepSeek-Reasonix/releases/download/v1.17.13/reasonix-windows-amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/esengine/DeepSeek-Reasonix/releases/download/v1.17.13/reasonix-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    - 5342a8aedc9161c5ff2c6cfce04e300b7a2e8136 Merge pull request #6544 from SivanCola/fix/credential-store-env-isolation
+    - fad0933b48f2c89ebee945f01a315612ba56e357 fix: isolate all stored credential env keys
+    - 0869add2c5b2894fc735fbbaf942dcd005b16745 Merge pull request #6542 from SivanCola/fix/delivery-readiness-recovery
+    - 9a5011ceb73025a611c336152377060e531ed938 test(worktree): cover Windows long checkout paths
+    - bfb0bf4d2e3faf0214c4e742f4ff263ad5a81f99 fix(worktree): harden Windows isolation
+    - fbdedc813f4185892f94ae94a4ee99399e6a89d2 test: make worktree checks portable on Windows
+    - 03b39a65543de245b6af8827172bb2c8be193ead fix(delivery): recover readiness and isolate concurrent writers
+    - f88b63641478a240eee28cf35a561f10dde687db Merge pull request #6540 from esengine/codex/stabilize-bot-lock-test
+    - de3927e2d13fa483361233732b49de989b852235 test: bound bot config writer stress
+    - 1a0f60f332deda7b910dfdb2be9b243c7d0b36a8 Merge pull request #6537 from esengine/codex/harden-nsis-install
+    - 65ddec5c4329a2bcc5fe72eaf5b7fe4bd3b1da8d ci: use curl for pinned NSIS archive
+    - d03c89a9969ee412167a429678ea4e225bff7ac8 ci: make NSIS setup independent of Chocolatey
+    - b589b9a524904663bc5dab570a738623be44cced Merge pull request #6536 from esengine/fix/release-gate-hardening
+    - f5179b4de4fa66dde1b81eb0b41527e515acbd47 fix: harden release-critical provider and credential paths
+    - 392b4a34b9b1fb6cb511b9afb5532ddd20389dd8 Merge pull request #6498 from SivanCola/fix/plan-delivery-yolo-rebuild
+    - e864fc48be0a96caffe941cafcb57bc8a7f9d079 docs: describe the implemented strict read-only boundary precisely
+    - 9bbd138695670300491b03ef1d071a7d1514a784 fix(agent): make reader authorization tamper-proof at MCP dispatch
+    - fdaf89c25013773ba93d46aadb9a82cf2a39b778 docs: list the strict read-only entrances and their boundary
+    - 5f5c869a94cb87ed1a5b0e8cb9be8b05e9228c3e Merge remote-tracking branch 'origin/main-v2' into codex/pr6498-readonly-boundary
+    - 912dee6902dbd784e70ef9aa7d6c13585d8e598e Merge pull request #6482 from SivanCola/feature/mcp-settings-simplification
+    - 0c61f6b544b5ef337befde311eb670d9d62a49fb docs: fix Plan and destructive-reviewer contract drift on public surfaces
+    - 60fc21f9d29c32fa5cfa633faa94d7e97f004599 fix(mcp): migrate legacy receipts at the pre-start gate, widen credential keys
+    - 2b88997bab4b9af0425549a268a9038d1e9264a3 docs: align Plan and MCP approval semantics with enforcement
+    - 3ad8dfa431000aceb870b5cbead77267789a6099 fix(approval): degrade unavailable auto_review to fresh human approval
+    - a7536482c347fc400595b64a9825e5e63d95331d fix(mcp): credential-aware identity fingerprints and exact launcher pins
+    - 5092b23ddb5d29adb2acb47af6cbfaec18160668 fix(mcp): enforce live official allowlists and receipt integrity
+    - ef5bfd07a33a18dbbad80057bb0bb82237f374ba Merge remote-tracking branch 'origin/main-v2' into feature/mcp-settings-simplification
+    - 53f992cb34dcca57d1e332b965579a10d41b5d69 fix(windows): stop loader-grant heap corruption and icacls cost
+    - 3212786e4509977916bfdc2ff1f65e1ba8bbdd31 fix(mcp): harden identity, cache, and transport trust boundaries
+    - 95c023b626afb740a19f78f821be166a2d0f984e Merge pull request #6516 from SivanCola/chore/retire-windows-sandbox
+    - c5427273d2b7cf39850b43b91a29bf807d7c3814 test(sandbox): expect Windows retired-backend remediation wording
+    - c0512555caad169c368f6a129be6728ee8f8b6fc fix(desktop): match retired-backend runtime escape reason for localization
+    - 8c02916042e8b2b7f90788d8b4efd4e89bf1433a chore(sandbox): retire Windows native backend
+    - 938b66aeaa0346ae8d12a7820ab9abb4294d65b7 fix(windows): scope loader grants to process startup
+    - 313defe0cd0b38ad8ea84208623da0fe9bb5ad43 fix(windows): serialize ACL mutation phases
+    - dd5c46f95e27120677a6e84d9421b4a05ed4fa80 fix(windows): isolate concurrent MCP ACL updates
+    - 6348d13d3a684368712e6c389b0b477dbe7d47d2 fix(windows): preserve sandboxed MCP startup
+    - 9b6fe02dffc20fce231fe760570873ae01e14a17 fix(windows): scope MCP AppContainer ACLs
+    - 845142312bc24d054ad3815c70271c4cc5c42789 fix(sandbox): expose temporary MCP executable safely
+    - 33d23238a1d1c3e282e5e07f0797eb8174c5790e Merge remote-tracking branch 'origin/main-v2' into feature/mcp-settings-simplification
+    - 83639eb0e57bcadfcdc362b791b39eaee535d92a fix(mcp): close trust and lifecycle review gaps
+    - ad9c3fc138b3e7b953405d94b96027b3275c4a50 Merge pull request #6504 from SivanCola/fix/post-edit-context-refresh
+    - 249f9e6a74ae87e658502368efb712b79c779b69 fix(agent): bound edit receipts and refresh previews
+    - c8ee98e0d5ec18d181e4c71092e8d18e8c89396a fix(agent): ground edits without forced rereads
+    - 988190f375fd2f08d59b295a2deea9fb8b3cc0b2 Merge pull request #6497 from SivanCola/fix/serial-todo-guardrails
+    - 3ff177d268878e095ce0d01ed8cbdab34a7c41d7 fix(agent): unify strict read-only MCP execution boundary
+    - d78c8e18cf28215d3b589d4255b27ea153585fa8 Merge remote-tracking branch 'fork/feature/mcp-settings-simplification' into codex/pr6498-readonly-boundary
+    - bd149dc8d18b40cd856439731679fc10a39a4ee4 fix(mcp): exclude credential values from cache identity
+    - ddcb0adcc028f9295464f915e70d9aee8111b4ce Merge latest PR head before validation
+    - 32c479f9721726ad77b2204ce985baed8f3f7f1d docs(todo): describe single current item continuity
+    - a9066729f398cc7bf8dcb03a6522e7796bd6f134 fix(todo): seed layered plans with executable child
+    - 9c60e593c87b672ba5dd4366d7634b95ed130812 Merge remote-tracking branch 'fork/feature/mcp-settings-simplification' into codex/pr6498-readonly-boundary
+    - 5fcca24382a5aead386c632217634f70f3df1953 fix(mcp): preserve trusted reader preflight snapshots
+    - c7ace7247f1ee5f70ca5b743a215ce3715da6295 ci: retrigger checks after Actions scheduling recovered
+    - 851c153e3f9f90a63216584e1bdeafb74c84eb22 Merge remote-tracking branch 'fork/feature/mcp-settings-simplification' into codex/pr6498-readonly-boundary
+    - 868d3fa9134ce9f254089245e3e8ac8b26cafb2e Merge remote-tracking branch 'origin/main-v2' into feature/mcp-settings-simplification
+    - 267b67b8185f5f2ade02d3d967531ceb95414370 Merge main-v2 into fix/serial-todo-guardrails
+    - 568da85b5a12062711378511850dfe3604bd680d Merge remote-tracking branch 'fork/feature/mcp-settings-simplification' into feature/mcp-settings-simplification
+    - c636f017a8ffaa5da0af3259fcbc414eb8da1ab9 feat(mcp): enforce trusted execution boundaries
+    - 6463e6bbbd6da48733f8d1ee82d1069401746265 ci: retrigger checks
+    - c8723be962d3f82f366bfd6a7b34fc9df1a41ef7 Preserve the single in_progress contract for phase chains
+    - ddca95f0163da79bfa668c8804c4ff03b7a7f687 Merge pull request #6460 from SivanCola/feature/reasonix-guard
+    - 1b9ff514d18d12d72a90e058eeca6e837449d660 fix(recovery): harden pre-ready exits, rollback serialization, and Safe Mode gates
+    - fb37b9b5b62b4694884e6c86e8181281f0f2c8a9 Make the serial todo contract level-aware
+    - 30faf50960b1cc29caf101cdcf8b15cad9b9a574 fix(desktop): align MCP details and compact layout
+    - 1bb724a7ee2835fc445bb03f5fd483b8e8f3f384 Merge origin/main-v2 into feature/mcp-settings-simplification
+    - 791ec4d03c3a0d677acdc602b5f30c80c6a6ea1a fix: retire hidden agent step limits
+    - fabdc9ef06b257c65ea76420c0c3bd838e8f540e fix(desktop): preserve Windows paths in notices
+    - af89911ed35fa0137a07d735ea105dc515177e02 chore(plan): remove obsolete trust helper
+    - b9a1f8d5f26de66ce2aec03da2393c36dab977e3 Merge pull request #6500 from SivanCola/fix/reasoning-language-imperative-zh-block
+    - c04cbfca17a6875585d01612976941abca3c4ed4 fix(desktop): normalize Windows workspace paths
+    - bed8c3f4c4cf4b21b16c5492e739889c8b061c1d fix(agent): make the zh reasoning-language block imperative
+    - 6ca868e0eea63be3669d3a49c4c3d1b964fcf796 Merge PR #6498 hardening into feature/mcp-settings-simplification
+    - d4ebb154dad719d4fb91feb3155d50b815499290 fix: unify strict read-only subagent execution
+    - 024e35c2310eb1b315793979aea8609ba3f3b348 fix(desktop): harden Windows update recovery
+    - 19ae765a204fd5326a06bba405480f2a69a17d65 Make todo progress guard adaptive
+    - 90d32deef582eaba31e2702ab30b782e49f3b051 Merge origin/main-v2 into feature/mcp-settings-simplification
+    - 88be1a23cec896a5f1fe545a0737fccbc9d67bb6 fix(plan): separate workflow from permissions
+    - a2cb36e819b61d06de313188ea4319085e4cb395 fix: remove obsolete desktop mode helper
+    - c3ab1caf48533664802b4ebdb55f732cbbbe0dff fix: harden Plan mode across controller rebuilds
+    - 1a45a16400323488799f7bd472f1ccfa60546d8b fix(agent): enforce serial todo progress
+    - 6834e2ccfee73b35aa3a8cfc31936ce214333db3 Merge pull request #6494 from SivanCola/fix/classic-pinned-section
+    - 82fa7c98f911375e39c636f1c3526fc99909a7bf Show pinned conversations in classic sidebar
+    - 8c548f25d68486c4e5002d2bdf9a91990053c5f5 chore(mcp): credit shared contributors
+    - 20d8c695f101e086a5320faf756364a63ccd4743 Merge remote-tracking branch 'origin/main-v2' into HEAD
+    - 1f91f803edffdeb629400a75def2d309864ec588 fix(control): stop auto-plan re-entry after user exits plan mode
+    - 109da0ab0bfc91b111a5c2e0249d120decc52d05 fix(desktop,mcp): close settings editor and install validation gaps
+    - a413c821de2872d4ea208992826875883d0da208 fix(mcp): keep installed MCP writers on the normal permission path while planning
+    - 417335f027ac92e20f191999a093368d02698764 Merge pull request #6434 from SivanCola/feature/claude-plugin-compat
+    - 6c13597de174e732eb3d86a8952cc515bfd1fae4 fix(mcp): close approval and settings gaps
+    - a95466b052d8c4ea17d82935acc6e90f85ee5182 Merge pull request #6438 from SivanCola/feature/acp-independent-session-axes
+    - 0d5f70401bde65a4eabe891d0c7c07422f64e9c8 fix(plugins): polish hook adapter semantics and deflake spawn tests
+    - 9abf0a52b035f90472818d4f4189b191eb0cb7e1 test(acp): simplify embedded factory selector
+    - e08431c90a9172143c609f3e15ed866ec58e21d4 Merge pull request #6404 from myipanta/fix/archive-double-click-race
+    - 50083f3557852634ffccfccc13a6baacd7b60e70 Merge remote-tracking branch 'origin/main-v2' into feature/acp-independent-session-axes
+    - d9633fda3a56223e5cec300120b90cc1220f8811 fix(acp): keep config rebuilds ordered and failure-atomic
+    - d20634d849f047ac264cbd2997d1adb51f7f6102 Merge pull request #6432 from SivanCola/fix/pending-prompt-stale-status-wipe
+    - a3b8a7a99791c76bdfe3b0709b9819a85b0779f7 Merge remote-tracking branch 'origin/main-v2' into HEAD
+    - c0c93610e6fe7b5545229c755a2ec29bea8ca260 fix(plugins): complete Claude hook contract adapters
+    - 4f89c15c2eb20a736e8804c24bd0610266269bff Add layered MCP approval policy
+    - 01b8d12ee2669a9ce3121b50483ffad8960e3b5f fix(desktop): surface residual topic cleanup failures
+    - 69ffaf766694bff2674ce80789f6220ccbced4e2 fix(desktop): ignore stale approval drain results
+    - 7ddd7a8b205a60192a52633bdca0b5823a4893c3 fix(guard): alias snapshot IDs in AI assist
+    - 0d64e3cfa0ac44bf8e1bcf7034d9798a48cb3334 Merge origin/main-v2 into feature/acp-independent-session-axes
+    - 5b0dfb0621b379a415fe92db5f1d969ddaa68bae fix(guard): harden diagnostic privacy and repair commits
+    - ca989965e102ac6d1d682b69f48aefb005a400c9 fix(desktop): delete the topic title last so retries keep a locator
+    - 22aa3d35fe3f20e4e61df78972385db19d89a8d7 Merge pull request #6468 from SivanCola/feature/classic-sidebar-activity-sort
+    - ef7e813f2e2a0e8d9c0e067eab3565fb4dca34b0 fix: complete Claude hook tool_input/tool_response contract translation
+    - 7127a853b37da195c3bcc1629ae37eb387fccee0 fix: persist switched system prompt, merge pending config axes, lock drift emitters
+    - 7515083239451e0707e20f12fe898960b1e80cb2 fix(desktop): dismiss only backend-drained approvals on mode switch; epoch-guard submit failures
+    - 659cbb9c2f9f9a69968f6a3b8401d1c19e989384 fix(guard): send only an allowlisted diagnostic DTO to the AI provider
+    - b6537edbc407117e5dea8ad4c8e764e01200ffce fix(recovery): commit repair transactions independently of the audit log
+    - d65d7b337fa7ecaf38bc53f2363576968a1261c0 Merge remote-tracking branch 'origin/main-v2' into fix/pending-prompt-stale-status-wipe
+    - 58eaeca17900ad9560417dc942f5877e43a2f22e Merge remote-tracking branch 'origin/main-v2' into HEAD
+    - 1ec2054df13f827f64a29eb0d136bc4af142ea14 Merge main-v2 into Claude plugin compatibility
+    - 84a1e12ee9d45a97617b287373690c67ce20b1fc fix(desktop): dedupe exact date in topic row title and aria-label
+    - 20194d525e34b442fd54ae8d46b3724eb3f0af39 fix(desktop): scope topic deletion cleanup to roots holding the topic
+    - d82a076b0374380c2ef236dc89a2027f5d03a322 fix(desktop): address classic sidebar review findings
+    - 6abb2d8c087b1b3c3d157112a241d188a31d88be Merge origin/main-v2 into feature/acp-independent-session-axes
+    - cad8fd1e23196a4cea334f1d47e69c1c33c85de8 Merge pull request #6467 from SivanCola/fix/goal-delivery-yolo-integration
+    - 39133e497e7f618a68b396d1dc8a9e05ee304e80 fix(guard): fail closed on any incomplete failed-install rollback
+    - 99e12a03138290e019924d6356fdf067f13494a4 fix(recovery): make snapshot-restore cleanup cross-device safe
+    - 3e585fc00c4a791c91cd6043a35339d3cd3ad1af fix(desktop): converge topic deletion on retry after partial failure
+    - a149b43500bcebb767b58d717fc15a697e1ef607 Merge pull request #6470 from SivanCola/fix/bot-stop-drain-followup
+    - b22e9e0304cda61307d5bde7e00c9c1998216e29 test(desktop): clean up pending crash file in Safe Mode retention test
+    - 79cbebe839a963340743cbf6027c069600f16fa5 fix: unblock restored delivery review baseline and non-Goal recovery submit
+    - 59f04609e61f86791bd3be5176b56b1cc9e31bf2 Merge pull request #6469 from SivanCola/fix/windows-shell-pasted-paths
+    - 076736c92bac21b26dfeb4f697ff749b9c99eaa4 fix(recovery): preserve symlinked config through snapshot restore and undo
+    - b6f4180c1960e121574f6b2da7b66deefec0e425 fix(recovery): compensate failed release-unit rollbacks; never launch mixed installs
+    - b46c5f254d7276cbd2b9723cb3778f83e37526ae fix(recovery): stop Safe Mode from persisting tabs or sweeping recovery GC
+    - 08e7719aeccdeaea72725c46d1c1502feed139ce fix(recovery): force all reporting off in Safe Mode
+    - 80a44f0359e695c965d21649a7f09cbd736eb7c9 test(boot): pin Safe Mode tool surface across token modes
+    - 197fd4b996246cdec55adaaa07001ef8d75bd6e6 Merge origin/main-v2 into feature/reasonix-guard
+    - e201ac31ff2496b26f60d9140b6bcc9d6f88bdae fix(cli): keep UNC and device prefixes in Windows shell unescape
+    - 787eae7d8c14b9dec1c34556bc95e60cf16f89d2 fix(bot): abort qq gateway dial on stop
+    - dc444f83219be2b6cbf789d82e872bfe2a0af490 Merge pull request #6472 from SivanCola/fix/windows-mixed-dpi-restore
+    - bd0dc0c079e9e4782fb3d9a13db52bc9751de1c3 feat(mcp): simplify settings and align tool approvals
+    - 71461948e4350b812388c6d2fa0be438434eba01 Merge pull request #6461 from SivanCola/feature/lean-agent-profiles
+    - a5d5f6fc34f13aa1b61c6c9e5748bd91d6827165 feat(desktop): add classic topic quick actions
+    - f9ced13d5b7fd73a872b059ce4705480807c8815 feat(desktop): single-line classic rows with right-aligned time
+    - 582061bfda313a0f58988ebff85545054cdc0d1b feat(desktop): codex-inspired classic sidebar density and preview
+    - e5629a8e94c9431a1693c0400c2c70bfb255313b feat(desktop): sort classic sidebar topics by activity time
+    - 2f9579ffe7d300b09d3cdb319e88fd6edcad05e3 fix(desktop): format vendored WebView2 sources
+    - df94dc709b7c84207fa64eec57f34110f760bd76 fix(desktop): keep WebView2 scale correct after restore
+    - aea376eaed5f5bc9014bb4f60ccfb939aac641f4 fix(desktop): render selection reference paths as JSON strings
+    - a891c82cb89d640c6e044ccc31571bebe4ab4662 fix(bot/qq): close and drain the QQ gateway connection on stop
+    - 50786ba7fd79160657cc0adaea1d317b05b92c27 fix(bot): publish and consume turn cancel under one lock discipline
+    - acf646142eb2a12a6792996ea250004db364943a fix(recovery): restore quarantined symlinks as symlinks on undo
+    - 4285eb0e3c52eef32d513375138146c2195baae5 feat(agent): let plan mode connect the workflow planning subset
+    - 224bbfa696d1bb5910f8dfe038db37485448436e fix(cli): support shell-escaped Windows pasted paths
+    - 2cfaef26d6823c8dace068814aca76ae69feb8b4 fix(recovery): close rollback and undo crash windows from second review
+    - 4828ef14cdb65486c37f7ba1c95d7b7138c2dd0b Merge pull request #6454 from SivanCola/feature/add-selected-text-to-chat
+    - c01967a1bce72e055e107a2fb630e9b7a43e81d3 fix(agent): preserve Economy tool allowlists
+    - 8774d436ec7e09e0b324ea5ddaeb8f065d3c3895 fix(bot): drain gateway lifecycle on stop
+    - d6a07dcb92aa51185587f98907a8cda72bc8d4fb Merge pull request #6060 from h4rk8s/jawa/reasonix-image-paste-token-upstream
+    - abe8d052636a78b162d3d6604f0ffe70458e6d2d fix: integrate goal delivery and yolo lifecycles
+    - bcb7fb34081cbbd25d9b03cd8cee9c2b699fa1fb test(cli): gate POSIX source cases on Windows
+    - 2845bbcc30f52c2914d0fbc6dcef50f7c0ce5133 fix(recovery): harden rollback, startup counting, plan undo, and read-only paths
+    - 5a3fb248ca7aedb0a5f1c100fe00a2c83e72b56d test(cli): make shell path coverage platform-aware
+    - 623c9b64e9caf0dca1eff9008878500e2b956268 Merge pull request #6463 from SivanCola/fix/classic-tabbar-empty-drag-region
+    - 25b77649fc0857b91d6ee3fc87310660d3c10a02 docs(agent): unpin example system_prompt and correct Economy prefix wording
+    - 910ba55997c6b68ff7d7e0d5e3cdb4d817b7d30f fix(desktop): make classic tabbar whitespace draggable
+    - 485c16d847058d4378db15c560abec9d260ec3c2 fix(cli): apply full POSIX backslash semantics when unescaping pasted paths
+    - 6c0cac8311c73aa6f2ed68588d6d7f8bcb1c0557 feat(agent): streamline prompts and Economy tool surface
+    - 234bc2622a5ed28e3b9f599b3f22a6e4967097f1 Merge branch 'main-v2' into jawa/reasonix-image-paste-token-upstream
+    - 165477f2bfc6f3bb02929d4cb62fb12d6f77e751 feat(desktop): align frontend @ref parsing with escaped-whitespace grammar
+    - 3baf0b3c4654cea5d8ffa5b52ccd54fae688c090 feat(recovery): add offline Guard and safe mode
+    - 61cfa529956bb13fc170ef7e55dc8a6661cd5c04 test(desktop): pin workspace floating-menu teardown on tab/scope switch
+    - 4f895c5c66907aab5ed3205cab45b617d2220b25 fix(desktop): discard workspace floating menus on tab/scope switch
+    - 0152a8ebf5c5ffbe016f6c3fdcd5c29c8831c118 fix(desktop): keep transcript selections from routing across sessions
+    - af54a530035c125afa47fab95df6eab7e628e94e feat(control): let @ref tokens carry backslash-escaped whitespace
+    - fde0c2fa000239b4367ef00a559a23bca06c2ee1 Merge pull request #6456 from SivanCola/fix/cli-composer-mouse-selection
+    - a79909870ba5c17300f489b8cfdc61e385a92691 feat(desktop): add workspace code selections to the chat context
+    - 3c4229b578c3f4fe164d322eb827e256741b9959 Merge pull request #6457 from SivanCola/feature/external-opener-menu
+    - fbaaaea07173d1219fe5ac8257cf33918ceb8c69 fix(cli): unescape and tokenize shell-escaped pasted paths without whitespace
+    - 149b4be5d462be52626f05a6be967f2004468249 Merge pull request #6458 from SivanCola/fix/plan-delivery-readiness-loop
+    - 2b3a48df063f46a68165805f758f3498b3dddbc7 test(agent): cover plan-blocked required capability through the full loop
+    - 58f2a60037716275dfc80066cd09852d32f0f2bd fix(desktop): reap opener processes and persist after launch
+    - 525bb13beaf52388abf4ba42100a3073d25e6094 fix(desktop): register the add-selection shortcut and dismiss the overlay on Escape
+    - 41d370a89e8cf450683f07bd88cd2119c622aa3a fix(cli): cover image-ref paste paths in wide repaint check
+    - 3aba71046d4984df8f6a1784659c11bd994cbccf fix(cli): address composer selection review findings
+    - a8a44928b4699c43f5ec6644baf409c78900234b fix(agent): preserve loop-guard recovery for plan-mode capability gate
+    - 36632b5cccdf1490dcf7b9f7e63122d45294efff fix(desktop): satisfy cross-platform opener lint
+    - 3449bb321662c17efa10874c4711dedf9e445423 Merge pull request #6449 from SivanCola/fix/mcp-invalid-schema-isolation
+    - 8c0a693ece925dea183428a75c1664901cdb34ec fix(agent): separate plan and delivery readiness gates
+    - fc5d812209e4a67692c09028dccf816502a69451 fix(cli): support mouse selection in composer
+    - 84ae08fc6043124f8fe23f8e328e5ece6f89e2fe feat(desktop): add dynamic external opener menu
+    - 90390d803f7937dec65dd36f101204abec3706c1 feat(desktop): add selected text to chat context
+    - 1b48ed0a236c4b974103465e0e9b8e4dbd863884 fix(mcp): disable schema compiler URL loader
+    - 9be6e1e8d92dbf68b2ff4f8e562c0e4c9e8bd499 fix(mcp): require object root type for tool schemas
+    - ed113b4909a250f6754e9d11754b19c50787bb58 fix(mcp): quarantine tools with invalid schemas
+    - 1ec5cbe1be097e6799528004af66eec09c94b004 Merge pull request #6394 from billycat/feature/fix-6368-tui-cjk-repaint
+    - 612b4ae89ee365d344bbc69f085858b9aa585a0d test(cli): cover chooser free-text wide input repaint
+    - b07c0e9956b129db01aaa8f3b8dcb136476a8595 fix(registry): reject bare package-name sources for kind=skill (#6444)
+    - 75e75cad7e29526ae1e054375cf039001cc8567c feat(registry): reject unresolvable publish sources at the schema (#6442)
+    - 548c97821c332fe56a37cf5e84193653119fec4f fix(cli,serve,desktop): keep profile prompt and session grants correct across controller rebuilds
+    - b36db7e4510b1c2d5c173f9f3d0b9bffa0352f95 fix(acp): keep profile prompt, axis switches, mode drift, and grants correct across controller rebuilds
+    - f2bef3bfb7739efef86da7e3dd177f900ea9cdc8 feat(acp): expose independent session axes
+    - 78fdf7d0c846b6ccd78bbc59fc9ca2ca85a4bf58 fix(desktop): scope resolved-prompt tombstone to controller epoch and RPC success
+    - b0255bc0ec8d35f153235f2f2e03a4cd14531d42 fix(plugins): translate tool_input field names and cover every Agent entry point
+    - ca2c08124943f11092681acf778837ae176d8612 Merge pull request #6431 from SivanCola/feature/claude-cli-interactions
+    - a2821a31a7137f645b42a6440befa6c8132f7785 fix(control): sync sub-agent gate on interactive approval-mode switch
+    - 347fd46f85e5f6efbb84c9e7eedb2939e2754140 fix(plugins): flag Claude hook matchers that can never fire
+    - 9ed15099b30b328e48fc87d786125c29bdc6c450 fix(desktop): ignore replays of an already-answered prompt id
+    - ef0aa6e2008c7a8a86e4a5a7f571a8eeaf6e0ab4 fix(control): propagate headless approval mode to sub-agent gates
+    - 19e25a92591949fbe360cf8319eeac9247c223a0 fix(plugins): stop hook auto-allow from bypassing fresh-human approval
+    - 3703cf430c2cf2e7058d2f9c2777719d0454a138 Merge pull request #6433 from SivanCola/fix/clarify-app-chrome-tabs
+    - 741fb836645096e181a17e6177206c842fab2416 fix(plugins): map Claude tool names in hooks and close remaining deny gaps
+    - 8b2d513657e8706711882ee2bd9616e164ce23ee test(boot): pin --add-dir resolution against explicit --dir workspace root
+    - 9fa57fd6aeab2f461169024fc9387448f2d32b02 fix(control): headless auto preserves explicit ask rules (deny, not silent-allow)
+    - e7cb0074684676bb1812407c4d0d4c027964dc16 fix(cli): make headless run safe and align approval/print/completion contracts
+    - 03b9200cb37d1dd3899c90a8a00ede0c926f05ee fix(cli): align picker j/k search behavior
+    - a99256d5236747d934fde42ccde00ba8b8887d8b feat(cli): align terminal interactions with Claude Code
+    - 062035a77357ea1b600cd65b0e14a7b47907da03 Merge pull request #6283 from SauronSkywalker/fix/cli-dir-set-workspace-root_20260710_113109
+    - 6e4596cc04a6f2b18f0b27344fce92160f03dad6 fix(desktop): refetch backend truth after rejecting a stale prompt snapshot
+    - e9c30ba7699fc7f01618117d01de7a48efddc9cd fix(cli): register cwd-restore cleanup after t.TempDir() in subagent --dir test
+    - cd8a6c2371c36aeb786fb9be25710f26bdb988ee Merge pull request #6421 from SivanCola/fix/subagent-delivery-readiness-cascade
+    - 019719d8b27dce56bbbee4bf1c09b75e21e4a437 fix(cli): thread --dir workspace root through subagent run/try setup seam
+    - 6506ba46b76abc36dfe01a51abb00c7c65f67875 fix(plugins): honor Claude hook deny decisions and fix hook dedup
+    - ba11d0884b59879ed14e5b6877fb24c6eb374405 Clarify AppChrome tab boundaries with spacing, outlines, and dividers
+    - e85119c0aa19013733788d684eaad2e78787c385 fix(jobs): close background-evidence lease lifecycle gaps
+    - ea212e8590302d527d05c89ef0efaf35c3e18203 Merge pull request #6416 from JesonChou/fix/issue-6391-active-tab-indicator
+    - c49e85669d5a45a7b788b2a74b0727d45cdfc0ea fix(cli): fail loudly when --dir workspace root can't resolve; add tests
+    - 61602e352c0f7be99f6c537d3dd34434bb1ee12f fix(cli): make --dir explicitly set workspace root instead of falling back to git-root detection
+    - ad11beb35c52bbda17ed0b45b004000db79c0426 fix(desktop): anchor prompt freshness to the prompt id, not each replay
+    - d9aaecc6542a55bdbfb2e5a635e253b81dc69e3a Fix macOS accent direction and preserve active marker on keyboard focus
+    - 5210a06a04c1612455e39d876ed5d525b6b21fe0 Merge pull request #6424 from SivanCola/fix/perf-popup-resume-and-copy
+    - dc3004ecab903e153f2cba9d2b07c3cdd707dc6b Merge pull request #6426 from SivanCola/fix/serve-transcript-autoscroll
+    - 724449326410935d83a207a1fbc056cfa149299a fix(jobs): lease background evidence until the collecting turn delivers
+    - 7b7b511b57f9efcbc85f736a84136ab4cf2097af fix(desktop): stop a throwing execCommand copy from wedging the Copy button
+    - 460f0c3e6c1b089bb65b8a6741c769c4767531bf fix(desktop): gate resume lag on focus too and route copy through the shared clipboard helper
+    - 673b1f3b39b3c213e685370f2655a87f34b3479e fix(serve): route approval shortcuts by focusing the prompt card
+    - 1d5cb7e448a461de9a84f2b7dd51a3cdffda76b1 fix(jobs): drop legacy evidence synthesis and drain collected evidence from artifacts
+    - cfe2b80c5c99472e54c8526d8c4d520b946d8577 feat(plugins): add Claude plugin compatibility
+    - 25aa97e95ddc9e3e6f477bb3992f72d8778c2420 Merge pull request #6420 from SivanCola/feature/crash-stats-retention
+    - 95390ad183db13383a5fc2e112691e465bd8785e fix(desktop): keep live approval/ask prompts across stale runtime snapshots
+    - e36cccc177d0b795347f8ba7cece7944c6103784 fix(jobs): recover background mutation evidence after restart
+    - 835ad60ccf4f8a73b49f028cd91c3008f155e31a fix(tool): defer background evidence collection during plan mode
+    - 6b30958d83662fab27e061b4af693dce55ffcdd1 fix(crash-report): detect stalled ingest between checks
+    - 03e021312123a99b499ec6d51e32b63f9c6a4372 fix(serve): harden prompt lifecycle, forced reveal, unpin intent, picker modality
+    - c3222005406a552c0fa799dfddb2291b0db05d0c test(agent): normalize background evidence paths
+    - 606bd1cb5fdb0d4733392e173e3cdb312b51cfea fix(agent): preserve background subagent evidence
+    - 9b0abea6518808c4389fabfccae5f5b43745894b fix(serve): scope global key shortcuts away from text entry and chords
+    - 687ecd01ffaf4f75fd4f0d8db26a29a4a571a653 fix(crash-report): validate and revoke alert webhook
+    - e26f6060bfa059c51dfefca0932e020adcb3fbb4 fix(serve): force-scroll blocking approval and ask prompts into view
+    - 62f77973bbc66a8cef04bfe51411ae3b1c90d34e fix(serve): stop autoscroll from fighting user scroll during streaming
+    - 2f92a19db5ffec5dca458b1971086ad3400bf958 ci(crash-report): mirror ALERT_WEBHOOK repo secret to the worker on deploy
+    - bf5649c515ac34042e43ebf722a4317ae8609044 fix(desktop): ignore suspended-timer delay at visibility resume and harden popup copy
+    - eb443a3ab141f5a668e1adc28ac679922ca10e6f fix(agent): stop delivery sub-agent readiness failure cascade
+    - 7068d557639b565556bed5285e5fa1b21dfb0d9e feat(crash-report): ingest write sentinel and graceful D1 degradation
+    - 2cb3431211a19b063096af9bc7448ba3448ed5c4 feat(crash-report): purge expired stats rows on a daily cron
+    - 0cbc898c577d2b7601d8393d369f8e446e45ba9c fix(desktop): add accent colour underline to active tab / 选中 tab 底部增加主题色条
+    - 8edd8210b1896a086c7b5e18d591aa4bd31b2001 fix(desktop): prevent double-click race on topic archive (#6312)
+    - 448a43a01954ffc02767b39c3a8170bcaf575c35 fix(cli): 修复 Windows 上 chooser 自由文本模式下宽字符输入的重绘问题
+    - 21938cd97ca7a7064b763faa97a8a79d3b2d2095 fix(cli): recognize shell-escaped pasted image paths
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/esengine/DeepSeek-Reasonix/releases/tag/v1.17.13
+ReleaseTime: 2026-07-16T02:00:40.0000000Z

@@ -1,0 +1,24 @@
+Version: "9.57"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-957.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#957
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Updates:
+      - In some environments, downloading a new version installer fails with Windows error code 12057 (ERROR_INTERNET_SEC_CERT_REV_FAILED). The Windows error description for this error code is misleading. The update interface now provides an error description which is hopefully more useful.
+    - Master/follower synchronization:
+      - The settings interface now checks that a synchronization password is configured, and that at least one host key or fingerprint for the master server is configured in follower settings. Synchronization cannot work without these settings.
+    - Control Panel:
+      - In previous versions 9.5x, it was possible for the SSH Server Control Panel to start fully open, instead of creating an icon in the system notification area, if it started before Windows initialized the system notification area. The SSH Server Control Panel now allows extra time for Windows to initialize the system tray. If the tray icon still cannot be created, the Control Panel opens with its window minimized.
+    - Scriptable settings:
+      - In previous versions, attempting to use the Bitvise.BssCfg COM object from a process without administrative privileges would result in a 30-second delay, followed by an unhelpful error. This now fails promptly with Access is denied.
+    - File transfer:
+      - We have seen that it's possible for Windows API functions to block indefinitely when attempting to connect to a Windows file share (network share), or when accessing a share, or disconnecting from a share.
+        The SSH Server now implements more granular logging for connection threads which are stuck disconnecting network shares.
+        When the SSH Server is shutting down, it now aborts prolonged network share disconnects, but Windows APIs may still block threads indefinitely.
+        We added a Best practices section in our page Accessing network shares, to help administrators increase reliability of Windows file share connections.
+ReleaseTime: 2026-02-01

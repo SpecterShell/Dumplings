@@ -1,0 +1,116 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.12.0/open-design-0.12.0-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🌟 Codename: Brand-backed Design System
+    🎨 103 PRs · 30 contributors · 6 days — codename "Brand-backed Design System." For the past two months Open Design started from a blank page and designed for you. 0.12.0 flips it: the brand you already own becomes a reusable design system. Point it at a live site, drop in a Figma file, or clip a page right in your browser, and it lifts the real brand — colors, type, voice — into a design system you can build from. That's the whole idea behind this release: a brand isn't a separate thing, it is a design system — capture it once and it runs through one unbroken loop, capture → design system → build → export, yours to reuse on every project after. Under the hood it's also the steadiest release yet: failures that used to vanish into one grey "execution_failed" bucket now say what actually went wrong, runs that stumble back off and retry instead of dying, and your first-run sign-in survives a browser that flakes out. 🏛️
+    🔥 Highlights
+    - 🎨 Bring your own design system — and reuse it forever. The marquee of 0.12.0. Until now the only way to get a brand-accurate design system was to hand-author a DESIGN.md — a wall for anyone not already steeped in the spec. Now every ingest path feeds one pipeline: a brand URL, a dropped DESIGN.md, an offline .fig file (decoded locally, no Figma account), or a page captured with the new browser clipper all extract into a reusable user: design system — because in 0.12.0 a brand is a design system. From there it's one loop, end to end: preview it as a kit + templates, build straight from it (onboarding now finishes on a build step), and one-click export the result to PDF, PPTX, editable PPTX, or image. Captured logos, screenshots, and palettes finally have a home in the new OD Library (a content-addressed asset registry), and a fresh install ships with 150 ready-made brand design systems (Airbnb, Stripe, Vercel, Tesla, Supabase, Uber, …) so the picker is useful on day one. Full CLI parity too: od brand, od library, od figma import, od export. (#4691, #4260, #4457, #4420, #4346) Thanks @pftom, @lefarcen, @dredozubov.
+    - 🩺 Failures that finally tell you what broke. The dreaded catch-all "execution_failed" is gone — runs now name their cause (startup crash, resume expiry, agent stuck in a tool loop, stale provider config) so you know whether to retry or report. And when a run can recover, it now backs off with jitter and retries on its own instead of falling over. (#4502, #4608, #4478, #4501, #3375, #4588, #4615) Thanks @lefarcen, @PerishCode, @nettee, @portseif, @maoxin1234.
+    - 🤝 Sign-in that survives a bad browser handoff. AMR / cloud sign-in used to hang for five minutes in silence if the browser handoff flaked — now it prints the login URL and code right there so you can finish by hand, and the whole onboarding Connect step was redesigned into a clean cloud sign-in landing. (#4402, #4513, #4419) Thanks @lefarcen, @chaoxiaoche.
+    - 🧩 Your coding agent, fewer rough edges. The agents you already use got steadier: OpenCode binary detection on npm, Windows Node discovery via fnm, pnpm resolution through Corepack, a centralized reasoning-provider policy, Codex subscription image-gen preferred (and single-image runs stay single-file), and the Warp "open in" launcher is hidden where it doesn't belong. (#4535, #4488, #4476, #4477, #4551, #4544) Thanks @YOMXXX, @leorivastech, @dredozubov, @nettee, @cbeaulieu-gt.
+    - 📄 Sharper PDFs and deck handling. PDF export now waits for the page to actually be print-ready before firing, printed filenames are Teams-safe, deck detection picks up slide-prefixed classes, and HTML-PPT screenshots no longer depend on a system Chrome being installed. (#4458, #4329, #4278, #4341, #4582) Thanks @YOMXXX, @nettee, @cbeaulieu-gt, @NeOMakinG, @PerishCode.
+    - 🖥️ A desktop that shows its work. The splash screen now shows real boot-stage progress instead of a frozen logo, wears the capitalised "Open Design" wordmark, and payload updates install in-app the way you'd expect. (#4223, #4721, #4471, #4524) Thanks @swpark3179, @lefarcen, @TheAngryPit, @PerishCode.
+    - 🌐 More polish where Open Design lives on the web. A refreshed home page with mobile-responsive fixes, a new "What is vibe design" blog post in 18 locales plus a wider vibe-design cluster, a site-wide SEO metadata pass, and the official account unified to @OpenDesignHQ. (#4497, #4416, #4484, #4581, #4568, #4480) Thanks @lefarcen, @wangchenglong0001, @xne998808-ai.
+    - 🚢 Easier to self-host. The runtime image ships bash and git, Docker defaults are aligned with the GHCR releases, there's an opt-in API-auth-disable flag for trusted networks, and a new Sealos one-click deployment option. (#4344, #4327, #4541, #4472) Thanks @MattchewMoar, @mrcfps, @yangchuansheng.
+    📥 Download: Tag open-design-v0.12.0. All assets are live on GitHub Releases and releases.open-design.ai.
+    Platform Architecture Asset
+    macOS Apple Silicon (arm64) open-design-0.12.0-mac-arm64.dmg
+    macOS Intel (x64) open-design-0.12.0-mac-x64.dmg
+    Windows x64 (installer) open-design-0.12.0-win-x64-setup.exe
+    Windows x64 (portable) open-design-0.12.0-win-x64-portable.zip
+    ✨ Added
+    🎨 Brands, design systems & studio
+    - Turn any brand into a reusable design system — brand-URL / DESIGN.md / offline .fig / browser-clipper ingest, the OD Library asset registry, one-click PDF/PPTX/image export, 150 seeded brand design systems, and od brand / od library / od figma / od export CLI parity. (#4691) Thanks @pftom.
+    - Agent-driven brand extraction with a two-loop memory overhaul for sharper, brand-faithful results. (#4260) Thanks @pftom.
+    - DESIGN.md systems hub with a design-token spec sheet and scenario mocks on each design-system page. (#4420) Thanks @xne998808-ai.
+    - 220px minimum width for workspace hover previews so thumbnails stay legible. (#4021) Thanks @Kushaal-k.
+    - Projects refresh control to re-scan your projects on demand. (#3993) Thanks @TheAngryPit.
+    🧠 Agents, runtimes & reliability
+    - Exponential backoff with jitter before a same-run retry, so a recoverable stumble waits and retries instead of dying. (#4588) Thanks @maoxin1234.
+    - Guard against agents looping on failing tool calls. (#3375) Thanks @portseif.
+    - Named failure causes split out of the opaque execution_failed bucket, with close-reason sub-details. (#4502) Thanks @lefarcen.
+    - Spawn-to-first-token split into auditable subsegments for latency diagnosis. (#4600) Thanks @maoxin1234.
+    - Run-result package endpoint for retrieving a finished run's bundle. (#4265) Thanks @dredozubov.
+    - Centralized reasoning-provider policy enforcement. (#4476) Thanks @dredozubov.
+    📊 Analytics & telemetry
+    - runtime_type across the full event chain plus BYOK run events. (#4510) Thanks @lefarcen.
+    - First-call cache-hit + is_followup_turn telemetry to baseline session reuse. (#4725) Thanks @lefarcen.
+    🚪 Onboarding, landing & blog
+    - Onboarding Connect step redesigned as a cloud sign-in landing. (#4513) Thanks @lefarcen.
+    - Home-refresh redesign merged across the landing page. (#4497) Thanks @lefarcen.
+    - "What is vibe design" blog post — 18 locales, author byline, download CTA. (#4484) Thanks @xne998808-ai.
+    - Vibe-design blog cluster plus refreshed Claude Design alternatives. (#4581) Thanks @xne998808-ai.
+    🖥️ Desktop & updater
+    - Boot-stage progress on the desktop splash screen. (#4223) Thanks @swpark3179.
+    - Capitalised "Open Design" wordmark on the startup splash. (#4721) Thanks @lefarcen.
+    ☁️ Deployment & docs
+    - Opt-in API-auth-disable flag for trusted-network Docker deployments. (#4541) Thanks @mrcfps.
+    - bash and git in the runtime image. (#4344) Thanks @MattchewMoar.
+    - Sealos deployment option. (#4472) Thanks @yangchuansheng.
+    - Docs: explain the Windows SmartScreen "unknown publisher" installer warning (#4554) and fix the 404 agent-install command to od mcp install <agent> (#4649). Thanks @Nagendhra-web, @xne998808-ai.
+    🔁 Changed
+    - Unified task-failure error card across every failure state, so a failed run reads the same everywhere. (#4656) Thanks @michaeltaxman911-hue.
+    - Leaner user chat messages — the redundant "You" header and timestamp are gone. (#4515) Thanks @maxmilian.
+    - Prefer Codex subscription image generation when available. (#4477) Thanks @dredozubov.
+    - Official X account unified to @OpenDesignHQ, with landing links updated to match. (#4480, #4611) Thanks @xne998808-ai, @PerishCode.
+    - Tighter on-page SEO metadata across the landing pages. (#4568) Thanks @xne998808-ai.
+    🐛 Fixed
+    🧠 Daemon, agents & runs
+    - Reclassify named causes out of opaque execution_failed and classify high-confidence run failures + completed Claude startup output before an exit-1, so failures are traceable. (#4608, #4478, #4501) Thanks @lefarcen, @PerishCode, @nettee.
+    - Stop re-opening the run event log after finish (a file-descriptor leak that caused spawn EBADF). (#4615) Thanks @lefarcen.
+    - Detect Claude resume failure from the stream-json result event. (#4275) Thanks @AriaZhao-coder.
+    - Close canceled Claude stdin earlier. (#4091) Thanks @mrcfps.
+    - Normalize stale Codex service_tier=priority and remove any invalid Codex service_tier before launch. (#4276, #4606) Thanks @cbeaulieu-gt, @lefarcen.
+    - Make same-turn HTML artifact recovery agent-agnostic. (#4308) Thanks @maxmilian.
+    - Platform-aware argv prompt budget so POSIX isn't capped at Windows' limit. (#4473) Thanks @YOMXXX.
+    - Keep single-image Codex runs to one final file. (#4551) Thanks @nettee.
+    - Report Deliver-to-editor launch failures instead of swallowing them. (#3952) Thanks @maxmilian.
+    - Surface crystallize proposal refresh failures. (#4323) Thanks @PerishCode.
+    - Refresh local CLI auth state after an API-key switch. (#4453) Thanks @alchemistklk.
+    - Gate cursor-agent --trust behind a --help capability probe. (#4505) Thanks @leorivastech.
+    - Hide the Warp open-in launcher on win32/linux. (#4544) Thanks @cbeaulieu-gt.
+    - Avoid system Chrome for html-ppt screenshots. (#4582) Thanks @PerishCode.
+    🤝 AMR & onboarding
+    - Surface the vela login URL/code so sign-in survives a failed browser handoff. (#4402) Thanks @lefarcen.
+    - Fix AMR agent-card label wrapping. (#4419) Thanks @chaoxiaoche.
+    🎨 Editing, preview & capture
+    - Keep the manual-edit inline text session alive until explicit finish. (#3646) Thanks @AriaZhao-coder.
+    - Gate the PDF print-ready handshake on a usable content size and wait for print-ready content before browser PDF export. (#4458, #4329) Thanks @YOMXXX, @nettee.
+    - Sanitize the preview document title so printed PDF filenames are Teams-safe. (#4278) Thanks @cbeaulieu-gt.
+    - Detect decks with slide-prefixed classes. (#4341) Thanks @NeOMakinG.
+    - Fix asset-cache origin-null preview. (#4487) Thanks @daltonnyx.
+    - A lone quote character is no longer parsed as an empty string in frontmatter. (#4182) Thanks @Nagendhra-web.
+    🌐 Web UI & home
+    - Improve dark-mode contrast for the in-tab present exit button. (#4590) Thanks @maxmilian.
+    - Hide the jump-to-latest button while the conversation-history dropdown is open. (#4371) Thanks @portseif.
+    - Balance finished chat transcripts. (#4328) Thanks @PerishCode.
+    - Show a sending state on home composer submit. (#4111) Thanks @maxmilian.
+    - Portal the New Project design-system dropdown so it isn't clipped. (#4346) Thanks @swpark3179.
+    🖥️ Desktop & updater
+    - Treat payload updates as in-app installs. (#4471) Thanks @TheAngryPit.
+    - Clean deprecated launcher payloads on updater startup. (#4524) Thanks @PerishCode.
+    📊 Analytics & diagnostics
+    - Stamp the frame platform and drop fetch-failure noise in the exception transport. (#4661) Thanks @lefarcen.
+    - Patch exception-tracking app_version after /api/version resolves. (#4508) Thanks @lefarcen.
+    - Count run artifacts agent-agnostically and emit ACP tool events. (#4520) Thanks @lefarcen.
+    - Enable GeoIP on the daemon PostHog client so events carry user country. (#4521) Thanks @lefarcen.
+    - Fix the Langfuse PostHog report closure. (#4315) Thanks @yinjialu.
+    🛠️ Platform, CLI & infra
+    - Discover Windows fnm-managed Node in the toolchain bin list. (#4535) Thanks @YOMXXX.
+    - Resolve pnpm via Corepack when npm_execpath is absent. (#4488) Thanks @leorivastech.
+    - Raise pi detection timeouts and harden Windows npm-prefix resolution. (#3693) Thanks @alucero270.
+    - Align Docker defaults with the GHCR releases. (#4327) Thanks @mrcfps.
+    - Unify the Discord invite links. (#4452) Thanks @kokisanai.
+    🙏 Thanks to everyone who shipped 0.12.0
+    @lefarcen · @pftom · @PerishCode · @xne998808-ai · @mrcfps · @YOMXXX · @maxmilian · @dredozubov · @nettee · @cbeaulieu-gt · @AriaZhao-coder · @maoxin1234 · @swpark3179 · @portseif · @leorivastech · @TheAngryPit · @Nagendhra-web · @chaoxiaoche · @NeOMakinG · @michaeltaxman911-hue · @AmyShang-alt · @MattchewMoar · @yangchuansheng · @daltonnyx · @alchemistklk · @kokisanai · @Kushaal-k · @wangchenglong0001 · @yinjialu · @alucero270
+    Full changelog: https://github.com/nexu-io/open-design/compare/open-design-v0.11.0...open-design-v0.12.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.12.0
+ReleaseTime: 2026-06-26T13:46:14.0000000Z

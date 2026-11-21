@@ -1,0 +1,46 @@
+Version: 0.3.30
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.30/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.30/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security Hardening
+    Comprehensive security audit and fixes in response to responsible disclosure:
+    Shell Injection Defense (CRITICAL)
+    - contains_shell_metacharacters() now blocks semicolons, pipes, redirects, braces, null bytes, and all ampersand operators
+    - Docker sandbox delegates to the same comprehensive check
+    - Metacharacter check runs before exec policy in all modes (Full, Allowlist, Deny)
+    API Auth Hardening (CRITICAL)
+    - All public endpoints are now GET-only — POST/PUT/DELETE always require authentication
+    - Prevents unauthenticated cron job creation, skill installation, integration reload, and agent spawning
+    OFP Wire Protocol (HIGH)
+    - send_to_peer() now derives a session key and uses per-message HMAC authenticated I/O
+    - broadcast_notification() requires shared secret and uses authenticated writes
+    - Eliminates plaintext agent messages after handshake
+    Audit Trail Persistence (MEDIUM)
+    - V8 migration adds audit_entries SQLite table with Merkle chain fields
+    - Entries persisted immediately on every write, not just in-memory
+    - Boot-time integrity verification detects tampering
+    Bug Fixes
+    - #437 Gemini API key now sent as query parameter (fixes auth failures)
+    - #437 Enhanced Gemini error parsing with proper AuthenticationFailed/ModelNotFound classification
+    - #429 CJK IME composition no longer triggers message send on Enter key
+    - #434 OpenClaw migration handles nested JSON objects in tool config fields
+    - #403 Discord ignore_bots config option (defaults to true)
+    - #407 Browser Hand requires chromium instead of obsolete python3/playwright
+    Stats
+    - 22 files changed, 874 insertions, 179 deletions
+    - 1,886 tests passing, 0 clippy warnings
+    - 26/26 live security endpoint tests passed
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.30
+ReleaseTime: 2026-03-08T14:02:57.0000000Z

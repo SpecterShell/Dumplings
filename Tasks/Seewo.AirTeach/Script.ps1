@@ -1,21 +1,22 @@
-$Object = $Temp.SeewoApps['AirTeach']
+$Object1 = $Global:DumplingsStorage.SeewoApps['AirTeach']
 
 # Version
-$Task.CurrentState.Version = $Object.softInfos[0].softVersion
+$this.CurrentState.Version = [regex]::Match($Object1.softInfos.Where({ $_.useSystem -eq 1 }, 'First')[0].softVersion, '(\d+(?:\.\d+)+)').Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.softInfos[0].downloadUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.softInfos.Where({ $_.useSystem -eq 1 }, 'First')[0].downloadUrl
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

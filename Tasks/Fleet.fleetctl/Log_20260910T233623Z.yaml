@@ -1,0 +1,27 @@
+Version: 4.91.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.91.1/fleetctl_v4.91.1_windows_amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.91.1_windows_amd64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+- Architecture: arm64
+  InstallerUrl: https://github.com/fleetdm/fleet/releases/download/fleet-v4.91.1/fleetctl_v4.91.1_windows_arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: fleetctl_v4.91.1_windows_arm64\fleetctl.exe
+    PortableCommandAlias: fleetctl
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug fixes
+    - Fixed software title details pages and the hosts list software status filter timing out for software with a large install history.
+    - Fixed host activity queue getting stuck due to database transactions not retrying when getting MySQL error 1615
+    - Fixed deleting a host that was released from Apple Business reporting success while the host record stayed in Fleet. Fleet now checks the assignment with Apple before deleting, and returns an error instead of reporting success if Apple can't be reached.
+    - Fixed "Hosts enrolled" chart on the dashboard page to exclude pending hosts from per-platform counts.
+    - Fixed an issue where VPP and In House Apps would backdate and sometimes fall outside of the MDM command queue.
+    - Fixed a bug where updating a SCIM group's members could silently remove members that the identity provider did not ask to remove.
+    - Fixed script-only packages (.sh/.ps1/.py) with an uninstall script showing "Run/Rerun" and "Ran" instead of "Install/Reinstall", "Uninstall", and "Installed" on the host details and self-service pages.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fleetdm/fleet/releases/tag/fleet-v4.91.1
+ReleaseTime: 2026-09-10T21:23:42.0000000Z

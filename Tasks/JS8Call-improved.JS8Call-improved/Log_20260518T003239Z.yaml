@@ -1,0 +1,117 @@
+Version: v3.0.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/JS8Call-improved/JS8Call-improved/releases/download/v3.0.1/JS8Call-3.0.1-installer.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    More information on JS8Call, including the User Guide, code resources and support forum is available on our website
+    Build resources to build JS8Call from source code are available at our js8lib repository:
+    https://github.com/JS8Call-improved/js8lib
+    Carefully read the release notes below for your operating system, and review the Known Issues, before installing JS8Call 3.0
+    Installer Notes
+    MacOS
+    MacOS builds are for Intel and Apple silicon. The app is signed and notarized. The Apple silicon builds were done on MacOS 26 Tahoe with Xcode 26.0.1 (17A400), MacOS 12.7/6 Monterey for Intel. MacOS 12 Monterey and later are supported.
+    Linux
+    Linux is distributed by the project via AppImage only. If you wish to build JS8Call 3.0.1 on linux there are semi-automated build scripts available below in the release assets for Debian-based and Fedora-based linux systems.
+    Windows 11
+    Windows 11 build is provided for x86_64 only. It will run on arm64 Windows 11 with the prism emulator. This has been tested on arm64 Windows 11 and there were no issues noted. OmniRig is no longer supported since v2.4.0. DO NOT download a Windows build anywhere but from our GitHub official repository or the js8call.com website. There are imposters out there on the Microsoft Store and other download locations. These are not official JS8Call-improved builds.
+    The Windows build is code signed by the JS8Call Developer team. Windows Defender and various virus scanning programs do not universally recognize signed software on Windows 11. If your Windows anti-virus software complains, make an exception in the rules for JS8Call. The digital code signature guarantees the software is malware-free, done on our official build system, and it ensures that it can't be tampered with during distribution of the software. Even so, the various virus scanners on Windows produce a lot of false positives. The digital signature allows you to verify it came from a trusted source, even though virus scanners may not think so.
+    JS8Call will also still run on Windows 10.
+    Known Issues
+    - For users still on js8call 2.2.0 there is incompatibility in settings between JS8Call v2.2.x and 2.3 and later. Settings between all versions of JS8Call are compatible from v2.3 on and can read the settings from JS8Call 2.2.x. JS8Call 2.2.x is not compatible with the settings created by JS8Call 2.3 and later. Although JS8Call v2.2.0 is no longer supported, if you are still using this version and wish to save your settings from it, make a copy of your JS8Call.ini configuration file before installing and running newer versions of JS8Call.
+    The JS8Call.ini file is found at:
+    Linux: ~/.config/JS8Call.ini
+    Windows, in C:\Users<your_user_ID>\AppData\Local\JS8Call directory
+    Mac, ~/Library/Preferences/JS8Call.ini
+    - Delay in PTT on some linux systems have been reported when using Flrig. This has been determined to be an issue with the TCP (XML over HTTP) connection between Hamlib and Flrig. It only affects a small number of linux systems, most notably Mint 22. If you experience this issue, it has been found that using rigctld in a chain; JS8Call ↔ rigctld ↔ Flrig ↔ Radio will fix the problem.
+    - If you find a bug or issue with JS8Call please post complete information on the issue to the GitHub repo at https://github.com/JS8Call-improved/JS8Call-improved/issues or in the Discussions category.
+    What's Changed
+    - Windows self-signed by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/116
+    - Mainwindow Breakdown by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/118
+    - Fix code doc generation after refactor by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/121
+    - Move Doxyfile and Linux desktop files, fix workflows by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/122
+    - Fix duplicate callsign in RX.DIRECTED TCP messages by @mgochoa57 in https://github.com/JS8Call-improved/JS8Call-improved/pull/123
+    - Add documentation to JS8_Logbook files by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/124
+    - More doxy documentation by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/125
+    - User Manual as markdown file, other documentation changes by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/128
+    - Switch all tables to markdown from html tags by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/130
+    - Addresses issue #103, dark mode cleanup by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/133
+    - Windows signing by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/136
+    - Inbound APRS message relay into JS8 mesh. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/134
+    - Remove experimental code no longer needed. by @aknrdureegaesr in https://github.com/JS8Call-improved/JS8Call-improved/pull/142
+    - Rename class files to match their class declarations in JS_Mode by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/145
+    - Linux build now signs the AppImage, other updates by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/147
+    - Source tree and UI fixes by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/150
+    - Remove deprecated DisplayManual class by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/151
+    - Create initial API.md by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/154
+    - User Guide update by @Aqueum in https://github.com/JS8Call-improved/JS8Call-improved/pull/149
+    - Fix APRS server connect bug. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/157
+    - Addresses issue #168, INBOX Message Management by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/169
+    - Give directed commands higher priority over messaging by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/172
+    - Return ACKS to APRSIS to prevent excessive message spamming. Add 120 second mute to a message after receipt to prevent excessive retries. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/162
+    - Fix TCP API RX.DIRECTED to match DIRECTED.txt output by @mgochoa57 in https://github.com/JS8Call-improved/JS8Call-improved/pull/176
+    - Add API updates. See docs/API.md Part 1 by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/159
+    - Respect blacklist before relaying APRS packets. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/177
+    - Message Inbox Enhancements by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/181
+    - Addresses issue #182 - Notification sound playback problems by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/183
+    - Bug fix: #126 Set snr for Log window. Add debugging for LogQSO by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/178
+    - Addresses issue #187 - PSK Reporter Failing to Spot by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/189
+    - Update JS8Call desktop file by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/195
+    - Addresses issue #191 - Add number of available messages to MSGS?, HB, and MSG response by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/192
+    - Expose BITS field in RX.ACTIVITY TCP push messages by @BrunoKlu in https://github.com/JS8Call-improved/JS8Call-improved/pull/198
+    - Addresses #193 Custom Descriptions for Frequencies by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/199
+    - Fix "Requested output audio format is not valid" startup bug by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/201
+    - Mac Intel Patch for <C++17 by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/205
+    - Revert "Fix "Requested output audio format is not valid" startup bug" by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/206
+    - Fixes issue #196 by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/197
+    - Fix turbomode decoder. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/210
+    - Switch to GCC 12, minor other fixes by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/214
+    - Bugfix in decoder affecting Turbo and Ultra modes. Enable Ultra. by @punk-kaos in https://github.com/JS8Call-improved/JS8Call-improved/pull/216
+    - TCP API: 8 STATION commands + headless autoreply confirmation by @BrunoKlu in https://github.com/JS8Call-improved/JS8Call-improved/pull/207
+    - Fixes Get Secrets Error by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/218
+    - Add new modes: JS8 40 and JS8 60 by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/217
+    - TCP API: STATION.SET_GROUPS + STATION.SET_AVOID_ALLCALL by @BrunoKlu in https://github.com/JS8Call-improved/JS8Call-improved/pull/208
+    - Add FILTER TCP API for remote bandpass filter control by @BrunoKlu in https://github.com/JS8Call-improved/JS8Call-improved/pull/209
+    - WSJT-X UDP protocol: recieve to decode state switching fixed by @chrbayer84 in https://github.com/JS8Call-improved/JS8Call-improved/pull/224
+    - RX.GET_FREE_OFFSETS API addition by @WebBreacher in https://github.com/JS8Call-improved/JS8Call-improved/pull/213
+    - Linux Audio Fixes by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/223
+    - CI Move Linux and Windows to Hamlib 4.7.0 Official release by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/230
+    - Revise JS8Call User Guide for version updates by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/225
+    - Fixes Failed to create popup. Ensure popup has a transientParent set. by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/231
+    - Implement pill formatting of commands in message text by @Beiri22 in https://github.com/JS8Call-improved/JS8Call-improved/pull/228
+    - Minor changes to Pills by @Beiri22 in https://github.com/JS8Call-improved/JS8Call-improved/pull/233
+    - Change to CMakelists.txt versioning: by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/235
+    - Add non-versioned development builds for master by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/236
+    - clean up some legacy wsjtx code by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/237
+    - Update links for libraries now hosted on js8lib by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/242
+    - Dockable Message Panel Fixes by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/239
+    - Load Stylesheet by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/243
+    - Status Bar overhaul by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/246
+    - Use preprocessor directives to apply platform-specific styles by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/249
+    - Final full implementation of styles.h by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/253
+    - New, more modern header bar design for JS8Call 3 by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/256
+    - restrict pill display to callsigns in relay hops by @Beiri22 in https://github.com/JS8Call-improved/JS8Call-improved/pull/245
+    - Implement Linux styles by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/257
+    - New Design of Frequency Offset Control (Mac only) by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/261
+    - Apply offset frequency slider widget across all platforms by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/265
+    - Fix security vulnerability by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/273, addresses https://github.com/JS8Call-improved/JS8Call-improved/security/advisories/GHSA-98hp-pjp7-w62x
+    - Addresses issue #260 Multiple notification audio connections left open by @rruchte in https://github.com/JS8Call-improved/JS8Call-improved/pull/271
+    - Documentation updates for 3.0.0 by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/277
+    - Fix to show status of auto_reply when program is first started. by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/280
+    - Replace UI lockup code that prevented a MSG from being composed with by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/281
+    - Update windows workflow by @wmiler in https://github.com/JS8Call-improved/JS8Call-improved/pull/284
+    - Auto HB ACK limiting by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/283
+    - Add callsign blocking feature, settable in the UI by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/289
+    - Change audio notifications dialog so it uses live UI state by @Chris-AC9KH in https://github.com/JS8Call-improved/JS8Call-improved/pull/291
+    New Contributors
+    - @Aqueum made their first contribution in https://github.com/JS8Call-improved/JS8Call-improved/pull/149
+    - @BrunoKlu made their first contribution in https://github.com/JS8Call-improved/JS8Call-improved/pull/198
+    - @WebBreacher made their first contribution in https://github.com/JS8Call-improved/JS8Call-improved/pull/213
+    - @Beiri22 made their first contribution in https://github.com/JS8Call-improved/JS8Call-improved/pull/228
+    Full Changelog: https://github.com/JS8Call-improved/JS8Call-improved/compare/release/2.5.2...v3.0.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JS8Call-improved/JS8Call-improved/releases/tag/v3.0.1
+ReleaseTime: 2026-05-17T17:12:10.0000000Z

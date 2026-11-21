@@ -1,0 +1,40 @@
+Version: 1.5.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.4/DeskBox_Setup_1.5.4_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.5.4/DeskBox_Setup_1.5.4_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.4 is a reliability update for large batch operations in file widgets: memory no longer climbs and stays high, the cut-out freeze is gone, and the undo history inside settings.json is finally bounded. It ships the performance and safety work from pull requests #386, #388, #390, #391, and #393.
+    Released on September 18, 2026.
+    Highlights
+    - Keep memory in check after large batch operations. Importing, organizing, or cutting thousands of files no longer leaves private memory near 1 GB with no recovery until restart. Settings persist by streaming straight into the store temp file instead of materializing multi-megabyte buffers, and moving files out of a widget stops triggering thousands of debounced saves.
+    - Stop the cut-out freeze. Cutting a large selection out of a widget used to run the cut-state sweep once per collection event, producing a visible storm of list updates; it now runs once per batch.
+    - Bound the undo history in settings.json. The history previously had no per-batch limit, so repeated multi-thousand-file operations could grow settings.json without bound (a real profile reached 19.8 MB, inflating every save and every startup). Batches beyond the receipt limits keep their history entry as a summary — real item count, never a partial undo — and existing bloated profiles shrink automatically on the first launch after updating (the 19.8 MB profile migrates to under 100 KB with all 24 entries preserved).
+    - Speed up large widget operations. Imports and watcher reloads use a scoped path index with binary insertion instead of per-file list scans.
+    - Harden the batch transaction boundaries. Recovery journals, undo receipts, and abandon markers follow checked-durable ordering, so a crash or a save failure during a large batch can no longer restore already-committed files back to the desktop or drop an abandon.
+    See CHANGELOG.md for the complete list.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeskBox 1.5.4 是一次针对文件格子大批量操作的可靠性更新：内存不再攀升后高居不下、剪切大量文件不再卡顿，settings.json 中的撤销历史终于有了上限。本版包含 PR #386、#388、#390、#391、#393 的性能与安全工作。
+    发布日期：2026 年 9 月 18 日。
+    主要更新
+    - 大批量操作后内存不再高居不下。 导入、整理或剪切数千文件不再让私有内存逼近 1 GB 直到重启：设置持久化直接流式写入临时文件，不再生成数 MB 临时缓冲；把文件移出格子不再触发数千次防抖保存。
+    - 移除剪切大量文件时的卡顿。 此前从格子剪切大块选区时，剪切状态清扫按每个集合事件执行一次，造成可见的列表更新风暴；现在合并为每批一次。
+    - 为 settings.json 的撤销历史设置上限。 历史此前没有单批上限，反复数千文件的操作会让 settings.json 无限增长（真实档案达到 19.8 MB，放大了每次保存和每次启动）。超出限额的批次保留摘要式历史条目——真实数量、绝不部分撤销——已膨胀的配置在升级后首次启动自动瘦身（19.8 MB 档案迁移后不足 100 KB，24 条历史全部保留）。
+    - 大批量格子操作更快。 导入与监视器重载改用批内路径索引和二分插入，替代逐文件列表扫描。
+    - 加固批量事务边界。 恢复日志、撤销回执与放弃标记遵循"检查式持久化"顺序，大批量期间的崩溃或保存失败不会再把已提交的文件恢复回桌面，也不会丢失放弃操作。
+    完整条目见 CHANGELOG.md。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.5.4
+ReleaseTime: 2026-09-18T06:35:56.0000000Z

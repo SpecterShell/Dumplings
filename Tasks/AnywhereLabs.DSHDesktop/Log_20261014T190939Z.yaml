@@ -1,0 +1,86 @@
+Version: 2.0.18-next
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anywhere-labs/dsh-desktop/releases/download/v2.0.18-next/DSH-NEXT-2.0.18-next-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This Next release moves to archived packaging with a bundled interpreter runtime, so the Office document skills work out of the box in the macOS and Windows packages. It adds Linux ARM64 packages, developer logging, and an editing context menu, and fixes attachment uploads, in-app update downloads, workspace folder selection, and more.
+    DSH NEXT is a community-maintained open-source project, not an official DeepSeek product.
+    New and improved
+    - Bundled interpreter runtime: The macOS and Windows packages carry standalone Python and Node runtimes with the Office skill resources, so the Office document skills (docx / pptx / xlsx) work out of the box. The universal macOS app selects the payload for the current CPU.
+    - Archived packaging and integrity check: The application is now archived into app.asar with a sealed file descriptor. At startup, the packaged app compares the descriptor with its own version, the installed core, platform, and CPU, and opens the recovery assistant instead of the workspace on a mismatch. The macOS package also keeps the manifest location that the 2.0.14-next through 2.0.17-next updaters read when verifying a downloaded image.
+    - Linux ARM64: Added Linux ARM64 AppImage, Debian / Ubuntu, and tar.gz packages.
+    - Developer logging: Added opt-in Desktop developer logging across Host and renderer processes, correlating model, tool, and session activity, transport timing, process output, and renderer errors. Logs have bounded retention and are included in diagnostic exports without recording chat text or tool inputs/outputs.
+    - Editing context menu: Editable areas get a native right-click menu with Undo, Redo, Cut, Copy, Paste, and Select All; selected read-only text offers Copy. On Windows the labels follow the application language; macOS and Linux use the native system labels.
+    - Community Market: Installing, enabling/disabling, and uninstalling plugins now go through the official plugin manager, with no restart prompt. The Installed view lists community plugins only; official and bundled plugins stay on the official Plugins page.
+    Fixes
+    - Attachment uploads: Fixed non-image attachments (such as .md, .docx, .zip) always failing to upload in the Next window.
+    - Plugin pages: Fixed same-origin plugin iframes showing a blank page in the conversation view.
+    - In-app updates: Fixed installer downloads on macOS and Windows failing with a download error because the release service's redirect was not followed.
+    - Preset loading: Fixed all built-in presets failing to load, which blocked new sessions, when stale module links from an older Desktop installation remained in a shared ~/.dsh. The cleanup removes only the links and never deletes files in the older installation directory.
+    - Workspace folder selection: Adding a workspace now opens the system folder dialog instead of the web directory panel.
+    - Folder references: Fixed dropped folders being rejected with the "only Desktop supports adding folders" notice. Dropped, pasted, or picked local files and folders now enter the composer as @ path references.
+    - Quitting: Fixed the app staying alive after Quit from the menu or tray when shutdown cleanup stopped responding. Cleanup is now bounded to five seconds before a forced exit.
+    - Launch environment: When launched from the Finder, the Dock, or a Linux desktop launcher, the Host, terminals, and tool subprocesses now inherit the login shell's PATH, locale, and time zone. This fixes non-ASCII file names showing as ? in the terminal and user tools outside the system PATH being invisible. On macOS, a UTF-8 locale is selected when the login shell sets none.
+    - macOS permission dialog: Screen Recording and Accessibility now show as "not granted" with a request action, instead of "denied" or "managed by the system". The dialog explains the follow-up steps macOS leaves out.
+    - Built-in developer tools: Fixed the embedded official Inspector failing to connect to the Host debugging endpoint, and the Reload DevTools action not responding.
+    - Windows caption buttons: Fixed the title bar buttons showing a different shade from the page background on the first-run setup and sign-in pages.
+    - Loading page: Fixed a brief white page while the official interface loads; the loading page now uses a dark background.
+    - Dark-mode select popups: Fixed select popups opening white with unreadable text under the dark palette on Windows and Linux.
+    Usage notes
+    - Quit the previous version and back up ~/.dsh before installing. Verify your usual plugins and workflows after installation.
+    - When upgrading from 2.0.17-next or earlier, download and install from this page; the in-app update in those versions may not complete the download.
+    - The first use of the Office document skills installs the bundled runtime under ~/.dsh/dsh-runtimes/dsh-next-primary-runtime, which needs additional disk space.
+    - Linux packages do not yet bundle the interpreter runtime, so the Office document skills are unavailable on Linux.
+    - The core checks declared plugin compatibility and may skip incompatible plugins. Check for plugin updates if a plugin does not load.
+    - Next remains experimental and defaults to the shared ~/.dsh home. Profiles do not isolate sessions, accounts, or credentials within that home.
+    - Set DSH_DESKTOP_NEXT_HOME to an absolute path to isolate DSH data; this does not isolate AA's default shared sign-in and device-binding state.
+    - Markets, mobile remote control, and Computer Use are off by default in new Profiles. Next does not yet offer the original Desktop's Extended / Advanced window modes.
+    - Before managing plugins for the desktop Profile from the bundled terminal, launch Desktop to initialize that Profile.
+    Full changelog · Project website
+    DSH NEXT will gradually replace the Stable edition.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次 Next 更新改为归档打包并随包提供解释器运行时，macOS 与 Windows 安装包的 Office 文档技能开箱即用；新增 Linux ARM64 安装包、开发者日志和编辑右键菜单，并修复附件上传、应用内更新下载、工作区目录选择等问题。
+    DSH NEXT 是社区维护的开源项目，并非 DeepSeek 官方产品。
+    新增与改进
+    - 随包解释器运行时： macOS 与 Windows 安装包内置独立的 Python 与 Node 运行时及 Office 技能资源，Office 文档技能（docx / pptx / xlsx）开箱即用；macOS 通用包按当前 CPU 选择对应载荷。
+    - 归档打包与完整性校验： 应用改为 app.asar 归档打包并随包封存文件清单；启动时核对清单与自身版本、已安装内核、平台和 CPU，不一致时打开恢复助手而不进入工作区。macOS 安装包同时保留 2.0.14-next 至 2.0.17-next 更新器校验镜像所需的清单位置。
+    - Linux ARM64： 新增 Linux ARM64 的 AppImage、Debian / Ubuntu 和 tar.gz 包。
+    - 开发者日志： 新增可选开启的桌面端开发者日志，覆盖 Host 与界面进程，关联记录模型、工具和会话活动、通信耗时、进程输出及界面错误；日志保留有容量限制，并纳入诊断导出，不记录聊天正文或工具输入／输出。
+    - 编辑右键菜单： 可编辑区域新增撤销、重做、剪切、复制、粘贴和全选的原生右键菜单，选中的只读文本提供复制；Windows 上的菜单文字随应用语言设置切换，macOS 与 Linux 使用系统原生标签。
+    - 社区市场： 插件的安装、启用／停用和卸载改由官方插件管理器执行，不再弹出重启提示；“已安装”视图只列出社区插件，官方及随包插件仍在官方插件页管理。
+    修复
+    - 附件上传： 修复 Next 窗口中非图片附件（如 .md、.docx、.zip）上传必定失败的问题。
+    - 插件页面： 修复插件对话视图中同源 iframe 白屏的问题。
+    - 应用内更新： 修复 macOS 与 Windows 上更新下载无法跟随发布服务跳转、提示下载错误的问题。
+    - 会话预设加载： 修复与旧版桌面版共用 ~/.dsh 时，残留的旧版模块链接导致内置预设全部“加载失败”、无法新建会话的问题；清理只移除链接，不会删除旧安装目录中的文件。
+    - 工作区目录选择： 添加工作区时改用系统文件夹对话框，不再打开网页版目录面板。
+    - 文件夹引用： 修复拖入文件夹时提示“只有桌面端支持添加文件夹”的问题；拖入、粘贴或选择的本地文件和文件夹现在以 @ 路径引用加入输入框。
+    - 退出： 修复通过菜单或托盘退出后，清理无响应时应用长时间不退出的问题；清理超过 5 秒即强制退出。
+    - 启动环境： 从 Finder、Dock 或 Linux 桌面启动器启动时，Host、终端和工具子进程继承登录 Shell 的 PATH、区域设置和时区；修复终端中非 ASCII 文件名显示为 ?、系统 PATH 之外的用户工具不可见的问题。macOS 上若登录 Shell 未设置区域，自动选用 UTF-8 区域设置。
+    - macOS 权限对话框： 屏幕录制和辅助功能未授权时显示为“未授权”并可直接发起授权请求，不再误显示为“已拒绝”或“由系统管理”；对话框补充了 macOS 未提示的后续步骤。
+    - 内置开发者工具： 修复官方内嵌 Inspector 无法连接 Host 调试端点，以及“Reload DevTools”无响应的问题。
+    - Windows 标题栏按钮： 修复首次设置和登录页面中，标题栏按钮与页面背景颜色不一致的问题。
+    - 加载页面： 修复官方界面加载期间短暂出现白屏的问题，加载页改为深色背景。
+    - 深色模式下拉菜单： 修复 Windows 与 Linux 深色模式下，下拉选择框的弹出列表显示为白底白字的问题。
+    使用提示
+    - 请先退出旧版应用并备份 ~/.dsh，安装后验证常用插件和工作流程。
+    - 从 2.0.17-next 或更早版本升级时，建议从本页手动下载安装；旧版本的应用内更新可能无法完成下载。
+    - Office 文档技能首次使用时，会把随包运行时安装到 ~/.dsh/dsh-runtimes/dsh-next-primary-runtime，需要额外磁盘空间。
+    - Linux 安装包暂不内置解释器运行时，Office 文档技能在 Linux 上不可用。
+    - 内核会检查插件声明的兼容版本，不兼容的插件可能被跳过；遇到插件未加载时，请先检查并更新插件。
+    - Next 仍属实验通道，默认与稳定版共用 ~/.dsh；Profile 不隔离同一目录中的会话、账号和凭据。
+    - 可通过绝对路径 DSH_DESKTOP_NEXT_HOME 隔离 DSH 数据，但不会因此隔离 AA 的默认共享登录与设备绑定状态。
+    - 新 Profile 的插件市场、手机远控和 Computer Use 默认关闭；Next 暂不提供原桌面版的扩展／增强窗口模式。
+    - 如需通过应用内终端管理 desktop Profile 的插件，请先启动 Desktop 完成该 Profile 的初始化。
+    完整变更记录 · 项目网站
+    DSH NEXT 将逐步取代稳定版。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.18-next
+ReleaseTime: 2026-10-14T15:47:33.0000000Z

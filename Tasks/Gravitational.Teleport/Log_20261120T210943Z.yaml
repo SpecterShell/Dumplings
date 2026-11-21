@@ -1,0 +1,29 @@
+Version: 18.11.13
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.teleport.dev/teleport-v18.11.13-windows-amd64-bin.zip
+  InstallerSha256: 6D5411FA9013B9DD50A74AE9CDFACF25899C80F631B6710D79E3DAFB11298C27
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Reduced the number of Hardware key PIN prompts from 2 to 1 when a local PIV agent (Teleport Connect) is available. tsh login now uses the PIV agent when available.
+    - Added support for searching Linux and Windows desktop session recordings using tsh recording search.
+    - Fixed an issue that caused screen corruption when multiple Windows desktop sessions are running simultaneously in Teleport Connect.
+    - Fixed an issue in AWS Identity Center integration where Access List member updates may not be immediately reflected in Identity Center.
+    - Fixed SSO login failures when AWS Cognito is Federated to an upstream IdP.
+    - Added support for discovering and enrolling AWS RDS databases through the AWS Terraform integration in the Web UI.
+    - Add support for scoped Azure and GCP Cloud Console apps.
+    - Fixed SSO MFA redirect loop issue in service provider initiated SAML IdP login.
+    - Added support for Discord plugin Web UI enrollment in self-hosted Teleport Enterprise clusters.
+    - Deprecated actions in role rules. Actions are no longer evaluated and are ignored if set.
+    - Fixed the tbot Application Access Proxy only forwarding the last header value for each header key in the response from the upstream service.
+    - Fixed some Web UI Access List edits hiding the members table from owners until a page refresh.
+    - Improved reliability of access request plugins when broadcasting high-volume notifications.
+    - Fixed collision with Microsoft AD target distinguished names for CRLs when using CA overrides. Database admins using PKINIT with CA overrides must republish CRLs with tctl auth crl to prevent authentication failures. See https://goteleport.com/docs/zero-trust-access/management/security/ca-overrides/#db_client for details.
+    - Added support for configuring the WorkloadIdentity spec.jwt.extra_claims field to the Terraform provider.
+    - Improved reliability of event handler when processing missing sessions.
+    - Fixed session processing concurrency limits in the event handler.
+    - SSO MFA devices are now correctly allowed in moderated sessions presence checks.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gravitational/teleport/releases

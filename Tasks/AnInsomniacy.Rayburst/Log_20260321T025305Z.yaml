@@ -1,0 +1,26 @@
+Version: 3.4.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.4.7/MotrixNext_3.4.7_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release promotes the v3.4.7 beta series to stable, delivering industrial-grade logging infrastructure, comprehensive path handling improvements, and full observability coverage across all error paths.
+    ✨ New Features
+    - Industrial-grade logging system — ISO 8601 timestamps with timezone, structured [level] [source] format, 10 MB file rotation, and enriched diagnostic exports (OS version, locale, engine PID, config snapshot)
+    - Platform-aware path handling — Custom Tauri commands for file existence checks, directory detection, trash operations, and show_item_in_dir with platform-specific implementations (Windows COM/ShellExecute, macOS NSWorkspace, Linux D-Bus)
+    - path_to_safe_string — Resolves Windows extended-length path (\\?\) incompatibility with external processes like aria2c
+    🛠 Improvements
+    - Comprehensive logging coverage — 40 log statements added across 10 files, covering all Rust commands (updater, engine, UPnP, config, file ops) and all frontend catch blocks (update dialog, task actions, tracker probe, batch operations)
+    - 35 structural tests — TDD-driven verification that every critical code path has appropriate log statements
+    - Windows path canonicalization — Best-effort fallback for virtual file systems (RAM disks) with debug logging
+    🐛 Bug Fixes
+    - Fixed silent error swallowing in update dialog, task pause/resume/restart, and batch operations
+    - Reverted Linux hide-first window close logic that caused tray regression on Wayland
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.4.7
+ReleaseTime: 2026-03-21T02:06:01.0000000Z

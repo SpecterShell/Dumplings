@@ -1,0 +1,76 @@
+Version: 15.10.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.10.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added a non-interrupting "aside" message channel to the agent loop (AgentLoopConfig.getAsideMessages / Agent.setAsideMessageProvider). Asides are drained at each step boundary (after a tool batch, before the next model call) and at the yield check, so passive notifications (e.g. background-job completions, late LSP diagnostics) reach the model between requests without waiting for the agent to stop and without aborting in-flight tools the way steering does.
+    Changed
+    - Changed core custom and hook messages to convert to developer messages for provider context.
+    Fixed
+    - Fixed the compaction spinner freezing (only repainting on a terminal resize) when compacting very large codex/OpenAI contexts. buildOpenAiNativeHistory re-collected the full known/custom tool-call id sets on every history-bearing message, rescanning the entire growing native history each time — O(N²) in history items — which blocked the event loop for seconds and starved the loader's animation timer and render scheduler. The sets are now maintained incrementally (linear), so building the compaction request no longer monopolizes the main thread.
+    Removed
+    - Removed the now-dead <turn-aborted> marker from the OpenAI compaction output user-message filter, since transformMessages no longer emits that note.
+    - Removed stale synthetic user-message tag filters from OpenAI remote compaction output preservation; developer messages are now dropped by role instead.
+    - Tool executions now receive the active turn AbortSignal unconditionally.
+    @oh-my-pi/pi-ai
+    Removed
+    - Removed the synthetic <turn-aborted> developer guidance note that transformMessages injected after an aborted/errored assistant turn (and its turn-aborted-guidance.md prompt). The per-call synthetic "aborted" tool results already tell the model the turn's tools were terminated, so the extra "verify current state before retrying" note was redundant — and it biased the model toward second-guessing a deliberate user interrupt when the turn was resumed.
+    - Removed the legacy Anthropic first-user-message skip for <system-reminder> blocks now that synthetic reminders no longer travel as user messages.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added clickable file path hyperlinks to read tool outputs (read-call rows, grouped summaries, and inline previews) using resolved or absolute file targets with selector-based line anchors for quick navigation
+    - Added a resolved-span echo to replace block/delete block edits: a successful block op now prints replace block N → resolved lines A-B (K lines) between the section header and the diff preview, so the model can confirm tree-sitter matched the construct it intended (e.g. catch a decorator left outside the block) instead of inferring the span from the diff after the fact.
+    Changed
+    - Changed the find tool to process each explicit multi-path target separately before merging results so searches stay scoped to the requested paths
+    - Changed multi-path find handling so invalid extra targets no longer fail the whole query and now return matches from valid targets only
+    - Changed background-job completion and late LSP diagnostic delivery to inject at the next agent step boundary (mid-run), via the new non-interrupting "aside" channel, instead of only when the agent reaches a yield/follow-up point. The model now sees these notifications between its own requests without the turn having to end first, and in-flight tools are never interrupted; job-poll acknowledgement still suppresses results the agent already saw.
+    - Changed late LSP diagnostics after edit or write to surface in the chat transcript as Late diagnostics entries rendered through the same grouped tree renderer the edit/write tools use (per-file nodes, severity icons, :line:col locations), and to honor the global tool-output expand toggle (collapsed entries cap at 5 diagnostics with a … N more hint)
+    - Changed delayed diagnostics delivery to batch late results in one message per flush instead of a raw hidden custom payload
+    - Changed hidden custom messages and file-mention context to reach providers as developer messages instead of user-authored turns, so system reminders no longer pollute compacted user history.
+    - Rewrote the plan-mode active prompt (prompts/system/plan-mode-active.md) from scratch to stop producing shallow plans. Reframed the artifact as an execution spec a fresh agent runs after the planning conversation is cleared/compacted (zero design decisions for the implementer) rather than a brevity-capped summary. Folded high-consensus requirements into the existing sections as inline, conditional rules — no new boilerplate sections: ordered Approach steps that keep the build/tests green after each step (sequencing); exact signatures/literals for new or load-bearing symbols (contracts); full callsite list + clean cutover for renames/signature-changes/removals; Verification that must exercise the new behavior (input → observable output) with run preconditions, not just build/typecheck; Assumptions restricted to user-overridable choices plus pre-decided fallbacks for load-bearing assumptions; a provenance rule (plan facts must come from a read this session; unverified claims flagged inline); and bans on conversation back-references and decision-free sections (Non-Goals/Alternatives/Risks/Future Work). Kept the decision-complete self-check and the brevity-vs-completeness tiebreak (completeness wins). Render contract (Handlebars vars/conditionals) unchanged; verified across all planExists/reentry/iterative branch combinations.
+    Fixed
+    - Fixed duplicate find matches in multi-target queries by deduplicating overlapping paths in merged results
+    - Fixed find partial updates to avoid repeated streamed rows while scans are still running
+    - Fixed stale late diagnostics from older edits being shown after a file was edited again
+    - Fixed read output paths so selector suffixes are preserved when corrected paths were returned without selectors
+    - Fixed read surfacing a misleading red "Operation aborted" on a plain-file or directory read when a turn was interrupted mid-read. Those reads are deterministic and fast, so execute now runs them to completion instead of cancelling them; slower/non-deterministic reads (archive, sqlite, document, image, summary, conflict scan, URL) stay cancellable.
+    - Fixed edit tool headers to hide first-change line suffixes, middle-elide long paths only when the header width needs it, show compact change stats, and target encoded file:// hyperlinks.
+    - Fixed Esc interrupts rendering a redundant Interrupted by user assistant transcript line while preserving the interrupt reason for tool-result placeholders and continuation logic.
+    - LSP writethrough no longer burns the full diagnostics poll on every edit/write. typescript-language-server never echoes the document version in publishDiagnostics (upstream #983), so the exact-version gate never passed; waitForDiagnostics now accepts an exact version match instantly and otherwise settles on the latest publish after a short quiescence window, dropping superseded in-flight diagnostics.
+    - LSP writethrough no longer blocks the whole edit/write on slow diagnostics: it now waits only a short inline window (~500ms) for a settled result, then hands the in-flight fetch to the deferred channel so a slow or cold language server (e.g. a large-project tsserver) delivers its diagnostics as a follow-up message instead of stalling the tool 3–5s on every edit. The background fetch also gets a longer budget so slow servers still surface late rather than being dropped.
+    - Fixed the c/. continue shortcut making the agent second-guess itself after an Esc interrupt. Continuing used to submit an empty user turn, which left the model with only the aborted-turn context — so it tended to restate the halted state and ask whether to proceed rather than just continuing. The shortcut now resumes with a hidden agent-authored developer directive ("keep going — don't stop to summarize or re-confirm the plan") instead of an empty turn. It still produces no visible transcript entry, same as before.
+    - Fixed native scrollback commit boundaries to be computed generically from finalized transcript blocks and observed append-only live growth, so tall final tool results and streaming previews keep their scrolled-off heads on ED3-risk terminals without per-tool append-only predicates; live blocks that re-layout remain deferred until finalization or the next checkpoint.
+    - Fixed read-group summaries for multi-path read results to use result-provided display targets so each resolved path is shown as its own row
+    - Fixed read-group range summaries to abbreviate long merged selectors with ellipsis to keep repeated-file range rows readable
+    - Fixed read-group TUI summaries so a single delimited read call renders as separate read rows, and repeated reads of the same file collapse under one file with full-file/range children.
+    - Fixed grouped read rows freezing on their pending "⏳ Read " preview on ED3-risk terminals (ghostty/kitty/iTerm2/…) when a parallel sibling tool closed the read run and appended a block below the group before the read's result arrived. The read-group block now stays in the repaintable live region until its entries settle, so the late success result repaints instead of being stranded; a seal() escape hatch (turn end / transcript rebuild) still lets a never-delivered read freeze rather than pinning the live region.
+    - Fixed session search to return all sessions unchanged when the query is blank
+    - Fixed duplicate session suggestions by deduplicating history matches by session path when merging metadata and prompt-history results
+    - Fixed /resume search ranking so sessions whose prompts or metadata match the query now prefer prompt recency and recent literal matches instead of letting older earlier-title fuzzy matches outrank a just-used session.
+    - Fixed omp --resume <id> / --fork <id> crashing with [Uncaught Exception] when the id did not match a known session. createSessionManager now throws a dedicated SessionResolutionError, which runRootCommand catches to print Error: Session "..." not found. plus a hint to stderr and exit with code 1. The same path covers --fork combined with --no-session and the non-interactive cross-project / moved-cwd prompts that previously surfaced raw stack traces (#2084).
+    Removed
+    - Removed the animated pending border ("shimmer") on running bash, eval, and ssh execution blocks. While pending, a block now shows a static accent border instead of sweeping a dark segment around its bottom edge; display.shimmer still governs the working-status line and task row animations.
+    - Removed the tool-level nonAbortable bypass so write and edit honor the active turn AbortSignal. read is abortable for everything that is slow or non-deterministic (URL/internal-URL reads, archive, sqlite, document conversion, image decode, structural summary, conflict scan, suffix glob); only the deterministic plain-file line/range reads and directory listings run to completion.
+    @oh-my-pi/hashline
+    Added
+    - Added a BlockResolution type and surfaced resolved block spans on ApplyResult.blockResolutions / PatchSectionResult.blockResolutions. resolveBlockEdits now accepts an onResolved callback that reports each replace block N: / delete block N anchor's resolved [start, end] span (and whether it was a delete). Spans are surfaced only on the no-drift apply paths, where the resolved line numbers line up with the tag the caller read.
+    Changed
+    - Reworked the edit tool prompt (prompt.md): added a replace block N vs replace N..M decision rule, documented that a leading decorator/attribute/doc-comment is a separate node not swept into the block (point N at the first decorator line, or use replace N..M for a Rust-style /// sibling comment), reframed the blast-radius guidance so "block replace" no longer reads as the dangerous option, and added a decorated-definition example.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed DEC 2048 in-band resize reports (CSI 48;rows;cols;hpx;wpx t) leaking into the focused editor as literal text during a rapid resize. When the window is resized quickly the event loop stays busy long enough for the StdinBuffer flush timeout to fire mid-report; the \x1b[48;… prefix was emitted as one event and the tail (e.g. 8;125;1156;1125t) arrived as bare printable characters that the editor inserted. ProcessTerminal now reassembles a split in-band report (including a split at the bare \x1b[4 type field) until its terminator and then drives the resize. A reassembled sequence that turns out not to be a resize report — such as a split kitty key like \x1b[48;5u (codepoint 48 = 0) — is forwarded to the input handler as a single escape sequence rather than dropped or leaked.
+    - Coalesced terminal-multiplexer SIGWINCH events into a single forced render once the pane stops resizing so closing/dragging a tmux/screen/zellij split no longer flashes the viewport blank before the new geometry repaints (#2088).
+    What's Changed
+    - fix(tui): coalesced multiplexer resize events into one settled render by @roboomp in https://github.com/can1357/oh-my-pi/pull/2090
+    - fix(coding-agent): friendly error when --resume/--fork session id is unknown by @roboomp in https://github.com/can1357/oh-my-pi/pull/2086
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.10.2...v15.10.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.10.3
+ReleaseTime: 2026-06-08T05:50:17.0000000Z

@@ -1,0 +1,181 @@
+Version: 0.1.804-beta
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/unslothai/unsloth/releases/download/v0.1.804-beta/Unsloth-Desktop-Windows.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Qwen3.8-Flash-Next and GLM-5.3-Flash can now run locally in Unsloth!
+    - Run Qwen3.8-Flash on 75GB RAM, GLM-5.3-Flash on 102GB RAM+VRAM
+    - 5x Faster inference for RAM offloading
+    - "Infinite" repeated compaction now works
+    - 100+ chat, reliability and performance improvements
+    Qwen Guide: https://unsloth.ai/docs/models/qwen3.8-next
+    Qwen GGUFs: https://huggingface.co/unsloth/Qwen3.8-Flash-Next-GGUF
+    GLM Guide: https://unsloth.ai/docs/models/glm-5.3-flash
+    GLM GGUFs: https://huggingface.co/unsloth/GLM-5.3-Flash-GGUF
+    Highlights
+    - Qwen3.8-Flash-Next on 75GB RAM
+    - GLM-5.3-Flash on 102GB total memory
+    - Smarter GPU + RAM offloading - run larger models with less setup
+    - Chats recover after disconnects instead of losing the reply
+    - See what fits before loading with clearer memory estimates
+    Qwen3.8-Flash-Next
+    Qwen3.8-Flash-Next is a new 125B multimodal reasoning model and an early preview of Qwen4's architecture.
+    - The 1-bit Unsloth Dynamic GGUF runs on 75GB RAM or unified memory.
+    - It's 79% smaller than BF16 while retaining 80% top-1 accuracy.
+    - Chat with text and images using up to 262K context.
+    - Switch between None, Low, Medium and Extra High reasoning.
+    - Preserved Thinking keeps reasoning consistent across longer chats.
+    GLM-5.3-Flash
+    GLM-5.3-Flash is Z.ai's new 320B multimodal model, with only 18B parameters active at a time.
+    - Run the 1-bit model on 102GB of combined RAM + VRAM.
+    - Chat with text, images and long documents using up to 1M context.
+    - Switch between Low, High and Max reasoning.
+    - Stronger coding, agent and vision performance than GLM-5.2.
+    - Recommended settings are applied automatically in Unsloth.
+    Chat + tools
+    - Local chats resume after a disconnect instead of losing the reply.
+    - Deep Research keeps going when a provider asks it to slow down.
+    - Vision chats now handle multiple images properly.
+    - Images returned by MCP tools appear directly in chat.
+    - Export chats as JSONL for backups or use in other tools.
+    - Adjust Auto Compaction for longer chats, or turn it off.
+    - Collapse tool activity by default for cleaner agent chats.
+    Models + performance
+    - Large GGUFs automatically split across GPU and system RAM.
+    - See estimated memory usage before loading a model.
+    - View VRAM usage directly from your downloaded models.
+    - Model settings stay saved when switching chats.
+    - Search and download embedding models directly from Hugging Face.
+    - Text-to-speech models only load when you actually use them.
+    Desktop + reliability
+    - Linux voice recording fixed.
+    - NVIDIA + Wayland interface freezes fixed.
+    - AMD model loading crashes fixed.
+    - llama.cpp models now load from Windows profiles with non-English characters.
+    - Non-English web links now work properly as chat sources.
+    - Desktop download links always point to the latest stable release.
+    What's Changed
+    - Bump install.sh / install.ps1 pin to unsloth>=2026.8.21 by @danielhanchen in https://github.com/unslothai/unsloth/pull/9699
+    - fix(studio): resolve PowerShell by absolute path in the update gate by @yzxcj797 in https://github.com/unslothai/unsloth/pull/9452
+    - Prevent shared preview loads from evicting the active Studio model by @NilayYadav in https://github.com/unslothai/unsloth/pull/7104
+    - studio: harden lockfile audit followups for #5604 by @danielhanchen in https://github.com/unslothai/unsloth/pull/5695
+    - Fix Linux voice recording by capturing raw PCM where WebKitGTK's MediaRecorder produces no audio by @Fizza-Mukhtar in https://github.com/unslothai/unsloth/pull/9564
+    - Studio: take remend 1.3.1, which stops repairing markdown that is already complete by @danielhanchen in https://github.com/unslothai/unsloth/pull/9667
+    - CLI: follow model reasoning default in unsloth start by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9733
+    - Name the encoding when the poll probe writes its artifact by @danielhanchen in https://github.com/unslothai/unsloth/pull/9691
+    - studio: add a freeze report script for Linux desktop interface hangs by @danielhanchen in https://github.com/unslothai/unsloth/pull/9668
+    - Fail the mac tab-capability smoke on a backend that never comes back, not on a stall by @danielhanchen in https://github.com/unslothai/unsloth/pull/9711
+    - Warm the app before timing /api/health, instead of widening the ceiling by @danielhanchen in https://github.com/unslothai/unsloth/pull/9724
+    - docs: remove duplicate Search bullet and fix error messages by @lxcxjxhx in https://github.com/unslothai/unsloth/pull/9566
+    - Follow up #9435: restore the rest of the moved names, and read quant labels through the variant lister by @danielhanchen in https://github.com/unslothai/unsloth/pull/9701
+    - Studio: use --load-mode none when the model fits without paging by @danielhanchen in https://github.com/unslothai/unsloth/pull/9565
+    - Studio: spill weights with -ot instead of layers, so the KV cache stays on the GPU by @danielhanchen in https://github.com/unslothai/unsloth/pull/9675
+    - Reject a negative chunking stride instead of silently dropping text by @vineethsaivs in https://github.com/unslothai/unsloth/pull/9249
+    - Studio: fix web pages with non-English URLs failing to load by @NilayYadav in https://github.com/unslothai/unsloth/pull/9721
+    - Studio: align composer and research activity icons by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9755
+    - desktop: turn webkit compositing off on the one wayland nvidia setup that freezes by @danielhanchen in https://github.com/unslothai/unsloth/pull/9734
+    - studio: keep a resumed turn's provider metadata through the continuation merge by @danielhanchen in https://github.com/unslothai/unsloth/pull/9684
+    - Studio: render MCP images returned as embedded resources by @NilayYadav in https://github.com/unslothai/unsloth/pull/9636
+    - Studio: send the most recent chat image to vision models by @NilayYadav in https://github.com/unslothai/unsloth/pull/9638
+    - Studio: align sidebar list header actions, and mark downloaded models with a dot by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9740
+    - Prevent stale hydration from overwriting remembered model settings by @alkinun in https://github.com/unslothai/unsloth/pull/9767
+    - Handle invalid Krea2 model indexes clearly by @alkinun in https://github.com/unslothai/unsloth/pull/9760
+    - Studio: track API token usage in Profile by @Etherll in https://github.com/unslothai/unsloth/pull/9320
+    - Studio: tell the model which documents are attached by @NilayYadav in https://github.com/unslothai/unsloth/pull/9718
+    - Studio: use live trending GGUFs in agent setup by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9752
+    - studio: preserve gguf settings across chat switches by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9562
+    - studio: add message jsonl export by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9614
+    - Validate studio_install_id before baking it into the launcher by @danielhanchen in https://github.com/unslothai/unsloth/pull/9741
+    - studio: show lm studio model names in chat by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9556
+    - Studio: fix per-chat settings and fork counts for app-created chats by @NilayYadav in https://github.com/unslothai/unsloth/pull/9639
+    - studio: show the train run preview as a column on a laptop window by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9762
+    - Use Unsloth for bare Studio product references by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9732
+    - Studio: stop the temporary toggle tagging a saved app-created chat by @danielhanchen in https://github.com/unslothai/unsloth/pull/9771
+    - Studio: honour forced tool_choice on local GGUF tool loops by @Souravrajvi0 in https://github.com/unslothai/unsloth/pull/9773
+    - Desktop: publish stable latest downloads by @oobabooga in https://github.com/unslothai/unsloth/pull/9652
+    - Give every installing job its own pip cache key by @danielhanchen in https://github.com/unslothai/unsloth/pull/9781
+    - Studio: report confirmed explicit GGUF context by @Doud-FR in https://github.com/unslothai/unsloth/pull/9713
+    - Studio: keep Deep Research alive when the provider asks it to slow down by @NilayYadav in https://github.com/unslothai/unsloth/pull/9720
+    - Studio: don't silently drop extra images from a message by @NilayYadav in https://github.com/unslothai/unsloth/pull/9719
+    - Studio: hide model disclaimer by default by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9789
+    - README: drop the Linux (Arm64) download row, which serves a macOS file by @danielhanchen in https://github.com/unslothai/unsloth/pull/9783
+    - studio: newline-terminate exported jsonl records by @mahiatlinux in https://github.com/unslothai/unsloth/pull/8759
+    - Take pytest tests/ from 16m22s to 4m17s at -n 16 by @danielhanchen in https://github.com/unslothai/unsloth/pull/9794
+    - Derive the fp8 fbgemm test tolerance from the bf16 ULP by @danielhanchen in https://github.com/unslothai/unsloth/pull/9795
+    - Make importing unsloth.models._utils twice in a process survive by @danielhanchen in https://github.com/unslothai/unsloth/pull/9793
+    - Studio: let the model decide when a message needs Deep Research by @NilayYadav in https://github.com/unslothai/unsloth/pull/9726
+    - Fix GGUF mmproj pairing for derivative repos by @Imagineer99 in https://github.com/unslothai/unsloth/pull/6574
+    - Remove duplicate TRL vLLM generation patch by @alkinun in https://github.com/unslothai/unsloth/pull/9764
+    - Studio: widen what the offload planner can place instead of declining by @danielhanchen in https://github.com/unslothai/unsloth/pull/9778
+    - Studio: turn the offload planner on by default by @danielhanchen in https://github.com/unslothai/unsloth/pull/9779
+    - studio: add a sampling seed to the chat run settings by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9144
+    - Return no base model, not the bare unsloth/ org, for a timestamp-less run directory by @rajarshidattapy in https://github.com/unslothai/unsloth/pull/9753
+    - Fix RAG fallback for oversized chat attachments by @Supersynergy in https://github.com/unslothai/unsloth/pull/9630
+    - Add Estimated Memory Usage to the Load Model panel by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9525
+    - Build sd.cpp test fixtures from _binary_names() instead of the POSIX literal by @derrickrajkumar10 in https://github.com/unslothai/unsloth/pull/9707
+    - Fix Sentence-Transformers 6 model_forward_params None handling by @kozistr in https://github.com/unslothai/unsloth/pull/9786
+    - Skip an Ollama manifest whose JSON is not an object, instead of 500ing the model picker by @rajarshidattapy in https://github.com/unslothai/unsloth/pull/9754
+    - Studio: auto-scroll the startup and update logs by @Lwrless in https://github.com/unslothai/unsloth/pull/9806
+    - Collect the pip-cache naming guard in the one job a workflow-only PR starts by @danielhanchen in https://github.com/unslothai/unsloth/pull/9802
+    - Fix main: assert the tool loop controller catalog structurally, not by source proximity by @danielhanchen in https://github.com/unslothai/unsloth/pull/9809
+    - Studio: add the four settings.agents keys to every locale overlay by @danielhanchen in https://github.com/unslothai/unsloth/pull/9808
+    - Studio: bound fence tokenization by line length, not by the wall clock by @danielhanchen in https://github.com/unslothai/unsloth/pull/9787
+    - studiobench: a null-control refusal that read the settled thread is an observation, not a blank by @danielhanchen in https://github.com/unslothai/unsloth/pull/9800
+    - Studio: warm fence grammars on real text, not an empty string by @danielhanchen in https://github.com/unslothai/unsloth/pull/9799
+    - Studio: let maths-bearing blocks take containment, behind a flag by @danielhanchen in https://github.com/unslothai/unsloth/pull/9731
+    - fix(studio): prevent OXC validator subprocess hangs by @Biotrioo in https://github.com/unslothai/unsloth/pull/9759
+    - Studio: stop chat from auto-loading a TTS model by @NilayYadav in https://github.com/unslothai/unsloth/pull/9813
+    - Fix llama.cpp loading for Unicode Windows profiles by @Imagineer99 in https://github.com/unslothai/unsloth/pull/8852
+    - fix(studio): distinguish dedicated vram from shared gpu memory (#9242) by @yzxcj797 in https://github.com/unslothai/unsloth/pull/9247
+    - Studio: clear the old transcript when a transcription fails by @NilayYadav in https://github.com/unslothai/unsloth/pull/9816
+    - Studio: embedding model picker searches the Hub and downloads what you pick by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9739
+    - Define "where local models live" once, so a BOM cannot split the answer in two by @Biotrioo in https://github.com/unslothai/unsloth/pull/9757
+    - Studio: refuse keyless access to a cross-site browser request by @danielhanchen in https://github.com/unslothai/unsloth/pull/9683
+    - Studio: resume local chat generation after disconnect by @Etherll in https://github.com/unslothai/unsloth/pull/9187
+    - Studio: Show the model's thinking on the preview page by @NilayYadav in https://github.com/unslothai/unsloth/pull/9815
+    - Studio: restore menu focus after outside dismissal by @alkinun in https://github.com/unslothai/unsloth/pull/9772
+    - Studio: show a VRAM memory bar on downloaded models by @IMJONEZZ in https://github.com/unslothai/unsloth/pull/7880
+    - Studio: fix the AttributeError that 500s every planned GGUF load by @danielhanchen in https://github.com/unslothai/unsloth/pull/9821
+    - Studio: tighten the comments added by the memory estimate PR by @danielhanchen in https://github.com/unslothai/unsloth/pull/9825
+    - Fix the studio PEP 604 union ratchet and name what breaches it by @danielhanchen in https://github.com/unslothai/unsloth/pull/9826
+    - Studio: keep the memory row readable on a narrow panel by @danielhanchen in https://github.com/unslothai/unsloth/pull/9824
+    - route thinking controls to ollama by @Souravrajvi0 in https://github.com/unslothai/unsloth/pull/9770
+    - Studio: read the memory row's captions past their line-breaking glue by @danielhanchen in https://github.com/unslothai/unsloth/pull/9831
+    - Studio: persist model disclaimer across instances by @shimmyshimmer in https://github.com/unslothai/unsloth/pull/9835
+    - Studio: consolidate the two memory-estimate stacks by @danielhanchen in https://github.com/unslothai/unsloth/pull/9830
+    - fix(prompt storage): rework prompt storage into a master-detail layout by @LeoBorcherding in https://github.com/unslothai/unsloth/pull/8692
+    - Studio: add Chat settings to disable or ease GGUF auto-compaction by @Souravrajvi0 in https://github.com/unslothai/unsloth/pull/9774
+    - Stop the slot re-fit tests encoding the fit floor as a literal by @danielhanchen in https://github.com/unslothai/unsloth/pull/9845
+    - Stop a left-padded row that attends to nothing returning NaN (#9708) by @danielhanchen in https://github.com/unslothai/unsloth/pull/9848
+    - Reject a macOS llama.cpp prebuilt that dyld will not load by @danielhanchen in https://github.com/unslothai/unsloth/pull/9843
+    - Fix the dev-server white screen from a two-barrel import cycle by @danielhanchen in https://github.com/unslothai/unsloth/pull/9852
+    - Stop a resumed turn retracting text it already streamed by @danielhanchen in https://github.com/unslothai/unsloth/pull/9851
+    - Studio: stop the dense torchao quant probe from crashing the backend on AMD ROCm by @oobabooga in https://github.com/unslothai/unsloth/pull/9828
+    - Stop a generation recovery rewinding the reply it is following by @danielhanchen in https://github.com/unslothai/unsloth/pull/9853
+    - Stop a recovery following a run this tab is already streaming by @danielhanchen in https://github.com/unslothai/unsloth/pull/9854
+    - Queue a parked send when a run started while it waited by @danielhanchen in https://github.com/unslothai/unsloth/pull/9810
+    - Add setting to collapse tool activity by default by @Imagineer99 in https://github.com/unslothai/unsloth/pull/9803
+    - fix(studio): restore parallel vision chat slots by @Biotrioo in https://github.com/unslothai/unsloth/pull/9842
+    - fix keyless access before desktop password setup by @mahiatlinux in https://github.com/unslothai/unsloth/pull/9855
+    - Fix dill pickling whole modules by value on an off-prefix install by @danielhanchen in https://github.com/unslothai/unsloth/pull/9791
+    - Studio: stop a small context window ending a tool-using turn with nothing by @danielhanchen in https://github.com/unslothai/unsloth/pull/9768
+    - Studio: warn instead of refusing to load a model bigger than VRAM plus RAM by @danielhanchen in https://github.com/unslothai/unsloth/pull/9822
+    - Apply the kwarg-spacing hook to the no-progress tool results test by @danielhanchen in https://github.com/unslothai/unsloth/pull/9860
+    - Keep the context length a load was given instead of resetting it to Auto by @danielhanchen in https://github.com/unslothai/unsloth/pull/9841
+    New Contributors
+    - @Doud-FR made their first contribution in https://github.com/unslothai/unsloth/pull/9713
+    - @rajarshidattapy made their first contribution in https://github.com/unslothai/unsloth/pull/9753
+    - @Supersynergy made their first contribution in https://github.com/unslothai/unsloth/pull/9630
+    - @derrickrajkumar10 made their first contribution in https://github.com/unslothai/unsloth/pull/9707
+    - @kozistr made their first contribution in https://github.com/unslothai/unsloth/pull/9786
+    - @Lwrless made their first contribution in https://github.com/unslothai/unsloth/pull/9806
+    - @IMJONEZZ made their first contribution in https://github.com/unslothai/unsloth/pull/7880
+    Full Changelog: https://github.com/unslothai/unsloth/compare/v0.1.803-beta...v0.1.804-beta
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/unslothai/unsloth/releases/tag/v0.1.804-beta
+ReleaseTime: 2026-08-27T13:09:58.0000000Z

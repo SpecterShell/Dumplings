@@ -1,0 +1,51 @@
+Installer:
+- Architecture: x86
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2409.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.09"
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2409-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.09"
+- Architecture: arm
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2409-arm.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.09"
+- Architecture: arm64
+  InstallerType: exe
+  InstallerUrl: https://7-zip.org/a/7z2409-arm64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: "24.09"
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2409.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://7-zip.org/a/7z2409-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - The default dictionary size values for LZMA/LZMA2 compression methods were increased:
+    dictionary size   compression level
+      v24.08  v24.09  v24.09
+              32-bit  64-bit
+        8 MB   16 MB   16 MB   -mx4
+       16 MB   32 MB   32 MB   -mx5 : Normal
+       32 MB   64 MB   64 MB   -mx6
+       32 MB   64 MB  128 MB   -mx7 : Maximum
+       64 MB   64 MB  256 MB   -mx8
+       64 MB   64 MB  256 MB   -mx9 : Ultra
+    The default dictionary size values for 32-bit versions of LZMA/LZMA2 don't exceed 64 MB.
+    - 7-Zip now can calculate the following hash checksums: SHA-512, SHA-384, SHA3-256 and MD5.
+    - APM and HFS support was improved.
+    - If an archive update operation uses a temporary archive folder and the archive is moved to the destination folder, 7-Zip shows the progress of moving the archive file, as this operation can take a long time if the archive is large.
+    - The bug was fixed: 7-Zip File Manager didn't propagate Zone.Identifier stream for extacted files from nested archives (if there is open archive inside another open archive).
+    - Some bugs were fixed.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/ip7z/7zip/releases/tag/24.09
+Version: "24.09"
+ReleaseTime: 2024-11-30T10:45:19.0000000Z

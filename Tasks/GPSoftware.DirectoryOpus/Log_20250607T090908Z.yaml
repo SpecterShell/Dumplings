@@ -1,0 +1,148 @@
+Version: "13.16"
+Installer:
+- InstallerUrl: https://cdn2.gpsoft.com.au/files/Opus13/DOpusInstall-13.16.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Key: ReleaseNotesUrl
+  Value: https://resource.dopus.com/t/directory-opus-13-16/56034
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Compatibility
+    - ARM: Fix for ARM64-emulation issues which prevented dark mode working in some dialogs, and also stopped combo box dropdowns working.
+    - Windows 11: Fix for double-clicks launching the wrong application after Microsoft's latest changes to filetype associations in Windows 11 24H2.
+    - Chrome: Opus no longer blocks Chrome.exe from loading its DLLs. A reboot may be required for this to take effect. This fixes a compatibility problem where File Save dialogs had long delays in some versions of Chrome. The original reason the block was introduced no longer applies to current versions of Chrome.
+
+    Filter/Find
+    - Added separate Ignore filename extensions options for the Filter Bar, FAYT Find, and FAYT Filter modes.
+
+    Inline Rename
+    - In inline rename mode, when a filename is copied from another item using Ctrl+Shift+Up/Down, the other item is now briefly highlighted in all display modes (previously it was only highlighted in Power/Details modes).
+    - Inline rename control keys can now be individually hidden from the tooltip that appears when holding the control key down. (Preferences / File Operations / Renaming Files / Control Keys)
+    - Fixed inline rename control key tooltip overlapping the edit field when close to the bottom of the screen.
+
+    Columns
+    - Added the Link Count column. Displays the number of hard links to a file. 1 means there is only one link (the file itself), 2+ means multiple files linked to the same data.
+    - Column font styles (bold, italics, underline) are now combined with label font styles, rather than replacing them. Strikethrough text is now also rendered correctly if applied by a label in combination with font styles from a specific column or the sort column.
+    - Fixed linkcount variable not working reliably in Evaluator columns.
+
+    Customize
+    - Duplicating a user command in the Customize dialog now bases the default name for the duplicate on the name of the duplicated command.
+    - Improved how the command editor finds a lister to test-run against when the command isn't from a lister toolbar; for example, when testing a User Command. If available, it will use the lister which opened the Customize dialog; failing that, it will fall back on the last active lister.
+    - Command menus in Preferences now update when user/script commands are modified in another window.
+
+    Viewers
+    - Fixed text/hex viewer plugin not respecting the hex font setting.
+    - In the image viewer, Show VIEWERCMD toolbar buttons that use {} insert codes (e.g. to modify the command with the evaluator) now work properly.
+
+    Tooltips
+    - The status bar filetype tooltip is now a fixed size rather than scaling with the size of the Lister.
+    - Improved folder format explanation text when a Content Type format was manually selected.
+    - Fixed elements that render multi-line markup text (e.g. tooltips) drawing two lines on top of each other if the first line ended exactly on a closing tag.
+
+    Miscellaneous
+    - If an update was downloaded but not installed, and the automatic Update Checker is turned off, Opus will now delete the update the next time it restarts, rather than keep prompting you to install it.
+    - Fixed Metadata Editor's Tags field not switching into "Multiple Values" mode if two files were selected where the 2nd file's tags were a superset of the first's.
+    - Workaround for delays during drag & drop in some situations.
+    - Preferences options for what to display under Desktop now apply when navigating to Desktop via Quick Access.
+    - Added Russian language back to the installer.
+    - Fixed CLI ignoring backspace and left cursor keys if the selection started on the first character of the line.
+    - Fixed password prompt appearing prematurely when opening a saved window with a tab for an encrypted archive, when Opus is configured not to auto-load archives from saved windows (Preferences / Folders / Automatic Reading).
+    - Fixed favorites with & in their names having the & doubled if rearranged via the Favorites Bar.
+    - (New in 13.16) Fixed memory leak when reading directory with malformed NTFS ADS metadata.
+    - (New in 13.16) Fixed crash IDs 506-509.
+
+    Commands
+    - The command Select FILTER=list can now be used to generate a dynamic list of filters. Selecting a filter from the list invokes the Select command to select files matching the filter.
+    - The FileType SUMMARY command can now display file type statistics for the contents of selected folders instead of just the currently displayed folder. The new contents and recurse keywords control this behaviour.
+    - Added Select FILTERFLAGS=showhidden flag, allows any currently hidden items to be redisplayed before the new filter is applied.
+    - Added Select FILTERFLAGS=deselectnomatch flag, allows any currently selected items to be deselected if they don't match the new filter.
+    - Added Toolbar CLICKTOEDIT command, which makes the next click on a toolbar button open that button for editing. Similar to the Alt + Click option in Preferences / Toolbars / Options, except it turns itself off automatically after the first use and allows you to use Alt + Click for other things (e.g. buttons that open folders normally open them in new tabs if Alt is down). You can optionally specify a timeout in milliseconds; e.g. Toolbar CLICKTOEDIT=5000 gives you 5 seconds to edit something before reverting to normal.
+    - Toolbar NAME=*this now works with floating toolbars, and no longer requires explicitly adding STATE=float (or FLOAT) to the command.
+    - Fixed issue with a function that runs two Copy AS commands to make two copies of the same file.
+    - Fixed issue with the copy queue overlay icon being left behind after a function that runs Copy {filepath$} AS...
+
+    Scripting - General
+    - Added script method Filter.List(). Returns a Vector containing the names of all defined filters.
+    - Added Msg.subitem property which provides the subitem (column) number for script dialogs listview on right-click/double-click.
+    - The Filter.Load script method now returns true or false to indicate whether or not the filter was successfully loaded.
+    - Further improvement to unscoped user variables being accessible to both functions and script functions.
+    - In script dialogs, the DialogListItem.icon property can now load icons for non-filesystem paths (e.g. from a collection or library path).
+    - Improvement for script DialogListItem.icon loading icons for local paths.
+
+    Scripting - Dynamically Generated Buttons
+    - Script commands can now be used to add dynamically-generated buttons to toolbars and menus. Buttons that invoke script commands can also now enable context sensitive state (checked and/or enabled state can be modified by the script).
+      An example script which adds a dynamic menu-button:
+      Find-As-You-Type (FAYT) scripts - #2 by Leo
+    - To add dynamic buttons the dynamic_args property of the ScriptCommand object needs to be initialised with a string containing the (comma-separated) argument names that can be used to generate dynamic buttons.
+      For example, a function called Foo might have an argument BAR that's used to generate a number of buttons (e.g. Foo BAR). You would therefore set dynamic_args to the value BAR.
+      To allow context sensitive state the context_args property performs a similar function.
+      In both cases, you can set the property to * to indicate that all (or no) arguments are required.
+      A script then needs to implement the OnAddButtons method (for dynamic buttons) and the OnButtonContext method (for context sensitivity).
+
+      OnAddButtons:
+      OnAddButtons is called to add dynamic buttons. Any buttons it creates will be displayed in place of the original button, and the original button will be hidden (except in Customize mode). The method should return true if it has added buttons, or if it doesn't add any buttons but still wants to hide the original button.
+      The OnAddButtons method receives an AddButtonsData object as its argument. The properties of this argument are:
+      - cmdline - provides the command line being used to generate the buttons
+      - method - provides the command method name
+      - embedded - provides the embedded function body if given by the user
+      - buttons - returns an AddButtonHelper object that is used to add buttons
+      - args - returns an Args object representing the function's parsed arguments
+      - lister - lister whose toolbar the commands are being added to (0 if not applicable)
+      - viewer - viewer whose toolbar the commands are being added to (0 if not applicable)
+      The AddButtonHelper object has the following methods:
+      - AddButton - adds a button
+      - AddThreeButton - adds a three-button
+      - AddMenu - adds a menu
+      - AddMenuButton - adds a menu button
+      Those methods all return a ButtonData object which is used to initialise the button via a number of properties. Most properties are optional and only need to be provided if you want something other than the defaults.
+      The properties common to all types are:
+      - label - the button's label
+      - desc - the button's description (tooltip)
+      - image - the button's primary image
+      - image2 - the button's secondary image
+      - textcol - the button's text color
+      - backcol - the button's background color
+      - showlabel - controls the button label visibility. Valid values are true/false, "left", "right", "top", "bottom".
+      - showimage - controls the button image visibility. Valid values are true/false, "dual", "large", "largedual"
+      - nohighlight - don't highlight the button on mouseover
+      - separator - display a separator after the button
+      - notablabel - don't interpret tabs in the label
+      For normal buttons and menu buttons, the following properties are available:
+      - type - function type; valid values are "batch", "script", "wsl". Leave empty for a standard Opus function.
+      - func - the function to run. Multiple lines can be provided, with cr/lf separators. Any
+        @modifiers need to go at the top of the function.
+      - checked - set to true to have the button appear checked
+      - radio - set to true to use a radio button rather than a checkmark
+      - disabled - set to true to disable the button
+      For menus, menu buttons and three buttons, two properties are available to configure child buttons.
+      - children - this returns another AddButtonHelper object, which lets you add child buttons to the menu. Note that for three buttons, the first button is designated left, the second is right and the third is middle.
+      - childimages - controls the visibility of images in the menu. Valid values are "off", "on", "large".
+      For menus, the following properties are available:
+      - popout - control where the menu pops open. Valid values are "left", "right", "top", "bottom"
+        arrow - display a dropdown arrow on the menu. Valid values are true/false, "normal", "slim"
+      - minimize - set to true to minimize the menu width
+      For three buttons, the following properties are available:
+      - dynamicfromchild - enables dynamic icons/labels for the button parent based on the child buttons
+      For menu buttons, the following properties are available:
+      - alwaysenable - set to true to always enable the dropdown even if the button itself is disabled
+      - holdright - set to true to enable hold/right button to pop open
+
+      OnButtonContext:
+      OnButtonContext is called to allow a script to selectively check and/or disable buttons that invoke its functions. The method should return true to update the button's appearance.
+      OnButtonContext receives a ButtonContextData object as its argument. The properties of this argument are:
+      - cmdline - provides the command line being used to generate the buttons
+      - method - provides the command method name
+      - ctx - returns a ButtonContext object that is used to change the button's state
+      - args - returns an Args object representing the function's parsed arguments
+      - lister - lister whose toolbar the commands are being added to (0 if not applicable)
+      - viewer - viewer whose toolbar the commands are being added to (0 if not applicable)
+      The ButtonContext object has the following properties:
+      - checked - set to true to have the button appear checked
+      - radio - set to true to use a radio button rather than a checkmark
+      - disabled - set to true to disable the button
+
+      Updating dynamic buttons
+      The new Script.UpdateButtons method can be used to force any dynamically-added script buttons to be refreshed. It takes a single bool parameter. Set to false to only refresh context sensitive state; set to true to also refresh dynamic buttons.
+ReleaseTime: 2025-06-07T09:08:34.3590000Z

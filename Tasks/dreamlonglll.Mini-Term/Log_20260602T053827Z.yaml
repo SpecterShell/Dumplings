@@ -1,0 +1,19 @@
+Version: 0.5.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.2/Mini-Term_0.5.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.5.2/Mini-Term_0.5.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 升级版本号至 v0.5.2 - package.json / tauri.conf.json / Cargo.toml / Cargo.lock 同步升至 0.5.2 - README 中英双版更新版本徽章至 0.5.2 - 本版修复：含中文/特殊字符路径的项目(如 D:\Git\bhyt-一体机)AI 会话列表始终为空——会话目录名编码规则未对齐 Claude Code(实际把非字母数字字符均转为 -);同时修复前缀相同的兄弟项目(如 D:\Git\bhyt 与 D:\Git\bhyt-一体机)会话互相串台
+    - fix: 修复含中文/特殊字符路径的项目 AI 会话列表始终为空 - encode_project_path 改为将所有非字母数字字符(含中文/点/空格)统一转为 -,对齐 Claude Code 实际的会话目录编码规则，修复 D:\Git\bhyt-一体机 等含中文路径算出的目录名与实际落盘目录(D--Git-bhyt----)对不上、导致 sessions 恒空的问题 - find_claude_project_dirs 对「前缀相同仅尾部多 -」的模糊匹配新增 dir_matches_project 校验，读取会话文件内真实 cwd 精确比对，避免兄弟项目(如 D:\Git\bhyt 与 D:\Git\bhyt-一体机)会话互相串台
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.5.2
+ReleaseTime: 2026-06-02T03:33:47.0000000Z

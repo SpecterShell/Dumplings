@@ -1,0 +1,23 @@
+Version: 1.15.5
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/uu201/character-arc/releases/download/v1.15.5/CharacterArc-1.15.5-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1.15.5 - 2026-07-29
+    Added
+    - 状态补录按章重试：记录每章扫描状态，支持仅补录未完成或失败章节，也可指定章节范围重新执行；任务可在章节边界暂停，并从已有进度继续
+    Changed
+    - 状态补录后台任务：将状态补录迁移到主进程后台运行，切换界面后仍可恢复并查看进度；完善任务去重、暂停恢复和异常状态持久化，减少重复扫描与中断影响
+    - 小说续写资料初始化：扩展章节分析与全书聚合结果，导入时可生成世界观、人物关系、组织势力、剧情线和知识摘要；完善导入校对、AI 结果确认、续写计划与可选故事状态补录
+    - 大数据界面性能：角色、世界观、大纲、关系组织、灵感、剧情线、项目知识库和全局搜索等列表改为增量渲染，并减少工作台页面切换时不必要的组件重建
+    Fixed
+    - 状态补录模型兼容性：规范化模型返回的状态增量，避免畸形数组或对象写入 SQLite；DeepSeek 请求会过滤不支持的 reasoning_effort 参数
+    - 项目知识库隔离：审计历史、知识文档和 AI 检索按项目严格隔离，旧数据会迁移到正确项目，避免不同作品之间共享或显示错误资料
+    - 历史知识文档归属：完善旧版知识文档项目归属迁移与兜底判断，修复升级后历史资料可能归属错误的问题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/uu201/character-arc/releases/tag/v1.15.5
+ReleaseTime: 2026-07-29T06:09:26.0000000Z

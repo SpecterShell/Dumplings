@@ -1,0 +1,22 @@
+Version: 0.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Buktal/deepseek-desktop/releases/download/v0.5.0/DeepSeek.Desktop_0.5.0_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - iframe 壳页常驻(#29 拍板 / #36 M1,ADR 0001):单 webview 内壳页常驻，dsh 以跨源 iframe 嵌入——六弹窗/更新提示/菜单条常驻盖在 dsh 之上；dsh URL 单一事实来源 record_dsh_url 在 4 个端口变化时点(boot 就绪 / 升级链就绪 /「稍后/返回」重启 / 崩溃重试)统一推给壳页 set iframe.src;整窗互斥导航退役；外链拦截移页面层(注入脚本拦截 <a> 点击 → postMessage → 系统浏览器)。
+    - 三平台窗口控制分治(#28 拍板 / #37 M2,ADR 0002):macOS Overlay + 隐藏标题(系统红绿灯与 28px 壳菜单条同行);Windows/Linux 保留系统标题栏、theme 跟随应用主题；壳菜单条同一 React 组件三平台复用。
+    - 菜单快照与单一动作分发(#38 M3):托盘与壳菜单条菜单同一份快照渲染(muda 投影),点击收敛到同一张动作表；「检查更新」disabled 随快照同步。
+    - 六弹窗 UI 化与更新进度浮层(#39 M4):原生阻塞式 dialog 全部退役，改壳页 AlertDialog/toast(shell-dialog 事件);更新下载进度右下角浮层。
+    - 全屏覆盖层编排与旧组件 shadcn 化(#40 M5):boot / dsh 升级 / dsh 意外退出三路状态镜像互斥覆盖层(deriveOverlay 纯函数，优先级 Error > Upgrade > Boot);意外退出转覆盖层 + [重试];前端组件统一到 shadcn/ui(FullScreenCard / ProgressRail 退役)。
+    - 上游耦合防线(#41 M6):dsh 升级流水线新增响应头回归检查——新版 dsh 响应带 X-Frame-Options / CSP frame-ancestors 时报明确错误并指引回退预案(恢复整窗互斥导航，git 历史可回)。
+    Fixed
+    - npm-cache ETARGET 根治(#41):内置离线缓存的 packument 早于升级目标版本时，--prefer-offline 跳过新鲜度检查导致 npm 误报「版本不存在」(ETARGET 假阴性);升级安装命中时回退无缓存网络重试一次(registry 数据恒新鲜)。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Buktal/deepseek-desktop/releases/tag/v0.5.0
+ReleaseTime: 2026-08-17T18:04:56.0000000Z

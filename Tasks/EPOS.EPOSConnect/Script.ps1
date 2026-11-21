@@ -1,0 +1,45 @@
+$Prefix = 'https://www.eposaudio.com/en-us/software/epos-connect/'
+$Object1 = curl -fsSLA $DumplingsInternetExplorerUserAgent $Prefix | Join-String -Separator "`n" | Get-EmbeddedLinks
+
+# Installer
+$this.CurrentState.Installer += $InstallerEXE = [ordered]@{
+  InstallerType = 'burn'
+  InstallerUrl  = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+}
+$VersionEXE = [regex]::Match($InstallerEXE.InstallerUrl, '(\d+(?:\.\d+){3,})').Groups[1].Value
+$VersionEXEShort = $VersionEXE.Split('.')[0..2] -join '.'
+
+$this.CurrentState.Installer += $InstallerWiX = [ordered]@{
+  InstallerType       = 'zip'
+  NestedInstallerType = 'wix'
+  InstallerUrl        = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('msi.zip') } catch {} }, 'First')[0].href
+}
+$VersionWiX = [regex]::Match($InstallerWiX.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+if ($VersionEXEShort -ne $VersionWiX) {
+  $this.Log("EXE version: ${VersionEXE}")
+  $this.Log("WiX version: ${VersionWiX}")
+  throw 'Inconsistent versions detected'
+}
+
+# Version
+$this.CurrentState.Version = $VersionEXE
+
+$InstallerWiX['NestedInstallerFiles'] = @(
+  [ordered]@{
+    RelativeFilePath = "EPOSConnect_$($this.CurrentState.Version).msi"
+  }
+)
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

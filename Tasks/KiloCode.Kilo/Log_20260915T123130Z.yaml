@@ -1,0 +1,72 @@
+Version: 7.7.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.1/kilo-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.1/kilo-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.7.1
+    Minor Changes
+    - #14126 4fb9f38 - Copy a link to any PR review comment from the Agent Manager PR panel.
+    - #14144 53a553f - Add a Reasoning Blocks display setting with Expanded, Preview, and Headline modes. Headline shows only the reasoning header and streaming indicator until you open the block, and your open or closed choice is kept while the response streams. Preview keeps a short capped scrolling preview while the agent writes and stays compact after it finishes, and blocks from earlier sessions start collapsed. Expanded keeps the full text open. The setting replaces Auto-Collapse Reasoning; existing auto_collapse_reasoning: true configurations map to Preview.
+      Keep the Preview viewport anchored to the newest reasoning text after the block finishes, so later tool calls no longer make it jump back to the top.
+      Background subagent transcripts use the same Reasoning Blocks setting instead of always showing the capped preview.
+    Patch Changes
+    - #14127 7bbba88 - Fix "Close Others" in the Agent Manager leaving closed session tabs open in the local tab bar.
+    - #14150 94c3e3c - Fix the Agent Manager sidebar going blank when a PR badge changes status
+    - #14145 c1195f0 - Stop showing a merged or closed pull request of an old branch on an Agent Manager worktree that only reuses its branch name.
+    - #14146 9701f12 - Keep the project row with its New worktree button pinned while scrolling the Agent Manager project list.
+    7.7.0
+    Minor Changes
+    - #14102 81ecad2 - Mention sessions, worktrees, terminals, and open documents by dragging their tab or card into the prompt.
+    - #14051 b30b2cf - Let permission denials include feedback so the agent can adjust before retrying.
+      Keep saved approval rules unchanged unless explicitly selected, and show a clear message when an edit has no changes to review.
+    - #14025 1ef46bd - Post inline comments to a checked-out GitHub pull request from Changes and Agent Manager diff views. The compact composer saves locally, sends to Kilo, or posts to GitHub with an explicit destination choice. Cmd/Ctrl+Enter saves a comment, and pressing it again in the review view sends all comments to Kilo without publishing to GitHub. The toolbar shows separate send-all-to-Kilo and send-all-to-GitHub actions, and only the Kilo action carries the keyboard shortcut. GitHub posting stops on the first error so unpublished comments are kept.
+    - #14105 b06c745 - Disconnect built-in providers without disabling them, and let users change stored API keys directly for providers with standard API-key authentication.
+      Keep settings saves available after disabling or enabling a provider.
+    - #14134 50fc57d - Enable the Kilo Swarm shared board by default. Turn it off in Agent Behaviour settings or with experimental.shared_agent_board: false.
+    - #14050 7a6ab9a - Speed up Agent Manager worktree creation by pre-warming reusable worktrees and claiming a ready one instead of running a full checkout. Control the pre-warming in Agent Manager settings under "Pre-warm worktrees"; it is enabled by default and uses one extra checkout of disk space per open project.
+      Prepare snapshots during session creation to reduce first-prompt initialization work. Start no-script sessions after environment files are copied, while preserving setup-script completion before agent startup. Discarded worktrees now remove their checkpoint data instead of leaving it behind.
+      Resolve the primary checkout with one git call instead of four and discover agents and skills for a new worktree before the first prompt arrives, so the first response starts sooner.
+    Patch Changes
+    - #14104 3c040da - Keep background subagent task cards collapsed and show their reasoning as a compact preview instead of expanding while the agent runs.
+    - #14116 81b9c21 - Reduce GitHub API usage of Agent Manager PR status polling by resolving all worktrees in one request per sync.
+    - #14045 f64c664 - Move the compaction model setting to the Models settings tab and link to it from the Compaction section.
+    - #14106 20c5742 - Close the @ mention menu when prose follows a typed or picked mention, keep it closed after Escape, and let Enter send the message instead of replacing the draft with a loose fuzzy match.
+    - #14103 3a2c5d5 - Reload the entire project for /reload and the reload actions. A reload from an Agent Manager worktree now reboots every loaded instance of the same project, so a project config change applies to the main checkout and all worktrees. The reload is refused while any session in the project is running.
+    - #14046 e49e786 - Keep the working indicator snug above the prompt at every sidebar width instead of floating in the empty space reserved for the wrapped session actions row.
+    - #14115 f40394f - Start the first snapshot of a new worktree several times faster. Seeding now reuses the checkout's index state instead of re-hashing every file, snapshot preparation reconciles the working tree before the first prompt arrives, and repacking snapshot objects waits until the snapshot repository is idle instead of blocking the tool steps of the running turn.
+      Delay the replacement of a claimed pre-warmed worktree so its checkout does not compete with the new session's first prompt.
+    - #14044 ea6d9b3 - Stop the transcript from twitching down and back up for one frame when the agent starts its next step after running tools
+    CLI
+    7.7.1
+    Minor Changes
+    - #14148 02e92bc - Speed up local session recall for common search terms across large conversation histories, rank whole-word matches above matches inside longer words, return flagged partial matches when no session contains every term, and match small typos against session titles.
+    7.7.0
+    Minor Changes
+    - #14051 b30b2cf - Let permission denials include feedback so the agent can adjust before retrying.
+      Keep saved approval rules unchanged unless explicitly selected, and show a clear message when an edit has no changes to review.
+    - #14103 3a2c5d5 - Reload the entire project for /reload and the reload actions. A reload from an Agent Manager worktree now reboots every loaded instance of the same project, so a project config change applies to the main checkout and all worktrees. The reload is refused while any session in the project is running.
+    - #14094 b7070e5 - Support scheduling and cancelling future wakeups: the agent can ask to resume a session at a later time, see what it scheduled, and cancel a pending wakeup before it fires.
+    - #14134 50fc57d - Enable the Kilo Swarm shared board by default. Turn it off in Agent Behaviour settings or with experimental.shared_agent_board: false.
+    Patch Changes
+    - #14101 5665631 - Keep a session goal running when you send a message. The message takes priority for that turn, then the goal continues. Pause or stop the goal explicitly with Stop or /goal pause. Shell commands and slash commands still pause it.
+    - #14048 d4e894f - Format detailed findings in /review as numbered, severity-tagged sections so each issue is visually distinct.
+    - #14051 877f976 - Reject pending permissions without feedback when using the app exit shortcut, returning to the normal prompt and its exit confirmation. Preserve Escape to open or cancel rejection feedback.
+    - #14047 203f19f - Keep output and exit status of short-lived terminal commands that finish before the terminal session attaches its listeners
+    - #14075 fdf1bca - Let an app-controlled session set its pull-request link through the set_pr_link remote command, so the CLI advertises the PR the app already knows and stops local detection.
+    - #14075 fdf1bca - Detect the session pull-request link from local git signals, the PR URL a session prints in its own output, and at most one REST lookup, so Kilo no longer burns the GitHub GraphQL rate limit probing for a PR on a timer.
+    - #13192 1e73d38 Thanks @maphew! - Only route auxiliary tasks (session titles, commit messages, branch names) to the cloud kilo-auto/small model when kilo credentials are configured; otherwise fall back to the session's own model so offline and local-only setups keep working.
+    - #14115 f40394f - Start the first snapshot of a new worktree several times faster. Seeding now reuses the checkout's index state instead of re-hashing every file, snapshot preparation reconciles the working tree before the first prompt arrives, and repacking snapshot objects waits until the snapshot repository is idle instead of blocking the tool steps of the running turn.
+      Delay the replacement of a claimed pre-warmed worktree so its checkout does not compete with the new session's first prompt.
+    - #14050 7a6ab9a - Speed up Agent Manager worktree creation by pre-warming reusable worktrees and claiming a ready one instead of running a full checkout. Control the pre-warming in Agent Manager settings under "Pre-warm worktrees"; it is enabled by default and uses one extra checkout of disk space per open project.
+      Prepare snapshots during session creation to reduce first-prompt initialization work. Start no-script sessions after environment files are copied, while preserving setup-script completion before agent startup. Discarded worktrees now remove their checkpoint data instead of leaving it behind.
+      Resolve the primary checkout with one git call instead of four and discover agents and skills for a new worktree before the first prompt arrives, so the first response starts sooner.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.7.1
+ReleaseTime: 2026-09-15T09:42:23.0000000Z

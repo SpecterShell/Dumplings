@@ -1,0 +1,19 @@
+Version: 0.2.25
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.25/Mini-Term_0.2.25_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.2.25/Mini-Term_0.2.25_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    - release: 发布 v0.2.25,修复终端焦点切换导致 AI 状态与视口回归 - 修复 AI 会话中切换终端焦点会把 ai-idle 误判为 ai-working:xterm.js 在 TUI 开启 sendFocus(DEC 1004) 后 focus/blur 会向 PTY 写入 CSI I/CSI O,Claude/Codex 响应焦点事件做局部重绘，重绘输出刷新 last_output 被 process_monitor 捕获 - 后端 pty.rs 新增 FOCUS_COOLDOWN=800ms 焦点冷却窗口，write_pty 严格匹配 CSI I/CSI O 时通过 bump_cooldown 打开窗口，窗口内 PTY 输出不刷新 last_output;字段 resize_cooldown_until 重命名为 tui_redraw_cooldown_until(现承载 resize+focus 双职责),bump_cooldown 改用 max 语义避免短冷却覆盖长冷却 - 修复 AI 会话中切换焦点会把终端视口强制打回底部：同一焦点序列还会进入 xterm.onData 被 scrollToBottom 误扫(用户往上翻历史时一切焦点就被打回底部);前端 terminalCache.ts 在 onData 里对 FOCUS_IN_SEQ/FOCUS_OUT_SEQ 跳过 scrollToBottom,保留 PTY 写入让 TUI 仍能感知焦点 - 新增 7 个焦点冷却相关单测(触发/非触发/箭头键/嵌入子串不匹配/max 语义/按 pty 隔离),cargo test 共 63 passed - package.json / src-tauri/Cargo.toml / src-tauri/tauri.conf.json 同步到 0.2.25,Cargo.lock 跟随；README version badge 与"测试覆盖"数量(35→63)同步
+    - docs: README 增加 macOS 安装"已损坏"提示的说明 - 在「平台支持说明」后新增「macOS 安装提示」小节，解释 Gatekeeper 弹出 "is damaged and can't be opened" 实际是 Release 产物未做 Apple Developer ID 签名，被 quarantine 标记拦截，而非文件真损坏 - 给出一行解除命令 xattr -cr /Applications/Mini-Term.app,并提示升级新版本需重做一次，降低 macOS 用户首次使用的卡点
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.2.25
+ReleaseTime: 2026-04-23T09:12:08.0000000Z

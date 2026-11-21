@@ -1,0 +1,168 @@
+Version: 18.7.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.7.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed interrupted runs so assistant message boundaries are emitted reliably, allowing subscribers to persist and recover the interrupted turn.
+    @oh-my-pi/pi-ai
+    Added
+    - Added getOAuthCredentialProvider() to resolve login aliases, such as openai-codex-device, to the provider where their credentials are stored.
+    Fixed
+    - Fixed Ultrafast service-tier billing and usage accounting: GPT-6 Astra now applies its published premium rates—6× on the OpenAI API and 8× included usage on Codex—and is counted toward the premium-request limit.
+    - Fixed Vertex AI authentication on Windows when credentials are created with gcloud auth application-default login.
+    - Fixed selecting Cursor accounts by email through auth.accountPolicies and /session pin; newly refreshed and existing accounts now retain the account email.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Mistral Large 4 with reasoning support, image input, a 1M-token context window, and preview pricing.
+    - Added configurable thinking levels from low through maximum for MiniMax-M3.1-Flash-Preview; because the model always reasons, requests that disable thinking use the low level.
+    - Added Google Antigravity pricing and model support for Claude Opus 5.5 and Sonnet 5.5.
+    Changed
+    - MiniMax Token Plan providers (minimax-code and minimax-code-cn) now use MiniMax's recommended Anthropic-compatible API for model requests and login key validation.
+    - Google Antigravity now exposes Claude Opus 5.5 and Sonnet 5.5 once each, with selectable low, medium, and high thinking levels.
+    Fixed
+    - Added the correct published pricing for GPT-6 Astra's Ultrafast service tier: a 6× multiplier on the OpenAI API and an 8× multiplier on the Codex card.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added last-chance consumption of eligible banked Codex and Claude resets expiring within five minutes when auto-redeem is enabled, even with low usage or reserved credits.
+    - Added inline rendering of agent-generated SVG diagrams, charts, and mockups, with theme-aware colors and a tui.renderSvg setting to disable it.
+    - Added automatic chart generation for numeric tables, configurable with tui.autoGraph (always, smart, or off). The agent now chooses suitable visual formats—including charts, Mermaid, SVG, tables, or prose—based on the content. Charts and this guidance apply to the main TUI session only, not to subagents, print, RPC, or ACP.
+    - Added first-class JSON and JSONL querying to the read tool with ?q=<jq-filter>, including in-process filtering, raw or compact output, and offset/limit pagination for efficient large-file access.
+    - Added /prewalk off to cancel a pending model handoff without changing the active model, saved prewalk setting, or continuation history.
+    - Added logout support to RPC clients through get_logout_accounts and logout, with matching methods in the TypeScript, Python, Go, and Rust SDKs.
+    - Added custom model-kind declarations for providers and extensions, allowing image, speech, embedding, judge, and other supported model roles to be registered and routed correctly.
+    - Added working-directory reporting for Tern terminal sessions so the native composer bar can display the current folder.
+    Changed
+    - Improved JSON and JSONL query streaming and pagination to reduce resource usage, support partial results, and provide clearer continuation between result pages.
+    - Clarified the read tool documentation with complete examples for requesting line ranges.
+    Fixed
+    - Fixed model-preset tests failing when provider credentials are configured in the environment.
+    - Fixed unauthenticated Macs auto-selecting the on-device Apple model when the default prompt exceeds its context window; Apple remains selectable explicitly.
+    - Fixed replay and compaction tests failing after bundled model roster changes.
+    - Fixed standalone builds failing when the native addon archive could not be resolved.
+    - Fixed JSON query parsing and parameter decoding for filters beginning with hyphens and other encoded query values.
+    - Fixed task execution after settings could not be saved; subagents now use the current in-memory settings while the save failure is reported as a warning.
+    - Fixed prewalk and model-recovery state across /new, handoffs, cancellations, and automatic recovery.
+    - Fixed login, logout, model refresh, and provider-status reporting for aliased providers such as openai-codex-device.
+    - Fixed model speed statistics mixing fast service-tier results into standard-tier averages; /models now reports the applicable tier separately.
+    - Fixed the write and edit tools hanging or consuming excessive resources when given FIFOs, terminals, device files, or other non-regular targets; unsupported targets are now rejected safely.
+    - Fixed long conversations losing user or tool-result images because assistant-generated images were counted against provider image limits.
+    - Fixed local session paths for special session IDs such as . and .. so they cannot escape the intended storage directory.
+    - Fixed omp gc --archive --apply leaving orphaned session-title records behind.
+    - Fixed /retry after an interrupted process exit while an extension-driven prompt was reopening.
+    - Fixed browser relay sessions failing to discover or interact with cross-origin iframe content that loaded before the tab was opened.
+    - Fixed browser clicks on visually styled radios and checkboxes whose underlying inputs are hidden.
+    - Fixed /model failing to switch when selecting the model already assigned to a project's default role.
+    - Fixed wait returning early when a background completion had already been consumed by another operation.
+    - Fixed symlinked routing configurations failing to reload after their target links were replaced.
+    - Fixed repeated coding-plan fallback confirmations in cases involving changing thinking settings, unavailable quota information, or account recovery.
+    - Fixed Python evaluation failing when a shared runner temporary directory was created by another user.
+    - Fixed RPC clients being unable to complete multi-select questions in multi-question ask prompts.
+    - Corrected inaccurate tool and setting descriptions, including read ranges, background bash behavior, Python evaluation capabilities, edit replacement guidance, goal removal behavior, and advisor.immuneTurns.
+    - Fixed custom glob backends hanging indefinitely; scans now honor tool deadlines and cancellation.
+    - Fixed --resume <path> silently creating a new session when the specified path did not exist; it now reports the missing path.
+    - Fixed /settings opening duplicate menus when invoked while the settings menu was already open.
+    - Fixed native Git operations resolving repositories incorrectly when run through symbolic links.
+    @oh-my-pi/pi-natives
+    Breaking Changes
+    - Renamed the linux-all Bazel target (//:natives-linux-all) to all (//:natives-all); the renamed target now includes Darwin addons.
+    - Removed the gen:native and gen:native:reset scripts. Standalone binary builds now embed the native addon archive and manifest instead of writing them to native/.
+    Added
+    - Enhanced rasterizeSvg with optional scaling and terminal-cell padding, allowing SVGs to render larger while preserving 1:1 display in terminals.
+    - Added OMP_NATIVE_FEATURES for passing extra Cargo features to local native addon builds; Bazel builds ignore this setting.
+    - Added support for cross-compiling macOS native addons from Linux hosts.
+    Changed
+    - macOS addon release stamping now works on any host by refreshing the addon's ad-hoc signature automatically.
+    Fixed
+    - Fixed tail failing to print files, or omitting their first 64 KiB, when file sizes were exact multiples of 64 KiB.
+    - Fixed tail printing nothing, or dropping lines from the file's first 64 KiB, when the file size is an exact multiple of 64 KiB (#14264 by @jchanghong023)
+    - Fixed native sed and jq killing the host process with SIGBUS when an input file is truncated while they read it (#14613)
+    - Fixed tail -f piped into a command that exits early (such as head -n 1 or grep -m1) never stopping on macOS (#14614)
+    - Native sort -u keeps punctuation-distinct paths under UTF-8 locales instead of silently dropping records (#14606).
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed Ultrafast turns not being counted toward the Premium Requests statistic.
+    - Fixed the desktop stats dashboard menu button so it no longer appears unnecessarily or dims the page without opening navigation.
+    @oh-my-pi/pi-tui
+    Added
+    - Assistant SVG code blocks now render as inline, theme-colored images on terminals with graphics support, updating as responses stream and adapting to terminal width; SVG that cannot be rendered remains available as code.
+    - Numeric tables in assistant responses can now include automatically selected, themed charts based on the table’s structure and units.
+    Changed
+    - The status line now recognizes projects located in the user’s repos directory.
+    - Model mentions, /switch completions, and model-picker search now update immediately while typing, including with large model catalogs.
+    Fixed
+    - Fixed terminal resizing issues that could cause flicker or briefly display an empty frame.
+    - Improved /annotate handling for long source lines and filenames, preserving indentation and typed note text.
+    - Fixed fullscreen inputs that could hide the cursor when hardware-cursor support was enabled.
+    - Fixed model picker and mention-list ordering for same-provider -latest models so results remain alphabetically stable.
+    - Model browser performance metrics now show the correct measurements for each service tier and identify the tier.
+    - Fixed plan review keyboard navigation so horizontal options use Left/Right and model-slider adjustments use Shift+Left/Right.
+    - Improved the Ask dialog footer so question-switching keyboard shortcuts are clearly labeled.
+    - Fixed creating a new agent when its generated system prompt contains a Markdown code fence.
+    - Timed-out glob scans are now labeled as timed out rather than truncated.
+    - Ctrl+Delete now deletes the word after the cursor, matching Ctrl+Backspace behavior.
+    What's Changed
+    - fix(tui): update autocomplete on every keystroke and speed up model ranking by @H4vC in https://github.com/can1357/oh-my-pi/pull/14595
+    - feat(catalog): collapse Antigravity Claude 5.5 thinking tiers and add pricing by @eggpeat in https://github.com/can1357/oh-my-pi/pull/14195
+    - feat(catalog): routed MiniMax Token Plan through the Anthropic-compatible API by @eggpeat in https://github.com/can1357/oh-my-pi/pull/13696
+    - fix(ai): priced ultrafast turns at the published 6x premium and kept tier speeds separate by @eggpeat in https://github.com/can1357/oh-my-pi/pull/14471
+    - feat(coding-agent): add RPC logout commands by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14588
+    - fix(prewalk): rearm new sessions and allow disarming by @NaC-L in https://github.com/can1357/oh-my-pi/pull/14587
+    - feat(catalog): add Mistral Large 4 (AI-assisted) by @PierrunoYT in https://github.com/can1357/oh-my-pi/pull/14602
+    - fix(coding-agent): release obsolete catalog snapshots by @iliaal in https://github.com/can1357/oh-my-pi/pull/14317
+    - fix(write): refuse FIFOs and devices instead of freezing on them by @DrFaustus-vic in https://github.com/can1357/oh-my-pi/pull/14452
+    - fix(edit): refuse FIFOs and devices instead of blocking on them by @DrFaustus-vic in https://github.com/can1357/oh-my-pi/pull/14462
+    - Stop assistant images from evicting real input images by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14390
+    - fix(coding-agent): keep the local:// fallback root inside omp-local for . and .. session ids by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/14385
+    - fix(gc): delete session_titles rows for archived sessions by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14358
+    - fix(agent): persist the aborted turn when a context handler rejects on abort by @schickling-assistant in https://github.com/can1357/oh-my-pi/pull/14188
+    - fix(tui): label the question-switch keys in the Ask dialog footer by @tahakotil in https://github.com/can1357/oh-my-pi/pull/14590
+    - fix(tui): keep code fences inside JSON when parsing generated agent spec by @tahakotil in https://github.com/can1357/oh-my-pi/pull/14589
+    - fix(coding-agent): show relay runs the iframes that loaded before the tab was opened by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14422
+    - fix(browser): click radios and checkboxes whose real input is transparent by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14555
+    - fix(ai): find gcloud user ADC under %APPDATA% on Windows by @jorgoose in https://github.com/can1357/oh-my-pi/pull/14549
+    - fix(stats): hide topbar menu button on desktop by @lin-snow in https://github.com/can1357/oh-my-pi/pull/14406
+    - fix(coding-agent): switch to the project default when its model-hub chip is picked by @jshield in https://github.com/can1357/oh-my-pi/pull/14382
+    - fix(coding-agent): ignore consumed completions when peeking the yield queue by @nick-maderight in https://github.com/can1357/oh-my-pi/pull/14257
+    - chore: remove duplicate Response.Moderation interface declarations by @kvnloo in https://github.com/can1357/oh-my-pi/pull/13719
+    - docs(telemetry): document skill description oneshot kind by @xaviergmail in https://github.com/can1357/oh-my-pi/pull/14145
+    - fix(ai): store the Cursor account email so account policies can select it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14511
+    - fix(coding-agent): follow config symlink replacements live by @schickling-assistant in https://github.com/can1357/oh-my-pi/pull/14192
+    - docs(readme): document project input trust controls by @JYeswak in https://github.com/can1357/oh-my-pi/pull/14259
+    - fix(tui): use left/right to pick plan review options in Tern by @H4vC in https://github.com/can1357/oh-my-pi/pull/14607
+    - fix(coding-agent): stop re-asking the reserve fallback prompt after No by @lemonleks in https://github.com/can1357/oh-my-pi/pull/14475
+    - fix(eval): stage runner scripts in a per-uid temp dir by @TheRockPusher in https://github.com/can1357/oh-my-pi/pull/14449
+    - fix(coding-agent): offer Done selecting for multi-select in multi-question ask over RPC by @ataberkus in https://github.com/can1357/oh-my-pi/pull/14253
+    - fix(pi-builtins): read a full last chunk in tail when the size is a block multiple by @jchanghong023 in https://github.com/can1357/oh-my-pi/pull/14264
+    - feat(natives): pass extra cargo features via env by @justdoGIT in https://github.com/can1357/oh-my-pi/pull/14058
+    - docs(coding-agent): make tool descriptions match runtime behaviour by @radkawar in https://github.com/can1357/oh-my-pi/pull/13998
+    - Correct advisor.immuneTurns description: blockers are always exempt by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14360
+    - fix(coding-agent): custom glob backends ignore the tool deadline by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14426
+    - fix(coding-agent): --resume must fail closed on a missing file by @F0Rextasy in https://github.com/can1357/oh-my-pi/pull/14404
+    - docs(coding-agent): show complete read range calls by @Dante-dan in https://github.com/can1357/oh-my-pi/pull/13956
+    - feat(models): custom model kinds and runner APIs for models.yml and extensions by @jimhester in https://github.com/can1357/oh-my-pi/pull/14483
+    - fix(tui): improve annotate wrapping, filenames, and cursor behavior by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/14609
+    - feat(read): add first-class JSON and JSONL querying with ?q= by @asuffield in https://github.com/can1357/oh-my-pi/pull/14141
+    - fix(settings): kept reloads working after a failed config save by @roboomp in https://github.com/can1357/oh-my-pi/pull/14622
+    - fix(builtins): read sed and jq inputs instead of mmapping them by @roboomp in https://github.com/can1357/oh-my-pi/pull/14618
+    - fix(builtins): preserved punctuation in locale sort uniqueness by @roboomp in https://github.com/can1357/oh-my-pi/pull/14610
+    - fix(builtins): stopped tail -f on macOS once its pipe reader exits by @roboomp in https://github.com/can1357/oh-my-pi/pull/14617
+    New Contributors
+    - @PierrunoYT made their first contribution in https://github.com/can1357/oh-my-pi/pull/14602
+    - @tahakotil made their first contribution in https://github.com/can1357/oh-my-pi/pull/14590
+    - @lin-snow made their first contribution in https://github.com/can1357/oh-my-pi/pull/14406
+    - @jshield made their first contribution in https://github.com/can1357/oh-my-pi/pull/14382
+    - @TheRockPusher made their first contribution in https://github.com/can1357/oh-my-pi/pull/14449
+    - @ataberkus made their first contribution in https://github.com/can1357/oh-my-pi/pull/14253
+    - @jimhester made their first contribution in https://github.com/can1357/oh-my-pi/pull/14483
+    - @asuffield made their first contribution in https://github.com/can1357/oh-my-pi/pull/14141
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.6.3...v18.7.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.7.0
+ReleaseTime: 2026-10-06T20:05:49.0000000Z

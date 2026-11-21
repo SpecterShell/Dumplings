@@ -1,0 +1,52 @@
+Version: 4.0.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.0.0/Rayburst_4.0.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.0.0/Rayburst_4.0.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    Motrix Next is now Rayburst. Settings, tasks and history are not imported into the new application.
+    Before switching, finish active downloads, back up unfinished work, and quit and uninstall Motrix Next. Install Rayburst and configure it again. Keep your downloaded files. Updating through the old app may leave both applications installed or retain old shortcuts.
+    Coming from an early 4.0 beta? Review custom file categories in Settings → Downloads. Each rule now needs a relative or absolute directory mode. Classification sets the destination before downloading; it no longer moves completed files.
+    What's Changed
+    Rayburst 4.0 introduces native HLS/DASH downloads, live recording and a unified sidebar. It brings the six beta releases to the stable channel, with Aria2 Next 2.8.2 and fixes for download recovery, browser handoff and desktop integration.
+    ✨ New Features
+    - Media downloads: select video, audio and subtitle tracks from HLS and MPEG-DASH sources. Save compatible output as MP4, MKV or subtitle-only WebVTT without a separate downloader.
+    - Live recording: set a duration or choose Finish recording and save. Pause and retry media tasks using their existing recovery data.
+    - Browser media capture: receive manifests, compatible media fragments and recordings from Rayburst Connect. Confirming a selection in the extension starts the same task without another desktop prompt.
+    - Remember save location: optionally reuse the last directory you selected. Browser submissions follow this preference without changing it.
+    - HTTP range limit: set a maximum size for individual HTTP range requests. Leave it at 0 for automatic sizing.
+    🛠 Improvements
+    - Combine task filters, About and Settings in one sidebar, with a compact layout for narrow windows and coordinated page, toolbar and footer transitions.
+    - Apply theme colors throughout the light and dark interfaces. Refine the default purple palette and add default and dark macOS icon appearances.
+    - Handle submissions, confirmation receipts, history and notifications in Rust while the main window is closed. Retrying a browser handoff after a lost reply reuses its submission identity.
+    - Start the desktop installation paired with the browser's Native Messaging host without relying on URL-handler defaults.
+    - Show native association status and repair actions for .torrent, magnet, ed2k, thunder and rayburst.
+    - Open completed or seeding content by double-clicking its task. List recent save directories in most-recent-first order.
+    🐛 Bug Fixes
+    - Prevent completed HTTP downloads from reappearing after a crash.
+    - Keep duplicate-torrent errors from failing the original task, and preserve torrent directories and per-task limits when global settings change.
+    - Restart eligible partial HTTP downloads when the remote resource changes, without mixing data from different versions of the file.
+    - Protect files used by other tasks during deletion. Keep the history entry if file removal fails.
+    - Pause seeding when downloaded files become missing or inaccessible, including while the window is closed. Recheck affected torrents when they resume.
+    - Fix window recreation in lightweight mode and allow browser submissions to receive acknowledgements without waiting for the window.
+    - Normalize proxy bypass lists and supported IPv4 wildcard rules. Report unsupported imported rules for correction.
+    - Report engine startup and failure separately from desktop connection failures, so Rayburst Connect can offer recovery instead of repeatedly launching the app.
+    - Stop processes owned by the target Windows installation before replacing or removing it. Prevent development builds from overwriting installed browser registrations.
+    Browser Extension
+    Use Rayburst Connect 2.0.4 or later for engine-status messages and recovery actions. Launch Rayburst once after installation, then enter its Extension API port and secret in the extension settings. Disable the previous extension to avoid competing download interception.
+    - Chrome
+    - Edge
+    - Firefox
+    Media Limitations
+    DRM, transcoding and subtitle translation are not supported. Output containers must support the selected codecs. Captured fragments must form a compatible media sequence, and live recovery cannot retrieve segments the server has already removed.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/rayburst/releases/tag/v4.0.0
+ReleaseTime: 2026-09-24T14:25:00.0000000Z

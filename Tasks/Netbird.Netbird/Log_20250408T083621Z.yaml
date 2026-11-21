@@ -1,0 +1,43 @@
+Version: 0.40.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.40.0/netbird_installer_0.40.0_windows_amd64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.40.0/netbird_installer_0.40.0_windows_amd64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.40.0.14327831890
+    Publisher: Netbird
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    Behavior change
+    - CLI Auth Behavior: Forced login for new users using PKCE flow in CLI. #3604
+    With this change, all users will be required to log in once their client session has expired, even when they have a Dashboard session active.
+    Improved Routing and DNS Behavior
+    Several enhancements were made to routing logic and DNS behavior, including:
+    - Automatically registering match domains for DNS routes. #3614
+    - Enhancing the DNS forwarder to track resolved IPs with resource IDs. #3620
+    - Fixing DNS forwarder handling of requested record types. #3615
+    Traffic Visibility and Interface Marking
+    - NetBird data plane traffic is now marked for improved interface traffic identification. #3623
+    These changes improve observability and routing accuracy for DNS and network flows.
+    Improvements
+    - Route Removal Logic: Updated route removal to correctly handle dynamic routes. #3625
+    - Linux Userspace Mode: Fixed missing inbound flows in userspace mode with native router. #3624
+    - TCP Connection Tracking: Improved TCP connection tracking. #3572
+    - Backend Router: Removed remaining Linux router limitations. #3589
+    - No-Browser Login: Added --no-browser flag for CLI login and up commands for better SSO control. #3610
+    - IP Lookup: Improved local IP lookup logic. #3551
+    - Logging: NetBird logger now handles ICE and gRPC logs. #3603
+    Bug Fixes
+    - Access Validation: Permission manager now validates account access correctly. #3444
+    Other Changes
+    - FreeBSD CI: Updated FreeBSD workflow for better test coverage. #3638
+    Full Changelog: v0.39.2...v0.40.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/netbirdio/netbird/releases/tag/v0.40.0
+ReleaseTime: 2025-04-08T07:26:58.0000000Z

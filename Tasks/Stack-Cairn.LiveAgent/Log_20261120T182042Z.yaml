@@ -1,0 +1,34 @@
+Version: 2.0.30
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.30/LiveAgent-v2.0.30-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.30/LiveAgent-v2.0.30-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Open in editor (#1359, via #1360)
+      - LiveAgent detects installed code editors: VS Code, VS Code Insiders, Cursor, Windsurf, Zed, Sublime Text, JetBrains IDEs and Xcode.
+      - You can open a file, a folder or the project root from the file tree, from the sidebar workspace menu, or from a chat file link (at the linked line).
+      - Choose your preferred editor in Settings → Code Editor.
+    - Folder trust (#1361, via #1362)
+      - Workspace settings → General shows whether the project folder is trusted, and lets you trust it or revoke trust.
+      - Trusting a folder lets K-brain load that project's prompt templates and project slash commands. The change applies immediately.
+    Backend
+    Bundled K-brain is now v0.107.40:
+    - Folder trust API /v1/trust, used by the setting above.
+    - Hooks
+      - Hooks can be limited to specific tools.
+      - The event is also sent on stdin.
+      - Stop hooks can keep a turn going (up to 5 times).
+      - Hooks can add context for the model.
+    - /goal: an independent check runs before a goal is marked as met. If the goal isn't met, the agent keeps working on it.
+    - kn run: new scripting flags (tool allow/deny lists, per-run permission rules, -cwd, -continue, -image, -effort).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.30
+ReleaseTime: 2026-11-20T17:59:41.0000000Z

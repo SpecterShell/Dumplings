@@ -1,0 +1,42 @@
+Version: 2.1.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/try2love/codex-mobile-bridge/releases/download/v2.1.6/Codex-Mobile-Bridge-2.1.6-Windows-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v2.1.6 improves chat organization, file reading, copying and account management. Desktop/mobile version: 2.1.6, Android/iOS build 39.
+    - Pin Codex, Claude and DSH chats in Bridge's recently active list. Apply changes locally before gateway synchronization; native clients' pin states are unchanged. Context menus support desktop right-click and mobile long-press.
+    - Confirm before stopping and archiving a supported chat. Confirm archive is on the left and Cancel on the right, with equal styling and size. Verify the selected chat and its descendants have stopped before archival; retain history and never replay uncertain operations.
+    - Copy Codex deep links, DSH session IDs and absolute file/folder paths. Restore clipboard writes and feedback in older iOS/Android apps; normalize Windows display paths.
+    - Switch Markdown between reading and source views and use a separate file-text size preference. Images and PDFs retain their own zoom controls.
+    - Unify Codex account inventory while retaining desktop quota details and the existing add-account/API entry. Improve the mobile API form and fetch upstream models to fill a default model. Official sign-in remains on desktop.
+    - Show all gateway addresses, remove redundant client headings and keep WSL initialization/UI on Windows. Fix DSH/Claude list refresh scope and recent/project cache interference. PR #73 corrects Windows SSH/CLI project names; PR #82 increases the HTTP listener backlog.
+    Archive limitations: Codex App-owned writers cannot always be released externally; archive those chats in Codex App. Claude Code Desktop needs compatible native support. Claude CLI/SSH/WSL reversible file archival is gated by verified versions, identity, files and writer checks; unsupported versions and Windows native CLI may be unavailable. Cowork archive/restore is unsupported. DSH needs the compatible connector and fresh stop verification. Bridge never quits a shared app or kills unrelated work to archive a chat. Restoring history does not restart unfinished tasks. Issue #77 remains open for these limitations.
+    Install over the matching existing app without clearing data; retain Android signing and use matching iOS identifiers/signing. Refresh shared pages after the gateway update. If Test and production share one native DSH connector, upgrade both gateways compatibly and explicitly restart the connector only after its tasks have stopped.
+    Thanks to @lanchengjiu for PR #73 and @mc373906408 (waken) for PR #82; original author commits are retained through merges.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本版完善手机 App 与 Web 的会话整理、复制和文件阅读，优化账号管理，并修复跨平台项目分组与列表更新问题。桌面与手机 App 版本为 2.1.6，Android/iOS 构建号为 39。
+    新增与改进
+    - 会话置顶：Codex、Claude 和 DSH 在“按最近交互”列表中支持置顶与取消置顶。操作先在当前设备生效，再同步到网关，减轻弱网等待；这是 Bridge 手机 App 与 Web 的列表偏好，不修改原生 App 或 CLI 的置顶状态。电脑右键、手机长按可打开会话菜单。
+    - 断开连接并归档：增加二次确认，左侧“确认归档”、右侧“取消”，两个按钮采用相同样式和大小。在支持的接入中停止所选会话及可核验的子任务，确认停止后再归档；聊天记录保留，可取消归档。无法确认停止或归档结果时不会自动重复提交。原生能力限制见下文，不能保证所有 App/CLI 会话均可归档。
+    - 复制与会话详情（#74、#75）：支持复制 Codex 深度链接、DSH Session ID，以及文件和目录的绝对路径；修复旧版 iOS/Android App 中复制未写入剪贴板、缺少结果提示的问题。深度链接入口移至会话详情的“在电脑运行”旁；Windows 普通盘符与 UNC 路径显示不再带扩展路径前缀。
+    - 文件阅读（#80、#81）：Markdown 可切换阅读与源码模式，并保留相应阅读位置。增加独立的文件字号设置，应用于文本、代码、Markdown 和 HTML 预览；图片与 PDF 继续使用各自的缩放方式。
+    - 账号与 API 接入（#78）：统一 Codex 账号清单，保留桌面网关的“添加账号或 API”和具体额度展示。手机 API 表单沿用现有配色，折叠标题与相邻设置一致，去掉多余外框，补齐输入标识；支持“获取上游模型”并自动填入默认模型。官方账号登录仍在电脑完成。
+    - 网关与列表：直接展示全部访问地址（#76），移除“客户端与接入”中多余的 Codex/Claude 分组标题。Mac/Linux 不初始化或展示 WSL 模块。修复 DSH/Claude 列表与置顶状态读取范围导致的更新失败，以及最近会话和项目列表之间的缓存干扰。
+    - 连接与项目分组（PR #73、#82）：修复 Windows SSH/CLI 项目目录分组名称；提高 HTTP 监听队列容量，改善并发连接接入，并验证异常 GET 请求关闭连接时不会污染后续请求。
+    归档支持范围与限制
+    - Codex：支持兼容原生运行时上的 CLI/WSL 会话，以及没有活跃写入者的 App 历史。仍由 Codex App 持有的部分会话暂时不能从 Bridge 释放并归档，请在 Codex App 中归档；Bridge 不会为此退出整个 App、影响其他会话或直接改写原生数据库。
+    - Claude：Claude Code Desktop 通过支持的原生接口停止并归档。CLI/SSH/WSL 使用可逆文件归档，仅在原生版本、配置身份、会话文件及写入进程检查通过后启用；未验证的版本、Windows 原生 CLI，以及仍检测到其他写入者的环境可能无法归档。Cowork 暂不支持归档与恢复。
+    - DSH：需要支持本版归档流程的连接器。停止目标会话及其任务后重新核验，再调用原生归档；无法确认安全状态时不执行。升级运行中的旧连接器需要显式重启接入，启动网关本身不会自动重启 DSH。
+    - 归档不会删除聊天记录，也不会在取消归档时自动恢复未完成任务。上述未完成范围继续由 #77 跟踪。
+    贡献与反馈
+    感谢 @lanchengjiu 的 PR #73，以及 @mc373906408（waken） 的 PR #82。两位作者的原始提交通过 merge 保留。感谢 #74、#75、#76、#77、#78、#80、#81 的建议与跨平台测试反馈。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/try2love/codex-mobile-bridge/releases/tag/v2.1.6
+ReleaseTime: 2026-10-27T00:57:46.0000000Z

@@ -1,0 +1,38 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://download.bitcomet.com/achive/BitComet_2.12_setup.exe
+  ProductCode: BitComet
+- Architecture: x64
+  InstallerUrl: https://download.bitcomet.com/achive/BitComet_2.12_setup.exe
+  ProductCode: BitComet_x64
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    GUI Improved: Upgraded the UI library to fix cropping issues in scrolling windows on macOS 14+
+    GUI Improved: If the task list has been sorted, when you click the task sort button in the toolbar, a prompt message will be displayed to unsort first
+    GUI Improved: Added command line parameters --bt_port and --webui_port to set the listening port
+    GUI Improved: The environment variables BITCOMET_BT_PORT and BITCOMET_WEBUI_PORT are read when the main program is started in command line mode and are used to set the listening port
+    GUI Improved: Command-line mode reads environment variables WEBUI_USERNAME and WEBUI_PASSWORD when the main program starts, which is used to set the WEBUI username and password
+    GUI Improved: Improved the layout of remote access page in options window
+    GUI bugfix: When dark mode is disabled, the webview still follows the system setting of dark mode
+    GUI bugfix: The list should scroll when dragging the task to reorder the task list
+    GUI bugfix: When dragging a task to reorder the task list, the page up/down key will change the dragged task
+    GUI bugfix: When dragging a task to reorder the task list, the target location indicator blinks
+    WebUI: implements the server list and connection list for HTTP tasks
+    WebUI: implements the task logs, global logs, and global statistics pages
+    WebUI: The maximum number of rows displayed in the multi-line input box has been increased
+    WebUI: fixed the issue that "Download Later" does not work when adding a HTTP task
+    WebUI: fixed the error message after deleting a task
+    Core Improved: Added advanced option network.exclude_remote_access_from_connection_restrictions that allows global rate limiting and TCP connection cap to exclude remote access connections, replacing the network.ignore_remote_access_in_speed_limit setting introduced in version 2.10
+    Core Improved: The UDP packet timeout for DHT and UDP Tracker is adjusted to 10 sec
+    Core Improved: The peer log in expert mode shows the Super Seed progress report log
+    Core Improved: Added command line mode main program bitcometd.exe which has no graphical interface, and only supports web UI interface
+    Core Improved: Added memory usage details to the Statistics page for macOS and Linux
+    Core Improved: Adjusted the priority of TCP connections such as Tracker and RSS
+    Core Improved: Added ALPN header for HTTPS downloads
+    Core bugfix: After switching the listening port, the CPU usage statistics of UDP are invalid
+    Core Bugfix: The remaining memory of the system in Linux should include the memory occupied by cache and buffer
+    Core bugfix: The HTTP task handles the case where the original link redirects to different CDN addresses
+Version: "2.12"
+ReleaseTime: 2025-01-14

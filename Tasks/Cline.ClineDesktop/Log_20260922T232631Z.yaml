@@ -1,0 +1,18 @@
+Version: 0.0.34
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cline/cline/releases/download/desktop-v0.0.34/Cline_0.0.34_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Composio connectors now load all their tools, not just the first 20. Google Calendar, for example, showed only 20 of its 47 tools, and the Installed view wrongly said "20/20." The full list is now fetched and the tool cache refreshes instead of staying stale forever
+    - You can now connect to a Mac as an SSH remote from a Mac. Picking a Mac host used to fail with "Remote target darwin/arm64 is unsupported in SSH" even though Test passed on the same profile. The app now uses its own signed backend as the helper on both Apple Silicon and Intel Mac hosts. Windows and Linux desktops still can't connect to a Mac out of the box
+    - Session errors now stay in the transcript when you leave a session or open it in another client. Before, a failed run's error disappeared once you went away and came back, or opened the session in the CLI. Failures after all retries run out are now recorded too, and these error-only entries are left out of compaction
+    - Stopping a run while it waits to retry an empty model response now takes effect right away, instead of after the backoff finishes
+    Full Changelog: https://github.com/cline/cline/compare/desktop-v0.0.33...desktop-v0.0.34
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cline/cline/releases/tag/desktop-v0.0.34
+ReleaseTime: 2026-09-22T21:10:28.0000000Z

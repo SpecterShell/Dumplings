@@ -1,0 +1,102 @@
+Version: 18.0.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.0.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed Anthropic Claude tool calls containing provider-visible private-use icon glyphs by reversibly tokenizing glyphs at the wire boundary and rejecting model-invented or unresolved glyph tokens before execution.
+    - Fixed agent identity confusion after session handoffs by clarifying context framing and ensuring successor instances seamlessly resume existing execution plans.
+    @oh-my-pi/pi-ai
+    Added
+    - Added reversible private-use glyph tokenization for Claude-compatible provider requests, including prompt notices, streamed response decoding, and safe handling of unresolved model-authored glyph tokens.
+    Fixed
+    - Fixed completed Anthropic turns remaining busy when the provider sent message_stop but kept the SSE connection open, which stranded tool execution and queued steering until timeout.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added model capability metadata for reversible private-use glyph tokenization on Claude-compatible models, so provider request handling can apply the compatibility layer without inferring from transport details.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the omp render command to replay session threads and benchmark transcript pipeline performance.
+    - Added configurable typo detection (Ctrl+. suggestions), Tab word completion, and opt-in autocorrect to the macOS prompt editor.
+    - Added a live benchmark dashboard to omp bench with real-time performance estimates, p50/p95 statistics, distinct input/output throughput metrics, cost tracking, mixed challenge suites by default, and a --prefill-bytes option for synthetic prefill benchmarks.
+    - Added the /shake thinking command to strip model reasoning blocks from session history.
+    - Added icon support and usage-frequency ranking to slash-command autocomplete suggestions.
+    - Enhanced the edit tool to support ＋-prefixed line insertions, unified diff formats, bare selection replacements, and robust recovery for common syntax variations and ambiguous match spans.
+    - Startup composer now renders immediately using cached session and theme data, allowing typing before session initialization finishes without dropping keystrokes.
+    - Added the tui.resizeScrollback setting (default append) controlling how a settled width resize refreshes pane scrollback when the terminal repaints in place (tmux/screen/Zellij panes, in-place direct terminals). Multiplexers rewrap old output naively on width changes, leaving history hard-broken at the old width; append re-emits the transcript at the new width below it (one fresh copy per settled resize), rebuild clears pane history first so it holds exactly one current-width copy (needs a host that honors ED3, like tmux; erases pre-session scrollback), and preserve keeps the old-width history untouched with zero growth (#8193).
+    Changed
+    - Session history rewinds (via Esc-Esc or /tree) now truncate transcript tails in place instead of clearing and replaying the entire terminal scrollback.
+    - Switched the fallback edit mode to sloppy for models lacking hashline support.
+    - macOS spelling checks now run in the background to avoid blocking editor rendering and keystroke responsiveness.
+    - Word completions accepted via Tab now insert a trailing space when not immediately followed by whitespace or punctuation.
+    - Increased default visible autocomplete dropdown rows to 10 and added the autocompleteMaxVisible configuration setting.
+    - Slash-command descriptions in the autocomplete popup now truncate to two lines instead of wrapping indefinitely.
+    Fixed
+    - Fixed streaming code blocks not rendering syntax highlighting live until completion.
+    - Fixed an issue where interrupting Claude during reasoning would replay partial thinking blocks on subsequent turns and cause API rejection errors.
+    - Fixed session resume performance by avoiding redundant edit-matching execution across historical transcripts.
+    - Fixed image requests to Kimi Code / Moonshot failing with 400 errors by sending inline base64 images directly.
+    - Fixed reading WAL-mode SQLite databases that do not have active -wal or -shm files.
+    - Fixed terminal transcript layout corruption on Windows caused by collapsed edit results with long wrapped diff lines (#9302).
+    - Fixed disappearing terminal scrollback history below updating cards such as background jobs or hub status cards.
+    - Fixed pasted image attachment thumbnails rendering as blank boxes in Kitty terminal graphics mode.
+    - Fixed context gauge display issues in the status line for unnamed sessions.
+    - Fixed accurate benchmark input token counts on providers with automatic prompt caching.
+    - Fixed C# files incorrectly displaying D3.js icons in edit results (#9323).
+    - Fixed incorrect token delta reporting in expanded context compaction summaries when pre-compaction usage was omitted by the provider (#9293).
+    - Fixed the composer image chip painting its right border inside the card and mangling the thumbnail's first row: the Kitty placement prefix was counted as visible width, breaking the thumbnail centering.
+    - Fixed edit-tool whole-line inserts (an insert selection alone on its own line) splicing into the anchor line instead of landing on a new line when the anchor was the last matched line, preceded a blank line, or sat at EOF.
+    - Edit tool prompt now documents whole-line insert selections and that a REWRITE … with no captured MATCH gap is written to the file literally.
+    - Fixed multiplexer width resizes (tmux/screen/Zellij/cmux/Herdr panes) replaying the entire transcript into pane history — one duplicated transcript copy and seconds of visible scrolling per width change. The width-epoch boundary now resolves for real transcripts: finalized blocks without getTranscriptBlockVersion are treated as immutable per the documented contract, Container-derived blocks without a nested epoch source fall back to whole-segment stability instead of failing, and bash/eval/tool/read-group blocks report a block version for their genuine post-finalize mutations. The interactive resize listener no longer marks every SIGWINCH as "render pending", which forced the conservative replay-from-row-zero fallback on every settled resize (#8193, #7026).
+    - Fixed the edit tool rejecting payloads containing a glued «» line: after MATCH it now reads as the mistyped » separator, elsewhere as a stray terminator to drop.
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed false-positive location extraction in episodic gists by properly enforcing capitalization constraints for proper nouns.
+    - Improved episodic gist participant extraction with Unicode support to properly capture names in non-Latin scripts (e.g., Cyrillic, Greek).
+    @oh-my-pi/pi-natives
+    Added
+    - Added native macOS spellchecker APIs (macOSAutocorrectWord, macOSCheckSpelling, macOSCompleteWord, macOSSpellingGuesses, and macOSSpellCheckerAvailable) that run asynchronously without blocking the JavaScript thread.
+    - Added HighlightStream, a stateful incremental syntax highlighter that supports chunked highlighting while maintaining parser state.
+    - Added TtyWriter, an off-thread terminal output writer that performs non-blocking writes and tracks backlog metrics for renderer frame skipping.
+    Changed
+    - Word completion now automatically appends a space unless followed by punctuation or whitespace.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Changed native macOS spelling and completion functions to return Promises.
+    - Updated EditorTextAssistProvider.tryAutocorrect signature to receive editor state instead of raw text.
+    - Updated Editor.decorateText signature to provide line and column context instead of raw text.
+    Added
+    - Added EditorTextAssistProvider with spelling suggestion support (ctrl+.), word replacement choices, and async autocorrection handling.
+    - Added Terminal.pendingOutputBytes and an output-backpressure render gate to drop stale frames on slow terminals.
+    - Added deferInput startup option and enableInput() across Terminal, TUI, and TUIStartOptions to improve startup responsiveness.
+    - Added icon support and customizable theming to autocomplete and select lists.
+    - Added MarkdownTheme.createHighlightStream for incremental syntax highlighting of completed lines in streaming Markdown code blocks.
+    - Added maxDescriptionRows option to SelectList layouts to truncate wrapped descriptions with an ellipsis.
+    - Added commandUsage ranking callback support to CombinedAutocompleteProvider to prioritize frequently used slash commands.
+    - Added Editor.viewportRowsProvider to constrain autocomplete dropdowns within the available terminal height.
+    - Added Editor.setTheme() to dynamically change themes without recreating the editor or losing draft content.
+    - Added setResizeScrollback() / ResizeScrollbackMode (PI_TUI_RESIZE_SCROLLBACK env initializer) controlling what a settled in-place width resize does to native scrollback, which the host rewraps naively at the old width: append replays the transcript at the settled width below the old-wrap history, rebuild clears pane history first (ED3) so it holds exactly one current-width copy, and preserve repaints the viewport only with zero history growth. The raw engine defaults to preserve; the coding agent's tui.resizeScrollback setting (default append) governs interactive sessions.
+    Changed
+    - Adjusted word completion to skip appending a trailing space when the following character is punctuation.
+    - Increased default autocomplete dropdown height from 5 to 10 items.
+    Fixed
+    - Fixed TUI freezing during large repaints on slow or occluded terminals by moving stdout writes to an off-thread writer.
+    - visibleWidth now measures APC sequences (Kitty graphics commands, cursor markers) as zero cells instead of counting their payload as printable text, matching the native width engine.
+    - Kitty Unicode-placeholder rows with long styled prefixes (e.g. bordered thumbnail cards) are recognized as image lines again, keeping them on the verbatim render path instead of SGR coalescing/truncation.
+    - Fixed multiplexer width-epoch resolution failing for every real component tree, which forced the conservative full-transcript replay (and one duplicated transcript copy in pane history) on every settled width resize: leading children without a width-epoch revision are no longer validated by width-dependent row counts (reflow is not mutation — identity plus the revision, when reported, is the stability proof), and Markdown now reports a width-independent mutation revision so it can sit above an epoch source (#8193, #7026).
+    What's Changed
+    - fix(coding-agent): bound collapsed edit diff rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/9304
+    - fix(mnemopi): drop /i flag defeating extractLocation's capital-letter intent by @roboomp in https://github.com/can1357/oh-my-pi/pull/7920
+    - fix(mnemopi): make episodic participant extraction Unicode-aware by @roboomp in https://github.com/can1357/oh-my-pi/pull/7921
+    - fix(tui): handle unknown compaction source tokens by @roboomp in https://github.com/can1357/oh-my-pi/pull/9294
+    - fix(tui): correct csharp edit icon by @roboomp in https://github.com/can1357/oh-my-pi/pull/9325
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.4.4...v18.0.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.0.0
+ReleaseTime: 2026-08-22T11:00:46.0000000Z

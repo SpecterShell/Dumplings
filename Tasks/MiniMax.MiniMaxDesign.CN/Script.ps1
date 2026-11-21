@@ -1,0 +1,61 @@
+$Prefix = 'https://filecdn.minimax.chat/public/minimax-hub/release/domestic/'
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
+
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      $Object2 = Invoke-RestMethod -Uri "${Prefix}changelog.json"
+
+      if ($ReleaseNotesObject = $Object2.en.items.Where({ $_.version -eq $this.CurrentState.Version }, 'First')) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = "$($ReleaseNotesObject[0].subtitle)`n`n$($ReleaseNotesObject[0].changelog | ConvertTo-UnorderedList)" | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      if ($ReleaseNotesCNObject = $Object2.zh.items.Where({ $_.version -eq $this.CurrentState.Version }, 'First')) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = "$($ReleaseNotesCNObject[0].subtitle)`n`n$($ReleaseNotesCNObject[0].changelog | ConvertTo-UnorderedList)" | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

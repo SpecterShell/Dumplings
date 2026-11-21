@@ -1,0 +1,54 @@
+Version: 0.9.39
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.39/Varin-0.9.39-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.39/Varin-0.9.39-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Mark an image, then send it in the conversation. Varin 0.9.39 adds editable image annotations, completes the plugin installation and update interface, and makes handing work to a Bot an explicit conversation action.
+    Images you can point at
+    - Open an attached image to add arrows, rectangles, ellipses, freehand strokes, text, numbered markers or opaque covers. Select, move, resize or delete annotations, zoom and pan, and undo or redo edits with the usual keyboard shortcuts. Each image keeps its own editing history while it remains in the draft.
+    - Adjust stroke color, width, outline and opacity, with a live preview. New annotations start without an outline; opaque covers remain opaque. Sending exports the annotated pixels while the original stays available for further draft edits.
+    - Pasting, dropping or choosing images inserts numbered references such as [Image 1] at the cursor. The thumbnails remain above the text. Removing an image renumbers the remaining images and their references together; removing all images starts the next one at 1.
+    - Image references use the theme accent and behave as whole labels when navigating or deleting text. Unsent file attachments show their name and size without download actions or a misleading preparation label.
+    Plugins in one place
+    - The plugin page separates Discover and Installed, with search, source information, configuration entry points and update checks. Built-in capabilities and externally installed plugins remain distinguishable.
+    - Browse the public registry maintained at Astrmira/Varin-plugins. Listings and short descriptions come from the registry; releases and updates come from each plugin's saved author source.
+    - Preview and install releases from GitHub, npm or a local release archive, and open installation links in Varin. Review the package and requested permissions before applying an installation or update. Shared Host credential services are available to plugin integrations; each plugin owns its account configuration interface.
+    Conversation and runtime fixes
+    - Hand off work from the workbench to a chosen Bot conversation with your own message and a reference to the original task. The Bot can inspect the task history and continue from there.
+    - Move conversation-recovery controls out of Varin's message content and remove the inappropriate handoff action from Bot conversations. Restore smooth settings entrance and dismissal.
+    - Retain the original extension owners when continuing a Run. Restore brokered services in cloud packages and correct Web workspace defaults and Windows path handling.
+    Container deployment change
+    Starting with this release, ghcr.io/youzini-afk/varin is the standard environment. Deployments that rely on the extra Java, Go, Rust, LSP or browser toolchain should use ghcr.io/youzini-afk/varin-toolbelt or the toolbelt Compose overlay. Existing exact 0.9.38 image references retain their original contents. See the deployment guide before updating a server that follows latest.
+    Desktop release targets are Windows x64/ARM64, macOS Apple Silicon and Linux x64/ARM64, alongside a signed Android APK. Android connects to an existing Varin Host. Optional local embedding components remain separate downloads.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    圈出图片上的问题，再接着聊。 Varin 0.9.39 加入图片标注，完善插件安装与更新界面，也让工作台任务交给 Bot 接手的操作更直接。
+    图片可以直接标注
+    - 打开附件图片即可添加箭头、矩形、椭圆、自由画笔、文字、编号和不透明遮盖。支持选中、移动、缩放、删除标注，以及图片缩放、平移；撤销和重做支持常用快捷键，每张草稿图片独立保留编辑历史。
+    - 可调整颜色、线宽、描边和透明度，并实时预览。新标注默认不带描边，遮盖始终保持不透明。发送时导出标注后的图片，草稿中的原图仍可用于继续编辑。
+    - 粘贴、拖入或选择图片，会在光标位置插入 [图片 1] 这样的编号引用，缩略图保留在文字上方。删除图片时，剩余缩略图和正文引用一起连续编号；全部删除后，新图片从 1 开始。
+    - 图片引用使用主题重点色，移动光标和删除时按整块处理。未发送的普通文件附件保留名称、大小等必要信息，去掉下载入口和容易误解的“待准备”字样。
+    统一管理插件
+    - 插件页分为发现与已安装，提供搜索、来源信息、配置入口和更新检查，并区分内置能力与外部安装的插件。
+    - 公开收录来自 Astrmira/Varin-plugins。市场列表和简短介绍读取收录目录，版本与更新沿各插件保存的作者来源获取。
+    - 支持从 GitHub、npm 或本地发行包预览安装，也可通过安装链接在 Varin 中打开。安装和更新前可查看包信息及所需权限。插件集成可复用 Host 的凭据服务，具体账号配置由各插件自己的页面负责。
+    聊天与运行时修复
+    - 工作台任务可以交给选定的 Bot 会话：发送内容由你填写，同时附上原任务引用，Bot 可继续读取任务记录、了解进展。
+    - 将会话回退的恢复入口移出 Varin 聊天正文，移除 Bot 对话中不合适的交接菜单；恢复设置页面平滑的打开和关闭动效。
+    - 修复 Run 接续时扩展执行归属的保留，补齐云端产物中的代理服务，并修正 Web 工作区默认值与 Windows 路径处理。
+    容器部署变更
+    从本版开始，ghcr.io/youzini-afk/varin 使用标准环境。需要额外预装 Java、Go、Rust、LSP 或浏览器工具链的部署，请改用 ghcr.io/youzini-afk/varin-toolbelt 或 toolbelt Compose overlay。已发布的 0.9.38 精确镜像引用保留原有内容。跟随 latest 的服务器升级前请查看部署说明。
+    发布目标包含 Windows x64/ARM64、macOS Apple Silicon、Linux x64/ARM64，以及签名 Android APK。Android 连接已有的 Varin Host；可选本地嵌入组件继续单独下载。
+    Full changelog / 完整改动
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.39
+ReleaseTime: 2026-11-07T05:45:26.0000000Z

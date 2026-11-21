@@ -1,0 +1,49 @@
+Version: 2.6.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Kuddev/pebrel/releases/download/v2.6.0/Pebrel-v2.6.0-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Kuddev/pebrel/releases/download/v2.6.0/Pebrel-v2.6.0-windows-x64.zip
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    macOS, Linux, and Android downloads are Preview builds.
+    Fixed
+    - Fixed Runtime discovery files on Linux and macOS so that only the owner can read them. Runtime access tokens now use the operating system's secure random source.
+    - Fixed commands typed with a leading space appearing in Pebrel's command history.
+    - Fixed command history always saving new entries to disk. Set command_history_persist=0 in pebrel_settings.txt and restart to keep new entries only in memory.
+    - Fixed command history records being lost when multiple Pebrel instances save at the same time.
+    - Fixed SSH fallback applying a later jump host even when an earlier ProxyCommand none disables the proxy.
+    - Fixed redundant shell discovery at startup and when opening a pane. A cached shell is checked before launch.
+    - Fixed the updater selecting an empty installer upload. It now uses a usable matching package when available.
+    - Fixed mouse-wheel coordinates appearing at the Bash prompt after a foreground program is killed.
+    - Fixed the Agent session index ignoring PEBREL_CONFIG_DIR. Each profile now saves and reads its own hook session index.
+    - Fixed Git worktree creation and cleanup for repositories whose directory names end with a space or newline.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    macOS、Linux 和 Android 下载为预览版。
+    修复
+    - 修复 Linux 和 macOS 的 Runtime 发现文件权限，仅允许文件所有者读取。Runtime 访问令牌改用系统的安全随机源生成。
+    - 修复以空格开头的命令被写入 Pebrel 命令历史的问题。
+    - 修复命令历史总是将新记录写入磁盘的问题。在 pebrel_settings.txt 中设置 command_history_persist=0 并重启，新记录仅保留在内存中。
+    - 修复多个 Pebrel 实例同时保存命令历史时记录丢失的问题。
+    - 修复 SSH 回退解析在前面的 ProxyCommand none 已关闭代理时，仍套用后续跳板机的问题。
+    - 修复启动和打开窗格时重复扫描 Shell 的问题。启动前会检查缓存中的 Shell 是否仍可用。
+    - 修复更新器误选空安装包的问题。有可用的匹配安装包时，会选用可用包。
+    - 修复 Bash 前台程序被强制结束后，滚动滚轮会向提示符输入鼠标坐标的问题。
+    - 修复 Agent 会话索引忽略 PEBREL_CONFIG_DIR 的问题。各配置目录分别保存和读取自己的 Hook 会话索引。
+    - 修复仓库目录名以空格或换行结尾时，Git 工作树无法创建和清理的问题。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/pebrel/releases/tag/v2.6.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kuddev/pebrel/releases/tag/v2.6.0
+ReleaseTime: 2026-11-19T11:41:56.0000000Z

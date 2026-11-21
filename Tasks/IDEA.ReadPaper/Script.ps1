@@ -1,17 +1,22 @@
-$Object = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-app-aiKnowledge/aiKnowledge/client/v1/getDownloadUrls' -Method Post -ContentType 'application/json' -Body '{}'
+$Object1 = Invoke-RestMethod -Uri 'https://readpaper.com/api/microService-acl/dic/public/app/getListByAppIdAndParentIdNameAvailable?appId=aiKnowledge&parentIdName=ClientDownloadManage'
 
-$Prefix = [uri]::new([uri]$Object.data.urls.windowsClient, '.').OriginalString
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.Where({ $_.groupName -eq 'windows' -and $_.downloadChannel.Contains('官方下载') }, 'First')[0].downloadUrl
+}
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(\.\d+)+)').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

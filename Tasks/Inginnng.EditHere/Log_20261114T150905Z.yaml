@@ -1,0 +1,24 @@
+Version: 0.13.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Inginnng/EditHere/releases/download/v0.13.2/EditHere-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.13.2 fixes screenshots that could turn entirely black with HDR enabled on Windows.
+    - Retry blank frames: wait for another frame when the first duplicated HDR desktop frame has not been painted. Valid frames retain the existing HDR-to-sRGB color conversion.
+    - Capture fallback: ordinary and scrolling captures read the desktop through GDI if the retry is still blank, with diagnostics recorded. If GDI also fails, report capture failure instead of accepting a black image as a successful screenshot.
+    Thanks to foxfoc for #71 and for confirming that ordinary screenshots work again on an RTX 5080 with HDR enabled. The maintainer's display has HDR disabled; color/GPU capture and fallback failure paths are checked separately. Scrolling capture on the reported HDR device still needs confirmation. GDI fallback can lose HDR color accuracy and highlights; output remains standard sRGB.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    0.13.2 修复 Windows 开启 HDR 时截图可能全黑的问题。
+    - 空帧重试：HDR 桌面采集的第一帧尚未绘制时，重新等待一帧；正常画面继续使用已有的 HDR 到 sRGB 颜色转换。
+    - 截图保底：重试后仍为空帧时，普通截图和长截图改用 GDI 读取桌面并记录诊断。GDI 也失败时明确提示截图失败，避免把黑图作为成功结果保存。
+    感谢 foxfoc 提交 #71，并在 RTX 5080、HDR 开启的设备上复测普通截图恢复正常。维护者本机未开启 HDR，已分别验证颜色 / GPU 采集及回退失败路径；长截图在该 HDR 设备上的实际效果仍需继续确认。GDI 保底可能损失 HDR 颜色与高光，导出仍为标准 sRGB 图片。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Inginnng/EditHere/releases/tag/v0.13.2
+ReleaseTime: 2026-11-14T14:39:35.0000000Z

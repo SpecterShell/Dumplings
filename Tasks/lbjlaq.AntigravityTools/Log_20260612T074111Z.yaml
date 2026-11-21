@@ -1,0 +1,23 @@
+Version: 4.2.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.2/Antigravity.Tools_4.2.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.2/Antigravity.Tools_4.2.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [安全与稳定] 安全审计与错误修复 (Security & Bug Fixes):
+      - 核心修复：修复了当代理认证模式设置为 Off 时，管理接口存在权限绕过的漏洞 (PR #3134)。
+      - 凭证保护：修复了在 Headless 模式启动时明文打印敏感凭证的问题，现改为仅打印状态 (PR #3134)。
+      - 路径隔离：增加了基于绝对路径的安全校验逻辑，修复了文本文件读写命令中的路径遍历漏洞 (PR #3134)。
+      - 加密加固：修复了 AES-GCM 加密使用固定 Nonce 的漏洞，引入了安全的随机 Nonce 机制并向下兼容 (PR #3134)。
+      - 前端安全：修复了 Tauri CSP 策略允许不安全的 unsafe-eval 的问题，防范 XSS 攻击 (PR #3134)。
+      - 协议兼容：修复了在使用 Codex 时因混入不被支持的 tools 字段导致的 400 INVALID_ARGUMENT 错误 (PR #3148)。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.2.2
+ReleaseTime: 2026-06-12T07:04:45.0000000Z

@@ -1,21 +1,22 @@
-$Object = Invoke-RestMethod -Uri 'https://updater.prntscr.com/getver/lightshot'
+$Object1 = Invoke-RestMethod -Uri 'https://updater.prntscr.com/getver/lightshot'
 
 # Version
-$Task.CurrentState.Version = $Object.update.version
+$this.CurrentState.Version = $Object1.update.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.update.installerurl | ConvertTo-Https
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.update.installerurl | ConvertTo-Https
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,27 @@
+Version: 3.6.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.6.4/MotrixNext_3.6.4_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release fixes a critical bug where URL protocol associations (magnet, thunder) could not be re-registered after being taken over by another application, and introduces safer file deletion using the OS trash.
+    ✨ New Features
+    - OS Trash for file deletion — Deleted task files are now moved to the system trash (Recycle Bin / macOS Trash) instead of being permanently removed, allowing easy recovery
+    - Skip-confirm file deletion option — New preference to automatically delete associated files when skipping the task deletion confirmation dialog
+    - Engine port conflict hint — EngineOverlay now displays troubleshooting guidance when the aria2 RPC port is occupied by another process
+    🛠 Improvements
+    - Folder-based BT cleanup prevents accidental directory trashing when removing torrent tasks
+    - Increased engine connection retry count from 1 to 3 for more resilient startup recovery
+    - Standardized message toast durations across the application
+    - Added reveal animation to the primary download button
+    🐛 Bug Fixes
+    - Fixed protocol registration not firing on save — When config already said "enabled" but the OS association was lost (e.g. another app took over magnet:), saving in Settings silently skipped the registration call. The save logic now queries the OS actual state and registers if needed
+    - Fixed engine startup flakiness — waitForEngine default retries increased to prevent premature connection timeout on slower systems
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.6.4
+ReleaseTime: 2026-04-07T09:55:01.0000000Z

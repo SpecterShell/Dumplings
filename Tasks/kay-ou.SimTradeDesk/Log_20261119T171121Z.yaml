@@ -1,0 +1,32 @@
+Version: 0.8.2
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/kay-ou/SimTradeDesk/releases/download/v0.8.2/SimTradeDesk-Setup-0.8.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    [0.8.2] - 2026-11-19
+    Added
+    - Brand administrators can mark their own brand's paid users as refunded; the new-user dialog copies the generated login credentials when closed and offers a manual-save fallback.
+    - Strategy-market exports produce a ZIP named after the strategy and export timestamp together with a separate usage guide, saved after choosing one folder.
+    Changed
+    - Customer license verification uses the signed v1 protocol and bounds access to the signed lease lifetime, including request latency.
+    - Auth-server runtime dependencies are pinned with uv; deployment validates complete configuration before building and adds SSH timeouts, live output, service readiness checks, and Nginx configuration recovery.
+    - Desktop CI reuses verified builds across brand and authentication configurations while preserving all regression checks.
+    - Strategy-market PTrade live deliveries now use a sandbox-safe loader and ship as a PTrade-importable package (user_strategy.py + user_code.dat). Strategies must be live-compatible (is_trade() branches or live APIs); pure backtest code is rejected.
+    - Strategy-market downloads no longer install into the desktop app; the only delivery target is the PTrade live package.
+    - Strategy exports now open in the Desktop folder by default, and new low-code strategies rebalance weekly (Monday) instead of daily.
+    - New low-code strategies no longer apply a minimum listing-days filter by default (0 days instead of 365).
+    - Strategy-market cards show metrics in two rows and keep the equity curve undistorted at a taller height.
+    - Data updates keep a longer incremental window and fall back to a full download when the chain is too long or close to the full package size.
+    - PTrade strategy source exported from low-code and the strategy market no longer contains comments.
+    Fixed
+    - Low-code exports now write daily or minute to user_code.dat according to the selected frequency; strategy-market exports retain minute.
+    - Valid license access remains available during background refresh, and a failed refresh cannot extend an expired lease.
+    - CI resume invalidates item results when stage inputs change; deployed browser tests cover clipboard permissions and Windows line endings.
+    - Strategy-market detail pages now show the same maximum drawdown on the metric and the chart, excess return uses %, and the exported user_code.dat ends one day before the export date.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kay-ou/SimTradeDesk/releases/tag/v0.8.2
+ReleaseTime: 2026-11-19T15:46:07.0000000Z

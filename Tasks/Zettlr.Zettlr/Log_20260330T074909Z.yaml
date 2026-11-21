@@ -1,0 +1,26 @@
+Version: 4.3.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Zettlr/Zettlr/releases/download/v4.3.1/Zettlr-4.3.1-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes and Performance Updates
+    For this small update, we've fetched the polishing cloth and improved things here and there, but nothing big has happened. The one notable fix is that Zettlr now properly escapes path names passed to shell commands during exports. In very specific circumstances, it was possible to make Zettlr execute unexpected commands during exports. This update improves this behavior so that it is no longer possible.
+    Do you enjoy Zettlr? With the recent spikes in SSD and RAM costs, our server costs have skyrocketed. Consider donating to help us pay for the development costs. You can donate monthly on Patreon or once via PayPal. Additionally, you can directly sponsor Hendrik Erz on GitHub or send a tip on Ko-Fi. Thanks for your support!
+    Changelog
+    GUI and Functionality
+    - Update pt-PT translations (#6262).
+    - Translated the tutorial to Japanese (#6260).
+    Under the Hood
+    - Escape file and directory paths passed to runShellCommand.
+    - Update Pandoc to v3.9.0.2.
+    - Updated some dependencies.
+    - Removed duplicate FSAL descriptor fetching.
+    - Improved resiliency of the descriptor fetching; now if a renderer requests an
+      array of paths, the FSAL does not fail. Instead, it simply omits those
+      descriptors from the return array and logs an error (context: #6272).
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Zettlr/Zettlr/releases/tag/v4.3.1
+ReleaseTime: 2026-03-30T07:48:58.0000000Z

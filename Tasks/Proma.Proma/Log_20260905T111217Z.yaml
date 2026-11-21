@@ -1,0 +1,29 @@
+Version: 0.19.31
+Installer:
+- Architecture: x64
+  InstallerUrl: https://cdn.proma.cool/releases/win-x64/Proma-0.19.31-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Proma v0.19.31 更新
+    新功能
+    - GPT-6 Astra 模型支持 — ChatGPT（Codex）渠道新增 GPT-6 Astra，支持文本与图片输入，按 100 万 token 配置上下文窗口，并提供 low / medium / high / xhigh / max 五档思考强度；存量渠道自动补入新模型，保留已有模型的自定义名称与启用状态。指定的 Codex 模型不存在时明确报错，不再静默切换到其他模型。
+    - Slack Bot 接入 — 设置页新增 Slack Bot，通过 Socket Mode 连接本机 Proma，无需公网回调地址。在已邀请 Bot 的频道中 @Proma 即可发起任务，同一成员在同一 thread 中可继续会话，不同成员的上下文相互隔离；提问、计划确认与单次权限审批以交互卡片返回原 thread。支持未送达最终回复的持久化重试；可选 Home Channel 接收其他来源会话的标题与完成状态，不转发回复正文。当前仅支持频道 @mention，不接收私信，使用时需保持 Proma 桌面端运行。
+    - Agent 表达原则完善 — 核心系统提示词新增面向用户的沟通原则，要求回复、交付文档、代码与提交信息语意连贯、结构清晰，在保持专业深度与信息密度的同时减少不必要的隐喻；如实说明结果、风险与不确定性，避免无依据的强化措辞，不把推测写成结论。
+    Bug 修复
+    - 附加目录展开状态保留 — 项目文件与会话文件中的附加目录在应用运行期间记住展开与折叠状态，按会话、来源和附加根目录分别隔离，切换视图后无需反复展开；目录重命名或移动后同步保留子目录的展开层级，过期加载结果不再覆盖当前目录，并修正路径边界判断，避免影响同名前缀的兄弟目录。
+    - 删除 MCP 不再影响其他服务器 — 删除单个 MCP 时仅移除目标配置，保留其他服务器的配置与启用状态，不再因触发全量重新校验而暂时关闭无关 MCP。
+    - Gemini 3 思考深度适配 — Chat 新增 Gemini 思考深度选择，按当前模型展示支持的档位；Agent 与 Chat 统一模型能力约束，已适配的 Gemini 3 文本模型使用 thinkingLevel，不再沿用旧版 thinkingBudget。不支持的档位自动回到该模型默认值，避免 Gemini 3.7 / 3.8 收到 minimal 后请求报错；同时补齐 Google 协议模型别名与上下文容量识别。
+    - 折叠侧栏会话即时切换 — 修复侧栏折叠时会话入口与协作子会话浮层的切换行为；快速从一个浮层切换到另一个时，旧浮层的延迟关闭不再误关新浮层，设置页未保存内容的离开确认仍然保留。
+    - 搜索弹窗宽度调整 — 扩大对话搜索弹窗的可用宽度，并根据窗口大小自适应保留两侧留白，让长标题与搜索结果有更多展示空间。
+    - Google 搜索页面不再误跳 Bing — 受管浏览器以 Google 主文档导航成功作为可用判据，不再等待图片、脚本等子资源全部加载完成，避免页面已经能用却被误判超时并切换到 Bing；主文档导航超时时仍保留备用搜索回退。
+    依赖升级
+    - Pi SDK 升级 — Pi Agent 相关依赖从 0.84.4 升级至 0.85.0，同步更新模型适配补丁与运行时打包依赖，配合本次 GPT-6 Astra 接入。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/proma-ai/Proma/releases/tag/v0.19.31
+ReleaseTime: 2026-09-05T09:17:36.5130000Z

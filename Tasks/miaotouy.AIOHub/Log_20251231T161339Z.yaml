@@ -1,0 +1,43 @@
+Version: 0.4.7-dev.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/miaotouy/aio-hub/releases/download/v0.4.7-dev.4/AIO.Hub_0.4.7-dev.4_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 AIO Hub v0.4.7-dev.4 (Pre-release)
+    这是 2025 年的最后一次开发预览版更新。本次更新聚焦于 渲染性能优化、会话变量系统设计 以及 构建流程的全面自动化。
+    ⚡ 性能优化 (Performance)
+    - HTML 预览冻结机制：引入预览容器冻结功能，默认仅保持最近 5 条消息活跃，大幅降低长会话中的 CPU 与内存占用。
+    - Token 计算优化：
+      - 引入分批并发控制 (runWithConcurrency)，防止大量消息同时计算导致 UI 卡顿。
+      - 增加计算缓存与防抖处理，避免重复运算。
+    - UI 渲染优化：为 Agent 编辑器等高频组件添加 v-memo，减少非必要的 DOM 更新。
+    ✨ 特性与增强 (Features)
+    - 世界书 (Worldbook) 增强：
+      - 支持导出为 SillyTavern (ST) 兼容格式，增强跨平台生态支持。
+      - 打开选择器时自动刷新列表，并优化了导出逻辑与文件名生成。
+    - 智能体管理：
+      - 新增预设消息 批量管理 功能（启用/禁用、移动、删除）。
+      - 增强预设消息匹配逻辑，支持 matchProfileName 及更灵活的模型 ID 匹配。
+    🛠️ 构建与工程化 (CI/CD)
+    - Flatpak 支持优化：统一构建产物命名规范，完善 Linux 环境下的发布流程。
+    - GitHub Actions 重构：
+      - 构建与发布 Job 分离，提升 CI 稳定性。
+      - 支持手动触发 Release，并自动关联 package.json 版本号。
+    - CDN 本地化优化：改进正则匹配逻辑，支持 .min.js 等多种资源后缀。
+    💄 体验改进 (UX/UI)
+    - 设置项重组：新增“渲染设置”分组，整合 HTML 预览、动画及性能指标选项。
+    - 交互微调：
+      - 统一工具栏 Tooltip 延迟为 500ms，减少视觉干扰。
+      - 优化导出对话框逻辑，根据智能体关联状态自动切换选项。
+    - 文档更新：全面重构主题系统架构文档，补充会话变量系统设计方案。
+    🐛 修复 (Bug Fixes)
+    - 修复智能体导出时包含运行时元数据（如 Token 计数）的问题。
+    - 优化消息合并逻辑，确保附件信息在会话加载时正确传递。
+    - 修复导出文件名未优先使用 displayName 的逻辑缺陷。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/miaotouy/aio-hub/releases/tag/v0.4.7-dev.4
+ReleaseTime: 2025-12-31T15:35:07.0000000Z

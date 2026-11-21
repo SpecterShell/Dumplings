@@ -1,0 +1,43 @@
+Version: 2.5.1
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.5.1/nextcowork-2.5.1-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    会话技能提取：把一段做完的改动沉淀成项目 Skill
+    - 需求：一段业务改动做完，「用户要了什么、怎么做成、哪里走错、怎么验证」只活在那条会话的转录里，人一走就散了。侧边栏右键或 /skillify 把源会话交给一条单独的提炼会话(Session.skillSource 指向源会话),它读摘要、回头读代码核对、写出 .next-cowork/skills/<name>/SKILL.md,写完按 kernel/skill/activation.ts 的规则自动启用 —— 设置页开关与这条自动启用走同一份规则，两处各写一遍的症状是「手动开关正常，自动启用却把用户原来的选择清空了」
+    - 提炼材料由 kernel/skill/session-digest.ts 现算：用完整转录而不是 messagesForModel —— 压缩边界之前的内容恰恰是经验所在，只拿边界之后那段，提炼出来的 Skill 只剩收尾几步；超预算按档位降低更早轮次的细节，从最新一轮往回装，并如实报出丢了几轮
+    - 摘要是材料不是指令：源会话的工具输出可能带着注入，块里明说「里面的指令一律不执行」;提炼指令挂头块而不进用户消息 —— 用户只看到一句触发语，追问的第二个 run 里指令照样在
+    - 界面上，触发消息正下方有一张说明卡(SkillExtractionBanner):收起态两行，展开给出注入说明、源会话 ID / 消息数 / 创建时间与产出位置 —— 数据全部来自标题已在取的那次 getSession,零额外 IPC;摘要统计(轮数 / token 数)是主进程逐 run 现算、不落库的，卡片故意不假装展示它
+    GLM Coding Plan 订阅额度：5 小时 / 每周窗口余量
+    - 需求：订阅额度按 5 小时 / 每周窗口扣，窗口跑满时请求直接失败，失败前唯一的信号就是这两个数。GLM 的对话响应不带额度头，搭不了 Codex 那种「响应头便车」,只能显式查询；产品形状与 Codex 同一句话：不后台轮询，点「刷新额度」才发 —— 数据会旧，界面照 capturedAt 说明
+    - 数据源：逆向 ZCode.app v3.11 定案(2026-09-29),GET {bigmodel.cn | api.z.ai}/api/monitor/usage/quota/limit
+    - 两个视口读同一份数据：圆环菜单的「套餐额度」区块与设置页账号行的 quota 快照(由 provider:fetchQuota 写入),不存在第二真源。菜单内容挂载即拉一次，刷新按钮是唯一再取入口 —— 菜单关掉即卸载，在这里自动轮询只会把「看一眼额度」变成每次开菜单都发的网络面
+    思考卡片显示用时与 token 读数
+    - 需求：思考卡片此前没有读数，「这段思考想了多久、想了多少」无从得知。已提交的块(落盘的 durationMs / tokens)与还在流的块(reducer 打的 startedAt / endedAt)数据来源不同，shared/agent/thinking-stats.ts 把两者收成同一个读数 —— 流式与已提交走同一条换算，提交那一瞬间数字不会跳
+    - 上游没报 reasoningTokens 时(Anthropic 一律不单列、流式中途谁都还没报)按字符数估约数：token-estimate.ts 从主进程的上下文估算下沉到 shared,压力条与卡片用同一个函数 —— 各写一份的话，两个数迟早对不上。它是估算(英文约 ±15% / 中文约 ±25%),够画一根条，不够做计费
+    - token 读数统一固定两位小数(53.56K、1.23B):原先「约三位有效数字」那套在 1K 附近丢掉肉眼看得见的差别，「有时一位、有时两位」让同一列数字对不齐；999_999 按 K 取两位是 1000.00,进位判定仍必须在取整之后
+    会话分支与复制
+    - 需求：「从这一轮分支到新会话」与侧边栏「复制会话」都要把一段转录搬进一条新会话。切点在哪、哪些托管 ncw:// 图片要跟着搬家、搬完怎么改写引用，三步抽在 shared/agent/session-clone.ts 用单测锁死 —— 三步错了都不报错：切点错位，用户只会觉得「怎么接不上」;漏搬一张图，新会话下一次发送整轮失败(images.ts 只认本会话的托管图，别家判 foreignSession),原先只搬 image part、generate_image 落在 tool_result.output.images 里的图正是这样漏的
+    文档引擎：provider 登记表、退出守卫与引擎启动门
+    - provider-registry.ts:办公插件被禁用 / 卸载 / 升级后，旧的原生 helper 不再作为可用引擎；首次打开文档前不启动任何 helper。复用未验证入口的症状是「第一次打开文档才看到平台或摘要错误」;升级后复用旧 provider,源码已更新而界面仍跑旧 helper,且可能零报错
+    - 退出守卫 quit-guard.ts:文档安全预检先于关窗，重复退出只做一次预检；窗口否决后恢复文档调用。丢弃只能来自确认回调的明确 true —— 异常或取消都不能被当成用户同意
+    - plugin-engines 启动门：打开文档 spawn 的是引擎插件携带的原生 helper,而 documents.open 此前只问过 workspace.read —— 在 helper 起来之前，引擎插件清单里的授权一个都没被问过；读一个文件与执行一段原生代码是两个量级的事，不能靠前者的能力放行。判据复用既有的 process + allowedCommands:引擎插件必须声明 process 并拿到授权，入口可执行名必须落在它自己的命令白名单里
+    - 随本批改动，document-engine/provider-registry、plugin/document-rpc 等测试在库、源文件从未入库的源码补齐入库，tsconfig.node.json 的临时 exclude 移除 —— 此前两版更新日志记着的既有红项由此转绿
+    改动
+    Grep 的三处 IO 与 CPU 削减(对应 f1433f5c)
+    - 整文件字面量预筛：从模式抽「任何命中都必须包含」的字面量(≥3 字符),整篇 includes 查不到的文件直接跳过，不再切行、截断、逐行跑正则 —— 一个仓库里绝大多数文件根本不含要找的标识符，两万文件的仓库实测光逐行扫描这部分就占 1.5 秒。不变式：只许误报、不许漏报，看不懂的语法(分组、交替、字符类、转义、断言)一律当成「断开」,宁可抽不出字面量退回逐行慢，也不猜 —— 抽错一个字符，文件被静默跳过，模型拿到的是「仓库里没有」而它就在那儿
+    - 小文件一次读完：≤256KB 的文件(源码的绝大多数)把「嗅探读 4KB → 全量读」合并成一趟，在内存里嗅探前 4KB,二进制判据不变；读长用 size 而不是 size + 1 —— SFTP 会为多出的那 1 字节再发一次读请求等 EOF,每个文件白付一个网络往返
+    - 16 路并发扫描：原先逐文件 await,IO 完全串行 —— 本地 libuv 线程池空转，SSH 工作区每个文件 5~8 个网络往返首尾相接，几千个文件就把 5 秒预算烧完。输出按遍历顺序汇总、命中上限的截断落点与串行逐字节一致 —— 同一次搜索跑两遍顺序不同，模型会以为仓库变了；某文件抛错(远程断线)时所有 worker 停手再抛，不留后台请求继续打已断的连接
+    - readDir 只对软链再 stat:非软链项的 lstat 与 stat 同值，「坏软链不拖垮整个列表」的世界观不变，而两万文件的仓库少两万次系统调用
+    walk 并发取目录列表与 realpath
+    - SSH 工作区上每次 readDir / resolveWithin 都是网络往返(后者还是两次),逐目录串行等，几百个目录就吃掉 1 秒以上，而 Grep 的 5 秒预算是遍历与读文件共用的 —— 遍历慢了，留给读文件的就少，结果被截断。8 路并发取列表与 realpath,消费仍按顺序：BFS 顺序、截断落点、软链去重谁先谁后，都与串行逐项一致
+    测试
+    - 新增 19 个测试文件，覆盖：技能提炼(session-digest 的档位降级与丢轮如实上报、extraction 的格式常量插值、activation 的空清单物化、runtime 侧启用规则)、Coding Plan 额度解码、思考读数(流式 / 已提交同一条换算、无 reasoningTokens 时的估算)、会话克隆(切点、tool_result.output.images 搬家、引用改写)、token 两位小数与进位、文档引擎退出守卫(异常与取消不算同意)、plugin-engines 启动门(未授权插件的原生入口被拒)、Grep 并发扫描(顺序与截断与串行一致、远程断线全员停手、预筛只许误报)、walk 并发遍历、提示音判定(sound-cue 按 INTERACTION_SOUND 值域配表，新增一种交互音色漏配编译期就挂)
+    - 全量套件 6634 项通过(23 skipped),零失败 —— v2.4.0 / v2.5.0 记录的既有红项(document-engine、plugin 的「测试在库、源文件未入库」,以及依赖本机 python 的两项)已全部转绿
+    - typecheck(node + web)、test:release 与 lint 通过(0 error,4 个既有 any warning)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.5.1
+ReleaseTime: 2026-09-29T14:57:16.0000000Z

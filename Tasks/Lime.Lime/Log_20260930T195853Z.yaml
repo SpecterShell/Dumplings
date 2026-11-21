@@ -1,0 +1,41 @@
+Version: 1.147.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.147.0/Lime-1.147.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.147.0
+    新功能
+    - TUI 任务中心支持按项目或状态分组、状态筛选、搜索、分页加载，以及任务创建、重命名和切换。
+    - 新增动态快捷键帮助与选择页签，统一任务中心、transcript、pager 和输入区的快捷键提示。
+    - 模型选择器采用无边框布局，支持当前模型标记、翻页导航和窄屏换行。
+    - 文件、Skill 和命令弹窗统一搜索匹配与选中项滚动，补齐 Unicode 高亮和长路径展示。
+    - 审批面板支持通过 Ctrl-A 查看完整详情，在窄窗口保留可操作选项，关闭详情页后继续原审批。
+    - MCP OAuth 登录支持 thread/login 关联通知；新增通过 App Server 执行的 lime mcp logout，按服务清理凭据并保持幂等。
+    - CLI 补齐 sandbox、approval 和权限参数继承，并支持发现本地 Plugin marketplace 与查看可用插件。
+    修复
+    - 修复历史分页、终端重排与 thread 切换时的阅读位置、选择和状态恢复。
+    - 修复多行 Markdown 引用粘贴、粘贴突发、输入区布局和窄屏状态页的显示边界。
+    - 修复命令弹窗提前消费 Enter 导致缓冲字符残留草稿的问题，同时保留粘贴中的换行和 Tab。
+    - 修复剪贴板迟到结果写入新草稿或旧会话的问题，明确远程终端与 X11 PRIMARY 的可用条件。
+    - 移除 npm Trusted Publishing 流水线中的 token 注入，使用现有 OIDC 与 provenance 发布合同。
+    优化与重构
+    - 将剪贴板读写迁入会话级后台 worker，增加超时、取消和迟到结果处理，减少桌面剪贴板服务阻塞终端输入的风险。
+    - 收敛无边框会话标题、/status、footer、任务行和活动摘要的展示，保留 canonical 状态与完整原始值。
+    - 拆分任务中心、状态格式化、剪贴板、选择样式和 transcript 阅读书签模块，继续复用唯一 App Server 主链。
+    测试与质量
+    - 扩展 MCP OAuth protocol/schema/client、CLI 权限与插件、TUI 交互和剪贴板的回归覆盖。
+    - 同步 CLI/TUI 真实 stdio/PTY Gate B、MCP fixture、结构 inventory 与 npm OIDC 发布守卫。
+    文档
+    - 更新 CLI 权限、插件管理、TUI keymap 配置、操作说明和 App Server 命令合同。
+    - 更新 TUI/CLI Codex 对齐执行计划与结构记录。
+    其他
+    - Desktop 与 CLI/TUI 继续共享 App Server JSON-RPC、RuntimeCore 和 Thread/Turn/Item 持久化；未新增平行 runtime 或历史存储。
+    - 本机验证结果记录在发布执行计划；平台产物、签名、公证与 npm 分发由 GitHub Actions 验证。
+    完整变更：v1.146.0 → v1.147.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.147.0
+ReleaseTime: 2026-09-30T16:11:46.0000000Z

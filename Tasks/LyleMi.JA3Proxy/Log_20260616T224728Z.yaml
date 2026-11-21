@@ -1,0 +1,51 @@
+Version: 0.5.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/LyleMi/ja3proxy/releases/download/v0.5.1/ja3proxy-v0.5.1-windows-amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/LyleMi/ja3proxy/releases/download/v0.5.1/ja3proxy-v0.5.1-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    Features
+    - Added hot-reloadable TLS fingerprint configuration via -fingerprint-config.
+      - Supports loading client and version from a JSON file.
+      - New HTTPS CONNECT connections use the latest loaded fingerprint.
+      - Existing tunnels continue using the fingerprint they were opened with.
+    - Fixed CONNECT response handling for clients such as ffprobe.
+    - Aligned ALPN behavior between client-side and upstream TLS connections.
+    - Avoided mutating Go's default HTTP transport.
+    - Passed HTTP transport traffic through the configured upstream dialer.
+    Improvements
+    - Added SOCKS5 upstream proxy handling improvements.
+    - Moved CLI source into cmd/ja3proxy.
+    - Changed default generated CA paths to:
+      - credentials/cert.pem
+      - credentials/key.pem
+    - Updated Docker runtime paths and Docker context ignores.
+    - Updated Makefile output paths so release binaries are written under bin/.
+    - Expanded README with usage, Docker, certificate, fingerprint, and development docs.
+    Testing
+    - Added end-to-end proxy tests.
+    - Added JA3 fingerprint verification coverage.
+    - Added unit tests for proxy handlers, MITM CONNECT flow, upstream dialer construction, custom TLS wrapping, certificate handling, debug writer behavior, and
+      edge cases.
+    Dependencies and CI
+    - Updated github.com/refraction-networking/utls from v1.6.7 to v1.8.2.
+    - Updated github.com/cloudflare/cfssl from v1.6.4 to v1.6.5.
+    - Updated golang.org/x/net from v0.23.0 to v0.38.0.
+    - Updated GitHub Actions dependencies:
+      - actions/checkout to v6
+      - actions/setup-go to v6
+      - docker-build-push action to v7
+    - Added Dependabot configuration for Go modules and GitHub Actions.
+    Upgrade Notes
+    The default certificate files are now stored under credentials/ instead of the repository root. If you previously relied on cert.pem and key.pem in the
+    current directory, either move them to credentials/cert.pem and credentials/key.pem, or pass explicit paths with -cert and -key.
+    Full Changelog
+    https://github.com/LyleMi/ja3proxy/compare/v0.4...v0.5.1
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LyleMi/ja3proxy/releases/tag/v0.5.1
+ReleaseTime: 2026-06-16T22:42:25.0000000Z

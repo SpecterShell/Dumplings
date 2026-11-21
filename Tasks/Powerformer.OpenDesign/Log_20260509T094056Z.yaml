@@ -1,0 +1,125 @@
+Version: open-design-v0.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/nexu-io/open-design/releases/download/open-design-v0.5.0/open-design-0.5.0-win-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🎉 51 PRs · 36 contributors · ~1 day — Open Design 0.5.0 turns the corner from "render once" to "iterate forever": live-data dashboards as a first-class artifact category, Inspect mode for per-element style tuning, an accent-color theme system for the launcher, Critique Theater Phase 5, plus a new agent (Qoder), a new image provider (Nano Banana), Linux headless mode, and a long fix queue from 16 beta cycles. 🚀
+    🔥 Highlights
+    - 📊 Three new live-dashboard skills. Generic live-dashboard (Notion-style team dashboard, #778), clinic-console template added to the existing live-artifact skill (#795), and template-mode flowai-live-dashboard-template (#801) — all targeting the 0.4.0 Live Artifacts surface so generated artifacts pull from real data instead of frozen mocks. Thanks @adityagaddhyan, @yashverma48, and @kushwahasonam.
+    - 🗂️ First prompt template under the Live Artifact category. Notion-style team dashboard under prompt-templates/image/ — template-only, no surface or loader changes. (#799) Thanks @Joey-nexu.
+    - 🔬 Inspect mode for live per-element style tuning. Click anything in the preview to inspect and tweak its computed styles — color, spacing, type — without round-tripping through the agent. (#362) Thanks @pftom.
+    - 🎨 Accent color control + launcher. Pick the brand color you want Open Design itself to wear — global accent persists across the desktop launcher and entry view. (#683) Thanks @Feroomon2010.
+    - 🎭 Critique Theater Phase 5: panel prompts + system composer. The jury picks up its scoring rubric from a panel-level prompt template wired through the shared system composer, so critiques stay coherent across runs. (#524) Thanks @Nagendhra-web.
+    - 📤 Project transcript export. Daemon now writes a structured transcript to disk for downstream tools (replay, audit, sharing) — prereq for #450. (#493) Thanks @bryanatkinson.
+    - 🤖 Qoder CLI agent + Nano Banana image provider. Open Design now drives Qoder out of the box, and image projects can target the new Nano Banana provider. (#626, #631) Thanks @mamba and @zztdan.
+    - 🐧 Linux headless install/start/stop. A non-graphical lifecycle path so Open Design can run on servers and CI without a desktop session. (#686) Thanks @JheisonMB.
+    - 🇮🇩 Indonesian (id) UI locale. (#414) Thanks @aqilaziz.
+    📥 Download: the table below points at the final asset URLs — links go live once this PR is merged and the release-stable workflow finishes. Tag: open-design-v0.5.0.
+    Platform Architecture Asset
+    macOS Apple Silicon (arm64) open-design-0.5.0-mac-arm64.dmg
+    macOS (auto-update feed) Apple Silicon (arm64) open-design-0.5.0-mac-arm64.zip
+    Windows x64 (unsigned) open-design-0.5.0-win-x64-setup.exe
+    ✨ What's New
+    🔬 Editing & inspection
+    - 🔬 Inspect mode. Live per-element style tuning in the HTML preview. (#362) Thanks @pftom.
+    - 🎨 Accent color control + launcher. Theme Open Design itself. (#683) Thanks @Feroomon2010.
+    - 🧰 SketchEditor text prompt becomes a modal so long prompts stop getting clipped. (#738) Thanks @pftom.
+    - 🧹 Tweaks-mode tooltip noise removed. (#697) Thanks @bojiehbj.
+    🤖 Agents & daemon
+    - 🤖 Qoder CLI agent adapter. (#626) Thanks @mamba.
+    - 🛣️ Override Codex executable path. Useful for nvm / mise / fnm-installed toolchains. (#755) Thanks @shangxinyu1.
+    - 🎨 Codex image projects can use built-in imagegen. (#622) Thanks @DehengHuang.
+    - 📡 Copilot prompts delivered via stdin. Removes another argv-too-large class of failure on Windows. (#727) Thanks @lefarcen.
+    - 🧪 Connection tests for execution settings. Verify provider config without launching a chat. (#507) Thanks @monshunter.
+    - 📤 Project transcript export. (#493) Thanks @bryanatkinson.
+    - 🔍 GUI-launched agents discover toolchain on minimal PATH. (#614) Thanks @XinminZeng.
+    - 🧠 DeepSeek v4 models in catalog. (#722) Thanks @1119302165.
+    - 🐍 Watcher ignores .venv and other large dirs. Stops project file watcher from melting on Python projects. (#531) Thanks @1119302165.
+    - 🌐 Portless Origin accepted in CORS whitelist. Restores Chrome compatibility for some embed scenarios. (#735) Thanks @lefarcen.
+    - 📁 OD_LEGACY_DATA_DIR migrator moves .od/ users into the desktop data layout cleanly. (#712) Thanks @Nagendhra-web.
+    🎭 Critique Theater
+    - 🎯 Phase 5: panel prompt template + system composer wiring. (#524) Thanks @Nagendhra-web.
+    🎬 Media generation
+    - 🍌 Nano Banana image provider. (#631) Thanks @zztdan.
+    - 🎞️ HyperFrames video previews + provider badge + source filter. Browsing video templates is no longer a guessing game. (#293) Thanks @pftom.
+    - ⏱️ Extend OpenAI image request timeouts so larger generations stop being killed mid-flight. (#788) Thanks @lefarcen.
+    🎨 Skills, design systems & prompt templates
+    - 📊 live-dashboard skill — generic Live Artifact dashboard template. (#778) Thanks @adityagaddhyan.
+    - 🩺 clinic-console live-artifact template. (#795) Thanks @yashverma48.
+    - 📈 FlowAI live dashboard template skill. (#801) Thanks @kushwahasonam.
+    - 🗂️ Notion-style team dashboard prompt template. (#799) Thanks @Joey-nexu.
+    - 📝 waitlist-page skill. (#555) Thanks @VedankVansia.
+    - 📱 social-media-dashboard skill + Totality Festival design system. (#678) Thanks @Tuola-waj.
+    - 🛰️ Five Orbit briefing templates. (#671) Thanks @anders-eli.
+    - 🧱 Craft form-validation module. Generated forms now follow modern RHF/Zod patterns instead of 2018 Formik habits. (#625) Thanks @MohamedAbdallah-14.
+    📁 Files & previews
+    - 📄 Alert when PDF export popup is blocked. (#664) Thanks @pratikrai.
+    - 📐 Tighter ws-tabs-bar scrollbar. Filenames stop overlapping the bar. (#781) Thanks @arunkukrety.
+    - 🪟 Fix chat pane overflow. (#740)
+    - 📦 Claude Design ZIP import works on Node 24 + the file ceiling is raised. (#591) Thanks @gabriel-vaz.
+    🐧 Packaging & platforms
+    - 🐧 Linux headless install / start / stop. (#686) Thanks @JheisonMB.
+    - 🪟 Improved Windows beta packaging and installer flow. Smaller, faster, cleaner namespace handling. (#768) Thanks @PerishCode.
+    - ☁️ Beta release publishing migrated to R2. (#805) Thanks @PerishCode.
+    - 🪟 Fix Windows link-code-folder dialog. (#698) Thanks @xuncha.
+    - 🪟 Consistent desktop entry chrome. (#655) Thanks @Siri-Ray.
+    🌍 Internationalization & docs
+    - 🇮🇩 Indonesian (id) UI locale. (#414) Thanks @aqilaziz.
+    - 🇺🇦 Ukrainian prompt template fixes + duplicate-key cleanup. (#674, #680) Thanks @Caprika and @lefarcen.
+    - 🇪🇸 Spanish README aligned to the es-ES.ts locale. (#611) Thanks @israelcastro.
+    - 🐦 @nexudotio X account surfaced in README + entry sidebar. (#696) Thanks @lefarcen.
+    - 🔗 Fix broken pi-ai links (404'd after the package split). (#277) Thanks @lefarcen.
+    - 📚 Linux namespace env var documented in tools-pack. (#670) Thanks @PerishCode.
+    🛡️ Stability & Reliability
+    - 🧩 Design-system selection persists in web. (#621) Thanks @lefarcen.
+    - 🧪 Aligned design-system default test fixture. (#708) Thanks @marcchan.
+    - 🧰 OpenCode error frames surfaced; empty-output runs treated as failed instead of silently succeeding. (#700) Thanks @lefarcen.
+    - 🪟 Settings dialog scroll behavior. (#667) Thanks @jiezhu.
+    - 🔠 Wider settings subtitle. (#747) Thanks @Nagendhra-web.
+    - 🔍 Diagnose missing Next package during tools-dev web startup. (#675) Thanks @iuliandita.
+    - 🧹 Batch of small bug fixes for #283, #275, #390. (#530) Thanks @Nagendhra-web.
+    🐛 Bug Fixes
+    - 🪟 Tweaks-mode element-selector tooltip removed. (#697) Thanks @bojiehbj.
+    - 🪟 Chat pane overflow. (#740)
+    - 📐 ws-tabs-bar scrollbar. (#781) Thanks @arunkukrety.
+    - 📁 .venv ignored by project file watcher. (#531) Thanks @1119302165.
+    📚 Documentation
+    - 🇪🇸 README.es alignment to es-ES locale. (#611) Thanks @israelcastro.
+    - 🐦 @nexudotio X account in README + entry sidebar. (#696) Thanks @lefarcen.
+    - 🔗 pi-ai link split fix. (#277) Thanks @lefarcen.
+    - 📚 Linux tools-pack namespace env doc. (#670) Thanks @PerishCode.
+    🔨 For Developers
+    Click to expand
+    - 🧪 Desktop settings + project flow e2e coverage. (#306) Thanks @Joey-nexu.
+    - 📊 Generated GitHub metrics + contributors wall refreshed for the release window. (#718, #720)
+    - 🤖 Discord #resolved notify when issues are closed by merged PRs. (#685) Thanks @lefarcen.
+    ✅ System Requirements
+    - 🍎 macOS — Apple Silicon (arm64) only, macOS 11 Big Sur or newer. Intel macs are not supported.
+    - 🪟 Windows — x64, Windows 10 / 11. Installer is unsigned (SmartScreen will warn on first launch — choose "More info → Run anyway").
+    - 🐧 Linux — first-class headless lifecycle support lands in 0.5.0 (install, start, stop from CLI). A packaged Linux desktop GUI artifact is still deferred while the release lane is hardened.
+    - 🧑‍💻 From source — Node.js 24.x and pnpm 10.33.2+ (per engines in package.json).
+    ⚠️ Known Issues
+    - 🪟 Windows installer is unsigned. SmartScreen / antivirus warnings are expected. Code signing is still follow-up work.
+    - 🍎 No macOS Intel (x64) build. Apple Silicon only.
+    - 🐧 No Linux desktop GUI package in 0.5.0 stable — use headless mode or run from source.
+    - 🐚 od CLI shadows POSIX od when installed globally. Use /usr/bin/od or command od for the system tool.
+
+    🚀 Releasing this PR
+    This PR ships:
+    1. 📦 All 13 monorepo package.json files bumped to 0.5.0 (root, apps/{web,daemon,desktop,packaged,landing-page}, packages/{contracts,platform,sidecar,sidecar-proto}, tools/{dev,pack}, e2e). Internal workspace specifiers are workspace:*, so no lockfile change was needed.
+    2. 📝 CHANGELOG.md — new [0.5.0] - 2026-05-07 entry covering the 51 merged PRs since 0.4.1, plus footnote refs for new PR numbers.
+    The release-stable workflow already lives on main; no infrastructure changes here. After merge, dispatch release-stable with mac_signed=true to publish.
+    Local verify dry-run before opening this PR:
+    - pnpm install (workspace links — lockfile already in sync)
+    - pnpm --filter @open-design/contracts --filter @open-design/desktop --filter @open-design/daemon run build (populates dist/ for downstream typecheck consumers; contracts must be rebuilt because 09eb88f and 988fd6d added new exported members like providerId / accountId / ImportFolderRequest / ImportFolderResponse)
+    - pnpm typecheck → exit 0 across all 13 packages
+    (Local Node was 22.22.0, so pnpm printed engine warnings for the repo's ~24 requirement; matches the 0.3.0 / 0.4.1 release dry-runs.)
+    Full Changelog: https://github.com/nexu-io/open-design/compare/open-design-v0.4.1...release/v0.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nexu-io/open-design/releases/tag/open-design-v0.5.0
+ReleaseTime: 2026-05-07T15:57:21.0000000Z

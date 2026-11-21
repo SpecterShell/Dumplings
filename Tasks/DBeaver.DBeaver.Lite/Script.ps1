@@ -1,0 +1,54 @@
+$Object1 = Invoke-RestMethod -Uri 'https://dbeaver.com/product/dbeaver-le-version.xml'
+
+# Version
+$this.CurrentState.Version = $Object1.version.number
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'user'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-x86_64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  Scope        = 'machine'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-x86_64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'user'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-aarch64.exe"
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  Scope        = 'machine'
+  InstallerUrl = "https://downloads.dbeaver.net/lite/$($this.CurrentState.Version)/dbeaver-le-$($this.CurrentState.Version)-windows-aarch64.exe"
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.version.date, 'dd.MM.yyyy', $null).ToString('yyyy-MM-dd')
+
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.version.'release-notes'.'#cdata-section' | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

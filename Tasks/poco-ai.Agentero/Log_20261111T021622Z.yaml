@@ -1,0 +1,69 @@
+Version: 0.15.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.15.5/Agentero_0.15.5_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.15.5/Agentero_0.15.5_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This update adds automatic translation after import, local LaTeX project management, and source review comments, alongside improved Mermaid interactions and full-text translation progress. It fixes partial translation recovery, PDF zoom shifts, self-hosted MinerU 4.1 support, feed discovery, and tool startup under Linux AppImage.
+    Features
+    - Automatic translation after import: When enabled in settings, newly imported papers enter the background full-text translation queue after layout analysis. The viewer shares progress and results with background jobs; manual requests can prioritize queued papers, and paper concurrency can be set from 1 to 5. (#1051 by @ffy6511)
+    - Local LaTeX projects: The Writing tree supports nested collections, with project configuration recording the project identity, entry file, and compilation engine. Entry files can live in subdirectories, and project configuration is preserved when a project moves. (#1053 by @qychen2001)
+    - TeX review comments: Add comments to selected source text, reply to threads, resolve or reopen them, and send the source context and discussion to an Agent. Comments are stored separately in the Vault, keeping source files and compiled output clean. (b61c9b876 by @qychen2001)
+    - Interactive Mermaid diagrams: Mermaid diagrams in chat support panning, zooming, fit-to-view, and fullscreen viewing, with trackpad and keyboard controls. The source view includes syntax highlighting and a copy button. (a4b7df781 by @ffy6511)
+    - CCF deadline categories: Filter CCF deadlines in Plaza by research category and combine the selection with the existing rank filter. (d31463f03 by @Phil-Fan)
+    Improvements
+    - LaTeX authoring aids: The outline recognizes formatted and accented section titles, including section commands defined through macros. Structured HTML from web pages or documents can be pasted as LaTeX, commands use distinct theme colors for their roles, and figures are edited directly in source with the standalone TikZ editor removed. (bd42dc33a by @qychen2001; 7ef6750a0 by @qychen2001; a7925949d by @qychen2001)
+    - Full-text translation progress: Translation and typesetting stages display page counts and progress, with the meter continuing forward when previews are rebuilt. Cancelling promptly retracts the meter instead of displaying completion. (87de69973 by @Phil-Fan)
+    - Desktop-bundled CLIs: Agents can discover and use Codex, Dsh, CodeBuddy, and Qoder CN CLIs bundled with desktop applications. Settings and onboarding identify desktop-bundled engines, while standalone installations and explicit paths retain priority. (#1033 by @Tippye; 0ae1f1654 by @Phil-Fan)
+    - Vault sync settings: When settings are reopened from another Vault, the sync pane follows that Vault and lets you switch between recent local Vaults. (edc75545b by @Phil-Fan)
+    - Feed reading layout: Feed card actions are grouped on the right, the list header is hidden while reading a detail view, and list separators and button placement are simplified. (ccca1ead1 by @Phil-Fan; c73038201 by @Phil-Fan)
+    Fixes
+    - Self-hosted MinerU 4.1: Support the MinerU 4.1 task API and try the newer protocol when the legacy upload endpoint returns 404. Upload and authentication errors now have clear messages, while existing service versions remain supported. (#1052 by @ttxl314)
+    - Feed discovery: When adding a website, discovery skips ordinary alternate links such as oEmbed, language variants, and mobile pages, and continues looking for RSS, Atom, or JSON Feed. (#1047 by @Suyog007)
+    - Updater asset origins: Updater manifests only rewrite GitHub API asset URLs belonging to the configured repository. URLs from other repositories or hosts are rejected to avoid incorrect download links. (#984 by @determine123)
+    - Unreachable translation services: Stop redundant retries after consecutive connection failures and provide an error message with a settings shortcut, reducing long waits during full-text translation. (8d838ecf6 by @Phil-Fan)
+    - Long-filename imports: Add a distinguishing suffix to truncated long filenames so different papers sharing the same prefix receive separate local records. (e8b4b5104 by @Phil-Fan)
+    Resolved Issues
+    - Partial translation recovery: When full-text translation is interrupted or has gaps, both the toolbar and dual-pane translation view offer completion or retranslation. Recovered results stay in the current view, and late-loading stale caches no longer overwrite newer translations. (#1050 by @Phil-Fan, @ffy6511)
+    - PDF zoom position: Fix the page jumping right after wheel or trackpad zoom by keeping fit-width centering consistent with the comment sidebar. (#1042 by @Phil-Fan)
+    - Linux AppImage child processes: Clear AppImage-injected library settings when launching child processes such as Node, npm, ACP, and terminals, fixing startup failures caused by incompatible bundled libraries. Diagnostics also show more specific errors for unusable tools. (#1002 by @Phil-Fan)
+    Full Changelog: v0.15.4...v0.15.5
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新新增导入后自动翻译、本地 LaTeX 项目管理与源码审阅评论，并改进 Mermaid 图表交互和全文翻译进度。修复了部分译文恢复、PDF 缩放偏移、自建 MinerU 4.1、订阅发现及 Linux AppImage 下的工具启动问题。
+    新功能
+    - 导入后自动翻译：开启设置后，新导入的论文会在版面解析完成后进入后台全文翻译队列。查看器与后台任务共享进度和结果，手动请求可提升排队论文的优先级，论文并发数可设为 1–5。（#1051 by @ffy6511）
+    - 本地 LaTeX 项目：写作目录支持多层分类，项目配置保存项目身份、主文件和编译引擎。主文件可位于子目录，项目移动后仍保留配置。（#1053 by @qychen2001）
+    - TeX 审阅评论：可在选中的源码旁添加评论，回复、解决或重新打开讨论，并把原文和讨论交给 Agent。评论单独保存在 Vault 中，源码和编译结果保持整洁。（b61c9b876 by @qychen2001）
+    - 交互式 Mermaid 图表：聊天中的 Mermaid 图表支持拖拽平移、缩放、适应视图和全屏查看，并提供触控板与键盘操作。源码视图带语法高亮和复制按钮。（a4b7df781 by @ffy6511）
+    - CCF 截稿分类：广场的 CCF 截稿列表可按研究领域筛选，并与现有等级筛选组合使用。（d31463f03 by @Phil-Fan）
+    改进
+    - LaTeX 写作辅助：大纲可识别带格式和重音字符的章节标题，以及通过宏定义的分节命令。支持将网页或文档中的结构化 HTML 粘贴为 LaTeX，并用不同主题颜色区分命令用途；图形改为直接编辑源码，移除独立 TikZ 编辑器。（bd42dc33a by @qychen2001; 7ef6750a0 by @qychen2001; a7925949d by @qychen2001）
+    - 全文翻译进度：翻译与排版阶段显示页数和进度，进度条在重建预览时保持前进。取消操作会及时收起进度，避免显示成已完成。（87de69973 by @Phil-Fan）
+    - 桌面应用内置 CLI: Agent 可发现并使用桌面应用自带的 Codex、Dsh、CodeBuddy 和 Qoder CN CLI。设置与引导页会标出桌面内置来源，独立安装和显式路径继续优先。（#1033 by @Tippye; 0ae1f1654 by @Phil-Fan）
+    - 资料库同步设置：重新从其他资料库打开设置时，同步页跟随新的资料库，并可在近期本地资料库间切换。（edc75545b by @Phil-Fan）
+    - 订阅阅读布局：订阅卡片的操作集中在右侧，阅读详情时隐藏列表标题，并简化列表分隔与按钮布局。（ccca1ead1 by @Phil-Fan; c73038201 by @Phil-Fan）
+    修复
+    - 自建 MinerU 4.1: 支持 MinerU 4.1 的任务接口，并在旧上传接口返回 404 时尝试新协议。上传或鉴权错误会给出明确提示，保留对既有服务版本的支持。（#1052 by @ttxl314）
+    - 订阅源发现：添加网站时会跳过 oEmbed、多语言和移动页面等普通 alternate 链接，继续查找 RSS、Atom 或 JSON Feed。（#1047 by @Suyog007）
+    - 更新清单资源来源：更新清单仅重写当前仓库的 GitHub API 资源地址，拒绝来自其他仓库或主机的地址，避免生成错误下载链接。（#984 by @determine123）
+    - 翻译服务不可达：连续连接失败后及时停止无效重试，并提供可进入设置的错误提示，减少整篇翻译长时间等待。（8d838ecf6 by @Phil-Fan）
+    - 长文件名导入：为截断后的长文件名加入区分后缀，避免前缀相同的不同论文被识别为同一条本地记录。（e8b4b5104 by @Phil-Fan）
+    已解决问题
+    - 部分译文恢复：全文翻译中断或存在缺失内容时，工具栏与双栏翻译面板都能继续补全或重新翻译。恢复结果保留在当前视图中，延迟载入的旧缓存不会覆盖新译文。（#1050 by @Phil-Fan, @ffy6511）
+    - PDF 缩放位置：修复滚轮或触控板放大后页面向右跳动的问题，使宽度适配与批注侧栏占位保持一致。（#1042 by @Phil-Fan）
+    - Linux AppImage 子进程：启动 Node、npm、ACP 和终端等子进程时清理 AppImage 注入的动态库环境，修复系统工具因加载不兼容库而启动失败的问题。不可用工具的诊断也会显示更具体的错误。（#1002 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.15.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.15.5
+ReleaseTime: 2026-11-11T01:10:56.0000000Z

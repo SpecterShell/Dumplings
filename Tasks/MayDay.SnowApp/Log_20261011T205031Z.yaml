@@ -1,0 +1,58 @@
+Version: 0.4.22
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.22/Snow-App-Setup-0.4.22.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Multiple Drawing Models per Channel: a channel can host several drawing models, each with its own size, quality, thinking level, aspect ratios, resolutions and custom prompt; generation resolves explicit parameters first, then the matched model, then the channel defaults.
+    - Desktop Pet Chat: the pet window gains a chat with conversation history, uses the conversation transcript as its background, and ships built-in pet characters plus an animation-speed setting.
+    - Prompt Optimization in the Drawing Workbench: optimize the prompt in place, cancel mid-run, and restore the previous prompt in one click; generation is never triggered automatically.
+    - Commit Detail Card: adds the changed-file count, links to the commit on GitHub / GitLab, and can record the commit into a memo.
+    Improvements
+    - Retry observability: every API path (chat, anthropic, gemini, interactions, responses, vision, model list) now logs retries through one entry point with a consistent context, and the server-error keywords cover the Cloudflare 5xx family.
+    - The retry notice shows a live "retrying in N seconds" countdown instead of up to 30 seconds of blind waiting.
+    - Auxiliary requests (summary, commit message, prompt optimization, theme palette, code review) use a fixed retry count of 3, so background tasks fail fast.
+    - Sidebar session tree: the sub-agent and Workflow expand toggles are unified into one, and tree refreshes are decoupled from the main conversation list.
+    - Decorative emoji are replaced with lucide icons in the drawing gallery, tool cards and settings panels.
+    Bug Fixes
+    - Fixed permanent 400 parameter errors being retried forever: numeric keywords are matched on digit boundaries, so random digits inside a conversation id no longer look like a 5xx status code.
+    - Fixed flickering and stale states of the input-bar plugin Action: it now stays silent, keeping only the spinner and the restore button.
+    - Fixed task-history persistence and message-footer snapshot identity: transient write failures are retried, and a footer snapshot is bound to its own response.
+    - Fixed file-tracking false conflicts with concurrent terminal commands: the conflict window no longer blocks file writes and marks a contaminated lease instead.
+    - Restored Chromium's default occlusion throttling (removed backgroundThrottling: false), fixing alt+tab stutter while a session is streaming.
+    What's Changed
+    - feat: API 重试可观测性、单渠道多绘图模型与 Git/插件能力增强（14 提交） by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/191
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.21...v0.4.22
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.22
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 单渠道多绘图模型：一个渠道可挂载多个绘图模型，每个模型独立配置尺寸、质量、思考强度、比例、分辨率与专属提示词；生成时按「显式参数 > 命中模型 > 渠道默认」解析。
+    - 桌宠聊天：宠物窗口新增聊天，可读取会话历史并以对话记录作为背景，内置多款宠物角色，新增动画速度设置。
+    - 绘图工作台提示词优化：一键优化提示词，优化中可取消，成功后一键还原；不会自动触发出图。
+    - 提交详情卡片：补齐变更文件数，支持跳转 GitHub / GitLab 远端提交，并可一键记录到备忘录。
+    改进
+    - 重试可观测性：chat / anthropic / gemini / interactions / responses / 视觉 / 模型列表等全部路径统一重试留痕，serverError 关键词补齐 Cloudflare 5xx 系列。
+    - 重试提示显示「N 秒后重试」实时倒计时，不再对着最长 30 秒的退避盲等。
+    - 辅助请求（摘要、提交信息、提示词优化、主题取色、代码审阅）固定重试 3 次，后台任务失败更快。
+    - 侧边栏会话树：子代理与 Workflow 合并为同一个展开按钮，树形刷新与主会话列表解耦。
+    - 绘图图库、工具卡片与设置面板的装饰性 emoji 统一替换为 lucide 图标。
+    修复
+    - 修复永久性 400 参数错误被无限重试：纯数字关键词改为数字边界匹配，会话 ID 中的随机数字不再被误判为 5xx 状态码。
+    - 修复输入栏插件 Action 状态文案闪现与残留，仅保留转圈与还原按钮。
+    - 修复任务历史持久化与页脚快照串用：暂态写入失败自动重试，页脚快照按回复身份隔离。
+    - 修复文件追踪与终端命令并发时的误判：冲突窗口不再阻断文件写入，改为标注污染租约。
+    - 恢复 Chromium 默认的遮挡节流（移除 backgroundThrottling: false），修复会话流式期间 alt+tab 切换窗口卡顿。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0422
+ReleaseTime: 2026-10-11T18:40:16.0000000Z

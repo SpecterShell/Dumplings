@@ -1,0 +1,192 @@
+Version: 4.6.0
+Installer:
+- InstallerUrl: https://cloud.r-project.org/bin/windows/base/old/4.6.0/R-4.6.0-win.exe
+  ProductCode: R for Windows 4.6.0_is1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://cloud.r-project.org/bin/windows/base/old/4.6.0/NEWS.R-4.6.0.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Significant User-Visible Changes
+    - The R citation now provides a DOI (10.32614/R.manuals): please update your bibliographies accordingly.
+    - The default C++ standard has been changed to C++20 where available (which it is on all known platforms from 2021 on): if not C++17 is used if available otherwise C++ is not supported (as before).
+      (GCC 16 has also switched to C++20 as its default.)
+      Packages can request C++17 if essential.
+    - The Sweave driver Rtangle no longer puts empty lines at the end of tangled scripts.
+    New Features
+    - The default AIC and BIC methods now check whether the methods namespace is loaded rather than stats4. They still use stats4::logLik (and stats4::nobs), but packages no longer need to load stats4 explicitly.
+    - confint.default() now also works on S4 objects, as long as suitable coef() and vcov() methods exist.
+    - binomial(identity) and quasibinomial(identity) now work without having to quote the argument.
+    - str() now shows more via format() for external pointers.
+    - terms(<formula>, specials = *) now treats non-syntactic specials more gracefully, thanks to Mikael Jagan's PR#18568.
+    - help.start() gets a lib.loc option and its default for make.packages.html() is enhanced to allow, e.g., fast access to .Library when that contains only base and recommended packages.
+    - In ‘*.Rd’ help files, the \linkS4class macro now also works for links to other packages via \linkS4class[<pkg>]{<myClass>}, much nicer than the “workaround” \link[<pkg>:<myClass>-class]{<myClass>} necessary in earlier versions of R.
+      Packages with the new syntax need to formally depend on ‘R >= 4.6.0’.
+    - tools::analyze_license() now also computes SPDX license identifiers, thanks to Thierry Onkelinx and LLuís Revilla.
+    - read.dcf() now recognizes lines starting with ‘#’ as comment lines. By Dirk Eddelbuettel, Laurent Gatto and Hugo Gruson.
+    - tcltk::tclVersion() now only optionally includes the ‘patch level’, as Tcl full versions can be of the form 8.7a5 or 9.0b1 without three clear components.
+    - untar(tar = "internal") supports extras = "-P" to use unchanged the recorded file paths (as many external tar programs do).
+    - extSoftVersion()[["zstd"]] now reports the version of the zstd compression library if available, thanks to Trevor Davis' patch proposal in PR#18914.
+    - New logical option() quiet, defaulting to false, set to TRUE by R's command-line option --quiet (and similar), now can be switched during an R session. Prompted by Dirk Eddelbuettel's proposal in PR#18913.
+    - Credentials for basic HTTP authentication with download method "libcurl" can now be provided in a ‘netrc’ file. The path to the file can be specified in options("netrc").
+    - tools::deparseLatex() gains a math argument, now used by the default bibstyle to format bibentry() fields with ‘$...$’ syntax via Rd \eqn markup.
+    - gzcon() can now decompress a concatenation of compressed streams PR#18887.
+    - Bibliographic citations and references in Rd files can now be auto-generated from bibentries in bibliographic databases in R or BibTeX formats. See RShowDoc("R-exts#Bibliographic-citations-and-references") for more information.
+    - Arguments to loadNamespace() which will be ignored because the namespace is already loaded are now noted.
+    - chkDots()' optional argument allowed has been implemented thanks to Trevor Davis' proposal in PR#18936.
+    - New function messageCondition() to create structured "message" objects analogous to warningCondition() and errorCondition() (PR#18940, by Trevor Davis).
+    - wilcox.test() can now perform exact (conditional) inference in case of ties. Based on contributions by Torsten Hothorn.
+    - wilcox.test() can now optionally compute improved asymptotic p-values by including up to 3 correction terms of the Edgeworth series for the normal approximation.
+    - barplot(.., orderH = *) for stacked bar plots allows to sort the stacks each according to size.
+    - New argument panel.first for hist() (via plot.histogram()), barplot(), bxp(), and hence implicitly boxplot(). All except the former also gain a new panel.last. Suggested by Marieke Stolte and Julian Welz.
+    - plot.default() gets a new switch lim2 to indicate that the default xlim and ylim range computations only use jointly finite x- and y-values; indirectly suggested in PR#7986 by Jincai Jiang.
+    - ‘Rman.css’, the stylesheet for the texi2any-generated HTML versions of the R manuals, was improved following joint efforts at the ‘R Dev Days’ of useR! 2024 and RSECon25.
+    - New system Rd macro \manual{name}{node} to refer to a specific section etc (possibly empty, for ‘Top’) of one of the R manuals (e.g., ‘R-exts’).
+    - list.files() now has optional argument fixed to allow literal pattern matching. Suggested and implemented by Duncan Murdoch in PR#18925.
+    - substring(txt, i1, i2), substr(..) and their replacement versions now accept i2 = NULL to mean “to the end_of_string”, thus fulfilling Kevin Ushey (and others') suggestions in PR#18851.
+    - The default method for pretty() gets a new switch bounds for completeness, corresponding to .pretty(). Also, it now catches typos such as eps.corrected = 2, noted in PR#18521 by Mikko Korpela.
+    - Plain-text help now renders Rd \describe lists using line breaks after item labels. Set tools::Rd2txt_options(descStyle=NULL) to get the old behaviour with a simple space; a "colon" variant is also available.
+    - x %notin% table newly in base is an idiom for !(x %in% table) and provided almost entirely for convenience and code readability, from an R-devel suggestion, after many years of private definitions mostly hidden in packages, including in R's tools package.
+    - The default method of sequence() gets a new option recycle to swap between current (not fully recycling) and future behaviour where all three of (nvec, from, by) are jointly recycled.
+    - ftable()s default method and the as.table() method for "ftable"s get a perm argument with back compatible default. The as.table() method also gets a named.dim = FALSE switch, no longer creating a named dim(<result>) by default.
+    - match.arg() gets a new option several.ok = "all", fulfilling the wish of Jim Hester in PR#16659.
+    - provideDimnames() gets new switch use.names, as proposed including patch by Mikael Jagan, in PR#18975.
+    - The default summary() is more informative for character vectors, optionally resorting to the factor method via the new argument character.method = "factor", e.g., when summarizing a data frame (PR#16750).
+      It also provides more useful summaries for complex vectors, with polar determining if polar or cartesian coordinates are more relevant; mostly based on a proposal by Mikael Jagan.
+    - Error messages from failed Rd \Sexpr code now include the call from the original condition (if available). Warning messages now include Rd source locations.
+    - When the environment variable R_WARN_BOUNDS_OPT is set to "yes", options(warn = val) will check if val is inside -1:2; this may happen unconditionally in the future.
+    - weighted.residuals() now returns weighted working residuals for "glm" objects. It used to return deviance residuals, but these do not give the one-step approximated dfbeta values, as pointed out by Ravi Varadhan. influence.glm() has been amended so that it now returns an object with both a "wt.res" and a "dev.res" element.
+    - Several influence measures for "glm" objects have been updated to use Pearson residuals rather than deviance residuals (the latter are not unbiased) and to not use leave-one-out estimates of dispersion in models with fixed dispersion. Thanks to Ravi Varadhan for discussions and testing of these updates.
+    - R now supports custom binary types which are of the form "<system>.binary.<build>" where <system> is lower-case name (letters only) of the system and <build> is the name of the build (alphanumeric and dashes). The corresponding paths returned by contrib.url (which govern the repository layout) with the above type= have the form bin/<system>/<build>/contrib/<x.y> where <x.y> is the R version without patch level. This is a generalisation of the binary types previously supported on macOS. In addition, binary packages can have the extensions .tar.bz2, .tar.xz, .tar.zst and .tar.zstd with the corresponding compression support.
+    - The value of .Platform$pkgType which defines the native binary type for the current build of R can be overridden with R_PLATFORM_PKGTYPE environment variable (previously this was only set by the macOS builds of R). This should be typically only done by the author of a binary R distribution to define the type of binaries supported by that build of R.
+    - If R uses custom binary type in its .Platform$pkgType then R CMD INSTALL --build will produce <package>_<ver>_R_<system>-<build>.tar.xz binary files. Please note that future versions may use .zstd compression by default so package tooling should support any of the above mentioned extensions.
+    - New facilities have been introduced for package integrity verification and package signing. The optional file ‘SHA256’ in a package contains SHA-256 hashes, lengths and paths of files provided in the package allowing for more reliable integrity verification (relative to ‘MD5’). This file is now generated by default in R CMD INSTALL --build and optionally via R CMD build --sha256. A package can be signed by creating a detached GnuPG signature file ‘SHA256.sig’ signing the entirety of the ‘SHA256’ file. Upon installation, the signature is verified using GnuPG, thus ensuring the integrity of the ‘SHA256’ file and by induction all files in the package. Both source and binary packages can be signed. Currently, this only applies to tar-based packages, and the command-line GnuPG gpg tool (or equivalent tool named in the GPG environment variable) has to be available for signing and verification to work. R CMD INSTALL --sign can be used to sign binary packages, including its use with --build. System-wide GnuPG keyrings for the R installation can be placed in R_HOME/etc/keyrings as files with ‘.gpg’ extensions and will be checked first before consulting user's GnuPG keyring (if present).
+    - Experimentally, several math library (‘math.h’) functions, such as exp(.), log1p(), sin(), atanh(), when called from R, are now ensured to give fully accurate results in a small neighbourhood of special values, such as exp(0) == 1, log1p(0) == 0, etc. This makes R slightly less platform dependent for these functions, notably on platforms with less accurate system math libraries, see also https://blog.r-project.org/2026/01/30/debugging-sensitivity-to-c-math-library-on-linux/.
+    - Function free1way() implementing semiparametrically efficient inference procedures (likelihood- and permutation-based) in distribution-free stratified K-sample one-way layouts was added to the stats package. Approximate (via power.free1way.test()) and simulation-based (utilising rfree1way() for random number generation) power-assessment and sample-size planning as well as model diagnostics (available from a plot method and probability-probability plots in ppplot()) complement the functionality. Provided by Torsten Hothorn.
+    - plot.data.frame() now supports a formula argument.
+    - New Rd macro \linkS4methods{}, e.g., for easier linking to method docs in other packages, proposed and coded by Mikael Jagan in PR#18998.
+    - Class "difftime" is now also among the S4 "OldClasses".
+    - New function bitstring() as a user-friendly wrapper around intToBits(), etc.
+    - plot.lm() now omits the smoother in the residuals vs leverage plot. This never made much sense, but if you really want it, you can force the old behaviour by setting panel.raw=panel.smooth.
+    - hatvalues() now has a method for nls (nonlinear model) results, prompted by the proposal of Patrice Kiener and Heather Turner in PR#18897.
+    - The Sweave driver RweaveLatex now allows the value of logical and numerical chunk options (only) to be the name of an object defined in earlier, evaluated code chunks. This is useful to pass computed values to options. For options set this way for weaving purposes, the Rtangle driver rather uses their default values, with a warning. By Vincent Goulet.
+    - The Sweave driver RweaveLatex gains an option to include unparsable R code or arbitrary text in code chunks. Chunks marked as ignore.on.weave = TRUE are completely ignored on weaving, i.e., not even parsed. The chunks however remain written out verbatim on tangling.
+      Similarly, the driver Rtangle gains an option to control the extraction of code chunks. Chunks marked as ignore.on.tangle=TRUE are processed as usual on weaving, but left out of the tangled scripts (or thrown away when split=TRUE).
+      The drivers also support the shorter aliases weave for !ignore.on.weave, and tangle for !ignore.on.tangle. A further option ignore, available for both drivers, sets ignore.on.weave and ignore.on.tangle at once.
+      By Vincent Goulet.
+    - The Sweave driver Rtangle now provides an option chunk.sep to control the separator between code chunks in tangled scripts (with an unchanged default of \n\n). Using check.sep=FALSE omits the separator (between two chunks when used as a chunk option). By Vincent Goulet.
+    - The Sweave driver Rtangle now provides an option extension to specify the extension, without the leading dot, for the file name of a tangled code chunk when splitting is selected (the option has no effect with split=FALSE). If TRUE, the default extension of Rtangle (usually ‘.R’) is used; if FALSE, no extension is added to the file name. By Vincent Goulet.
+    - New function SweaveGetSourceName in package utils to obtain the name of the file being woven by an Sweave process launched from the command line. By Vincent Goulet.
+    Graphics
+    - The graphics engine version, R_GE_version, has been bumped to 17 and so packages that provide graphics devices should be reinstalled.
+      The glyphFont() function gains a variations argument, which allows variable font axes to be specified, e.g., c(wght = 100).
+      Only the quartz() device and Cairo-based graphics devices (but not cairo_pdf()) support variable font axes so far.
+    Installation on a Unix-Alike
+    - configure appends bsdtar to the list of command names it tries when finding a default for TAR.
+    - Failures in building the documentation for the base packages, including from parsing their Rd files, are no longer ignored by make docs.
+    - Building the R manuals now requires Texinfo 6.8 or later.
+    - A new LIBR_LDFLAGS defaulting to LDFLAGS allows more flexibility, e.g., for distributions such as Gentoo, Debian or Ubuntu, fixing PR#18992; additionally a make failure to create ‘libR.pc’ should no longer be ignored, fixing PR#18993; both thanks to Benjamin Drung.
+    Checking an Installation
+    - There is a new directory ‘tests/C++Standards’ which contains small packages which can be test-installed to check support for various C++ standards. This is principally for use on Windows as on a Unix-alike this partially duplicates tests done by configure — although it can also be used to test the behaviour of R CMD INSTALL on unsupported standards.
+    Package Installation
+    - Specifying C++11 or C++14 in ‘src/Makevars’ has long given a note: in 99% of CRAN packages the specification was unnecessary as the default C++17 sufficed (in a few cases with a deprecation warning from some compilers).
+      Support for these standards has been removed: the default C++ standard will be used.
+      R CMD config variables CXX11, CXX14 and their associated CXXxxFLAGS, CXXxxPICFLAGS CXXxxSTD, SHLIBCXXxxLD and SHLIBCXXxxLDFLAGS variables are no longer supported and reported as ‘defunct’.
+    - When installing binary packages the time stamp in the "Built" field is considered even if the package version is identical to allow binary package repositories to update binaries without the need to increase the package version.
+    - The "Built" column returned by installed.packages() and old.packages() now contains the full value of the "Built" entry from the (installed) ‘DESCRIPTION’ file. Previously, only the R version from the "Built" entry was returned.
+    - If the timestamp passed as --built-timestamp to R CMD INSTALL is in RFC-2822 form (with time-zone offset) it will be converted to ISO UTC form to conform to the format used by R for purposes described above. (PR#19037, thanks to Dirk Eddelbuettel)
+    C-Level Facilities
+    - New functions GEcreateDD() and GEfreeDD() for allocating (and initialising) DevDesc structures. Can be used by external graphics devices. Satisfies PR#18292.
+    - New function R_eval_with_gd() designed to “lock” a graphics device during call to eval() within device drawing routines. External on-screen graphics devices should consider using this function to avoid crashes from the device being closed by the user (e.g., a mouse click) during drawing.
+    - Declarations for non-API functions LOGICAL0, INTEGER0, REAL0, COMPLEX0, and RAW0 have been removed from installed header files.
+    - Non-API entry points Rf_acopy_string and Rf_lazy_duplicate have been added to those reported by R CMD check.
+    - Packages using the non-API functions ATTRIB and SET_ATTRIB will now receive check ‘NOTE’s. See ‘Writing R Extensions’ for alternatives to use.
+    - R CMD check ‘NOTE’s on the use of these non-API entry points have been upgraded to ‘WARNING’s in preparation for removing declarations and, where possible, hiding these entry points: R_nchar, R_tryWrap, Rf_GetOption, R_lsInternal, BODY, FORMALS, CLOENV, SET_TYPEOF, STRING_PTR, R_duplicate_attr, getConnection, R_data_class, STRING_PTR, SET_OBJECT, ATTRIB, SET_ATTRIB, Rf_findVarInFrame3.
+    - The deprecated macros CHARACTER_DATA and CHARACTER_POINTER now return const pointers since using writable pointers in packages is not safe.
+    - New function DATAPTR_RW() for use in implementing ALTREP Dataptr methods. This function should not be used in any other contexts.
+    - New function R_class() as the C equivalent of class() in R.
+    - New function Rf_isScalarString.
+    - The R_ObjectTable type definitions formerly in ‘R_ext/Callbacks.h’ are now available in the new header file ‘R_ext/ObjectTable.h’. This new header file should be used in packages instead of ‘R_ext/Callbacks.h’.
+    - Task callback support declared in ‘R_ext/Callbacks.h’ has been enabled again. It was disabled for R 4.5.0.
+    - The non-API header file ‘R_ext/PrtUtil.h’ is no longer copied to the installed ‘include’ directory.
+    - New function R_mapAttrib for iterating over the attributes of an object.
+    - New functions R_altrep_class_name and R_altrep_class_package for retrieving the class name symbol and package name symbol of an ALTREP object. These should be used instead of ALTREP_CLASS.
+    - New function R_getAttributes returns the same result as the R function attributes. New functions R_getAttribCount, R_getAttribNames, R_hasAttrib, R_nrow, and R_ncol.
+    - The function Rf_isFrame has been removed; use Rf_isDataFrame instead.
+    - The function VECTOR_PTR has been removed.
+      The non-API function DATAPTR is no longer declared in an installed header file.
+    - These entry points are now marked as hidden and no longer have declarations in installed header files: ENVFLAGS, EXTPTR_PROT, FRAME, ENCLOS, EXTPTR_PTR, EXTPTR_TAG, HASHTAB, IS_S4_OBJECT, LEVELS, NAMED, OBJECT, R_shallow_duplicate_attr, Rf_isValidString, Rf_lazy_duplicate, Rf_NonNullStringMatch, SETLENGTH, SETLEVELS, SET_BODY, SET_CLOENV, SET_ENCLOS, SET_FORMALS, SET_ENVFLAGS, SET_FRAME, SET_GROWABLE_BIT, SET_HASHTAB, SET_NAMED, SET_S4_OBJECT, SET_TRUELENGTH, STDVEC_DATAPTR, TRUELENGTH, UNSET_S4_OBJECT, XTRUELENGTH.
+    - New experimental API for working with variable bindings in environments. The function R_GetBindingType identifies the binding type without forcing a delayed or active binding. New bindings care created by R_MakeDelayedBinding, R_MakeForcedBinding and R_MakeMissingBinding. Delayed and forced bindings can be inspected with R_ForcedBindingExpression, R_DelayedBindingExpression, and R_DelayedBindingEnvironment. Bindings for ... in function call environments can be examined with R_findDotsEnv, R_DotsExist, R_DotsLength, R_DotsNames, R_DotsElt, R_GetDotType, R_DotDelayedExpression, R_DotDelayedEnvironment, and R_DotForcedExpression. Contributed by Lionel Henry, Davis Vaughan, and Charlie Gao in PR#18928.
+    - New function R_envSymbols returns a vector of the symbols for which an environment contains bindings (PR#18928).
+    - R CMD check ‘NOTE’s on the use of the non-API entry points PRCODE, SET_PRCODE, PRENV, SET_PRENV, PRVALUE, SET_PRVALUE, R_PromiseExpr, and Rf_allocSExp have been upgraded to ‘WARNING’s in preparation for removing declarations and, where possible, hiding these entry points.
+    - New functions R_getVar and R_getVarEx. In most cases these can be used instead of the non-API functions Rf_findVar and Rf_findVarInFrame. Other cases can be handled by the new API for working with variable bindings.
+    - Packages using any non-API variables will now receive check ‘NOTE’s.
+    - New function R_getRegisteredNamespace finds and returns the namespace environment registered for a name, or R_NilValue if none is found.
+    Utilities
+    - R CMD check now reports further clang warnings including -Wkeyword-macro. This is most commonly seen for the C23 keywords bool, true and false, but is also seen for nullptr (C23 and C++11). Masking these by macros may generate correct code (but not always) and always results in confusing-to-read code.
+    - The cascaded stylesheet ‘R.css’ now adds less vertical white space when rendering Rd files' \itemize, \enumerate, and \describe list \items to HTML.
+      Where R is used via extensive IDEs such as RStudio, their maintainers may need to adapt ‘R.css’ files accordingly.
+    - R CMD check when passed a tarball looks at its contents and so no longer derives the package name from the tarball name (which can now be arbitrary).
+    - Package ‘README.md’ files are now installed and featured in HTML help.
+    - package.skeleton() now invisibly returns the path of the created directory, similar to prompt() et al., and allows creating blank skeletons without any R objects.
+    Deprecated and Defunct
+    - structure(NULL, <name> = <val>) is now defunct.
+    - Three tk*.slaves() functions were deprecated in favor of tk*.child() which do need Tcl/Tk version 8.6 or higher.
+    Bug Fixes
+    - chol(x, pivot=TRUE) now zeroes the trailing submatrix when the algorithm stops early. Following the help page instructions on how to reconstruct the matrix in positive semidefinite cases gave incorrect results if the rank was 2 or more less than the dimension (PR#15853).
+    - Profiling "mle" objects (stats4 package) could fail because profile MLE used starting value from full MLE. Now starts from profile MLE from previous step.
+    - Setting attributes on primitive functions is now an error; previously it modified without copying (as noticed by Henrik Bengtsson on the R-devel mailing list).
+      Relatedly, changing the environment() of a primitive function does no longer happen and gives a warning (to become an error, later).
+    - Dataset LifeCycleSavings had a misspelled row name: "Guatamala" was corrected to "Guatemala".
+    - The Pair(x,y) construction in the formula interface to paired tests did not work with the subset argument, due to the absence of a [.Pair method, which has now been added.
+    - Subsetting "table" objects keeps S3 classes more consistently, fixing PR#18845.
+    - When browser() is active or when otherwise debugging, R code such as if(TRUE) now longer triggers a new browser level, fixing PR#18885 (differently than the fix for PR#15770), with thanks to Ivan Krylov.
+    - text() now truncates labels to maximum length of x and y (if it is longer), fixing PR#7084. Thanks to Heather Turner, Ella Kaye, and Philippe Grosjean.
+    - <Date> %in% set is again as fast as it was before R 4.3.0, via a new S3 method mtfrm.Date.
+      <character> %in% <Date> and vice versa are now documented to work in concordance with == and as an exception to the typical match() behaviour which relies on “univariate” mtfrm() alone.
+    - It is now possible to convert to "snpc" units via, e.g., grid::convertWidth(), fixing PR#18915. Thanks to Trevor Davis.
+    - The precip dataset had typos in the names "Bismarck" and "Pittsburgh" (PR#18895).
+    - tools::checkReplaceFuns() now deals better with replacement methods not available as regular functions in the namespace.
+    - length(xpr) <- n now also works for expression vectors, the same as for lists, i.e., padding with NULL entries if the length is increased. Thanks to Mikael Jagan's PR#18917.
+    - <complex>[i] <- NA now only sets the real part to NA, consistently with the as.complex(NA) behaviour since R 4.4.0; thanks to Mikael Jagan's PR#18918.
+    - format(<list>) calling format.default() now calls generic format() on each list element (rather than format.default()).
+    - tools::Rd2HTML() detects paragraphs in more cases of \Sexpr-generated Rd code, fixing a regression in R 3.6.0 originally reported by Georgi Boshnakov and later also in PR#18470. An inactive #ifdef block no longer breaks the paragraph.
+    - Parsing a multi-line string from Rd \Sexpr code no longer doubles the newlines.
+    - requireNamespace(.., versionCheck = *) now shows an error and returns FALSE when the package version check is not fulfilled, thanks to Iris Simmons and Trevor Davis's PR#18255. Additionally, the versionCheck argument is checked and when invalid, an error is signalled to avoid subsequent confusing error messages.
+    - requireNamespace() now throws an error even if the name space is already loaded if it is called with an unmatched argument such as quitely = TRUE or quiet = TRUE (argument quietly cannot be abbreviated as it follows ...).
+    - rep() signals more specific error messages, notably when using both times and each optional arguments. Fixes PR#18926, thanks to Ella Kaye and collaborators at useR! 2025's ‘R Dev Day’.
+    - jitter(x, amount, factor) becomes more robust for non-finite x or also negative amount, factor. help(jitter) is easier to read, fixing PR#17279, thanks to its contributors.
+    - Plain-text help (Rd2txt) lacked markup for ‘\cite’d titles, which are now wrapped in single quotes.
+    - Default column labels are now correctly aligned when printing a matrix with right alignment (PR#18943, thanks to Mikael Jagan).
+    - poly(fct, n) signals an error again, for a non-ordered factor fct, thanks to Roland Fuss' notice on R-devel.
+    - terms(<formula>, simplify=TRUE) now works correctly also in the cases where the formula has more than one term with NAs such as f(u, b=NA) or g(NA), finally fixing PR#15275 thanks to Mikael Jagan's patch.
+    - The help page example(matplot) now correctly labels Sepal vs Petal dimensions in its first iris data plot, thanks to Jeff Dick's post on R-devel.
+    - diff(m, lag, dif) for matrix m now still returns matrices, also when lag * dif > nrow(m) (PR#18972, thanks to Mikael Jagan and Suharto Anggono). diff(<ts-matrix>) remains matrix, even when it has length zero.
+    - Values returned by active binding functions are now marked as not mutable to prevent unintended mutation in complex assignment operations.
+    - The default method of sequence() now allows to fully recycle all three of (nvec, from, by) as always documented; with thanks to Mikael Jagan's report and patch in PR#18304. Its behaviour remains back compatible for now, but can be switched to future behaviour via environment variable R_sequence_recycle, or explicit recycle = TRUE.
+    - Subassignment, x[ind] <- val, to 1-dimensional arrays no longer “drops” them to simple vectors when ind is a name, fixing PR#18973, reported by Thomas Soeiro.
+    - The implicitGeneric definition for toeplitz() produced a default method that failed when toeplitz(x, r) was called with more than the first argument. Simple fix from Mikael Jagan.
+    - The error message for array(dim = c()) now uses "'dim'", thanks to Hugo Gruson.
+    - Some legal but strange nested complex assignments are handled a bit more robustly in interpreted code.
+    - cacheMetaData() does not to mangle primitive generics.
+    - The S4 method norm(<ANY>, type = <missing>) for the implicit generic norm() now uses type = "O" as has been the intention for more than ten years, fixing PR#18979 thanks to Mikael Jagan.
+    - On Windows terminals Ctrl-C now breaks out of waiting for keyboard input, fixing PR#18982.
+    - The default summary() and its factor method now label missing values ‘NAs’ rather than ‘NA's’, fixing a decades-old grammatical faux pas inherited from S (PR#16348 and PR#18948).
+    - Asymmetric toeplitz(x, r) is type consistent now, even when r of length 0 or 1 is not used directly. Fixes PR#18996, thanks to Mikael Jagan's patch and test.
+    - format(r) now keeps names(r) also for raw objects r.
+    - rep.int() and rep_len() again drop names also for factors, fixing a regression in R 4.0.0. (Thanks to a report by Rui Barradas and PR#18999 by Suharto Anggono.)
+    - str(x) with a list-like x of a class having an str() S3 method using NextMethod(), now no longer outputs "List of <...>" in the default method, thanks to Ian Farm's report and fix proposal in PR#19001.
+    - as.POSIXlt(ch), as.Date(ch) etc now also work correctly when ch contains "Inf", via strptime(.), fixing PR#19006.
+    - c(<POSIXlt>, ..) now fully preserves sub-second accuracy, fulfilling a part of Suharto Anggono's wishlist PR#18989.
+    - When subassigning "POSIXlt", e.g., <dat>[i] <- v, v is now converted to the time zone of dat, before being assigned, see PR#18919.
+    - The "tzcode" attribute of "POSIXlt" objects should no longer depend on earlier calls, fixing PR#19005 thanks to Ivan Krylov, a patch by Suharto Anggono and reports of “Non-deterministic POSIXlt tzone in Europe/London ..” on R-devel.
+    - In intervals with very low density cdplot() was unreliable, returning probabilities that are greater than one or NaN (PR#19011). Fix from Christoph Dalitz and Achim Zeileis.
+    - R CMD build now installs packages providing their own vignette engine (PR#18191). Patch by Paul Smith.
+    - ar.burg(), ar.yw() and ar.ols() deal better with non finite AIC values thanks to Simone Giannerini's remarks on R-devel.
+    - Parsing deeply nested expressions no longer should segfault in certain circumstances, fixing five different checks on context stack size, thanks to Kevin Ushey's report and Michael Chirico's patch in PR#18994.
+    - The internal cwilcox function used in computations for the Wilcoxon distribution is now based on an implementation of a formula by Andreas Löffler provided by Andreas Löffler, Aidan Lakshman, and Ivan Krylov, substantially reducing the memory complexity of the original implementation (PR#18655).
+    - When Ops group methods for matrix-"ts" return a zero-extent matrix, its type is correct now. E.g., <int> + <dbl> now returns type "double", see also PR#18972.
+    - intToUtf8(<negative>) now returns NA and no longer accesses invalid memory, thanks to Kevin Ushey's report with patch in PR#19052.
+    - When file.choose() is terminated with an EOF, it now signals an error rather than returning garbage, thanks to Kevin Ushey's report and patch in PR#19053,
+ReleaseTime: 2026-04-24

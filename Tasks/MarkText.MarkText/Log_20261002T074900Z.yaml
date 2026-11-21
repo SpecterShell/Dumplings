@@ -1,0 +1,558 @@
+Version: 0.20.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/marktext/marktext/releases/download/v0.20.0/marktext-win-x64-0.20.0-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/marktext/marktext/releases/download/v0.20.0/marktext-win-arm64-0.20.0-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - chore(release): v0.19.0 release branch (DO NOT MERGE until stable) by @Jocs in https://github.com/marktext/marktext/pull/4269
+    - chore: bump develop to 0.20.0-dev by @Jocs in https://github.com/marktext/marktext/pull/4296
+    - docs(release): update Step 7 asset list to 24 by @Jocs in https://github.com/marktext/marktext/pull/4298
+    - docs(end-user): align user docs with 0.19 prefs and platform matrix by @Jocs in https://github.com/marktext/marktext/pull/4300
+    - docs(dev): sync developer docs with current codebase by @Jocs in https://github.com/marktext/marktext/pull/4299
+    - chore: convert repo to pnpm monorepo (packages/desktop, muyajs, website) by @Jocs in https://github.com/marktext/marktext/pull/4302
+    - refactor(website): migrate to Next.js 15 + Cloudflare Workers CI by @Jocs in https://github.com/marktext/marktext/pull/4305
+    - feat(website): serve www.marktext.me (301 → apex) by @Jocs in https://github.com/marktext/marktext/pull/4308
+    - fix(website): www→apex redirect (middleware) + smarter preview-URL parsing by @Jocs in https://github.com/marktext/marktext/pull/4309
+    - ci(website): enable Preview URLs on marktext-website Worker by @Jocs in https://github.com/marktext/marktext/pull/4311
+    - refactor(website): redesign landing page, drop markdown engine deps by @Jocs in https://github.com/marktext/marktext/pull/4312
+    - feat(muya): migrate TS rewrite to packages/muya alongside legacy muyajs by @Jocs in https://github.com/marktext/marktext/pull/4314
+    - feat(website): add /docs route and consolidate docs/ under packages/website/ by @Jocs in https://github.com/marktext/marktext/pull/4316
+    - fix: replace remaining absolute raw.githubusercontent.com URLs with relative paths in READMEs by @Jocs with @Copilot in https://github.com/marktext/marktext/pull/4329
+    - fix(website): serve prerendered docs pages via static-assets cache by @Jocs in https://github.com/marktext/marktext/pull/4335
+    - fix(website): open download buttons in new tab pointing to releases page by @Jocs in https://github.com/marktext/marktext/pull/4336
+    - refactor(website): simplify docs subtree (palette / sidebar / markdown / nav) by @Jocs in https://github.com/marktext/marktext/pull/4349
+    - refactor(website): simplify landing page (helpers, types, data-driven blocks) by @Jocs in https://github.com/marktext/marktext/pull/4350
+    - chore(website): tighten middleware matcher; drop unused 'use client' by @Jocs in https://github.com/marktext/marktext/pull/4351
+    - fix(muyajs): preserve nested lists of differing types (#4341) by @Jocs in https://github.com/marktext/marktext/pull/4354
+    - fix(muyajs): allow CJK ideographs as flanking boundary for emphasis by @Jocs in https://github.com/marktext/marktext/pull/4355
+    - fix(muyajs): clamp setStart offset to legal range to prevent IndexSizeError (#2800) by @Jocs in https://github.com/marktext/marktext/pull/4358
+    - fix(muyajs): null-guard list block paths to prevent renderer crash (#4346) by @Jocs in https://github.com/marktext/marktext/pull/4359
+    - fix: restore local builds after monorepo split by @Jocs in https://github.com/marktext/marktext/pull/4361
+    - fix(release): add repository field for electron-builder by @Jocs in https://github.com/marktext/marktext/pull/4368
+    - fix(muyajs): split correct paragraph on Enter in multi-block list items (#4374) by @Jocs in https://github.com/marktext/marktext/pull/4376
+    - fix(renderer): improve graphite contrast and unify accent colors (#4377) by @Jocs in https://github.com/marktext/marktext/pull/4378
+    - feat(muya): expose desktop-required public API accessors by @Jocs in https://github.com/marktext/marktext/pull/4381
+    - feat(muya): expose themeable CSS variables and diagram theming by @Jocs in https://github.com/marktext/marktext/pull/4382
+    - feat(muya): add block duplicate/insert/delete public API by @Jocs in https://github.com/marktext/marktext/pull/4384
+    - feat(muya): restore flowchart and sequence diagrams by @Jocs in https://github.com/marktext/marktext/pull/4385
+    - feat(muya): add ImagePathPicker floating autocomplete UI by @Jocs in https://github.com/marktext/marktext/pull/4386
+    - fix(muya): unbreak lint:css (stylelint 17 compatibility) by @Jocs in https://github.com/marktext/marktext/pull/4388
+    - feat(muya): add cursorCoords + active formats to selection-change by @Jocs in https://github.com/marktext/marktext/pull/4387
+    - feat(muya): implement focus mode (dim inactive blocks) by @Jocs in https://github.com/marktext/marktext/pull/4389
+    - feat(muya): emit format-click and preview-image interaction events by @Jocs in https://github.com/marktext/marktext/pull/4390
+    - feat(muya): add updateParagraph block-type conversion API by @Jocs in https://github.com/marktext/marktext/pull/4391
+    - feat(muya): add runtime setOptions / setFont / setTabSize / setListIndentation by @Jocs in https://github.com/marktext/marktext/pull/4393
+    - feat(muya): add spellcheck word-replacement API by @Jocs in https://github.com/marktext/marktext/pull/4392
+    - feat(muya): serialize/restore undo history by @Jocs in https://github.com/marktext/marktext/pull/4394
+    - feat(muya): add invalidateImageCache by @Jocs in https://github.com/marktext/marktext/pull/4396
+    - test(muya): port MarkText regression cases (#4341/#4307/#4190) by @Jocs in https://github.com/marktext/marktext/pull/4399
+    - feat(muya): add createTable / insertImage / setCursor API by @Jocs in https://github.com/marktext/marktext/pull/4397
+    - feat(muya): add clipboardFilePath paste hook by @Jocs in https://github.com/marktext/marktext/pull/4398
+    - fix(muya): treat CJK as punctuation for strong/em flanking (#4307) by @Jocs in https://github.com/marktext/marktext/pull/4401
+    - feat(desktop): consume @muyajs/core in util files (markdownToHtml/pdf/dompurify/printService/sourceCode/icon) by @Jocs in https://github.com/marktext/marktext/pull/4402
+    - feat(desktop): add kebab-case editor CSS vars to themes for @muyajs/core by @Jocs in https://github.com/marktext/marktext/pull/4404
+    - feat(desktop): migrate editor.vue to @muyajs/core engine by @Jocs in https://github.com/marktext/marktext/pull/4406
+    - fix(i18n): unify quick-insert hint to "/" trigger by @Jocs in https://github.com/marktext/marktext/pull/4405
+    - test(parity): failing-test scoreboard for #4406 muyajs→@muyajs/core gaps by @Jocs in https://github.com/marktext/marktext/pull/4407
+    - fix(muya): insertParagraph immediate-block anchoring in nested blocks (PG13) by @Jocs in https://github.com/marktext/marktext/pull/4408
+    - fix(muya): consume autoCheck + hideLinkPopup options (PG3/PG12) by @Jocs in https://github.com/marktext/marktext/pull/4409
+    - feat(muya): expose block affiliation in selection-change (PG1) by @Jocs in https://github.com/marktext/marktext/pull/4410
+    - feat(muya): restore clipboard image paste + imageAction routing + copyAsRich (PG5/PG6/PG9) by @Jocs in https://github.com/marktext/marktext/pull/4411
+    - fix(muya): inline export CSS + heading ids for offline export & TOC anchors (PG7/PG8) by @Jocs in https://github.com/marktext/marktext/pull/4412
+    - feat(muya): emit preview-image + heading-copy-link events (PG10/PG11) by @Jocs in https://github.com/marktext/marktext/pull/4414
+    - feat(muya): restore drag-and-drop image insertion (PG4) by @Jocs in https://github.com/marktext/marktext/pull/4413
+    - feat(desktop): wire @muyajs/core parity APIs (menu state, copyAsRich, heading-link, source cursor, saved indicator) by @Jocs in https://github.com/marktext/marktext/pull/4415
+    - fix(desktop): pass imageAction + getPathForFile to Muya constructor (re-activate PG4/5/6) by @Jocs in https://github.com/marktext/marktext/pull/4417
+    - fix(muya): resolve pre-existing lint:css no-descending-specificity by @Jocs in https://github.com/marktext/marktext/pull/4419
+    - fix(muya): record source-mode bulk edit as a single undo boundary (PG14) by @Jocs in https://github.com/marktext/marktext/pull/4420
+    - test(desktop): remove redundant muyajs-engine unit specs (Phase F) by @Jocs in https://github.com/marktext/marktext/pull/4422
+    - fix(desktop): retarget theme.ts editor CSS at muya mu-* classes (E4) by @Jocs in https://github.com/marktext/marktext/pull/4421
+    - fix(desktop): port print image-src resolution off muyajs (last muya/lib import) by @Jocs in https://github.com/marktext/marktext/pull/4423
+    - fix(muya): crash typing '#' — guard I18n.t + add heading-copy-link locale key by @Jocs in https://github.com/marktext/marktext/pull/4424
+    - fix(muya): add missing image i18n keys ('Click to add an image' / 'Load image failed') by @Jocs in https://github.com/marktext/marktext/pull/4427
+    - fix(muya): render relative image paths anchored to the document dir (Phase G blocker) by @Jocs in https://github.com/marktext/marktext/pull/4428
+    - fix(desktop): Edit▸Replace action + saved-indicator false-clean (Phase G) by @Jocs in https://github.com/marktext/marktext/pull/4431
+    - fix(muya): preserve drive/UNC roots in relative image path resolution (#4428 review follow-up) by @Jocs in https://github.com/marktext/marktext/pull/4430
+    - fix: source-mode cursor sync + language-switch hint refresh (Phase G G7/G8) by @Jocs in https://github.com/marktext/marktext/pull/4432
+    - fix(muya): updateParagraph data-loss on list/quote + front-matter insertion + frontmatterType lang (Phase G) by @Jocs in https://github.com/marktext/marktext/pull/4429
+    - test: cover @muyajs/core migration regression gaps (Phase G) by @Jocs in https://github.com/marktext/marktext/pull/4434
+    - fix(muya): restore cross-cell table selection + resolve dead TableChessboard picker (Phase G) by @Jocs in https://github.com/marktext/marktext/pull/4435
+    - test(muya): de-flake heading-locale + backspace regression specs (#4434 review) by @Jocs in https://github.com/marktext/marktext/pull/4436
+    - fix(muya): restore the in-editor table grid picker (revert #4435 chessboard deletion + wire trigger) by @Jocs in https://github.com/marktext/marktext/pull/4437
+    - docs: archive the muyajs → @muyajs/core migration tracker by @Jocs in https://github.com/marktext/marktext/pull/4438
+    - chore: keep .claude/ fully ignored (untrack migration tracker) by @Jocs in https://github.com/marktext/marktext/pull/4439
+    - fix: restore editor visual parity after @muyajs/core migration by @Jocs in https://github.com/marktext/marktext/pull/4443
+    - fix(muya): align Cmd+A / copy / cut / paste with legacy muyajs by @Jocs in https://github.com/marktext/marktext/pull/4446
+    - chore(muya): align packages/muya conventions with desktop + doc cleanup by @Jocs in https://github.com/marktext/marktext/pull/4450
+    - fix(muya): editor parity with muyajs (themes, fonts, spellcheck) + CLASS_NAMES cleanup by @Jocs in https://github.com/marktext/marktext/pull/4454
+    - refactor(muya): split clipboard into modules + type copy/paste modes as enums by @Jocs in https://github.com/marktext/marktext/pull/4459
+    - fix(muya): enable inline image resize by @Jocs in https://github.com/marktext/marktext/pull/4460
+    - refactor(muya): rebuild ImageEditTool to match muyajs ImageSelector by @Jocs in https://github.com/marktext/marktext/pull/4461
+    - chore: remove ununsed comments by @Jocs in https://github.com/marktext/marktext/pull/4462
+    - chore(muya): remove redundant comments added during the muyajs port by @Jocs in https://github.com/marktext/marktext/pull/4463
+    - refactor(muya): unify Selection into facade over Text/Table/Image sub-selections by @Jocs in https://github.com/marktext/marktext/pull/4467
+    - fix(muya): match muyajs nested list spacing and bullet markers by @Jocs in https://github.com/marktext/marktext/pull/4469
+    - fix(editor): restore caret on source-mode undo and tab switch by @Jocs in https://github.com/marktext/marktext/pull/4470
+    - fix(muya): preventDefault on forward-delete paragraph merge by @Jocs in https://github.com/marktext/marktext/pull/4471
+    - fix(muya): restore Paste as Plain Text via async clipboard read by @Jocs in https://github.com/marktext/marktext/pull/4472
+    - fix(muya): stop drag-selection from expanding to whole blocks by @Jocs in https://github.com/marktext/marktext/pull/4477
+    - fix(muya): delete whole image on backspace (inline, raw html, reference) by @Jocs in https://github.com/marktext/marktext/pull/4478
+    - fix(muya): stop Shift+Tab unindent from crashing on insertTab by @Jocs in https://github.com/marktext/marktext/pull/4479
+    - fix(muya): stop arrow nav from crashing on null cursor coords by @Jocs in https://github.com/marktext/marktext/pull/4480
+    - fix(muya): clear the / trigger when quick-inserting front matter by @Jocs in https://github.com/marktext/marktext/pull/4481
+    - fix(desktop): make Promote Heading shortcut fire on macOS by @Jocs in https://github.com/marktext/marktext/pull/4482
+    - fix(desktop): refresh muya locale on language switch (hint + quick-insert menu stay translated) by @Jocs in https://github.com/marktext/marktext/pull/4489
+    - fix(desktop): anchor theme card h3 label to its heading by @Jocs in https://github.com/marktext/marktext/pull/4490
+    - fix(muya): stop in-flight float positioning from re-revealing a hidden float by @Jocs in https://github.com/marktext/marktext/pull/4491
+    - fix(desktop): return relative image path for local-path-string inserts by @Jocs in https://github.com/marktext/marktext/pull/4492
+    - fix: insert web images dragged from a browser by @Jocs in https://github.com/marktext/marktext/pull/4494
+    - fix(muya): support resizing images that share the same link by @Jocs in https://github.com/marktext/marktext/pull/4495
+    - fix(muya): render vega-lite diagrams under the renderer CSP by @Jocs in https://github.com/marktext/marktext/pull/4496
+    - fix(muya): refresh local images on "Reload images" (View → Reload images) by @Jocs in https://github.com/marktext/marktext/pull/4498
+    - fix: reflect the current block in the Paragraph menu (PG1) by @Jocs in https://github.com/marktext/marktext/pull/4500
+    - fix(muya): keep selection after applying an inline format to a range by @Jocs in https://github.com/marktext/marktext/pull/4501
+    - fix(desktop): reflect underline/superscript/subscript/highlight in the Format menu by @Jocs in https://github.com/marktext/marktext/pull/4503
+    - fix: paragraph menu / command palette parity (focus, list unwrap, shortcut symbols) by @Jocs in https://github.com/marktext/marktext/pull/4504
+    - fix(muya): keep cursor in place when toggling Loose List Item by @Jocs in https://github.com/marktext/marktext/pull/4506
+    - refactor(muya): rework the selection type surface by @Jocs in https://github.com/marktext/marktext/pull/4512
+    - fix(desktop): point in-app docs links at marktext.me by @Jocs in https://github.com/marktext/marktext/pull/4513
+    - fix(website): point self-referential doc links at the published docs by @Jocs in https://github.com/marktext/marktext/pull/4514
+    - fix(website): register the missing end-user docs pages by @Jocs in https://github.com/marktext/marktext/pull/4515
+    - feat(i18n): add Turkish (tr) locale by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4510
+    - feat: make PlantUML server URL configurable by @jyte in https://github.com/marktext/marktext/pull/4400
+    - fix: #4474 unsaved indicator never clears after undoing back to on-disk content by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4475
+    - fix(test): correct PlantUML custom-server URL assertion by @Jocs in https://github.com/marktext/marktext/pull/4517
+    - fix(i18n): reconcile desktop & muya locale keys after the muya engine refactor by @Jocs in https://github.com/marktext/marktext/pull/4516
+    - test(muya): backfill engine-unit coverage for audited gaps by @Jocs in https://github.com/marktext/marktext/pull/4508
+    - test(muya-e2e): backfill real-DOM e2e coverage for audited gaps by @Jocs in https://github.com/marktext/marktext/pull/4511
+    - test(desktop): backfill renderer/main unit coverage for audited gaps by @Jocs in https://github.com/marktext/marktext/pull/4509
+    - refactor(muya): return enums from TextSelection direction/type by @Jocs in https://github.com/marktext/marktext/pull/4519
+    - refactor(muya): setSelection takes anchor/focus endpoints by @Jocs in https://github.com/marktext/marktext/pull/4523
+    - refactor(muya): route format/codeblock selection through setCursor by @Jocs in https://github.com/marktext/marktext/pull/4520
+    - refactor(muya): split ICursor into focused interfaces by @Jocs in https://github.com/marktext/marktext/pull/4524
+    - refactor(muya): keep table rect selection exclusive of text selection by @Jocs in https://github.com/marktext/marktext/pull/4522
+    - refactor(muya): extract computeDirection/computeCaretType helpers by @Jocs in https://github.com/marktext/marktext/pull/4525
+    - refactor(muya): simplify selectAll into three escalation rules by @Jocs in https://github.com/marktext/marktext/pull/4526
+    - test(muya): replace any with precise block/state types in specs by @Jocs in https://github.com/marktext/marktext/pull/4528
+    - refactor(desktop): remove no-explicit-any suppressions in favor of precise types by @Jocs in https://github.com/marktext/marktext/pull/4527
+    - refactor(muya): drop cyclomatic complexity below 20 across the engine by @Jocs in https://github.com/marktext/marktext/pull/4529
+    - refactor(muya): rename selection enum members to UPPER_SNAKE_CASE by @Jocs in https://github.com/marktext/marktext/pull/4531
+    - chore: translate remaining Chinese console/debug strings to English by @Jocs in https://github.com/marktext/marktext/pull/4533
+    - refactor(muya): enforce _ prefix for private members via lint by @Jocs in https://github.com/marktext/marktext/pull/4535
+    - refactor(muya): mark core/state/selection internals private by @Jocs in https://github.com/marktext/marktext/pull/4541
+    - refactor(muya): mark block-tree internals private/protected by @Jocs in https://github.com/marktext/marktext/pull/4538
+    - refactor(muya): mark UI float-tool internals private by @Jocs in https://github.com/marktext/marktext/pull/4539
+    - refactor(desktop): remove remaining no-explicit-any suppressions by @Jocs in https://github.com/marktext/marktext/pull/4548
+    - feat: align Paragraph/Format menus with muyajs behavior on @muyajs/core (+3 upgrades) by @Jocs in https://github.com/marktext/marktext/pull/4547
+    - fix(muya): sync inline format toolbar highlight via selection-change by @Jocs in https://github.com/marktext/marktext/pull/4558
+    - fix(muya): align normalizePastedHTML link unlinking with muyajs by @Jocs in https://github.com/marktext/marktext/pull/4550
+    - fix(muya): render footnotes in copy-as-html / copy-as-rich clipboard HTML by @Jocs in https://github.com/marktext/marktext/pull/4544
+    - fix(muya): align clipboard cut/delete semantics with muyajs by @Jocs in https://github.com/marktext/marktext/pull/4540
+    - fix(muya): collapse code block to paragraph on cross-block cut from its language line (#918) by @Jocs in https://github.com/marktext/marktext/pull/4545
+    - fix(muya): merge pasted paragraphs/headings inline (muyajs parity) by @Jocs in https://github.com/marktext/marktext/pull/4542
+    - fix(muya): replace selected image on paste + language-input paste parity by @Jocs in https://github.com/marktext/marktext/pull/4543
+    - fix(muya): merge same-type list paste + plain-text block HTML (muyajs parity) by @Jocs in https://github.com/marktext/marktext/pull/4546
+    - fix(muya): round-2 paste/clipboard parity fixes from a full muyajs re-audit by @Jocs in https://github.com/marktext/marktext/pull/4549
+    - fix: populate the table of contents on open and fix link navigation by @NSO73 in https://github.com/marktext/marktext/pull/4448
+    - fix(desktop): paste captured image on macOS Edit → Screenshot by @Jocs in https://github.com/marktext/marktext/pull/4566
+    - fix(muya): restore editor cursor when closing the search bar (selectHighlight) by @Jocs in https://github.com/marktext/marktext/pull/4567
+    - fix(muya): restore find-bar prefill from editor selection by @Jocs in https://github.com/marktext/marktext/pull/4569
+    - fix(search): scroll editor to match when opening a folder-search result by @Jocs in https://github.com/marktext/marktext/pull/4568
+    - fix(muya): serialize lists with the configured listIndentation by @Jocs in https://github.com/marktext/marktext/pull/4570
+    - fix(muya): restore the focused frontmatter delimiter markers by @Jocs in https://github.com/marktext/marktext/pull/4571
+    - fix(muya): show code-block line numbers on first render for language-less blocks by @Jocs in https://github.com/marktext/marktext/pull/4572
+    - fix(muya): re-parse on parse-affecting option changes so ```math toggles live by @Jocs in https://github.com/marktext/marktext/pull/4573
+    - fix(export): repair five styled-HTML export regressions (math, vega, footnotes, TOC, images) by @Jocs in https://github.com/marktext/marktext/pull/4576
+    - fix(export): make "Overwrite theme font" actually override the selected theme by @Jocs in https://github.com/marktext/marktext/pull/4579
+    - fix(editor): restore per-tab caret on tab switch by @Jocs in https://github.com/marktext/marktext/pull/4580
+    - fix(editor): restore undo after an external file reload by @Jocs in https://github.com/marktext/marktext/pull/4582
+    - fix(desktop): auto-focus the editor when creating or opening a tab by @Jocs in https://github.com/marktext/marktext/pull/4581
+    - fix(editor): align code block line numbers vertically by @Jocs in https://github.com/marktext/marktext/pull/4583
+    - fix(editor): keep spelling suggestions when "no underline" is enabled by @Jocs in https://github.com/marktext/marktext/pull/4584
+    - refactor(muya): decouple engine/block layers from src/ui plugin internals by @Jocs in https://github.com/marktext/marktext/pull/4587
+    - fix(clipboard): copy only the selected part of cross-block selections by @Jocs in https://github.com/marktext/marktext/pull/4586
+    - fix(muya): correct setext heading level when typing the underline by @Jocs in https://github.com/marktext/marktext/pull/4591
+    - fix(muya): guard checkNeedRender against a null cursor (image-preview reclick crash) by @Jocs in https://github.com/marktext/marktext/pull/4588
+    - test(desktop): backfill renderer/main unit coverage for post-migration gaps by @Jocs in https://github.com/marktext/marktext/pull/4592
+    - test(muya-e2e): backfill real-DOM e2e coverage for post-migration gaps by @Jocs in https://github.com/marktext/marktext/pull/4593
+    - test(muya): backfill engine unit coverage for post-migration gaps by @Jocs in https://github.com/marktext/marktext/pull/4589
+    - test(desktop): backfill app e2e coverage for post-migration gaps by @Jocs in https://github.com/marktext/marktext/pull/4594
+    - chore(security): remediate 25 Dependabot alerts by @Jocs in https://github.com/marktext/marktext/pull/4596
+    - chore(deps): upgrade all packages to latest + align shared versions by @Jocs in https://github.com/marktext/marktext/pull/4597
+    - test(muya): poll for the html_tag mount instead of waiting a single frame by @Jocs in https://github.com/marktext/marktext/pull/4607
+    - fix(muya): escape pipes at cell start and consecutive pipes in table serialization by @Jocs in https://github.com/marktext/marktext/pull/4601
+    - fix(muya): absorb a manually typed closing markdown marker after text by @Jocs in https://github.com/marktext/marktext/pull/4602
+    - fix(muya): let Shift+ArrowUp/Down extend selection while the inline toolbar is shown by @Jocs in https://github.com/marktext/marktext/pull/4603
+    - fix(muya): render
+    - fix(muya): keep emphasis intact when a line contains escaped dollar signs by @Jocs in https://github.com/marktext/marktext/pull/4605
+    - fix(muya): paste a URL into link parentheses without nesting a markdown link by @Jocs in https://github.com/marktext/marktext/pull/4608
+    - fix(muya): make links inside a raw HTML block clickable by @Jocs in https://github.com/marktext/marktext/pull/4609
+    - fix(muya): correct inline code/math shortcut labels in the format toolbar by @Jocs in https://github.com/marktext/marktext/pull/4611
+    - fix: #4356 crash when using the link popover on a link with an unsupported protocol by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4473
+    - fix(muya): map to U+00A0 and keep escaped spaces unbreakable by @Jocs in https://github.com/marktext/marktext/pull/4612
+    - fix(desktop): scroll to non-heading in-document anchors on Ctrl/Cmd-click by @Jocs in https://github.com/marktext/marktext/pull/4613
+    - fix(muya): keep the inline-math parse-error message on one line by @Jocs in https://github.com/marktext/marktext/pull/4614
+    - fix(muya): allow inline style in the html-block live preview by @Jocs in https://github.com/marktext/marktext/pull/4618
+    - fix(muya): cap and horizontally scroll the inline-math popup by @Jocs in https://github.com/marktext/marktext/pull/4615
+    - fix(desktop): isolate the editor stacking context so previews stay under modals by @Jocs in https://github.com/marktext/marktext/pull/4617
+    - test(desktop): fix inline code/math shortcut tests failing on develop after #4611 by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4624
+    - fix(desktop): scroll CodeMirror to the heading on TOC click in source mode by @Jocs in https://github.com/marktext/marktext/pull/4619
+    - fix(muya): constrain a rendered diagram svg so wide diagrams don't clip by @Jocs in https://github.com/marktext/marktext/pull/4616
+    - fix(desktop): apply custom keybinding changes without an app restart by @Jocs in https://github.com/marktext/marktext/pull/4621
+    - fix(muya): break undo entries at word and edit-kind boundaries by @Jocs in https://github.com/marktext/marktext/pull/4622
+    - fix(muya): swap cross-block arrow boundary keys in RTL mode by @Jocs in https://github.com/marktext/marktext/pull/4610
+    - fix: opaque light-theme editor text colors for crisp antialiasing by @Jocs in https://github.com/marktext/marktext/pull/4631
+    - fix(muya): clamp selection offset to the node's legal range by @Jocs in https://github.com/marktext/marktext/pull/4626
+    - fix(desktop): prevent data loss when closing after Source Code mode edits by @Jocs in https://github.com/marktext/marktext/pull/4627
+    - fix(muya): center inline math vertically so it sits on the text baseline by @Jocs in https://github.com/marktext/marktext/pull/4632
+    - fix(muya): render inline math containing an escaped dollar sign by @Jocs in https://github.com/marktext/marktext/pull/4629
+    - fix(muya): prevent renderer crash when deleting consecutive thematic breaks by @Jocs in https://github.com/marktext/marktext/pull/4628
+    - test: drop the low-value opaque-color guard tests from #4466 by @Jocs in https://github.com/marktext/marktext/pull/4633
+    - test(muya): regression guard for code-block scroll on typing (#3191) by @Jocs in https://github.com/marktext/marktext/pull/4638
+    - fix(muya): align serialized table columns by visual width (#1983) by @Jocs in https://github.com/marktext/marktext/pull/4636
+    - fix(muya): insert ordinary spaces for Tab instead of non-breaking spaces (#3273) by @Jocs in https://github.com/marktext/marktext/pull/4634
+    - fix(muya): convert typed diagram fences to diagram blocks on Enter (#2177) by @Jocs in https://github.com/marktext/marktext/pull/4635
+    - fix(muya): keep the caret on Shift+Tab list unindent (REPLACEMENT path) (#3223) by @Jocs in https://github.com/marktext/marktext/pull/4637
+    - fix(muya): typed diagram fences create diagram blocks via the language selector (#2177) by @Jocs in https://github.com/marktext/marktext/pull/4640
+    - refactor: rewrite getTOC and remove unused comments by @Jocs in https://github.com/marktext/marktext/pull/4642
+    - fix(muya): allow trailing whitespace after a math block's closing $$ (#1931) by @Jocs in https://github.com/marktext/marktext/pull/4649
+    - fix(muya): stop ArrowDown from endlessly creating empty paragraphs (#3520) by @Jocs in https://github.com/marktext/marktext/pull/4650
+    - fix(muya): take the list marker from a line start in _convertToList (#2429) by @Jocs in https://github.com/marktext/marktext/pull/4651
+    - fix(muya): strip trailing punctuation from extended autolinks (#2096) by @Jocs in https://github.com/marktext/marktext/pull/4652
+    - fix(muya): ArrowUp at document start moves the caret to offset 0 (#3193) by @Jocs in https://github.com/marktext/marktext/pull/4655
+    - fix(muya): destroy UI plugins on Muya.destroy() to stop leaking DOM nodes (#3315) by @Jocs in https://github.com/marktext/marktext/pull/4659
+    - fix(muya): don't cut a cross-block selection on Ctrl+ (Windows/Linux) (#3491) by @Jocs in https://github.com/marktext/marktext/pull/4656
+    - fix(muya): apply inline format across paragraphs nested in one blockquote (#3462) by @Jocs in https://github.com/marktext/marktext/pull/4661
+    - fix: #4534 group theme menu into Light/Dark submenus by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4623
+    - fix(muya): drop pending op batch on setContent to prevent cross-document corruption (#2938) by @Jocs in https://github.com/marktext/marktext/pull/4658
+    - test(desktop): pin autosave's recreate-missing-directory behavior (#3509) by @Jocs in https://github.com/marktext/marktext/pull/4657
+    - fix(muya): keep list item non-empty on Enter in empty first paragraph (#4644) by @Jocs in https://github.com/marktext/marktext/pull/4660
+    - fix(desktop): restore vue-tsc typecheck (vite 7 PluginOption) by @Jocs in https://github.com/marktext/marktext/pull/4667
+    - fix(release): support immutable releases (draft-then-promote) + docs by @Jocs in https://github.com/marktext/marktext/pull/4666
+    - fix(muya): undo/redo corruption on coalesced paragraph→list + text edits by @Jocs in https://github.com/marktext/marktext/pull/4669
+    - fix(renderer): keep find-bar prefill from being clobbered on open by @NSO73 in https://github.com/marktext/marktext/pull/4646
+    - fix(muya): preserve nested-list indentation in RTL mode by @Jocs in https://github.com/marktext/marktext/pull/4676
+    - fix(muya): load mhchem onto the same katex instance so \ce renders (#4670) by @Jocs in https://github.com/marktext/marktext/pull/4674
+    - fix(muya): keep inline links that are followed by a bare URL or text (#4671) by @Jocs in https://github.com/marktext/marktext/pull/4672
+    - fix(keybinding): sync menu bar and command palette when keybindings change by @Jocs in https://github.com/marktext/marktext/pull/4681
+    - fix(muya): guard detached code block in language selector (#4654) by @Jocs in https://github.com/marktext/marktext/pull/4677
+    - test(e2e): stabilize flaky search-prefill test (wait for selection commit) by @Jocs in https://github.com/marktext/marktext/pull/4682
+    - fix: export PDF/HTML/print in the editor's text direction (RTL) by @Jocs in https://github.com/marktext/marktext/pull/4678
+    - fix(muya): create a code-block when typing ``` + Enter inside block-quotes and lists by @Jocs in https://github.com/marktext/marktext/pull/4689
+    - fix(muya): prevent undo/redo exceptions from permanently disabling history (#4685) by @Jocs in https://github.com/marktext/marktext/pull/4692
+    - fix(muya): auto-hide inline markers when holding an arrow key out of a token by @Jocs in https://github.com/marktext/marktext/pull/4694
+    - test(e2e): replace fixed waits with expect.poll in editor-input by @NSO73 in https://github.com/marktext/marktext/pull/4695
+    - fix: normalize first-row colspan table paste by @Renakoni in https://github.com/marktext/marktext/pull/4707
+    - fix(renderer): use the theme text colour for the key bindings list (#3937) by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4713
+    - fix: wrap selected text when typing auto-pair characters by @Renakoni in https://github.com/marktext/marktext/pull/4698
+    - fix(muya): skip empty sibling containers in caret navigation (#4644 follow-up) by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4715
+    - fix(muya): stop the paragraph front-menu from acting on a stale block (#4686) by @Jocs in https://github.com/marktext/marktext/pull/4714
+    - fix(muya): re-sync the live tree from json state when an undo/redo apply throws by @Jocs in https://github.com/marktext/marktext/pull/4717
+    - fix(desktop): paint the launch window in the active theme's background (#3957) by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4718
+    - fix(renderer): keep the key bindings hover row readable on dark themes by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4719
+    - fix(renderer): make the custom dictionary table readable on dark themes by @FurkaanBoraa in https://github.com/marktext/marktext/pull/4721
+    - feat(muya): self-contained editor typography via --mu-* options by @Jocs in https://github.com/marktext/marktext/pull/4722
+    - refactor(desktop): consume muya self-contained typography, remove shell style injection by @Jocs in https://github.com/marktext/marktext/pull/4726
+    - fix(muya): move preview toolbar to the block's top-right by @Jocs in https://github.com/marktext/marktext/pull/4734
+    - fix(renderer): hide muya float tools in source-code mode by @Jocs in https://github.com/marktext/marktext/pull/4732
+    - fix(desktop): remove duplicate title when using the native title bar by @Jocs in https://github.com/marktext/marktext/pull/4630
+    - fix(muya): keep a nested sublist when forward-deleting an empty list item (#1845) by @Jocs in https://github.com/marktext/marktext/pull/4725
+    - fix(muya): remove the inner format when un-toggling a nested inline run (#2063) by @Jocs in https://github.com/marktext/marktext/pull/4727
+    - docs: add commenting guidelines by @Jocs in https://github.com/marktext/marktext/pull/4738
+    - fix(muya): escape parentheses in inserted image paths (#3060) by @Jocs in https://github.com/marktext/marktext/pull/4728
+    - fix(muya): decode HTML entities in fetched page titles when pasting a URL (#2525) by @Jocs in https://github.com/marktext/marktext/pull/4729
+    - fix(muya): reset search state when the document is replaced (#1932) by @Jocs in https://github.com/marktext/marktext/pull/4730
+    - fix(muya): split on Enter over a cross-block selection (#2443) by @Jocs in https://github.com/marktext/marktext/pull/4735
+    - fix(muya): let Enter replace a selection when the format toolbar is shown (#3196) by @Jocs in https://github.com/marktext/marktext/pull/4736
+    - fix(muya): stop punctuation after a link wrapping to its own line (#2258, #3025) by @Jocs in https://github.com/marktext/marktext/pull/4737
+    - chore: audit Claude-authored comments against the commenting guidelines by @Jocs in https://github.com/marktext/marktext/pull/4740
+    - fix: normalize HTML task-list paste by @Renakoni in https://github.com/marktext/marktext/pull/4710
+    - fix: preserve bare URL HTML links on paste by @Renakoni in https://github.com/marktext/marktext/pull/4711
+    - fix: preserve whitespace-only plain text paste by @Renakoni in https://github.com/marktext/marktext/pull/4706
+    - fix: preserve nested HTML lists under ordered parents by @Renakoni in https://github.com/marktext/marktext/pull/4709
+    - fix: prevent nested empty list items from becoming setext headings by @Renakoni in https://github.com/marktext/marktext/pull/4697
+    - fix: preserve empty task list items when parsing markdown by @Renakoni in https://github.com/marktext/marktext/pull/4696
+    - fix: remove ~1s sidebar delay for newly created files (#3955) by @Jocs in https://github.com/marktext/marktext/pull/4744
+    - fix(i18n): degrade malformed translations to raw text instead of crashing (#4046) by @Jocs in https://github.com/marktext/marktext/pull/4745
+    - fix: vertically center task list checkbox with item text by @Jocs in https://github.com/marktext/marktext/pull/4750
+    - fix(desktop): prefer UTF-8 when a file is valid UTF-8 instead of trusting ced (#3151) by @Jocs in https://github.com/marktext/marktext/pull/4739
+    - fix(desktop): scroll the view up when the caret moves above the viewport (#3329) by @Jocs in https://github.com/marktext/marktext/pull/4742
+    - fix: scroll the active tab into view on tab switch (#3958) by @Jocs in https://github.com/marktext/marktext/pull/4743
+    - fix(muya): scroll wide math blocks instead of clipping by @Jocs in https://github.com/marktext/marktext/pull/4751
+    - fix(desktop): route undo/redo to CodeMirror in source code mode by @Jocs in https://github.com/marktext/marktext/pull/4752
+    - fix(muya): leave Tab to the IME during composition by @Jocs in https://github.com/marktext/marktext/pull/4753
+    - fix(desktop): add a context menu to the sidebar root folder by @Jocs in https://github.com/marktext/marktext/pull/4754
+    - fix(muya): preserve code fence length on serialize by @Jocs in https://github.com/marktext/marktext/pull/4755
+    - fix(muya): refresh math/diagram preview on undo by @Jocs in https://github.com/marktext/marktext/pull/4756
+    - fix(desktop): resolve relative local links on export by @Jocs in https://github.com/marktext/marktext/pull/4757
+    - fix(muya): require a word boundary before an emoji shortcode by @Jocs in https://github.com/marktext/marktext/pull/4758
+    - fix(desktop): don't overwrite an existing file when creating from the sidebar by @Jocs in https://github.com/marktext/marktext/pull/4759
+    - fix(desktop): ignore content-identical file-change events by @Jocs in https://github.com/marktext/marktext/pull/4760
+    - fix(desktop): make the source-mode selection visible on dark themes by @Jocs in https://github.com/marktext/marktext/pull/4771
+    - fix(desktop): persist export dialog options across sessions by @Jocs in https://github.com/marktext/marktext/pull/4768
+    - fix(muya): convert $$ to a math block in place inside a list item by @Jocs in https://github.com/marktext/marktext/pull/4767
+    - fix(muya): self-close generated tags for JSX/MDX compatibility by @Jocs in https://github.com/marktext/marktext/pull/4766
+    - fix(muya): preserve current-line indent on Enter in code fences by @Jocs in https://github.com/marktext/marktext/pull/4761
+    - fix(muya): make autolinks and bare URLs followable on Cmd/Ctrl-click by @Jocs in https://github.com/marktext/marktext/pull/4763
+    - fix(muya): exclude selection whitespace when applying inline format by @Jocs in https://github.com/marktext/marktext/pull/4762
+    - fix(desktop): make empty-state CTA button labels readable in all themes by @Jocs in https://github.com/marktext/marktext/pull/4775
+    - fix(muya): surface the KaTeX parse error for invalid math by @Jocs in https://github.com/marktext/marktext/pull/4764
+    - fix(desktop): keep sidebar width + tree collapse state across icon toggle by @Jocs in https://github.com/marktext/marktext/pull/4769
+    - fix(muya): recognize c++/h++ as aliases for the cpp code grammar by @Jocs in https://github.com/marktext/marktext/pull/4794
+    - fix(muya): don't highlight LaTeX \% as a comment by @Jocs in https://github.com/marktext/marktext/pull/4795
+    - fix(muya): recolor sequence-diagram text/boxes for dark themes by @Jocs in https://github.com/marktext/marktext/pull/4800
+    - fix(muya): keep image resize handles attached on layout reflow by @Jocs in https://github.com/marktext/marktext/pull/4802
+    - fix(muya): make cpp c++/h++ alias registration idempotent by @Jocs in https://github.com/marktext/marktext/pull/4816
+    - fix(desktop): preserve TOC collapse state across content edits by @Jocs in https://github.com/marktext/marktext/pull/4803
+    - fix(desktop): make Paragraph/Format commands inert in source mode (grey out menus) by @Jocs in https://github.com/marktext/marktext/pull/4810
+    - fix(desktop): New File on a collapsed sidebar folder expands it by @Jocs in https://github.com/marktext/marktext/pull/4809
+    - fix(desktop): select the query when re-opening the Find bar by @Jocs in https://github.com/marktext/marktext/pull/4807
+    - fix(desktop): keep diagram content when exporting with Header & Footer by @Jocs in https://github.com/marktext/marktext/pull/4805
+    - fix(desktop): list bundled fonts in the font picker by @Jocs in https://github.com/marktext/marktext/pull/4801
+    - fix(desktop): remove doubled Edit-menu separator on Windows/Linux by @Jocs in https://github.com/marktext/marktext/pull/4797
+    - fix(desktop): generate a PDF outline from headings on export by @Jocs in https://github.com/marktext/marktext/pull/4798
+    - fix(desktop): avoid PDF/print page breaks right after a heading by @Jocs in https://github.com/marktext/marktext/pull/4799
+    - fix(desktop): resolve Homebrew/standard bin dirs for GUI launches by @Jocs in https://github.com/marktext/marktext/pull/4796
+    - fix(muya): show and slug TOC headings by rendered plain text (#3516) by @Jocs in https://github.com/marktext/marktext/pull/4811
+    - Add UKey Wallet sponsor to README and website by @Jocs in https://github.com/marktext/marktext/pull/4819
+    - fix(desktop): apply editor max-width preference to @muyajs/core content column (#4828) by @Jocs in https://github.com/marktext/marktext/pull/4830
+    - Add Bengali README and links by @FahimFBA in https://github.com/marktext/marktext/pull/4823
+    - fix(muya): skip identity operations during deferred flush by @tech-hoon in https://github.com/marktext/marktext/pull/4815
+    - fix(muya): harden History against identity (null) json-change ops by @Jocs in https://github.com/marktext/marktext/pull/4838
+    - fix(muya): stop inline math showing a scrollbar for trailing sub/superscripts (#4837) by @Jocs in https://github.com/marktext/marktext/pull/4839
+    - fix(muya): isolate mermaid render failures during export (#4812) by @Jocs in https://github.com/marktext/marktext/pull/4840
+    - fix(desktop): correct English typos in locale and preference schema (#4787) by @Jocs in https://github.com/marktext/marktext/pull/4845
+    - fix(muya): stop double percent-encoding autolink hrefs by @Jocs in https://github.com/marktext/marktext/pull/4841
+    - fix(muya): keep pasted list items in order when merging mid-list by @Jocs in https://github.com/marktext/marktext/pull/4842
+    - fix(desktop): confirm before opening executable link targets (code execution) by @Jocs in https://github.com/marktext/marktext/pull/4843
+    - fix(muya): keep soft line breaks when exporting to HTML/PDF by @Jocs in https://github.com/marktext/marktext/pull/4844
+    - fix(muya): show escaped pipe in table cell code as | not | (#4849) by @Jocs in https://github.com/marktext/marktext/pull/4850
+    - fix(muya): preserve fenced code block info string on round-trip (#4770) by @Jocs in https://github.com/marktext/marktext/pull/4846
+    - fix(muya): load Prism component dependencies in order (fixes flaky c++ load) by @Jocs in https://github.com/marktext/marktext/pull/4861
+    - refactor(muya): treat the code fence info string as the source of truth (CommonMark) by @Jocs in https://github.com/marktext/marktext/pull/4856
+    - fix(muya): call h1-h6 "headings" not "headers" in the insert menu by @Jocs in https://github.com/marktext/marktext/pull/4854
+    - fix(desktop): don't crash on unwatchable image directories (UNC/WSL paths) by @Jocs in https://github.com/marktext/marktext/pull/4853
+    - fix(desktop): save files atomically to prevent data loss on crash by @Jocs in https://github.com/marktext/marktext/pull/4852
+    - fix(desktop): make crash-recovery buffer writes durable against power loss by @Jocs in https://github.com/marktext/marktext/pull/4864
+    - fix(muya): render extensionless remote images served with a charset (shields.io badges) by @Jocs in https://github.com/marktext/marktext/pull/4857
+    - fix(muya): follow the link when modifier-clicking a linked image by @Jocs in https://github.com/marktext/marktext/pull/4858
+    - fix(muya): follow the link on Ctrl/Cmd-click for reference-linked and raw-HTML linked images (#4865) by @Jocs in https://github.com/marktext/marktext/pull/4866
+    - fix(desktop): keep TOC collapse state across tab switches by @Jocs in https://github.com/marktext/marktext/pull/4860
+    - fix(desktop): flush pending edits before saving (dropped last keystroke) by @Jocs in https://github.com/marktext/marktext/pull/4859
+    - fix: preserve Google Docs CSS formatting on paste by @Renakoni in https://github.com/marktext/marktext/pull/4699
+    - fix(desktop): preserve RTL text direction in PDF and print export by @Jocs in https://github.com/marktext/marktext/pull/4874
+    - docs: update sponsor logo by @Jocs in https://github.com/marktext/marktext/pull/5014
+    - docs: remove sponsor ukey by @Jocs in https://github.com/marktext/marktext/pull/5217
+    - fix: preserve viewport when toggling task-list checkbox by @Awaker-OTE in https://github.com/marktext/marktext/pull/5189
+    - fix(desktop): allow saving directly to a drive root (#5150) by @Panisnbb in https://github.com/marktext/marktext/pull/5188
+    - docs: fix grammar issues in FAQ.md by @woltary02-creator in https://github.com/marktext/marktext/pull/5089
+    - fix(ui): sync quick insert highlight with input method by @KDOJP in https://github.com/marktext/marktext/pull/5176
+    - feat(i18n): add Dutch locale + validation tests + fix existing issues by @rkristelijn in https://github.com/marktext/marktext/pull/5137
+    - Japanese translation update by @coolvitto in https://github.com/marktext/marktext/pull/5049
+    - fix: allow copy-paste in same folder with auto-rename by @rkristelijn in https://github.com/marktext/marktext/pull/5139
+    - chore: add pre-commit hooks (husky + lint-staged) by @rkristelijn in https://github.com/marktext/marktext/pull/4999
+    - fix(muya): escape HTML in image attribute values (CWE-79) by @andesyteoss in https://github.com/marktext/marktext/pull/4980
+    - fix: #5001 persist pasted bitmap images to the assets folder per preferences by @Panisnbb in https://github.com/marktext/marktext/pull/5168
+    - fix(muya): preserve cursor on IME composition backspace(#4956) by @Zengzzhao in https://github.com/marktext/marktext/pull/4957
+    - fix(muya): size table columns to their content by @Renakoni in https://github.com/marktext/marktext/pull/4952
+    - fix: handle UNC image paths and watchers by @Renakoni in https://github.com/marktext/marktext/pull/4778
+    - fix(desktop): ignore revoked output pipe errors on macOS by @Awaker-OTE in https://github.com/marktext/marktext/pull/5229
+    - feat(desktop): add "Reset Zoom" item to the Window menu by @xrgzs in https://github.com/marktext/marktext/pull/5185
+    - fix: #3469 decode Windows clipboard file paths as UTF-16LE by @Panisnbb in https://github.com/marktext/marktext/pull/5167
+    - fix(desktop): prevent CodeMirror line tree corruption by @Renakoni in https://github.com/marktext/marktext/pull/4930
+    - fix(i18n): add the missing Dutch resetZoom label by @githello1 in https://github.com/marktext/marktext/pull/5245
+    - feat(macOS): add Dictionary lookup for selected editor text by @nikkogibler in https://github.com/marktext/marktext/pull/4814
+    - fix: #4890 use file extension for side bar icons by @doktorigi in https://github.com/marktext/marktext/pull/4910
+    - fix(muya): #4747 deep clone editor state without recursing by @CookPiu in https://github.com/marktext/marktext/pull/5259
+    - fix: init image size when render html tag image by @Jocs in https://github.com/marktext/marktext/pull/5264
+    - fix: render rect selection in table by @Jocs in https://github.com/marktext/marktext/pull/5265
+    - fix: the missing locale key by @Jocs in https://github.com/marktext/marktext/pull/5266
+    - fix: #5152 align TOC navigation with editor viewport by @foo-hao in https://github.com/marktext/marktext/pull/5153
+    - fix: #5130 keep Electron locale resources for all supported UI languages by @legsing in https://github.com/marktext/marktext/pull/5132
+    - fix: #5129 detect system language on first start by @legsing in https://github.com/marktext/marktext/pull/5131
+    - fix: skip website preview deploy on fork PRs by @Jocs in https://github.com/marktext/marktext/pull/5278
+    - feat: add 'Treat soft newlines as spaces' preference (#1849) by @wmoss in https://github.com/marktext/marktext/pull/4937
+    - fix(muya): keep IME input intact after a soft line break by @Jocs in https://github.com/marktext/marktext/pull/5281
+    - fix(muya): stop the quick-insert hint claiming a line of its own by @Jocs in https://github.com/marktext/marktext/pull/5283
+    - fix(muya): give a code block's trailing empty line a line box by @Jocs in https://github.com/marktext/marktext/pull/5286
+    - fix(muya): keep footnote reference ids intact for special identifiers (#5208) by @Jocs in https://github.com/marktext/marktext/pull/5285
+    - fix(muya): skip search matches whose block left the document (#5163, #5215) by @Jocs in https://github.com/marktext/marktext/pull/5287
+    - fix(muya): keep the image resize bar from crashing after its image is removed (#5216) by @Jocs in https://github.com/marktext/marktext/pull/5288
+    - fix(muya): ignore a quick-insert pick once its paragraph is gone (#5213) by @Jocs in https://github.com/marktext/marktext/pull/5289
+    - fix(muya): drop an image selection whose block left the document (#5055) by @Jocs in https://github.com/marktext/marktext/pull/5291
+    - fix(muya): number empty lines in code blocks (#5294) by @Jocs in https://github.com/marktext/marktext/pull/5295
+    - fix(muya): don't restore a drag selection onto removed blocks (#4981, #5256) by @Jocs in https://github.com/marktext/marktext/pull/5290
+    - fix(muya): end the paragraph on a Shift+Enter that would leave an empty line by @Jocs in https://github.com/marktext/marktext/pull/5300
+    - fix: make anchor links reach CJK headings and headings in other documents (#5292) by @Jocs in https://github.com/marktext/marktext/pull/5298
+    - fix(desktop): flush pending edits before entering source code mode by @richbodo in https://github.com/marktext/marktext/pull/5103
+    - fix(muya): load relative images from folders named with #, ? or % (#5302) by @Jocs in https://github.com/marktext/marktext/pull/5301
+    - test(desktop): wait for TOC scrolls to settle in the toc-scroll e2e by @Jocs in https://github.com/marktext/marktext/pull/5303
+    - fix(muya): make a code block a diagram when its language is a diagram language (#5060) by @Jocs in https://github.com/marktext/marktext/pull/5304
+    - docs: fix the macOS alias path in the CLI docs by @Jocs in https://github.com/marktext/marktext/pull/5308
+    - chore: run only eslint --fix on staged desktop TS/Vue files by @Jocs in https://github.com/marktext/marktext/pull/5318
+    - fix(desktop): ignore line-ending menu updates for a closed window (#4923) by @Jocs in https://github.com/marktext/marktext/pull/5319
+    - fix: #4926 prevent emoji deletion from splitting surrogate pairs by @Renakoni in https://github.com/marktext/marktext/pull/4931
+    - fix(desktop): keep exported links working from folders named with #, ? or % by @Dev-next-gen in https://github.com/marktext/marktext/pull/5320
+    - fix(desktop): explain the max width format in preferences (#5331) by @Jocs in https://github.com/marktext/marktext/pull/5334
+    - fix(muya): delete emoji whole in code blocks and drop the caret-inside-cluster handler (#4926) by @Jocs in https://github.com/marktext/marktext/pull/5332
+    - fix(desktop): keep exported images working from folders named with #, ? or % (#5335) by @Jocs in https://github.com/marktext/marktext/pull/5337
+    - fix(muya): regex search freezes on zero-width patterns and splits emoji by @Jocs in https://github.com/marktext/marktext/pull/5333
+    - fix(desktop): keep the share host in exported links from UNC documents (#5336) by @Jocs in https://github.com/marktext/marktext/pull/5338
+    - fix: #4899 keep trailing content out of the child list when outdenting a list item by @doktorigi in https://github.com/marktext/marktext/pull/4913
+    - fix(muya): keep the link popover open when moving between links (#5313) by @anandghegde in https://github.com/marktext/marktext/pull/5324
+    - fix: reuse image on case-insensitive path match (#3119) by @dzid26 in https://github.com/marktext/marktext/pull/5326
+    - fix(desktop): name copied images after their content, not their path (#5344) by @Jocs in https://github.com/marktext/marktext/pull/5346
+    - fix(muya): only outdent a paragraph that sits in a nested list item (#5342) by @Jocs in https://github.com/marktext/marktext/pull/5345
+    - fix(muya): split the list when outdenting a task item into a plain list (#5341) by @Jocs in https://github.com/marktext/marktext/pull/5348
+    - fix(muya): edit a footnote definition as its own container (#5340, #5343) by @Jocs in https://github.com/marktext/marktext/pull/5347
+    - fix(muya): keep a Tab-indented list item out of a sublist of the other kind (#5349) by @Jocs in https://github.com/marktext/marktext/pull/5354
+    - fix(muya): preserve ordered list source markers by @Renakoni in https://github.com/marktext/marktext/pull/4776
+    - chore(desktop): disable the Report button in the error dialog by @Jocs in https://github.com/marktext/marktext/pull/5359
+    - fix(muya): run paragraph commands on the whole table or code block (#4944) by @Jocs in https://github.com/marktext/marktext/pull/5358
+    - fix(muya): don't drop blocks when a cut ends inside a code block (#4903, #5148) by @Jocs in https://github.com/marktext/marktext/pull/5357
+    - feat: add source line number toggle by @masalha-alaa in https://github.com/marktext/marktext/pull/5111
+    - fix(muya): change the heading level of the caret's paragraph, not its list (#5360) by @Jocs in https://github.com/marktext/marktext/pull/5361
+    - fix(muya): keep a setext heading's level when promoting or demoting it (#5362) by @Jocs in https://github.com/marktext/marktext/pull/5363
+    - fix(muya): keep every line when a multi-line block becomes a heading (#5366) by @Jocs in https://github.com/marktext/marktext/pull/5367
+    - fix(muya): collapse only the nested code block when a cut starts in its language line (#5368) by @Jocs in https://github.com/marktext/marktext/pull/5370
+    - fix(muya): keep the code block when a cut ends in its language line (#5371) by @Jocs in https://github.com/marktext/marktext/pull/5372
+    - fix(muya): remove the selected rest of a list or quote when a cut starts in it (#5385) by @Jocs in https://github.com/marktext/marktext/pull/5397
+    - feat(muya): support same-line display math by @Renakoni in https://github.com/marktext/marktext/pull/4935
+    - fix(muya): start an image resize only from the resize bar's own handles (#5116) by @Jocs in https://github.com/marktext/marktext/pull/5382
+    - fix(muya): don't crash or replace another block when picking a table size after undo (#5355) by @Jocs in https://github.com/marktext/marktext/pull/5384
+    - fix(desktop): launch normally when NODE_ENV=development is set (#5053) by @Jocs in https://github.com/marktext/marktext/pull/5374
+    - fix(desktop): open files from a second instance started with --user-data-dir (#3020) by @Jocs in https://github.com/marktext/marktext/pull/5375
+    - fix(desktop): keep debug mode out of release builds (#5407) by @Jocs in https://github.com/marktext/marktext/pull/5410
+    - fix(desktop): read locale files from the app's resources (#5408) by @Jocs in https://github.com/marktext/marktext/pull/5411
+    - fix(muya): keep the document intact when a cut ends in a table (#5400, #5405, #5399, #5398) by @Jocs in https://github.com/marktext/marktext/pull/5406
+    - fix(muya): cancel Backspace that turns a setext heading into a paragraph (#5035) by @Jocs in https://github.com/marktext/marktext/pull/5381
+    - fix(muya): keep a dollar sign in a regex replace capture by @Dev-next-gen in https://github.com/marktext/marktext/pull/5404
+    - fix(muya): regexp replace groups — per-match Replace All, unmatched groups, two-digit $nn by @Jocs in https://github.com/marktext/marktext/pull/5420
+    - fix(muya): keep an inline raw HTML tag's id intact by @Dev-next-gen in https://github.com/marktext/marktext/pull/5416
+    - fix(muya): re-read the block type after a Backspace on a syntax marker (#5388) by @Jocs in https://github.com/marktext/marktext/pull/5421
+    - fix(muya): keep blocks after a paragraph merged into a table cell out of the row (#5386) by @Jocs in https://github.com/marktext/marktext/pull/5422
+    - fix(muya): keep the rest of a blockquote quoted on forward-Delete merge (#5423) by @Jocs in https://github.com/marktext/marktext/pull/5424
+    - fix(muya): escape braces in a plain-text find query by @Dev-next-gen in https://github.com/marktext/marktext/pull/5428
+    - fix(desktop): open Quick Open when files are open without a folder by @Dev-next-gen in https://github.com/marktext/marktext/pull/5431
+    - fix(muya): select the document when Select All's cached caret block was removed by undo (#5387) by @Jocs in https://github.com/marktext/marktext/pull/5425
+    - fix(desktop): load the e2e Playwright config by moving it to the package root by @Fr4ncis in https://github.com/marktext/marktext/pull/5435
+    - fix(muya): ignore a table tool click once its table left the document (#5442) by @Jocs in https://github.com/marktext/marktext/pull/5443
+    - docs: add StarDesk as a special sponsor by @Jocs in https://github.com/marktext/marktext/pull/5444
+    - fix(tests): Windows paths + CI + timeout fix by @dzid26 in https://github.com/marktext/marktext/pull/5323
+    - ci: check every text file out as LF so the Windows test leg sees the same bytes by @Jocs in https://github.com/marktext/marktext/pull/5447
+    - ci: bound the unit-test job at ten minutes by @Jocs in https://github.com/marktext/marktext/pull/5448
+    - fix(desktop): keep title bar path segments in order under the Bidi algorithm by @dronov-dmitry in https://github.com/marktext/marktext/pull/5317
+    - fix(muya): apply pandoc's tex_math_dollars constraints to $…$ (#5446) by @Jocs in https://github.com/marktext/marktext/pull/5449
+    - feat: add the texMathDollars preference, replacing the math option (#5446) by @Jocs in https://github.com/marktext/marktext/pull/5450
+    - feat: implement pandoc's tex_math_gfm, replacing the GitLab compatibility option (#5446) by @Jocs in https://github.com/marktext/marktext/pull/5457
+    - feat: show selected text word count by @Renakoni in https://github.com/marktext/marktext/pull/4457
+    - docs: explain how to put marktext on PATH on every platform by @Jocs in https://github.com/marktext/marktext/pull/5459
+    - fix(desktop): wrap long code-block lines when exporting to PDF (#5307) by @Jocs in https://github.com/marktext/marktext/pull/5460
+    - fix(desktop): restore treePathExcludePatterns filtering in the sidebar tree by @Jocs in https://github.com/marktext/marktext/pull/5461
+    - fix(desktop): require deliberate movement before a tab click becomes a drag (#4895) by @Jocs in https://github.com/marktext/marktext/pull/5464
+    - fix(desktop): put the unsaved dot back on the left of the title bar path (#5467) by @Jocs in https://github.com/marktext/marktext/pull/5468
+    - fix(muya): render SVG images that state no size of their own (#4991) by @Jocs in https://github.com/marktext/marktext/pull/5462
+    - fix(muya): bound inline math by the text column, not by its own box (#5034) by @Jocs in https://github.com/marktext/marktext/pull/5466
+    - fix(muya): give every mermaid render its own id (#5023) by @Jocs in https://github.com/marktext/marktext/pull/5465
+    - fix(muya): show the text cursor over the whole editable column (#5477) by @Jocs in https://github.com/marktext/marktext/pull/5478
+    - feat: support pandoc's backslash TeX math delimiters (#5446) by @Jocs in https://github.com/marktext/marktext/pull/5481
+    - fix(desktop): theme the table of contents text and arrows (#5094) by @Jocs in https://github.com/marktext/marktext/pull/5486
+    - fix(desktop): tell the two backslash math preferences apart in the UI (#5481) by @Jocs in https://github.com/marktext/marktext/pull/5485
+    - feat(export): convert Markdown to arbitrary formats via Pandoc by @dimbc in https://github.com/marktext/marktext/pull/5379
+    - fix(desktop): make source mode math highlighting follow the editor (#5483) by @Jocs in https://github.com/marktext/marktext/pull/5484
+    - fix(desktop): reload an unedited tab silently when its file changes on disk (#3652) by @Jocs in https://github.com/marktext/marktext/pull/5479
+    - fix(muya): keep footnote definitions packed one per line as siblings by @Jocs in https://github.com/marktext/marktext/pull/5487
+    - fix(muya): resolve footnote references while escapes are still visible by @Jocs in https://github.com/marktext/marktext/pull/5491
+    - fix(muya): give each repeated footnote reference its own id and backref by @Jocs in https://github.com/marktext/marktext/pull/5492
+    - feat(i18n): add Russian (ru) localization by @blvcknwh1te in https://github.com/marktext/marktext/pull/5496
+    - test(muya): stop the deepClone spec from overflowing the stack itself by @Jocs in https://github.com/marktext/marktext/pull/5505
+    - fix(i18n): give Dutch users the Dutch editor UI, and hold the language registries together by @Jocs in https://github.com/marktext/marktext/pull/5502
+    - fix(desktop): resolve local link paths without decoding the document folder (#4749) by @Jocs in https://github.com/marktext/marktext/pull/5506
+    - test(desktop): repoint the technical-term checks at keys that exist by @Jocs in https://github.com/marktext/marktext/pull/5503
+    - i18n: improve Russian localization wording by @NeroWolfe75 in https://github.com/marktext/marktext/pull/5507
+    - feat(toc): highlight active heading based on cursor position by @rkristelijn in https://github.com/marktext/marktext/pull/4345
+    - docs: update verify the download instructions by @slovanos in https://github.com/marktext/marktext/pull/5511
+    - fix(desktop): keep the outline title in place, and make its word-wrap preference work by @Jocs in https://github.com/marktext/marktext/pull/5514
+    - perf(muya): skip a code block re-render that produces identical DOM by @Jocs in https://github.com/marktext/marktext/pull/4876
+    - fix(muya): re-render a code block when the grammar it renders with changes (#5515) by @Jocs in https://github.com/marktext/marktext/pull/5516
+    - fix(desktop): stop clipboard image uploads clobbering each other and mangling paths by @Jocs in https://github.com/marktext/marktext/pull/5512
+    - fix(desktop): retry a save whose rename an SMB share refused (#5322) by @Jocs in https://github.com/marktext/marktext/pull/5520
+    - fix(desktop): find the uploader the user installed, wherever they installed it (#5518) by @Jocs in https://github.com/marktext/marktext/pull/5519
+    - fix(desktop): find pandoc the same way the uploader finds picgo (#2751) by @Jocs in https://github.com/marktext/marktext/pull/5525
+    - Type the .vue CodeMirror/spell-checker handles and forbid any in .vue (#4257) by @Jocs in https://github.com/marktext/marktext/pull/5521
+    - Type the editor handle as Muya, from the engine's own declarations (#4257) by @Jocs in https://github.com/marktext/marktext/pull/5533
+    - Drop the legacy muya ambient bridge and its aliases (#4257) by @Jocs in https://github.com/marktext/marktext/pull/5526
+    - fix(muya): select the clicked line ourselves on a triple-click (#5389) by @Jocs in https://github.com/marktext/marktext/pull/5524
+    - fix(muya): take the image references from the live DOM after selecting (#5391) by @Jocs in https://github.com/marktext/marktext/pull/5534
+    - fix(muya): keep an image resize released outside the window (#5393) by @Jocs in https://github.com/marktext/marktext/pull/5537
+    - fix(muya): size an image from where its resize handle was grabbed (#5392) by @Jocs in https://github.com/marktext/marktext/pull/5535
+    - fix(muya): cut a cross-block selection from beforeinput too (#5415) by @Jocs in https://github.com/marktext/marktext/pull/5536
+    - fix: keep the export render container out of the page layout (#5541) by @Jocs in https://github.com/marktext/marktext/pull/5542
+    - fix(muya): keep a wide equation from scrolling under its own tag (#4339) by @Jocs in https://github.com/marktext/marktext/pull/5540
+    - fix: restore code block legibility and text crispness (#5539) by @Jocs in https://github.com/marktext/marktext/pull/5553
+    - test: fold the two #5539 specs into one by @Jocs in https://github.com/marktext/marktext/pull/5557
+    - fix(muya): keep a hard line break's glyph on the line it ends (#2094) by @Jocs in https://github.com/marktext/marktext/pull/5556
+    - revert: keep grayscale antialiasing on editor text (#5539) by @Jocs in https://github.com/marktext/marktext/pull/5558
+    - fix(muya): keep sequence diagram arrowheads in exported PDFs (#2423) by @Jocs in https://github.com/marktext/marktext/pull/5561
+    - fix(muya): pair emphasis delimiters the way CommonMark does (#2086) by @Jocs in https://github.com/marktext/marktext/pull/5555
+    - fix(muya): parse link destinations the way CommonMark does (#2377) by @Jocs in https://github.com/marktext/marktext/pull/5562
+    - Add a zoom/pan viewer and image export for rendered diagrams by @Jocs in https://github.com/marktext/marktext/pull/5554
+    - fix: give the editor and Preferences windows their own menu bar (#2245) by @Jocs in https://github.com/marktext/marktext/pull/5560
+    - perf(muya): re-render only the two affected blocks when stepping through search (#5580) by @ycyc0421 in https://github.com/marktext/marktext/pull/5569
+    - fix(muya): open documents whose reference labels contain regex characters (#5578) by @ycyc0421 in https://github.com/marktext/marktext/pull/5579
+    - fix: #5582 route standard edit shortcuts to macOS native Open/Save dialogs by @Jocs in https://github.com/marktext/marktext/pull/5588
+    - fix(build): keep the Windows Markdown association across updates (#4966) by @Jocs in https://github.com/marktext/marktext/pull/5463
+    - fix(desktop): apply the Markdown math preferences to the pandoc export (#5566) by @Jocs in https://github.com/marktext/marktext/pull/5590
+    - fix(muya): keep the table column toolbar anchored while hovering it (#5574) by @Jocs in https://github.com/marktext/marktext/pull/5592
+    - docs: replace CLAUDE.md with AGENTS.md and refresh contributor docs by @Jocs in https://github.com/marktext/marktext/pull/5595
+    - feat(muya): support ordered task lists (#1691) by @Jocs in https://github.com/marktext/marktext/pull/5597
+    - fix(build): unify the app name to MarkText (#5202) by @Jocs in https://github.com/marktext/marktext/pull/5598
+    - fix: #5575 restore column handle menu by @davidscottpope-gif in https://github.com/marktext/marktext/pull/5589
+    - feat(muya): support tilde code fences (#1788) by @Jocs in https://github.com/marktext/marktext/pull/5600
+    - fix(muya): wrap long table cell content (#5605) by @Jocs in https://github.com/marktext/marktext/pull/5606
+    New Contributors
+    - @Jocs with @Copilot made their first contribution in https://github.com/marktext/marktext/pull/4329
+    - @FurkaanBoraa made their first contribution in https://github.com/marktext/marktext/pull/4510
+    - @jyte made their first contribution in https://github.com/marktext/marktext/pull/4400
+    - @NSO73 made their first contribution in https://github.com/marktext/marktext/pull/4448
+    - @Renakoni made their first contribution in https://github.com/marktext/marktext/pull/4707
+    - @FahimFBA made their first contribution in https://github.com/marktext/marktext/pull/4823
+    - @tech-hoon made their first contribution in https://github.com/marktext/marktext/pull/4815
+    - @Awaker-OTE made their first contribution in https://github.com/marktext/marktext/pull/5189
+    - @Panisnbb made their first contribution in https://github.com/marktext/marktext/pull/5188
+    - @woltary02-creator made their first contribution in https://github.com/marktext/marktext/pull/5089
+    - @KDOJP made their first contribution in https://github.com/marktext/marktext/pull/5176
+    - @rkristelijn made their first contribution in https://github.com/marktext/marktext/pull/5137
+    - @coolvitto made their first contribution in https://github.com/marktext/marktext/pull/5049
+    - @andesyteoss made their first contribution in https://github.com/marktext/marktext/pull/4980
+    - @Zengzzhao made their first contribution in https://github.com/marktext/marktext/pull/4957
+    - @xrgzs made their first contribution in https://github.com/marktext/marktext/pull/5185
+    - @githello1 made their first contribution in https://github.com/marktext/marktext/pull/5245
+    - @nikkogibler made their first contribution in https://github.com/marktext/marktext/pull/4814
+    - @doktorigi made their first contribution in https://github.com/marktext/marktext/pull/4910
+    - @CookPiu made their first contribution in https://github.com/marktext/marktext/pull/5259
+    - @foo-hao made their first contribution in https://github.com/marktext/marktext/pull/5153
+    - @legsing made their first contribution in https://github.com/marktext/marktext/pull/5132
+    - @wmoss made their first contribution in https://github.com/marktext/marktext/pull/4937
+    - @richbodo made their first contribution in https://github.com/marktext/marktext/pull/5103
+    - @Dev-next-gen made their first contribution in https://github.com/marktext/marktext/pull/5320
+    - @anandghegde made their first contribution in https://github.com/marktext/marktext/pull/5324
+    - @dzid26 made their first contribution in https://github.com/marktext/marktext/pull/5326
+    - @masalha-alaa made their first contribution in https://github.com/marktext/marktext/pull/5111
+    - @Fr4ncis made their first contribution in https://github.com/marktext/marktext/pull/5435
+    - @dronov-dmitry made their first contribution in https://github.com/marktext/marktext/pull/5317
+    - @dimbc made their first contribution in https://github.com/marktext/marktext/pull/5379
+    - @blvcknwh1te made their first contribution in https://github.com/marktext/marktext/pull/5496
+    - @NeroWolfe75 made their first contribution in https://github.com/marktext/marktext/pull/5507
+    - @slovanos made their first contribution in https://github.com/marktext/marktext/pull/5511
+    - @ycyc0421 made their first contribution in https://github.com/marktext/marktext/pull/5569
+    - @davidscottpope-gif made their first contribution in https://github.com/marktext/marktext/pull/5589
+    Full Changelog: https://github.com/marktext/marktext/compare/v0.19.0...v0.20.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/marktext/marktext/releases/tag/v0.20.0
+ReleaseTime: 2026-10-02T06:02:56.0000000Z

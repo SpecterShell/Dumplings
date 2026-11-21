@@ -1,0 +1,40 @@
+Version: 0.50.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ipfs/ipfs-desktop/releases/download/v0.50.1/ipfs-desktop-setup-0.50.1-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Note
+    This release was brought to you by the Shipyard team and IPFS community.
+    Important
+    This release carries security fixes across the stack, in the bundled Kubo and in Electron. Older versions of IPFS Desktop stay exposed, so update as soon as possible.
+    v0.50 is the last IPFS Desktop line from the Shipyard team. Our IPFS work ends on September 30, 2026. After that date, Shipyard no longer maintains IPFS Desktop. Bring your support and transition questions to the community forum.
+
+    Highlights
+    🧊 Updated Kubo to v0.43.1 and Electron to v44
+    Bundled Kubo is now v0.43.1. See Release Notes for Kubo v0.43.1 for the full list of changes, key highlights below. Electron is now v44 (Chromium 152).
+    🔒 Security Fixes
+    Kubo v0.43.1 and Electron 44.3 carry security fixes across the networking and browser layers. Do not stay on 0.50.0 or older.
+    🌐 WebTransport Keeps Working From Safari 26
+    Browsers reach your node over WebTransport, and Safari 26 needs the node to advertise session limits before it opens a stream. Kubo now does. (details)
+    🔕 No Telemetry Endpoint
+    The bundled Kubo no longer ships a telemetry endpoint, so it collects and sends nothing unless you configure one yourself. (details)
+    🐧 Electron 44
+    Fixes the Linux tray icon that Electron 43.3 through 44.0 broke on GNOME, KDE, Xfce and Cinnamon, which hit distro packages built on the system Electron. macOS 13 Ventura is now the minimum, as Electron 44 dropped macOS 12.
+
+    🐧 Better Linux Packaging
+    Distro packages can set IPFS_DESKTOP_EXEC so the autostart entry launches their wrapper script instead of a reconstructed Electron command. Startup no longer launches the daemon twice when the stored daemon flags get normalized on first run. Both fixes from @RubenKelevra, thank you!
+    🧭 Error Dialogs Point to Answers
+    The report the error button no longer opens a bug report for failures that already have an answer: a missing or unparseable repo config, removed Kubo config keys, a hostname in an /ip4/ address, a corrupted Files root, and the common "IPFS Desktop will not start" cases now open the matching FAQ entry, which also gained a supported OS table.
+    What's Changed
+    - fix: avoid duplicate daemon start during startup by @RubenKelevra in https://github.com/ipfs/ipfs-desktop/pull/3210
+    - fix: prefer distro launcher for autostart by @RubenKelevra in https://github.com/ipfs/ipfs-desktop/pull/3211
+    - fix: electron 44 by @lidel in https://github.com/ipfs/ipfs-desktop/pull/3212
+    - fix: kubo 0.43.1, electron 44.3.0 by @lidel in https://github.com/ipfs/ipfs-desktop/pull/3216
+    Full Changelog: https://github.com/ipfs/ipfs-desktop/compare/v0.50.0...v0.50.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ipfs/ipfs-desktop/releases/tag/v0.50.1
+ReleaseTime: 2026-09-15T17:15:01.0000000Z

@@ -1,0 +1,98 @@
+Version: 1.4.250
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.250/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We did two releases today! Be sure to check out the v1.4.249 release notes, which include easier Chat or Terminal setup, more control over conversations, and a redesigned phone Home.
+    Lower terminal memory use, clearer chat changes & a Chrome-compatible password manager ✨
+    - ⚡ Lower terminal memory use: Stop repeatedly reading and parsing font files for terminal ligatures, fixing a source of high memory use and launch crashes in sessions with many terminals.
+    - ⚡ Faster worktree switching: Performance improvements make switching between worktrees faster.
+    - 📝 See what agents changed: Chat turns show changed files and line counts, with patches available inline on desktop and phone.
+    - 🔐 Chrome-compatible password manager: Enable in Settings → Browser to save, fill, import Chrome passwords, and manage logins, encrypted locally with your OS’s secure storage.
+    - 💬 Chat UI keeps up with your agent: Long, tool-heavy turns stay connected in Chat UI, and new chats follow your agent’s own model configuration unless you choose a model.
+    - 🖥️ More reliable terminals and hosts: Prevent stray escape-sequence text after terminal output gaps, and make paired-server workers and usage polling available on headless hosts.
+    - 📱 Better phone continuity: Send chat with Cmd/Ctrl+Enter and keep paired devices following the tabs they open.
+    Highlights
+    - Performance: Worktree switching is faster. Terminal ligatures no longer parse an entire font for every terminal. In the PR’s Windows test with Commit Mono, 32 terminals relaunched without the previous out-of-memory crash; results depend on fonts and workload. Closing a tool in a long agent turn also avoids scanning every other live tool.
+    - Chat: Successful Claude and Codex edits appear as changed-file summaries in the conversation, with patch details loaded on selection. Chat UI no longer interrupts an otherwise healthy agent turn when it exceeds 128 live text or tool entries. Codex chats show requested wait durations and support goal pause, resume and clear.
+    - Browser: Save and fill logins in Orca’s browser and manage them in browser settings. Passwords use OS-backed encryption; the vault is unavailable when secure storage is unavailable.
+    - Terminal & remote hosts: Terminal stream recovery avoids printing partial escape sequences after output gaps. Headless hosts start the services needed for paired-server workers and usage polling.
+    - Workspace & onboarding: Choose Chat UI during onboarding, hide the onboarding checklist, find hidden discovered worktrees outside project grouping, and use the improved inactive workspace cleanup interface.
+    Compatibility & upgrade notes
+    - Terminal ligatures: Common ligatures remain available. Font-specific ligatures outside the built-in list may no longer join with the GPU renderer.
+    - Browser passwords: The vault is available in the desktop browser, including local and SSH workspace pages; streamed paired-server pages and the web client do not have a vault. Secure OS encryption is required.
+    - Chat model defaults: A new chat without an explicit model choice uses the agent’s configuration. The displayed default can be stale until the agent starts and reports its model.
+    - Terminal recovery: Remote-runtime streams retain their existing recovery behavior.
+
+    Product experience
+    Native chat & agents
+    Review changed files in context and keep longer agent turns moving.
+    - fix(chat): keep pending workspace composers ready by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37954
+    - Show the requested wait duration in Codex chats by @brennanb2025 in https://github.com/stablyai/orca/pull/37951
+    - fix(chat): show Codex image generation as generating while it runs by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38269
+    - Keep long agent turns alive beyond 128 timeline entries by @brennanb2025 in https://github.com/stablyai/orca/pull/38257
+    - Show changed files directly in chat turns by @brennanb2025 in https://github.com/stablyai/orca/pull/38256
+    - New chats run the agent's configured model when you haven't picked one by @brennanb2025 in https://github.com/stablyai/orca/pull/38252
+    - fix(native-chat): let arrow keys reach a question card's answer field by @big-sheq in https://github.com/stablyai/orca/pull/38285
+    - fix(native-chat): run /goal pause, resume and clear in Codex chats by @brennanb2025 in https://github.com/stablyai/orca/pull/38250
+    - fix(native-chat): show list numbers in folded chat messages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38319
+    - fix(native-chat): wrap long answers in a question card's answer field by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38325
+    - fix(dictation): keep the transcript when you stop with the composer's stop button by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38327
+    - fix(native-chat): keep chat suggestions above the composer when the floating panel moves by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38322
+    - fix(native-chat): show @ and / suggestions above the agent setup submenu by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38328
+    - Keep a Pi chat awake while its background subagents run by @brennanb2025 in https://github.com/stablyai/orca/pull/38207
+    Terminals, performance & hosts
+    Reduce terminal memory use and improve stream and headless host reliability.
+    - fix(terminal): keep the ligature addon from reading font files by @OrcaWin in https://github.com/stablyai/orca/pull/38240
+    - fix(terminal): only resume a terminal stream where xterm is, so escape tails never print by @nwparker in https://github.com/stablyai/orca/pull/38049
+    - fix(orcad): stop the managed server crash-looping under a ulimit -v address-space limit by @nwparker in https://github.com/stablyai/orca/pull/38263
+    - fix(agent-state-rules): treat a 404 as nothing published, not a warning by @nwparker in https://github.com/stablyai/orca/pull/38278
+    - fix(serve): give headless hosts the services the desktop window path started by @nwparker in https://github.com/stablyai/orca/pull/37633
+    - fix(terminal): every terminal tab close declares who asked; no implied user close by @nwparker in https://github.com/stablyai/orca/pull/38284
+    - Use the shared agent picker for terminal quick commands by @brennanb2025 in https://github.com/stablyai/orca/pull/38213
+    Browser
+    Save logins and improve remote workspace browser behavior.
+    - fix(browser): stop terminal links in remote workspaces showing the agent glow by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38262
+    - feat(browser): save and fill passwords in Orca's browser by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33994
+    Phone & paired devices
+    Keep chat input and tab navigation consistent across devices.
+    - fix(mobile): send chat with Cmd/Ctrl+Enter by @brennanb2025 in https://github.com/stablyai/orca/pull/38267
+    - Keep the phone's chat Send button the same as desktop while the agent works by @brennanb2025 in https://github.com/stablyai/orca/pull/38317
+    - fix(session-tabs): paired devices follow every tab they open, not just the first by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38336
+    Workspaces, onboarding & automations
+    Make setup, workspace navigation and automation runs easier.
+    - Add Chat UI choice to onboarding by @AmethystLiang in https://github.com/stablyai/orca/pull/36204
+    - Add hide button to onboarding checklist by @AmethystLiang in https://github.com/stablyai/orca/pull/38241
+    - fix(right-sidebar): hide the previous worktree's panels while a workspace is created by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38261
+    - fix(automations): let Run Now start without checking the GitHub source tool by @Jinwoo-H in https://github.com/stablyai/orca/pull/38029
+    - Say where to switch back from Chat UI wherever Orca turns it on by @brennanb2025 in https://github.com/stablyai/orca/pull/38243
+    - fix(sidebar): show hidden discovered worktrees outside project grouping by @brennanb2025 in https://github.com/stablyai/orca/pull/38231
+    - fix(sidebar): extend the workspace list scrollbar hit area past the seam by @OrcaWin in https://github.com/stablyai/orca/pull/38288
+    - Align grouped workspace cards with sidebar headers by @AmethystLiang in https://github.com/stablyai/orca/pull/38245
+    - Improve inactive workspace cleanup interface and add repository indicator by @Jingyue-Wu in https://github.com/stablyai/orca/pull/38281
+    Tests, CI & maintenance
+    Maintain tests and cross-version checks.
+    - Remove 129 low-value test cases and 45 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38233
+    - Remove 382 low-value test cases and 46 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38238
+    - Remove 552 low-value test registrations and 58 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38255
+    - test(cross-version): resolve moved shared modules in release checkouts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38270
+    - test(e2e): layout oracle restart comparison honors terminalsRestart by @brennanb2025 in https://github.com/stablyai/orca/pull/38271
+    - test: remove low-value renderer suites by @OrcaWin in https://github.com/stablyai/orca/pull/38276
+    - test: remove low-value renderer suites and unused fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/38292
+    - test: remove low-value renderer suites and orphaned harnesses by @OrcaWin in https://github.com/stablyai/orca/pull/38299
+    - test: remove low-value renderer followup suites by @OrcaWin in https://github.com/stablyai/orca/pull/38310
+    - test: remove low-value launch palette and tour suites by @OrcaWin in https://github.com/stablyai/orca/pull/38316
+    - test: remove low-value account and surface settings suites by @OrcaWin in https://github.com/stablyai/orca/pull/38323
+    - test: remove low-value renderer launch and settings suites by @OrcaWin in https://github.com/stablyai/orca/pull/38330
+    - test: remove low-value appearance and chat settings tests by @OrcaWin in https://github.com/stablyai/orca/pull/38337
+    - test: remove low-value mobile and repository settings tests by @OrcaWin in https://github.com/stablyai/orca/pull/38339
+    New Contributors
+    - @big-sheq made their first contribution in https://github.com/stablyai/orca/pull/38285
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.249...v1.4.250
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.250
+ReleaseTime: 2026-11-05T10:40:31.0000000Z

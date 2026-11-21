@@ -1,0 +1,64 @@
+Version: 0.15.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/shadps4-emu/shadPS4/releases/download/v.0.15.0/shadps4-win64-sdl-0.15.0.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Greetings, fellow users, testers, devs.
+    Missed us already? Here is a brand new shadPS4 release for you out there. A lot of new features is here to improve compatibility and general user experience as well. It is recommended to use 0.15.0 for some time since there are a lot of breaking changes coming to 0.15.1 WIP (that will correct and improve a lot of things), but we hope it will be production ready quite soon.
+    Enough talking, here is the latest shadPS4 version and it’s changes:
+    Core
+    - Automatically add missing hotkeys to the global input config
+    - Fixed in Settings:InternalScreenWidth would get internalScreenHeight instead of InternalScreenWidth
+    - Kernel.Pthreads: Remove unreachable in posix_pthread_mutex_timedlock
+    - Volume hotkey: show volume value, set game_specific arg correctly, clamp value
+    - Kernel.Process: Implement sceKernelGetModuleInfo2, sceKernelGetModuleList2
+    - Log: Group same lines with counter
+    - Prevent protects during unmaps
+    - Mount system fonts
+    - Kernel.Equeue: Only reset trigger state on events that clear.
+    - Filesystem: fix crashes caused by returning a pointer from an std::vector
+    - Threads: initialize TLS on thread creation
+    - Implement guest signal handlers
+    - Mount /data to /data instead of /data/gameid
+    - Kernel.Event: Implement kqueue and kevent
+    - IPC: Tweak LoadFigure and RemoveFigure
+    - Improved signal emulutation
+    - Fixed game arguments with CLI11
+    - PSF: close file after encode
+    Shader recompiler
+    - Handle operand fields execlo and exechi for S_MOV
+    - Fixed r128
+    - Support 32 thread sharing mode
+    - Implemented IMAGE_ATOMIC_CMPSWAP
+    Libraries
+    - Improved sceAudioOut and SDL3 backend
+    - Implemented npWebApi library
+    - Added sceAudioOutGetSystemState
+    - Added some NPTus Functions
+    - Implemented some HLE libcInternal calls
+    - Fixed some issues in scePad and refactoring
+    - Improved motion controls emulation
+    - Lib.GnmDriver: Fix flip arg for sceGnmSubmitAndFlipCommandBuffers
+    - Lib.VideoOut: Fix pending flips limit
+    - Fix some logic bugs in sceHttpUriParse
+    - Audio3d SDL improvements
+    - Lib.Net: Proper resolver errors when isConnectedToNetwork is disabled
+    - Lib.GnmDriver: Implement sceGnmDrawIndirectMulti
+    - Lib.Net: Fix Windows-specific incorrect error in PosixSocket::Connect
+    - SSL module returned an empty certificate data instead of no certs
+    - SysModule HLE implementation
+    - Stub data for sceSslGetCaCerts
+    GPU
+    - Copy image handle 2d->3d copies and opossite now
+    - Skipped guest/host marker parsing/calls when disabled
+    - Added Relaxed,precise modes in readbacks
+    - Force subgroup size to 64 when possible
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/shadps4-emu/shadPS4/releases/tag/v.0.15.0
+ReleaseTime: 2026-03-17T07:46:48.0000000Z

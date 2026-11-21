@@ -1,0 +1,21 @@
+Version: 0.20.2
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.20.2/magic-context-dashboard-windows-x64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.20.2/magic-context-dashboard-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Linux AppImage opens on newer systems. The AppImage bundled old Wayland libraries, so on systems with a newer Mesa the window never opened (EGL_BAD_ALLOC). It now uses the system's own Wayland libraries. The workaround with LD_PRELOAD is no longer needed. (#716)
+    - Memory search finds a memory by its ID. Typing 1234 or #1234 shows that memory first, followed by text matches, within the current filters. (#626)
+    - Prompt drops in sessions Magic Context doesn't manage are no longer labelled as Magic Context reclaims. A large drop in, for example, a Broca worker session now reads "Prompt tokens dropped". When the request itself didn't get smaller, it also says that the provider counted fewer tokens.
+    - Broca sessions that use newer features show their data. The dashboard reads sessions that use Broca's structured output and provider text state.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cortexkit/magic-context/releases/tag/dashboard-v0.20.2
+ReleaseTime: 2026-10-18T01:04:12.0000000Z

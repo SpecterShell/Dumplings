@@ -1,0 +1,33 @@
+Version: 17.2.8
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.8/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-coding-agent
+    Changed
+    - Upgraded the bundled omptype schema engine: intersection and pipe operators, bigint and RegExp literals in the string DSL, Standard Schema V1 interop, JSON Schema import via fromJsonSchema(), and richer union/collection error reporting.
+    @oh-my-pi/omptype
+    Added
+    - Added io: 'input' and io: 'output' options to toJsonSchema(), supporting input validation shapes and piped .to() target types
+    - Added Standard Schema V1 interop: every schema exposes ~standard with synchronous validation, enabling direct use with @t3-oss/env, tRPC, and other Standard Schema consumers.
+    - Added fromJsonSchema(), rebuilding callable schemas from JSON Schema documents (draft-07 / draft-2020-12 structural keywords, string formats, $defs recursion, enums, and anyOf/oneOf/allOf composition) — the inverse of Type.toJsonSchema().
+    - Added $defs/$ref emission for recursive alias schemas in toJsonSchema() (draft-07 converts to definitions), preventing unbounded recursion on cyclic scopes.
+    - Added AnyType, a minimal structural constraint for generic functions accepting any schema without descending the recursive fluent surface.
+    - Root .default() values now materialize for undefined input in direct calls and at the Standard Schema boundary (factories run per call).
+    - .narrow()/.filter() boolean overloads accept OmpErrors returns, so cond || ctx.reject(...) recipes typecheck.
+    Changed
+    - Restored low-overhead schema construction by lazily activating advanced normalization and compatibility machinery.
+    - .default() is typed input-side (i | (() => i)) and marks the schema's input as optional (i | undefined).
+    - Parse keywords (string.integer.parse, parse.number, ...) now infer their morph output inside union strings, and input-side inference is union-aware.
+    - Object-literal inference for .merge()/.or()/.and() unwraps embedded schema values (output and input sides).
+    Fixed
+    - Alias intersections defer through memoized lazy nodes, so cyclic scope schemas no longer overflow the stack in .and() or morph-union determinism checks.
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.7...v17.2.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.8
+ReleaseTime: 2026-08-04T16:34:47.0000000Z

@@ -1,0 +1,68 @@
+Version: 1.16.1
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/packer/1.16.1/packer_1.16.1_windows_386.zip
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/packer/1.16.1/packer_1.16.1_windows_amd64.zip
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/packer/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    FEATURES:
+    - plugin/getter: add support for installing plugins from non-GitHub HTTPS sources,
+      including mirrors and artifact repositories that expose the HashiCorp release
+      directory format.
+      GH-13691
+    IMPROVEMENTS:
+    - communicator/winrm: add configurable connection timeout and retry interval settings.
+      GH-13701
+    - build: update Go to 1.26.8.
+      GH-13701
+    BUG FIXES:
+    - core/hcl2: pass user variable values to builders, provisioners, and post-processors
+      as packer_user_variables, restoring legacy {{ user "name" }} interpolation in
+      plugin-managed templates.
+      GH-13686
+    - post-processor/shell-local: execute inline scripts through the shell to avoid
+      intermittent ETXTBSY errors.
+      GH-13701
+    - build: bump github.com/shoenig/go-m1cpu to v0.2.2 to prevent segmentation
+      faults on Apple M5 hardware.
+      GH-13696
+    SECURITY:
+    - deps: bump google.golang.org/grpc to v1.83.2 in Packer and the plugin
+      tester to reject requests missing both the :authority and Host headers.
+      GH-13704
+      GH-13707
+    DEPENDENCIES:
+    - deps: bump github.com/hashicorp/packer-plugin-sdk to v0.6.11.
+      GH-13701
+    - deps: bump github.com/hashicorp/go-getter/v2 to v2.2.4.
+      GH-13701
+    - deps: bump github.com/hashicorp/hcp-sdk-go to v0.175.0,
+      github.com/go-git/go-git/v5 to v5.19.2, and
+      github.com/klauspost/compress to v1.18.7.
+      GH-13689
+    - deps: bump golang.org/x/crypto to v0.56.0, golang.org/x/net to
+      v0.58.0, and google.golang.org/grpc to v1.83.2.
+      GH-13701
+      GH-13707
+    - deps: bump go.opentelemetry.io/otel, go.opentelemetry.io/otel/metric,
+      and go.opentelemetry.io/otel/trace to v1.45.0, and
+      github.com/go-logr/logr to v1.4.4.
+      GH-13710
+    - deps: update additional Go module dependencies in Packer and the plugin tester.
+      GH-13689
+      GH-13701
+    INTERNAL:
+    - docs: update the README contribution link to use the main branch.
+      GH-13700
+    - compliance: update copyright headers.
+      GH-13699
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/packer/releases/tag/v1.16.1
+ReleaseTime: 2026-09-18T12:52:47.0000000Z

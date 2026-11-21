@@ -1,0 +1,73 @@
+Version: 0.29.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.29.0/codeg_0.29.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.29.0/codeg_0.29.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Read a pull request and merge it without opening a browser.
+    Every assistant reply now sits under a header you can fold away.
+    New
+    - A pull request opens as three tabs, and there's a Merge button. Conversation, Checks and Files changed; click a file to see its diff; the merge menu lists only what the repository allows — merge commit, squash, or rebase.
+    - Write a comment, close or reopen an issue, and file a new one — all in the repository panel. These used to mean going to GitHub or GitLab in a browser.
+    - Every reply has a header: "Working…" while the agent writes, "Worked for 1m 9s" when it's done. Click it to fold the whole reply away; sending your next message folds the one above it. A reply that stops on a tool call keeps everything on screen.
+    - Hover a session and a card floats out to the right with its full title, agent and model, folder, branch and path. Sessions started inside codeg now show a model too — before, only imported ones did.
+    - Ctrl/Cmd+1 through 9 jump to a tab, and Ctrl/Cmd+Shift+T reopens the one you just closed. (#502, @Adam-Dalloul)
+    - VS Code joins the "Open in" menu, for folders, directories and files. (#591, @markos-ttl)
+    - Antigravity can sign in on a machine with no browser. codeg gives you a link, you sign in to Google on your phone or another computer, then paste the address it lands on back into codeg.
+    - A conversation whose session was archived says so, and hands you the command to get it back. One click copies codex unarchive <id>; before, it just said "Failed to load session, starting new". (#598, @asteroida123)
+    - Codex now says why it needs your approval, instead of a fixed title like "Edit files". Comes with the codex-acp 1.7.0 upgrade.
+    Improved
+    - Updated bundled agents: Gemini CLI 0.57.0, OpenCode 1.18.25, Hermes 0.20.6, CodeBuddy 2.141.0, Kimi Code 0.39.1, Qoder 1.1.33.
+    - Kimi Code takes MCP servers again, which is what unblocked the jump from 0.36.1 to 0.39.1; its login hint now includes the --region global a kimi.ai account needs.
+    - Saving MCP settings leaves fields codeg has no UI for exactly as they were, instead of dropping them.
+    - The pull request detail panel lines its description, comments and composer up on one left edge, keeps the author's avatar next to you down a long comment, and is wider.
+    Fixed
+    - The interface grows when you zoom the window. At 150% the text got bigger, but column widths, small labels and popovers stayed at their 100% size.
+    - Chinese, Japanese and Korean text isn't clipped at high zoom in the sidebar, conversation titles and dropdowns.
+    - One stretch of thinking stays one card while sub-agents are streaming beside it, instead of being cut into several. (#494, #586, @dawNotPoi)
+    - A reply you're watching in a sub-agent transcript stops being stuck on "responding". Its timing stats and artifacts card show up.
+    - An image card keeps its filename or page name after a reload, rather than reverting to "Image generation". (#504, @Adam-Dalloul)
+    - An OpenCode tool card shows the result, not a blob of raw JSON. Watching live, a question you'd already answered read as "no selection".
+    - Sessions Codex delegates to sub-agents no longer show up as separate sessions in your history. (#593, @TroyMitchell911)
+    - When a turn produces nothing, nothing comes back — not the previous turn's answer.
+    Thanks to @Adam-Dalloul, @asteroida123, @dawNotPoi, @markos-ttl and @TroyMitchell911 for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    读 PR、合并 PR，不用再打开浏览器。
+    每一轮回复都收进一条可以折叠的标题栏里。
+    新增
+    - PR 打开后分成三个标签页，右边还有「合并」按钮。 「对话」「检查项」「文件更改」各占一页，点开文件就能看 diff；合并方式只列这个仓库允许的那几种——创建合并提交、压缩后合并、变基后合并。
+    - 在仓库面板里就能发评论、关闭或重新打开议题，也能新建议题。 以前这些都得跳去 GitHub、GitLab 的网页上做。
+    - 每一轮回复顶上都有一条标题栏：智能体在写时显示「正在工作中…」，写完变成「工作了 1 分 9 秒」。 点它就能把整轮回复折起来，发出下一条消息时上一轮自动折叠。停在工具调用上、还没给出回答的回合不会被折走。
+    - 鼠标停在会话上，右边会浮出一张卡片，写着完整标题、智能体和模型、所在文件夹、分支和路径。在 codeg 里新建的会话现在也能看到模型名了，以前只有导入的会话才有。
+    - Ctrl/Cmd + 1 到 9 直接跳到第几个标签，Ctrl/Cmd + Shift + T 重新打开刚关掉的那个。（#502，@Adam-Dalloul）
+    - 右键菜单的「打开于」里多了 VS Code，文件夹、目录、文件都能用。（#591，@markos-ttl）
+    - Antigravity 可以在没有浏览器的机器上登录。 codeg 给你一个链接，你用手机或另一台电脑打开、登录 Google 账号，再把跳转后的地址粘回来就完成了。
+    - 会话在 Codex 那边被归档时，横幅会直接说明，并给出找回历史的命令。 点一下就复制 codex unarchive <id>；以前只会显示「加载会话失败，正在新建会话」。（#598，@asteroida123）
+    - Codex 会说明它为什么要请求这次授权，不再只显示「编辑文件」这种固定标题。随 codex-acp 1.7.0 升级一起到来。
+    改进
+    - 内置智能体版本更新： Gemini CLI 0.57.0、OpenCode 1.18.25、Hermes 0.20.6、CodeBuddy 2.141.0、Kimi Code 0.39.1、Qoder 1.1.33。
+    - Kimi Code 重新支持 MCP 服务器，卡在 0.36.1 的版本这才升到 0.39.1；登录提示里也补上了 kimi.ai 账号要加的 --region global。
+    - 保存 MCP 设置时，codeg 界面上没有的那些字段会原样留着，不会被清掉。
+    - PR 详情面板的描述、评论和输入框对齐到同一条左边线，读长评论时作者头像一直停在旁边，面板整体也更宽了。
+    修复
+    - 调窗口缩放时，整个界面跟着一起变大。 之前调到 150%，字是变大了，但栏宽、小号标签和弹出层还是 100% 的尺寸。
+    - 缩放调高后中文不再被切掉上下半截，侧边栏、会话标题、下拉框都恢复正常。
+    - 旁边有子智能体在输出时，一段思考仍然是一整张卡片，不会被切成好几段。（#494、#586，@dawNotPoi）
+    - 打开子智能体的转写去看，回复不会一直卡在「响应中」，耗时统计和产物卡片也能正常显示。
+    - 图片卡片刷新页面后还是原来的名字（文件名或页面名），不会变回「Image generation」。（#504，@Adam-Dalloul）
+    - OpenCode 的工具卡片显示的是结果，不是一段原始 JSON。 之前实时看的时候，已经回答过的提问会显示成「未选择」。
+    - Codex 委托给子智能体的会话，不会再作为独立会话出现在历史列表里。（#593，@TroyMitchell911）
+    - 某一轮什么都没输出时，返回的就是空，不会把上一轮的回答顶上来。
+    感谢 @Adam-Dalloul、@asteroida123、@dawNotPoi、@markos-ttl 与 @TroyMitchell911 为本次发布做出的贡献。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.29.0
+ReleaseTime: 2026-08-29T09:17:29.0000000Z

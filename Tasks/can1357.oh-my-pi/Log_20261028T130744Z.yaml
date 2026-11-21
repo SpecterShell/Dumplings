@@ -1,0 +1,147 @@
+Version: 18.13.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.13.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    Fixed
+    - Fixed chat-completions context estimates counting past thinking that the request drops (no reasoning replay), which triggered compaction far below the threshold (#15797, #17231 by @ghisguth)
+    @oh-my-pi/pi-ai
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/browser-relay
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/pi-catalog
+    Added
+    - Added DeepSeek V4.1 Flash 1017 to the Factory Droid provider for accounts with Factory's 1017 flag; turning thinking off on its Baseten route disables reasoning instead of falling back to low effort (#17234 by @skipper019)
+    Changed
+    - Made Kimi Code model discovery authoritative and cached per credential, added K3.1 Pro and K3.1 Pro Highspeed to the bundled Kimi Code catalog, and preserved live thinking metadata there (#17224 by @trukhinyuri)
+    - Updated Bun engine requirement to ≥1.4.4
+    Fixed
+    - Codex model refresh now lists models available to an entitled account even when other saved accounts return HTTP 402 (#17198).
+    - LiteLLM discovery now reads every /v2/model/info page before selecting the proxy's model roster, rather than caching only the first 50 entries; malformed or incomplete pagination falls back without caching a partial page (#17237 by @maykonmichel).
+    - Fixed hosted web search on OpenAI Responses and Codex Responses selecting GPT-5.6 Luna instead of GPT-6 Luna (#17202 by @mateo-bolanos).
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Manual compactions (RPC compact, /compact, extension ctx.compact()) emit manual_compaction_start and manual_compaction_end session events, so RPC hosts can show compaction progress; docs/rpc.md documents these with the other progress events (retry_fallback_applied, ttsr_triggered, goal_updated) (#17247 by @Quelaan1)
+    - Added retry.rateLimitWalksChain (default false): with it on, a 429 rate limit after a turn with signed Claude thinking moves to the next model in retry.fallbackChains at once instead of retrying the throttled model until retry.maxRetries is spent (#17232 by @sjawhar)
+    - Sessions can be renamed from the resume picker: the new title persists as a user title without loading the session, and renames of live sessions are refused instead of forking the transcript (#17262 by @Twilight0)
+    - Added display.advisorCollapsedLines (Settings → Appearance → Display) to cap how many note lines a collapsed advisor card shows; the default keeps the full preview (#17228 by @bluecapone)
+    - omp config list --scope global|project lists only the keys that layer sets, with the values as written: path-scoped enabledModels, enabledProviders and disabledProviders entries ({ path, … }) stay unresolved, so a host can edit the global value without dropping them (#17246 by @Quelaan1)
+    - tools.xdevNotices: false hides the xd://: mounted … notices shown as MCP servers connect, without turning on startup.quiet (#17263 by @MaisonnatM)
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    Fixed
+    - A running job's glance keeps the whole a meter counts instead of the bare numerator: a widget whose headline restated 140 beside a 140/190 bar now draws 140/190 in the job card, the HUD pill and the status line (#17226 by @iacore)
+    - Fixed the managed-skills root guard rejecting a symlinked store outright; a root that resolves to a directory now accepts writes inside its target, while a broken link or a link to a non-directory is still refused (#17201 by @iacore)
+    - Fixed experimental context rollover repeatedly running during tool calls when the fixed prompt and tool schemas already exceed the recovery band (#17205)
+    - Fixed Ctrl+D during deferred extension startup falsely reporting an extension exit error and exiting 1 instead of closing cleanly (#17259).
+    - Resuming a session, or reviving a parked or restored subagent, after a prewalk or plan-yolo handoff continues on the model and effort the handoff switched to instead of falling back to the planning model (#17229 by @shgew)
+    - Fixed one interrupt silently stopping a session from ever waking on its own background job results again: an interrupt (Esc, the RPC abort command, an ACP cancel, a collab guest stop, an extension's ctx.abort()) that stops no run and no queued work no longer suppresses those wakes, and after an interrupt that did stop a run they come back once a later turn has run and ended. Esc on the "waiting on background jobs" row still ends that wait: its results land in context for your next prompt, as before (#17243 by @sjawhar)
+    - Fixed ! commands on zsh/fish waiting forever at interactive prompts (e.g. the Oh My Zsh update question on !code .); keystrokes now go to the running command while it runs, and Esc still cancels (#17210)
+    - Fixed auto-compaction firing early on OpenAI-compatible chat-completions models that don't replay past reasoning (#15797, #17231 by @ghisguth)
+    - Eval's tool.<name>(…) now accepts xd://<name> and the Claude Code mcp__<server>__<tool> spelling like direct tool calls, and reports registered but unavailable tools instead of "Unknown tool" (#17250)
+    - Updated the ask prompt to encourage assistants to show missing decision context before the dialog opens (#17242 by @jasonharrison)
+    - Custom LiteLLM providers now refresh cached model rosters after paginated /v2/model/info discovery was fixed; cached first-page-only lists no longer hide later-page models (#17237 by @maykonmichel).
+    - Fixed hosted search repeating the same request when the active model is also its search target but uses a cloned or refitted model object (#17202 by @mateo-bolanos).
+    - Fixed a killed or failed inline browser tab worker keeping its connection to the browser relay, which left Chrome's "started debugging this browser" bar on every tab until the omp session exited (#17212 by @nickzitzer)
+    - Fixed a live tool card dropping the model's i intent, which the harness strips from the args tool_execution_start carries; the card now keeps it, so a bash call in Tern shows its description instead of a bare "Bash" as it already did in a resumed session (#17197 by @iacore)
+    - RPC sessions now report settled (isSettled: true, session_settled) after a turn whose failed todo call queued a reminder for the next prompt, instead of appearing busy until another prompt arrives (#17238 by @kmccleary3301)
+    - /annotate keeps notes and an unfinished note when the overlay is closed without sending them: reopening the same source restores them, Saved draft resumes any of the session's drafts, and Discard notes and close drops one (#17271 by @H4vC, based on #17230 by @Shadorain).
+    - Annotation feedback names each note's source line, so notes on blank or repeated lines stay distinguishable (#17271 by @H4vC, based on #17230 by @Shadorain).
+    - Fixed /tan clones ending without a final answer when they call ask; the clone now keeps running and the parent receives its final answer instead of an empty result (#17223 by @trukhinyuri)
+    - Pasting in a terminal with enhanced paste (Tern, kitty) now lands in the open dialog's field — the agents hub's New agent description, an /annotate note — instead of the hidden prompt
+    - Pasting or dropping an image file into the prompt in a terminal with enhanced paste (Tern, kitty) now attaches the image instead of typing its path
+    - The plan review's edit button in Tern names your editor ("Edit in Notepad", "Edit in nvim") instead of "Edit in $EDITOR"
+    - Fixed GitHub /review diff links keeping the snapshot that built the request after the cached diff refreshes in the background, instead of opening whatever file now sits at the same index (#16310 by @tkossak)
+    @oh-my-pi/collab-web
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/pi-natives
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/omptype
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/snapcompact
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/omp-stats
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/pi-tui
+    Added
+    - The resume picker renames the selected session in place: F2 opens a dialog prefilled with the current title, Enter commits, Esc cancels (#17262 by @Twilight0)
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    Fixed
+    - Restored WebP and JPEG images stay visible in Kitty scrollback after resuming a session (#17220).
+    - Escape in an annotation note no longer discards it: the overlay closes and getDraft()/restoreDraft() let the host keep and reopen the note; Discard notes and close (confirmed by a second press) clears them instead, and code review's actions start on Paste so a stray Enter never sends the LLM review (#17271 by @H4vC, based on #17230 by @Shadorain).
+    - Fixed terminal replies such as Tern's tsp;e;{"ev":"ack",…} showing up in the shell prompt after quitting omp; the exit drain now waits for the terminal to answer a final DA1 sentinel
+    - Fixed the plan review sheet in Tern squeezing the "continue with" model tiers under a long plan, so the model name overlapped the tier buttons
+    - /usage in Tern shows when each quota resets as a countdown (resets in 2h30m) instead of a clock time; hovering shows the date and time
+    - Fixed extension ui.select dialogs treating unconfigured j/k keys as navigation, which could turn a default No into Yes when typing ok then Enter (#17255 by @SAKANA-MOONLIGHT).
+    Removed
+    - Removed support for the TSP t (theme) verb, as surface theme synchronization is no longer required
+    @oh-my-pi/pi-utils
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    @oh-my-pi/pi-wire
+    Changed
+    - Updated Bun engine requirement to ≥1.4.4
+    Removed
+    - Removed TspPalette definition and t verb from the protocol specification
+    What's Changed
+    - fix(review): pin PR diff URLs to the frozen cache generation by @tkossak in https://github.com/can1357/oh-my-pi/pull/16310
+    - fix(tui): stop treating bare j/k as selector navigation by @SAKANA-MOONLIGHT in https://github.com/can1357/oh-my-pi/pull/17255
+    - fix(tan): keep a clone's run alive when it calls ask by @trukhinyuri in https://github.com/can1357/oh-my-pi/pull/17223
+    - fix(annotate): keep /annotate notes across closes and restarts (rework of #17230) by @H4vC in https://github.com/can1357/oh-my-pi/pull/17271
+    - fix(coding-agent): settle after hidden next-turn messages by @kmccleary3301 in https://github.com/can1357/oh-my-pi/pull/17238
+    - fix(tui): kept the model's intent on live tool cards by @iacore in https://github.com/can1357/oh-my-pi/pull/17197
+    - fix(browser): drop an inline tab worker's relay connection when it is terminated by @nickzitzer in https://github.com/can1357/oh-my-pi/pull/17212
+    - fix(catalog): use GPT-6 Luna for hosted web search by @mateo-bolanos in https://github.com/can1357/oh-my-pi/pull/17202
+    - feat(coding-agent): add tools.xdevNotices to hide xd:// mount notices by @MaisonnatM in https://github.com/can1357/oh-my-pi/pull/17263
+    - Fix paginated LiteLLM model discovery by @maykonmichel in https://github.com/can1357/oh-my-pi/pull/17237
+    - fix(prompts): instruct models to show context before calling ask by @jasonharrison in https://github.com/can1357/oh-my-pi/pull/17242
+    - feat(catalog): add DeepSeek V4.1 Flash 1017 to Factory Droid by @skipper019 in https://github.com/can1357/oh-my-pi/pull/17234
+    - fix(catalog): skipped payment-denied codex accounts during discovery by @roboomp in https://github.com/can1357/oh-my-pi/pull/17200
+    - fix(eval): resolved xd:// and mcp alias spellings in the tool bridge by @roboomp in https://github.com/can1357/oh-my-pi/pull/17252
+    - fix(tui): held kitty image retirement until conversion by @roboomp in https://github.com/can1357/oh-my-pi/pull/17221
+    - feat(catalog): make Kimi Code discovery authoritative and cache it per account by @trukhinyuri in https://github.com/can1357/oh-my-pi/pull/17224
+    - fix(agent): skipped dropped chat-completions thinking in context estimate by @ghisguth in https://github.com/can1357/oh-my-pi/pull/17231
+    - fix(coding-agent): forwarded keystrokes to running ! pty commands by @roboomp in https://github.com/can1357/oh-my-pi/pull/17213
+    - feat(config): add --scope to omp config list to show one layer's own values by @Quelaan1 in https://github.com/can1357/oh-my-pi/pull/17246
+    - feat(tui): setting to limit collapsed advisor card lines by @bluecapone in https://github.com/can1357/oh-my-pi/pull/17228
+    - fix(coding-agent): one Esc no longer stops a session waking on its own background jobs by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17243
+    - fix(coding-agent): keep prewalk handoff model across resume and revival by @shgew in https://github.com/can1357/oh-my-pi/pull/17229
+    - fix(coding-agent): handled ctrl-d during guarded startup by @roboomp in https://github.com/can1357/oh-my-pi/pull/17260
+    - fix(coding-agent): prevented futile context rollovers by @roboomp in https://github.com/can1357/oh-my-pi/pull/17206
+    - feat(tui,coding-agent): allow renaming sessions from the resume picker with F2 by @Twilight0 in https://github.com/can1357/oh-my-pi/pull/17262
+    - feat(coding-agent): add retry.rateLimitWalksChain for the 429 chain walk after signed thinking by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17232
+    - feat(coding-agent): emit manual_compaction_start/end session events for RPC hosts by @Quelaan1 in https://github.com/can1357/oh-my-pi/pull/17247
+    - autolearn: accept a symlinked managed-skills root by @iacore in https://github.com/can1357/oh-my-pi/pull/17201
+    - fix(tui): show a meter's whole in a job glance that restated its numerator by @iacore in https://github.com/can1357/oh-my-pi/pull/17226
+    New Contributors
+    - @nickzitzer made their first contribution in https://github.com/can1357/oh-my-pi/pull/17212
+    - @mateo-bolanos made their first contribution in https://github.com/can1357/oh-my-pi/pull/17202
+    - @MaisonnatM made their first contribution in https://github.com/can1357/oh-my-pi/pull/17263
+    - @maykonmichel made their first contribution in https://github.com/can1357/oh-my-pi/pull/17237
+    - @ghisguth made their first contribution in https://github.com/can1357/oh-my-pi/pull/17231
+    - @Quelaan1 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17246
+    - @bluecapone made their first contribution in https://github.com/can1357/oh-my-pi/pull/17228
+    - @Twilight0 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17262
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.13.2...v18.13.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.13.3
+ReleaseTime: 2026-10-28T12:49:52.0000000Z

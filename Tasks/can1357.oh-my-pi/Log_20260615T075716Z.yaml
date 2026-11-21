@@ -1,0 +1,96 @@
+Version: 15.13.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.13.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Removed harmony-leak exports from the @oh-my-pi/pi-agent-core package entrypoint
+    - Replaced the experimental promptToolCalls agent/loop option with toolCallSyntax, selecting an explicit in-band tool-call grammar instead of a boolean GLM-only mode.
+    Added
+    - Added support for selecting owned in-band tool-call syntax via PI_OWNED_TOOLS=<syntax> (for example hermes or qwen3) while preserving legacy PI_OWNED_TOOLS=1/true as GLM mode
+    - Added owned in-band tool calling for multiple syntaxes (glm, hermes, kimi, xml, anthropic, deepseek, harmony, pi-native, qwen3). Owned mode sends no native provider tools, appends a syntax-specific prompt/catalog, re-encodes prior tool calls/results as grammar-owned text, and parses streamed model output back into canonical tool calls.
+    - Added tool-example folding to normalizeTools: when given a model's affinity syntax (resolved via preferredToolSyntax), it renders each tool's examples into an <examples> block in that native syntax and appends it to the wire description. Wired through both context paths (fresh build and append-only takeSnapshot/build via a new exampleSyntax build option), with the _i intent-field placeholder added to examples when intent tracing injects it.
+    - Added the abortOnFabricatedToolResult option to AgentOptions/AgentLoopConfig (default true): when owned tool calling is active and the model fabricates a tool result mid-turn, true aborts the provider request immediately while false lets it finish and discards the fabricated continuation.
+    Changed
+    - Added owned in-band syntax support to Agent loop configuration resolution by selecting syntax from toolCallSyntax or PI_OWNED_TOOLS when present
+    Fixed
+    - Fixed append-only context cache fingerprinting to account for exampleSyntax, so switching tool-call syntax rebuilds cached prompts with the correct injected tool examples
+    - Fixed owned in-band tool-calling requests to omit toolChoice after stripping native tools, preventing invalid tool-choice requests
+    - Fixed owned tool calling letting the model fabricate tool results by treating grammar-owned tool-result markers in assistant text as a hard turn boundary: calls before the fabrication are kept, fabricated results and dependent calls are dropped, and the real result is fed back on the next turn.
+    @oh-my-pi/pi-ai
+    Added
+    - Added jsonSchemaToTypeScript to @oh-my-pi/pi-ai/utils/schema to render JSON Schema argument shapes as compact, human-readable TypeScript-style signatures
+    - Added the generic ToolExample type (ToolCallExample/ToolCompareExample/ToolNoteExample, parameterized over a tool's argument shape) and an examples property on the Tool interface for defining tool-call examples once as data.
+    - Added renderToolExamples (via @oh-my-pi/pi-ai/grammar) to render a tool's examples into an <examples> block in the model's native tool-call syntax, with an optional _i intent-field placeholder injected when intent tracing is active.
+    - Added per-grammar renderToolCall rendering of a single tool-call invocation (the inner element only, without the parallel-call block envelope), distinct from renderAssistantToolCalls which renders a complete block of one or more parallel calls.
+    - Added a GrammarRenderOptions.example flag to renderToolCall: when set, the invocation renders as the bare payload — Harmony emits just the JSON arguments, dropping the verbose <|start|>…<|message|>…<|call|> envelope — so renderToolExamples keeps <examples> blocks legible.
+    - Added an abortOnFabrication parameter to wrapInbandToolStream (default true): when false, a fabricated in-band tool-result continuation is discarded without aborting the provider request instead of cutting the turn short.
+    - Added @oh-my-pi/pi-ai/utils/harmony-leak export with helpers to detect, audit, and recover GPT-5 Harmony tool-call header leaks
+    - Added the @oh-my-pi/pi-ai/grammar public entrypoint for grammar factories, prompt/call rendering, in-band scanning, history encoding, and related typed utilities
+    - Added a unified in-band tool-call grammar engine with syntax-owned scanners, prompts, history rendering, tool-result rendering, and stream adaptation for GLM, Hermes/Qwen, Kimi, XML/Anthropic, DeepSeek, Harmony, and pi-native formats.
+    Changed
+    - Changed Harmony in-band tool-call rendering to omit the <|constrain|>json marker before the payload in commentary channel calls
+    - Changed tool inventory rendering to present each tool’s Parameters section as a simplified TypeScript-style signature derived from its wire schema
+    - Added raw in-band tool-call block capture to parsed owned tool calls so debugging can inspect the exact model-emitted call syntax.
+    - Moved the canonical ToolCallSyntax union to @oh-my-pi/pi-catalog/identity and re-exported it from @oh-my-pi/pi-ai/grammar so the catalog can own the syntax vocabulary without an @oh-my-pi/pi-ai runtime import; all existing import paths are unchanged.
+    - Made tool-call argument validation more lenient for schema-directed scalar coercions, including object/array stringification and 0/1 boolean coercion.
+    - Changed renderToolInventory (the verbose system-prompt inventory and /dump) to render each tool as a # Tool: <name> markdown section instead of a <tool name="…">…</tool> wrapper.
+    Fixed
+    - Fixed Harmony leak handling support by adding recoverHarmonyToolCall plus leak-detection workflows for contaminated assistant messages so recoverable tool-call arguments can be safely truncated and retried
+    - Fixed false-positive gating in Harmony leak heuristics using signal-based checks so unrelated text containing to=functions... is not treated as leaked tool-call markup
+    - Routed Kimi, DeepSeek DSML, and plain thinking markup healing through the shared in-band scanners so provider leak repair and owned tool calling parse the same wire formats.
+    - Fixed Cursor provider (cursor-agent API) streaming dropping large MCP tool-call arguments — most visibly the built-in task tool's tasks array on multi-subagent dispatches, which failed downstream schema validation with tasks: Invalid input: expected array, received undefined. Two upstream behaviors were fighting the stream handler in packages/ai/src/providers/cursor.ts: (1) args_text_delta carries the cumulative args text so far per agent.proto, but the handler concatenated each snapshot onto the buffer, garbling the JSON; (2) tool_call_completed carries an McpArgs map that omits oversized parameters entirely and downgrades unparsable values to their raw string fallback, but the handler unconditionally overwrote the streamed args with that map. The handler now strips the already-buffered prefix from each args_text_delta snapshot (falling back to append when the snapshot doesn't extend the buffer) and merges the decoded McpArgs map into the streamed args — preserving streamed keys the completion frame omits and the structured value when the completion frame downgrades to a string. (#2615)
+    - Fixed Codex Responses stream mis-routing interleaved function_call_arguments.delta events when more than one tool call was open concurrently. The runtime tracked a singleton currentItem/currentBlock, so every delta — regardless of item_id — was appended to whichever item was most recently added, and output_item.done for the earlier call then overwrote a sibling's stored arguments (visible as tasks: Invalid input: expected array, received undefined on the task tool). Open items are now keyed by item_id with output_index fallback; deltas/done events route to the matching block, late deltas whose item already closed are dropped instead of corrupting a sibling, and toolcall_* stream events emit the right contentIndex per call (#2619).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the ToolCallSyntax union and FALLBACK_TOOL_SYNTAX constant to @oh-my-pi/pi-catalog/identity (re-exported from @oh-my-pi/pi-ai/grammar).
+    - Added preferredToolSyntax(modelId) to @oh-my-pi/pi-catalog/identity, resolving a model's native tool-call syntax affinity from its family token (Claude→anthropic, GLM→glm, Kimi→kimi, Qwen→qwen3, DeepSeek→deepseek, OpenAI/gpt-oss→harmony, else the xml fallback).
+    - Added flux-1-schnell-fp8 to the Fireworks serverless model catalog
+    - Added gpt-oss-20b to the Fireworks model catalog
+    - Added qwen3-embedding-8b to the Fireworks model catalog
+    - Added qwen3-reranker-8b to the Fireworks model catalog
+    - Added Gemma 4 E2B IT and Gemma 4 E4B IT to the Google model catalog
+    - Added qwen/qwen3-asr-flash to the Zenmux model catalog
+    - Added sparse supportsTools model metadata so providers can mark models that require in-band tool-call formatting.
+    Changed
+    - Kept non-tool-capable Fireworks serverless models in discovery results and marked them with supportsTools: false for fallback-aware handling
+    - Extended modelFamilyToken(modelId) to classify Claude/OpenAI ids the structured parser misses (older dated forms such as claude-3-5-sonnet-20241022 and gpt-4o), returning anthropic/openai instead of an empty token.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added tool examples data to exported RPC session tool metadata, so tool dumps and other clients can receive model-call examples
+    - Added supportsTools to model definitions and overrides so custom model configs can declare whether a model supports native tool calls
+    - Added tools.format for choosing native tool calling or a specific owned in-band format (glm, hermes, kimi, xml), with auto falling back to GLM only for models marked as not supporting native tools.
+    - Added a conditional easter-egg tip recommending nerd fonts when using the unicode symbol preset.
+    - Added the tools.abortOnFabricatedResult setting (default on): with in-band tool calls, stop the model the moment it starts hallucinating a tool result mid-turn, or disable it to let the model finish and discard the fabricated continuation instead.
+    Changed
+    - Changed /dump tool catalog output to render tools through the shared inventory renderer with readable TypeScript-style signatures and native-syntax <examples> blocks
+    - Changed todo tool result rendering so that collapsed phases truncate from the beginning, showing the latest/active tasks and displaying the "more todos" summary at the top.
+    - Expanded tools.format to support additional in-band tool-call syntaxes, including anthropic, deepseek, harmony, pi, and qwen3
+    - Changed the 13 tools that documented hand-written <examples> blocks (eval, browser, todo, irc, ssh, ast_edit, ast_grep, debug, find, inspect_image, ask, plus the patch/apply_patch edit modes) to define examples as typed examples data on the tool (ToolExample<z.input<typeof schema>>); the AI layer now renders them in the model's native tool-call syntax and the markdown <examples> blocks were removed.
+    - Changed the experimental owned tool-calling prompt from a GLM-only toggle to syntax-specific grammar prompts and result formats. PI_OWNED_TOOLS=1 still forces GLM; PI_OWNED_TOOLS=<syntax> forces that syntax.
+    - Changed the large-paste menu to offer attachment XML blocks (<attachment>), local-file attachments, or inline paste as explicit actions.
+    - Changed the system-prompt tool inventory: moved the # Inventory block to the bottom of the TOOLS section, and it now renders a compact tool-name list only when native tool calling is active and tool descriptions are not repeated; otherwise it emits full # Tool: <name> sections.
+    Fixed
+    - Fixed Auto-Promote Context being pre-empted by compaction: the pre-prompt context check ran compaction directly, so snapcompact (or any strategy) fired before promotion ever got a chance. It now tries promotion to a larger-context model first — mirroring the post-turn threshold path — and only compacts when no larger-context target is available. Snapcompact (auto and manual) also falls back to a context-full LLM summary when its frame archive plus kept history would still overflow the model's usable window, instead of leaving the session over the limit.
+    - Fixed eval JS cells intermittently failing after ~15s with exit code 1 under load (e.g. bun test --parallel, where each file runs in a worker subprocess and the eval worker is nested). The host swallowed asynchronous worker spawn/load/crash failures — new Worker reports module-load errors via an async error event, not a synchronous throw, so the spawn try/catch (and its inline-worker fallback) never fired, and no error/messageerror listener was wired — leaving a dead worker indistinguishable from a slow one and blocking the full worker-init timeout. The init handshake now rejects immediately on a worker error/messageerror event and falls back to the inline worker, and the ready listener is attached synchronously after new Worker (Bun does not buffer messages posted before a listener exists) so a fast worker's ready can no longer be dropped.
+    @oh-my-pi/hashline
+    Breaking Changes
+    - Renamed all hashline DSL operators to concise abbreviated keywords:
+      - replace → SWAP
+      - delete → DEL
+      - insert before/after/head/tail → INS.PRE/POST/HEAD/TAIL
+      - replace_block → SWAP.BLK
+      - delete_block → DEL.BLK
+      - insert_after_block → INS.BLK.POST
+    What's Changed
+    - fix(ai): route Codex Responses arg deltas by item_id by @roboomp in https://github.com/can1357/oh-my-pi/pull/2624
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.13.1...v15.13.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.13.2
+ReleaseTime: 2026-06-15T07:08:17.0000000Z

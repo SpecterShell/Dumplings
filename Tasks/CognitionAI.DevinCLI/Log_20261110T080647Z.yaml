@@ -1,0 +1,18 @@
+Version: 3000.12.43
+Installer:
+- Architecture: x64
+  InstallerUrl: https://static.devin.ai/cli/3000.12.43/devin-3000.12.43-x86_64-pc-windows.zip
+  InstallerSha256: A76947BBCDA169B64FD00B9FAAAB2BAF4F92C613DB28DEC1B8DCE5C48BA80FCD
+- Architecture: arm64
+  InstallerUrl: https://static.devin.ai/cli/3000.12.43/devin-3000.12.43-aarch64-pc-windows.zip
+  InstallerSha256: 83F21562B166FCD7F40B49565DF7647DFF4336A90CF0724DEDC43864F70039E4
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Image reads take an image_size. The default sends 70% of the original’s longest side, at least 1024 px, and images sent to GPT and Gemini models use those models’ own size limits.
+
+    Changed
+    - When a response stops at the output limit before a tool call, the CLI continues the turn instead of ending it. --continue-on-output-truncation=false restores the old behavior.
+    - GPT models keep working instead of stopping to ask for input they can work out, and add fewer low-value tests.

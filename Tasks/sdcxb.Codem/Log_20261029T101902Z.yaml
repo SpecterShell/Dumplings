@@ -1,0 +1,36 @@
+Version: 1.16.332
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/sdcxb/codem/releases/download/v1.16.332/Codem_1.16.332_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/sdcxb/codem/releases/download/v1.16.332/Codem_1.16.332_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Codem v1.16.332
+    发布日期：2026-10-29
+    类型：稳定版
+    下载：Codem_1.16.332_x64-setup.exe（推荐）或 Codem_1.16.332_x64_en-US.msi
+    本版要点
+    - worktree 冲突逐文件选边：合并回主工作区时，每个冲突文件可单独选择保留「主工作区」或「工作树」，也可以整体选一边。没选完会被拦住并列出文件，不会把仓库留在冲突态。
+    - 设置页长文本输入恢复整行：Base URL、称呼、名字、时区、我的标志选择器不再被挤到右侧 200px；「我的标志」的 emoji 网格也回到整行。
+    - 帮助页不再只占左半屏：内容卡宽度从 500px 放宽到设置内容区宽度。
+    - 子智能体状态条不再溢出：状态条独立成行、自动换行，不再压住工具调用面板标题或超出左右边界。
+    - 模型列表数量修正：刷新后不再出现「服务器 2 + 内置目录 1」却显示「获取到 0 个模型」。
+    - DeepSeek 模型目录清理：Vision-Exp 已并入 deepseek-flash，不再显示为独立实验模型；旧缓存中的退役 id 会自动过滤。
+    - 过期事件先归档再清理：事件流水超过保留期时先写入 archives/events，再从索引删除。
+    - 重启恢复待回答的问题：上次退出前的 needs_you 问题，重启并打开对应会话后会重新出现。
+    升级说明
+    - 直接覆盖安装即可；设置、会话、技能、插件都在用户目录，升级不会清空。
+    - 旧版本缓存的 DeepSeek 退役模型会在启动后自动消失，不需要手动刷新模型列表。
+    已知问题
+    - deepseek-v4-pro 目前仍按服务器列表显示；官方说明其请求会路由到 V4.1-Flash，本版未隐藏该条目。
+    校验
+    - 安装包与 latest.json 均已签名；更新器使用 windows-x86_64-nsis / windows-x86_64 两个键。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sdcxb/codem/releases/tag/v1.16.332
+ReleaseTime: 2026-10-29T10:13:08.0000000Z

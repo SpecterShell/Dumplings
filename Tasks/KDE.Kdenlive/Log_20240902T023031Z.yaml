@@ -1,0 +1,179 @@
+Installer:
+- InstallerUrl: https://download.kde.org/stable/kdenlive/24.08/windows/kdenlive-24.08.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/more_information/whats_new.html
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://docs.kdenlive.org/zh_CN/more_information/whats_new.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Kdenlive 24.08 is out, and while summer is usually a quieter time for the team, this update comes packed with nifty new features, enhancements, and quality-of-life improvements, specially for Effects and Transitions. This version boosts performance in sequence playback and timeline preview rendering, improves handling of transcoding issues when importing large amounts of clips, adds VAAPI transcode profiles, and fixes GPU transcoding for Nvidia. On the packaging front, Whisper support has been improved for both Windows and macOS while also improving theming issues on all platforms.
+
+    Effects and Transitions
+    This release comes with many improvements to Effects and Transitions that were made possible thanks to your contributions to our fundraiser.
+
+    User Interface
+    This version comes with a revamped user interface for all effect controls, resulting in a cleaner look and more efficient usage of space.
+
+    Easing Modes
+    In addition to the existing easing modes (linear, smooth, and constant), we’ve added several new options like: Cubic In/Out, Exponential In/Out, Circular In/Out, Elastic In/Out, and Bounce In/Out for transitions and effects.
+
+    Effect Groups
+    The new Effect Groups feature enables you to control and apply changes to all clips within a group or selection, making the effect editing process more flexible.
+
+    Transform Effect UX
+    This release brings several enhancements to the Transform effect, improving both usability and functionality. The handles’ visuals have been refined by adding more control points for easier adjustments. Now, you can move the frame from anywhere inside it, with the handles automatically disappearing during the move for a cleaner view. Also holding Alt+Click lets you cycle through clips without needing to select them in the timeline. We’ve also added a grid to the monitor, allowing clips to snap into place while moving.
+
+    Curve Editor
+    This version introduces an initial prototype of the highly anticipated curve editor for keyframes. Please note that it is in a very alpha state and is not ready for production.
+
+    Other Highlights
+    This release includes over 130 commits. Here are a few highlights:
+    - Fixed many Python related issues
+    - Fixed Titles background issues
+    - Added timestamps to undo commands
+    - Fixed many crashes in various operations
+    - Add Actions to quickly add Marker/Guides in a specific category
+    - Run callback server for OAuth2 only if necessary.
+    - Fixed issues with custom Clip Jobs
+    - Fixed audio recording regressions
+    Full Changelog
+    - Fix Whisper / numpy version on Mac. Commit.
+    - Try to fix venv on Mac. Commit.
+    - Fix monitor data lost on switch from/to fullscreen on Windows. Commit. See bug #490708.
+    - Improve default track height calculation. Commit. See bug #490869.
+    - Ensure qtblend composition is always preferred to cairoblend unless specifically requested by user. Commit. See bug #491628.
+    - Better syntax for package check. Patch by Philippe Fremy. Commit.
+    - Fix effectstack view keeps scrolling when mouse leaves. Commit.
+    - Improve drag and drop of effects, don’t create 2 separate entries on dropping effect from list. Commit.
+    - Fix effect stack scroll on drag. Commit.
+    - Stop dragging effect stack when mouse is outside of the widget. Commit.
+    - Fix reuse. Commit.
+    - Fix some effect names not translated. Commit. Fixes bug #491438.
+    - Fix python venv on Windows. Commit.
+    - Fix possible crash on python install and enforce correct packages for Windows Whisper. Commit. See bug #490661.
+    - Switch openai installer to python requirements files, allowing to fix numpy error on Windows. Commit. See bug #491350.
+    - Fix rendering progress sometimes incorrect. Commit. See bug #490146.
+    - Fix NVidia transcoding of 10bit videos (convert to 8bit). Commit.
+    - Default to GPU transcoding if available. Commit.
+    - Fix incorrect param in audio thumb introduced in recent commit. Commit.
+    - Minor optimization for preview render. Commit.
+    - Fix titler incorrect background scale. Commit.
+    - Fix subtitle widget size on AppImage. Commit.
+    - Fix detection of build in MLT lumas. Commit.
+    - Fix subtitle widget using too much space. Commit.
+    - When doing an extract operation on all tracks and guides are not locked, move / delete the guides accordingly. Commit. See bug #490020.
+    - Fix titler background is pixelated. Commit. Fixes bug #431606.
+    - Fix deleting several single selection items sometimes deletes an unselected clip. Commit.
+    - Make audio only render faster. Commit. See bug #491109.
+    - Add video only vaapi transcode profile. Commit.
+    - Don’t start proxy/audio tasks if a clip requires transcoding. Commit.
+    - First round of fixes for task manager. Commit.
+    - Add vaapi transcoding profile. Commit.
+    - Fix crash in task manager. Commit.
+    - Separate file for audio tracks fixes: Fix muted tracks exported, don’t export audio for video render. Commit. See bug #491108.
+    - Fix timeline scrolling down by a few pixels when already at the bottom when using rubberband or spacer. Commit. Fixes bug #490956.
+    - Ensure missing timeline clips all have the “Invalid” markup text. Commit.
+    - Fix crash cutting missing timeline clip. Commit.
+    - Fix possible crash in keyframe editor. Commit.
+    - Scroll effect stack view when dragging an effect. Commit.
+    - Fix crash adding/editing keyframes on tracks/master when using group effects feature. Commit.
+    - Fix possible QT debug crash on paste. Commit.
+    - Add Actions to quickly add Marker/Guides in a specific category. Commit.
+    - Fix loading sequence clip broken by last commit. Commit.
+    - Fix single selection resize affecting other grouped items. Commit.
+    - Add a control uuid to each bin clip to ensure clips can not get mixed on project opening. Commit.
+    - Fix crash after undo spacer move with guides. Commit.
+    - Fix transform keyframe center seeking outside clip. Commit.
+    - Fix crash pasting single selected clip. Commit. Fixes bug #490370.
+    - Fix track effects cannot be deleted if “group effect” feature is enabled. Commit.
+    - Updating a bin clip (name, tag) should be applied to all timelines, not only the current one. Commit.
+    - Slightly better adjustment of tracks in multicam view for more than 4 tracks. Commit.
+    - Make multitrack tool operate on inactive tracks as well. Commit. See bug #489981.
+    - Fix color theme menu not showing active theme. Commit. Fixes bug #489958.
+    - Fix cannot restore audio after saving project with master muted. Commit. Fixes bug #489985.
+    - Fix crash transcoding an audio only clip. Commit.
+    - Generating comobox box from mlt enumeration parameters in generic effect UI. Commit.
+    - Add createdate to dynamic text keywords and some tooltip info. Commit. See bug #489119.
+    - Update SoK file copyright. Commit.
+    - Implement keyframe curve editor. Commit.
+    - Fix transcoding sometimes results in vfr clips. Commit.
+    - Fix avgblur minimum value for x offset. Commit.
+    - Add sliders to keyframe import offset (Fixes #1884). Commit.
+    - Update include/exclude lists with latest status. Commit.
+    - Allow Effects/Compositions widgets to be smaller. Commit.
+    - Consistently use USE_DBUS in CMake. Commit.
+    - Monitor qml overlay: don’t allow editing effect if timeline cursor is outside effect. Commit.
+    - Get rid of ugly public/private hack in tests. Commit.
+    - In comments, replace en_GB words “colour” and “analyse” with en_US versions. Commit.
+    - Rename CMake option for DBus from NODBUS to USE_DBUS. Commit.
+    - Nicer monitor handles for transform effect, don’t allow invalid rect on resize. Commit.
+    - [cmd rendering] Ensure proper kdenlive_render path for AppImage. Commit.
+    - [nightly flatpak] update otio. Commit.
+    - Explicitly mention that QT’s major version in MLT must match the one used for Kdenlive. Commit.
+    - Fix undo move effect up/down. On effect move, also move the active index, increase margins between effects. Commit.
+    - Fix removing a composition from favorites. Commit.
+    - Properly activate effect when added to a timeline clip. Commit.
+    - Transform effect: allow moving frame from anywhere inside it, hide handles on move. Commit.
+    - Fix spacer tool can move backwards and overlap existing clips. Commit.
+    - Transform effect: add top, bottom, left, right handles. Commit.
+    - Add easing method to video fades. Commit.
+    - Transform effect: fix handles move on click. Commit.
+    - Transform effect: when working in timeline with several clips using a transform effect, Alt+Click allows cycling through the clips. Commit.
+    - [nightly flatpak] Switch to llvm18. Commit.
+    - Add grid to monitor effects scene (it snaps). Commit.
+    - Run callback server for OAuth2 only if necessary. Commit.
+    - Fix extra dash added to custom clip job output. Commit. See bug #487115.
+    - Fix include list license. Commit.
+    - Fix usage of QUrl for LUT lists. Commit. See bug #487375.
+    - Rename include/exclude lists. Commit.
+    - For Qt5 require at least KF 5.115.0, for Qt6 KF 6.0.0. Commit.
+    - Allow custom whitelist files for effects / compositions (no ui yet). Commit.
+    - Fix startup crash on KF 6.3. Commit.
+    - Fix missing whitelist license. Commit.
+    - Implement effects whitelist (WIP). Commit.
+    - Fix default keyframe type referencing the old deprecated smooth type. Commit.
+    - Warn if custom clip job contains uneven number of quotes. Commit.
+    - Be more clever splitting custom ffmpeg commands around quotes. Commit. See bug #487115.
+    - Fix effect name focus in save effect. Commit. See bug #486310.
+    - Fix tests. Commit.
+    - Fix selection when cutting an unselected clip under mouse. Commit.
+    - Add timestamp to undo commands. Commit.
+    - Fix loading timeline clip with disabled stack should be disabled. Commit.
+    - Fix crash trying to save effect with slash in name. Commit. Fixes bug #487224.
+    - Remove quotes in custom clip jobe, fix progress display. Commit. See bug #487115.
+    - Replace custom style menu by new KStyleManager menu. Commit.
+    - Use KIconTheme::initTheme & KStyleManager::initStyle for proper styling. Commit.
+    - Fix setting sequence thumbnail from clip monitor. Commit.
+    - ClipJob: fix typo. Commit.
+    - ClipJob: correct and update info and whatsthis. Commit. See bug #487115.
+    - Fix locked track items don’t have red background on project open. Commit.
+    - Fix spacer tool doing fake moves with clips in locked tracks. Commit.
+    - Hide timeline clip status tooltip when mouse leaves. Commit.
+    - UI files: use notr=”true” instead of old comment=”KDE::DoNotExtract”. Commit.
+    - Fix wrong FFmpeg chapter export TIMEBASE. Commit. Fixes bug #487019.
+    - Fix tests build. Commit.
+    - With Qt6 the breeze-icons *.rcc files are no longer delivered. Commit.
+    - Code Gardening: split main() into logical pieces. Commit.
+    - Create sequence thumbs directly from bin clip producer. Commit.
+    - Play monitor on click – make configurable. Commit.
+    - Fix opening documentation link for shuttle on Windows. Commit.
+    - Fix merge error. Commit.
+    - Typo for build command: ninja is use in the cmake command, so sudo ninja install should be used. Commit.
+    - JogShuttle, add note and link for installation on Windows. Commit. Fixes bug #485602.
+    - Optimize playback of sequence clips (don’t default to rgba format which triggers expansive compositing checks). Commit.
+    - Correct typo “file exist” → “file exists”. Commit.
+    - Draft: Clarify that the remaining time calculation is an estimation. Commit.
+    - Fix tests warnings. Commit.
+    - Improve user feedback. Commit.
+    - Audio record: allow playing timeline when monitoring, clicking track rec… Commit. See bug #486198. See bug #485660.
+    - Feat: Implement effect groups. Commit.
+    - Work/audio rec fixes. Commit.
+    - Add multi-format rendering. Commit.
+    - Ensure Docks are correctly sorted in view menu. Commit.
+    The post Kdenlive 24.08.0 released appeared first on Kdenlive.
+- Key: ReleaseNotesUrl
+  Value: https://kdenlive.org/en/2024/09/kdenlive-24-08-0-released/
+Version: 24.08.0

@@ -1,0 +1,20 @@
+Version: 0.6.27
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.27/OMPiUI_0.6.27_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复流式回复期间出现 Cannot read properties of undefined (reading 'type') 并导致聊天页面崩溃的问题。
+    - fix: 修复流式消息内容空位导致的页面崩溃 (84117af)
+    - fix: 接收端不再为尚未到达的内容块提前扩长数组；缺少前序块时保留当前消息并只读恢复完整快照。
+    - fix: 保留空参数工具调用的内容块，正确同步清空后的参数，避免内容下标缺口。
+    - test: 增加逐帧聊天渲染、缺块恢复、历史水合和真实 worker 到前端的无损往返回归。
+    - verification: npm run release:prepare -- 0.6.27 的完整校验通过，前端 1349 项测试全部通过；lint 为 0 error、6 条已有 warning，官方 OMP 环境验证有 1 项跳过。发布选择逻辑的 12 项测试通过；安装包构建及实机升级仍以发布工作流和设备验收为准。
+    - chore: 根包、全部 workspace、互依赖、npm 锁文件及 Tauri/Cargo 统一为 0.6.27；事件协议与官方会话格式不变。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.27
+ReleaseTime: 2026-10-15T12:12:53.0000000Z

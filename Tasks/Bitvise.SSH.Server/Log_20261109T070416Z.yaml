@@ -1,0 +1,87 @@
+Version: "9.67"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshServer-967.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-server-version-history-9-5#967
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Security updates:
+      - This version fixes multiple security issues, including SSH protocol and key handling, excessive resource use, and failures to enforce configured access restrictions. Depending on server settings, some issues can affect unauthenticated connections. We recommend upgrading.
+    - Compatibility:
+      - The SSH Server now requires at least Windows Vista, Windows Server 2008, or newer. Windows XP and Windows Server 2003 are no longer supported.
+      - The SSH Server's settings format has changed. Settings saved by version 9.67 cannot be loaded by earlier versions. Applications that use the scriptable settings COM object using static linkage will need to use the new 9.67 interfaces. Scripts that use dynamic languages, including PowerShell, retain 9.xx compatibility.
+      - Remote administration now requires WRC version 9.67. This is included with Bitvise SSH Client 9.67.
+    - SSH cryptography:
+      - Bitvise software now supports hybrid post-quantum and classical signatures using MLDSA44_Ed25519 (ssh-mldsa44-ed25519). This combines ML-DSA-44 and Ed25519 for server and client authentication. The algorithm is only available when FIPS 140 cryptography mode is not enabled in Windows.
+        New installations now generate RSA-3072 and MLDSA44_Ed25519 host keys by default. If Windows FIPS mode is enabled, the defaults remain RSA-3072 and ECDSA/nistp384. An upgrade does not change host keys for existing installations.
+        If considering whether to generate a new MLDSA44_Ed25519 host key on an existing installation, review Host Keys in the SSH Server Users' Guide. Specifically, the section: Adding a host key with a different algorithm.
+      - SSH compression using zlib is now disabled by default in new settings. Upgrading preserves the existing setting.
+        The concern with zlib is that it uses a shared compression dictionary for all connection channels. If channels contain data from different users, for example when using port forwarding, a user of one channel may be able to leverage compression characteristics to discover data sent on other channels in the same SSH connection.
+        Per-channel compression could avoid this issue, but needs a specification. Bitvise would consider this if another SSH implementation has interest.
+      - SSH algorithm settings now support configurable preference order. The new Algorithm preference setting allows compatible clients to use the SSH Server's configured algorithm preference, instead of the client preference. This is initially intended for master/follower synchronization. The implementation follows the Internet-Draft Server-Led Algorithm Preference in the Secure Shell (SSH) Protocol.
+        By default, server algorithm preference is offered by SSH Server instances configured as Master or Secondary master. It allows a master to choose algorithm preference for follower synchronization connections. Clients that do not negotiate this feature continue to use client preference.
+        Like other clients, Bitvise SSH Client and FlowSsh do not implement this feature at this time. They continue to negotiate client preference.
+      - Further limited the amount of CPU that clients can consume through repeated SSH key exchanges.
+    - Control Panel and Settings:
+      - The Connections tab now provides more detailed transfer statistics, including connection totals, FTP data transfers, and transfer speeds. Improved responsiveness when displaying many connections.
+      - Improved handling of overlapping settings windows and background notifications. Fixed cases where notifications could appear in the wrong window, fail to complete an action, or cause an internal error.
+      - Fixed Easy settings issues affecting the saving and copying of accounts. These included discarded changes to file-share passwords and unintended changes to inherited permissions.
+      - Windows account and group settings entries can now be marked Ignored. This retains their configuration while excluding the entries from account matching and settings inheritance. It also avoids lookup warnings for retained entries referring to removed Windows accounts or groups.
+      - Added a global Allow public key management setting under Access control. Groups and accounts can inherit this setting or override it. Existing permissions are preserved during upgrade.
+      - Easy settings no longer offers unrestricted shell access for virtual accounts. This remains configurable in Advanced settings, with a warning about the lack of isolation between virtual accounts that use the same Windows account.
+      - Fixed SSH Server Control Panel startup errors associated with acquiring the system tray icon, including during Windows login.
+    - Authentication and virtual accounts:
+      - Fixed security issues in the handling of TOTP grace periods.
+      - Virtual accounts configured to share a logon session with their group now consistently use the group's Windows security context. A stored account-level override could previously apply despite group sharing being enabled.
+      - Improved protection of SSH Server subsystems against interference between virtual accounts. Virtual accounts using the same Windows account still do not provide the isolation of separate Windows accounts when users are allowed to run arbitrary programs.
+      - Authentication agent forwarding is no longer permitted for virtual accounts sharing a group logon session, or using the SSH Server, Local Service, or Network Service security contexts. Additional protection checks apply to PuTTY agent forwarding.
+      - Restored recovery from certain Windows S4U logon failures.
+      - When valid virtual-account credentials are accepted but Windows cannot create the configured security context, the failure no longer incurs a credential penalty or its associated login delay. It still counts toward the total failed-attempt threshold.
+    - Delegated administration:
+      - Fixed a security issue where delegated administrators could receive private host-key or certificate information without permission to manage host keys and certificates.
+      - Tightened enforcement of delegated administrators' mount point path restrictions.
+    - Port forwarding:
+      - Windows accounts can now inherit forwarding from multiple Windows groups. This is controlled by Inherit forwarding from other groups. When enabled, permissions from matching groups are additive, while account-level restrictions take precedence. The default remains inheritance from the primary group only.
+      - Added Max client-side S2C listeners per user, a server-wide default setting with group and account overrides. The limit applies across all connections for the user. Newly created settings default to 100. For compatibility, upgraded settings use 9,999. Administrators of upgraded instances are encouraged to review and adjust this setting, in particular if settings permit S2C forwarding.
+        This setting does not affect server-configured S2C port forwarding rules.
+      - Fixed issues in enforcement of forwarding restrictions. Disabling S2C forwarding permission now also removes existing listeners covered by that permission.
+      - Fixed forwarding listeners that could remain stalled after a temporary overload. Improved management of Windows Firewall exceptions for forwarding listeners.
+    - File transfer:
+      - Fixed security issues in enforcement of mount point permissions, filename restrictions, and protection of existing files. Corrected cases where cleanup could affect an unintended file.
+      - Reworked permissions for newly uploaded files. New-file access is tied more closely to files created in the current file transfer session. Once associated handles are closed and operations complete, access can expire after 15 seconds without successful activity, or sooner when the session's tracking limit is reached. It does not permit resuming an upload after disconnecting.
+        For Specific directory and Unlimited access mount points, the setting remains Permit Read/Write/Delete New. For other mount point types, it is now named Permit Read/Write/Move New to reflect the supported operations.
+      - Improved coordination of Move uploads and On-upload commands with open file handles and pending file operations.
+        When NTFS alternate data streams are enabled, activity on a file and its streams is now grouped for upload processing. This avoids separate upload actions for each stream while retaining separate transfer log entries.
+      - Fixed issues in buffered and asynchronous file operations that could cause corrupted or incomplete uploads, incorrect success reporting, or stalled cleanup. Errors during final writing or closing are now handled more consistently.
+        For moves implemented by copying and then deleting, a failure to finish writing the destination no longer permits deletion of the source.
+      - When filtering directory contents, a directory listing could end before all permitted entries were shown. Fixed.
+      - Fixed text-mode file positioning which could access the wrong position when counting line separators.
+      - Improved deletion and error cleanup for encrypted volumes. Changing a volume's size limit no longer disrupts its open files and pending operations.
+      - For mount points of type Another SFTP server, improved handling of stale file handles after reconnecting and corrected available-space reporting.
+      - Improved support for updating authorized_keys by renaming the existing file and uploading or renaming a replacement. The server no longer prematurely recreates the file during this workflow. Incomplete replacements are not applied if the file transfer session ends.
+    - FTPS:
+      - Fixed security issues in TLS handshake processing. Also fixed valid handshakes that could fail depending on how the handshake data arrived, and improved cleanup of passive data connections and server-initiated disconnects.
+      - Newly generated ECDSA certificate signing requests now use SHA-256 instead of SHA-1. Self-signed ECDSA certificates already used SHA-256.
+    - BvShell and SCP:
+      - BvShell must now be launched directly by the SSH Server. Starting it through Command Prompt, PowerShell, or another wrapper no longer provides access to the server's virtual filesystem.
+        Support for external DLL-based filesystem providers and the public SfsDll interface has been removed.
+      - Use BvShell with WinSCP is now disabled by default in newly created settings. Existing settings are preserved during upgrade. WinSCP has supported SFTP for a long time, so we expect this is no longer commonly needed.
+      - Tightened restrictions on client-supplied environment variables for restricted shell access types. For Git access only, the only permitted client variable is GIT_PROTOCOL, and permission to accept environment variables must still be enabled.
+      - Fixed BvShell pipelines that could run despite a startup failure, or hang after another command in the pipeline exited.
+      - SCP now supports subsecond file timestamps. Corrected timestamp and exit-code reporting, and improved handling of deeply nested directories.
+    - Logging and automation:
+      - Fixed log entries containing duplicate XML attributes. This could prevent external XML tools from reading the SSH Server's textual log files.
+      - Improved disconnect summaries and diagnostics for high CPU or memory use.
+      - Added I_SERVICE_IP_BLOCKED to report the reason and duration of an IP address block.
+      - When a text-log failure triggers Allow connections from administrators only, existing non-administrator connections are now disconnected as intended.
+      - PubKeyMaint.ps1 now recognizes public-key use as part of multi-factor authentication. Previously, this use could be missed when identifying unused keys.
+      - Fixed application of configured TLS requirements when sending email directly to destination mail servers. Also fixed failures to queue messages and incorrect delivery timeout calculations.
+      - Corrected scriptable settings compatibility properties that could return outdated values or ignore assignments. Fixed creation of path-list entries through scripting.
+    - General:
+      - Fixed a regression introduced in 9.63 which could cause an internal error during SSH channel cleanup. Improved handling of channels that are starting or closing when a connection ends.
+      - Improved disconnect and service shutdown when Windows does not finish terminating a subsystem. The SSH Server no longer waits indefinitely for that termination.
+      - The installation now includes GenCountries.exe, which can generate an updated Countries.bin using either IPLocate.io or MaxMind data. The included country database now uses IPLocate.io data.
+ReleaseTime: 2026-11-09

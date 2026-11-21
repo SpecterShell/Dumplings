@@ -1,0 +1,67 @@
+Version: 0.61.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.61.2/OpenHuman_0.61.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.61.2/OpenHuman_0.61.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The Orchestration & Workflows Leap
+    This release brings a big step forward in orchestrating agents, building reliable workflows, and tightening up privacy, stability, and observability across the app. Onward! 🚀
+    Highlights
+    Orchestration hub & agent fleet control 🧠
+    Orchestration matured into a true control center: a TinyPlace-focused hub and dedicated tab, an attention/“Needs you” zone for approvals and blocked runs, typed v2 harness-session streams, and a Master chat control channel for managing sessions (including better DM ingest/replies and safer handling of undecryptable messages).
+    This also expands what can be orchestrated—co-located local CLI agents, Cursor/Windsurf harness support, hosted-brain client work, and new device tool execution flows (with trust gating and approvals) to keep powerful actions both usable and safe. (#4588, #4589, #4592, #4609, #4623, #4627, #4652, #4660, #4693, #4709, #4710, #4712, #4713, #4720, #4722, #4725, #4738, #4753, #4773, #4775, #4777, #4778, #4837) — Thank you @oxoxDev, @sanil-23, @senamakel, @M3gA-Mind, @CodeGhost21, and @YellowSnnowmann!
+    Workflows (tinyflows) from foundations to polished UX 🔁
+    Workflows evolved rapidly: the core engine seam and domain landed, then triggers/resume/history, approvals and trust, run inspection, list + navigation, canvas views, and a full Workflows page overhaul with discoveries and runs. The builder gained major quality-of-life upgrades—live catalog grounding, clearer input handling, safer defaults and gating, better diagnostics, and a “Fix with agent” path for failed runs.
+    A long run of correctness fixes followed: condition and routing validation, schedule rendering, tool output path handling (including schema-less probing), better run honesty (including warnings), deduped output rendering, persisted copilot chat, and protection against accidentally arming scheduled/side-effecting flows. (#4433, #4447, #4449, #4450, #4471, #4472, #4474, #4477, #4552, #4561, #4570, #4573, #4574, #4578, #4580, #4586, #4587, #4590, #4591, #4602, #4605, #4606, #4607, #4608, #4628, #4630, #4636, #4645, #4647, #4651, #4659, #4662, #4663, #4664, #4665, #4668, #4670, #4672, #4673, #4674, #4698, #4702, #4707, #4750, #4822, #4823, #4826, #4834, #4835, #4836, #4858, #4865, #4869, #4870, #4874, #4876) — Thank you @graycyrus, @senamakel, @CodeGhost21, and @YellowSnnowmann!
+    TinyAgents + agent harness reliability (and better answers) 🧩
+    A major wave of harness and TinyAgents migration work landed: the agent_graph state-machine harness with checkpointing/HITL/observability, migration completion, structured policy-block messaging, better “final answer” guarantees, tool-failure classification surfaced to the UI, and a strengthened memory read→dedupe→write→index contract (plus a long tail of fixes around unavailable tools and no-progress nudges).
+    A lot of robustness work also went into preventing wedged turns and improving orchestration behaviors—timeouts, parallel fan-out, safer delegation paths, clearer tool failure rendering, prompt posture adjustments, and better scheduler/cron hardening. (#4261, #4362, #4372, #4386, #4399, #4400, #4413, #4419, #4425, #4430, #4431, #4434, #4443, #4444, #4445, #4473, #4476, #4478, #4479, #4480, #4481, #4482, #4483, #4485, #4495, #4502, #4504, #4507, #4509, #4512, #4524, #4539, #4542, #4601, #4603, #4658, #4682, #4683, #4686, #4741, #4748, #4751, #4752, #4757, #4764, #4768) — Thank you @senamakel, @M3gA-Mind, @oxoxDev, @sanil-23, @sanil-23, and @CodeGhost21!
+    Memory engine upgrade: TinyCortex migration 🧠📚
+    Memory got a foundational upgrade with a staged TinyCortex migration: adapter seams, type unification, connection foundations, chunk store flips (read paths, batching, listing), and finally the full engine migration—backed by parity harness work and updated coverage.
+    Along the way, several important quality fixes landed: safer rendering shims, better memory-store self-healing, clearer error classification, and improved reliability signals between Vault health and Sync status. (#4363, #4526, #4529, #4532, #4534, #4538, #4546, #4547, #4551, #4555, #4559, #4781, #4785, #4787, #4788, #4789, #4790, #4794, #4820, #4699, #4700, #4703, #4340, #4410) — Thank you @senamakel, @YellowSnnowmann, @CodeGhost21, @M3gA-Mind, and @oxoxDev!
+    Privacy Mode & local-only enforcement 🔒
+    Privacy became first-class: Privacy Mode and local-only inference enforcement, plus an egress descriptor + disclosure events, privacy status surfaces, per-action disclosure UI, and PII/identification-risk detection.
+    This work also extends local-only enforcement across integrations and tools, making it easier to understand what will (and won’t) leave your machine before you run something. (#4446, #4812, #4813, #4849, #4850) — Thank you @oxoxDev!
+    Observability & Langfuse tracing (deeper + safer) 🔭
+    Tracing and observability expanded dramatically: richer Langfuse metadata, one-trace-per-turn, full-content tracing across generations/tools/subagents with real costs, and export of graph/flow runs (including Agent-Graph-view metadata). Journal telemetry now feeds Langfuse usage/run insights, and trace parenting for spawned sub-agents is correctly linked.
+    Stability improvements round it out: chunked ingestion batches, demoted noisy rejection paths, and several trace correctness fixes (including an upstream observation-id collision fix via dependency bump). (#4498, #4499, #4506, #4562, #4568, #4676, #4678, #4864) — Thank you @senamakel, @M3gA-Mind, and @oxoxDev!
+    Desktop stability, startup recovery, and UX polish 🖥️
+    Desktop reliability improved across platforms: proactive stale process cleanup on Windows startup, macOS/Linux stale-lock reaping and installer pre-install kills, better Linux linking for error handling/builds, and CEF/Windows GPU routing via SwiftShader (plus tighter scoping for Windows pre-CEF recovery).
+    On the UX front, this range adds remote-core connection settings with live status, window geometry persistence and minimized-window restore behaviors, better sign-in error messaging, and a set of app-wide header/landing standardizations. (#3793, #4405, #4406, #4643, #4644, #4649, #4817, #4818, #4851, #4857, #4859, #4860, #4805) — Thank you @sanil-23, @M3gA-Mind, @senamakel, and @NgoQuocViet2001!
+    Channels & communications: email, Telegram/WhatsApp, meetings ✉️
+    OpenHuman gained native IMAP/SMTP email integration, plus continued work on channels via tinychannels migrations and runtime boundaries. Telegram pairing and tool-calling reliability improved, history ingest got back-pressure, and WhatsApp corruption handling now recovers instead of flooding Sentry.
+    Meetings leveled up with live transcripts, improved correlation IDs, Recall Calendar auto-join and UI improvements, richer bot “speak” tagging for mascot pose, and even dual mascots with per-mascot voice + speaker alternation. (#4367, #4414, #4569, #4549, #4557, #4349, #4350, #4354, #4391, #4585, #4715, #4740) — Thank you @oxoxDev, @senamakel, @graycyrus, and @YellowSnnowmann!
+    Inference + core runtime modernization ⚙️
+    Inference moved toward a cleaner, crate-native and TinyAgents-driven architecture: migrating callers onto tinyagents ChatModel, decoupling per-turn state, adopting ModelRouter routing, and multiple “Motion” steps to cut over BYOK cloud slugs and OpenAI/codex paths to crate-native implementations—while also addressing SSE hang scenarios and ensuring raw BYOK model IDs are preserved.
+    On the platform side, the core runtime gained pluggability and a “fleet host,” plus DomainSet composition and a compile-time voice feature gate. There’s also progress on managed file storage agent tools and surfaced storage transfer tools. (#4393, #4614, #4625, #4629, #4769, #4780, #4782, #4783, #4784, #4298, #4791, #4808, #4833, #4576, #4577) — Thank you @senamakel, @oxoxDev, @sanil-23, and @YellowSnnowmann!
+    Quality: CI, tests, and release plumbing 🧪
+    This range invests heavily in build and test confidence: two-lane CI (lite/full), changed-files-only PR lanes and full-suite release lanes, test audits and phased cleanup/backfill, faster Rust test builds, and many E2E stabilizations across platforms and release “tails.”
+    Release mechanics also got attention: workflow parse fixes, full dist artifact restoration, release-lane unblocks and timeouts, branch/limit adjustments (including a cap removal), and CodeQL alert sink hardening. (#4486, #4488, #4489, #4492, #4494, #4497, #4500, #4501, #4511, #4519, #4521, #4527, #4530, #4531, #4533, #4540, #4543, #4548, #4553, #4554, #4556, #4579, #4646, #4666, #4671, #4701, #4721, #4759, #4827, #4830, #4838, #4866, #4867, #4871) — Thank you @senamakel, @M3gA-Mind, @CodeGhost21, and @graycyrus!
+    Product experience: chat, persona, rewards, settings, and docs 🎁
+    Chat and conversations got significant upgrades: per-turn process history and a multi-phase timeline refactor, improved event merging in reducers, more reliable tool-result rendering, timeline anchoring/dedup fixes, and a 1M context window adjustment for chat-v1. There are also UX refinements like tool-call failure explanations in the processing timeline and safer cancellation scoping.
+    Elsewhere: morning briefing personalization, guided persona builder role templates, achievement token rewards visibility, font-size fine-tuning, standardized analytics interaction tracking, plus a major docs refresh including setup/recovery guides and reorganized install/workflows/orchestration documentation. (#4373, #4416, #4424, #4612, #4604, #4622, #4626, #4765, #4711, #4696, #4873, #4407, #4508, #4514, #4515, #4792, #4493, #4510, #4513, #4516) — Thank you @M3gA-Mind, @senamakel, @oxoxDev, and @YellowSnnowmann!
+    Smaller-but-mighty fixes across the app 🛠️
+    A broad set of targeted fixes improved everyday reliability: stopping API usage flooding, rebinding state correctly on active-user switch, handling /announcements/latest 404s gracefully, better offline-provider behavior to prevent Sentry floods, and safer boot behavior in cloud mode.
+    There are also improvements in learning and agentworld utilities, connection cleanup correctness, MCP catalog additions, shell execution routing on Windows, and composio approval parking behavior. (#4379, #4417, #4415, #4402, #4484, #4518, #4697, #4717, #4723, #4758, #4584, #4704, #4819, #4848, #4298) — Thank you @oxoxDev, @mysma-9403, @CodeGhost21, @M3gA-Mind, @sanil-23, and @YellowSnnowmann!
+    Language-based workflows (RLM/Rhai) & “Codex” vendor work 🧠🧰
+    Language-based workflows took shape with a first-class Rhai .ragsh REPL tool and follow-on domain renaming, backed by planning docs and broader vendor strategy work.
+    A set of “codex” and vendoring PRs also landed: TinyJuice/TokenJuice work, TinyChannels runtime pieces and provider adoption, tiny.place SDK vendoring and pairing flow, and various submodule updates to keep the stack aligned. (#4528, #4571, #4523, #4400, #4535, #4549, #4557, #4560, #4575, #4620, #4491, #4563, #4815) — Thank you @senamakel!
+    Additional highlights 🔗
+    A few more focused contributions round out this release with targeted fixes and improvements that are worth calling out. (#4475, #4525, #4550, #4558, #4564, #4582, #4599, #4611, #4621, #4624, #4642, #4694, #4807, #4816, #4824, #4831, #4832, #4839, #4842, #4875) — Thank you @sanil-23, @senamakel, @CodeGhost21, @YellowSnnowmann, and @M3gA-Mind!
+    New Contributors
+    - Thank you @nazarli-shabnam for improving resilience by making /announcements/latest return null on 404 instead of erroring. (#4417)
+    Hope you’ll join our Discord—there are exclusive roles and contributor rewards waiting for you!
+    Contributor Credits
+    Huge thanks to everyone who contributed to this release: @CodeGhost21, @Cyrus Gray, @Mega Mind, @mysma-9403, @NgoQuocViet2001, @oxoxDev, @sanil-23, @Shabnam, @Steven Enamakel, @YellowSnnowmann, and the automation support from @github-actions[bot].
+    Full Compare
+    https://github.com/tinyhumansai/openhuman/compare/v0.58.7...v0.61.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tinyhumansai/openhuman/releases/tag/v0.61.2
+ReleaseTime: 2026-07-15T08:42:50.0000000Z

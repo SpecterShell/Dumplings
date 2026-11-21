@@ -1,49 +1,59 @@
-$Object1 = Invoke-RestMethod -Uri 'https://updates.bravesoftware.com/service/update2' -Method Post -Body @"
-<?xml version="1.0" encoding="UTF-8"?>
-<request protocol="3.0" updaterversion="1.3.361.137" ismachine="0" sessionid="{$((New-Guid).Guid)}" testsource="auto" requestid="{$((New-Guid).Guid)}">
-    <os platform="win" version="10" sp="" arch="x64" />
-    <app appid="{103BD053-949B-43A8-9120-2E424887DE11}" ap="x86-be" version="" nextversion="" lang="" brand="" client="">
-        <updatecheck />
-    </app>
-    <app appid="{103BD053-949B-43A8-9120-2E424887DE11}" ap="x64-be" version="" nextversion="" lang="" brand="" client="">
-        <updatecheck />
-    </app>
-    <app appid="{103BD053-949B-43A8-9120-2E424887DE11}" ap="arm64-be" version="" nextversion="" lang="" brand="" client="">
-        <updatecheck />
-    </app>
-</request>
-"@
+$Releases = (Invoke-GitHubApi -Uri "https://api.github.com/repos/brave/brave-browser/releases").Where({ $_.name.StartsWith('Beta') })
 
-if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Length -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+# The latest release may not contain all the installers. Iterate through the releases to find the latest one with all installers.
+foreach ($Object1 in $Releases) {
+  try {
+    # Version
+    $this.CurrentState.Version = "$([regex]::Match($Object1.name, 'Chromium (\d+)').Groups[1].Value).$([regex]::Match($Object1.name, 'v(\d+(?:\.\d+)+)').Groups[1].Value)"
+
+    # Installer
+    $this.CurrentState.Installer = @(
+      [ordered]@{
+        Architecture = 'x86'
+        Scope        = 'user'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup32.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+      [ordered]@{
+        Architecture = 'x86'
+        Scope        = 'machine'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup32.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+      [ordered]@{
+        Architecture = 'x64'
+        Scope        = 'user'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+      [ordered]@{
+        Architecture = 'x64'
+        Scope        = 'machine'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('Setup.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+      [ordered]@{
+        Architecture = 'arm64'
+        Scope        = 'user'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('SetupArm64.exe') -and $_.name -match 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+      [ordered]@{
+        Architecture = 'arm64'
+        Scope        = 'machine'
+        InstallerUrl = $Object1.assets.Where({ $_.name -match 'BraveBrowserStandalone' -and $_.name.EndsWith('SetupArm64.exe') -and $_.name -notmatch 'Silent' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+      }
+    )
+
+    # If the latest release contains all installers, break the loop and use this release.
+    break
+  } catch {}
 }
 
-# Version
-$Task.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase + $Object1.response.app[0].updatecheck.manifest.packages.package.name
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'arm64'
-  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

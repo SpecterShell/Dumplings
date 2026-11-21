@@ -1,0 +1,32 @@
+Installer:
+- InstallerType: msix
+  InstallerUrl: https://c.quick-lint-js.com/releases/3.2.0/windows/quick-lint-js.msix
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://c.quick-lint-js.com/releases/3.2.0/manual/windows-x86.zip
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://c.quick-lint-js.com/releases/3.2.0/manual/windows.zip
+- Architecture: arm
+  InstallerType: zip
+  InstallerUrl: https://c.quick-lint-js.com/releases/3.2.0/manual/windows-arm.zip
+- Architecture: arm64
+  InstallerType: zip
+  InstallerUrl: https://c.quick-lint-js.com/releases/3.2.0/manual/windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - VS Code: You can now make quick-lint-js messages fun and insulting with the quick-lint-js.snarky setting (disabled by default). (Implemented by vegerot.)
+    - Using Greek question mark (;, U+037E) instead of a semicolon (;, U+003B) now reports [E0457][] ("this is a Greek Question Mark, not a semicolon (';')"). This diagnostic is also reported for similar-looking characters like ǃ (which should be !) and ﴾ (which should be ().
+    - TypeScript: Decorators on abstract classes are now parsed. (#1194)
+    Fixed
+    - TypeScript: (): RT<T>=>null (with no spaces in >=>) now parses correctly. (Fixed by vegerot.)
+    - Fixed E0718 falsely diagnosing valid code. (#1192, #1199)
+    - quick-lint-js no longer crashes in the presence of symbolic links and directory junctions on Windows. (#1182)
+    - Fixed a read buffer overflow (possibly leading to a crash) when checking whether short identifiers containing Unicode escape sequences are keywords. (x86 and x86_64 only.) (#1191)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/quick-lint/quick-lint-js/releases/tag/3.2.0
+Version: 3.2.0
+ReleaseTime: 2024-03-04T04:59:06.0000000Z

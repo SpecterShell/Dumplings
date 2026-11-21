@@ -1,33 +1,51 @@
 $Prefix = 'https://pdflux.com/downloads/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object = Invoke-WebRequest -Uri 'https://pdflux.com/log/' | Read-ResponseContent | ConvertFrom-Html
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
     try {
-      $ReleaseNotesNode = $Object.SelectSingleNode("//div[contains(./@class, 'version-item') and contains(./div[3]/h3[1]/text(), '$($Task.CurrentState.Version)')]")
+      $Object1 = Invoke-WebRequest -Uri 'https://pdflux.com/log/' | Read-ResponseContent | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object1.SelectSingleNode("//div[contains(./@class, 'version-item') and contains(./div[3]/h3[1]/text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesNode) {
         # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="version-subtitle"]') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

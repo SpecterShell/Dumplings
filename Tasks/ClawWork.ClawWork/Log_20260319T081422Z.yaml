@@ -1,0 +1,30 @@
+Version: 0.0.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/clawwork-ai/ClawWork/releases/download/v0.0.8/ClawWork-0.0.8-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ✨ What's New
+    - 📐 Responsive panels & drag-to-resize — Default panel widths now scale with screen size (clamp-based). Drag either panel border to resize; widths persist across restarts. The left nav collapses to a 52px icon rail. Toggle panels with ⌘, / ⌘. shortcuts. by @samzong in #93
+    - 🗂️ Artifact storage & full-text search — Agent messages are automatically scanned for code blocks and images, which are persisted to the workspace git repo. A new File Browser with FTS5 full-text search, per-task filtering, and an inline preview drawer replaces the placeholder file manager. by @samzong in #96
+    - 🔑 Pairing code auth & connection banner — Add a gateway by pasting a base64 setup code (URL + bootstrap token in one). A persistent ConnectionBanner surfaces reconnect state and missing config inline instead of silently failing. by @samzong in #106
+    - 📂 Change workspace path after setup — The workspace directory is now configurable at any time. Changing it copies all files and migrates the SQLite database atomically; rollback on failure is automatic. by @samzong in #108
+    - 🏠 Welcome screen toolbar — Model selector, thinking level picker, slash command dashboard, and tools catalog now appear on the welcome screen. Configure preferences before starting your first task. by @samzong in #90
+    - 🌐 Marketing landing page — A standalone landing page (website/) with EN/ZH i18n, dynamic latest-release version badge, and scroll-reveal animations. by @samzong in #88
+    🐛 Bug Fixes
+    - Fixed image attachments disappearing after restart — image data is now serialized to SQLite and restored on hydration by @samzong in #87
+    - Fixed gateway banner unclickable due to Electron titlebar drag overlay — added titlebar-no-drag to banner; upgraded to amber warning colors for visibility by @samzong in #107
+    - Fixed task context menu appearing offset from click position — replaced Radix DropdownMenu with a portal-based popover that renders at exact click coordinates by @yankay in #101
+    - Fixed logo and screenshot 404 on GitHub Pages subpath — replaced hardcoded / paths with import.meta.env.BASE_URL by @samzong in #92
+    🎨 UI Polish
+    - File manager: code preview uses highlight.js directly, adds extension badge + file size, proper horizontal scroll; plain-text assistant messages get a save-to-artifact button by @samzong in #99
+    - Left sidebar: design system compliance pass — correct press/focus states, border radius, active depth; bottom bar compressed to icon row; archived tasks get search + grid layout; macOS traffic lights hidden when sidebar is collapsed to 52px by @samzong in #100
+    🔧 Engineering
+    - Added Apple code signing to dev-release workflow — dev builds now use the same certificate import as release builds by @kinzhi in #86
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/clawwork-ai/ClawWork/releases/tag/v0.0.8
+ReleaseTime: 2026-03-18T17:14:13.0000000Z

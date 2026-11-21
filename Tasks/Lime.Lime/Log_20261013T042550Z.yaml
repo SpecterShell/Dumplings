@@ -1,0 +1,37 @@
+Version: 1.156.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.156.0/Lime-1.156.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.156.0
+    新功能
+    - 后台命令可在模型回合结束后继续输出和完成；GUI 与 TUI 展示运行输出、终端交互和最终状态，恢复会话后继续接收原命令通知。
+    - 侧边栏搜索支持对话正文匹配，并与标题结果合并、分页加载；内容搜索不可用时保留标题匹配并提供提示。
+    - Skills 工作区支持通过共享协议启用或停用技能，设置页增加 Skills 入口。
+    - 文件面板展示会话补丁和工作区 Git 变更，支持刷新变更列表并打开结果文件。
+    修复
+    - 修复后台命令在 Renderer 重载、会话恢复和跨回合续接后丢失输出或停留在运行状态的问题，保留原命令身份、完成记录与输入草稿。
+    - 修复 CLI 中断与退出时的资源回收：先取消原回合并排空命令输出，再释放订阅和 App Server 连接，保持中断退出码与持久化终态一致。
+    - 关闭连接时保留尚未执行的排队输入及顺序，冷恢复后仍可继续处理多模态任务。
+    - 修复 Bash/POSIX 与 PowerShell 权限检查对普通字符串、注释和文件名的危险命令误报；按实际 shell 和字面量调用检查命令及路径，动态语法继续进入审批流程。
+    - 修复终端控制序列在命令文本展示中的残留，以及运行中命令输出的可见性。
+    优化与重构
+    - 收敛后台执行、取消、输出排空与 Command 生命周期，实时通知、读取、分页和冷恢复使用同一 canonical 投影。
+    - 拆分命令执行、恢复、投影与事件持久化的大型模块；GUI、CLI、TUI 继续共享 App Server、RuntimeCore、权限与工具 owner。
+    - 模型原生 Shell 工具配置统一到共享 unified execution，移除重复工具表面和未使用 helper。
+    测试与质量
+    - 增加后台命令输出、恢复通知消费、跨回合 stdin、取消与 transport shutdown 的单元、协议和真实 stdio/PTY/Electron 回归。
+    - 扩充 Shell 字面量解析、对话搜索、Skills 启停及五语言界面回归；改进本地测试续跑和生成产物排除规则。
+    - 发布验证固定候选源码与构建身份，按实际平台和交互链路记录证据。
+    文档
+    - 更新架构、命令边界、质量工作流、TUI/CLI 结构清单和全局对齐执行计划。
+    其他
+    - 桌面应用、CLI npm 包与 Rust workspace 版本统一为 1.156.0。
+    完整变更：v1.155.0 → v1.156.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.156.0
+ReleaseTime: 2026-10-13T02:27:54.0000000Z

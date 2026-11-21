@@ -1,0 +1,47 @@
+Version: 0.4.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.4.0/ovnfs_0.4.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.4.0/ovnfs_0.4.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    - 889bd35800d1405323802429eee932fc3daaf6f0 Merge PR #32: Support sockets and FIFOs in checkouts (@Waseemilyas)
+    - aa7393e3b6b60967b8869d5cc98ea949ea2bd6b9 Merge PR #34: fix(serve): open the admin socket before the state loads (@MonsieurBarti)
+    - 0c5f0d6c12c7e0e1632eb52d7abbd00095174c2c Merge PR #35: fix(base): left submodule contents out of revision ignore roots (@flosrn)
+    - ce3729a9866001130a66dd84ed5d07c27ee45ea3 Merge PR #40: End outbound ssh links when a checkout is removed (@fengqiaoqu)
+    - 0b80e7d4b9344a7bf3b879e132cbc14d1460b39e Merge pull request #31 from MonsieurBarti/fix/nfs-readdir-relist
+    - c90c4cc5e71953d36327603696227c5c583259f7 Support long socket names in upper paths
+    - b19feede84cc45fd6ce29037e7b5d4ddfe508902 Support socket and FIFO nodes in views
+    - e9d8372cf333a3a6d415bad431e197278a209b41 docs(internals): described stale socket turns and failed loads
+    - d6d5208999ec5235784e88d8ee46fb995e0941aa docs(internals): described the admin socket opening before the load
+    - b3444dfb5e1357e0a4cc14b0dd190b925ac0cee9 docs(limitations): described sockets and fifos in checkouts
+    - fcf20a8a84fcbbcbff58853ce9d0bff25d14c414 feat(config): added ovnfs config to get and set ovnfs.yml keys - Added config list, get, set, unset and edit, reading and writing the folder's .o2/ovnfs.yml and ~/.o2/ovnfs.yml by dotted key as git config does, with --global, --local, --show-origin and --json. - Merged get across both files as Load does, routed daemon settings to the user file, and refused writes whose result would not load. - Kept comments on edits, wrote through dotfile symlinks, and mirrored git's exit status 1 for an unset get and 5 for a missing unset. - Detected a home folder reached through a symlinked $HOME, which Load read twice and rejected daemon settings in.
+    - 7a65458f3837e1407f7f262e668a673947d595f3 feat: added git remotes to source repositories for each live checkout
+    - 81b7bae24b486e6d89a9bf1226a8c25822896744 feat: granularized watch invalidations to subtrees
+    - 7951531c78defdc51a9d5a7a53f015f4bad38d7f fix(admin): serialized listens that replace a stale socket
+    - 88967df7db321a6a22c1eed051b0cbfdbbac25bb fix(base): left submodule contents out of revision ignore roots
+    - a54345affcfb0bc2e9dd2416f28506e5e95ad164 fix(checkout): left sockets and fifos out of source trees
+    - 043d0f42bd38e3aa089c3635982aa00fafbfb3cb fix(cli): bounded completion's wait for a loading daemon
+    - d5b35719cea73c75c9230ddaf2059ed9a3e30901 fix(cli): quoted the daemon log when its load fails
+    - 8d54673af970a20e65d5e161309d64db95271bd6 fix(daemon): open the admin socket before the state loads
+    - 498f7c132957c6dd54770ef5345a2c09a1dc96cf fix(links): end outbound ssh links when a checkout is removed
+    - eac6e297c2b1264c2e9cd05f187befa41887f357 fix(links): kept one inbound session per checkout of a folder
+    - 53b71062446cf885a7913e92c718eec4a5961763 fix(links): made link removal safe for folder lanes and pending attaches
+    - 7ff9ccf5b88327a61edab05499da34f410441c9f fix(nfs): answered mknod of unknown types with badtype
+    - ff3b7d12380a784411549df1aea7639a3d228b74 fix(nfs): listed a changed directory again after its snapshot was evicted
+    - c3edd1c1052e5a5296e440b70048aa9915937862 fix(overlay): staged new sockets in the work directory
+    - 34d6e9903656971c7cf16d910a3b78e05752374a fix(watch): declared Change for platforms without a backend
+    - 3eca66033b57d31cc4c790e5634acc457108fb87 refactor: restructured subtree handling and added dictionary release
+    - c82ee72aaeee4085da04d0433b7b34a459466431 test(serve): covered the admin socket during a held state load
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stencil-hq/ovnfs/releases/tag/v0.4.0
+ReleaseTime: 2026-11-11T03:46:26.0000000Z

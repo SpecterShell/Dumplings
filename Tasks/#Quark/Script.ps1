@@ -1,0 +1,2 @@
+$Global:DumplingsStorage.QuarkApps = Invoke-WebRequest -Uri 'https://qxpinfo.quark.com/Autoupdate/QuarkServer.xml' | Read-ResponseContent | ConvertFrom-Xml
+$Global:DumplingsStorage.QuarkDownloadPage = Invoke-PlaywrightFetch -Uri 'https://www.quark.com/support/installers' -Headless -Stealth -WaitUntil Load

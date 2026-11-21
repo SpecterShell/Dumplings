@@ -1,0 +1,1728 @@
+Version: 0.9.9
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/autohandai/code-cli/releases/download/v0.9.9/autohand-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Hey there! We've been busy making Autohand better. Here's what's new since v0.9.8:
+    Answers and continuity
+    - Ctrl+Enter steers the next or selected queued message into the running conversation, preserves an unrelated draft, and leaves other queued work in order. Enter continues to queue new messages.
+    - Streamed tool calls retain their identity when continuation chunks contain blank IDs. Genuinely incomplete headers are withheld from execution and enter bounded continuation without replaying the accepted request.
+    - Replies stay visible while completion review, pending todos, steering, or peer updates continue. Interrupted reviews retain the draft and its status in the session; a draft never completes a goal. Fixes #674.
+    - Final answers lead with the result and include a short recap of the request, useful facts learned, and confirmed memories saved. Pending automatic reflection is identified honestly. Successful background memory writes produce a receipt tied to the originating request and session. Research citations, experiment state, goal acceptance, and structured output remain authoritative.
+    Terminal layout
+    - Experimental full-screen mode keeps the composer and status at the bottom while history streams, scrolls, or is searched. Menus open above the input, and drafts survive resize and modal return. Enable it with /experiments enable full_screen_mode, then restart. Ctrl+Enter steering remains available.
+    Search and provider setup
+    - Signed-in Lite, Pro, Pro Plus, Max, Team, and Enterprise accounts can use included Autohand Web Search through the authenticated API, backed by Cloudflare Web Search. Queries support up to 1,024 characters and 10 results, with an account limit of 30 searches per minute. Access is verified on the server for the selected account.
+    - Free users can set up browser-profile search or their own Exa, Brave, or Parallel API key during standard and quick onboarding. Google and DuckDuckGo remain explicit options with CAPTCHA caveats. Existing provider choices are preserved.
+    - Search settings and /search show the same providers. --search-engine takes precedence in interactive, patch, automatic, RPC, and ACP modes. Browser-profile failures identify the selected provider and offer setup guidance without silently switching to Google. Fixes #672.
+    - Custom OpenAI-compatible providers can save a router policy absent from /models after explicit confirmation. Authentication and connection failures still block the save. Fixes #659; thanks to Cestercian for #676.
+    - Fantail documentation now distinguishes its 256k input context from its 16k maximum output. Fixes #658.
+    New Stuff
+    - Apply Code settings profiles on login
+    - Synchronize managed mcp connectors
+    - Add negotiated browser automation v2
+    - Add durable meta-tools
+    - Compute session diff line stats
+    - Make status lines extensible
+    - NVIDIA provider, Ink 7 UI improvements, idle timeout, Shift+Enter CSI fix, chrome.spec flake fix
+    - Dynamic welcome suggestions and 30-min idle logout
+    - Add exit_plan_mode tool for cc-src-style plan workflow
+    - Session bootstrap, quality pipeline non-blocking, trimmed memory injection
+    - Add changeVertexAISettings to pre-populate existing values
+    - Add SITREP UI component, Vertex AI native Claude support, and background shell
+    - Add mode-change hook event
+    - Add SITREP UI component for status reports
+    - Add background mode for shell commands
+    - Add --settings CLI flag for configuration
+    - Display user messages with styled background in Ink UI
+    - Add interactive command support and unrestricted mode fixes
+    - Add request_directory_access action for dynamic workspace expansion
+    - Make registration mandatory with retry support
+    - Add hardware cursor positioning for IME support
+    - Add Cerebras AI provider with x-source headers and persistence tests
+    - Add --setup flag and /setup command with ACP, JSON-RPC, and i18n support
+    - Add Z.ai (Zhipu AI) provider support
+    - Add $skill autocomplete with mention preview panel
+    - Add skill mentions with $ prefix, RPC getSession endpoint, and fix test failures
+    - Adopt multi-stage image compression pipeline
+    - Add --chrome and --no-chrome CLI flags
+    - Enhance provider architecture with capability detection
+    - Add model capabilities registry
+    - Add /pr-review slash command
+    - Add notebook cell editing tool
+    - Add skill and sleep tools
+    - Add session enter and exit tools
+    - Add cron create and delete tools
+    - Add team task management tools
+    - Expose delegation and tool discovery guidance
+    - Artistic welcome screen with centered logo and Login/Exit prompt
+    - Diff display and file-modified hooks for all mutation tools
+    - Mandatory CLI login — require authentication before use
+    - Add glob tool powered by ripgrep for cross-platform file matching
+    - Upgrade run_command to always use shell execution
+    - Add /review slash command with bundled code-reviewer skill
+    - Implement code_review action with hook lifecycle and env vars
+    - Register code_review tool definition
+    - Add review hook events and code_review action type
+    - Add browser_execute_js tool
+    - Inject Chrome skill in RPC mode and route browser tool responses
+    - Chrome automation skill and browser tool bridge
+    - Add browser_* tools for Chrome extension integration
+    - Add browser network, console, tabs, and tab groups tools
+    - Interactive auto-mode toggle with /automode on/off
+    - Chrome extension integration with /chrome command and browser tools
+    - OpenAI ChatGPT browser-based authentication flow
+    - Add core types for OpenAI auth, Chrome integration, and auto-mode
+    - Upgrade install scripts to tarball bundles with checksum verification
+    - Add utilities for parallel execution and ripgrep resolution
+    - Add optional account registration step using device-flow auth
+    - Add blinking step progress indicator for /learn phases
+    - Render markdown bold/italic as ANSI in slash command output
+    - Grouped batch rendering for parallel tool output
+    - Add depth-scaled concurrency to prevent cascading parallelism
+    - Wire parallel tool config, system prompt, and progress rendering
+    - Add parallel tool execution engine with concurrency control
+    - Add project_tracker tool for GitHub issues and PRs
+    - Emit schedule_triggered event for ACP and RPC clients
+    - Add list_schedules and cancel_schedule LLM tools
+    - Inline ghost text for slash commands and file mentions
+    - Add --acp shorthand flag for Agent Client Protocol mode
+    - Add --repeat CLI flag for non-interactive recurring mode
+    - Add /repeat slash command for recurring prompt scheduling
+    - Slash command autocomplete dropdown with subcommand support
+    - Improve skill generation UX, fix duplicate output, add subcommands
+    - Wire learn RPC methods into dispatch switch
+    - Add Learn RPC handlers for recommend, update, and generate
+    - Add Learn RPC type definitions for recommend, update, and generate
+    - Implement find_agent_skills action with registry search
+    - Wire modal pause/resume through slash command context
+    - Add modal lifecycle callbacks for proper pause/resume
+    - Add find_agent_skills tool definition and type
+    - Add onProgress callback for sequential step logging
+    - Update OpenRouter attribution headers for app rankings
+    - Update config reference in 8 languages and improve --auto-skill
+    - Extract process error handlers and add skill event tracking
+    - Implement /learn update with project-hash change detection
+    - Wire LLM provider into /learn dispatch and update i18n strings
+    - Rewrite /learn with LLM-powered project analysis and skill recommendation
+    - Add /skills search, trending, remove routes and metadata
+    - Add project-hash metadata for /learn update tracking
+    - Export LearnAdvisor from skills barrel
+    - Add LearnAdvisor class for LLM-powered analysis and generation
+    - Add LLM prompt builders for /learn advisor
+    - Add LLM response types for /learn advisor
+    - Implement /learn slash command with search, install, update, remove, feedback
+    - Export LearnClient and SkillSecurityScanner from skills barrel
+    - Add RPC methods/notifications and ACP command for /learn
+    - Extend HookEvent with pre-learn/post-learn and add securityScore to GitHubCommunitySkill
+    - Add i18n strings for /learn command
+    - Add LearnClient for search, trending, version-check
+    - Add SkillSecurityScanner with two-layer threat detection
+    - Auto-resolve OpenRouter API key from ~/.autohand/config.json in translate script
+    - Add interactive wizard and /model support for Azure provider
+    - Wire Azure provider into factory, config env vars, and tests
+    - Add AzureProvider implementing LLMProvider interface
+    - Add AzureClient HTTP client for Azure OpenAI API
+    - Add Azure types, config shape, and AzureTokenManager
+    - Add AzureTokenManager with API key, Entra ID, and Managed Identity auth
+    - Auto-resolve OpenRouter API key from ~/.autohand/config.json in translate script
+    - Integrate TextBuffer into persistent input with dynamic region height
+    - Integrate TextBuffer into idle prompt for true multi-line editing
+    - Key handler maps keypresses to buffer actions
+    - Word navigation with Intl.Segmenter
+    - Visual layout integration, viewport scrolling, visual cursor movement
+    - Visual layout engine with word-wrap and bidirectional mapping
+    - Add interactive wizard and /model support for Azure provider
+    - Wire Azure provider into factory, config env vars, and tests
+    - Add AzureProvider implementing LLMProvider interface
+    - Add AzureClient HTTP client for Azure OpenAI API
+    - Add Azure types, config shape, and AzureTokenManager
+    - Add AzureTokenManager with API key, Entra ID, and Managed Identity auth
+    - Cursor movement — left, right, up, down, home, end with preferredCol
+    - Core data model with insert, backspace, delete
+    - Add navigable Ctrl+Q queue browser with edit/remove
+    - Add Ctrl+Q shortcut to review and edit queued requests
+    - Add LLM-backed ! command autocomplete and TAB accept
+    - Auto-answer follow-up questions in yes mode
+    - Auto-approve commits in yes and non-interactive modes
+    - Default to non-interactive completion with opt-in handoff
+    - Import Cursor chat sessions from SQLite databases
+    - Add hook notification emission to ACP adapter for Zed parity
+    - Register /import command and fix /resume to filter by project
+    - Add importedFrom provenance to SessionMetadata and SessionIndex
+    - Add BaseImporter with dedup, pre-validation, and index recovery
+    - Add import tool types, session metadata, and Ink UI components
+    - Implement Gemini, Cursor, Cline, Continue, Augment importers
+    - Implement full CodexImporter with session/settings/skills
+    - Implement full ClaudeImporter with session/settings/skills/memory
+    - Add ImporterRegistry with parallel detect
+    - Register update and upgrade Commander subcommands
+    - Add update command handler with tests
+    - Register /settings in slash command system
+    - Add /settings command with registry and TUI
+    - Add /settings command translation keys
+    - Add session memory extraction module with TDD tests
+    - Add startup suggestions from project context
+    - Wire LLM tools for team formation and teammate execution
+    - Wire SuggestionEngine into agent loop and prompt
+    - Render LLM suggestion as ghost text and thread through prompt
+    - Add SuggestionEngine with LLM-powered next-step generation
+    - Add ui.promptSuggestions toggle (default: true)
+    - Dectecing mode for plan and terminal to change visual colours of the border
+    - Migrate desktop notifications to node-notifier
+    - Integrate activity indicator with rotating verbs and tips into spinner
+    - Pass left/right status to drawInputBox in renderPromptLine
+    - Thread version check result into agent formatStatusLine
+    - Add activity indicator with rotating verbs and tips
+    - Support left/right layout in drawInputBox
+    - Add shuffle-bag tips module
+    - Add activityVerbs and activitySymbol to UISettings
+    - Dectecing mode for plan and terminal to change visual colours of the border
+    - Migrate desktop notifications to node-notifier
+    - Add TeamSettings config and --teammate-mode CLI flag
+    - Add TeamPanel and TeammateView TUI components
+    - Add tmux split-pane support
+    - Add /team, /tasks, /message slash commands
+    - Add team lifecycle hook events
+    - Add teammate mode entry point
+    - Add barrel export for teams module
+    - Add 6 built-in agent definitions and registry loading
+    - Add ProjectProfiler + apply spec compliance fixes
+    - Add TeamManager for team lifecycle orchestration
+    - Add TeammateProcess for child process lifecycle
+    - Add MessageRouter for JSON-RPC over stdio
+    - Add TaskManager with CRUD, dependencies, and serialization
+    - Add team data model types with Zod schemas
+    - Integrate activity indicator with rotating verbs and tips into spinner
+    - Pass left/right status to drawInputBox in renderPromptLine
+    - Thread version check result into agent formatStatusLine
+    - Add activity indicator with rotating verbs and tips
+    - Support left/right layout in drawInputBox
+    - Add shuffle-bag tips module
+    - Add activityVerbs and activitySymbol to UISettings
+    - Add modal browser with search for community installs
+    - Stabilize boxed composer and active-turn queue input
+    - Wire worktree into rpc/acp and restore acp sessions
+    - Add --worktree and --tmux session launch support
+    - Add scope option to mcp subcommands
+    - Support http transport in add commands
+    - Add automatic error reporting to GitHub Issues
+    - Add pipe mode with JSON output for composable workflows
+    - Add native ACP mode for Zed integration
+    - Add MCP client manager for Model Context Protocol
+    - Add pipe mode with JSON output for composable workflows
+    - Add smart stdin detection (fstatSync + isFIFO)
+    - Add Homebrew formula for macOS installation
+    - Add MCP client manager for Model Context Protocol
+    - Add --yolo flag with granular tool allow/deny and timeout
+    - Add /history command for session browsing
+    - Add --thinking flag for extended reasoning toggle
+    - Add pipe mode with JSON output for composable workflows
+    - Add smart stdin detection (fstatSync + isFIFO)
+    - Add shell command execution with ! prefix
+    - Expand indicator to full text on backspace
+    - Detect and buffer bracketed paste sequences
+    - Enable bracketed paste mode in terminal
+    - Add paste state interface and factory
+    - Add content display utility for paste detection
+    - Add /about command and --about flag
+    - Support implicit GitHub format owner/repo
+    - Extend Modal component with confirm/input/password modes
+    - Add fetchRepoInfo for GitHub and GitLab
+    - Add URL parsing for GitHub and GitLab
+    - Shift+Tab toggle with colorful status indicator
+    - Add feedback command with plan mode integration and constants
+    - Add onboarding wizard, session sharing, and i18n docs
+    - Improve input handling with caching and non-blocking writes
+    - Add session sharing, git auto-init, and thinking level support
+    Bug Fixes
+    We squashed 231 bugs:
+    - Send max_completion_tokens for GPT-6 chat completions
+    - Create AUTOHAND_INSTALL_DIR when it does not exist yet
+    - Narrow simple-chat fast path to anchored casual greetings
+    - Exclude system messages from tool relevance scan
+    - Derive client context from --client instead of hardcoding chrome
+    - Stabilize prompt and mcp cli regressions
+    - Speed up prompt-mode startup
+    - Harden deferred responses and startup branch detection
+    - Retry deferred final responses
+    - Keep chat history in terminal scrollback
+    - Stabilize composer transcript rendering
+    - Use deployed feedback endpoint
+    - Restore composer paste and multiline behavior
+    - Align fff-bun adapter with native result API
+    - Serialize mutating tool execution
+    - Keep model text out of composer status
+    - Route double ctrl-c through quit
+    - Refresh theme and isolate modals
+    - Use provider-specific auth errors
+    - Restore skill mention menu
+    - Stabilize modal and shell command input
+    - Make ink tui the default
+    - Preserve shared stdin listeners
+    - Route Ink paste through composer input
+    - Trust local token when server returns 401 on unexpired session
+    - Make /about and /help visible in TUI mode
+    - Handle # memory storage in TUI mode
+    - Make /clear and /new work properly in TUI mode
+    - Close slash dropdowns on single ESC press
+    - Clear composer input after slash commands complete
+    - Async onBeforeModal with setImmediate yield for React 19 cleanup
+    - Set modalActive flag during quality pipeline to suppress hook output
+    - Prevent queued requests from processing after exit signal
+    - Composer box now respects theme colors
+    - Seed provider/model before start() so welcome helpline shows them
+    - Unify /plan and SHIFT+TAB behavior in Ink TUI, add orange border
+    - Resolve composer blocking after LLM turns and slash commands
+    - Composer accepts input when idle (isWorking=false)
+    - Handle slash commands locally in Ink queue path
+    - Gate plan tool behind plan mode, strengthen instructions, prevent LLM looping
+    - Restore keyboard navigation in modals after Ink 7 upgrade
+    - Implement install_agent_skill execution handler
+    - Skip native host test on CI due to Node.js path issues
+    - Properly find Node.js on GitHub Actions CI
+    - Throw error with stderr content for CI debugging
+    - Add stderr capture for debugging CI test failure
+    - Use Node.js for both host script and CLI in test
+    - Skip native host test when Node.js is unavailable on CI
+    - Convert bun:test imports to vitest and fix chrome test timing
+    - Add missing VertexAISettings import and remove broken types file
+    - Use correct method to update context window in Vertex AI settings
+    - Re-initialize Vertex AI provider after settings change
+    - Add backgroundPid to ShellCommandResult interface
+    - Add missing ui.cancel i18n key for Vertex AI provider
+    - Pass provider parameter to settingsUpdated i18n
+    - Use correct i18n keys for Vertex AI settings change modal
+    - Add background parameter to runCommand call site
+    - Remove redundant path validation in list_tree
+    - Only show plan mode instructions when plan mode is enabled
+    - Robust context compaction, Ink composer flicker, and safety gates
+    - Include run_command and shell in default YOLO tools
+    - Include run_command and shell in default YOLO tools
+    - Remove broken IME cursor positioning that corrupted Ink rendering
+    - Permission mode precedence and improve UserMessage display
+    - Prevent chat log loss and resize artifacts
+    - Improve paste handling and cursor positioning in composer
+    - Eliminate typing flicker with synchronized output and stable input handler
+    - Swap user message colors for better visibility
+    - Prevent input box corruption after modal confirmation
+    - Prevent terminal flicker by consolidating useStdout calls
+    - Multi_file_edit now uses fuzzy match for whitespace differences
+    - Resolve TypeScript errors and ESLint warnings in proof script
+    - Remove screen clear on resize to prevent flickering
+    - Include commit message in modal and respect --yolo flag
+    - Process --yolo flag in RPC mode before runtime creation
+    - Improve Linux browser opening fallback for missing xdg-open
+    - Handle circular references in Ollama provider JSON.stringify
+    - Smooth terminal resize without flash or ghost artifacts
+    - Use async OpenRouter API for vision detection in RPC adapter
+    - Resolve quality pipeline hang by replacing exec with spawn and ensuring TUI cleanup
+    - Resolve all ESLint unused variable warnings
+    - Clean up TUI output formatting and return values
+    - Secure path resolution with symlink protection and additional dirs
+    - Harden action executor validation and error handling
+    - Improve context compaction and conversation management
+    - Prevent image payload overflow with size limits (Issue #81)
+    - Improve shebang validation and Linux browser fallback
+    - Filter Bun fs paths from native host args and fix shebang resolution
+    - Handle ripgrep Windows checksum file format
+    - Correct ripgrep target for Linux ARM64 bundling
+    - Use musl ripgrep binaries for Linux targets
+    - Use gnu instead of musl for ripgrep Linux targets
+    - Restore composer command flow and stable mention selection
+    - Skip sync restore in non-interactive login
+    - Route browser bridge output safely
+    - Improve setup and tool-call guidance
+    - /logout uses showModal and welcome screen uses FIGlet logo
+    - Fire file-modified hooks with changeType from markFilesModified
+    - Make git_diff path optional and add queueInstruction to slash context
+    - /review works in RPC/ACP modes and fires review hook events
+    - Slash command TUI rendering and /clear terminal clear
+    - /chrome command improvements
+    - Resolve test module cache pollution causing 15 test failures
+    - Modal input cursor support and bracketed paste handling
+    - Strip HTML tags from API error bodies before display
+    - Wrap all setRawMode calls in try/catch for bad file descriptor
+    - Handle node:sqlite unavailable on Bun runtime
+    - Filter out expected operational errors from auto-reporter
+    - ChatGPT OAuth streaming and debug line rendering
+    - Tag LLMGateway requests with x-source
+    - Pause theme and language modals in the TUI
+    - Avoid sync shell execution from interactive prompt
+    - Restore terminal composer rendering and diff previews
+    - Handle missing xdg-open during login
+    - Classify invalid models and respect rate-limit retry windows
+    - Validate workspaces and honor yolo file-tool defaults
+    - Update default OpenRouter model to nvidia/nemotron-3-super-120b-a12b:free
+    - Show "Paste your API key..." placeholder instead of password
+    - Improve 400 error message for malformed request body
+    - Use centralized error classification instead of raw Error
+    - Strip bracketed paste markers from model ID input
+    - Classify "is not a valid model ID" as model_not_found
+    - Guide LLM to recommend /repeat cancel for schedule cancellation
+    - Correct case-sensitive import for RepeatManager
+    - Show all catalog skills to LLM for better recommendations
+    - Resolve @ file mention not showing on first prompt
+    - Remove dead code accessing property on narrowed-to-never type
+    - Auto-run triggered jobs in non-interactive modes
+    - Prevent Shift+Enter CSI residual "13~" from leaking into text buffer
+    - Preserve credentials on network failure during startup validation
+    - Don't block startup prompt waiting for suggestion LLM call
+    - Auto-detect shell operators and enable shell mode for pipes
+    - Graceful shutdown on setRawMode/EIO failures instead of crash loop
+    - Return actionable message instead of throwing in non-git dirs
+    - Derive allowed tools from user permission config
+    - Await pending suggestion with deadline and add tool permission constraint
+    - Parse single bare tool call JSON from non-standard model responses
+    - Add subcommand metadata to /repeat for autocomplete hints
+    - Remove unused imports and dead code flagged by eslint
+    - Route immediate-command output through writeAbove when terminal regions active
+    - Add to abort listeners, use ApiError for retry exhaustion
+    - Ollama provider adds timeout, retry, streaming timeout, and friendly errors
+    - MLX provider adds timeout, retry, and friendly error messages
+    - Catch ENOENT in run_command, return friendly error instead of crashing
+    - Config parser handles empty/malformed files with recovery suggestions
+    - Simplify error classification fallbacks, add missing context overflow pattern
+    - Centralize error classification — model errors no longer mislabeled as context overflow
+    - Resolve cursor positioning on narrow terminals and improve Shift+Enter handling
+    - Improve permission handling and tool relevance
+    - Persistent input and console bridge for slash commands
+    - Ignore EIO read errors on all fds during pty teardown
+    - Prefix unused comment param with underscore to satisfy lint
+    - Wire ? shortcut help panel into prompt renderer
+    - Stabilize Shift+Enter multiline and suppress 13~ fragments
+    - Restore ? shortcut help in persistent input
+    - Support literal multiline input and remove initial submit gap
+    - Keep piped stdin in command mode when stdout is non-interactive
+    - Await cleanup before shutdown on interactive exit
+    - Indent heredoc body in release workflow to fix YAML block scalar parsing
+    - Route hook output through promptNotify to avoid composer interleaving
+    - Render auth notifications above composer instead of inside it
+    - Add background fill to border lines and make box theme-aware
+    - Use raw ANSI codes in drawInputBox for reliable background fill
+    - Mock node:sqlite in test suites that import CursorImporter
+    - Allow pipe mode with -p flag without inline text argument
+    - Add safeReadJson, dedup handling, and skip reasons to all importers
+    - Use default fs-extra import for ESM compatibility in onboarding
+    - Strip leaked <tool_call> XML from displayed responses
+    - Display thinking output correctly in ora mode + add tests for resize/shift-enter fixes
+    - Add Google headless Chrome provider, tool gating, and chat log display
+    - Clean up inputPrompt suggestion code from review
+    - Await pending suggestion before showing prompt
+    - Stabilize terminal-regions composer rendering and input cursor
+    - Restore contextual help helper wiring after rebase
+    - Allow Shift+Tab plan toggle during active turns
+    - Sanitize Cloudflare HTML errors and support configurable API base URL
+    - Keep composer stable on first turn and restore dynamic completion notifications
+    - Harden queued turns, status updates, and tool-loop guard
+    - Stabilize boxed composer cursor and terminal region rendering
+    - Route active-turn console output above boxed composer
+    - Preserve persistent input raw-mode between queued turns
+    - Anchor composer with live terminal window size
+    - Keep boxed prompt stable and restore live queue typing
+    - Clear boxed startup prompt before active-turn render
+    - Anchor boxed composer cursor across startup and active turns
+    - Stabilize working status line with persistent input
+    - Apply stashed status-line-enhancements after worktree merge
+    - Prevent infinite loop when ESC cancels ask_followup_question
+    - Allow Shift+Tab plan toggle during active turns
+    - Sanitize Cloudflare HTML errors and support configurable API base URL
+    - Keep composer stable on first turn and restore dynamic completion notifications
+    - Harden queued turns, status updates, and tool-loop guard
+    - Stabilize boxed composer cursor and terminal region rendering
+    - Address spec review findings
+    - Route active-turn console output above boxed composer
+    - Preserve persistent input raw-mode between queued turns
+    - Anchor composer with live terminal window size
+    - Keep boxed prompt stable and restore live queue typing
+    - Clear boxed startup prompt before active-turn render
+    - Anchor boxed composer cursor across startup and active turns
+    - Stabilize working status line with persistent input
+    - Apply stashed status-line-enhancements after worktree merge
+    - Prevent infinite loop when ESC cancels ask_followup_question
+    - Support --scope in slash commands and fix chrome-devtools startup flag
+    - Return strict env map for retry cache override
+    - Avoid setRawMode crashes on terminal teardown
+    - Retry npx startup with isolated npm cache
+    - Render dropped images as placeholders only
+    - Parse escaped unicode-space image paths
+    - Detect drag-drop image paths from stdin data stream
+    - Replace dropped image paths with inline placeholders
+    - Report stdio server exit details on connect
+    - Block unsupported sse in user add/install flows
+    - Accept http servers from community registry
+    - Strip internal action metadata from tool arguments
+    - Patch yoga-wasm-web postinstall to detect WASM loader pattern
+    - Exorcise phantom deps from Bun compiled binaries
+    - RPC mode crash on startup — add MCP Streamable HTTP transport and guard slash commands
+    - Replace vi.useFakeTimers with Bun-compatible approach
+    - Replace vi.useFakeTimers with Bun-compatible approach
+    - Improve status line readability across all themes
+    - Change status line color to white for better readability
+    - Clean paste display and preserve prefix content
+    - Properly buffer multi-line pastes
+    - Make file collection truly non-blocking for instant prompt
+    - Improve startup UX and make about links clickable
+    - Register missing slash command metadata
+    - Add llmgateway provider configuration support
+    - Enable hot-reload language switching without restart
+    - Update package.json version before build
+    - Prevent duplicate keypress listeners and improve prompt visibility
+    Updates
+    - Restore composer input after session export dialogs
+    - Exit export fixtures without interrupting completed sessions
+    - Keep native MCP readiness tests independent of hook latency
+    - Wait for composer input before exiting after modal commands
+    - Keep configured status items at the bottom of full-screen sessions
+    - Allow temporary ad-hoc macOS releases and repair CI regressions
+    - Add autohand account to list and switch the account the CLI bills to
+    - Start full-screen terminal sessions in Auto mode
+    - Keep transcript Find responsive during active work
+    - Merge home path shortening into the welcome banner
+    - Merge the Autohand brand theme with current terminal rendering
+    - Merge remote-tracking branch 'origin/main'
+    - Enable persistent goals by default in 0.9.9
+    - Merge origin/main into main
+    - Open the Squad desktop app from autohand squad, installing it if missing
+    - Skip Computer control when the installed release has no computer command
+    - Resume folder sessions with -c and keep auto-commit long-only
+    - Restore full-screen output expansion and user message highlighting
+    - Reload trusted extensions inside the running REPL
+    - Merge pull request #688: Keep ACP sessions connected when loading or resuming
+    - Keep ACP transport input active while replacing sessions
+    - Protect session files and honour Node proxy settings
+    - Keep working status and rotating capability tips above the composer
+    - Add the Document Factory extension and verify trusted command discovery
+    - Show the product header and place full-screen navigation below the status
+    - Keep the composer anchored and make fullscreen the default
+    - Merge pull request #687 from autohandai/cto/ship-all-safety-20261020
+    - Keep CLI automation isolated and make startup and review flows predictable
+    - Handle Windows ARM fallback and musl Linux installations
+    - Handle Windows ARM fallback and musl Linux installations
+    - Merge the full-screen terminal viewport into main
+    - Stabilize terminal completion checks and startup assertions
+    - Execute native workflow goals and reviews with scoped hooks and permissions
+    - Show the home folder as ~ in the welcome banner
+    - Add the autohand brand theme
+    - Enable queued steering with Ctrl+Enter and recover incomplete streamed tools
+    - Integrate foreground-only operation and repaired session commands
+    - Add Muse Wonder 1.0, Qwen 3.8 Max and Gemini 4 Argon to the Autohand AI catalog
+    - Provide account web search and preserve visible final replies for 0.9.9
+    - Run Autohand without background services and repair session context commands
+    - Record repository skills and ignore local build artifacts
+    - Use the terminal's normal foreground for the Autohand logo
+    - Configure the engineering skills for this repo
+    - Give Moa reviews independent deadlines and share terminal resize updates
+    - Convert the supplied Autohand SVG into an animated terminal scene
+    - Animate a compact monochrome startup logo and preserve login navigation
+    - Bundle verified Zit binaries with npm and Bun installations
+    - Explain local MCP prerequisites and avoid retrying Docker launch failures
+    - Reject late checkpoint verdicts and identify review failure stages
+    - Keep draft answers visible when checkpoint review fails
+    - Finalize goals only after reviewed answer delivery
+    - Recover interrupted inference turns and Moa checkpoint reviews
+    - Report incomplete agent turns as failed terminal work
+    - Preserve partial findings from failed parallel delegations
+    - Document cloud continuation and checkpoint review recovery
+    - Recover interrupted inference turns and Moa checkpoint verdicts
+    - Offer repository readiness reviews after the first interactive turn
+    - Keep synchronization resilient to Console errors and restore terminal input
+    - Integrate current main with OSC7501 lifecycle reporting
+    - Add hosted cloud sessions and local handoff to the CLI
+    - Preserve cached cloud prompts through read-to-edit transitions
+    - Report OSC7501 status across agent and protocol lifecycles
+    - Bound managed Computer Use cursor movement to 50 ms
+    - Repair Computer Use archive extraction and fresh-install verification
+    - Respect Grok tool limits while preserving tool discovery
+    - Integrate pull request #590 against the reviewed CLI runtime
+    - Integrate pull request #591 against the reviewed CLI runtime
+    - Integrate pull request #593 against the reviewed CLI runtime
+    - Integrate pull request #594 against the reviewed CLI runtime
+    - Integrate pull request #595 against the reviewed CLI runtime
+    - Integrate pull request #596 against the reviewed CLI runtime
+    - Integrate pull request #597 against the reviewed CLI runtime
+    - Integrate pull request #598 against the reviewed CLI runtime
+    - Integrate pull request #599 against the reviewed CLI runtime
+    - Integrate pull request #605 against the reviewed CLI runtime
+    - Integrate pull request #610 against the reviewed CLI runtime
+    - Integrate pull request #619 against the reviewed CLI runtime
+    - Integrate pull request #620 against the reviewed CLI runtime
+    - Integrate pull request #655 against the reviewed CLI runtime
+    - Integrate pull request #657 against the reviewed CLI runtime
+    - Integrate pull request #660 against the reviewed CLI runtime
+    - Refresh pending pull requests against the current CLI runtime
+    - Fixing details for memory clasp feature
+    - Refresh orchestration instructions when session settings change
+    - Enable Moa orchestration with Fantail research workers
+    - Ask zit which symbols an edit changes before claiming
+    - Claim the Markdown sections an edit changes, not the whole file
+    - Exit -p runs promptly and record zit workspaces on signals
+    - Claim files in Zit before file tools write them
+    - Leave Autohand session state to zit's built-in ignores
+    - Add --zit session mode backed by Zit workspaces
+    - Allow ACP hosts to manage workspace setup and report failed turns
+    - Make usage reports navigable with the keyboard
+    - Keep large tool results within a pageable terminal viewport
+    - Add code mode: one sandboxed script that calls tools and returns only the answer
+    - Give the payment-access scenario the standard startup allowance
+    - Show tool results as a short preview that opens on Ctrl+O or a click
+    - Present plans as written and let users open and edit them before accepting
+    - Start interactive terminal sessions in auto mode by default
+    - Show the interaction mode only in the help line and route /plan through the mode controller
+    - Add Axo, a hidden axolotl buddy that lives above the composer
+    - Improve terminal Markdown layout and clickable references
+    - Keep host context and installed agents from breaking specialist rosters
+    - Repair OpenAI tool history and model-specific request parameters
+    - Create missing explicit installer destinations before installation
+    - Report Computer Use errors and bound screenshot request payloads
+    - Render Computer Use as a compact lifecycle-aware task lane
+    - Support fresh alpha installs with recoverable profile backups
+    - Verify managed desktop permissions before native app requests
+    - Expose per-session Moa reasoning preferences through ACP
+    - Integrate required computer use with isolated request context and precise failures
+    - Preserve MCP window metadata and identify stalled inference requests
+    - Keep the full skill catalog for terminal sessions
+    - List skills by name only in the system prompt
+    - Expose Autohand Computer Use under its product MCP namespace
+    - Stream model output to ACP clients and stop blocking prompts on account and trace checks
+    - Restore CLI telemetry delivery and track account skill mentions
+    - Report agent state and session to Herdr panes
+    - Keep reasoning terminal journeys on the authenticated local catalog
+    - Exercise authenticated model discovery in the terminal fixture
+    - Select hosted Autohand models from authenticated plan entitlements
+    - Keep session feedback responsive and enforce scoped tool approvals
+    - Install native dependencies for cross-architecture releases
+    - Compile release binaries with Bash on Windows runners
+    - Wait for peer selection before typing the scoped message
+    - Wait for peer selection before typing the scoped message
+    - Allow ad-hoc signing for macOS alpha releases without Apple credentials
+    - Allow ad-hoc signing for macOS alpha releases without Apple credentials
+    - Improve full-screen navigation and preserve command output
+    - Anchor full-screen composer controls and preserve terminal formatting
+    - Add an opt-in full-screen terminal viewport
+    - Make usage reports navigable with the keyboard
+    - Keep large tool results within a pageable terminal viewport
+    - Add code mode: one sandboxed script that calls tools and returns only the answer
+    - Give the payment-access scenario the standard startup allowance
+    - Show tool results as a short preview that opens on Ctrl+O or a click
+    - Present plans as written and let users open and edit them before accepting
+    - Start interactive terminal sessions in auto mode by default
+    - Show the interaction mode only in the help line and route /plan through the mode controller
+    - Preserve drafts entered while the feedback survey appears
+    - Improve terminal Markdown layout and clickable references
+    - Complete five-point session feedback and repair scoped tool approvals
+    - Keep host context and installed agents from breaking specialist rosters
+    - Reconcile published main with rewritten local history
+    - Repair OpenAI tool history and model-specific request parameters
+    - Create missing explicit installer destinations before installation
+    - Merge Computer Use and ACP improvements into main
+    - Report Computer Use errors and bound screenshot request payloads
+    - Render Computer Use as a compact lifecycle-aware task lane
+    - Support fresh alpha installs with recoverable profile backups
+    - Verify managed desktop permissions before native app requests
+    - Expose per-session Moa reasoning preferences through ACP
+    - Integrate required computer use with isolated request context and precise failures
+    - Restore CLI telemetry delivery and track account skill mentions
+    - Preserve MCP window metadata and identify stalled inference requests
+    - Keep the full skill catalog for terminal sessions
+    - List skills by name only in the system prompt
+    - Expose Autohand Computer Use under its product MCP namespace
+    - Stream model output to ACP clients and stop blocking prompts on account and trace checks
+    - Merge feat/autohand-prompt-cache: stable prompt cache key and tool set for Autohand AI cloud
+    - Merge feat/autohand-prompt-cache: stable prompt cache key and tool set for Autohand AI cloud
+    - Merge feat/autohand-prompt-cache: stable prompt cache key and tool set for Autohand AI cloud
+    - Keep Autohand AI cloud prompt prefixes cacheable across iterations
+    - Keep Autohand AI cloud prompt prefixes cacheable across iterations
+    - Keep Autohand AI cloud prompt prefixes cacheable across iterations
+    - Keep computer-use screenshots out of persisted tool text
+    - Keep computer-use screenshots out of persisted tool text
+    - Connect Autohand Computer Use with native MCP framing
+    - Connect Autohand Computer Use with native MCP framing
+    - Make native computer control available on the first app turn
+    - Make native computer control available on the first app turn
+    - Keep usage heatmap month labels whole when the grid starts late in a month
+    - Create AUTOHAND_INSTALL_DIR when it does not exist
+    - Document allowList and denyList as the permission config keys
+    - Enforce --timeout for --yolo auto-approval
+    - Match argument-scoped --allowed-tools patterns against the real command
+    - Skip computer postinstall in unbuilt source checkouts
+    - Skip computer postinstall in unbuilt source checkouts
+    - Merge native computer control and signed companion packaging
+    - Merge native computer control and signed companion packaging
+    - Require notarized macOS release artifacts
+    - Require notarized macOS release artifacts
+    - Keep computer permission diagnostics resilient
+    - Keep computer permission diagnostics resilient
+    - Launch permission checks with the branded app identity
+    - Launch permission checks with the branded app identity
+    - Verify computer permissions after macOS prompts
+    - Verify computer permissions after macOS prompts
+    - Register the computer use host before permission checks
+    - Register the computer use host before permission checks
+    - Ship Autohand Computer Use from its cross-platform component
+    - Ship Autohand Computer Use from its cross-platform component
+    - Keep local installer builds independent of optional llama binaries
+    - Keep local installer builds independent of optional llama binaries
+    - Add verified native computer control with Cua Driver
+    - Add verified native computer control with Cua Driver
+    - Merge ahtraces companion packaging and supervision
+    - Merge ahtraces companion packaging and supervision
+    - Ship the trace companion with npm installations
+    - Ship the trace companion with npm installations
+    - Stabilize discovery upload cancellation terminal test
+    - Stabilize discovery upload cancellation terminal test
+    - Make ahtraces release identity upgrade-safe
+    - Make ahtraces release identity upgrade-safe
+    - Pin the recovered trace supervisor revision
+    - Pin the recovered trace supervisor revision
+    - Keep API-only models out of CLI pickers
+    - Keep API-only models out of CLI pickers
+    - Validate inherited trace upload endpoints
+    - Validate inherited trace upload endpoints
+    - Pin environment-aware trace supervision
+    - Pin environment-aware trace supervision
+    - Clear trace credentials after background auth rejection
+    - Clear trace credentials after background auth rejection
+    - Refresh trace credentials across account changes
+    - Refresh trace credentials across account changes
+    - Honor the trace-specific API endpoint
+    - Honor the trace-specific API endpoint
+    - Restrict trace companion environment without losing custom sources
+    - Restrict trace companion environment without losing custom sources
+    - Expose task attribution in discovery Work Maps
+    - Expose task attribution in discovery Work Maps
+    - Keep local trace design records out of source control
+    - Keep local trace design records out of source control
+    - List Weka as an API-only catalog model
+    - List Weka as an API-only catalog model
+    - Document agent traces setup and Console controls
+    - Document agent traces setup and Console controls
+    - Merge pull request #612 from autohandai/ahtraces
+    - Finish Ink teardown before writing session summaries
+    - Build the Autohand traces sub agent from its private component
+    - Implement native Hermes trace discovery and exact model usage
+    - Normalize native OpenClaw session traces
+    - Normalize native Amp thread traces
+    - Normalize native Antigravity transcript traces
+    - Normalize native Copilot sessions and usage
+    - Stabilize usage dashboard teardown on Linux
+    - Normalize native Grok session traces and usage
+    - Keep trace defaults implicit in terminal fixtures
+    - Normalize native Droid sessions and settings
+    - Bundle trace controls and consent guidance in installers
+    - Clarify trace consent and cloud deletion boundaries
+    - Normalize native Kimi wire traces and usage
+    - Require versioned consent for trace monitoring
+    - Normalize native Pi sessions for trace usage
+    - Join Cline session records and preserve model-level usage
+    - Constrain trace discovery to native session stores
+    - Show Free monthly quota and stop ambiguous Autohand AI timeout replays
+    - Document source-scoping gate for agent trace rollout
+    - Harden native trace parsing and token accounting
+    - Restore queue-first input and selected-message steering
+    - Cover additional native trace stores and stabilize skill suggestions
+    - Align local native compilation with release packaging
+    - Add local-first agent trace monitoring and discovery work maps
+    - Stabilize usage dashboard Tuistory terminal geometry
+    - Remember the rate limit a successful response already carried
+    - Make loop grouping tests independent of git timing and drop any-casts
+    - Report complete streamed tool calls as tool_calls and unify finish-reason mapping
+    - Bound every ReAct loop recovery and report unfinished todos honestly
+    - Keep usage heatmap month labels aligned with activity cells
+    - Merge the rebuilt resume session picker
+    - Normalize incomplete responses across remaining providers
+    - Refactoring our reactloop and reflection to speed up the kv_Cache reads a bit more faster as we prepare for blueprint arrival
+    - Status bar: section-based renderer with two-line layout support
+    - Let the hooks terminal assertions tolerate padded row numbers
+    - Fixing a cosmetic slash menu to show below status line
+    - Pin the picker's row reservation and make its clamp exact
+    - Close out the resume picker review: sentinel timestamps, scoped search, and layering
+    - Stop double-compensating the session picker's row-number width
+    - Fix session picker row overflow and prove the resume picker in a real terminal
+    - Terminate title and tab-colour escapes with ST instead of BEL
+    - Make the resume picker's title fallback lazy and close review gaps
+    - Adjusting terminal title to be fun
+    - Wire /resume to the grouped session picker rows
+    - Order resume picker pages by last activity instead of creation time
+    - Adding more rich details for ghostty and iterm2 for status bar
+    - Thread filterable through showModal, fix stale filter cursor on backspace, and unify Escape detection in the select modal
+    - Add opt-in type-to-search filtering to the shared select modal
+    - Remove redundant single-digit padding from the hooks event browser label
+    - Right-align modal row numbers to a shared width
+    - Group session picker rows by local calendar day and drop reveal-row padding
+    - Implement session picker row builder with width-aligned columns
+    - Adding details for modify install to say hello prompt
+    - Clear the task panel whenever a turn ends, not only when it succeeds
+    - Offer to start Autohand with a first message once the installer finishes
+    - Keep every debug line behind AUTOHAND_DEBUG
+    - Keep a failed turn's summary honest after slash commands and shard CI across runners
+    - Document fetch body release and synchronous exit handlers in the resource lifecycle rules
+    - Release unread fetch bodies, hung probes, and exit-time resources
+    - Shut down relay, PTY, streaming, and ACP resources that outlived their session
+    - Release per-turn resources that were retained for the life of the session
+    - Expose the effective subagent registry to SDK clients
+    - Honor process provider selection without persisting credentials
+    - Fixing a few test and ui runtime errors
+    - Let the stdin steer test run with the default Enter behaviour
+    - Repair the four CI failures left by the branch integration
+    - Keep the Ink composer wiring tests green after Enter started steering by default
+    - Delete the superseded ContextManager and the unreferenced barrel modules
+    - Remove dead exports and consolidate duplicated helpers across the CLI
+    - Keep goal panels live across terminal processes
+    - Recover offline goals through their original conversations
+    - Persist goal stop reasons and resumable progress checkpoints
+    - Require reported completion evidence for approved goal criteria
+    - Preserve damaged goal snapshots and offer explicit backup recovery
+    - Persist goal completion before resolving the next queued template
+    - Allow fresh goals after budget exhaustion without losing history
+    - Unify goal activation across commands and agent tools
+    - Attribute turn usage to its original goal and session
+    - Preserve goal mutations across concurrent sessions
+    - Record monitored proof failures and unchanged upstream evidence
+    - Record evidence and disposition for the September issue investigation
+    - Bound command output and preserve readable memory under storage pressure (#556, #546)
+    - Preserve provider rejection semantics and stop retrying retired models (#544, #545, #558)
+    - Keep model settings owned by the selected provider
+    - Reject unsafe Windows startup directories before filesystem work (#564, #563, #548, #547)
+    - Classify completed replies without treating quoted examples as promises (#565, #562, #557)
+    - Preserve native tool exchanges when cropping context (#567, #555, #550)
+    - Prevent sync completion from redrawing a closed terminal screen
+    - Enable authenticated local peer messaging and coordinated command admission
+    - Never fail a handoff because the Web conversation moved on
+    - Return an imported session to its own Web conversation
+    - Wait for confirmed terminal shutdown in interactive tests
+    - Honor provider overrides when resuming native transfers
+    - Making ui a little less fresh refresh
+    - Route the last three hand-rolled usage objects through the shared normalizer
+    - Report what a context compaction cost and which skill spans survived it
+    - Preserve cache token usage across turns and session telemetry
+    - Report every top-level CLI command, and what each tool result cost
+    - Document Moa timeout recovery and validation limits
+    - Answer a bare /handoff with the surfaces it can hand this session to
+    - Give the idle tip rotation test room for the slower cadence
+    - Report goal transitions and skill spans from the CLI
+    - Adding more ignore files
+    - Rotate composer tips while idle and keep every turn's summary on that row
+    - Add run budgets for model requests, tokens, and wall time shared with sub-agents
+    - Validate command-mode answers against a caller-supplied JSON Schema with --output-schema
+    - Add named config profiles and --set overrides that apply to one run only
+    - Add --ephemeral runs that keep the session in memory and out of history
+    - Back off session recovery after a provider outage instead of re-sending the turn within seconds
+    - Finish the cloud streaming port: resolve the committed test conflict and document the inference endpoint
+    - Introducing autohand doctor for inspecting flaky config files and restore broken json syntax, adding more control for sub agents with access to skills via autohand skill registry and more built-in sub agents and control for configure references too
+    - Add lifecycle hook authoring, :alias messaging, steering, session titles, built-in analysis skills, and startup budgets
+    - Run session-end hooks for ACP clients and emit the autoresearch finalize events
+    - Install ah as a short command alias alongside autohand-code and agent
+    - Tidy up a few things that needs my attention
+    - Wait for the Codex Ctrl+J newline to render before typing in the shortcut profile test
+    - Render assistant markdown in the terminal with a ui.renderMarkdown setting
+    - Load project lifecycle hooks and MCP servers behind a per-workspace trust prompt
+    - Merge pull request #585 from autohandai/working-tips
+    - Merge pull request #586 from autohandai/fix/autohandai-foreign-model
+    - Correct a model the Autohand cloud gateway cannot serve back to Fantail
+    - Document /upgrade and cover the working tip line in the built CLI Tuistory suite
+    - Add /upgrade to open the console checkout for the next Autohand plan
+    - Pin an upgrade hint under the status line when an Autohand quota ends the turn
+    - Rotate a working tip under the Ink status line
+    - Load working tips from tool_tips.json and expand skill and command templates
+    - Merge pull request #579: follow other agents' keyboard shortcuts and import their data during setup
+    - Merge pull request #578: enable the kitty keyboard protocol so Shift+Enter inserts a newline in iTerm2
+    - Document keyboard shortcut profiles and the setup import step
+    - Cover the Codex shortcut profile in the built CLI Tuistory suite
+    - Offer detected agents' shortcuts and a memories, sessions and skills import during setup
+    - Drive the Ink composer's shortcuts from the active keybinding profile
+    - Expose the keybinding profile as a validated ui setting
+    - Read external coding agent and Codex keymap files as profile overrides
+    - Add keybinding profiles for the interactive composer
+    - Ask the terminal to encode modified keys so Shift+Enter inserts a newline in iTerm2
+    - Align the Tuistory mode-cycle and caret scenarios with the new mode order and mouse default
+    - Refresh the hook event table snapshot for the permission-denied event
+    - Keep click-to-position on outside iTerm2 and cycle modes Ask, Plan, Auto, YOLO
+    - Embed the hardened discovery scanner and make the discovery command report what it is doing
+    - Leave terminal mouse reporting off unless click-to-position is enabled
+    - Reclaim session index locks left by dead processes and keep startup alive
+    - Stop the first message from waiting on MCP handshakes and the banner on the model catalog
+    - Support the originally documented hook names, config shape, and templates
+    - Rename the fff_grep tool to find_grep
+    - Let the approval prompt always allow a command prefix
+    - Stop desktop notifications from holding the CLI open at exit
+    - Removign flaking tests for prompt decisions and fixing callback on recall
+    - Wait for the cursor position query after Tuistory mouse clicks
+    - Fixing the team panel view
+    - Show a countdown on the status line while a provider waits to retry
+    - Honour retry-after for Autohand token-throughput throttles
+    - Keep session history sync off the network in offline runs
+    - Add private session handoff from CLI to Web
+    - Bound Git metadata lookups during CLI startup
+    - Discover engineering workflows from workspace skills and user activity
+    - Publish native user skills to the account library
+    - Restore release workflow documentation and synchronize terminal test input
+    - Closing the gap and releasing peer inner communication for 0.9.8
+    - Merge max_agents worker controls and lifecycle workflows into main
+    - Preserve account skill synchronization and ACP session handling
+    - Refresh CLI build toolchains and fix CI regressions
+    - Preserve image attachments when resuming transferred Web sessions
+    - Recover stale session index locks left by exited transfer importers
+    - Recover interrupted transfer checkouts without replacing local work
+    - Resume private Web transfers in the standalone CLI
+    - Refresh payment access and move suspended Cloud sessions to Free
+    - Show the goals close shortcut beside the footer controls
+    - Preserve Windows PATH entries and recover from interrupted hooks
+    - Start agent sessions in read-only plan mode from the CLI
+    - Keep the goals view concise while preserving complete objectives
+    - Resume saved sessions from the CLI with project filtering
+    - Preserve composer caret visibility across background redraws
+    - Add shared typed-message history to the composer
+    - Keep terminal history readable during goal activity
+    - Add live worker controls, lifecycle hooks, and project lessons
+    - Avoid remounting the composer for direct settings commands
+    - Make Aurora the default terminal theme
+    - Document hook imports and lifecycle settings in configuration reference
+    - Add the Tuatara developer theme
+    - Add repository discovery and authenticated workflow uploads
+    - Make lifecycle hook snapshots independent of terminal colors
+    - Preserve repository and request context across agent runs
+    - Wait for process readiness before testing cancellation
+    - Complete lifecycle hook wiring and import external command hooks
+    - Remove unused bindings from Coding Agent settings snapshots
+    - Release provider cancellation listeners and settled deadline timers
+    - Separate one-shot Review from interactive protocol execution
+    - Record safe command and skill lifecycle telemetry
+    - Ship Review reports through a locked-down local viewer
+    - Add lifecycle hook browsing and plain-English script authoring
+    - Complete native multi-agent lifecycle, inspection, and testing workflows
+    - Isolate authentication fixtures and respect configured test homes
+    - Give every review surface one evidence contract
+    - Teach the specialist roster to trust Autohand Review
+    - Download and apply Console connectors reliably
+    - Preserve bounded screenshot observations in native model requests
+    - Expose specialist capabilities and strengthen lifecycle handoffs
+    - Add configurable session thread budgets and reasoning warnings
+    - Register the goals queue command and align experiment aliases
+    - Support direct task list placement settings
+    - Keep goal result shaping inside GoalManager
+    - Recover stranded goals from the slash command
+    - Make task list placement configurable
+    - Render apply_patch results with themed diffs
+    - Complete session-aware goal and collaboration workflows
+    - Migrate goal state to per-session goals with peer awareness
+    - Make undo preserve unrelated workspace changes
+    - Expose Autohand Auto and preserve cloud image inputs
+    - Align specialist Tuistory with model assignment output
+    - Restore deterministic sync and terminal proof coverage
+    - Add task-aware team composition with ranked rosters and dependency-linked task graphs
+    - Refine terminal command controls and session resume
+    - Clear sticky task activity after successful turn completion
+    - Align ACP interaction modes with Autohand's four-mode model
+    - Make Autohand Local reachable and refresh its toolchain
+    - Reconcile task activity at successful turn completion
+    - Consolidate peer join notices in the Ink UI
+    - Render sticky plans with the shared task panel
+    - Keep active task plans visible in the Ink composer
+    - Surface live Autohand account quotas in the CLI
+    - Document provider compatibility fallbacks
+    - Type safe Windows home candidate selection
+    - Preserve durable Autohand device credentials across session expiry metadata
+    - Recover after repeated deferred final responses
+    - Preserve concise generic gateway errors
+    - Serialize text-only provider message payloads
+    - Retry transient Autohand AI upstream failures
+    - Migrate retired Autohand AI cloud model IDs
+    - Disable incompatible reasoning for GPT-5.6 tool calls
+    - Resolve Windows user state outside system directories
+    - Make team model assignments explicit and visible
+    - Avoid duplicate goal continuations
+    - Honor idle logout configuration
+    - Restore the Ink agent layout root
+    - Stop instructions after cancelled provider setup
+    - Recover from truncated agent responses
+    - Fail closed for unknown providers
+    - Fix Windows PATH parsing: use regex split to handle quoted entries with semicolons
+    - Fix task panel: cap rendered rows at 100 instead of unbounded
+    - Fix mode indicator visibility: render at top of layout so it never scrolls into scrollback
+    - Fix idle logout: restore enabled-by-default behavior
+    - Fix goal queuing: queued goals now activate continuation when created behind active goal
+    - Let the reflection guard stand down instead of stranding the turn
+    - Align Fantail context window expectations with the 256k catalog contract
+    - Expire stale composer clicks and keep wheel input flowing
+    - Give a non-streaming completion the time it actually needs
+    - Match the Autohand AI provider row by shape, not by label text
+    - Bb: automated commit
+    - Initial draft for /peers command to show sub agents in a better tui
+    - Anchor the interaction mode indicator in the stable bottom section
+    - Pin the memory event contract the console writes against
+    - Fixing path for windows user, instead of appending it was wiping all the previous path values
+    - Make the worktree cancellation test report why the child never started
+    - Improving the timeout for 4 hours instead of 60 min of idle time
+    - Render team task tools as a panel instead of raw JSON
+    - Queue goals set while one is active instead of refusing them
+    - Make the Autohand AI tier policy typecheck and its tests run
+    - Removing duplicated and extending idletime out for 4 hours
+    - Remove invalid options property from AutohandAIModelTierPolicy
+    - Downgrade max_tokens automatically when OpenRouter 402 names an affordable budget
+    - Add a native Claude provider and stop sending Claude malformed requests
+    - Show the account plan in the CLI and keep it current
+    - Render Autohand quota reset times in the configured time zone
+    - Make Windows installer architecture detection resilient
+    - Keep the active composer cursor across status repaints
+    - Keep CLI login compatible with the deployed auth schema
+    - Enable mouse composer cursor positioning by default
+    - Add grapheme-safe mouse cursor positioning to the Ink composer
+    - Surface hosted AI token throughput limits
+    - Make team execution observable and reliable
+    - Surface daily request quotas across Autohand CLI
+    - Preserve chat scrollback during composer refreshes
+    - Enable automatic specialists by default
+    - Trust the production Console upgrade URL
+    - Handle Autohand rate-limit windows by scope
+    - Add deterministic specialist orchestration
+    - Keep persistent goals scoped to their agent session
+    - Restore reliable Moa tool execution across agent loops
+    - Protect whats-new modal submission behavior with terminal coverage
+    - Merge the completed TypeScript 7 integration into main
+    - Preserve control-plane repair ancestry in type_v7
+    - Merge goal continuation into type_v7
+    - Merge type_v7 control-plane config repair into main
+    - Reconcile current remote main ancestry
+    - Merge TypeScript 7 dependency refresh into main
+    - Repair obsolete control-plane API configuration
+    - Refresh Bedrock and fff runtime dependencies
+    - Repair obsolete control-plane API configuration
+    - Integrate the current Dependabot fff-bun update
+    - Integrate the current Dependabot Bedrock SDK update
+    - Merge goal continuation into TypeScript 7 main
+    - Refresh Bedrock and fff runtime dependencies
+    - Adopt the TypeScript 7 compiler and integrate dependency updates
+    - Integrate the Dependabot production dependency group update
+    - Integrate the Dependabot node-gyp 13 update
+    - Integrate the Dependabot Bedrock SDK update
+    - Integrate the Dependabot Ink 7.1.1 update
+    - Integrate the Dependabot Commander 15 update
+    - Integrate the Dependabot ACP SDK update
+    - Integrate the Dependabot TypeScript 7 update
+    - Continue active goals across successful auto-mode turns
+    - Adopt the TypeScript 7 compiler and integrate dependency updates
+    - Embed the model catalog in standalone release binaries
+    - Use code-only device authorization in current clients
+    - Verify macOS release artifacts on native architectures
+    - Pass product identity through device authorization
+    - Preserve Ollama model persistence coverage after rebasing main
+    - Prevent invalid macOS release binaries from reaching installers
+    - Preserve bundled model metadata in catalog overrides
+    - Implement session-scoped read safety and unchanged-read deduplication
+    - Define the agent run runtime and direct communication contract
+    - Harden read_file with bounded streaming and recovery
+    - Publish Autohand AI in the model catalog
+    - Show live Autohand quota in status usage
+    - Show Autohand plan allowances in usage and status commands
+    - Recommend paid plans when Autohand AI quota is exhausted
+    - Repair Fantail context accounting and catalog contracts
+    - Commit in-progress working-tree changes across auth, status line, UI, and tooling
+    - Add built-in brainstorm skill with plan-mode and intent-based auto-injection
+    - Update provider persistence Tuistory for Autohand AI
+    - Clamp Autohand AI max_tokens per model and fix negative context percentage
+    - Sort /model provider list and route configured custom providers to settings flow
+    - Add model catalog entry from issue #478
+    - Fixing nodellamacpp incorrect dependency
+    - Small update on ignore
+    - Stop retrying provider rate limits and surface them through hooks
+    - Consolidate the external coding agent gap analysis into a single reviewed document
+    - Classify OpenRouter provider_unavailable failures as retryable
+    - Cap provider-supplied Retry-After delays used during session recovery
+    - Harden experimental prompt cache affinity controls
+    - Keep the CLI alive while raw-stdin panels are open
+    - Add hardened Blueprint answer and setup-only RPC contracts
+    - Keep the Ink composer cursor across footer repaints
+    - Sync per-session line change totals to mobile clients
+    - Restore composer cursor placement and stabilize release checks
+    - Improve mobile handoff scanning and composer identity
+    - Add mobile composer controls and reliable relay delivery
+    - Stabilize mobile handoff QR and project status line
+    - Fixing the mobile relay
+    - Preflight Homebrew and npm artifacts before release publication
+    - Normalize stable release versions and repair Homebrew guidance
+    - Add resumable per-step RPC control
+    - Align themed composer borders with the input surface
+    - Fixign flasky tuistory tests
+    - Align Autohand AI context-window expectations
+    - Fixing release flow
+    - Correct moa context window to 1M
+    - Fixing broken ci for tuistory scenario
+    - Keep shell completions and executable aliases synchronized
+    - Preserve model configuration across development restarts
+    - Document the concurrent session awareness design and plan
+    - Gate Autohand inference behind rollout flag
+    - Harden Autohand AI local setup: memory guard, Ink progress, pinned MLX runtime
+    - Add Autohand AI provider with cloud and Apple Silicon local plans
+    - Coordinate concurrent sessions in shared workspaces
+    - Keep status and detached process reporting responsive
+    - Learn project capability usage from canonical memory
+    - Complete canonical hierarchical memory
+    - Better sync serviceS
+    - Renaming /chrome to /browser command to work with any chromium browser, made soft modifications for memory component, now using Victortalin idea behind zoom in and out of memory across spatial time, consider like mirroring previous lessons, also reflecting on error and stop signals via hooks, add better resync
+    - Add a recoverable append-only memory ledger
+    - Make quality modal cleanup coverage structural
+    - Make parallel read batch coverage order independent
+    - Learn from failed and canceled agent turns
+    - Take git off the render path so the composer stops stuttering
+    - Make announcement theme coverage color-mode independent
+    - Show recent releases with the changelog command
+    - Stop shell commands from hanging forever under Bun
+    - Harden the CLI announcements pipeline against hangs and spoofed text
+    - Document the CLI announcements design
+    - Deliver resilient CLI announcements and dismissal controls
+    - Support structured JSON output for one-shot commands
+    - Let /ps and /stop run immediately instead of queueing behind an active turn
+    - Close out final-review findings for the /ps and /stop background-process controls
+    - Add an end-to-end Tuistory test for /ps and /stop
+    - Add /stop to kill a background shell process
+    - Add /ps to list background shell processes
+    - Wire the background-process registry through the agent and clean it up on exit
+    - Track every background shell process in the new registry
+    - Fix BackgroundProcessRegistry.register() directory parameter to be optional
+    - Add a session-scoped registry for background shell processes
+    - Add regression test for killProcessGroup fallback path
+    - Fix Windows compatibility in killProcessGroup by guarding process-group kills
+    - Add a reusable process-group kill helper for background commands
+    - Surface unset R2 secrets clearly in the model catalog publish script
+    - Fixing mobile relay and combine tui for group activities in sub agents
+    - Rank and render awesome-sub-agents catalog results for find_sub_agents
+    - Keep built-in sub-agents working on xAI OAuth Responses turns
+    - Add Grok 4.5 catalog defaults and SuperGrok OAuth login for xAI
+    - Let Autohand Mobile set session permission modes
+    - Keep background command output observable in the TUI
+    - Preserve chat history across slash menu modals
+    - Document cross-provider prompt caching architecture and delivery plan
+    - Cycle interactive modes with Shift+Tab
+    - Fall back when native PTY startup is unavailable
+    - Merge extension builder and Pi compatibility into main
+    - Complete mobile remote model controls
+    - Complete Code CLI hook event parity
+    - Mobile readiness completed stage 1
+    - Keep node-pty shell execution reliable after clean installs
+    - Record advisor branch integration evidence
+    - Redact sensitive data from RPC diagnostics
+    - Document cloud sync trust boundaries across locales
+    - Make explicit permission denials terminal across approval modes
+    - Track a reproducible audited Bun dependency graph
+    - Preserve validation outcomes in parallel delegation
+    - Fix long Open Research receipt paths
+    - Accept valid encoded and animated research assets
+    - Require explicit publication consent regardless of yes mode
+    - Make Open Research publication requests cancellable
+    - Preserve committed publication outcomes after display errors
+    - Recover expired Open Research publication attempts
+    - Adding more handlers for the mobile control, mode Rpc adaptors and new README.md intro gif, improved and renamed chrome commands to /browser to avoid litigation from Google
+    - Expand Extension API v1 with trusted runtime capabilities
+    - Make browser the canonical CLI integration name
+    - Rename the Chrome slash command to browser
+    - Target extension-builder installs at Autohand
+    - Refresh model catalogs from reviewed R2 releases
+    - Fix long Open Research receipt paths
+    - Derive development CLI version from repository tags
+    - Design the research publication lifecycle
+    - Document and record extension-builder authoring workflow
+    - Type the agent tool-output host boundary
+    - Type the agent project operations host boundary
+    - Type the post-turn action host boundary
+    - Extract CLI option normalization and mode routing
+    - Pin CLI option and mode routing contracts
+    - Make the development script portable across user homes
+    - Repair README links to the canonical repository
+    - Accept valid encoded and animated research assets
+    - Require explicit publication consent regardless of yes mode
+    - Make Open Research publication requests cancellable
+    - Preserve committed publication outcomes after display errors
+    - Recover expired Open Research publication attempts
+    - Advertise native ACP terminal authentication
+    - Document native ACP setup across development environments
+    - Add agentic extension authoring and Pi skill compatibility
+    - Document configurable idle logout across supported locales
+    - Make device authentication terminal fixtures portable
+    - Make authenticated idle logout duration configurable
+    - Isolate interactive terminal tests from CI rendering mode
+    - Run terminal gates on a proven hosted PTY platform
+    - Record extension builder publication evidence
+    - Add agentic extension authoring and Pi skill compatibility
+    - Offer consent-gated Open Research publication after deep research
+    - Make NVIDIA long-session recovery truthful
+    - Add a secure declarative Code extensions platform
+    - Preserve and replay autoresearch experiment decisions
+    - Isolate native host tests from browser profiles
+    - Complete orderly runtime shutdown
+    - Expand mobile handoff into remote steering
+    - Add project token activity views to usage
+    - Persist per-turn usage in session history
+    - Install catalog sub-agents for immediate delegation
+    - Render workspace changes for every LLM tool batch
+    - Track deep research progress and completion truthfully
+    - Make browser-profile web tools resilient
+    - Register autoresearch experiment loops across CLI surfaces
+    - Keep RPC command discovery aligned with the CLI registry
+    - Bound built-in sound hook playback duration
+    - Make foreground shell cancellation deterministic in CI
+    - Keep importer unit tests out of real session storage
+    - Make foreground command cancellation testing event-driven
+    - Ignore top-level planning artifacts
+    - Ignore local autoresearch result artifacts
+    - Finalize reliability proof evidence
+    - Smoke-test compiled Windows binaries in CI
+    - Close remaining authorization and automode outcome gaps
+    - Record completion of the CLI reliability program
+    - Gate releases on built terminal behavior and refreshed dependencies
+    - Enforce truthful and cancellable agent execution
+    - Validate cloud sync before local state changes
+    - Make session and telemetry persistence atomic and shutdown-safe
+    - Contain community skill files within trusted roots
+    - Keep file search inside configured roots
+    - Add the OpenAI GPT-5.6 model family
+    - Make autohand the canonical command across installers
+    - Repair public Homebrew installation and release publishing
+    - Resume the TUI immediately after startup login
+    - Add model catalog entry from issue #414
+    - Restore model request issue form discovery
+    - Preserve model catalog formatting in generated changes
+    - Authorize model requests by repository permission
+    - Use a stable qualification output path
+    - Qualify model catalog issues before write access
+    - Automate model catalog pull requests from issues
+    - Define reliability hardening execution plans
+    - Restore catalog-backed provider model defaults
+    - Move provider model lists into a JSON catalog
+    - Reconcile dependencies before development startup
+    - Generate release notes from the previous release tag
+    - Filter operational provider failures from auto-reporting
+    - Keep provider outage recovery from reporting completion
+    - Add active Autohand agents dashboard
+    - Adapt image compression for updated Sharp types
+    - New command /deep-research to allow build new features easily
+    - Guard composer against stale Ink runtime exports
+    - Route imported Codex skill installs to Autohand
+    - Use CommonJS native host fixture in Chrome tests
+    - Require meaningful reflection before follow-up tools
+    - Refresh NVIDIA hosted model list
+    - Classify ChatGPT refresh failures as auth errors
+    - Classify request-size provider failures as context overflow
+    - Harden provider stream terminal handling
+    - Stabilize skill install progress and session handoff
+    - Preflight skill installs before writing files
+    - Allow direct skill installs from Skilled catalog
+    - Dealing with corrupted history sessions
+    - Add goal writer queue sequencing
+    - Add guided goal authoring command
+    - Complete hook event coverage
+    - Derive alpha releases from stable tags
+    - Gate turn memory diagnostics behind debug mode
+    - Gate handoff session behind experiment
+    - Add experimental session fork and clone commands
+    - Linking reference config in their user own language
+    - Handle noisy provider config and process reports
+    - Fix custom provider setup verification and display
+    - Add custom OpenAI-compatible provider configuration
+    - Verify agent-turn composer stability without loopback
+    - Verify composer stability during agent turns
+    - Keep the Ink composer mounted between turns
+    - Tighten reflection parsing and runtime input contracts
+    - Add GLM-5.2 and GLM-5.1 to Z.ai provider
+    - Keep debug notices out of the Ink transcript
+    - Expand reflection parser scenario coverage
+    - Handle reflection as response metadata
+    - Defer automatic feedback while Ink has queued prompts
+    - Use Ink cursor placement for the composer
+    - Reflect successful turns into durable memory
+    - Stabilize Ink composer footer repainting
+    - Restore interactive startup login menu
+    - Start authentication without the fragile startup menu
+    - Update README community and localized docs links
+    - Adding documentation for the new /statusline options
+    - Adding /exit as well as /quit
+    - Improving some tests and new features
+    - Disable process auto-reporting in test subprocesses
+    - Classify LLM Gateway 400 errors by body
+    - Recreate session directories before writes
+    - Handle startup config parse failures explicitly
+    - Handle invalid config set usage explicitly
+    - Accept provider keys in config set
+    - Ignore terminal EPIPE shutdown errors
+    - Prevent sync from corrupting rotated auth tokens
+    - Rename feature switch command to experiments
+    - Fix startup composer cursor placement
+    - Place status line fields in the composer help line
+    - Add configurable status line controls
+    - Make queued prompts grouped and editable
+    - Render the composer as an open input surface
+    - Keep composer cursor state aligned during mid-line editing
+    - Document and enforce explicit bare runtime boundaries
+    - Add explicit bare startup mode
+    - Adding tests coverage
+    - Fixing regression on cursor use for ink rendering
+    - New feature Introducing --squad option
+    - Add idle logout opt-out for long-running agents
+    - Align Ink renderer usage with Ink 7 exports
+    - Expand agent import coverage for OpenCode, Kimi, and Gemini MCP
+    - Expand skill discovery for shared agent locations
+    - Restore skill mention discovery in the composer
+    - Handle Ollama responses without message wrappers
+    - Improving and getting ready for Paid plans
+    - Adding support for account sync
+    - Guard session recovery notes before conversation bootstrap
+    - Use Ink cursor without rendered composer cursor fallback
+    - Document activity indicator customization
+    - Improve real terminal composer typing and paste handling
+    - Make terminal logo rendering responsive
+    - Refine Ink diff transcript styling
+    - Improve Ink composer input responsiveness
+    - Stop Ctrl+C quit requests from entering the prompt queue
+    - Handle cancelled browser login polling
+    - Force themed diff colors in Ink tool transcripts
+    - Make completion reports configurable
+    - Restore themed colors for chat diff text
+    - Show model tool activity in Ink transcripts by default
+    - Render fenced diff blocks in chat history
+    - Preserve Ink transcript order across immediate prompt echo
+    - Gate persistent goals behind slash_goal
+    - Add persistent goal management across CLI modes
+    - Fixing a few bugs in the UI rendering and settings
+    - Add configuration toggle for activity verbs
+    - Guard tool inventory responses from deferred-action classification
+    - Preserve activity verbs while isolating tool output
+    - Keep volatile activity text out of active status lines
+    - Cover default completion rendering invariant
+    - Improve account-aware command output and legacy tool parsing
+    - Show rejected responses after repair retry
+    - Authenticate settings sync file transfers
+    - Show completed tool-list answers
+    - Harden mobile steering and follow-up answer display
+    - Prevent dangling Responses tool calls
+    - Add configurable tool output visibility
+    - Restore themed diff colors in tool output
+    - Restore git diff availability for recent-change prompts
+    - Gate AWS Bedrock provider behind feature flag
+    - Add AWS Bedrock provider support
+    - Adding mobile tier for MacOS users
+    - Report telemetry session duration from the app session clock
+    - Track repository agent instructions
+    - Adding generate locales
+    - Adding details and invite the dev community for our SDK
+    - New agents
+    - Hardness the tests for local detector
+    - New Bahasa Indonesia support
+    - Suppress duplicate background notifications
+    - Fixing a few tests
+    - Add gated usage dashboard and feature switches
+    - Gate native tool calls by provider capability
+    - Prefer native OpenAI tool prompting
+    - Keep background sync warnings out of active status
+    - Preserve streamed OpenAI tool calls
+    - Unwrap ChatGPT responses stream completion events
+    - Prioritize stderr in collapsed live command output
+    - Centralize assistant turn completion outcomes
+    - Preserve debug logging in dev launches
+    - Repair empty no-tool assistant turns before saving
+    - Route response completion hooks through the React loop
+    - Expose response completion classifier hooks
+    - Document CLI backed Code Agent SDK packages
+    - Tighten response completion contract cleanup
+    - Harden response completion classification
+    - Prevent deferred inspection responses from ending turns
+    - Add vertical padding to user message blocks
+    - Restore themed user message blocks
+    - Serialize OpenAI multimodal messages correctly
+    - Tighten active composer spacing
+    - Improve configured provider model menu
+    - Correct session token accounting
+    - Serialize ChatGPT assistant history as output text
+    - Align Ink UI with installed Ink exports
+    - Preserve streamed OpenAI ChatGPT responses
+    - Stabilize pipe integration script runner
+    - Keep shell composer input free-form
+    - Allow arbitrary shell composer commands
+    - Stabilize release Vitest execution
+    - Keep Tuistory tests on dedicated Vitest config
+    - Fixing failing CI tests
+    - Resolve model context windows dynamically
+    - Update context windows for current provider models
+    - Handle missing ripgrep in FFF file fallback
+    - Recognize Tencent Hy3 context window
+    - Fixing failing tests
+    - Stabilize native host chunked input test
+    - Render live shell output in a compact body
+    - Merge legacy multi file edit tool removal into main
+    - Show all todo task states in progress output
+    - Allow slash autocomplete during queued input
+    - Remove legacy multi file edit from default tool surface
+    - Separate prompt suggestions from autocomplete
+    - Repair FFF search tool exposure and fallback behavior
+    - Restore visible cursor in Ink composer
+    - Prevent progress updates from ending agent turns
+    - Keep planning responses from completing turns
+    - Improve slash command autocomplete ranking
+    - Prevent assistant responses from leaking into composer suggestions
+    - Ensure piped stdin observes EOF
+    - Match slash suggestion ordering to help output
+    - Show bang command suggestions inline
+    - Prevent structured thoughts from leaking into composer suggestions
+    - Resolve pipe handoff before agent UI composition
+    - Show shell suggestions in Ink composer
+    - Wire Ink composer suggestions into prompt UI
+    - Stabilize Vitest worker usage in CI
+    - Fixing theme regression bug
+    - Stabilize Bun dependency installs in CI
+    - Document the failing test repair workflow
+    - Stabilize startup git initialization under test load
+    - Fix theme colors across Ink UI
+    - Untrack AGENTS and CLAUDE from git
+    - Document current src/core/agent architecture split
+    - Collapse huge single-line composer pastes
+    - Removing unrequired flickering controls for ink7
+    - Stop tracking workspace and extract files now in .gitignore
+    - Fixing legacy code
+    - Fixing a few errand on the rendering
+    - Cosmetic issues on the rendering logs
+    - Adding new providers like Deepseek and xAI
+    - Improving cover for the additional tests
+    - Moving docs to a better place and changelog
+    - Adding Deepseek to the list of providers
+    - Adding the new missing cli params and interactive modes
+    - What am I doing in this change? Ansi is stripping most especial char for menu options
+    - Update process title to 'Autohand Code'
+    - Upgrading our tests for the new mocking services after upgrading to ink 7
+    - Breaking changes for dependencies to new versions
+    - Upgrading the new tests due to new dependencies
+    - Fix VertexAI auth token input to come clean when changing value
+    - Major improvements to our AgentUI.ts for @ mention files, 5x faster, les than 16ms now; typing now like @src + Tab now auto completes the first classified file, Fixes Applied src/ui/ink/AgentUI.tsx • Synchronous mention detection in handleInput: when the buffer changes, mentions are detected immediately and refs are updated so Tab works without waiting for e 16ms React state flush • Stale-state guard in the mention useEffect: skips processing when input/cursorOffset lag behind the buffer • Buffer-accurate cursor offset in Tab handling: uses getTextBufferCursorOffset(buffer) instead of the stale cursorOffsetRef.current src/ui/mentionPreview.ts • Synchronous suggestion refresh for Tab and arrow keys: updateSuggestions() is called immediately inside handleKeypress before handling navigation/acceptance, e uring fresh data src/ui/useBufferedInput.ts • Added clear documentation explaining why stdin cannot be safely connected alongside Ink • Removed the broken 'sequence' listener in favor of correct 'data'/'paste' listeners on StdinBuffer (ready for future safe stdin interception)
+    - Debug: log findNodePath result to understand CI failure
+    - Improving the docs
+    - Fixing a flaky test
+    - Adding a limit for rendering large blocks of text when pasted by the user
+    - Update run_command tool description to prefer shell tool
+    - Adding better instructions for shell tool
+    - Making less flake the ui and new shell tool
+    - Bug fix, apply patch was not considering original value for the string to replace causing runtime error and default for run_command from the LLM
+    - Adding more i18n details for providers Vertex AI and TUI
+    - Fixing a formatting issue
+    - Adding missing i18n for all xAi and Cerebras AI providers
+    - Bug fix: Adding support for gcloud auth refresh
+    - Adding translations missing for xAi and Vertex AI
+    - Bug fixing: permission were not considering in prefix for folders it was only considering files
+    - Fixing a regression for showing file in AgentUI
+    - Enforcing auth now for our Autohand APIs
+    - Improving the git load config
+    - Upgrading the CI for Bun 2.0 action instead of v1
+    - Moving AScii to utils
+    - Loading config from new configuration settings to stop overflow or reload when change settings in VSCode or Zed
+    - Improving the commands to add --fedback flag
+    - Improving the Feedback scenario
+    - Removing ASCII dependence
+    - Refactoring ascii to be in a util class rather than just in agents.ts
+    - Adding vitest resutls
+    - Bug fix: if user provide a dir outside of the workspace, we should ask to add to the permissions as we do manually for local.settings.json , add more details for feedback and simplify a bit
+    - Adding more stability to the chrome integration and updated docs for including AUTOHAND_CODE environment variable
+    - Keep the other local docs up to date with _en locale
+    - Starting an AUTOHAND_CODE env variable to detect when running autohand
+    - Adding Z.Ai as new provider, fix the broken tests and adding more details to the error message, BUG fix: Ollama cloud models are now treated as feature for the exception rather than the errors
+    - Trying a new menu option for interactive way
+    - New feature for only sending partial description of tools to the Provider
+    - Making permissions a little bit more agressive and permanent, to make sure the user is in control of the flow, the existing feature for controling the permissions via non interactive are much better now for allowing overrides of configs
+    - Adding some TUI UX costmetic filters for /skills and --auto-skills
+    - Adding agents permissions changeS
+    - Transient changes in the permissions checks
+    - Fixing shortcut for composer
+    - Making it faster for prioritising new tools
+    - Update release.yml
+    - Adption login approach for the next launch
+    - Merge branch 'worktree-gh_issues'
+    - New Feature, users coming from OpenAI can now oAuth using their ChatGPT account or API key, we had 120 requests
+    - Adding ripgrep as part of the bundle
+    - Bundling a few agents to be part of the release
+    - Fix tui modal lifecycle and shell composer styling
+    - Adding test units for the new openai provider settings
+    - Improving the experience with onboarding from OpenAI provider choice
+    - Adding more details for the share feature
+    - Improving the syntax for tool_call on open source OpenAI models
+    - Making editor more resistant for suggestions trailing effect and permissions issues
+    - Merge pull request #14 from autohandai/igorcosta/add-repeat-command
+    - Merge: resolve conflict with origin/main (slash command method rename)
+    - Adding folders to ignore
+    - Fixing a failing test
+    - Implementing and adding more coverage test for learn command
+    - Merge branch 'feat/skill-telemetry-tracking'
+    - Merge branch 'worktree-feature_learn'
+    - Merge branch 'feat/multiline-composer'
+    - Merge branch 'worktree-azure_support'
+    - Adding more resume options for Zed Editor
+    - Add multiline support to Ink composer
+    - Adding full wizard config options for azure selection on onboarding
+    - Append changes for locale
+    - New feature, adding more configuration details for onboarding wizard
+    - Adding full wizard config options for azure selection on onboarding
+    - Adding more details and locale
+    - Adjusting auto-mode new param
+    - Joining the alliance with Entire
+    - Making more stable by fixing a few existing bypass on the tests
+    - Bug fix: providing feedback was spilling 1 on 5 star feedback
+    - Bug fix: ACP mode strictly skipping verification at start
+    - New feature, we're improving the ACP mode experience for Zed, Jetbrains editors as ACP native support agents for those IDE
+    - When a turn completes with queued instructions, persistentInput.stop() is skipped (terminal regions stay active), but the Completed in... message was written via console.log() which goes to stdout at the cursor's current position — inside the fixed region (composer area)
+    - Fixing failed error
+    - Fixing a few failing tests and the theme loader
+    - Fixing non ghostty terminal issue when theme not found and briging backward compatibility
+    - Fixing theme loader
+    - New feature: adding support for ghostly themes nativelly
+    - Fixing the shutdown when stderr was silently discarded
+    - Giving a bit of Gandalf LotR inspiring words
+    - New feature: adding /clear and improving memory absortion by the agent on multi-task
+    - Introducing new headless local search, terminal resize fix and fixing input lagging
+    - Adding github dark theme
+    - Fixing the merge conflicts
+    - Merge branch 'worktree-hashed-plotting-dongarra'
+    - Merge branch 'worktree-witty-booping-bengio' into worktree-hashed-plotting-dongarra
+    - BUG: text in composer were overflown
+    - Merge branch 'on_the_tree' with cursor stability fixes
+    - Fixing tui before merging from on_the_tree branch
+    - Fixing boxing and themes text
+    - Merge branch 'on_the_tree' into worktree-witty-booping-bengio
+    - Merge: integrate worktree-validated-riding-pie into on_the_tree
+    - Adding --worktree and --tmux param for the non interactive approach
+    - Updated scripts
+    - Bug fix: the install script for alpha release were not picking up the lastest build by tag id the github api was getting order wrong
+    - Adding tui ui for mcp
+    - Adding more mcp tests
+    - Bug mcp normalise stdin and http for standlone npx
+    - Attempt #2 to fix the path for image
+    - BUG: when working as in queued, the ! and / was getting queued rather than working right away, fixed
+    - BUG fix: MCP was blocking non http and only accepting stdio
+    - Adding notification for within interactive and plan mode session when the user needs attention, not just within completion
+    - Mcp stderr capture for connection error diagnostics
+    - Uncaught ENOENT crash in command.ts
+    - Proofing the existing mcp coverage
+    - Fixing a flaky test
+    - Fixing linting for mcpcli command
+    - BUG: MCP was firing and forget not waiting to connect or retry to connect to the https or stdin for mcp servers
+    - Fixing mcp list
+    - Bug fix: The mcp add and mcp remove CLI subcommands now operate directly on config without spawning/killing MCP server processes.
+    - Adding proof as task for bun
+    - Adding completion and commands to non interactive mode, this allows mcp, sessions completion work in non interactive mode
+    - Bug, /about was hanging the process and never exit
+    - Adding MCP to RPC mode for VSCode extension
+    - BUG: plan mode was being trigger without flagging as plan mode due to keyboard shortcut
+    - Adding more examples for pipe for big launch 0.8.0
+    - Fixing agent to support new pipe format
+    - Making pipe work for adjcent examples
+    - Changing description for us
+    - Bug fix: When adding two xml tool_Call on the same xml defition produces malformed json, leaving the loop to break, this will fix it the issue
+    - Bug on tool call for xml format tool, some models from distilled Opus or Sonnet that uses this format are conflicting with json format
+    - Fixing asm
+    - Fixing postinstall script
+    - Fixing the CI for smoke test
+    - Fix test for yoga breaking alpha release
+    - Fixing yogaint issue on macos and adding --alpha param
+    - CRITIAL bug: fixing the hanging process due to i18n
+    - I18next was blocking instructions for getting through the locale apply, and askin for money support, supressing the message
+    - Cleaning lint warnings
+    - Fixing tests for v 0.7.11
+    - Homebrew formula
+    - Fixing the release.yml pipeline for removing external dependencies on binary build
+    - Fixing pipemode spec
+    - BUG: auto-mode introduced a write bysize loop when files were created but no change detected, with a infinity loop that block a stop
+    - Fixing slash command and mcp display manager
+    - Enhance error handling, session management, and field consistency
+    - Add MCP support and update translations
+    - /mcp i18n adding support
+    - ACP adapter for mode param
+    - BUG Fix: /help wasn't showing all options available
+    - By popular demand, MCP is now part of autohand code cli
+    - BUG: fix /ide detection for multi os
+    - New feature: Add /ide to integrate with VSCode and Zed Editor
+    - Adding support for /ide command in all locales
+    - BUG: .agents folder for todo tasks in automode were saved in the wrong directory, now follows the standard for .agents
+    - Fixing the linters
+    - Adding bash command support for the tui
+    - Checking version now using autohand api not github due to limits and errors reported by users
+    - Bug: fixing rpc events for VSCode extension
+    - Same install script but not for windows and powershell users
+    - Adding support and reference for Zed Editor and VSCode and links to our discord
+    - Linting code
+    - Removing unused vars
+    - Fixing types for new ink modal component
+    - Adding acp registry modifications
+    - Fixing hooks in RPC for vscode extension launch day
+    -  - Create Modal.tsx base component with arrow navigation, number shortcuts, custom input mode, and disabled option support - Add ASCII progress bar to StatusLine showing context usage with color coding (green <50%, yellow 50-80%, red >80%) - Refactor questionModal.tsx to use Modal (130 → 35 lines) - Refactor planAcceptModal.tsx to use Modal with i18n support - Add translations for new UI strings (en, es, fr, pt-br, zh-cn) - Add tests for Modal component (26 tests)
+    - New feature: introducing a web repo tool
+    - New feature: allowing users to override system prompt or append to the existing system prompt
+    - Bug fix: startup checks were delaying the start due to a hook malfunction
+    - Refactoring and cleaning up some dead ends
+    - Fixing a vew issues on test coverage
+    - Wiring the terminal ui for new features plan mode
+    - Bug fix: making filesystem respect the plan mode feature
+    - Wiring the web search, plan mode and auto compact context feature
+    - Bug: Limiting the edit tools for plan mode
+    - Fixing an issue on the test coverage for other web search providers
+    - Adding test coverage for new cc feature
+    - New feature: Auto compact context when sessions are getting longer and also for plan mode
+    - BUG fix: Adding control for language in other locale
+    - Adding more options for onboarding questions
+    - New feature: adding more than one provider for web search
+    - Documenting how to use all providers with autohand code cli
+    - New feature: Add native support for LLMGateway.io as provider
+    - BUG fix Moved src/openrouter.ts to src/providers/OpenRouterClient.ts for better code organization.
+    - Ignore updated for local build script test
+    - BUG fixes: - Adding more support for 15 languages to match our VSCode launch
+    - Fixing release version syntax
+    - Fixing add-dir missing test edge case and adding i18n support for cli
+    - New feature: l18n has arrived on autohand code cli, - adding support - Adding support for the following languages en, zh-cn, zh-tw, fr, de, it, es, ja, ko, ru, pt-br, tr, pl, cs, hu, hi - Auto detect locale based on user OS
+    - New feature: Added write permissions for --add-dir directory to an an existing project, users can now add more directory for their automated systems
+    -  - BUG Fix: automode was skipping worktree merge - BUG Fix: Sync service was missing edge cases test
+    - Introducing sync settings for paid users
+    -  - Bug: Hook scripts weren't being created on first install - Fix: Updated ensureHookScripts() to properly write scripts to ~/.autohand/hooks/ - Bonus: Added Windows PowerShell (.ps1) equivalents for native Windows support
+    - Fixed mocked used in test
+    - Removing bin from commit and fixing the agent resume session
+    Under the Hood
+    Some housekeeping and improvements:
+    - Update tsx requirement from ^4.23.1 to ^4.23.15
+    - Bump the production-dependencies group across 1 directory with 5 updates
+    - Bump vitest from 4.1.11 to 5.0.1
+    - Bump tuistory
+    - Update node-gyp requirement from ^13.0.1 to ^13.0.2
+    - Update @typescript-eslint/parser requirement
+    - Update ignore requirement from ^7.0.6 to ^7.0.9
+    - Bump zod from 4.6.4 to 4.6.1
+    - Bump @aws-sdk/client-bedrock from 3.1131.0 to 3.1130.0
+    - Bump @aws-sdk/client-bedrock from 3.1108.0 to 3.1106.0
+    - Bump @ff-labs/fff-bun
+    - Bump @types/node from 25.9.5 to 26.1.1
+    - Update @aws-sdk/credential-providers requirement
+    - Update unist-util-visit requirement from ^5.0.0 to ^5.1.0
+    - Bump the production-dependencies group across 1 directory with 2 updates
+    - Rename the chrome client context to browser
+    - Assert anchored simple-chat behaviour
+    - Cover chat history retention across /statusline save
+    - Bump @aws-sdk/client-bedrock from 3.1101.0 to 3.1097.0
+    - Update ink requirement from ^7.1.0 to ^7.1.1
+    - Bump commander from 14.0.3 to 15.0.0
+    - Bump node-gyp from 12.4.0 to 13.0.1
+    - Bump @agentclientprotocol/sdk from 0.19.1 to 1.3.0
+    - Bump typescript from 6.0.3 to 7.0.2
+    - Bump the production-dependencies group across 1 directory with 2 updates
+    - Bump tuistory
+    - Harden dependency and release automation
+    - Expand slash command tuistory coverage
+    - Harden local scripts and tool filtering
+    - Type react loop host
+    - Stabilize proof suite timeouts
+    - Introduce typed instruction runner
+    - Remove obsolete ink compatibility patches
+    - Extract project operations
+    - Extract tool output runtime
+    - Collapse response parsing wrappers
+    - Extract context runtime
+    - Extract session accounting
+    - Extract command runtime
+    - Extract ui runtime
+    - Extract interactive lifecycle
+    - Extract orchestration modules
+    - Link extending guide from readme
+    - Add session diff line extension example
+    - Document Ink line extensions
+    - Refresh Autohand Code CLI branding
+    - Cover InkUIManager public contract
+    - Route Ink startup through UIManager
+    - Extract tool loop signature helpers
+    - Migrate search tools from ripgrep to FFF
+    - Extract auto-compaction into src/core/context/ module
+    - Fix flaky native host chunked-input test
+    - Add shell tool analysis documentation
+    - Consolidate search tools into unified 'find' tool
+    - Stop tracking .vitest/vitest/results.json
+    - Reset device auth mocks between tests
+    - Split FixedBottom into StatusSection and InputSection
+    - Add Go SDK documentation
+    - Update feedback tests to match new rating-based API schema
+    - Document $skill mentions, shell commands (!), and expand tool system categories
+    - Expand test coverage for command, agent, glob, error reporting, and UI
+    - Update existing tests to match new behavior
+    - Add regression tests for action executor and skills formatting
+    - Configure vitest for stable single-thread execution
+    - Add cc-src gap analysis matrix
+    - Refresh CLI flags and commands
+    - Add Autohand-in-Chrome documentation
+    - Update chrome command and browser tests
+    - Minor updates to support new features
+    - Add EACCES directory permission test
+    - Make proof deterministic offline and without auto-installs
+    - Add regression tests for dedup refactoring
+    - Extract initializeManagers, withModalPause helpers
+    - Un-export shellCommand implementation details
+    - Remove dead code from promptCallback
+    - Clean up inputPrompt exports and dead code
+    - Deduplicate persistentInput utilities
+    - Use shared shuffleInPlace in activityIndicator and tips
+    - Use stripAnsiCodes in box.ts and terminalRegions.ts
+    - Extract themedFg helper to theme/Theme.ts
+    - Extract ANSI, bracketed-paste and shuffle utilities to displayUtils
+    - Add parallel execution tests and performance benchmarks
+    - Add project_tracker implementation plan
+    - Fix spec issues from review
+    - Add project_tracker tool design spec
+    - Add missing assertion and afterEach spy cleanup
+    - Slim down LLM prompt to use find_agent_skills for discovery
+    - Fix unused import lint warning in LearnAdvisor test
+    - Update learn/skills RPC methods and ACP descriptors
+    - Migrate search, trending, remove, feedback from /learn to /skills
+    - Extract shared community install utilities
+    - Export buildSkillGenerationPrompt from autoSkill
+    - Comprehensive edge-case and regression tests for TextBuffer, layout, and key handler
+    - Remove dead NEWLINE_MARKER code (getDisplayContent, countNewlineMarkers, MAX_NEWLINES)
+    - Add string-width for Unicode visual column widths
+    - Switch completion guidance to SITREP format
+    - Expand overview, features, troubleshooting and roadmap
+    - Add release workflow for automated npm publishing
+    - Update shared importer contract tests for full implementations
+    - Document /settings command
+    - Add integration tests for /settings command
+    - Make activity indicator verb parsing ANSI-safe
+    - Remove unused prompt helpers to satisfy lint
+    - Make activity indicator verb parsing ANSI-safe
+    - Remove unused prompt helpers to satisfy lint
+    - Normalize hyphenated comments and descriptions
+    - Cover http add and sse rejection paths
+    - Stabilize mcp subcommand tests under bun+ink
+    - Remove lint warning in tool arg sanitization
+    - Fix theme color access and add onboarding imports
+    - Add shell command documentation and i18n support
+    - Add paste detection feature documentation
+    - Add comprehensive paste integration tests
+    - Remove unused imports from formatters action
+    - Trigger contributor graph update
+    - Fix hooksCommand test and exclude .worktrees from vitest
+    - Add .worktrees to .gitignore
+    - Remove enquirer dependency completely
+    - Remove unused enquirer imports and update comments
+    - Replace enquirer with Modal in agent and FeedbackManager
+    - Replace enquirer with Modal in export and share
+    - Replace enquirer with Modal in theme, language, completion
+    - Replace enquirer with Modal component
+    - Replace enquirer with Modal components
+    - Replace enquirer with Modal components
+    - Replace enquirer with Modal components
+    - Replace enquirer with Modal/Input components
+    - Update setupWizard tests to use Modal mocks instead of enquirer
+    - Replace all enquirer calls with Modal in setupWizard.ts
+    - Replace all enquirer calls with Modal in ProviderConfigManager
+    - Replace enquirer with Modal in agent.ts
+    - Remove duplicate provider config methods from agent.ts
+    - Integrate ProviderConfigManager for provider configuration
+    - Extract workspace file collection to WorkspaceFileCollector
+    - Extract formatting utilities to AgentFormatter module
+    - Add .worktrees to .gitignore
+    - Optimize rendering performance and eliminate flickering
+    Full comparison: https://github.com/autohandai/code-cli/compare/v0.9.8...v0.9.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/autohandai/code-cli/releases/tag/v0.9.9
+ReleaseTime: 2026-10-27T19:59:49.0000000Z

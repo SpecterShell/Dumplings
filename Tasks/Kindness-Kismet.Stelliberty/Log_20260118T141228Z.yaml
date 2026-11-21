@@ -1,0 +1,65 @@
+Version: 1.2.070
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.070/Stelliberty-v1.2.070-windows-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.2.070/Stelliberty-v1.2.070-windows-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    📦 构建信息
+    项目 内容
+    包名 stelliberty
+    版本号 1.2.070
+    Mihomo 核心 1.19.19
+    提交哈希 2461c1b446209c17fa3e15ae67a1699452f60132
+    📋 更新日志
+    自 v1.2.060 以来的功能和修复：
+    尝试修复特定设备中托盘未能正确销毁
+    提交：86230f3 | 作者：ONEUI9
+    Clash 配置注入器补充缺失配置
+    提交：526fc86 | 作者：ONEUI9
+    style(ui): 重做顶部按钮布局
+    - 顶部按钮改为圆角矩形
+    - 统一按钮组容器样式
+    提交：6bfa144 | 作者：ONEUI9
+    chore(rules): 移除顶部提供者按钮
+    提交：54b7ae8 | 作者：ONEUI9
+    非 IPC 繁忙的重试次数调整
+    提交：bf561a7 | 作者：ONEUI9
+
+    ❓ 故障排查
+    Linux 启动问题
+    如果无法启动应用，请确保已为应用文件夹赋予权限：
+    # 进入应用目录
+    cd /path/to/stelliberty
+
+    # 赋予权限
+    chmod 777 -R ./stelliberty
+    端口被占用（Windows）
+    如果遇到端口冲突：
+    # 1. 查找占用端口的进程
+    netstat -ano | findstr :端口号
+
+    # 2. 结束进程（以管理员身份运行）
+    taskkill /F /PID XXX
+    ⚠️ 重要：必须以管理员身份运行命令提示符。服务模式启动的核心进程需要提升权限才能终止。
+    软件工作不正常
+    路径要求（ZIP 和 EXE 均适用）：
+    - 路径中不应包含特殊字符（空格除外）
+    - 路径中不应包含非 ASCII 字符（如中文字符）
+    - 支持空格：D:\Program Files\Stelliberty ✅
+    EXE 安装程序的位置限制：
+    如果使用 EXE 安装程序，还有额外的安装位置限制：
+    - 系统盘（C:）：仅允许 %LOCALAPPDATA%\Programs\*（如 C:\Users\用户名\AppData\Local\Programs\Stelliberty）
+    - 其他盘（D:、E: 等）：无限制
+    💡 如需安装到 EXE 不允许的位置，请使用便携版 ZIP（无位置限制，但仍可能受系统目录权限影响）。
+    缺少运行库（Windows）
+    如果应用程序在 Windows 上无法启动或立即崩溃，可能是缺少必需的 Visual C++ 运行库。
+    解决方案：
+    安装 Visual C++ 运行库：vcredist - Visual C++ 运行库合集
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kindness-Kismet/Stelliberty/releases/tag/v1.2.070
+ReleaseTime: 2026-01-18T13:43:00.0000000Z

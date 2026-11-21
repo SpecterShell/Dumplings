@@ -1,0 +1,22 @@
+Version: 0.2.35
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.35/Strata.Manager_0.2.35_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Starts still work after strata update prunes old components (upstream #4899): strata update now keeps only the two newest component folders, so paths in a config that point into a removed components/control/<version> folder (working directory, model/MTP flag paths, vision paths and the install root) broke. Discovery and start now move such paths to the newest sibling folder that still has the file, write the config back before the start and log a note. Paths with no matching file are left unchanged.
+    - "Use existing model" keeps image support (upstream #4926): regenerating a config from existing files always turned image support off, so a config that could read images became text only. It now keeps the current configuration's image setting, and without one follows whether the model supports images. The panel has an "Image support" switch to change it; text-only models show "This model is text only".
+    - Clear guidance when a third-party GGUF needs BF16 (upstream #4900): logs with "requires BF16", "--compat-bf16" or "hc tensor not BF16" were reported as a conversion or disk failure. They now get their own result, "This third-party GGUF does not fit the engine", suggesting the OrcaRouter uncensored model import or converting again with --compat-bf16, and noting that retrying or freeing disk space won't help.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - strata update 清理旧组件后仍能正常启动（上游 #4899）：新版 strata update 只保留最近两个组件目录，配置里指向已删除的 components/control/<版本> 的路径（工作目录、模型/MTP 等参数路径、视觉组件路径和安装目录）会失效。现在发现和启动时会把这些路径改到仍包含该文件的最新同级版本目录，启动前写回配置，并在日志里记一条说明；找不到对应文件的路径保持不变。
+    - 「使用已有模型」保留图像支持（上游 #4926）：此前用已有模型重新生成配置时一律关闭图像支持，原来能看图的配置会变成只能文本。现在沿用当前配置的图像设置；没有当前配置时按模型是否支持图像决定。面板里多了一个「图像支持」开关，可手动改；只支持文本的模型显示「此模型只支持文本」。
+    - 第三方 GGUF 需要 BF16 时给出准确提示（上游 #4900）：日志出现「requires BF16」「--compat-bf16」或「hc tensor not BF16」时，以前被归为「转换失败」或「磁盘不足」。现在单独提示「第三方 GGUF 与引擎不兼容」，建议用「导入 OrcaRouter 去审查模型」，或用 --compat-bf16 重新转换；并说明重试或清理磁盘没有用。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.35
+ReleaseTime: 2026-11-01T16:41:31.0000000Z

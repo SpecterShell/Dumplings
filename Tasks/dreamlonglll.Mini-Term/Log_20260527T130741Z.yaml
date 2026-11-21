@@ -1,0 +1,32 @@
+Version: 0.4.16
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.16/Mini-Term_0.4.16_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.16/Mini-Term_0.4.16_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    修复
+    - Windows 深色模式标题栏跟随主题切换 (#33) — 此前深色模式下原生标题栏仍为浅色，与窗口主体配色割裂、观感突兀。本版本后端新增 window_theme::set_window_dark_mode Tauri command，Windows 调 Win32 DwmSetWindowAttribute(DWMWA_USE_IMMERSIVE_DARK_MODE=20) 切原生标题栏配色；前端 themeManager.applyToDOM 末尾自动 invoke('set_window_dark_mode')，在 theme 切换 / 启动加载 config / auto 模式系统色变化 三处自动同步标题栏。
+    技术细节
+    - 启动 applyTheme 在 window.show 之前以双 requestAnimationFrame 调用，深色用户标题栏先变深再可见，无首帧浅色闪烁。
+    - HRESULT 失败仅 eprintln 不阻塞主流程；纯浏览器 dev 模式 invoke reject 由 .catch 静默吞错。
+    - 非 Windows 平台用 cfg 包裹空实现保持跨平台编译；Cargo.toml windows crate 新增 Win32_Graphics_Dwm feature。
+    兼容性
+    - 适配范围：Windows 10 20H2+ 与 Windows 11；1809-1909 不做 DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1=19 fallback。
+    下载
+    - Windows — Mini-Term_0.4.16_x64-setup.exe(NSIS，推荐) 或 Mini-Term_0.4.16_x64_en-US.msi
+    - macOS (Apple Silicon) — Mini-Term_0.4.16_aarch64.dmg(首次启动需在终端运行 xattr -cr /Applications/Mini-Term.app 解除 Gatekeeper quarantine)
+    - Linux — Mini-Term_0.4.16_amd64.AppImage / Mini-Term_0.4.16_amd64.deb / Mini-Term-0.4.16-1.x86_64.rpm
+    平台支持：Windows 为主要支持平台，日常开发与测试均在 Windows 上进行；macOS / Linux 代码层面已支持，但未经充分打磨，可用性欠佳，欢迎提 Issue 反馈。
+
+    完整 commits: https://github.com/dreamlonglll/mini-term/compare/v0.4.15...v0.4.16
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.16
+ReleaseTime: 2026-05-27T12:29:32.0000000Z

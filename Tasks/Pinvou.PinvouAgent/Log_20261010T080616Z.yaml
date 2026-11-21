@@ -1,0 +1,115 @@
+Version: 0.10.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.7/pinvou-agent_0.10.7-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.7 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. 任务辅助侧聊：任务运行期间，右侧停靠面板承载一个独立的、无工具的问答会话，其回答从不进入主任务的上下文或执行流——可以随时问「为什么选这个方案」而不干扰运行。构造上保证每个主任务至多一个侧聊（侧聊 id 由父任务 id 派生，无持久化映射），工作模式与代码模式共用同一 aux- 会话存储（#433）。
+    2. 无头 agent run 会话默认持久化，逐轮工具调用上限移除：无头运行会话进入 GUI 会话存储，按 agentic_ id 前缀持有独立的保留预算，批量运行不再可能驱逐桌面聊天历史（pin 豁免、清扫中途复查 pin、pin 文件不可读时安全失败）；逐轮工具调用上限全面移除（benchmark 钉住的 8 次上限、PINVOU3_MAX_TOOL_CALLS 环境变量、eval 预算武装），失控防护交给引擎自身的逐轮边界（#504、#527）。
+    3. 内建插件框架与内建插件页：后续内建工具在共享骨架上生长——manifest 新增 builtin / visibility: system / security_level / data_access / tool_features 字段；session-reader 注册为首个内建插件（L0，sessions.read）；插件中心新增只读的内建插件页，透明展示每个内建件能触碰什么（#585）。
+    4. 内嵌浏览器在 macOS 正式发布：常规 macOS 构建注册 mcp_browser_* 工具并显示原生浏览器停靠栏，与 Windows/Linux 对齐；preview 专用的构建门被移除，杜绝预览专用通道悄然回归（#633）。
+    5. 消失的项目文件夹可重新绑定：项目文件夹从磁盘消失后，侧边栏提供按根重绑入口——选择后继文件夹，旧路径下所有绑定迁移到新位置，覆盖六种持久化形态，带 busy-turn 栅栏、两阶段强确认握手，以及如实的部分失败报告（失败项保持可原地重试）（#463）。
+    6. 供应商预设刷新，本地模型默认最低思考档：预设默认值对齐当前官方厂商文档（Mimo mimo-v2.5-pro → mimo-v2.6-pro（v2.5 于 2026-10-21 硬退役）、Anthropic → claude-opus-5-5、xAI → grok-4.7；OpenAI 默认经 gpt-6 模型页核实后曾刻意保留，随后被 #625 的 Responses 线接入推翻——见下条）（#620）。本地模型思考不再默认 off——Qwen3.8 一类模型无论如何都会静默思考，先拖住首个 SSE 包再把推理泄漏进纯文本；声明的思考现在经推理通道流式输出且保持低成本，off 仍是显式可选项（#622）。
+    7. Plain 会话默认 DenyAll：已安装的连接器与技能包不再未经显式 opt-in 进入新会话——所有 scope 收敛为「默认关闭、显式 opt-in」；现有安装经读取时迁移保留升级前的开关状态（#455）。
+    8. 会话代码块一键复制：代码块右上角出现常见代码托管样式的一键复制按钮，经渲染后原生 DOM 挂载（幂等）与流式 innerHTML 替换后的 MutationObserver 自愈，复制仅取 <code> 文本，空块如实失败并给出勾/叉反馈（#663）。
+    9. GPT 系列模型改走 OpenAI Responses 线：gpt-6 系模型页明确 Chat Completions 仅在 reasoning_effort: none 下支持函数调用（gpt-6-astra 甚至整体拒绝），内建 openai 供应商固定的 Chat 线此前无法驱动这些模型的工具循环——目录内 GPT 模型（gpt-6-sol/luna/astra、gpt-5.6-sol/terra/luna、gpt-5.5、gpt-5.4-mini）现在每轮真实走 /v1/responses（底座 CodeWhale #79 使运行时路由对 Custom 具备 wire 通道，含加密推理捕获/回放拓宽与六道 forkguard_* 行为钉）；OpenAI 预设默认模型改为 gpt-6-sol（128K 输出事实随路携带，引擎 8192 兜底不再钳制新默认）；新增 openai_responses 自定义预设作为第三种自定义协议（与 Chat Completions、Anthropic 并列），手输的模型 id 保持 Chat 线，DEEPSEEK_PROVIDER/DEEPSEEK_MODEL 环境钉与官方端点守卫优先于改道（#625）。
+    问题修复
+    1. OpenCode 网关恢复接受请求：Go 网关（opencode.ai/zen/go/v1）自 2026-09 起以 HTTP 400 MissingSessionID 强制 x-opencode-session 亲和头，路由在 /zen 前缀的自定义 OpenAI 兼容端点此前不带该头；现在请求携带确定性逐会话 id（对会话 id 做 uuid v5，本发布窗口唯一的 Cargo.lock 变化），共享的网关检测做了 host + path 加固（含 FQDN 尾点），内建注入保持身份作用域（#593）。
+    2. 本地 Ollama 模型不再死于紧急压缩死循环：Ollama 兼容层 /v1/models 不携带上下文窗口事实，未探明的模型此前落到 8192 兜底而压缩下限 4096，每轮都要支付一场注定失败的紧急压缩、以「无法把请求压到模型限制以下」横幅告终（Ollama 0.34.4 实报致命）；现在经原生 Ollama API（/api/ps，/api/show 的 num_ctx 作回退）取真实窗口（#636）。
+    3. 运行时下载在中国网络环境优先走镜像——不弱化完整性：六条硬编码境外产品路径（外加一条 eval CLI 路径）先试镜像或经镜像重试；每条钉定校验和的产物源（KB 模型、wecom-cli 归档、MCP Python wheels、PINVOU3_GITHUB_ASSET_MIRROR_PREFIX）对包括镜像在内的每个源都按既有 SHA-256 钉校验，镜像被篡改即拒绝并落到下一源（#619）。
+    4. bge-m3 安装中途崩溃不再永久禁用语义检索：进程死在磁盘部署与进程内安装之间曾留下 installed = true 且使用门藏起所有恢复路径（Linux arm64 实报）；加载器现在启动时对账「已部署未安装」状态并续跑安装（#630）。
+    5. 陈旧的旧布局连接器二进制不再遮蔽钉定版本：~/.pinvou3/connectors/<triple>/bin/ 下的旧 wecom-cli 0.1.9 曾让工具库卡片卡在「修复」、技能侧报 0.1.9 而实际装的是 1.2.1；bundle-store 导入降级此类记录，版本探测优先钉定的 store 二进制（真实 macOS arm64 机器复现诊断）（#631）。
+    6. 辅助侧聊请求停止被禁止客户端采样参数的网关拒绝：Kimi Coding Plan 网关拒绝任何客户端选择的采样 temperature（HTTP 400 invalid temperature，活体探测证实），artifact 卡片上的找错/检阅因此 400 而同一模型在主聊天正常；aux 请求体现在对齐引擎 wire 形状（不带 temperature 与客户端附加参数）（#634）。
+    7. HTML artifact 预览在 macOS 渲染：主窗口导航守卫此前只在 Linux 豁免浏览器内部的 about:blank / about:srcdoc URL，而 WKWebView 把 iframe[srcdoc] 呈现为主窗口导航并拒绝之，留下永久暗色占位；豁免现在覆盖所有平台（#635）。
+    8. Computer use 可被发现、macOS 权限可呈现：此前模型从未被告知 computer use 存在——它声称环境没有屏幕访问、并在进程级激活缓存清空后丢失延迟工具；主开关开启时每个原生 Engine 会话注入 ## Computer use 小节，macOS 屏幕/录制权限呈现来自 2026-09-30 真实端到端排障（#640）。
+    9. 凭据不再被失败的保存摧毁：两处 keyring 删除曾运行在偏好保存事务内——删除模型（或搜索供应商）可能已成功销毁密钥、随后保存失败，留下「已配置但无密钥」的供应商；两处删除现在都推迟到提交之后，失败的删除只孤儿化一个凭据并降级为警告（#505、#654）。
+    10. 录音不可被窃取或错误归属：录音归其窗口所有（跨窗口 Alt 手势无法再抢占或双重启动），与草稿/会话的关联在异步写回、首轮物化、回滚之下保持正确；voice-ASR 与消息转换子进程改用有界等待，挂死的 ffmpeg 不再永远阻塞调用线程（#617、#650）。
+    11. 连接器与更新器失败说人话：流程卡失败上报稳定失败码（auth_failed / registration_failed），卡片经新增 uiToolStore.connectorErrors 字典渲染 zh/en/ja 本地化文案并跟随界面语言切换；手动更新检查失败显示简短本地化提示而非裸后端错误串（#615）。
+    12. Marketplace 共享状态文件跨进程安全：bundles.json、recycle-bin.json、mcp.json 此前只有进程内互斥锁，两个应用进程可能静默互相丢弃写入（#515 丢失更新类）；现在按路径先进程内互斥再 OS 文件锁串行化，无法建立串行化的写入直接拒绝而非尽力而为（#656）。
+    13. 模型可见文本不再与强制行为矛盾：对系统提示层、工具描述、连接器技能包、逐轮提醒的全量审计修正了与强制行为相悖的不准确、严重遗漏与漂移重复，覆盖 fork 侧全部面（五层 instruction markdown、应用侧提示/提醒字符串、三个 bundle 钩子脚本、内建视觉设计技能、dws/wecom/lark/tmeet 连接器包），带 NOTICE 登记与 BUNDLE_VERSION 0.33 语义递增；引擎侧发现已上游呈报（CodeWhale#90）（#658）。
+    内部改进
+    1. 长聊天保持流畅：流式增量按帧合并（首个增量保底、全部十个桥重置点同步 flush，web 桥补齐桌面端 180 ms markdown 节流作对齐），会话历史经 @tanstack/react-virtual 虚拟化渲染（#607）。
+    2. Engine 冷启动可观测：Rust 侧相位计时 span（spawn、knowledge-host 交接、首次模型往返），scripts/engine-startup-report.mjs 带快速失败 CLI 阈值与坏 span 静默过滤，scheduled 运行同样计时，契约见 docs/engine-startup-observation.md；新增 perf:engine-startup npm script（#608）。
+    3. 两轮全仓死代码与孪生实现清扫：每条高置信死代码判定在删除前对照完整生产引用图（generate_handler!、前端 invoke 字符串、serde/事件名、i18n 键、访问策略、benchmark-hooks 面）逐一手工复核，行数净负；检测硬编码 false、bootstrap 必报错的 local_llm 预装模型路径连同三个命令、一个进度组件、27 条 i18n 文案一并移除（通用开发者路径不受影响）（#596、#661、#609）。
+    4. 复用整合：跨 feature IO 原语收敛进 platform/（单一 sha256_hex(bytes) 取代七种手写拼法、stamp 缓存/reaper 家族同签名替换）、共享 modal shell 从 features/codex/ 提升为 components/ModalShell.jsx 并退役两处内联壳、会话 id 与定时任务 id 校验器共享同一字符集助手（两份错误文案逐字节钉住）（#651、#652、#669）。
+    5. Checkpoint 面恢复、CLI 消费面打开：早前死代码清扫移除的 checkpoint 展示/预览面恢复（CheckpointMeta.label 规范化写入、CJK 安全 80 字符上限、serde(default) 读取；CheckpointDiff.patch / patch_truncated），消费方是无头 CLI（#602）；CLI 消费的八个 feature 模块及具名项从 crate-private 打开（#603）。
+    6. GAIA 基准移除单任务 harness 时限：官方 GAIA 评测只看答案且不定义运行时限，600 秒适配器默认移除（NativeTurn.timeout 变为 Option<Duration>）；失控防护仍在引擎（最大步数、墙钟、有界重试、取消），时限模式成为持久可查状态（manifest 记录、schema 2 门恢复、评分产物带 era 戳）（#506）。
+    7. 构建与 CI：Windows 工具链安装自修复（只读探测、隔离 marker 保护的 RUSTUP_HOME 内修复）且 dev/build 经 rustc 栈包装器启动（防 codewhale-tui STATUS_STACK_OVERFLOW）、VC++ 运行库预检钉定覆盖（#610）；两份 rust-toolchain.toml 随 CodeWhale 浮动 stable（stable 1.99 曾折断 CodeWhale 独立 workspace 编译腿）（#642）；僵死 mac-build.yml 工作流折叠进 pr-check 的 macos-rust-check、Actions 缓存配额抖动停止驱逐最有价值缓存（约 415 runner 小时/月可回收）（#643）；发布的 Windows nsis 构建改用探测选型的 lld-link（与测试腿一致，改变发布二进制）、macOS 测试腿补齐 lld 链接内存环境对齐，跨平台链接器机制注释与已验证模型对齐（rustc ≥ 1.90 在 x86_64 Linux 自链接）（#645、#646）。
+    8. 测试可靠性：marketplace 上传重装断言不再在 Windows 无条件失败（运行时 is_windows() 分支 + 理由写入测试体）（#626）；macOS cargo test --lib 挂死修复——ad-hoc 签名测试二进制的首次真实 keyring 读取可能无限阻塞在 SecKeychainFindGenericPassword 的 ACL 同意弹窗，marketplace 测试 harness 改用文件 keyring（#648）；git stat-trust flake 的 fixture 全量转为 #590 staging-rename 模式（#655）；易 flake 的浏览器冒烟按选择重试一次（#674）。
+    9. 依赖维护：CodeWhale 推进至 0bc868ff0（2026-10-08/09 fork 批次的七次 squash 合入：自定义供应商表 wire 覆写 #79、restore_compaction_checkpoint 不再删除无 provenance 戳的载体 #88、#89/#75/#78 各经 APPROVED 复审、#94/#95 为本仓 Windows 腿逮住的 owner 指向编译修复）（#670）；npm 侧 dompurify 3.4.16（#641）、brace-expansion 5.0.12（#632）、source-map-js 1.2.2（CVE-2026-93749）（#664）、smol-toml 1.9.0 dev（#667）、桥运行时独立 lockfile 的 @modelcontextprotocol/sdk 1.32.1（#666）。
+    注意事项
+    - DenyAll（#455）只作用于新会话；现有连接器/技能开关状态经读取时迁移保留——不会有什么自动重新启用，也不会有什么被关掉。
+    - 无头会话（#504）现在与 GUI 会话同样计入保留规则；pin 一条运行可豁免。PINVOU3_MAX_TOOL_CALLS 不再被任何地方读取。
+    - GAIA 评分产物带 era 戳（#506）：本版之前的分数产生于 600 秒单任务时限之下，与 era-2 运行不可直接比较。
+    - 本地模型思考（#622）默认最低可用档而非 off；若你的推理栈真正支持静默关闭，仍可按模型显式选择。
+    - 预设刷新（#620、#625）只改变新配置的默认值；现有供应商设置不受影响。GPT 目录模型改走 Responses 线（#625）按模型 id 前缀生效，手输 id 与环境钉保持原线。
+    - Windows 发布二进制改由 lld-link 链接（#645）；该工具链变更是有意为之且经 CI 验证。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 安装包与发布产物由版本 PR 合入 main 后触发的发布工作流构建，未在本地构建。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 9188aa6e1 / Actions #37923549687（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - 任务辅助侧聊：任务运行旁挂独立无工具问答会话，回答不进入主任务上下文或执行。
+    - 无头 agent run 会话默认持久化（独立保留预算，不再驱逐桌面历史）；逐轮工具调用上限移除。
+    - 内建插件框架与只读内建插件页（安全级别、数据访问透明展示）。
+    - 内嵌浏览器在 macOS 正式发布，与 Windows/Linux 对齐。
+    - 消失的项目文件夹可重新绑定（全绑定迁移、部分失败可重试）。
+    - 供应商预设刷新（Mimo/Anthropic/xAI）；本地模型默认最低思考档而非 off。
+    - GPT 目录模型改走 OpenAI Responses 线（gpt-6 系工具调用恢复可用）；OpenAI 预设默认改为 gpt-6-sol；新增 openai_responses 自定义预设。
+    - Plain 会话默认 DenyAll：连接器与技能包需按会话显式 opt-in，既有开关状态迁移保留。
+    - 会话代码块一键复制按钮。
+    修复
+    - OpenCode 网关恢复接受请求（x-opencode-session 亲和头 + 确定性逐会话 id）。
+    - 未探明的 Ollama 模型检测真实上下文窗口，不再陷入注定失败的紧急压缩循环。
+    - 运行时下载中国镜像优先，同时每个源（含镜像）仍按 SHA-256 钉校验。
+    - bge-m3 安装中途崩溃在启动时对账恢复，不再永久禁用语义检索。
+    - 陈旧旧布局连接器二进制不再遮蔽钉定版本。
+    - 辅助侧聊请求体对齐引擎 wire（拒绝客户端 temperature 的网关不再 400）。
+    - HTML artifact 预览在 macOS 渲染。
+    - Computer use 对模型可发现，macOS 屏幕/录制权限清晰呈现。
+    - 模型与搜索供应商的 keyring 删除推迟到保存提交之后，失败保存不再摧毁凭据。
+    - 录音按窗口归属且跨异步写回/回滚保持关联；ASR/转换子进程有界等待。
+    - 连接器与更新器失败显示 zh/en/ja 本地化文案。
+    - Marketplace 共享状态文件跨进程文件锁串行化，不可串行化的写入直接拒绝。
+    - 模型可见提示文本全面修正；引擎侧发现上游呈报。
+    en-US
+    Features
+    - Auxiliary side chat: ask questions beside a running task in an independent tool-free session whose answers never enter the task's context or execution.
+    - Headless agent run sessions persist into the GUI session store under their own retention budget; the per-turn tool-call cap is removed everywhere.
+    - Built-in plugin framework with a read-only Built-in plugins page showing security level and data access.
+    - The embedded browser is released on macOS, matching Windows and Linux.
+    - Vanished project folders can be rebound with all bindings moved and partial failures retryable.
+    - Provider presets refreshed (Mimo/Anthropic/xAI); local models default to the lowest thinking tier instead of off.
+    - GPT catalog models ride the OpenAI Responses wire (tool calling works on gpt-6 models); the OpenAI preset default is now gpt-6-sol; a new openai_responses custom preset joins the lineup.
+    - Plain sessions default to DenyAll: connectors and skill packs need explicit opt-in per session, with existing switch state migrated on read.
+    - One-click copy button on conversation code blocks.
+    Fixes
+    - OpenCode gateways accept requests again (x-opencode-session affinity header with deterministic per-conversation ids).
+    - Unknown Ollama models detect their real context window and stop looping on doomed emergency compaction.
+    - Runtime downloads prefer China mirrors while keeping SHA-256 pin verification on every source, mirrors included.
+    - A crashed bge-m3 install reconciles on launch instead of permanently disabling semantic search.
+    - Stale legacy connector binaries no longer shadow pinned versions.
+    - Auxiliary-chat request bodies match the engine wire (gateways that reject client-chosen temperature stop returning 400).
+    - HTML artifact previews render on macOS.
+    - Computer use is discoverable by the model, and its macOS screen/recording permissions surface clearly.
+    - Model and search-provider keyring deletes run after the preference save commits, so a failed save can no longer destroy a credential.
+    - Voice recordings are window-owned and stay attributed across async writeback and rollbacks; ASR/conversion subprocesses get bounded waits.
+    - Connector and updater failures show localized zh/en/ja copy.
+    - Shared marketplace state files serialize through OS file locks; unserializable writes are refused.
+    - Model-facing prompt text corrected against enforced behavior; engine-side findings filed upstream.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.7
+ReleaseTime: 2026-10-10T03:54:05.0000000Z

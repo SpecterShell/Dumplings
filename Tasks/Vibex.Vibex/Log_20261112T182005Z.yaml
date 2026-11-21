@@ -1,0 +1,77 @@
+Version: 0.1.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.5/vibex-0.1.5-windows-x86_64-nsis.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.5/vibex-0.1.5-windows-aarch64-nsis.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🚀 Highlights
+    - Delegation follows what the composer showed: the TUI carries the selected runtime-option reference through the draft, the held-message queue and the send path, the desktop rewrites an inserted @Agent chip when its row is edited, and the authority binds a child session to the newest user message's Agent mention. A delegation that disagrees with that mention is refused with target_mismatch instead of silently running another provider or model.
+    - WSL runtimes take a port you choose: the add dialog accepts a custom Runtime port (default 8765), checks it before the download starts, and names a busy port so it can be corrected in place. The chosen port is stored in the connection profile and reused for install, start, pairing, and every reconnect.
+    - Pairing links are back: Settings → Remote instances → Connect with pairing link adds a runtime from the vibex://pair#/code/... line it printed, with no SSH, tunnel, or Docker image. A pairing sheet that has completed now offers Done, so it can be dismissed without revoking the device.
+    - Thinking levels can be suggested: the model editor offers the effort values published by models.dev under Thinking levels, with an explicit Apply row. Nothing is adopted automatically, and a declaration that already names the same levels is left alone.
+    - An Agent update no longer loses the account catalogue: a managed Agent update or an application upgrade can change the launch identity before the catalogue is rediscovered. The previous complete catalogue now keeps explicit-model sessions working until the refresh lands, and runtime-only launch inputs no longer change the catalogue's identity.
+    - A failed turn keeps its answer: a turn that answered and then hit a boundary error now keeps the answer as its conclusion, with the error behind the fold. The same projection change keeps the reader's exact row in place when an older history page is prepended.
+    🖥 Desktop
+    - WSL runtime ports are configurable: Add WSL runtime now includes a Runtime port field that defaults to 8765. The port is validated locally, probed inside the distro before the deployment spends time downloading, and a busy port keeps the dialog open with the chosen number in the message. The port is stored in the WSL connection profile and reused by the install, start, pairing, and later reconnect paths.
+    - Pairing links are accepted again: a runtime that prints vibex://pair#/code/... can be added directly from Remote instances. The dialog hides the address field when the link carries it, accepts a numeric code plus an address when only the code is available, and keeps a rejected or expired code next to the field with its reason. A successful claim registers the runtime, lists it under Remote connections, and connects to it.
+    - A completed pairing can be dismissed: after the device is claimed, the offer sheet's actions are disabled because there is nothing left to copy, cancel, or regenerate. It now shows Done, which leaves the pairing without revoking the new grant; previously the sheet could sit over the workbench with no enabled control.
+    - The title sweep keeps running: the live-label gate measured frame gaps against the display refresh interval, so a deliberate 30fps frame looked late and the title and status sweeps stopped for good. The gate now floors its budget at the app's 33ms animation interval, and only frames that miss that budget stop the sweep.
+    🔌 Providers and Agents
+    - models.dev suggests thinking levels: when a Model's cached catalogue entry publishes reasoning_options, the editor shows those effort values under Thinking levels with an Apply action. The row never writes the field on its own: adopt_all and the generic suggestion list still carry only scalar fields, and applying the row parses the same declaration text the chips write. A declaration that already matches by level, including one that uses the endpoint's wire spelling, hides the suggestion.
+    - The account catalogue survives a launch-identity change: a managed Agent update or an application upgrade changes the launch fingerprint before the background refresh has written a new catalogue. The runtime now falls back to the newest complete catalogue for the same account revision, provided it describes the selection, instead of failing every explicit-model session with agent_auth_model_catalog_unavailable. The exact catalogue is still preferred whenever it covers the selection.
+    - Runtime-only inputs no longer invalidate the catalogue: terminal capabilities and environment values inherited from the launching process are part of the process fingerprint, where a change can require a restart, but they are excluded from the catalogue fingerprint. A restart under a different shell or a headless start therefore finds the same durable catalogue.
+    - An empty rediscovery keeps the previous Models: a managed update can replace the Adapter before its first probe can answer session/new. Persisting that empty answer under the new fingerprint would hide every Model the reader had selected, so the new snapshot borrows the previous Models and stays marked incomplete for the next background refresh. The refresh loop also publishes after each repaired Agent and refreshes that Agent's catalogue before the invalidation, rather than waiting for the whole inventory.
+    - One unreachable Agent no longer holds the others back: a failed discovery or a lost operation lock is logged and skipped for that Agent, while the rest of the catalogue refresh continues. A failed write is likewise logged and retried later instead of aborting the loop.
+    🤝 Delegation and collaboration
+    - The addressed collaborator is authoritative: vibex_delegate and vibex_create_session now bind to the Agent mention carried by the newest user message. A conflicting selectionRef is refused with target_mismatch; an unspecified target adopts the single mention; several mentions require the caller to name the one it is delegating to, or an agentId that narrows the choice to exactly one. The direct human Delegate action carries its own exact reference and is exempt.
+    - The TUI keeps the typed reference: accepting an @Agent row now remembers the stable runtime-option reference alongside the visible text. It travels with the draft, through the held-message queue, and into the send request, so the authority can bind the child session to the configuration the reader saw. Deleting the visible label withdraws the reference.
+    - The desktop keeps an edited chip in sync: changing a delegation row's Provider or Model rewrites any matching @Agent token already in the draft. The visible label stays @Agent, while the encoded mention id now points at the configuration the reader just chose.
+    📱 Mobile and remote
+    - An empty tail keeps the conversation on screen: a cold client can restore a persisted prefix whose sequence is not contiguous, then read a tail that has nothing newer. That empty answer used to replace the prefix, so the phone briefly showed the conversation and then said it had no messages. Only a non-empty answer with a gap may replace the prefix now, so a paired session stays visible on a cold start.
+    ⌨️ Terminal
+    - A failed turn keeps the answer above the fold: when a provider produced a final answer and then reported a boundary error, the TUI named the error as the turn's conclusion and removed the answer from the transcript. A final answer is now the conclusion even when an error follows it; the error remains in the turn's work, where opening the fold reveals it.
+    - Older history keeps the row being read: loading a page above the viewport anchored the block but not the row inside it, so a reader parked inside a long answer was snapped back to the answer's first line. The anchor now records the block and the row within it and restores both after the prepend.
+    ⬆️ Upgrading
+    Install 0.1.5 over 0.1.4 as usual: sessions, workspaces, Provider configuration, Skills, and remote hosts carry over. Desktop packaging and the updater manifest format are unchanged; an existing WSL runtime keeps its stored port, and a paired device remains paired.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 核心亮点
+    - 委派会沿用输入框展示的选择： TUI 会把选中的运行时选项引用一路带过草稿、暂存消息队列和发送路径；桌面端在委派行被编辑后会重写已经插入的 @Agent chip；权威端会把子会话绑定到最新用户消息中的 Agent 提及。与提及冲突的委派会以 target_mismatch 拒绝，而不会悄悄运行另一个 Provider 或模型。
+    - WSL 运行时可以使用自选端口： 添加对话框新增 运行时端口（默认 8765），会在下载开始前检查，端口被占用时会指出具体端口号，可以直接修改后重试。所选端口会写入连接档案，安装、启动、配对和之后每次重连都会复用它。
+    - 配对链接入口恢复： 设置 → 远程实例 → 使用配对链接连接，可以直接用运行时打印的 vibex://pair#/code/... 添加运行时，无需 SSH、隧道或 Docker 镜像。已完成的配对面板现在提供 完成，可以在不撤销设备授权的情况下关闭。
+    - 思考档位可以得到建议： 模型编辑器会在 思考档位 下提供 models.dev 发布的档位值，并附带明确的 采用 行。不会自动采用任何值；已经声明了相同档位的配置也不会被打扰。
+    - Agent 更新不再丢失账户目录： 托管 Agent 更新或应用升级可能在目录重新发现之前改变启动标识。上一份完整目录现在会继续支撑显式模型会话，直到刷新完成；只属于运行时环境的启动输入也不再改变目录标识。
+    - 失败的回合会保留答案： 先给出答案、随后遇到边界错误的回合，现在仍以答案作为结论，错误保留在折叠区里。同一处投影修改也会在加载更早历史时保持读者正在阅读的那一行不动。
+    🖥 桌面体验
+    - WSL 运行时端口可配置： 添加 WSL 运行时 现在包含 运行时端口 字段，默认 8765。端口会先在本地校验，再在发行版内探测，然后才开始耗时的下载；端口被占用时对话框保持打开，并在提示中写出所选端口。端口会写入 WSL 连接档案，安装、启动、配对以及后续重连都会使用它。
+    - 重新支持配对链接： 打印 vibex://pair#/code/... 的运行时可以直接从 远程实例 添加。链接自带地址时对话框会隐藏地址字段；只有数字代码时也可以输入代码和地址。错误或过期的代码会留在字段旁并显示原因。认领成功后运行时会注册、出现在 远程连接 列表中并自动连接。
+    - 已完成的配对可以关闭： 设备认领完成后，配对面板上的复制、取消、重新生成等操作都会因为无事可做而禁用。现在会显示 完成，关闭面板但保留新的授权；在此之前，面板可能一直盖在工作台上且没有任何可用按钮。
+    - 标题扫光持续运行： 实时标签门控原来用显示器刷新间隔衡量帧间隔，因此刻意按 30fps 调度的帧会被当成迟到，标题和状态扫光会永久停止。门控现在把预算下限设为应用 33ms 的动画间隔，只有真正超出该预算的帧才会停止扫光。
+    🔌 Provider 与 Agent
+    - models.dev 会建议思考档位： 当模型的缓存目录条目包含 reasoning_options 时，编辑器会在 思考档位 下显示这些档位值，并提供 采用 操作。该行不会自行写入字段：adopt_all 和通用建议列表仍然只处理标量字段，点击采用时会按档位 chip 使用的同一套声明格式解析。已经按档位匹配的声明（包括使用端点实际拼写的声明）不会再显示建议。
+    - 账户目录能跨启动标识变化继续使用： 托管 Agent 更新或应用升级会在后台刷新写入新目录之前改变启动指纹。运行时现在会回退到同一账户修订下最新的完整目录，只要它描述了当前选择，而不是让所有显式模型会话都以 agent_auth_model_catalog_unavailable 失败。只要精确目录覆盖当前选择，仍然优先使用精确目录。
+    - 仅属于运行时的输入不再使目录失效： 终端能力以及从启动进程继承的环境值仍然属于进程指纹（变化时可能需要重启），但不再参与目录指纹。因此在另一个 shell 下或无人值守启动时，同一份稳定配置仍能找到原来的目录。
+    - 重新发现为空时保留原有模型： 托管更新可能替换 Adapter，而新 Adapter 的首次探测还无法回答 session/new。如果把空答案写到新指纹下，读者已经选择的模型就会全部消失；因此新快照会借用上一份模型，并保持“未完成”标记，等待下一次后台刷新。刷新循环也会在修复每个 Agent 后立即发布失效通知，并在发布前刷新该 Agent 的目录，而不是等整个清单结束。
+    - 单个 Agent 不可达不再拖住其他 Agent： 发现失败或操作锁获取失败只会记录并跳过该 Agent，其余目录刷新继续进行；写入失败同样记录并在之后重试，而不是中止整个循环。
+    🤝 委派与协作
+    - 用户点名的协作者具有权威性： vibex_delegate 和 vibex_create_session 现在会绑定最新用户消息中的 Agent 提及。与提及冲突的 selectionRef 会以 target_mismatch 拒绝；未指定目标时采用唯一的提及；存在多个提及时，调用方必须指明要委派给哪一个，或提供能唯一缩小范围的 agentId。人类直接点击 委派 时自带精确引用，不受此绑定影响。
+    - TUI 会保留输入时选中的引用： 接受 @Agent 行时，会在可见文本之外记住稳定的运行时选项引用。它会随草稿、暂存消息队列和发送请求一起传递，权威端因此可以把子会话绑定到读者看到的配置。删除可见标签也会撤销该引用。
+    - 桌面端会让已编辑的 chip 保持同步： 修改委派行的 Provider 或 Model 时，草稿中所有匹配的 @Agent token 都会被重写。可见标签仍然是 @Agent，但编码的提及 id 已指向读者刚选择的配置。
+    📱 移动端与远程
+    - 空尾页不再清空屏幕上的对话： 冷启动客户端可能先恢复一段序号不连续的持久前缀，再读取一个没有更新内容的尾页。这个空答案以前会替换前缀，导致手机先显示对话、随后又说没有消息。现在只有非空且存在断档的答案才能替换前缀，配对会话在冷启动后仍会显示。
+    ⌨️ 终端
+    - 失败的回合仍把答案留在折叠区之上： 当 Provider 先给出最终答案、随后报告边界错误时，TUI 曾把错误当作回合结论，并把答案从转录中移除。现在即使后面跟着错误，最终答案仍是结论；错误保留在回合的工作内容里，展开折叠即可阅读。
+    - 加载更早历史时保持正在阅读的行： 在视口上方加载分页时，原来只锚定块，不锚定块内的行，读者停在长答案中间也会被弹回答案第一行。现在锚点同时记录块和块内行，并在前置分页后恢复两者。
+    ⬆️ 升级
+    按正常方式用 0.1.5 覆盖 0.1.4 即可：会话、工作区、Provider 配置、Skills 与远程主机都会保留。桌面打包方式与更新清单格式没有变化；已有 WSL 运行时会保留其端口，已配对设备也保持配对。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/vibex-ai/vibex/releases/tag/v0.1.5
+ReleaseTime: 2026-11-12T17:54:51.0000000Z

@@ -1,0 +1,34 @@
+Version: 18.2.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.2.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added the judgment module for typed questions over JSON state, including choice, yes/no, and score judgments through the Judge interface.
+    - Added TypeSafeJudge support with TypeSafe System One authentication, credential rotation on unauthorized responses, and retry-aware backoff.
+    - Added TextJudge and chatTextBackend for model-based judgments, with structured state rendering and safeguards that prevent embedded requests from being executed.
+    - Added automatic format-correction retries to TextJudge when models return malformed output.
+    - Added the guardState option to TextBackend to control whether safety guidance is included in prompts.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added typesafe authentication for TypeSafe System One judgments via the TYPESAFE_API_KEY configuration and API-key validation against the TypeSafe models endpoint.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added an optional live generation speed readout via composer.tokenRate, showing smoothed tokens-per-second output in the working row and keeping the rate visible between turns.
+    - Added TypeSafe provider support through /login typesafe or TYPESAFE_API_KEY. TypeSafe can power thinking-level detection, unexpected-stop detection, and AI-assisted git staging with calibrated judgment probabilities; configure providers.judgmentProvider as auto, typesafe, or llm to select the judgment backend.
+    - Added the judge(state, questions) evaluation helper for Python and JavaScript cell code, supporting typed choice, boolean, and score judgments. It returns a handle whose .wait() method provides answers and probabilities, using TypeSafe when configured and available or a fallback chat model otherwise.
+    Changed
+    - Unified thinking-level detection, unexpected-stop detection, and AI-assisted staging around a shared judgment system with automatic fallback across configured models when TypeSafe is unavailable or cannot complete a request. AI-assisted staging now evaluates files as a single batched judgment while preserving one yes/no decision per file.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed inline images disappearing or temporarily blanking when resizing the terminal in kitty and Ghostty.
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.2.3...v18.2.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.2.4
+ReleaseTime: 2026-09-17T09:10:49.0000000Z

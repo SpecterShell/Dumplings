@@ -1,0 +1,74 @@
+Version: 1.0.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/myYangyunfan/dsh_desktop/releases/download/v1.0.0/DSH-Desktop-Setup-1.0.0-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/myYangyunfan/dsh_desktop/releases/download/v1.0.0/DSH-Desktop-Setup-1.0.0-win-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DSH Desktop 1.0.0 — 全平台（纯净线首版）
+    v1.0.0 是 Tauri 主线的第一个正式包，四条主线：① 交付口径反转——28 条内置伴随插件
+    随安装包分发，装完首次开机自动镜像进 profile，开箱可用；② 内核 pin 在 0.2.0-rc.2
+    （离线 tarball 随包，启动链 fail-closed 校验版本一致，禁止浮动）；③ 在册 28 条插件
+    逐条对 rc.2 宿主做过更新判定与兼容修复，幽灵服务与失效注入清零；④ Electron 时代
+    遗留面整体拆除（余额轮询环、宠物窗、拖放预处理），桥方法收到 46 项、IPC 通道 38 条，
+    契约同轮随迁并由机器审计咬合（注册命令 ⊆ 契约表 + 双向哨兵）。
+    ✨ 新功能
+    28 条内置插件随安装包分发（内置线）
+    安装包首次开机由启动链的同步步骤把随包插件整树镜像进 profile，不需要再手动装插件。
+    交付门禁保证「仓库源目录数 = 安装包内插件目录数」，并剪除开发机的残留依赖树与超长路径
+    （Windows NSIS 在 >260 字符路径处会中断建包）。
+    工作台文件体验（dsh-better-sidebar 0.24.1）
+    上游整包换代到 0.24.1，并把桌面版那套 VSCode 式文件系统迁进来：编辑器标签体内常驻
+    左侧文件栏（可收起 / 可拖宽 140–480 / 按会话记忆），点文件开成「每文件一个去重标签」，
+    不再原地替换；「合并/独立」选择器与停靠树一并退役。
+    自定义系统提示词（dsh-prompt-custom 0.3.5）
+    替换或追加官方人设，带官方提示词预览与变量插值。本版把它的宿主侧/页内侧回归网按
+    真实内核 + 真实插件源码重建（26 例，含 4 条变异反证）。
+    账户余额与本轮费用（dsh-balance 0.1.3）
+    余额 dock 挂在对话统计栏上，峰谷价目按官方价目表取值（本版已对齐，见下方修复）。
+    🛠 修复
+    开机报 Failed to load plugins（两条插件被启动审计拒装）
+    幽灵服务 settingsScope 在 rc.2 内核里并不存在，注入它的两条插件（dsh-session-manager、
+    dsh-side-session）永远停在 pending，启动审计判定「2 entries did not activate」即拒装。
+    前者摘除注入名即恢复激活，后者改写为 ctx.remote.settings 适配器。
+    设置改了不生效
+    作废的 ctx.settings.register 换成内核真实 API（声明式 Config + describe()/update()）；
+    插件设置命名空间一律改成 profile 条目 id（原先多处写的是包名，查找永不命中 ⇒ 静默失效）；
+    关掉内核自动设置页，避免同一设置两处可改；页内远端读取对密钥脱敏返回空串，
+    不再反盖宿主本地读到的真值。
+    本轮消费偏大 / 缓存命中价算错（dsh-balance 0.1.3）
+    两处独立缺陷叠在同一条查表路径上：内核真实下发的模型 id deepseek-flash 不在价目表内，
+    未命中即静默落回 pro 档（命中价按 0.3 计，是官方 flash 档 0.04 的 7.5 倍）；flash 档
+    价目本身又是按 pro÷3 推导的。本版按官方价目表改正（高峰：未命中 2 / 命中 0.04 / 输出 8，
+    空闲为半价），并补上价目键回归锁与变异反证。
+    配套插件同步把开发机残留依赖树整树分发
+    内置线要求插件随包，同步面只分发声明过的正件（声明式 shipsNodeModules），
+    开发机残留不再进安装包。
+    ✅ 验证
+    - Node 侧（2026-10-09 实测）：scripts/test/ 189 个测试文件，npm test = 2033 例 / 0 fail
+      （9 条 skip 逐条是环境缺料）；check-syntax / validate-pin（✓ dsh-v0.2.0-rc.2）/
+      patch-surface verify 全绿。
+    - Rust 侧（同轮实测）：cargo test --workspace = 689 passed / 0 failed / 4 ignored
+      （含契约审计测试）。
+    - 端到端：安装布局冒烟 smoke-installed.sh PASS——内置插件 28/28 随包并镜像进 profile、
+      插件加载零致命错误（2026-10-08 第三版 1.0.0 包实测）。
+    - 发版防线：版本一致性四道闸（强制检出 tag、tauri.conf.json 版本比对、产物文件名内嵌
+      版本断言、publish 汇总断言），每个主资产附带同名 .sha256 边车。
+    已知问题
+    - dsh-synapse（会话地图）：重启或切换会话时历史回填可能出现空档——宿主 rc.2 下线了
+      Session 上的 events 属性而插件仍读旧字段（不报错、不崩溃）。已登记在内置插件台账
+      §5.5，本版按裁定未处置。
+    - Windows ARM64：payload 内原生模块仍是 x64 prebuild，靠 Windows 11 模拟层兜底，
+      标为实验性产物。
+    详细更新日志
+    壳侧（Tauri / Rust / 六份契约）见
+    dsh-tauri/CHANGELOG.md，
+    Node 侧与内置插件见
+    dsh-desktop/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/myYangyunfan/dsh_desktop/releases/tag/v1.0.0
+ReleaseTime: 2026-10-09T09:54:41.0000000Z

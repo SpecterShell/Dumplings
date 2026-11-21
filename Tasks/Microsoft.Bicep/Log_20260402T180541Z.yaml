@@ -1,0 +1,47 @@
+Version: 0.42.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.42.1/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.42.1/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.42.1/bicep-setup-win-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.42.1.51946
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - Bicep console GA! (#19261)
+    - Bicep Role Definitions Function (#18457)
+      properties: {
+          roleDefinitionId:
+            roleDefinitions('Data Factory Contributor').id
+          principalId: scriptIdentity.principalId
+        }
+    Features and Bug Fixes
+    Experimental Visualizer
+    An experimental version of the Bicep visualizer was added, which can run side-by-side with the existing one. The new visualizer includes several improvements:
+    - Improved UI styling
+    - Accessibility enhancements: accent color support and a light high-contrast theme
+    - New feature: export the graph as a PNG image (see screenshot below)
+    To use the new visualizer, right-click the editor tab and select Open Bicep Visual Designer (Experimental) or Open Bicep Visual Designer to the Side (Experimental):
+    The existing visualizer will be deprecated and removed after two release cycles.
+    Other
+    - Enhance error messages for ArgumentException (#19208)
+    - External input bug fixes (#19256)
+    - Don't crash when nonexistent symbol is used with external inputs (#19260)
+    - Don't crash on error symbol external input parameters (#19263)
+    - Update active pseudo-grammar of the bicep language (#19169)
+    - Added the grace period to delay recommending the latest API version (#19205)
+    - RpcClient: Various improvements for safety + ux (#19203)
+    - Add more info about JSONRPC (#19277)
+    - Fix generate-params JSON defaults (#19265)
+    - Fix playground quickstart module handling and Monaco worker init (#19264)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.42.1
+ReleaseTime: 2026-04-02T17:54:53.0000000Z

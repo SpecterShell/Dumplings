@@ -1,0 +1,27 @@
+Version: 1.0.5
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v1.0.5/cursor-byok-1.0.5-windows-x32-installer.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v1.0.5/cursor-byok-1.0.5-windows-x64-installer.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v1.0.5/cursor-byok-1.0.5-windows-arm64-installer.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v1.0.5
+    修复
+    - OpenAI 兼容模型安全默认值：将未显式配置的默认 max_tokens 从 65536 调整为 4096，避免部分供应商直接返回超限错误。
+    - 超限自动恢复：识别供应商返回的实际 Token 上限，自动收敛请求预算、持久化限制并有限重试，减少模型因额度保护策略无法使用的问题。
+    新功能
+    - Daoxe 供应商模板：支持从 Daoxe 动态拉取模型目录，并按其实际的 /v1/chat/completions 模式创建模型。
+    - Daoxe 协议自动适配：供应商模板优先于通用模型名称推断，gpt-oss-* 等模型不会被错误路由到 Responses 端点。
+    Windows 用户注意：安装时若被 SmartScreen 拦截，点击「更多信息」->「仍要运行」即可。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/cursor-byok/releases/tag/v1.0.5
+ReleaseTime: 2026-09-03T16:15:18.0000000Z

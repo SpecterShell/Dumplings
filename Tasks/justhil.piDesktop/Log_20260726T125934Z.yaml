@@ -1,0 +1,34 @@
+Version: 0.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/justhil/pi-app/releases/download/v0.5.0/pi.Desktop-Setup-0.5.0-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    pi Desktop v0.5.0
+    新增
+    - #31 Composer @ 项目文件搜索：在消息开头或空白后输入 @，即可模糊搜索当前项目文件和目录；支持键盘、鼠标、目录继续补全、hidden 文件、.gitignore、symlink，以及空格 / Unicode / Windows 路径
+    修复
+    - 模型设置页国际化失效：模型供应商页面的标题、按钮、提示和校验信息恢复中英文翻译，不再直接显示 i18n key
+    - Global / User SDK 模型配置崩溃：模型配置校验与可用模型读取同时兼容内置 SDK 0.80.7 和新版 ModelRuntime API，不再出现读取 .create 的异常
+    - 聊天框模型选择被默认设置覆盖：设置页默认模型仅用于新会话，保存设置不再切换当前会话已选择的模型
+    - #30 模型配置保存后仍提示未保存：保存成功后会同步清除设置页脏状态；保存失败仍保留未保存提示
+    - #32 手动检查更新无法读取 GitHub Releases：更新请求改用 Electron Chromium 网络栈，兼容系统代理和 PAC；保留 token、超时及 latest 404 fallback 行为
+    - #33 macOS 提示应用已损坏：Apple 凭据齐全时自动签名、公证并执行 Gatekeeper 验证；凭据缺失时仍发布 unsigned DMG / ZIP，不再阻塞整次 Release
+    - 中文输入法 Enter 误发送：IME 组词期间的 Enter 不再触发补全或发送
+    - 流式 Markdown 表格延迟成型：流式尾部出现表格等块级语法时改用 Markdown 渲染
+    - 思考内容滚动串联：展开的思考内容拥有独立滚动区，鼠标滚轮不再带动整条 Timeline
+    - 窄窗启动后输入框高度异常：Composer 会在窗口、侧栏或中心列宽度变化后重新测量内容高度；程序化填充、清空和历史恢复也会自动复位，不再保留窄窗下的异常多行高度
+    优化
+    - 对话区宽度与思考可读性：侧栏收起后对话区按中心列自适应放宽；思考正文提升字号、行高和对比度
+    - 文件引用兼容性：项目文件以现有附件 chip 展示，发送保持 @path；含空格路径使用引号，避免引用被截断
+    注意
+    - macOS 构建若未配置 Apple Developer ID 与公证凭据，下载到的 unsigned 版本仍可能被 Gatekeeper 拦截；需要签名版本时请等待带签名资产或手动移除 quarantine
+
+    安装包见本页 Assets。更新说明以本正文为准（应用内「发现新版本」弹窗会展示）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/justhil/pi-app/releases/tag/v0.5.0
+ReleaseTime: 2026-07-26T12:03:20.0000000Z

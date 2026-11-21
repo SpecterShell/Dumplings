@@ -1,0 +1,27 @@
+Version: 2.25.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/mistralai/mistral-vibe/releases/download/v2.25.2/vibe-acp-windows-x86_64-2.25.2.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: vibe-acp.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mistralai/mistral-vibe/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - VS Code extension: debug submenu with log level picker, open log file, and a togglable session status panel showing agent statistics (steps, tokens, tokens/sec, context, cost)
+    Changed
+    - Open the session picker faster by building the merged session listing once per cursor walk instead of on every page.
+    - Renamed SessionBackendKind literals from "python"/"rust" to "legacy"/"unified" to match backend identity naming.
+    Fixed
+    - An "always" permission grant that fails to reach ~/.vibe now warns instead of passing silently: ConfigOrchestrator.set_field returns its errors rather than raising, so an ignored failure looked exactly like a successful write and the next session asked again with nothing to explain why.
+    - Steered prompts now preserve their host-provided display content in app-server session history.
+    - Preserve the selected permission mode when a session starts in a worktree.
+    - Managed worktree creation, attachment, and retention cleanup are serialized across processes, and stale reservations are recovered safely.
+    - Stop dropping a session from the picker when it is touched while paging through the list.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mistralai/mistral-vibe/blob/HEAD/CHANGELOG.md#2252---2026-09-10
+ReleaseTime: 2026-09-10T14:42:15.0000000Z

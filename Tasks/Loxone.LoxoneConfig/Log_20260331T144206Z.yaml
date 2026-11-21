@@ -1,0 +1,866 @@
+Version: 17.0.03.31
+Installer:
+- InstallerUrl: https://updatefiles.loxone.com/LoxConfig/LoxoneConfigSetup_17000331.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    Climate
+    - A3D9-T1991: Fan Speed off: Set AC to off by fan speed adaption
+    - A3D9-T2060: Intelligent Room Controller – rename temperature mode “off” to building protection
+    - A3D9-T2246: Automatically connect CO2/Humidity Sensors to Intelligent Room controller
+      - Only applied if temperature of room controller is provided by Air/Tree devices supporting CO2/Humidity
+      - Respective inputs do not have sensors connected
+    General
+    - Config: New Main-Window and Ribbon implementation
+      - Main-Window and Ribbon have been completely rewritten from scratch
+      - new overall simplified UI
+    - A3D9-T2056: Air Based Integration into IRC – Object Input
+    - A3D9-T2061: Ac Unit Controller – default temperature value setting updated
+    - BG-T3904: A checkbox in DALI search dialog is added to show all devices regardless of whether or not they are already learned
+    - A3D9-T2049: All Climate blocks are coloured in orange by default
+    - A3D9-T2048: Function block name editing initiated on insert
+    - A3D9-T2062: AC Unit Controller: Parameters Hys and O enabled only when using IRC
+    - New Media Control configuration dialog
+    - Media Control: naming outputs is now possible
+    - A3D9-T1930: Added a setting button to note block, text in note left aligned
+    - BG-I40328: Project Backups Popup is ported to new framework
+    - [General] A3D9-T1917: Project Backups dialog is ported to new framework
+    - SPO: System message when no next day data available
+    - Added Ukrainian language
+    - Honeywell Plugin 1.0.1
+      - Added setting for severity level for “OPIF timestamp mismatch” system status message
+    - Added room and category to info pinner
+    - Support for new Remote Connect
+      - Faster connection established by constant tunnel connection
+      - New URL connect.loxonecloud.com
+    - A3D9-T2159: Extended token validity for App token
+      - Configurable in Settings in Document
+      - Allow extension of validity to 12 months instead of the default 3
+      - Can be used in installations where users don’t access the visualization for several months
+    - A3D9-T2094: New Function Block – Presence Central
+      - Get a combined overview of the presence in a building
+      - Longterm Absence pulse
+      - Auto Config will enable house in deep sleep on long-term absence
+      - App support will be added in the next weeks
+    - A3D9-T1870: Central function blocks – Added state Outputs
+    - A3D9-T2237: Added History entries for presence when activate/deactivate manually
+    - A3D9-T2172: State Control – Increase to 8 inputs
+    - Link to new Remote Support Tool instead of Team Viewer
+    - Add checkbox to run after install
+    - A3D9-T2238: Show info message box with option to save into Miniserver after closing a learn dialog and something has changed
+    - A3D9-T2225: Controller Frequency and Open input options are hidden if they are not different from their default values
+    - Wireless Speaker
+    - A3D9-T2284 – Touch Pure Flex Controller
+      - Brightness for Display and backlight are handled separately now.
+      - Display is exclusively activated by Presence and Don input
+      - New Output CBrD: Shows the default brightness used for display and status LEDs
+      - Fixed: Text with only white spaces triggered backlight
+      - Fixed: After falling edge of reset input, the outputs would not recalculate
+    - A3D9-T2224: Reworked name setting description for some objects
+    - AC Control Air for Panasonic
+    - Connection references can be temporarily moved
+      - Please note the position will not be saved!
+      - Moving them is only for convenience while programming logics
+    - New Colours and Icons
+      - We proudly present the new Colours of our Brand now also in Loxone Config
+      - New Splash Screen
+      - Category colours get converted to new colour equivalents
+    - Upgraded to newest version of the Framework used for the Loxone Config UI
+    - Loxone Config now supports only 64-bit systems
+    - Increased minimum system requirements
+      - Windows 10 (64-bit) or higher
+      - Graphics processor (GPU): Support for OpenGL 4.5 or DirectX 11
+    Devices
+    - Wallbox Air: Enable Tree interface – New Wallbox Air FW 16.2.11.27
+    - R20-T805: Nano Dimmer US: Touch IC IQS7222C support for Nano Dimmer US
+    - A3D9-T2216: Create Meter and Switch for Smart Socket Air
+    - Support for Door Lock Air
+    - Hörmann Air: Support new Hörmann actuators SupraMatic H4
+    Trust
+    - Add Trust Members by importing CSV file
+      - Action in the context menu
+    - Private Trust
+      - Isolate your trusts so that only the Manager can see who is a member of the trust
+      - Members can only communicate with the Trust Manager
+      - This can be used for partners to manage access to their customer installations
+    - A3D9-T1244: Trust Manager – Allow replace of the Manager Miniserver
+      - The Trust Manager serial can now be edited on Trust Members
+      - System Status Message ‘New Trust Manager detected’ with option to ‘accept and reboot’ when a new Miniserver claims to be the Manager
+      - Multiplicator: Edit Trust Manager serial, perform a ‘Trust Update’ and save into Miniservers
+    Usability
+    - Learning dialog now also preselects the switchboard like the room depending on the previous selection
+    - Reduced categories and rooms which get added in a new project
+    - Removed “Reset Interaction” button from tree learning dialog
+    - Add Column title to tooltip in a Table View (e.g. Multi Edit Dialog)
+    - Removed connector letter from objects in tree (example ‘P’ on presence inputs)
+    - Proper Error message when trying to connect with invalid credentials to the Miniserver
+    Auto Configuration
+    - A3D9-T2210: Changed Handling of General Inputs/Outputs
+      - General purpose IO won’t be connected to function blocks anymore by the Auto Config, to prevent invalid usage
+    - A3D9-T2214: Digital Inputs in category presence detection create a presence control in the room
+    - A3D9-T2213: Similar light devices will be connected to the same light output
+    - A3D9-T2211: Audio Player Group will be automatically created when needed
+    - A3D9-T2209: A relay in category Ventilation will create a Toilet Ventilation instead of a Room Ventilation
+    OCPP
+    - BG-I46333: Added “Miniserver Authorization preferred” setting
+    Gateway-Client
+    - BG-I42658: New warning window added in case of credential mismatch
+    Access
+    - A3D9-T1949: Added dedicated permission to access system messages
+    Lighting
+    - BG-T4542: Periodically retransmission of DALI light control commands
+    Fixed
+    General
+    - Weather data request fails, requests now spread further to limit load on Loxone servers
+    - BG-I36954: Tree diagnosis – Tree to air bridge: fix increased packet loss.
+    - BG-I43220: invalid permission-hint for “Trigger Backup”
+    - BG-I42554: Multiplicator: highlighting of operating mode
+    - Reverted automatic name editing when inserting control
+    - BG-I42445: Wallbox Manager Output Cp shows assigned power not actual power of Wallboxes
+    - BG-I42781: Enter/Return key didn’t trigger default button in Insert Device settings dialog when focus was inside Name setting editor
+    - BG-I42865: Monitor Window closes when the last active monitor is paused
+    - Increased timeout for fetch of weather to 60s (original value)
+    - Reverted UI change which caused artifacts
+    - BG-I42693: Note – tabs not drawn on page
+    - BG-I42740: fix issue with sorting table of backups by date in Replace Miniserver dialog
+    - BG-I42921: Dali: device serial number not correctly displayed in property window
+    - BG-I42787: Display name: wrong position in property window for 1-w
+    - BG-I42874: PropertyWindow: “Apply to Miniserver” button didn’t work in all cases
+    - BG-I42820: PropertyWindow: selection in Text Editor settings wasn’t restored properly when text was submitted with ENTER/RETURN key
+    - BG-I42911: Presence – Deactivate Warning Timer
+    - BG-I41603: Touch Grill loses manual button functions after resaving to Miniserver
+    - BG-I42552: “IR Extension search” not working
+    - Creator settings not saved in project planning
+    - BG-I42880: Removed Update system message when Update is done manually via Config
+    - BG-I42971: Text IO not transmitted across Miniservers
+    - BG-I43014: Bacnet IO does not have IO identifier setting visible anymore which is necessary for BacNet
+    - A07R-I1654: Wrong setting unit for allowed timeouts of virtual HTTP Input
+    - An error message due to high Miniserver usage is shown when starting Update on a Gen.2 – Message is only relevant for Gen.1
+    - BG-I42641: fixed conversion of old v6 projects (not loading pages anymore)
+    - BG-I42737: Miniserver Replace dialog took IP address from backup instead of Miniserver search result
+    - BG-I42735: Text unnecessarily truncated/scolled in Replace Miniserver dialog’s cloud service summary page
+    - BG-I42675: When filtering the periphery tree for device types, device references are filtered out
+    - BG-I42837: Tree Filter – Lighting groups not properly filtered by automatic room selection
+    - BG-I40496: Garage/Gate – improved history entry texts when moved externally
+    - BG-I42825: Roof window shading: calculation slightly different than automatic shading (same settings)
+    - BG-I42823: Automatic shading: wrong state in history if Dir=0
+    - BG-I42798: Non interconnectable api could be connected and no message displayed
+    - BG-I42986: Formula block shows “Invalid” even though it works and is valid after copying
+    - BG-I41891, fix issue with changing user password in system status messages, when Miniserver has default user
+    - BG-I42685: It’s not possible to change the colour of the Constant
+    - BG-I34079: Added a warning message when selecting Relative/Absolute modes for SPO
+    - BG-I42730: SPO – Error Message Data for Tomorrow not available
+    - BG-I39134: Add timezone and timeserver settings to the property window (next to the Geocoordinate settings)
+    - BG-I40539: Statistics interval setting text cut off since its too long
+    - Unnecessary custom changes created for Touch Pure Flex and Valve Actuator devices
+    - BG-I42832: Off-Delay, On-Delay do not activate when trigger is active while off is deactivated
+    - BG-I42770: Automatic Designer – Weather fields with offset saved incorrectly
+    - BG-I42414: Config crash when deleting controls
+    - Backup/Update dialog: update could be started before backup was finished
+    - BG-I42506: Close all monitor windows, when disconnected from miniserver or when there is no active monitor
+    - Town setting contains linebreak which breaks structure file for app
+    - BG-I41478: CPU usage estimation of a project not correct anymore
+    - BG-I42603: Wrong project type opened when connecting to a fresh Miniserver
+    - BG-I42622: fixed Icon dialog not opening in property window for visu on/off icon settings
+    - Musicserver about zones appears even if it is offline
+    - BG-I32460: Wrong Month statistics after a DST change
+    - BG-I42064: HTTP setting missing in Configure Miniserver dialog when replacing Gen.1 Miniserver by Gen.2 Miniserver
+    - BG-I42592: CCo dialog – Column name not fully shown
+    - BG-I42590: CCo dialog – IRC cannot be added after deleting source
+    - BG-I42515: Hörmann Air – diagnostic inputs doesn’t show inputs
+    - BG-I39407: Intercom switching to video does not work
+    - BG-I41754: Generating a one-time setup code for a managed tablet uses the wrong orientation
+    - BG-I42578: Devices, that have a reference on a page are collapsed if clicking somewhere else
+    - BG-I42155: Generators do not list all user parameters as an option
+    - BG-I42613: Database Connector not working after update to 16.2
+    - BG-I40261: Drag/Drop inside tree not possible when mouse buttons are swapped
+    - BG-I42230: pasting of linebreaks not prevented in property window
+    - BG-I41830: Window/Statusmonitor – permitted users not shown when permissions are inherited by main monitor
+    - BG-I41971: Liveview-Values for connection references overlapping if too long
+    - BG-I42359: Intelligent Roomcontroller – set default capabilities if control does not use any outputs
+    - Custom Changes – Miniserver childs saved when adapting name
+    - BG-I42623: Status block doesn’t work properly on start up
+    - BG-I41865: wrong time status message does not disappear automatically
+    - BG-I42366: misleading Exo license system status message
+    - BG-I42087: Touch pure flex Controller backlite not working via API connection
+    - BG-I42044: Possible to delete all operating modes when custom mode is marked together with standard modes
+    - BG-I41316: Wind-Gauge Input Avgt
+    - BG-I41312: MSC reboot when rebooting AS part with device command
+    - BG-I41432: VQ can have a colour
+    - BG-I41159: API Connector colour picker doesn’t get applied
+    - BG-I40533: LoxApp3 json break due to special characters inside a text in a system scheme
+    - BG-I41069: TPF Controller dos not reset
+    - BG-I39666: State in cell for switch is not in sync
+    - BG-I40984: Apply on Miniserver does not work for ACC limits
+    - BG-I40867: Valve Air V2 – missing icon in App-Search
+    - BG-I40949: Trust – Different hint on F1 and on click on info icon in tree
+    - BG-I40905: Web page module Line break in URL destroys Loxone app access
+    - BG-I40963: System variable not checking input state after restart/reboot only on edges
+    - BG-I40337: Flex ghost connection after load from MS if change was done in IRC
+    - BG-I39007: Presence block ends presence when it should not be the case
+    - BG-I40080: Display correct message when web interface is unavailable
+    - BG-I39171: Healthcheck: Gateway Client wrong text when Clients are on different Version
+    - BG-I39960: Window – Movement not executed when input Pos was changed during movement
+    - BG-I41180: RS232 template does not create text actors
+    - BG-I41213: Prevent dropping API-Actor on controls without api output
+    - BG-I41076: Hint-Text conversion: unvisualized controls will use documentation
+    - BG-I41198: Virtual Input – localhost URL fails when accessing files instead of webservices
+    - BG-I40012: Touch Pure Flex dialog: improve description for SET/SETT5 value
+    - BG-I41267: Usermanagement – Checkboxes in members view are not disabled
+    - BG-I41389: Setting ‘Room Type’ not shown in property window
+    - BG-I40067: HVAC: Wait for dampers to open before activating fan on manual trigger
+    - BG-I41550: SPO input/ouput short descriptions mix of English and config language
+    - BG-I41485: Table lamp: T5 is not assigned to a category by default
+    - BG-I41619: SPO: better description for Demand parameter
+    - BG-I41560: Coil Quantity – visible even when Command is set to different type then 15
+    - BG-I38978: Wallbox: Add charge error code to system message on charge error
+    - Document conversion: invalid reference colours when converting from very old config versions
+    - BG-I40895: SD format successful dialog blocks some interactions in config
+    - BG-I41434: Ping shown as unconfigured control after change via expert mode
+    - BG-I41540: Moving Average – output set to 0 after saving into Miniserver
+    - BG-I41645: Invalid JSON sent when confirming notifications
+    - BG-I41576: Device Status Dialog changes size with device commands
+    - BG-I41134: Compact Audioserver has invalid mac address
+    - BG-I41557: Documentation text not saved with templates
+    - BG-I41604: Edit shared properties now use referenced IO’S
+    - BG-I41714: Place/Category if IO’s not immediately shown when dragged on page
+    - BG-I41818: Device Status: Audiodevice have invalid color when updating
+    - BG-I41781: Automatic designer – some actions/conditions cant be selected in French
+    - BG-I41420: System Status – confirm button not removed when using custom confirm actions
+    - BG-I40484: Dali groups in Multiplicator settings are editable
+    - BG-I39452: Livelearning – replacing Airbases with different Hardware-Versions not possible
+    - BG-I41064: Livelearning – replacing extension not working properly
+    - BG-I41204: Extension still findable in device search after learning from the app
+    - Modbus coil quantity set for non-coil IO’s
+    - BG-I40050: fixed INT64 overflow in parameter input
+    - BG-I41146: Network Intercommunication Sensor creates multiple edges on receive
+    - BG-I42089: Duplicate documentation field for treeturbo-caption
+    - BG-I42047: Connection Reference for controls without room not correct
+    - BG-I41717: SystemScheme dialog was missing display of text input restrictions (maximum character/block count)
+    - BG-I41716: SystemScheme dialog: items cannot be moved outside scheme rect anymore
+    - BG-I41954: pressing ESC key hid Air diagnostics view inside HealthCheck dialog
+    - BG-I41953: HealthCheck dialog could be closed via ESC key and had inconsistent behaviour with AirDiagnostics view
+    - BG-I41888: filter header was set collapsed when opening the floating property window right again
+    - BG-I41440: App search shows Link branch in Tree-Search
+    - BG-I42060: Tracker does not show origin Sensor when connected via reference
+    - BG-I42247: Reference Drawing: display name shown on page
+    - BG-I41408: Fix issue with F5 search in Parallels (Mac) by setting focus of text editors (note, text generator, alarm chain) after closing.
+    - BG-I41861: Device Status – invalid colour for updating speakers
+    - BG-I42047: Connection flags to controls without room not named properly
+    - BG-I42129: Pool Controller – inconsistent naming for inputs I1,I2 in property window
+    - BG-I41857: Usermanagement API: Adding NFC tags not consistent
+    - BG-I41894: Sequence Control: After a sequence ends, the “S” output remains active
+    - BG-I42151: System Status variable incorrect category and room by default
+    - BG-I42159: Project Analysis – Missing meter blocks “Not fully configured” and Load Manager
+    - BG-I41602: Network intercommunication monitor shows the same packet multiple times
+    - BG-I40708: Error message for empty port appears twice in miniserver configuration dialog
+    - BG-I42166: Multiple API-Commands in a short interval not always executed
+    - BG-I42234: KNX Actors do not show corrected analog value in app
+    - BG-I42394: Fixed config crash when loading custom changes including trusts
+    - BG-I42063: EIB-Actors keep reference connection on copy-paste
+    - BG-I42382: Config resets to single MS after “abort” settings for multiplicator
+    - BG-I42422: Roof Window – no protection reason provided by Central Roof Window
+    - BG-I38126: Periphery Tree disappear after cancel new project
+    - BG-I42319: Climate – AC Central controllers show activated AC Unit Controllers as “no demand”
+    - BG-I42095: Intercom – Second Tree branch would appear in some cases
+    - BG-I41113: Virtual Output: quick state change on startup causes VO command not be sent
+    - BG-I40919: Fix snapping issue while dragging multiple outputs onto a function block
+    - Updated fronius to 0.10.27
+    - BG-I41961: Filter in periphery tree is reset after editing settings of an object if automatic filtering is enabled
+    - BG-I39862: Automatic filtering in device learning dialog now also includes the last added device type
+    - BG-I42182: Monitored devices are selected in the tree after a change to the tree (e.g. new control added, deleted, …)
+    - BG-I42537: icon setting of custom icon didn’t open icon dialog
+    - BG-I42574: fixed dialog button sizes in BackupUpdate dialog (and all future dialogs)
+    - BG-I40524: no feedback at all when trying to connect to Audioserver (instead of Miniserver) with Config
+    - BG-I41687: Untranslatable text in Trust takeover dialog
+    - BG-I42199: Missing dialog button texts in property window
+    - BG-I42134: document selection was changed upon M-Bus monitor start
+    - BG-I41519: Device Options (Settings Edit) dialog is ported to new framework
+    - BG-I42693: Note: Spaces created with the tab key are not displayed
+    - BG-I43316: Digital Inputs shows physical variables and different scale (Miniserver DI, Old Extension)
+    - BG-I40928: Project Planning: having Meter and Wallbox sets meter types incorrectly
+    - BG-I43618: Auto configuration duplicates input 6 in the “Good night” logic
+    - BG-I43171: Gate: History “double” entry when controlling via inputs
+    - BG-I43201: Audio Player history has placeholder in text when presence blocked
+    - CUIX-T87: increase type safety and warning levels
+    - BG-I32539: Belimo – external sensors are read only after bigger value change
+    - A3D9-T1886: Belimo MPL Damper do not have diagnosis-IO’s for Devicestate anymore
+    - BG-I42822: fixed broken UI in Energy Manager configuration dialog upon moving entries by buttons
+    - BG-I43569: Property Window: date/time editors didn’t show “different assignment” text
+    - BG-I42782: insert device dialog didn’t remember last selected room upon consecutive openings
+    - A3D9-T1921: Improvements in Sequence Controller Dialog. Tree elements have a pencil icon for renaming, Tabs have new naming convention
+    - BG-I43468: Fix issue with deleting the connection of reference-API between IRC and HCC
+    - BG-I43426: Configuration-dialog on device insertion doesn´t show category
+    - BG-I43010: Schedule block could allow value to be equal to default value which would not save set time in config
+    - BG-I43216: Repeating the auto Config reconfigures the shading
+    - BG-I43477: Wallbox – Only one API Connector possible
+    - BG-I43375: NFC/Wallbox block – Only one API Connector possible
+    - Fixed incorrect immediate hiding of popup ribbon panel (when in collapsed state) in some situations
+    - Fixed incorrectly updated Ribbon actions (based on previous document when switching back and forth between documents)
+    - A3D9-T2143: added logic for doubling presence overrun time after a quick reactivation
+    - BG-I44906: Fix menu text for Exo projects in project view list
+    - BG-I44618: Fixed issue with 2x opening dialog for Tablet function block
+    - BG-I43910: Fixed issue where MDI child windows could enter floating state
+    - Confirmed system messages not shown in tree
+    - BG-I44624: Update available system message not removed when Update is done manually via Config
+    - BG-I43786: Fixed drag and drop not working on Qt Main Window
+    - Fixed connection state panel in incorrect state after an unsuccessful connection attempt
+    - BG-I44709: Connection state panel showed hostname from previous connection attempt during connecting
+    - BG-I44469: Simulation time settings were ignoring input value for seconds
+    - BG-I44487: Documentation info button on function blocks was not clickable if connected ApiC onnector pointed to unconfigured device
+    - BG-I44012: Push Notifications sent to users with internal only permissions
+    - BG-I44111: TPF Configurator Velvet White cannot be imported to Config
+    - BG-I44440: IRC – timer in the app overrides the schedule
+    - BG-I43912: Fixed issue with Message Box of Sequence Control when opening a project
+    - BG-I44708: Handling of ampersands was not correct in all cases in Ribbon texts
+    - Fixed unnecessary CPU consumption in Config once a project/document is opened
+    - Trust not working when mixing Miniservers with new and old Remote Connect
+    - BG-I44738: SD format of Miniserver Gen.1 not working
+    - Remote connect url not checked in Health Check
+    - BG-I44104: Timezone cant be set from Config
+    - BG-I44594: Fixed issue with inserting DALI Air devices
+    - BG-I44402: QuickSearch were missing insert actions for Tree/Air devices and templates
+    - BG-I44491: Configure Device action text didn’t change to “Configure Miniserver” when connected to Miniserver and selected
+    - BG-I44481: fixed incorrect active document handling (with document tabs in titlebar)
+    - BG-I44467: button text in Miniserver connect dialog truncated in some translations
+    - BG-I44485: disable word wrap in Monitors to avoid truncation of text (e.g. at “-“) even if there is still enough space left to render
+    - BG-I43815: show ribbon actions in popup when hovering in collapsed state
+    - BG-I44062: NFC read / format actions in Ribbon were not correctly en-/disabled
+    - Ribbon was not updated according to the currently selected control when switching between documents/projects
+    - Fixed truncated text of “Connect to Miniserver” button in some cases/languages
+    - BG-I43949: QuickSearch (F5) were missing Air/Tree peripherals
+    - BG-I43743: Firmware Packages were not loaded correctly on Config startup
+    - Program size estimation not correct
+    - IRC temperature values cant be edited
+    - Auto Config checkboxes not clickable
+    - BG-I44390: Fix issue with floating property window when opening message box
+    - BG-I42655: Spot Price Optimizer – full hour price has double entry when market interval is changed from 60 to 15 minutes
+    - BG-I43685: Roof Window Shading sometimes has no calculation displayed in history, but will start at the correct time
+    - BG-I43931: Energy meter Tree on Wallbox Air – wrong filter used
+    - BG-I43214: Simulation sets default values on inputs
+    - BG-I43444: AC Unit Controller – wrong history-origin when manually turned off via input
+    - BG-I43904: Automatic rule for sauna created via app not working as expected
+    - Fixed CRC Handling for Audioserver-configuration
+    - BG-I44437: Fixed coloring issue of negation connection in Gateway-Client projects
+    - BG-I43681: Fixed tooltip positioning when the Properties window is at the edge of the screen
+    - BG-I41899: Show tooltip for info icons when icon is clicked
+    - BG-I43728: Auto Config – Climate ToDo note twice
+    - BG-I43729: re-running Autoconfig – double presence on Lico
+    - BG-I43825: Renamed ribbon category from “Simulation” to “Testing”
+    - BG-I43880: Added missing resume state to “Pause simulation” action
+    - BG-I43939: LiveView ribbon button could be visually toggled while Simulation was already running
+    - BG-I43954: Simulation time settings were not taken over in all cases
+    - BG-I43839: Prevent unnecessary automatic switching of ribbon categories when selection changes
+    - BG-I43976: Home tab kept being selected after opening an already opened document again from ProjectManagement view
+    - BG-I43984: Double clicking on Miniserver search result directly connects to Miniserver
+    - BG-I43720: Connecting to a Miniserver always opened a new Document
+    - BG-I43998: Ribbon NFC context panels were missing some NFC related actions
+    - Bumped minor version due to year change
+    - BG-I42330: Filter for unassigned room also shows plugins without room
+    - BG-I41504: Improvements to /dev/sys/createbackup
+    - Perform cleanup before performing SD-Card check
+    - BG-I43148: Battery Monitor shows devices to user without room access
+    - BG-I43198: Device Offline System Messages of devices shown to normal users without necessary rights on
+    Gateway
+    - BG-I44372: Operating Times action was missing calendar (sub-)entries
+    - BG-I44395: Dali Learn-Dialog action wasn’t always reenabled after loading from / saving to Miniserver
+    - BG-I43279: Different Audio-specific settings on Compact/Audioserver
+    - BG-I43874: Fan Control Tree not cannot be added
+    - BG-I44363: Invalid range in description of link-lost-value
+    - BG-I43735: Wrong error message when starting belimo search from monitor without proper selected device
+    - API Connector now uses Input-Queue instead of text edges
+    - Automatic Designer: removed redundant text for notifying about execution
+    - BG-I44110: invalid line-drawingtype of connectors are very close
+    - Fixed incorrect immediate hiding of popup ribbon panel (when in collapsed state) in some situation
+    - BG-I45113: Move Media Control dialog hints to translatable strings
+    - BG-I45113: Move legal note text to translatable strings
+    - Remote Connect did not close old connection properly
+    - Incorrect initial TPF value when changing comfort temperatures on IRC with 2 comfort temperatures
+    - Readded lost strings for Private Trust
+    - Windspeed of weather service is incorrectly rounded
+    - Trust Users not updated when a setting is changed
+    - BG-I45773: Presence Central not shown in App after auto configuration
+    - External port of a Miniserver gets lost due to conversion to the new CloudDNS/RemoteConnect address
+    - Removed oldschool page border & punch holes from the page
+    - BG-I45242: Ribbon showed incorrect IR Extension context panel when sensor of IR Control Air was selected
+    - BG-I45339: TreeViews didn’t have a minimum-size set
+    - BG-I45810: Upon opening the MiniserverKeychain dialog incorrectly cleared it’s password field if Miniserver was preselected
+    - BG-I45411: Added clearer LiveView icon to MiniserverState panel if manual value change is enabled or not (same as in Ribbon)
+    - BG-I45734: Notes were not selectable when on top of a selected control
+    - BG-I43710: Some table views didnt update scroll positions when navigating through items by keyboard
+    - Text values with multiple lines not shown in liveview
+    - BG-I45706: Fire & Water Alarm: Add parent device to alarm cause
+    - BG-I45140: Access Schedules do not show correct help item
+    - BG-I45150: In Gateway/Client do not show error message if client is not registered
+    - Trusted user’s validity timeframe not correctly forwarded to Client Miniserver
+    - BG-I44986: Remote Connect: Fixed issue with incorrect handling of HTTP return codes
+    - BG-I45287: Reworked MDI document menu merging to prevent document menu and controls from being added to the main frame
+    - BG-I44029: Fixed filtering by device types in periphery tree
+    - BG-I44863: TPF – Units on the CDT are not processed correctly
+    - BG-I43915: Category colour change with App did not apply to existing function blocks from this category in config
+    - BG-I41857: User management API: NFC tags would not be added if the name property was missing
+    - BG-I45542: Config: Link in About Dialog was not clickable
+    - BG-I45489: Documentation with links were not rendered correctly in property window header tooltip
+    - BG-I45626: Property Window was empty when being opened via collapsed Ribbon
+    - BG-I45478: Resolved an issue where a system alert was displayed incorrectly due to a synchronization error.
+    - BG-I44977: Corrected naming of Device/Test command action, depending on selection
+    - BG-I45375: User Permission dialog didn’t update correctly when changes were made in some cases
+    - BG-I44610: Project Backups created from dialog were created with incorrect version number when a project with same path already existed
+    - CUIX-I5: Config: Save credentials (locally) not always working
+    - CUIX-I6: Config: When inserting multiple dial-key inputs via drag and drop, the “Allow response” setting of the corresponding Caller objects was only enabled for the first input in the drag/selection
+    - BG-I45259: Renaming a control via property window didn’t rename child objects accordingly (as if it would have been renamed directly in the periphery tree)
+    - BG-I45516: Miniserver State panel: Long Miniserver hostname was visible in the back while Disconnect button was shown
+    - BG-I45512: Ribbon was missing “Edit Object for each Miniserver” action in Multiplicator projects
+    - BG-I45417: Auto Update – Prevent triggering /dev/sys/autoupdate or /dev/sys/updatetolatestrelease when update is already downloading
+    - BG-I44743: Pulse delay not giving pulse when Dd changed after P input
+    - BG-I44470: Wrong calendar week showing
+    - BG-I43777: App -> Battery status Air devices old images
+    - BG-I44191: Text Generator will not adapt Date-Settings of Miniserver
+    - BG-I45238: Fixed window position and size not being restored correctly on application startup
+    - BG-I43726: fix issue with object selection when right-clicked on another object
+    - Fixed cases where some Ribbon actions were not correctly enabled
+    - HOME-Tab (titlebar) was not selected when Project Management was selected via main menu
+    - BG-I44019: Library Templates were missing in Quick Search results
+    - BG-I44708: Fixed incorrect display of “Energy Meter for 1&5A Current Transformers” translation (appearing with “&&”)
+    - BG-I44381: Description of Timezone/Timeserver setting in property window is missing waring about miniserver restart
+    - BG-I44378: Timezone is left blank when connecting to a completely new miniserver
+    - BG-I41899: Fix tooltip icons in Auto Configuration (first page will be fixed in a future version)
+    - Remote Connect: Improved stability of the connection and how the system handles unexpected disconnects.
+    - BG-I44992: OCPP Server – description reset when reopening a document
+    - BG-I44012: Custom System Message – users without external permissions receive push notifications
+    - Central Lighting – Webservice ‘setmoods’ only works once
+    - BG-I45150: Do not show connection error message if the Miniserver is a Client in a Gateway/Client setup
+    - Set RestartIfNeededByRun=no to prevent reboot prompts triggered by installer run actions
+    - BG-I45396: Replace of Touch Pure with Touch Pure CO2 does not add CO2 sensor
+    - BG-I45054: Webservice “GetRoomList” does not return correct rooms for non admin users
+    - BG-I45457: Session Database Connector – Starting an already active session now will end previous session
+    - Cloud Connect Release 2.0.8 – Remove strict connection checking, that might cause issues in case of bad network connection
+    - BG-I46039: Ribbon: User Permissions context panel contained duplicated actions
+    - BG-I46229: Clicking on the same object rating (rooms, categories, …) again, clears the rating
+    - BG-I46243: increased default size of Database Connector dialog
+    - BG-I46228: reduced retry timeout after initial Exosphere data update failed (projects, workspaces, …)
+    - BG-I46280: Avoid saving project into wrong Exosphere workspace accidentally by forcing the user to select the correct workspace
+    - BG-I46263: Now using display name in Trust Configure dialog (same as in periphery tree)
+    - BG-I45850: Highlighted item wasn’t cleared when mouse left periphery tree view
+    - BG-I45807: Insert function block actions in Ribbon were not correctly enabled in all cases (e.g. right after opening a project)
+    - BG-I41900: Adjusted appearance of notification popups (same as Getting Started wizard popups)
+    - BG-I43424: Alarm – Translation: Incorrect wording for arming without presence
+    - BG-I45901: Debug Monitor dialog sizing incorrect on some PCs
+    - BG-I45648: Property Window didn’t update when configuration dialog of Constant Brightness Controller was closed
+    - BG-I45887: Fixed inconsistent context menu handling in Property window
+    - BG-I45409: Property window setting tooltips didn’t show line breaks correctly in all cases
+    - BG-I45923: Status block: Conditions between inputs are not shown after update
+    - BG-I45713: Auto Update – Client Miniservers not updated when Gateway send queue too large
+    - BG-I44396: Fix issue with dragging some reference types onto wrong function blocks
+    - Connect dialog always shows an empty password
+    - BG-I46036: Config shows old versions as update available
+    - BG-I46087: Property window stays empty when second property window has focus
+    - Velvet white Touch Pure Flex is not handled as a white flex
+    - A3D9-T2192: Geo Coordinates to 6 decimal places
+    - BG-I45578: IR Meter Interface AIR: Objects color changes to black when type is changed to IEC or SML
+    - BG-I45920: Alle Objekte Typ Wsp
+    - BG-I46013: Change own password permission is disabled in dialogs as soon as the user has User management rights
+    - BG-I45550: not possible to lock central block if child block has visualization password
+    - BG-I45424: If the input Iw switches on, on the IRC Gen 1, the house in deep sleep switches off with a delay
+    - incorrect last presence when ending presence from App
+    - BG-I44708: Energy Meter translation in QuickSearch window was displayed incorrectly (with double ampersand)
+    - BG-I43840: Bring document tab to front when document is activated and currently “hidden” in more-menu (for closing of the tab and see further info)
+    - BG-I46318: Current index was not updated when clicking a checkbox inside a table view (e.g. AutoConfig dialog)
+    - BG-I46410: When saving/exporting a template, some fields were incorrectly omitted when they were set to 0 (even though a value of 0 was a valid value)
+    - BG-I45428: Status function block now allows to set colour independently from the selected icon (since the App is also using the set colour for the display text)
+    - BG-I43350: Pasting multi-line text into table views didn’t take current sorting into account, thus the insert ended up “randomly”
+    - BG-I46270: Trust groups not updated when edited in quick succession
+    - BG-I44082: Multi Click function block only has advanced parameters
+    - BG-I46537: Door Lock Air has a “Reaction time” input which is only necessary for development
+    - Backup dialog shows that Wireless Speaker version is not supported
+    - Status dialog shows wrong column header text
+    - Presence central not visualized per default
+    - BG-T4231: when we connect any input to Alarm Central. Now, the History is updated in the GUI.
+    - A3D9-T2000: Alarm Central: add user-information in tracker
+    - BG-I47021: fixed incorrect rendering of Miniserver state panel when switching between documents in some cases (e.g. during Miniserver update)
+    - BG-I46816: fixed incorrect selection handling when only references were selected and deleted
+    - BG-I46909: fixed visual appearance of disabled options in Miniserver update/backup dialog
+    - BG-I46970: Quick Access configuration dialog contained empty items/actions
+    - BG-I46981: updated Save-As icon
+    - BG-I47102: Can’t connect to Miniserver from Keychain from within an empty Miniserver compact project
+    - BG-I47090: No info when updating Touch Pure Flex from online configurator that local changes get overwritten
+    - Updated Config icon
+    - BG-I46817: fixed possible cut off text in some Ribbon menus (e.g. Insert function block menu)
+    - Invalid setting for send cycle of touch
+    - Saving into new Trust Manager did not update Trust Manager serial and did not show dialog
+    - A3D9-T1559: Burglar Alarm: Include name of confirming device
+    - BG-I46758: Wallbox charge mode dialog: price unit not shown, editor resets values
+    - Remove unsupported CO2/Humidity connections from IRC
+    - BG-I46943: Project planning added an Audioserver if a Wireless Speaker is in part list
+    - BG-I47010: Some icons have a frame
+    - Message Centre update has no proper retry backoff handling if the requests fail
+    - BG-I46945: Documentation links stored as escaped HTML in XML descriptions are rendered correctly again
+    - Webservice (/dev/sys/checkrsa) is allowed without authentication
+    - BG-I46600: Name Title of function block cant be properly selected with the Mouse
+    - BG-I46833: Autoconfig does not name buzzer after nightlight.
+    - BG-I46865: After auto configuration defaut view of page is a cover page.
+    - BG-I46666: not getting notified about a different version when you have a different language and version of Config.
+    - BG-I46949: Property Window now saves pending editor changes when focus changes and the window is closed
+    - Cloud Connect Release 2.0.10 – Fix issues when no internet connection is available and rework logging
+    - BG-I46955: Fire/Wateralarm reboots miniserver when starting an alarm drill
+    - BG-I46705: Project Analys shows incorrect warning for presence detection
+    - BG-I46880: fixed painting issues in DeviceDiagnostics dialogs when moving selection around with mouse drag
+    - BG-I46731: Ribbon collapsed state is now toggeld with mouse double-click again (closer to already known/old behaviour)
+    - Adapted Config to new Brand colours
+    - BG-I45932: Config gets stuck in connecting state when connection timeouts after configuring the network settings
+    - BG-I45450: Most monitors cannot be opened if not connected to a Miniserver
+    - BG-I45139: If the user has set a custom name for Rooms/Categories it is not used in the config
+    - Smart socket: App Autoconfig set incorrect category to created blocks
+    - BG-I46188: If no valid location is entered the weather service still provides data
+    - BG-I46469: editing documentation setting only updated first control when multiple controls were selected
+    - BG-I46547: Document tabs were not updated when switching between documents by shortcut keys
+    - BG-I46654: Webinterface (local/remote) actions were missing in QuickSearch
+    - BG-I46624: PropertyWindow: non-editable comboboxes were not searchable by keyboard input
+    - BG-I43780: Better sorting in Project Backups Dialog is added
+    - Cloud Connect Release 2.0.9 – Fix isseus when switching to new relay
+    - BG-I44970: Scene with selection switch – possible to trigger only once
+    - BG-I45266: Permanently setting the trasnformer ratio by double clicking on a meter
+    - BG-I45183: Config-Peripheries Tree-Value changes:Wrong step size is changed in property window by choosing +/-
+    - BG-I45159: Default Systemnotification object not deletable, but also renamable
+    - BG-I46608: Show on map GPS coordinates forwards only 3 decimals
+    - BG-I46553: Two temperature shutdowns for wireless speaker in the fire and water alarm
+    - BG-I46472: API connector: all FBs showing +ADD
+    - BG-I46625: Geographic coordinate system reorder
+    - BG-I46462: Logger/Mailer/Caller/Tracker not working for LICO
+    - BG-I46107: Tree device can’t be added when Wallbox Air is added on Tree to Air bridge
+    - BG-I45811: Logger shows himself as digital on a analog value
+    - BG-I45166: Simulation time is not taken over correctly by “Pulse at” block
+    Plugin
+    - Updated EEBUS documentation
+    - BG-I39372: Gardena (1.0.4): Rate limit hit when using to many actors
+    - Tesla-Powerwall (1.0.11): Updated documentation
+    - Exosphere Plugin (1.3.1):
+      - Fix: Process did not terminate correctly when stopping the plugin
+      - New: Added periodic certificate checking and renewal if certificate was not found
+      - New: Added memory usage limit so in case of no internet connection for long period the plugin does not consume too much memory
+    Climate
+    - BG-I43473: Missing translations for new IRC inputs
+    - BG-I43063: AC Central Controller – parameters not converted to Fahrenheit
+    - BG-I40399: IRC shows motion timer after disconnecting presence input
+    - BG-I40478: IRC does not register off pulse from presence block
+    - BG-I40481: AC Central Controller does not set mode when saved as unconfigured control
+    - BG-I40846: Intelligent Roomcontroller: Flex VALUESELECT has incorrect start value when using single comfort temperature
+    - BG-I39165: Heating and Cooling controller may start cooling when forecast failed
+    - BG-I41348: AC control block does not show controlled by icon
+    - BG-I41637: Intelligent room controller – only show high temperature difference-message when active cooling is available
+    - BG-I41528: AC Control – Fanspeed gets overwritten by IRC after manual adjustment
+    - AC Control – Combobox settings do not display values
+    - BG-I41917: Outside Temperature by Systemvariable not immediately updated on Climate-control-inputs
+    - BG-I42143: Incorrect Mode Switching When Using Fahrenheit in IRC Block
+    - A3D9-T2060: Intelligent Room Controller – rename temperature mode “off” to building protection
+    - BG-I43370: ACc – no parameter conversion to °F for Hys and O
+    - A3D9-T2092: AC Control Air – add option to always rely on indoor unit for temperature control
+    - BG-I44608: Live-Learning – missing device-images for certain AC Control Hardwaretypes
+    - BG-I39666: Stop active AC timers when switching off via app
+    - Intelligent Room Controller: enable flex-command ‘MENU’ for Fanspeed and Air direction
+    - BG-I45491: IRC – Single comfort temperature with allowed deviation switches mode too early
+    - BG-I45583: AC control block wrong current temperature output
+    - BG-I45015: ACc ignores ADir and Fan setting if timer is running
+    - BG-I45012: Changing ADir or Fan on one ACc starts a timer on another
+    - BG-I45560: AC – no history on off impulse in some cases
+    - BG-I45359: Heating and Cooling temperature activates H2 on unknown outdoor temperature
+    - BG-I44630: Target Temperature stuck on 0°C
+    - BG-I43294: Intelligent room controller does not work properly when the temperature is in the frost protection range
+    - BG-I44914: Climate controller service mode does not open valve via flow temp calculator
+    - Intelligent Roomcontroller – wrong operating mode shown in visu
+    - Activate AC Unit Controller when setting Fanspeeds or Temperatures via visu or Flex
+    - BG-I46296: AC Unit Controller shortly switches off when saving into the miniserver
+    - BG-I46294: Heating and Cooling Controller: Service mode stopped after reboot
+    - IRC spams AC Control Air with temperature updates when IRC has no active source
+    - Which results in 100% utilization of the Air channel
+    - BG-I46356: Intelligent Room controller does not save mode after saving into miniserver
+    - IRC: Override entries incorrect (API)
+    - IRC: Added info when source is not providing (API)
+    - BG-I44647: IRC starts presence mode when toggling operating mode
+    - Intelligent Roomcontroller: Invalid text and output value for “Off Mode” in schedule.
+    - BG-I46859: Miniserver crash when using IRC without configured source
+    - Adapted name of fancoil blocks
+    - BG-I45716: IRC – Mishandling of Schedule and Presence
+    - BG-I46358: IRC – ECO temperature can be set beneath frost protection or above heat protection via app
+    - BG-I46503: HVAC Controller does not switch off when request ends
+    - IRC: Invalid override reasons shown in app
+    - IRC: Invalid Timer after updating from release
+    - AC Unit Controller: Remove Fanspeed in Automode, fanspeeds now defined by connected IRC
+    Stability
+    - BG-I43427: Fixed crash on property window end edit
+    - BG-I42035: Fixed crash issue while navigating with arrow keys when a filter is active
+    - BG-I42925: System Status Remanence file too big causing instabilities for Gen.1 Miniserver
+    - BG-I42644: App crash – When opening the PV forecast
+    - make Color delegate use a modal window
+    - BG-I42937: force Qt widgets to have native window handles
+    - BG-I42936: force using Qt dialogs
+    - fix BG-I42673, check pEvent before using
+    - BG-I43003: Config crash when converting Intelligent Room Controller Gen.1
+    - BG-I42660: Miniserver Crash when creating history entry for Audio Player in some cases
+    - BG-I41942: Miniserver reboot when trying to decrypt broken ciphers
+    - BG-I42523: Miniserver reboot when using SPO in a Mulitplicator project
+    - BG-I42551: Config crash when creating excel file from project planning
+    - Possible fix for Gateway watchdog reboots
+    - BG-I42540: Miniserver Crash when reading from SSL socket in some cases
+    - BG-I42153: Miniserver Crash when creating backup via /dev/sys/createbackup and saving into Miniserver
+    - BG-I42558: Watchdog reboot while getting memory information
+    - BG-I41543: Crash when editing shared properties due to invalid dialog modality
+    - BG-I40550: Config crash when closing multiplicator settings dialog
+    - BG-I41984: fixed possible crash when opening SystemScheme dialog
+    - BG-I42297: Miniserver Crash when LiveView overriden IOs are added or removed
+    - BG-I42480: Crash when editing force of v1 valve
+    - BG-I42533: Crash when deleting custom icon
+    - BG-I41167: fixed possible crash in User-/Permission edit dialog
+    - BG-I42979: prevent crashes on error during TechDoc init
+    - BG-I43487: fix potential crashes during GenericViewData destruction
+    - BG-I42937: fix crash in Permission Management Dialog when switching tabs
+    - BG-I42941: Fixed window parenting and dialog handling for Qt windows
+    - BG-I42936: Fixed crash in _AfxPostInitDialog when using Qt native dialogs in MFC context
+    - Fixed Qt/MFC event loop integration issues in Nice() to prevent use-after-free
+    - Added safety checks to file dialogs and fixed unsafe lambda captures to prevent crashes during app shutdown
+    - BG-I44690: Fixed stability issue
+    - BG-I44536: Fixed crash in settings editor when switching documents
+    - BG-I44615: Miniserver Crash when trying to set Online Status of corrupted input
+    - BG-I42799: Miniserver Crash when LiveView overridden IOs are added, removed or checked
+    - Possible Miniserver crash when using Spot price optimizer and saving to Miniserver
+    - BG-I43589: Fix crash when opening NFC dialog after cancelling a previous dialog
+    - BG-I45443: Fix crash when closing projects while a backup/update dialog is open
+    - switch to dynamic MSVC runtime and vcredist distribution
+    - BG-I45460: Fix crash when performing double redo after undo
+    - BG-I45553: Fix assertions causing crashes in release builds
+    - BG-I45510: Fix crash when opening multiplicator setting
+    - BG-I45522: Fix property window content not showing when tech doc was open
+    - BG-I45111: fix crash while closing when miniserver discovery is active
+    - BG-I45384: Simplified property window update blocking when dialogs are open
+    - Fixed low performance while loading big projects from Miniserver and during running Auto-Config
+    - BG-I45371: Fixed crash in property window when the document is closed or destroyed while the property window is still active
+    - BG-I45129: Fixed packing scope for SerialXml to avoid ODR layout mismatches
+    - BG-I45180: fix crash when property window closed while dialog is open
+    - BG-I45182: Fixed possible crash when importing device template files (e.g. Modbus)
+    - BG-I45204: Config crash when disconnecting Meter API connector from Energy Flow Monitor
+    - BG-I45724: Fix crash when closing while backup/update dialog is active
+    - BG-I46089: Config crash when deleting function block
+    - BG-I46099: Config crash when trying to import Exosphere Database definition
+    - BG-I45835: Prevent crash in permission management dialog by deferring tab visibility updates during selection rebuild
+    - Config crash when loading from Miniserver which got a major Trust from its Manager
+    - BG-I46406: Config crash when deleting extension after learning on it
+    - BG-I47105: Config crash when creating two projects with different Miniserver types
+    - BG-I46973: Miniserver did not reboot in case of Main Task Watchdog
+    - Setup packaging now picks the newer VC++ redistributable from Qt or Visual Studio and keeps ARM64 fallback support
+    - BG-I46556: Changing backup option checkbox in Backups dialog enabled the possibility to start backup before file list was retrieved, which resulted in a crash
+    - Config crash when loading from Miniserver
+    Documentation
+    - A07R-I1650: Table Lamp has wrong description for Button behaviour
+    Devices
+    - Touch Pure CO2 Tree
+      - BG-T3786: The sending interval of analog values (temperature, humidity and CO2) can now be set to a static send interval in 1 s steps
+    - BG-I40104: Change behaviour when Air Base is not reachable to continue Sensor Update Interval for “Room Comfort Sensor Air” and “Temperature and Humiditiy Sensor Air”
+    - Room Comfort Sensor Air remains offline. New binary version 16.01.10.30
+    - BG-I41877: Changed default values for “increased” and “maximum” force level settings
+    - BG-I41664: Dimming behaviour DALI groups and individual control
+    - DALI logarithmic dimming curve can be activated for DALI device types 0-6
+    - BG-I40069: M-Bus sensor value is not updated in config
+    - BG-I41877: Enabled changing Force Levels of Valve Actuator Tree
+    - BG-I26450, BG-I33761, BG-I35761: Touch Nightlight backlight flickering, Touch Nightlight time deviation (added time sync plausibility check and advanced logging option)
+    - BG-I34317, BG-I35673: Touch Nightlight sometimes sends touch only on falling edge (added advanced logging option)
+    - BG-I33761: Touch & Grill time deviation (added time sync plausibility check and advanced logging option)
+    - BG-I40559: Nano2RelayTree add current detection threshold value to TechReport
+    - BG-I41367: System Message for Thermal Shutdown not shown on connected Blocks
+    - WA1-T594: Wallbox Air/Tree: Add diagnosis code for charging error code
+    - Air router functionality can be switched off for XAL Light Air devices
+    - BG-I26173: Nano IO Air goes offline without a reason – New binaries 16.01.10.17
+    - BG-I36164: Nano Motor Controller – Systemtemperatur is not sent the first time
+    - R20-T787: Touch Tree Fix BuzzerTest Web cmd
+    - BG-I40077: Issue with DALI RGBW Group Control after Config Update
+    - new firmware for DALI Extension
+    - P1 Meter Reader Air
+    - BG-I38558: OBIS Ids of Main Meter: Ignore Byte in front of colon (:) of to support broader range of meters.
+    - BG-I38652: Missing Unit on Sub-Meter-value: Ignore only that value instead of discarding whole p1 frame.
+    - BG-I36740: Valve Actuator Gen2 – Added random delay before actuator moves after powerup
+    - Wallbox Air/Tree – Binaries 16.01.10.23
+      - BG-I37350, BG-I41202: Fix charging Error; simplified pilot circuit was not detected correctly.
+      - Send additional error code for “Unknown error” cases.
+      - Correct system temperature showing 0 when storing to the Miniserver.
+    - BG-I42231: Energy Meter CT: Create a System Message when CT Settings cannot be applied to an already locked device
+    - BG-I43113: Modbus RTU: Acuator limit not validated when using templates
+    - DALI logarithmic dimming curve can be activated for DALI devices which support multiple device types
+    - BG-I33020: M-Bus Extension: read VIFE before try decoding variable length VIF
+    - BG-I44108: Reduced the Tech Report content of Valve Actuator Tree Gen. 1 and relocated the information into another webservice so tree diagnosis does not show errors
+    - R20-I11: Valve Actuator Tree Gen. 1, a second position packet was omitted, if the packets arrived in less than 1s distance to each other
+    - BG-I43651: Valve Actuator Air’s pin moves completely inside when set into pairing mode
+    - R20-T913: Valve Actuator Tree Gen. 1, a position drive is retried if the max. force was altered and the previously requested position was not reached
+    - BG-T4391: Valve Actuator Air calibration drives start randomly delayed, when powered with 24V, to reduce load on the power supply
+    - BG-T3786: Analog sending interval can be adjusted for the following devices: Touch Tree, Touch Pure Tree, Touch Pure Flex Tree, Touch Pure Flex Tree Gen. 1, Touch Pure Flex Tree CO2, Touch Pure Flex Tree IP44, Roomsensor Tree, Weather Station Tree, Motion Sensor Tree
+    - BG-I43636: Touch Pure Flex Air/Tree Gen1/Gen2, Fixed Ghost Triggering Issue
+    - A3D9-T2285: Refactored Touch Pure Flex Controller Brightness Architecture
+    - BG-I45000: NFC behaviour if two different NFCs are connected to one Anfc
+    - BG-I45020: Wrong popup when inserting T2AB to Wallbox Air
+    - Touch Tree, Touch Pure Tree and Touch Pure CO2 Tree occasionally did not respond to touches
+    - BG-I46364: Touch Pure Air – Backlight actor not removed when device is battery operated
+    Energy
+    - BG-I43163: PV forecast not working after update to 16.2.11.25
+    - Energy Meter Tree – receive timeout smaller than minimum polling cycle
+    - BG-I42131: Load Manager – TsU output resetting in random intervals
+    - A3D9-T1910: Energy Meter Tree – Proper handling when max energy reading is exceeded
+    - BG-I41982: Meter block can be locked and reset the values
+    - BG-I41110: Not possible to add storage to EFM
+    - BG-I41051: EFM: PV in Distribution board not counted towards self consumption
+    - BG-I40914: EFMO dialog: not possible to set type on some meters
+    - A07R-I1533: Adapted primary current limitations in property window
+    - BG-I41704: Wallbox block shows inconsistent power values on Mr/Ccc/Clc outputs when measured with Pf
+    - BG-I36687: Energy Manager: Minimum runtime not ensured when analogue 0 is set on load status input
+    - P1 Meter Reader: Set Power via Api connector to 0 on receive timeout
+    - BG-I40690: Energy Flow Monitor Dialog – custom colour for settings of meters which differ from main control
+    - BG-I42040: Power Supply & Backup output names
+    - BG-I42346: P1 Meter Reader: Invalid Ribbon and Sensor-Setting
+    - BG-I43008: Energy Meter Tree – monitoring of API-Connector-values can not be disabled
+    - BG-I45593: Energy Meter Tree – invalid receive timeout set for newly created devices
+    - BG-I45490: SPO – Cv was using .3f causing mismatch with limits in some cases
+    - SPO notifications: time to check for next day data would not get updated on miniserver causing premature data request in some cases
+    - Ribbon action for Energy Meter P1 to discover IOs was not correctly enabled
+    - BG-I44241: App: EFMO: Wrong display of nested grids
+    - BG-I45722: Wallbox charging stops randomly after a Miniserver restart
+      - Fix will only apply after the update!
+    Lighting
+    - BG-I42913: Property window: +/- buttons not working for Dali2 sensor motion timeout
+    - BG-I42443: Dali Analog Sensor show retrieving data in app
+    - BG-I42516: Light Central – M+ not working when Lico is disabled
+    - BG-I42452: Lighting Controller Dialog: Input assigned for mood cannot be revoked
+    - BG-I41054: Light control colour change reactivates LC1 output after switching off
+    - BG-I40840: History – wrong text and missing name of sensor
+    - BG-I37944: Lighting Controller – Met timer started instead of unmixing mood after mode change
+    - BG-I41330: Loxone Trust Analog Output is set as Switch when connected to Lico
+    - BG-I41197: Light Controller Dialog – no end ellipsis for long mode names
+    - BG-I41405: Light Controller Dialog: invalid favourite colours in daylight mode
+    - BG-I42303: Lighting Controller Dialog – AltGR + N creates new Mood
+    - BG-I41879: Lighting Controller – History entry für blocked presence not precise
+    - BG-I43647: DALI DT8: possible to enter -1 becomes 1000000 for colour temperature
+    - BG-T4542: Periodically retransmission of DALI light control commands
+    - BG-I43658: Lighting Central – DisP falling edge sends impulse on Lico outputs when local Disp is still on
+    Shading
+    - BG-I43012: Automatic Shading – Rdd parameter doesn’t work when set by logic
+    - BG-I42141: Automatic Shading Awning naming in history not consistent
+    - BG-I41274: Automatic Shading – parameter RD not updated when changed via logic
+    - BG-I43687: As and Rws behavior to Sysvar sunshine is different
+    - BG-I43218: Automatic shading can’t be stopped via app during windalarm
+    - BG-I43836: Automatic shading does not execute Spe when sunshine changes exactly at end of automatic time
+    Auto Configuration
+    - BG-I35880: NFC code touch is connected to audio central if added after intercom has already been configured and autoconfig is run again
+    - BG-I40883: Autoconfig: 2 PSB get configured wrong
+    - BG-I40882: Autoconfig – Buzzer – Away Mode double
+    - BG-I40880: Autoconfig does not list DALI as an Lighting option
+    - BG-I41403: Auto Configuration Overwrites Manual Shading Configuration
+    - BG-I41401: AutoConfig: checkbox Select all doesn’t show something is already checked in some cases
+    - BG-I41606: AutoConfig: in some cases Climate was a selectable option when it shouldnt be
+    - BG-I41612: Autoconfig does not connect goodnight to Adnp on BurglarAlarm in some cases
+    - BG-I41608: Autoconfig for audio does not connect night mode to DisP in some cases
+    - BG-I42102: Note to check connected outputs on IRC missing
+    - Light Actors are now connected each to an individual output of the Light Controller
+      - Use Light groups if you want to group Spots together by the Auto Config
+      - Exception is only the orientation lights those will still be connected all to one output
+    Audio
+    - BG-I43074: Audioserver – invalid speakertype not shown in property window
+    - R20-T812: Projet Planning – adapt needed power for Install Sub 10 Master/Client
+    - [General] Revert API command queue
+    - BG-I41429: Serverstate for Audioservers untranslated in Device Status
+    - BG-I41591: Music Player – negated Btp input not represented on output
+    - BG-I44413: Audioplayer – Output Btp not updated in liveview when setting changed via app
+    - Compact Audiotasks reinitializes endless with newly formated SD card
+    - BG-I43862: Music Extension shown
+    - BG-I43161: Audioserver Systemmessages – add support for dismiss action
+    - Tunein: several radio stations from germany not playing properly
+    - Added a timeout to Players show playing but without audio
+    - Tunein: No default roomfavorites generated in some regions
+    - Player offline: Shown offline in App fixed, Root cause was missing room favorites
+    - Music Player – adapted allowed characters in names
+    - When playing Airplay and set the volume to 0, the Auto-Pause after 10s does not take effect.
+    - newly created Players have default Room Favorites, but show ‘No music selected’
+    - BG-I45726, change MS Compact within Client/Gateway installations causes Audio not to play
+    - fixed a racecondition when multiple play/pause of Soundsuit was issued in a short period
+    - fixed a racecondition within websockets causing them to block the entire communication for a short period
+    - Optimized Mastervolume behaviour for bigger installations
+    - Wrong Assignments for In Ceiling Speakers / Satellite Speakers
+    - Bluetooth state in group broken if ‘Off’ input is used and causes inconsistency
+    - Stereo Extension sometimes offline after reboot
+    - Config crash when splitting stereo outputs
+    - Increased default value for bell volume on Audio Player
+    - Set default value for bell volume on Audio Player to 35
+    - Airplay: Behaviour in groups fixed (Volume, disconnects)
+    - Airplay: removed auto deselect of Apple Sender Device after 15 min of inactivity
+    - Bluetooth: TC1-I288, BG-I46475 – When playing Bluetooth in a group to a single player and fire an event, all players will play
+    - General: When a player plays with Volume 0, the playback that stops after 10s will generate a History message now
+    - BG-I44629: Audioserver not reachable after changing Miniserver-Port
+    - Wireless Speaker: Library offers Event file as storage mountpoint, removed.
+    - BG-I46558: Wireless speaker shown in Tree Turbo search
+    - Wireless Speaker: SSID special characters handling fixed when pairing to WiFi
+    - Wireless Speaker: fixed double announcements for ‘ready to pair with miniserver’
+    - Wireless Speaker: fixed reconnection issue when DHCP server and / or WiFi not present at boot time
+    - Wireless Speaker: Health Check extended, shows Wifi parameters and correctly displayed on other Audioserver’s diagnosis result
+    OCPP
+    - BG-I41365: Rejected NFC Tag does not send authorized information to Miniserver causing the ocpp timeout of 5s
+    - Do not de-authorize active session with Remote Stop without valid transaction number
+    - Updated Documentation to clearly state that local authentication is performed after rejection from OCPP backend
+    Multiplicator
+    - BG-I40537: Custom changes for Trust changes not saved as program changes
+    - BG-I44855: Light Controller output naming reverted to default after loading from Miniserver
+    Trust
+    - BG-I40283: User not updated when only validity timestamp changes
+    - BG-I41903: Misleading error message when joining trust
+    - BG-I41793: Outputs stop being sent
+    - BG-I41357: App shows empty trust structure
+    - BG-I41404: State of an Intercom which is on a Client not forwarded via Trust
+    - BG-I41404: App cant establish to a trusted Intercom where the source is a client
+    - BG-I45771: Trust causes watchdog reboots when members are not reachable
+    - Miniserver on old Release cant join a Miniserver when the trust key was exported with current version which uses new Remote Connect address
+    - Trust Users from a Member get lost in Manager project when changing serial of that Trust Member
+    Gateway-Client
+    - BG-I41633: Text connections across Miniservers send an edge after SPS restart
+    - BG-I41372: No error message when unique ids are regenerated when adding a project
+    - BG-I44474: Device updates not downloaded if no Miniserver updates available
+    - BG-I43055: Invalid data is serialized which causes clients shown as offline
+    - BG-I43213: Miniserver can receive data from its own IP and will handle it like it was received from another Client
+    - BG-I42116: AutoUpdate: Update running message does not dissapear after update
+    Access
+    - BG-I41929: User-Management – Access prohibition is not saved because of missing prohibition-entry
+    - BG-I40935: TPF ECHO no function at Garage / Gate Block
+    - BG-I43731: NFC Authentication: Reactivation of Single use code which was used sets validity to infinite
+    - BG-I45218: NFC Authentication: Only first user is checked for necessary rights which causes false negatives for duplicate keycodes or NFC tags
+    - BG-I44693: System Messages do not create in app messages
+    Project Planning
+    - BG-I40927: Project planning: adding Wallbox 22kW does not rename Meter and set room
+    - BG-I40928: Project Planning: having Meter and Wallbox sets meter types incorrectly
+    - BG-I40995: Project Planning: In Common Settings Touch Pure Tree/Air missing
+    - BG-I41928: Planning Tool in Config – missing items
+    - BG-I40952: Fan Control Tree cannot be added to US project planning
+    - BG-I42048: Incorrect DALI Extension Added by Project Planner in Loxone Config
+    - BG-I42135: allow creating Tree devices up to the branch limit as a workaround for PSBs using Tree slots
+    - BG-I44656: Old door window contact listed
+    - BG-I45226: Name column too small
+    - BG-I45228: Config crash when doing Auto Config with existing project which includes a Smart Socket
+    Security
+    - BG-I41943: Alarm Blocks which are not visualized can’t be activated by Central Alarm
+    Usability
+    - Password change popup has a cancel button which is incorrect it should state ‘Later’
+    - Default files still contain “Schaltschrank” as default switchboard panel
+    - Lighting group is in the wrong property category
+    - Reordered context menu Multi Edit actions
+    - Version column is always per default visible in Extension learning dialog which is unnecessary
+    - Multi Edit row in Learning dialogs now always visible since it confuses when it suddenly disappears when only one device is left
+    - Device view in Learning dialogs is shown even if it’s not needed
+    - Switchboard Position is suggested automatically which does not make sense
+    - No info that you need to update a Client before you can add it to a Gateway
+    - Button order in Debug Monitor Setting dialog changed compared to older versions
+    - Multi Edit dialog hidden behind taskbar
+    - Multi Edit dialog jumps the first time after scrolling with touchpad
+    - BG-I46284: Table View automatically resorts each time a checkbox is checked in selection dialogs
+    - Light Controller does not show light circuit names on function block
+    - Monitor columns are too narrow when starting the Monitor with a filter
+    Honeywell
+    - BG-I45102: Fixed incorrect handling of fragmented websocket data
+    Planning
+    - BG-I46414: Trusted intercom is in generated part list
+    - BG-I46499: Products are added even if count is set to 0
+    - BG-I46943: Project planning added an Audioserver if a Wireless Speaker is in part list
+RealVersion: "17.0"

@@ -1,0 +1,66 @@
+Version: 0.14.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.14.2/FylloCode-0.14.2-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.14.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds a project-level Work Lineage browser so tasks, Chat sessions, Plans, Proposals, and Commits can be reviewed by Session on one page. Settings now uses stable child routes with consistent Service Connections terminology, while confirmation actions remain visible when a dialog contains a long description.
+    Added
+    - Added /lineage, which lists every project lineage subject by most recent update, supports All, Active, Archived, and Unlinked filters, and shows the Plan, Proposal, and Commit path grouped by Session
+    - Work Lineage details reuse existing entry points to open Chat sessions and Proposals, go to Task Board, and copy full Commit hashes; missing Session, Plan, or Proposal metadata keeps its stable ID without blocking other subjects
+    - Added a Work Lineage entry to the Project Overview governance health grid, showing the total project subject count and opening the complete lineage browser
+    - Added a bilingual durable knowledge design article covering the admission boundary for retained knowledge, the two-stage knowledge.flag and capture mechanism, and the roles of knowledge, guidelines, and lineage
+    Changed
+    - Settings now uses independent /settings/acp-agents, /settings/connections, /settings/preferences, and /settings/about child routes inside one shared layout; /settings remains the stable entry and opens ACP Agents by default
+    - The Settings sidebar now uses the fixed Preferences, Agents, Service Connections, and About order; the former Integration Providers label is now Service Connections, and project integrations use the focus parameter to locate a provider that needs configuration
+    - Repository Agent release support is consolidated into the prepare-release skill, which covers release-range auditing, bilingual documentation, changelogs, version synchronization, release notes, validation, and commit/tag/push/publish approval checkpoints; contributor guides now document the maintainer flow
+    - Chinese and English documentation now includes Work Lineage and Settings product references, with matching updates to Overview, lineage, ACP Agents, and engineering integrations
+    Fixed
+    - Fixed confirmation dialog actions scrolling out of view when the description is long; the description now scrolls independently while confirm and cancel actions remain visible
+    - Fixed ACP session_info_update overriding the Chat session title established by FylloCode; the mapper now ignores this upstream update so the existing session title remains stable
+    Notes
+    - The application version is now 0.14.2.
+    - The fyllo-specs MCP server remains at 0.8.1, and the fyllo-cortex MCP server remains at 0.5.0; neither server changed in this release range.
+    - The lineage browser is a read-only projection of existing local lineage, Session, Plan, and Proposal data. It does not change storage formats, and existing projects require no migration.
+    - Compatibility: /settings?tab=integration-providers|preferences|about no longer selects a Settings section and is not redirected for compatibility. Use /settings/connections, /settings/preferences, or /settings/about instead.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0142---2026-07-16
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个版本补齐项目级工作脉络浏览能力，让任务、Chat、Plan、Proposal 与 Commit 可以在同一页面按 Session 回看。Settings 同时改为稳定的独立子路由，并统一服务连接术语；长内容确认弹窗的操作区域也保持可见，减少关键确认按钮被滚动内容挤出视口的问题。
+    新增
+    - 新增 /lineage 工作脉络页面：按最近更新时间浏览项目全部 lineage subject，支持“全部 / 推进中 / 已归档 / 待关联”筛选，并按 Session 展示 Plan、Proposal 与 Commit 演进路径
+    - 工作脉络详情支持复用现有入口打开 Chat 会话和 Proposal、进入任务看板及复制完整 Commit hash；缺失的 Session、Plan 或 Proposal 元信息会保留稳定 ID，不阻塞其他脉络显示
+    - Overview 治理健康入口网格新增“工作脉络”，显示项目 subject 总数并进入完整 lineage browser
+    - 新增 durable knowledge 中英文设计文章，说明可沉淀知识的准入边界、knowledge.flag / capture 两阶段机制，以及 knowledge、guidelines 与 lineage 的分工
+    调整
+    - Settings 改为共享布局下的 /settings/acp-agents、/settings/connections、/settings/preferences 与 /settings/about 独立子路由；/settings 继续作为稳定入口并默认进入 ACP Agents
+    - 设置左侧导航固定按“偏好设置、Agents、服务连接、关于我们”排序；原“集成提供方”统一改为“服务连接”，项目集成页会通过 focus 参数定位需要配置的 provider
+    - 仓库内 Agent 发版能力统一为 prepare-release skill，集中处理发布范围审计、中英文文档、changelog、版本同步、release notes、验证与 commit/tag/push/publish 审批点；贡献指南同步记录维护者流程
+    - 中英文文档新增工作脉络与 Settings 产品参考，并同步更新 Overview、lineage、ACP Agents 和研发系统集成页面
+    修复
+    - 修复确认弹窗在描述内容较长时操作按钮随内容滚出可视区域的问题；描述区域现在独立滚动，确认与取消操作保持可见
+    - 修复 ACP session_info_update 覆盖 FylloCode 已建立的 Chat 会话标题的问题；mapper 现在忽略该上游更新，使现有会话标题保持稳定
+    备注
+    - 应用版本升级到 0.14.2。
+    - fyllo-specs MCP server 保持 0.8.1，fyllo-cortex MCP server 保持 0.5.0；本次发布范围没有修改这两个 server。
+    - lineage browser 是现有本地 lineage、Session、Plan 与 Proposal 数据的只读投影，不改变存储格式，既有项目无需迁移。
+    - 兼容性提示：/settings?tab=integration-providers|preferences|about 不再选择设置区域，也不会兼容重定向；请改用对应的 /settings/connections、/settings/preferences 或 /settings/about 子路由。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0142---2026-07-16
+ReleaseTime: 2026-07-17T02:02:50.0000000Z

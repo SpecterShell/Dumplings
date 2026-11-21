@@ -1,0 +1,53 @@
+Version: 0.11.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.11.3/FylloCode-0.11.3-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.11.3
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release focuses on consolidating the local JSON persistence model and introducing a proper migration path. The app now runs data migrations automatically at startup, bringing persisted field naming and time formats into a single consistent shape instead of letting historical formats diverge over time. It also fixes a case where the config options bar could stay empty when starting a new draft session with the same Agent as before.
+    Added
+    - Local JSON data migration framework, running migrations in version order during app startup and providing a baseline mechanism so new installs do not replay historical migrations
+    - Initial persistence migration scripts to rename the historical config_options field to configOptions and convert timestamp fields in several caches and install records to ISO 8601 strings
+    Changed
+    - Unified field naming conventions across persisted JSON files around camelCase
+    - Unified time field formats in the ACP registry cache, status cache, and installed records to ISO 8601 strings, reducing cross-module read/write inconsistencies
+    - Reorganized migration script registration into a dedicated scripts directory with a static registry for easier future extension and maintenance
+    - Corrected runtime dependency classification by moving @nuxt/ui into production dependencies so the component library is not treated as development-only
+    Fixed
+    - Fixed a case where creating a new draft session with the same Agent as the previous draft would not re-trigger config option probing, leaving the config bar empty
+    - Fixed migration runner tests to improve regression coverage stability for the migration flow
+    - Fixed invalid warning output in the icon build script
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0113---2026-06-01
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个补丁版本聚焦本地 JSON 持久化模型的收敛与迁移能力补齐。应用启动时会自动执行数据迁移，既有持久化字段命名与时间格式得到统一，避免历史数据长期积累格式分叉；同时修复了使用同一 Agent 开启新草稿会话时配置项栏可能不显示的问题。
+    新增
+    - 新增本地 JSON 数据迁移框架，在应用启动阶段按版本顺序执行迁移，并提供 baseline 机制避免新安装重复回放历史迁移
+    - 新增首批持久化数据迁移脚本，用于将历史数据中的 config_options 字段迁移为 configOptions，并把若干缓存与安装记录中的时间戳统一迁移为 ISO 8601 字符串
+    调整
+    - 统一持久化 JSON 文件中的字段命名约定，收敛为 camelCase
+    - 统一 ACP 注册表缓存、安装状态缓存和已安装记录中的时间字段格式，改为 ISO 8601 字符串，减少跨模块读写格式分歧
+    - 调整迁移脚本注册结构，集中到独立脚本目录与静态注册表，便于后续扩展和维护
+    - 修正运行时依赖分类，将 @nuxt/ui 归入生产依赖，避免组件库被误归类为仅开发时依赖
+    修复
+    - 修复使用与上一个草稿会话相同的 Agent 重新创建新草稿时，配置项探测不会重新触发，导致配置栏可能为空的问题
+    - 修复数据迁移 runner 相关测试，提升迁移链路在回归验证时的稳定性
+    - 修复图标构建脚本中的无效 warning 输出
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.zh-CN.md#0113---2026-06-01
+ReleaseTime: 2026-06-01T15:43:27.0000000Z

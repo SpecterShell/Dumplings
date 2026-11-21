@@ -1,0 +1,26 @@
+Version: 0.1.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.12/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.12/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.12
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Auto-compaction is now budgeted per custom model. hellogrok resolves the model-level, global session, or default 85% preference, reserves the active maximum output plus a 5% context margin with an 8K minimum, and temporarily lowers only unsafe model thresholds. A lower user threshold is never raised.
+    - Missing capacity is learned without model-name allowlists from actual request output limits, valid upstream model-capacity headers, and unambiguous structured context errors. Trusted learned context windows are temporarily projected onto the model so Grok Build uses the same denominator; privacy-preserving hashed capacity records expire after 30 days.
+    Fixed
+    - Switching between channels with different context and output limits now reloads each model's own compaction budget instead of sharing one global minimum. Active Grok sessions are refreshed after they become idle through bounded, cancellable, coalesced retries, and proxy shutdown cancels those workers before restoring configuration.
+    - Capacity learning, threshold updates, and context-window projection use the existing recovery transaction. A failed runtime update keeps the previous active configuration and recovery state, while proxy stop restores original bytes, preserves concurrent user edits even when TOML is temporarily invalid, and leaves request-derived output limits in the private cache instead of turning them into a model output cap.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0112-2026-08-16
+ReleaseTime: 2026-08-16T08:34:17.0000000Z

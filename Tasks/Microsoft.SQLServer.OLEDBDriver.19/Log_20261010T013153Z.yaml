@@ -1,0 +1,92 @@
+Version: 19.4.3
+Installer:
+- InstallerLocale: en-US
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x409
+- InstallerLocale: de-DE
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x407
+- InstallerLocale: es-ES
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x40A
+- InstallerLocale: fr-FR
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x40C
+- InstallerLocale: it-IT
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x410
+- InstallerLocale: ja-JP
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x411
+- InstallerLocale: ko-KR
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x412
+- InstallerLocale: pt-BR
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x416
+- InstallerLocale: ru-RU
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x419
+- InstallerLocale: zh-CN
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x804
+- InstallerLocale: zh-TW
+  Architecture: x86
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2383708&clcid=0x404
+- InstallerLocale: en-US
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x409
+- InstallerLocale: de-DE
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x407
+- InstallerLocale: es-ES
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x40A
+- InstallerLocale: fr-FR
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x40C
+- InstallerLocale: it-IT
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x410
+- InstallerLocale: ja-JP
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x411
+- InstallerLocale: ko-KR
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x412
+- InstallerLocale: pt-BR
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x416
+- InstallerLocale: ru-RU
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x419
+- InstallerLocale: zh-CN
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x804
+- InstallerLocale: zh-TW
+  Architecture: x64
+  InstallerUrl: https://go.microsoft.com/fwlink/?linkid=2382896&clcid=0x404
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features added
+
+    | Feature added                                         | Details                                                                                                                                                                                                  |
+    | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Added USERAGENT feature extension                     | The driver sends its name, version, architecture, and operating system details to the server in the LOGIN7 USERAGENT TDS feature extension.                                                              |
+    | Added canonical connection string aliases             | Added the ConnectTimeout, MultipleActiveResultSets, and WorkstationID keywords as aliases for the Timeout, MarsConn, and WSID keywords. The existing keywords continue to work.                          |
+    | Added redirect context to connection failure messages | When the server routes a connection to another server and the connection to that server fails, the driver adds an error that names both the target server and the server that redirected the connection. |
+    | Added support for enhanced routing                    | Supports enhanced routing for Azure SQL Database Hyperscale named-replica reader endpoints. The driver connects to the server and the database that the server's routing information specifies.          |
+    | Updated authentication library                        | Updated Microsoft SQL Driver Authentication library (mssql-auth.dll) to version 1.1.4. This update fixes a crash when an application unloads and reloads the library after authentication starts.        |
+
+    Bugs fixed
+
+    | Bug fixed                                                                                      | Details                                                                                                                                                                                                                                                                                                                                        |
+    | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | Fixed LOB parameter leak in linked server EXEC AT.                                             | Fixed large object (LOB) parameters not being released when a linked server EXEC ('\<statement>', @parameter) AT [\<linked server>] call passes a LOB parameter that has no matching ? placeholder in the statement.                                                                                                                           |
+    | Fixed implicit connections logging in to the initial database instead of the current database. | Additional connections that the driver opens, such as implicit connections that run a command while a rowset is open, now log in to the current database instead of the database specified in the connection string. Previously, unqualified object names on these connections could resolve against the wrong database after a USE statement. |
+    | Fixed a crash on DLL unload when using Microsoft Entra authentication.                         | Fixed an intermittent access violation when the driver is unloaded after a connection that uses Microsoft Entra authentication, for example when Excel closes a workbook.                                                                                                                                                                      |
+    | Fixed a crash in STA hosts such as Excel when using Microsoft Entra integrated authentication. | Fixed a crash when a single-threaded apartment (STA) host such as Excel opens a connection with Authentication=ActiveDirectoryIntegrated after the authentication library (mssql-auth.dll) was unloaded. The driver now keeps the library loaded after it first initializes.                                                                   |
+    | Fixed security issues in the processing of server responses.                                   | Improved the validation of data that the driver receives from the server.                                                                                                                                                                                                                                                                      |
+ReleaseTime: 2026-10-09

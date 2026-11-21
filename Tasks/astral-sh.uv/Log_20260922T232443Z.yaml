@@ -1,0 +1,32 @@
+Version: 0.12.18
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.18/uv-i686-pc-windows-msvc.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.18/uv-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/astral-sh/uv/releases/download/0.12.18/uv-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Released on 2026-09-22.
+    Enhancements
+    - Add --output-format json to uv pip install and uv pip sync, including for --dry-run and --check (#21893)
+    - Add --check to uv pip install and uv pip sync to report planned changes without modifying the environment (#21844)
+    - Identify failures from get_requires_for_build_* hooks correctly in build errors (#21881)
+    Preview features
+    - Validate build requirements for uv build --no-build-isolation with --preview-features build-dependency-check; use --skip-dependency-check to opt out (#21880)
+    Performance
+    - Speed up uv_build editable wheel creation by omitting compression from temporary wheels (#21918)
+    Bug fixes
+    - Select package versions with wheels compatible with each Python resolution fork, correctly interpreting generic and stable-ABI wheel tags (#21835, #21836)
+    - Restore project, script, and lock files when uv add, uv remove, or uv version fails or is interrupted (#21860, #21856)
+    - Use configured dependency-metadata when checking whether installed requirements are satisfied (#21843)
+    - Reject archive entries that normalize to absolute Windows paths (#21923)
+    - Recognize distribution filenames and archive extensions when URL fragments contain ? (#21920)
+    - Generate correctly lowercased platform tags for BSD and Haiku releases (#21853)
+    - Avoid rebuilding a Windows relative path into an absolute form (#21923)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/astral-sh/uv/releases/tag/0.12.18
+ReleaseTime: 2026-09-22T23:00:51.0000000Z

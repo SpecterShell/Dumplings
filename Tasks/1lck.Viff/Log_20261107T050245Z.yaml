@@ -1,0 +1,92 @@
+Version: v0.4.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/1lck/viff/releases/download/v0.4.0/viff-v0.4.0-windows-amd64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.0 opens Subversion working copies and repositories inside a WSL distribution in the same window, and adds the jumps, search and minimap you reach for while reading code.
+    Highlights
+    This release removes the two assumptions behind "Git repositories only": the version control system is no longer just Git, and a repository no longer has to live on the Windows side. The reading side gains jumps, on-demand search and a code minimap at the same time.
+    ✨ New features
+    - Subversion working copies: open, status, diff, blame, history, commit (choosing the files this commit takes), update, revert and branch switching all happen in the same window; entries a backend cannot offer are hidden rather than shown and failing.
+    - WSL repositories: the Windows build opens a repository inside a WSL distribution and runs Git in that distribution, so credentials, signing and hooks come from the Linux side.
+    - Find in Files: ⇧⌘F searches the working tree on demand and lists relative paths, line numbers and the matching line, building no index, stopping at 300 results, honouring Git tracking and .gitignore, and skipping binaries.
+    - Jump to Source: open the file and line a diff change comes from, straight from the diff.
+    - Change marks and code map: the right edge of a diff marks where changes are, and a code map can be shown on demand.
+    - Repository discovery: pick a parent folder and scan it for repositories to import in one go.
+    - Searchable log branch filter: type to narrow the branch list instead of scrolling it.
+    - Code minimap: the read-only file viewer shows a minimap on the right; dragging the viewport mask jumps through the file, with the text, the mask and the scroll bar kept in step.
+    ⚡ Improvements
+    - Text inside a diff can be selected and copied.
+    - The Chinese interface covers the Project panel's context menus, toolbar tips and empty states instead of mixing both languages.
+    - Consistent terminology: stash, whitespace and history labels now read the same way across the whole message table.
+    - The Git path echo follows the repository: with a WSL repository open, settings name the git inside that distribution rather than the Windows default.
+    🛠 Fixes
+    - The titlebar's minimize, maximize and close buttons take their color from the current theme, so switching themes no longer leaves them invisible.
+    - The Project panel keeps folding and expanding while a filter is applied.
+    - The file count in the status area no longer shows an English plural in the Chinese interface.
+    Upgrade instructions
+    - Upgrading from v0.3.x: the settings file format is unchanged, so existing settings carry over.
+    - macOS: choose the Apple Silicon or Intel DMG, quit the old version, open the DMG, and replace Viff.app in Applications.
+    - Windows: quit the old version and run the x64 installer, or extract the portable ZIP and run viff.exe.
+    - Windows portable: extract the archive, enter its directory, and run viff.exe; no installation information is written.
+    - Debian/Ubuntu: run sudo apt install ./viff-v0.4.0-linux-amd64.deb.
+    - Linux portable: extract the archive, enter its directory, and run ./viff after installing the required system libraries.
+    - Install Git separately on PATH; Subversion working copies also need an svn client on the machine.
+    Compatibility and known issues
+    - Both macOS architectures require macOS 13 or later; Linux needs a working graphical session and rendering backend.
+    - The macOS app is ad-hoc signed without Developer ID signing or notarization, and the Windows installer is not Authenticode signed, so the operating system may show a security prompt.
+    - Subversion support is still being filled in: property editing (svn:ignore, svn:eol-style) and lock/unlock are not implemented, and their entries are not shown.
+    - Subversion history needs the repository: when it cannot be reached the failure is reported instead of keeping an old answer on screen labelled as stale.
+    - WSL repositories are Windows-only: the integrated terminal and content search still run on the Windows side, and the settings that configure the Windows git (Git path, GPG program, signing key, credential helper, SSH command) do not apply to a WSL repository.
+    - The minimap appears in the read-only file viewer only; a diff still carries just the change marks on its right edge.
+    - Input methods, external editors and graphics configurations still need acceptance on real desktops.
+    Install only files from this project's release page after checking their checksums; if blocked, verify the source before using the operating system's option to allow the app.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.0 让同一个窗口也能打开 Subversion 工作副本和 WSL 发行版里的仓库，并补上读代码时最常用的跳转、搜索与缩略图。
+    重点更新
+    这一版拆掉了「只能打开 Git 仓库」的两个前提：版本控制系统不再只有 Git，仓库也可以位于 Windows 之外的发行版里。读代码的一侧同时补上了跳转、按需搜索与代码缩略图。
+    ✨ 新功能
+    - Subversion 工作副本：检出与打开、状态、diff、blame、历史、提交（可选择本次提交的文件）、更新、还原、分支切换都在同一个窗口里；后端没有的能力入口直接隐藏，不会显示出来再报错。
+    - WSL 仓库：Windows 版可以直接打开发行版内的仓库，Git 由该发行版执行，凭据、签名与 hooks 沿用 Linux 侧的配置。
+    - 在文件中查找：⇧⌘F 按需搜索工作树内容，列出相对路径、行号与命中行文本，不建索引，结果最多 300 条，遵守 Git 跟踪与 .gitignore 并跳过二进制文件。
+    - 跳转到源码：在 diff 里直接打开改动所在的文件与行。
+    - 变更刻度与代码地图：diff 右缘标出改动位置，并可按需显示代码地图。
+    - 从父目录发现仓库：选择上层目录即可扫描并批量导入其中的仓库。
+    - 日志分支筛选：分支筛选框支持输入搜索，不再需要在长列表里翻找。
+    - 文件缩略图：只读文件查看器右侧显示代码缩略图，拖动视口遮罩可快速定位，正文、遮罩与滚动条同步。
+    ⚡ 改进
+    - diff 里的文本可以直接选中复制。
+    - 中文界面覆盖 Project 面板的右键菜单、工具栏提示与空状态，不再中英混排。
+    - 术语统一：储藏、空白差异与历史相关标签在整份消息表里保持一致。
+    - Git 路径回显按仓库给出：打开 WSL 仓库时，设置页显示的是该发行版内的 git，而不是 Windows 的默认值。
+    🛠 修复
+    - 标题栏的最小化、最大化与关闭按钮随主题取色，切换主题后不再因浅色压浅色而看不见。
+    - Project 面板在应用筛选时仍可正常折叠与展开。
+    - 状态栏的文件计数在中文界面下不再显示英文复数形式。
+    升级说明
+    - 从 v0.3.x 升级：设置文件格式未变，原有设置在升级后继续生效。
+    - macOS：按机型选择 Apple Silicon 或 Intel 的 DMG，退出旧版后打开 DMG，将 Viff.app 拖入“应用程序”并替换旧版。
+    - Windows：退出旧版后运行 x64 安装器，或解压便携 ZIP 后执行 viff.exe。
+    - Windows 便携包：解压后进入新目录执行 viff.exe，不写入安装信息。
+    - Debian/Ubuntu：执行 sudo apt install ./viff-v0.4.0-linux-amd64.deb。
+    - Linux 便携包：解压后进入新目录执行 ./viff，并自行安装所需系统库。
+    - Git 需单独安装并加入 PATH；使用 Subversion 仓库时，本机还需要 svn 客户端。
+    兼容性与已知问题
+    - macOS 两个架构都要求 macOS 13 及以上；Linux 需要可用的图形会话与渲染后端。
+    - macOS 应用使用 ad-hoc 签名，未经 Developer ID 签名或公证；Windows 安装器未经 Authenticode 签名，系统可能显示安全提示。
+    - Subversion 支持仍在补全：属性编辑（svn:ignore、svn:eol-style）与 lock/unlock 尚未实现，相关入口不显示。
+    - Subversion 的历史需要访问仓库：仓库不可达时会直接报错，而不会把旧结果标注为陈旧后继续展示。
+    - WSL 仓库仅限 Windows：内置终端与内容搜索仍走 Windows 侧，设置里针对 Windows git 的取值（Git 路径、GPG 程序、签名密钥、凭据助手、SSH 命令）对 WSL 仓库不生效。
+    - 缩略图只在只读文件查看器里出现，diff 视图仍然只有右缘的变更刻度。
+    - 输入法、外部编辑器与各类显卡环境仍需在实际桌面环境继续验收。
+    仅安装来自本项目发布页且已核对校验值的文件；若系统拦截，请先确认来源，再使用系统提供的允许打开选项。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/1lck/viff/releases/tag/v0.4.0
+ReleaseTime: 2026-11-06T17:27:22.0000000Z

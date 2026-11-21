@@ -1,0 +1,33 @@
+Version: 20.0.22.0
+Installer:
+- InstallerUrl: https://services.pdq.com/download/deploy-inventory/Inventory_20.0.22.0.exe
+  ProductCode: '{CA4F56AD-0D9C-4A83-8796-C0CCF381B14C}'
+  AppsAndFeaturesEntries:
+  - ProductCode: '{CA4F56AD-0D9C-4A83-8796-C0CCF381B14C}'
+    UpgradeCode: '{1EF97000-6F9C-4B13-964D-4BE80BC583F2}'
+    InstallerType: wix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security Enhancements
+    - Upgrade SQLite to 3.53.0 to address flagging of CVE-2025-70873
+    - Updated the MailKit email library to address a STARTTLS response injection vulnerability (CVE-2026-41319)
+
+    New Features
+    - Added CLI commands to update and test credentials for automated password rotation workflows (SetServiceCredentials, UpdateDeployCredential, UpdateScanCredential, TestCredential)
+    - Added CLI command to create custom variables
+    - Deploy: Added CLI command to clean unused repository files for automated maintenance workflows
+    - Deploy: Added CLI commands to export and import packages
+    - Deploy: Added CLI command to query deployment status for monitoring, automation orchestration, and reporting integrations
+    - Deploy: Added CLI command to delete packages
+    - Inventory: Added CLI commands to export and import collections
+    - Inventory: Added CLI command to delete computers for automated cleanup and decommissioning workflows
+    - Inventory: Added -Wait flag to ScanComputers and ScanCollections commands for synchronous scanning in automated verification workflows
+    - Inventory: Added CLI command to manually trigger auto reports for integration with external automation workflows
+    - Inventory: Added CLI commands for network discovery enabling scheduled and automated scanning workflows (StartNetworkDiscovery, GetNetworkDiscoveryStatus, StopNetworkDiscovery)
+
+    Bug Fixes
+    - Deploy: Fixed issue where package order in schedules was not preserved after first save
+    - Inventory: Updated Help Manual for broken Link on Variables Windows Page
+ReleaseTime: 2026-06-29T15:03:03.0000000

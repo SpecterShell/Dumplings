@@ -1,0 +1,57 @@
+Version: 0.56.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.56.0/netbird_installer_0.56.0_windows_amd64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.56.0/netbird_installer_0.56.0_windows_amd64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.56.0.17406541100
+    Publisher: Netbird
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.56.0/netbird_installer_0.56.0_windows_arm64.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/netbirdio/netbird/releases/download/v0.56.0/netbird_installer_0.56.0_windows_arm64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.56.0.17406541100
+    Publisher: Netbird
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    In this release, we are adding support for user approval. This allows administrators to control whether users can join their account and automatically be allowed to connect their peers to their networks. Learn more at https://docs.netbird.io/how-to/approve-users
+    Client Enhancements
+    - Added netstack support for Android CLI. #4319
+    - Added MTU configuration flag. #4213
+    - Fixed Darwin DNS errors always being thrown. #4403
+    - Fixed shared socket buffer allocation. #4409
+    - Prevented upstream resolvers from deactivating on failure. #4128
+    - Updated to the latest Pion ICE version. #4388
+    Management Improvements
+    - Optimized proxy network map performance. #4324
+    - Removed redundant store locks for better concurrency. #4385, #4390
+    - Changed network serial increment to occur at the end of transactions. #4397
+    - Reported sync and login durations by account ID. #4406
+    - Split high latency gRPC metrics for more detailed monitoring. #4408
+    - Continued user updates even after failures (removed locks). #4410
+    - Fixed ephemeral flag handling in peer batch response. #4420
+    - Added login filter to prevent multiple peers from connecting with the same public key. #3986
+    - Removed withContext from store methods. #4422
+    - Fixed duplicate group removals on peer deletion. #4421
+    - Added user approval feature for accounts. #4411
+    Signal & Relay
+    - Fixed goroutine and memory leaks when forwarding messages between peers. #3896
+    - Relay now accepts any origin. #4426
+    Other Changes
+    - Bumped golang-jwt/jwt from 3.2.2 to 5.3.0. #4375
+    - Fixed Windows client and management benchmark tests. #4424
+    New Contributors
+    - @plusls made their first contribution in #4319
+    Full Changelog: v0.55.1...v0.56.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/netbirdio/netbird/releases/tag/v0.56.0
+ReleaseTime: 2025-09-02T13:53:52.0000000Z

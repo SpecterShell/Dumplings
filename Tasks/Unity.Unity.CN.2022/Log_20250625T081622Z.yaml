@@ -1,0 +1,124 @@
+Version: 2022.3.59f1c1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unitychina.cn/download_unity/6f0f5d6fe989/Windows64EditorInstaller/UnitySetup64-2022.3.59f1c1.exe
+  ProductCode: Unity 2022.3.59f1c1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/2022.3.59
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/2022.3/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 2022.3.59f1
+    - Android: [iOS] [UnityWebRequest] Requests with "UnityWebRequest" are open for SSL Proxying (UUM-97194)
+    - DirectX12: Crash on GfxDeviceD3D12Base::DrawBuffersCommon when opening a project after changing the Graphics API to DirectX12 (UUM-77757)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: The Player hangs when unloading a scene using the UnloadUnusedAssets() method (UUM-79718)
+    - Packman: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - Shader System: Crash after the “State comes from an incompatible keyword space“ log when opening the project (UUM-98620)
+    - Vulkan: [Android] Application crashes on Android devices with Vulkan when restoring from background (UUM-90287)
+    2022.3.59f1 Release Notes
+    Features
+    - Version Control: You can now create a code review from the list of branches (or changesets) opening either the Desktop App or the Unity Cloud website.
+    - Version Control: You can now Shelve your Pending Changes when switching to another branch (or changeset) and decide if you want to apply them automatically after the switch.
+    - Version Control: You can now Shelve your selected Pending Changes, inspect the shelves content, and apply them to your workspace.
+    Improvements
+    - Build Pipeline: Added pdb files for all platform Editor extensions, this will provide better logs in case there are exceptions in platform Editor code.
+    Changes
+    - Plugins: .framework plugins will be imported with "Add to Embedded Binaries" flag enabled by default. (UUM-84614)
+    - Plugins: .xcframeworks will be imported with "Add to Embedded Binaries" flag enabled if they contain .frameworks or dynamic libraries. (UUM-84614)
+    - Version Control: Added dedicated toolbar buttons to open the list of branches and the Branch Explorer of the Desktop App.
+    - Version Control: Improved the Create workspace window to suggest the matching Unity Cloud project if it exists.
+    - Version Control: Moved the 'Unity Version Control' menu item under 'Window'/'Version Control' submenu starting from Unity 6.1.
+    - Version Control: Optimized incoming changes & merge to only reload the Package Manager when needed.
+    - Version Control: Reworded the changeset context menu "Undo this change" to "Revert this file to the previous revision" so it's more explicit.
+    - Version Control: Serialize the Checkin comment and tick selection so they are kept on any domain reload and play mode.
+    Fixes
+    - 2D: 2D: Fix case where Texture Sampling is lost when reconnecting SpriteColor Node in Fragment. (UUM-71736)
+    - 2D: Fixed sprite instancing with 2d shaders. (UUM-87636)
+    - Android: Added missing pdb files for Android Editor extensions - AndroidPlayerBuildProgram.Data.pdb, AndroidPlayerBuildProgram.pdb, Unity.Android.Gradle.pdb, Unity.Android.Types.pdb, UnityEditor.Android.Extensions.pdb. This will improve Editor.log contents when there's an exception happening in Android editor code. (UUM-95520)
+    - Android: Fixed builds when having incompatible cmdline-tools version (higher than 10.0). (UUM-96041)
+    - Animation: Fixed a crash when attempting to open the clip selection popup in the Animation Window on an animation source containing a list of animation clips with null references. (UUM-92603)
+    - Asset Import: Handle FBX Skeleton with unsupported RootNode. (UUM-62869)
+    - Asset Pipeline: Fixed issue with compilation not getting completed in InitialRefresh/Refresh, when triggered by a define change done in InitializeOnLoad. (UUM-92685)
+    - Audio: Fixed a bug with an Audio Source on Game Object with one or more Audio Effects potentially never becoming non-virtual (inaudible). (UUM-91256)
+    - Audio: Fixed a bunch of tests that timed out on apple silicon machines. (UUM-34995)
+    - Audio: [AudioSource.isPlaying](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/AudioSource-isPlaying.html\) no longer remains true when a [PlayableGraph](https://docs.unity3d.com/2022.3/Documentation/Manual/Playables-Graph.html\) finishes playing an audio clip. (UUM-97436)
+    - Build System: Fixed an issue where external processes invoked by the Build System were being read with a non-UTF-8 code page resulting in some characters being garbled. (UUM-95751)
+    - DX12: Fixed the memory of released textures accumulating, when the editor is out of focus. (UUM-86354)
+    - Editor: Do not accumulate vertical/horizontal scroll deltas for IMGUI events being triggered from native code. (UUM-79079)
+    - Editor: Fixed a bug that would cause the editor to throw a null reference exception when selecting a Video Clip. (UUM-83274)
+    - Editor: Fixed an infrequent crash when calling Shader.WarmupAllShaders(). (UUM-73239)
+    - Editor: Fixed an issue where attempting to reset the QualitySettings would cause the editor to crash if they contained 1 or more Texture Mipmap Limit Groups. (UUM-91590)
+    - Editor: Fixed Color Picker's broken intensity selector after using RGB values. (UUM-96564)
+    - Editor: Fixed graphics jobs toggle in projects settings when building for standalone targets. (UUM-91713)
+    - Editor: Fixed issue where the Gizmos and Layers menu opens and then closes and immediately reopens when you click the dropdown. (UUM-91078)
+    - Editor: Fixed prefab editor ignoring gameobject structure changes such as adding or removing a component. (UUM-72378)
+    - Editor: Fixed to dylib files to appear in Xcode project for iOS/tvOS/visionOS. (UUM-72675)
+    - Editor: Hide Edit menu items added by Apple Intelligence. (UUM-96160)
+    - Editor: Prevent "Attempting to draw with missing bindings" warning from being reported in some cases. (UUM-92382)
+    - Editor: Shortcuts are now updated in the context menu after setting them in the shortcuts window on Linux. Shortcuts are also updated using "Reset to Default". (UUM-95870)
+    - Graphics: Fixed rare crash on certain Samsung devices when running GLES. (UUM-29705)
+    - Graphics: Graphics: r8g8b8a8 abd b8g8r8a8 srgb formats now report LoadStore unsupported on intel mac, since srgb writes are explicitly not supported there. (UUM-95478)
+    - HDRP: Fixed color pyramid sampling when distortion is enabled after the distortion pass. (UUM-75319)
+    - HDRP: Fixed refraction sampling with DRS. (UUM-65289)
+    - IL2CPP: Fixed issue where build would fail if the project's root directory contained files named after project assemblies. (UUM-91340)
+    - IL2CPP: Fixes the performance on QNX for the first CultureInfo call.CultureInfo call tested on NXP iMX8QM:~240 ms without fix.~70 ms with the fix. (UUM-86398)
+    - IL2CPP: Removed the html report. This fixes a UnityLinker crash when --enable-report is used on a large project. (UUM-95599)
+    - iOS: Fixed a bug where if the "Prepare iOS for Recording" player setting was true and the "Mute Other Audio Sources" player setting was false, we would stop an external app's audio when first starting the Unity app. (UUM-91252)
+    - iOS: Fixed a few cases where the "Mute Other Audio Sources" player setting is false, but we would still end up stopping an external app's audio sometimes when starting a microphone recording. (UUM-73479)
+    - Linux: Fixed assertion failure on ExFAT File systems when "Build and Run" is executed. (UUM-91555)
+    - Mono: Prevent the crash on domain reload when Windows Form is using a tooltip window. (UUM-79065)
+    - Particles: Fixed mesh related errors when editing a Particle System with a Sprite in the Shape module. (UUM-86163)
+    - Physics 2D: Ensure that both Animation Root Motion rotation and Animation Transform rotation correctly rotate a Rigidbody2D. (UUM-79513)
+    - Scene/Game View: Fixed issue where Shortcut Manager would not alert the user when attempting to binding shortcuts containing reserved modifiers. (UUM-90584)
+    - Scripting: Fixed 'Stack overflow' error logged in the Console when a script that has a lot of classes is compiled. (UUM-90041)
+    - Scripting: Fixed freeze in InstantiateAsync with very large objects. (UUM-95656)
+    - Shadergraph: Fixed NullReferenceException thrown when updating a legacy node for second time through undo. (UUM-76255)
+    - SRP Core: Fixed truncated vector warning in DownSampleDepth shader. (UUM-84784)
+    - Terrain: Fixed bug in which grass details always used the default rendering layer mask. (UUM-91894)
+    - Terrain: Terrain Detail objects are not rendered in the build when the Terrain is generated at runtime. (UUM-62407)
+    - UI Elements: Fixed an issue where the child index was incorrect when dragging a nested item within another nested item in a CollectionView. (UUM-82863)
+    - UI Elements: Fixed the unintended horizontal scrolling behavior triggered by drag operations in a CollectionView. (UUM-73197)
+    - Version Control: Ensured ignore.conf is not being reformatted when adding or removing an ignore rule, so it keeps empty lines and comments.
+    - Version Control: Fixed a performance issue by preventing the ConfigureLogging call on every domain reload when Unity Version Control is not used, reducing the load time by ~200ms.
+    - Version Control: Fixed console error GUI Error: Invalid GUILayout state in PlasticWindow view which is caused under some circumstances.
+    - Version Control: Fixed lock statuses to correctly refresh in Project View and Inspector after merging.
+    - Version Control: Fixed missing checked-out for renamed assets.
+    - Version Control: Fixed null exception on entering in Play Mode before creating the workspace.
+    - Version Control: Fixed rename asset leaves 'Added' + 'Remove locally' status instead of 'Moved'.
+    - Version Control: Fixed the create branch operation to work in Gluon mode which uses partial workspaces.
+    - VFX Graph: Fixed NullReferenceExpection happening with disconnected output contexts. (UUM-92319)
+    - VFX Graph: Fixed occasional crashes when modifying exposed properties when in paused play mode. (UUM-91916)
+    - VFX Graph: Prevent VFXRenderer direct material modification that could lead to crashes. (UUM-89988)
+    - Video: Editor is stuck on loading bar or freezes when playing 8K video using Video Player. (UUM-75813)
+    - Video: Fixed corruption of alpha values when converting YUVA to RGBA with line widths that aren't a multiple of 8. (UUM-86958)
+    - Video: The "AVFoundationVideoMedia error while reading" error is thrown when streaming from a URL with a signed token in VideoPlayer. (UUM-86076)
+    - WebGL: Fixed a problem in Web platform Build and Run feature when both Native C/C++ multithreading is enabled, and Autoconnect Profiler is enabled. (UUM-53120)
+    - WebGL: Fixed bug causing PlayDelayed() to play audio immediately in WebGL builds, regardless of the delay specified. (UUM-77285)
+    - XR: Updated XR Interaction Toolkit (com.unity.xr.interaction.toolkit) to version 2.6.4.
+    Package changes in 2022.3.59f1
+    Packages updated
+    - com.unity.collab-proxy: 2.6.0 to 2.7.1
+    - com.unity.render-pipelines.core: 14.0.11 to 14.0.12
+    - com.unity.render-pipelines.high-definition: 14.0.11 to 14.0.12
+    - com.unity.render-pipelines.high-definition-config: 14.0.11 to 14.0.12
+    - com.unity.render-pipelines.universal: 14.0.11 to 14.0.12
+    - com.unity.services.wire: 1.2.6 to 1.3.0
+    - com.unity.shadergraph: 14.0.11 to 14.0.12
+    - com.unity.visualeffectgraph: 14.0.11 to 14.0.12
+    - com.unity.xr.arcore: 5.1.5 to 5.1.6
+    - com.unity.xr.arfoundation: 5.1.5 to 5.1.6
+    - com.unity.xr.arkit: 5.1.5 to 5.1.6
+    - com.unity.xr.interaction.toolkit: 2.6.3 to 2.6.4
+    - com.unity.memoryprofiler: 1.1.1 to 1.1.4

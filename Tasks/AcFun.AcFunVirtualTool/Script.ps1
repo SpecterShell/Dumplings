@@ -1,52 +1,60 @@
 $Object1 = Invoke-RestMethod -Uri 'https://api.kuaishouzt.com/rest/zt/appsupport/checkupgrade?appver=0.0.0.0&kpn=ACFUN_APP.LIVE.PC&kpf=WINDOWS_PC'
 
 # Version
-$Task.CurrentState.Version = $Object1.releaseInfo.version
+$this.CurrentState.Version = $Object1.releaseInfo.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.releaseInfo.downloadUrl
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.releaseInfo.message | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Headers = @{
-      Referer = 'https://livetool.kuaishou.com'
-    }
-    $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
-    $Object2 = Invoke-RestMethod -Uri "https://ytech-ai.kuaishou.cn/ytech/api/virtual/reconstruct/record?api_key=${Key}&timestamp=$([System.DateTimeOffset]::Now.ToUnixTimeMilliseconds())" -Headers $Headers -SkipHeaderValidation
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesUrl = $Object2.data.data.Where({ $_.iconText.Contains([regex]::Match($Task.CurrentState.Version, '(\d+\.\d+)').Groups[1].Value) })[0].link
-      if ($ReleaseNotesUrl) {
-        # ReleaseNotesUrl
-        $Task.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $ReleaseNotesUrl
-        }
-      } else {
-        $Task.CurrentState.Locale += [ordered]@{
-          Key   = 'ReleaseNotesUrl'
-          Value = $null
-        }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.releaseInfo.message | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    # ReleaseNotesUrl
+    $this.CurrentState.Locale += [ordered]@{
+      Key   = 'ReleaseNotesUrl'
+      Value = $null
+    }
+
+    try {
+      $Headers = @{ Referer = 'https://livetool.kuaishou.com' }
+      $Key = (Invoke-RestMethod -Uri 'https://ytech-ai.kuaishou.cn/ytech/api/register' -Headers $Headers -SkipHeaderValidation).Split(':')[0]
+      $Object2 = Invoke-RestMethod -Uri "https://ytech-ai.kuaishou.cn/ytech/api/virtual/reconstruct/record?api_key=${Key}&timestamp=$([System.DateTimeOffset]::Now.ToUnixTimeMilliseconds())" -Headers $Headers -SkipHeaderValidation
+
+      $ReleaseNotesUrlNode = $Object2.data.data.Where({ $_.iconText.Contains($this.CurrentState.Version.Split('.')[0..1] -join '.') }, 'First')
+      if ($ReleaseNotesUrlNode) {
+        # ReleaseNotesUrl
+        $this.CurrentState.Locale += [ordered]@{
+          Key   = 'ReleaseNotesUrl'
+          Value = $ReleaseNotesUrlNode[0].link
+        }
+      } else {
+        $this.Log("No ReleaseNotesUrl for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

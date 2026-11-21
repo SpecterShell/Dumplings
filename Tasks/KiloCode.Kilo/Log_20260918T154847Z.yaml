@@ -1,0 +1,46 @@
+Version: 7.7.5
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.5/kilo-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.7.5/kilo-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.7.5
+    Minor Changes
+    - #14251 b3ef153 - Add @model, @past-chats, and @worktrees mentions to the Agent Manager New Worktree prompt. Past chats and worktrees are sent as attachments to the new session, and model references stay inline text.
+    - #14249 d73b514 - Run worktree-independent slash commands from the Agent Manager New Worktree prompt. Custom commands, skills, MCP prompts, and /goal now appear in the prompt menu and execute when a new worktree is created. Typing /goal alone starts a two-step flow, so the objective can be entered before the session starts.
+    Patch Changes
+    - #14274 d162846 - Keep the Agent Manager .kilo directory out of git in subdirectory workspaces and avoid creating it in folders that are not git repositories.
+    - #14277 d8eaefd - Recover permission approval dialogs that stall instead of leaving the approval buttons disabled.
+    - #14280 815a81b - Fix a memory leak that made Agent Manager session switching slower the longer the window stayed open. Tool card fade animations kept unmounted transcript rows alive.
+    - Updated dependencies [d8eaefd]:
+      - @kilocode/sdk@7.7.5
+      - @kilocode/kilo-ui@7.7.5
+      - @kilocode/plugin@7.7.5
+      - @opencode-ai/ui@7.7.5
+      - @opencode-ai/core@7.7.5
+      - @kilocode/kilo-gateway@7.7.5
+      - @kilocode/kilo-indexing@7.7.5
+    CLI
+    7.7.5
+    Patch Changes
+    - #14279 cfc786a - Keep the model's behaviour in sync with the selected agent after switching. Every agent change now adds one reminder that names the previous and current agent and states whether the current agent may modify files, based on its configured permissions. This covers built-in, custom, and organization agents, and fixes Ask still trying to edit files after switching from Code back to Ask.
+    - #14284 bab87b4 - Stop denying read-only bash commands in Ask, Plan, and Explore modes when a shell operator is only literal text, such as grep "=>", rg "foo|bar", or cat <<'EOF' bodies, or when output is discarded with 2>/dev/null or 2>&1. Real file redirects, pipes, chaining, and command substitution are still denied.
+    - Updated dependencies [d8eaefd]:
+      - @kilocode/sdk@7.7.5
+      - @kilocode/plugin@7.7.5
+      - @opencode-ai/tui@7.7.5
+      - @opencode-ai/ui@7.7.5
+      - @kilocode/kilo-gateway@7.7.5
+      - @kilocode/kilo-indexing@7.7.5
+      - @kilocode/plugin-atomic-chat@7.7.5
+      - @opencode-ai/server@7.7.5
+      - @kilocode/kilo-telemetry@7.7.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.7.5
+ReleaseTime: 2026-09-18T12:10:33.0000000Z

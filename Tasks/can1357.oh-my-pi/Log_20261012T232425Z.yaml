@@ -1,0 +1,96 @@
+Version: 18.10.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.10.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - Removed estimateImageContentTokens() from @oh-my-pi/pi-agent-core/image-tokens; use Tokenizer.imageTokens(size, detail), which prices with the reading model's catalog image rule (#15446 by @will-bogusz)
+    - applyShakeRegion() and applyShakeRegions() take the replacement's token count (replacementTokens); a block rewrite of an assistant turn adds the tokens it removes to elidedOutputTokens, so a replayed Claude turn's count stays lowered after a reload (#15446 by @will-bogusz)
+    Fixed
+    - Fixed Claude context counts reading Opus 5.5 requests about 55% over their billed input: a replayed thinking turn now counts at the output size Claude billed for it, not its signature's bytes (#15446 by @will-bogusz)
+    - Fixed screenshots and other non-frame images being counted at the OpenAI rate for every model instead of the reading model's own; Claude billed them about 16% higher (#15446 by @will-bogusz)
+    - Fixed OpenAI Responses and Codex context estimates leaving out replayed reasoning: each turn whose encrypted reasoning actually replays now counts its reported reasoning tokens (its ciphertext when the backend reports none), and none while a cold session rebuilds it out of the request, so compaction and snapcompact sizing match billing; branch summaries no longer budget for encrypted reasoning they never send (#15447 by @will-bogusz)
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - isOfficialCodexApiUrl moved from @oh-my-pi/pi-ai to @oh-my-pi/pi-catalog/wire/codex, next to CODEX_BASE_URL, so the catalog's compat resolver classifies Codex endpoints with the same check (#15434 by @will-bogusz)
+    Added
+    - Added withoutUnverifiedThinking utility to filter reasoning capability from models when no effort is requested
+    - Added reachesOfficialEndpoint(model): whether a request to the model reaches the official endpoint its compat was built for, following ANTHROPIC_BASE_URL and Foundry's FOUNDRY_BASE_URL reroutes of first-party Anthropic models (#15434 by @will-bogusz)
+    - Added AssistantMessage.elidedOutputTokens, the visible output tokens a history rewrite (shake) has removed from the turn, which usage.output still counts (#15446 by @will-bogusz)
+    - Exported shouldDropTruncatedThinkingOnlyAssistant from providers/transform-messages, isColdReplayableResponsesTurn from providers/openai-shared and the new openAIResponsesReplaysNativeHistory from providers/openai-responses, so local token estimates can follow which turns replay drops and whether a session replays native history (#15447 by @will-bogusz)
+    Fixed
+    - Fixed Claude on Google Antigravity failing every turn with "image exceeds 5 MB maximum" once a large image entered the conversation; images are now downscaled to the host's limits before sending, as on the Anthropic API (#15444 by @will-bogusz)
+    @oh-my-pi/pi-catalog
+    Breaking Changes
+    - resolveInlineImageByteBudget(model, officialEndpoint) and resolveImageCountBudget(model, officialEndpoint) take whether the request reaches the official endpoint instead of reading compat.officialEndpoint, which misses request-time reroutes such as ANTHROPIC_BASE_URL; pass pi-ai's reachesOfficialEndpoint(model) (#15434 by @will-bogusz)
+    Added
+    - Added Muse Wonder (muse-wonder-1.0) to Meta and Muse Code with its minimal–max effort ladder and pricing
+    - Added the thinking-unverified rule axis: on hosts whose model list carries no capability metadata (Meta, Muse Code), unrecognized models now offer an opt-in thinking ladder (ThinkingConfig.unverified) instead of none
+    - Added thinking-unverified axis for offering reasoning ladders on unclassified model IDs
+    - Added Muse Wonder 1.0 model definition to Meta provider
+    - Added the opt-in snapcompact-image-reads axis: snapcompact images a fresh read result only for readers whose rule sets it; Claude Opus 5.5 and later opt in (#14249 by @will-bogusz)
+    - Added the image-count-budget rule for how many images one request may carry (Anthropic 90, Codex 200, other hosts unchanged) and the official-image-count-budget override that applies only on the official endpoint: Anthropic 600 (100 on 200k-window Claude models), Codex 2,000 (#15434 by @will-bogusz)
+    - Added a 24 MB inline-image byte budget for the Codex backend, which now counts as its official endpoint at its default URL and at paths under it such as /codex/responses (#15434 by @will-bogusz)
+    - Added isOfficialCodexApiUrl to wire/codex, moved from pi-ai (#15434 by @will-bogusz)
+    - Added verified to image-tokenization rules, marking the Claude 4.7+ high-res tier and the GPT-5.5 to 6.1 and gpt-6-astra rules as matching measured provider billing (#15442 by @will-bogusz)
+    - Added the image-max-edge axis and resolveImageMaxEdge() for hosts that shrink images before the model reads them; Cursor's Claude and GPT models and its default (Auto) route fit 1024×1024 (#15448 by @will-bogusz)
+    - Added the thinking-replay-tokens axis; Claude lines set it to output on every host, since a replayed signed thinking block bills the turn's full reasoning, not the signature's bytes (#15446 by @will-bogusz)
+    - Added a KDL opt-in for sibling subagent prompt-cache sharing, enabled for Muse Code's Spark 1.3, Wonder 1.0, and Wonder Full 1.0 variants over the Responses API (#15467 by @iliaal)
+    Changed
+    - Updated model definitions and compatibility rules for provider metadata
+    - Google Antigravity, xAI and Cursor requests keep up to 60 images, 20 for Claude on Antigravity and Cursor, up from 5; this counts snapcompact frames and live screenshots together (#15449 by @will-bogusz)
+    - Snapcompact sizes archives at the frame prices measured for Antigravity Gemini (a fixed 1,089 tokens), Grok 4.6 to 4.20, and Claude Sonnet 4.6's standard tier (#15449 by @will-bogusz)
+    Fixed
+    - Applied max-image-dimension and max-image-payload-bytes to Google API models, and declared the 5 MiB per-image limit of Claude on Google Antigravity (#15444 by @will-bogusz)
+    - Fixed local token counts for OpenAI GPT-5 and later models (Codex, OpenAI, Azure, OpenRouter, Copilot and other hosts) reading about 12% low: their text is now counted with o200k_base instead of a bytes/4 estimate (#15447 by @will-bogusz)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added task.agentSoftRequestBudget to give named subagents their own soft request budget, so a long-running agent can get more requests (or 0 for no guard) while scout, sonic and other agents keep theirs (#15419 by @will-bogusz)
+    - Added o200k as a tokenizer value for custom models and overrides in models.yml (#15447 by @will-bogusz)
+    Changed
+    - Sized snapcompact archives for Claude 4.7+ and GPT-5.5 to 6.1 (gpt-6-astra included) at each frame's measured price instead of at least 5,024 tokens, so Codex archives can hold up to 1.7× as many frames when the room under the compaction trigger is the limit (#15442 by @will-bogusz)
+    - Enabled sibling subagent prompt-cache sharing for Muse Code's Spark 1.3, Wonder 1.0, and Wonder Full 1.0 variants while keeping their conversations separate (#15467 by @iliaal, based on #15285 by @YueyuHoshizora)
+    - Reduced tool-result tokens by omitting subsecond bash timing and redundant task size metadata (#15468 by @iliaal; #15265; based on #15284 by @YueyuHoshizora)
+    - On the official Anthropic and Codex endpoints, snapcompact archives may carry up to 12 MB of frames instead of 3 MB, Anthropic requests keep up to 600 images (100 on 200k-window models) instead of 90, and Codex requests up to 2,000 instead of 200; custom base URLs, including Anthropic requests rerouted by ANTHROPIC_BASE_URL or Foundry's FOUNDRY_BASE_URL, keep the previous limits and no longer get Anthropic's 24 MB inline image byte limit (#15434 by @will-bogusz)
+    Fixed
+    - Fixed snapcompact.toolResults re-sending each large tool result as images a turn after it went out as text, which broke the prompt cache and Anthropic signed thinking every turn; results are now imaged from their first send, and read results stay text unless the model is known to edit exactly from images (Opus 5.5+) (#14249 by @will-bogusz)
+    - Fixed compaction on Claude sessions with thinking sometimes keeping about half the recent history compaction.keepRecentTokens asks for, because each kept turn was counted at its signature's size (#15446 by @will-bogusz)
+    - Fixed retry fallback rejecting a model with a smaller window by charging it the reasoning the active model's provider usage replayed, and the output cap charging reasoning a cold Responses session leaves out of its first request (#15447 by @will-bogusz)
+    - Fixed anonymized session exports losing whether bash timing was shown (#15468 by @iliaal)
+    - Added omp --restore <session>: resumes a session like --resume, then goes on with what its last process left unfinished when it crashed or was killed, both the interrupted turn and the subagents it was running (their results reach the parent as usual); Tern's session daemon now restarts omp with it after a crash
+    - Kept private prompt-cache routing keys out of shared sessions and HTML exports (#15467 by @iliaal)
+    @oh-my-pi/snapcompact
+    Breaking Changes
+    - providerImageBudget(provider) and providerFrameBudget(provider) became providerImageBudget(model) and providerFrameBudget(model), and maxFramesForDataBudget(shape) became maxFramesForDataBudget(shape, budget) with a required byte budget (#15434 by @will-bogusz)
+    - Removed PROVIDER_IMAGE_BUDGETS and FRAME_DATA_BYTES_BUDGET: image counts come from the catalog's image-count-budget rules, and frame byte budgets from frameDataBytesBudget(model) (DEFAULT_FRAME_DATA_BYTES_BUDGET where the host has none) (#15434 by @will-bogusz)
+    Added
+    - Added plannedFrameTokens and Shape.frameTokensVerified: archive sizing charges a frame its own price when the reader's image-tokenization rule is verified, and at least FRAME_TOKEN_ESTIMATE otherwise (#15442 by @will-bogusz)
+    Fixed
+    - Fixed snapcompact frames for Claude and GPT on Cursor, including its default (Auto) route, being drawn at 1568–1932px, which Cursor shrank to 1024px before the model read them; frames now render at the host's catalog image-max-edge (#15448 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Changed
+    - Updated model picker to offer manual effort selection for unverified models instead of automatic mode
+    Fixed
+    - Fixed the snapcompact.shape settings preview labelling variants 5x8-sent and repeating the first variant's sample when the frame edge differs from the variant table (Claude and GPT on Cursor; auto on high-resolution Claude) (#15448 by @will-bogusz)
+    What's Changed
+    - feat(task): let named subagents get their own soft request budget by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15419
+    - feat(catalog,snapcompact,coding-agent): size snapcompact request limits from catalog policy by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15434
+    - fix(catalog,snapcompact,coding-agent): size snapcompact archives at billing-verified frame prices by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15442
+    - fix(ai,catalog): clamp Claude images to Antigravity's 5 MiB limit by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15444
+    - fix(catalog,snapcompact,tui): keep snapcompact frames legible to Claude and GPT on Cursor by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15448
+    - feat(catalog): size snapcompact archives on Antigravity, xAI and Cursor from measured limits and prices by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15449
+    - fix(agent,catalog,coding-agent): count replayed Claude thinking and images at what Claude bills by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15446
+    - perf(tools): trim bash timing and task size metadata by @iliaal in https://github.com/can1357/oh-my-pi/pull/15468
+    - fix(catalog,agent,ai,coding-agent): count GPT-5 and later context the way OpenAI bills it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15447
+    - fix(coding-agent): stop snapcompact tool-result imaging from rewriting already-sent results by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/14249
+    - perf(task): share sibling prompt-cache keys on opted-in providers by @iliaal in https://github.com/can1357/oh-my-pi/pull/15467
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.10.2...v18.10.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.10.3
+ReleaseTime: 2026-10-12T19:23:53.0000000Z

@@ -1,0 +1,24 @@
+Version: 0.3.6
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.6/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.6/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.3.6
+    Fix #265: Telegram messages now sanitize HTML tags before sending. Unsupported tags are escaped so Telegram's API no longer rejects them with 400 errors.
+    Fix #236: Tool JSON schemas for memory_store.value and event_publish.payload now include explicit "type" fields. Strict schema validators (like llama.cpp) no longer reject these tool definitions.
+    Fix #226: The web wizard now generates correct TOML with model = "..." (was name = "...") and puts system_prompt under [model] (was [prompt] system = "..."). Generated configs now actually work.
+    Fix #237: Hand install is now supported via CLI (openfang hand install <path>) and API (POST /api/hands/install). Custom hands can be installed from a HAND.toml file on disk or via JSON payload. The hand registry uses DashMap for concurrent access.
+    Fix #255: All hardcoded ~/.openfang paths now respect the OPENFANG_HOME environment variable. Set OPENFANG_HOME=/your/path to use a custom config/data directory. Updated across CLI, TUI wizards, dotenv loader, templates, kernel config, and types config — 18 files total.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.6
+ReleaseTime: 2026-03-03T17:30:15.0000000Z

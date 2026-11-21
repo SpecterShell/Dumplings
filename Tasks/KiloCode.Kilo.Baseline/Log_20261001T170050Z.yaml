@@ -1,0 +1,56 @@
+Version: 7.8.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.8.3/kilo-windows-x64-baseline.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.8.2
+    Minor Changes
+    - #14634 34ec938 Thanks @brunoagatao! - Add a copy content button to the Documents viewer toolbar, and expand the document tab context menu with Copy Path, Copy Relative Path, Copy File Name, and Open in Editor.
+    - #14630 de285a6 Thanks @brunoagatao! - Add a manual Fetch Models button to the Custom Provider settings dialog.
+    - #13589 2d6d0a0 Thanks @sylwester-liljegren! - Suggest files from every folder in a multi-root VS Code workspace when typing @, so folders added through "Add Folder to Workspace..." are mentionable without reaching for the file picker. Files outside the session's own project are still only read after the usual approval.
+    Patch Changes
+    - #14675 5b336a9 - Keep the latest Agent Manager selection when another project finishes loading.
+    - #14672 97dda4f - Keep the Agent Manager browser preview visible when you resize its panel.
+    - #14585 234111e - Reduce repetitive autocomplete error telemetry while retaining a diagnostic sample.
+    - #14707 f40ebdd - Attach selected code to the last-focused chat in Agent Manager, an editor tab, or the sidebar.
+    - #14631 029802e Thanks @brunoagatao! - Fix Open in Editor button in Documents viewer
+    - #14686 d3966e5 - Highlight code snippets when a response finishes, without requiring a follow-up message.
+    - #14590 63ba85d Thanks @hdcodedev! - Keep collapsed pastes when browsing prompt history with the arrow keys.
+    - #14684 8bdec8c - Add a "View details" action to marketplace suggestion notifications that opens the suggested item in the Kilo Marketplace panel with the search prefilled.
+    - #14319 52019c9 Thanks @hdcodedev! - Report revert failures instead of failing silently. A failed revert or redo now shows an error toast, and the snapshot steps behind it log the git exit code and stderr when they give up.
+    - #14711 7de049a - Keep the background agent avatar animation smooth above the prompt input.
+    - #14680 ac4a092 - Preserve prompt cache prefixes across goal turns, compaction, and completion, and keep the working timer running through turn boundaries and rejected commands until the goal stops.
+    - #14682 979e02c - Stop a single sub-agent from its task card, and follow the background agents of the current run next to the working status and session actions. A click opens, stops, or clears them. The background agent bar above the chat is removed, and the sub-agent running animation is easier to see.
+    - #14641 4f35e9d - Apply pending autocomplete edits from the VS Code quick-fix menu.
+    - Updated dependencies [463cbed]:
+      - @kilocode/kilo-indexing@7.8.2
+      - @opencode-ai/core@7.8.2
+      - @kilocode/kilo-ui@7.8.2
+      - @opencode-ai/ui@7.8.2
+    CLI
+    7.8.2
+    Patch Changes
+    - #14676 f05a4fd - Use the full model output limit for Claude Sonnet, Opus, and Claude-family aliases such as Auto Frontier to prevent responses from ending early during long reasoning.
+    - #14547 1b09c19 - Report a session asleep on a pending wakeup or cron task as scheduled with its wake time.
+    - #14708 c8aaebf - Show suggested next steps in the CLI with clickable action buttons, and show whether each suggestion was accepted or dismissed.
+    - #14635 693c402 - Recover from provider context-limit errors by compacting and retrying when the provider reports the request exceeded the model's context length.
+    - #13321 ad173c7 Thanks @maphew! - Stop sending prompt_cache_breakpoint to custom OpenAI-compatible providers, and to first-party provider IDs rerouted through custom endpoint overrides; both reject the parameter with HTTP 400.
+    - #14592 c4506f7 - Show Kilo Gateway models that don't report their supported parameters, such as Jev Router.
+    - #14319 52019c9 Thanks @hdcodedev! - Report revert failures instead of failing silently. A failed revert or redo now shows an error toast, and the snapshot steps behind it log the git exit code and stderr when they give up.
+    - #14680 ac4a092 - Preserve prompt cache prefixes across goal turns, compaction, and completion, and keep the working timer running through turn boundaries and rejected commands until the goal stops.
+    - #14709 1988e54 - Keep file storage usable after a cancelled operation interrupts its first access. Before, wakeups, cron tasks, and session fork diffs could fail until Kilo restarted.
+    - #14679 9076f03 - Restrict session PR linking, automatic recording, and background polling to CLI backends. VS Code, Agent Manager, JetBrains, and other clients keep their existing PR integrations without running the separate session-link mechanism, including when controlled from mobile.
+    - Updated dependencies [463cbed, d6426d0]:
+      - @kilocode/kilo-indexing@7.8.2
+      - @kilocode/kilo-telemetry@7.8.2
+      - @opencode-ai/server@7.8.2
+      - @opencode-ai/tui@7.8.2
+      - @opencode-ai/ui@7.8.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.3
+ReleaseTime: 2026-10-01T13:19:25.0000000Z

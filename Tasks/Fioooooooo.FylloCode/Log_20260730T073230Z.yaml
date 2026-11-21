@@ -1,0 +1,70 @@
+Version: 0.14.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.14.4/FylloCode-0.14.4-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.14.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release improves reading, preview, and recovery in Chat. Absolute local file links can now be previewed safely inside the app, Markdown files gain source, rendered, and wrapping modes, and Fyllo Signal gives Agents a lightweight display channel that requires no confirmation. ACP Agent connections are prewarmed in the background and confirmed session configuration is restored after restart or reconnection; bundled MCP servers also move to a reusable application-level HTTP host while retaining stdio fallback.
+    Added
+    - All shared MarkStream hosts can now preview absolute local text-file links. Files under the project root or a registered worktree open directly; files outside trusted roots require either one-time access or trust for the current window before content is read. Preview accepts regular UTF-8 files up to 5 MiB and supports :line[:column] locations.
+    - Local Markdown previews now offer Source / Preview and Content Overflow / Wrap Lines controls. Preview uses MarkStream rendering, Source remains the default, and display choices affect only the current Slideover without modifying the file or persisting a setting.
+    - Added the passive Fyllo Signal display protocol. The initial show.time type renders the current time as a non-interactive pill without creating a Fyllo Action, entering the session event rail, or producing durable side effects.
+    - The Pinned Sessions and Recent Sessions groups in Chat can now be collapsed independently. Expanded groups share the remaining height and retain their own scroll positions.
+    Changed
+    - After launch, FylloCode now prewarms installed and valid custom ACP Agent connections with application-level concurrency limits. Installation, upgrade, and custom-Agent saves also schedule incremental warmup, and Chat reuses the same in-flight or ready connection.
+    - The ACP capability cache now retains complete authentication, prompt, MCP, and session capability snapshots while remaining compatible with older prompt-only cache files and preserving current attachment and prompt-capability behavior.
+    - fyllo-specs and fyllo-cortex now use an application-level shared HTTP host. HTTP-capable Agents reuse a stable loopback proxy, application bearer token, and request-scoped project/session context; Agents without HTTP support, or unavailable backends, continue through stdio.
+    - Fyllo Action and Fyllo Signal now share MarkStream rules for top-level standalone blocks, streaming closure, and exact literal-source preservation while keeping separate schemas, state, and rendering contracts.
+    Fixed
+    - Fixed confirmed session options such as model, mode, and thought level being replaced by Agent defaults after app restart or Agent reconnection. Compatible values are restored before the first resumed prompt, while incompatible options fall back to the Agent's current schema.
+    - Fixed Chat prompt-timeline container sizing, scroll targeting, and summary-popover details, and added syntax-safe Mermaid guidance for flowchart and state-diagram labels to reduce unrenderable Agent output.
+    - Fixed the Chat message area not filling its available height in some layouts.
+    Notes
+    - The application version is now 0.14.4.
+    - The fyllo-specs MCP server is now 0.9.0, adding HTTP transport, request-scoped context, and Mermaid guidance. Tool names, inputs, outputs, storage behavior, and stdio transport remain compatible.
+    - The fyllo-cortex MCP server is now 0.6.0, adding HTTP transport and request-scoped context. Tool names, modes, inputs, outputs, storage behavior, and stdio transport remain compatible.
+    - Older ACP capability caches are read through the compatibility path and are gradually rewritten in the new format after Agents initialize successfully; no manual migration is required.
+    - Trust in this window for files outside the project is kept only in Renderer Window memory. Closing the window or restarting the app requires confirmation again.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.en.md#0144---2026-07-30
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个版本集中改善 Chat 中的阅读、预览和会话恢复体验：绝对本地文件链接可以在应用内安全预览，Markdown 文件支持原文、渲染和换行模式，Fyllo Signal 则为 Agent 提供无需确认的轻量展示通道。ACP Agent 连接会在后台预热，并在应用重启或连接重建后恢复已确认的 session 配置；内置 MCP server 同时迁移到可复用的应用级 HTTP 托管，并保留 stdio 兼容回退。
+    新增
+    - 所有共享 MarkStream 宿主现在都能预览绝对本地文本文件链接：项目根和已注册 worktree 内的文件直接打开，项目外文件在读取内容前要求“仅打开一次”或“在此窗口中信任”；预览只接受不超过 5 MiB 的 UTF-8 普通文件，并支持 :line[:column] 定位
+    - 本地 Markdown 文件预览新增“原文 / 预览”和“内容溢出 / 自动换行”切换；“预览”使用 MarkStream 渲染，默认仍显示只读原文，查看模式只在当前 Slideover 中生效，不修改文件或持久化设置
+    - 新增 Fyllo Signal 被动展示协议；首个 show.time 类型可把当前时间渲染为非交互 pill，不创建 Fyllo Action、不进入会话事件栏，也不产生持久化副作用
+    - Chat 的“置顶会话”和“最近会话”分组支持独立折叠；多个展开分组平分剩余高度，并保留各自滚动位置
+    调整
+    - 应用启动后会在后台限流预热全部已安装和有效的自定义 ACP Agent 连接；安装、升级或保存自定义 Agent 后也会增量预热，用户发起 Chat 时可复用同一条在途或已就绪连接
+    - ACP capability cache 升级为保存认证方式、prompt、MCP 与 session 完整能力快照，同时兼容只含 prompt 能力的旧缓存，并保持现有附件与 prompt 能力判断不变
+    - fyllo-specs 与 fyllo-cortex 迁移到应用级共享 HTTP host：支持 HTTP 的 Agent 复用稳定 loopback proxy、应用级 bearer token 和请求级项目/session 上下文；不支持 HTTP 或后端不可用时继续使用 stdio
+    - Fyllo Action 与 Fyllo Signal 共用 MarkStream 顶层独立 block 识别、流式闭合和原文保留规则，各自仍使用独立 schema、状态与渲染契约
+    修复
+    - 修复应用重启或 Agent 连接重建后，已确认的 model、mode、thought level 等 session 配置可能被 Agent 默认值覆盖的问题；首个续聊 prompt 前会恢复仍与当前 schema 兼容的选值，不兼容项降级到 Agent 当前值
+    - 修复 Chat prompt 时间线的容器高度、滚动定位和摘要浮层细节，并补充 Mermaid flowchart / state diagram 的安全标签指引，减少 Agent 输出无法渲染的图表
+    - 修复 Chat 消息区在部分布局下无法占满可用高度的问题
+    备注
+    - 应用版本升级到 0.14.4。
+    - fyllo-specs MCP server 升级到 0.9.0，新增 HTTP transport、请求级上下文与 Mermaid 指引；tool 名称、输入输出、存储行为和 stdio transport 保持兼容。
+    - fyllo-cortex MCP server 升级到 0.6.0，新增 HTTP transport 与请求级上下文；tool 名称、mode、输入输出、存储行为和 stdio transport 保持兼容。
+    - 旧版 ACP capability cache 会按兼容路径读取，并在 Agent 后续成功 initialize 时逐步写为新格式，无需手动迁移。
+    - 项目外文件的“在此窗口中信任”只保存在当前 Renderer Window 的内存中；关闭窗口或重启应用后需要重新确认。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0144---2026-07-30
+ReleaseTime: 2026-07-30T06:03:48.0000000Z

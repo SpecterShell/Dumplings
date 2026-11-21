@@ -1,0 +1,58 @@
+Version: 0.4.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.0/Snow-App-Setup-0.4.0.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Phone Remote Control: Drive the current session from a phone browser — live conversation and streaming, workspace/model switching, tool approvals, question answering, image and file attachments, and session rollback, plus dedicated tool cards and workflow canvas cards. The remote HTTP service now runs in the Rust native layer, the public entry uses long-term tokens (one-time pairing codes and credential rotation removed), and the bundled frpc extends to macOS/Linux with multi-distribution Linux deployment and custom ports.
+    - Workspace Relocation: Project directory health is verified (missing location, unmounted volume, no permission) and can be relocated — conversations, memories, memos, scheduled tasks, and project-level settings migrate together, with merge support, a migration history, and undo.
+    - Markdown Table Export: Tables in replies can be exported as CSV or XLSX.
+    Improvements
+    - Outbound requests now go through the Rust-side proxy uniformly (with no_proxy direct connections for local networks), shared by the MCP HTTP transport.
+    - MCP server lists return immediately while tool discovery happens on demand or in the background, so slow servers no longer block the MCP settings panel or the project MCP panel.
+    - Memory injection is frozen per session: memories added or changed mid-session no longer disturb the session's prompt-prefix cache.
+    - Faster fuzzy matching for indentation-sensitive files.
+    Bug Fixes
+    - Images no longer trust the declared MIME — the real format is sniffed; inline images in tool results are persisted to disk so base64 no longer bloats the database and request context.
+    - Fixed 400s from strict Chat Completions providers when tool results carry images: images are emitted as one synthetic user message after the turn's tool replies.
+    - Added a pre-send context window guard that rejects oversized requests locally (images billed as vision), instead of letting the provider return an error.
+    - Fixed the status leak when a question card is unanswered or interrupted.
+    - Fixed the mobile history paging entry point.
+    What's Changed
+    - feat: add secure mobile remote control by @zerio1 in https://github.com/MayDay-wpf/snow-app/pull/130
+    - fix(api): reject oversized requests locally before hitting the provider context window by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/132
+    New Contributors
+    - @zerio1 made their first contribution in https://github.com/MayDay-wpf/snow-app/pull/130
+    - @ShiroEirin made their first contribution in https://github.com/MayDay-wpf/snow-app/pull/132
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.3.1...v0.4.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 手机远控：手机浏览器即可接管当前会话——实时对话与流式输出、切换工作区与模型、审批工具、回答问题、发送图片文件、回滚会话，并配套工具卡片与 WorkFlow 画布卡片。远控 HTTP 服务迁移到 Rust 原生层，公网入口改用长期令牌（移除一次性配对码与凭据轮换），内置 frpc 扩展至 macOS/Linux，支持多发行版 Linux 部署与自定义端口。
+    - 工作区重新定位：校验项目目录状态（位置已失效、磁盘未挂载、无访问权限），可选择当前目录重新定位，并把会话、记忆、备忘、计划任务与项目级设置一并迁移，支持合并、迁移记录与撤销。
+    - Markdown 表格导出：回复中的表格可导出为 CSV 或 XLSX。
+    改进
+    - 出站请求统一由 Rust 代理（no_proxy 本机网段直连），MCP HTTP 传输共用同一配置。
+    - MCP 服务器列表改为快速返回，工具发现按需触发或后台补齐，慢服务器不再阻塞 MCP 设置面板与项目 MCP 面板。
+    - 记忆注入改为会话快照：会话期间新增或修改的记忆不再影响当前会话的提示词前缀缓存。
+    - 优化缩进敏感文件的模糊匹配性能。
+    修复
+    - 图片不再信任声明的 MIME，改为嗅探真实格式；工具结果中的内联图片落盘持久化，避免 base64 撑大数据库与请求上下文。
+    - 修复严格 Chat Completions 提供商下工具结果图片触发 400 的问题：图片改为在该轮工具回复后合成为一条 user 消息。
+    - 新增发送前上下文窗口守卫：超限请求在本地拦截（图片按视觉方式计费），不再由提供商返回错误。
+    - 修复提问卡未回答或被中断时的状态泄漏。
+    - 修复移动端历史消息翻页入口。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v040
+ReleaseTime: 2026-09-15T09:17:38.0000000Z

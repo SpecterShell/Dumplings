@@ -1,0 +1,25 @@
+Version: 4.1.25
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.1.25/Antigravity.Tools_4.1.25_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.1.25/Antigravity.Tools_4.1.25_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心功能] 动态画图模型与新架构支持：
+      - 动态解析：移除了针对 gemini-3-pro-image 的硬编码限制。通过新增的 clean_image_model_name 智能清洗后缀（如 -4k, -16x9），全面兼容如 gemini-3.1-flash-image 等任意未来新增的画图模型。
+      - 配额自适应：优化了 normalize_to_standard_id，使用 image 关键词宽泛匹配，确保新模型也能正确触发配额保护机制。
+    - [核心功能] 聊天接口 (Chat Completions) 画图拦截支持：
+      - 跨界融合：OpenAI 和 Claude 协议的对话流现在能智能探测画像生成意图。当使用带有 image 的模型名时，系统会将常规文本生成请求静默转移给高级画图引擎。
+      - 流式回显：生成完成后，通过 Markdown 格式（![Generated Image](url)）以 SSE 流式返回图片链接，完美适配所有支持 Markdown 的聊天客户端。
+    - [核心修复] 彻底修复画图重定向 404 与参数穿透失效：
+      - 404 移除：移除了底层调用中残留的旧模型硬编码，根除因模型信息不一致导致的 404 Not Found 崩溃及账号受损。
+      - 精准参数继承：修复了未传参数时系统强制塞入默认 1024x1024 的行为。现在，如果模型名带有后缀（如 gemini-3-pro-image-16x9-4k），后台会严格优先解析后缀分辨率进行穿透绘图。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.1.25
+ReleaseTime: 2026-02-27T05:36:05.0000000Z

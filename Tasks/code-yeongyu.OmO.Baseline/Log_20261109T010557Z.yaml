@@ -1,0 +1,462 @@
+Version: 5.1.65
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.65/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A message an agent sends to a session on another device now says who sent it. It used to arrive there as plain text, indistinguishable from that session's own user. It now carries the same sender line and authority notice as a message between sessions on one device (the sending session, its workspace and project, and the device it came from), and a leading / in it no longer runs a command or expands a prompt template on the receiving side. omo remote send from a terminal is unchanged. (#12858, part of #12852)
+    Memory retention no longer evaluates its completion-record guard twice per record. The completion sweep now reads the guard once and keeps or removes the record on that single answer, and the retention tests check their own preconditions instead of asserting them away. No change to what retention keeps or removes. (#12783, follow-up to #12532)
+    The standalone omo binary's omo doctor reports memory runtime size again, like the npm install. Each memory identity's runtime size against its cap and the total across identities are printed by both distributions, so binary/npm doctor parity holds (#12785). (#12783)
+    Old binary runtimes are pruned safely when two omo launches start at once. A launch no longer deletes a runtime another launch is still pruning, and a runtime that launch already removed is not reported as a failure. omo --version, --help and omo update never prune. (#12770, follow-up to #12627)
+    A task child whose engine cannot hold its designated model chain is no longer started. Before, when a process child's engine could not take its chain (an older engine, a refused set_retry_fallback, or no answer in time) or a task host did not advertise retry_fallback_profile, the child was still prompted and ran on the engine's own fallback settings, which can reach models outside its chain. The start now fails before the first prompt and names every designated model and the reason, and such a host is refused as incompatible, naming the same models. (#12759) (#12761)
+    A command on a closed session on another device now reports the same error as on this device. It answered session_not_found remotely and unknown_session locally; both now answer unknown_session. (#12755) (#12756)
+    omo hands its device keys to the device service from memory, with no credential store read for relay. A fresh sign-in (omo login, omo account adopt) deletes the signed-out marker and then hands its in-memory keys and account to a running device service. The memory sync session re-adopts from the credential it already holds when the service reports no adopted device. Every sign-out path (logout, forget, a session the service ended) tells the service to forget the device. The start-up bootstrap no longer reads the stored credential. device.adopt carries account only to a device service at 0.1.3 or newer, and the pinned device service is raised to 0.1.3 (design D PR 4). (#12735)
+    omo remote can open, send, switch model, interrupt and close sessions on your other devices. omo remote open <device> [--project P] [--model M] starts a session there and prints <device>/<session>; omo remote send <device>/<session> <text> prints the answer as it streams in and returns when the turn settles (--steer steers the running turn, --follow-up queues behind it, --no-wait returns once the session took the message); model, interrupt and close do what they say. Each verb is the same remote op the agent's thread tools use, and --json prints its typed result. A steer to a session on another device now reaches it when that device's engine reports its running turn, instead of always being refused. (#12709, part of #12320)
+    Creating or forking a thread on another device no longer waits for a separate session.locate round trip: the create asks the relay for the new session's id on the open_session reply and uses it. A relay daemon without that answer (an older host, or an older service on this device) is handled as before, with session.locate. (#12686)
+    omo update on the standalone binary now replaces the installed omo. It used to print a replace command for the copy under ~/.omo/binary-runtime/<version>/, which the next launch put back, so the update never took. A launch also removes old runtime versions there, keeping the previous one for a rollback and any version still running. (#12627, fixes #12626)
+    Each memory identity's runtime directory is capped at 2 GiB, and omo doctor and /doctor show how much it holds. After retention, the 12-hour memory maintenance pass evicts oldest-first until the identity fits memory.runtime.max_bytes (default 2 GiB, 0 for unbounded, per-agent overridable under memory.agents.<id>.runtime). It removes folded reflection runs first, then the transcripts of fully reflected sessions, idle sidecars, and finally old failed runs beyond the newest ten. Journals that were never or only partly reflected are kept by default; memory.runtime.discard_unreflected_journals: true lets the cap evict them too, and only while reflection is succeeding on the identity. Live sessions, in-flight runs and the run-id high water are never touched. omo doctor prints each identity's runtime size and the total, and warns when an identity reaches 80 % of its cap. /doctor adds a runtime-size check with the largest stores and what retention would still free. (#12538)
+    Memory no longer grows without bound on disk. The background memory maintenance pass now removes finished reflection runs, fully reflected transcripts, recall sidecars and legacy stores past configurable windows (memory.runtime.retention_days 7, completions_days 30), in time-boxed slices that resume where they stopped. Transcript input reflection never folded into memory is kept unless you turn on discard_unreflected_journals (then removed after abandoned_journal_days, 14, only while reflection works for that agent). Nothing a live session owns, no locked or unfinished work and no run id reflection still needs is touched. (#12532)
+    A reflection lock left behind by a run whose processes died (launcher killed before the run started, supervisor and child gone with no outcome, an unreadable run ledger, or a torn active.lock) is now released at session start, on the next turn, and by the new omo doctor --fix (--dry-run to preview, /doctor --fix in a session), instead of keeping every later reflection queued; omo doctor --fix also reclaims runtime locks whose owner is gone. (#12517)
+    Fixed
+    - Senpi: omo now names any senpi feature it relies on that the running senpi lacks in one startup warning, and opening a monitor on another device's session on a senpi without remote wake fails with remote_wake_unavailable instead of starting a watch that never wakes. A contract test checks every such feature against the pinned senpi. (#12862, fixes #12861)
+    - The browser skill now depends on the published omowright package (^0.3.0, the first release that ships a built dist/ that loads under Node as well as Bun) instead of a git commit. Its runtime stager and loader accept omowright's TypeScript sources, the older JavaScript sources, or a compiled dist/, in that order, so a future layout change cannot silently break the staged browser runtime (#12842, #12851, #12847). (#12847)
+    - Memory facts extraction records facts again with senpi 2026.11.6-3: the facts child (also used by onboarding's understand step) keeps the approval mode its own settings give it and may run only its own record tools without asking, instead of being refused as a child whose parent is gone. (#12839)
+    - Concurrent memory account resolves on a desktop host share one open, so the app sees one descriptor request instead of one per caller; a failed open is retried by the next resolve (carried from #12717, which this PR supersedes). (#12839)
+    - Thread tools: an agent can now reach a session on another device of the same account by its name. A name that matches the title of one live session on another device sends there, and a name shared across devices (or with a thread on this device) is refused as ambiguous with every candidate and its device listed, never picked silently. Claiming or renaming a thread alias on a signed-in CLI device now reaches the account's alias registry instead of always answering that the registry cannot be reached; an alias claimed on one device now reaches that thread from every other device instead of reporting its device offline, and a registry outage never changes how a plain name resolves. omo thread read resolves aliases and other devices' threads the way the agent's thread_read does. (#12837, fixes #12833)
+    - Release: the service-auth release step now refuses a bundle that carries more than one release key set, so it always checks the set the bundle ships. (#12812, fixes #12617)
+    - Runtime fallback: when a session times out and no fallback model can be prepared, the user is now warned even if nothing was awaiting a fallback, the warning names the real reason ("no available fallback models" while attempts remain, instead of "max fallback attempts reached"), and a compaction that outlives its watchdog budget returns control as a real cancellation without staying marked as recovering. (#12790, fixes #12762)
+    - Standalone binary on Windows: running the provisioned runtime copy directly (~/.omo/binary-runtime/<version>/omo.exe) no longer hands off to itself and reports itself as the installed launcher when the home path is spelled with an 8.3 short name or different letter case. (#12772, fixes #12769)
+    - While service accounts are closed, the compiled omo binary recognises the device-code omo login with the same option parse as the command itself, so omo login -- --device and similar argv get the immediate refusal instead of being handed on to the command. (#12723, fixes #12646)
+    - The browser skill's doctor no longer calls a browser ready when its only BrowserSkill extension is 0.4.0. That release left a "BrowserSkill" tab group in the user's browser after every task. The doctor now reports outdated-extension and tells the user to update the extension and delete the saved groups. (#12663)
+    - omo no longer warns "Could not download the OmO device service. Check the connection and try again." on every interactive start while the device service release it pins has not been published. A 404 for that release is now its own not_published state: the start stays quiet, and omo remote bootstrap says remote devices are not available in this build yet. A connection failure, a server error or a half-published release still warns. (#12659)
+    - When a dream or reflection run deletes, archives or moves a memory note, [[path]] and relative markdown links to it in other notes are now updated in the same run, after the completion check has decided which of the run's changes land. A moved note's links follow it, and the moved note's own relative links keep pointing at their targets. A note the run archived, meaning its ARCHIVE.md entry names the file (its path, or its file name when no other note shares it), is linked as [[ARCHIVE.md|<old path> (archived)]]. Links to any other removed note, such as one the user asked to forget, become plain text. A note the completion check refuses, or one whose rewrite it would refuse (for example a note that already holds secret-like text), or one that is not valid UTF-8, keeps its links as they were, so /doctor can still report those. A targeted /dream --to <doc> that removes its own target is no longer refused because of these link updates. Facts extraction also no longer writes into a month ledger path that was archived or deleted: that month's new facts go to notes/facts/<month>-2.md (then -3, ...), so an old link can never start pointing at unrelated new content. (#12642) (#12645)
+    - Runtime fallback keeps compaction retries separate from the primary model chain and preserves substantive retry prompts. Compaction watchdogs defer within a bounded budget, exhausted native retry signals do not trigger an abort, and stuck-session watchdogs still return control when no replacement can be dispatched. Thanks @mradwankhalil. (#11907, fixes #9786)
+    - Background tasks let runtime fallback decide who recovers a session error before starting a replacement or finalizing the task. Exhausted and refused retries release recovery ownership, model-less retry errors can finish the task, and a slow decision never starts a competing replacement. (#9683, #11907)
+    - Runtime fallback keeps its place in the fallback chain when its own abort echoes back as a stop or idle event, and no longer mistakes its own retry for a manual model change. A failing fallback now moves on to the next model instead of going back to the model that just failed. (#11901, fixes #6751)
+    - Runtime fallback: a session timeout whose fallback dispatch is rejected now uses up the attempt, stops at max_fallback_attempts, and ends with an abort the caller sees instead of re-arming the timer forever. (#11898, fixes #6637)
+    - First-prompt refusal tests now await launch settlement when the bounded start report arrives first, preserving both untyped and non-credential refusal diagnostics without depending on subprocess startup speed (#11732). (#11852)
+    Changed
+    - Task children ask through the parent session instead of being refused: a child's permission prompt (and its other select, confirm, input and editor dialogs) is raised on the parent's UI, so Allow runs the child's call and Deny does not. A child the parent turn is waiting on asks on the connection that started that turn; a background child asks every attached client that may answer. Secret inputs and permanent grant selections are never forwarded. Children in their own process or on the task host open in the parent's approval mode and follow every later change of it, one change at a time and always ending on the latest; a child that could not follow is reported to the parent session. (#12839)
+    - omo remote open and the thread tools' create and fork on another device name the approval mode the new session runs in: the creating session's own mode, or for omo remote open the new --permission-preset flag, else this device's own setting; a setting that cannot be read is a usage error rather than the loosest mode. (#12839)
+    - The compiled engine no longer has the unused installEngineCaTrust startup routine. That routine set NODE_USE_SYSTEM_CA=1 but had no caller, and engine launches set up certificate trust in the launcher trust stage. A new test checks that an engine started without NODE_USE_SYSTEM_CA in its environment does not get it from the launcher. Validation of OMO_EXTRA_CA_CERTIFICATES is unchanged. (#12628, part of #10762)
+    - eac1bb56bc docs(changelog): 5.1.65 carries #12862 after the dev merge; consume its fragment
+    - 0de8bb77f7 Merge commit '790a6f227d0fe924548e7d25fa5e1e653ef056ac' into release/v5.1.65-source-state
+    - e95a9d3d5d Merge pull request #12839 from code-yeongyu/feat/6189-runner-permission-forwarding
+    - e9dc0a65ed test(thread): the remote surface factories carry the session's permission preset (#6189 review ask)
+    - 412f9562d9 Merge dev 9ac8bc957e into feat/6189-runner-permission-forwarding; regenerate bundles and service-auth
+    - 9ac8bc957e Merge pull request #12858 from code-yeongyu/fix/12852-remote-peer-provenance
+    - 1e3bbb1eae Merge pull request #12847 from code-yeongyu/fix/omowright-ts-entry-staging
+    - cce5edbd55 test(memory): pin the facts child's own approval mode and allow list at its launch site (#6189)
+    - f781a96482 Merge origin/dev (ca74736644) into feat/6189-runner-permission-forwarding
+    - 10db2183b2 Merge remote-tracking branch 'origin/dev' into fix/omowright-ts-entry-staging
+    - 3ed5d6bc87 Merge origin/dev (ca74736644) into fix/12852-remote-peer-provenance
+    - ca74736644 Merge pull request #12837 from code-yeongyu/fix/12833-cross-device-name-addressing
+    - 0be039421b docs(changes): #12839 fragment covers the facts child fix
+    - 0961e21ebf Merge origin/dev (adddd17004) into fix/12852-remote-peer-provenance
+    - 9a40a4dbc8 Merge remote-tracking branch 'origin/dev' into feat/6189-runner-permission-forwarding
+    - afa8683f7d Merge origin/dev (adddd17004) into fix/12833-cross-device-name-addressing
+    - adddd17004 Merge pull request #12761 from code-yeongyu/fix/child-designated-chain-fail-closed
+    - 7a2f988786 fix(browser): depend on omowright ^0.3.0 from npm
+    - e582acec77 Merge remote-tracking branch 'origin/dev' into fix/12852-remote-peer-provenance
+    - 984876eb12 Merge origin/dev (c0ef8c2b50) into fix/12833-cross-device-name-addressing
+    - b0b0de4e3f Merge remote-tracking branch 'origin/dev' into fix/child-designated-chain-fail-closed
+    - c0ef8c2b50 Merge pull request #12686 from code-yeongyu/perf/create-locate-in-open
+    - 580ad181fc fix(browser): pin omowright at ab7d268 (lazy bun:ffi)
+    - 388b168209 Merge origin/dev (f2e637aab5) into fix/12833-cross-device-name-addressing
+    - 8b3d696c90 chore(knip): drop the DEFAULT_SERVICE_API pre-existing row; cliServiceAccess now uses it (#12833)
+    - af68c67985 fix(shared-skills): resolve omowright layouts TS src, then JS src, then dist, in the stager and the loader
+    - 1cc6513dee docs(changelog): note the remote send provenance (#12858, part of #12852)
+    - 4128cab496 fix(thread): stamp a send to another device with the sender's gateway provenance and expand nothing (#12852)
+    - 356dcf9ada test(thread): a send to another device carries the sender's gateway provenance (RED, #12852)
+    - bac0bb0737 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - f2e637aab5 Merge pull request #12841 from code-yeongyu/fix/12835-eq-e24
+    - 4bfcf0f7cb Merge remote-tracking branch 'origin/dev' into fix/child-designated-chain-fail-closed
+    - 0b3bd99d68 fix(shared-skills): keep the omowright digest entry names OS-independent
+    - 1f36f59d56 docs(changes): name the fragment for its PR
+    - 13875581b2 docs(changes): #12839 fragment covers the review fold
+    - fe01b5ffac ci(eq): install the Codex plugin workspace before EQ so E24 resolves the pinned comment-checker (review HIGH)
+    - f7ea2d6086 fix(shared-skills): stage the omowright runtime from TypeScript sources too
+    - 996d41af81 Merge origin/dev (42c486c273) into fix/12833-cross-device-name-addressing
+    - 91e3790f9a fix(omo-native): loadThreadSdk's thread client importer defaults to the plugin sidecar, so its type is a function (#12833)
+    - 42c486c273 Merge pull request #12764 from code-yeongyu/test/o8-chain-hop-count
+    - cc19f39e62 fix(qa): give EQ E24 the pinned comment-checker instead of a live download
+    - a1dba4da20 docs(changes): fragment for #12839
+    - 8b167da371 Merge origin/dev (6d3ff3a566) into fix/12833-cross-device-name-addressing
+    - 6d3ff3a566 Merge pull request #12756 from code-yeongyu/fix/remote-closed-session-code
+    - 397427dfe7 docs(changes): #12837 cross-device name addressing and CLI alias claims
+    - 5ca0b159d3 chore(omo-native): regenerate the service-auth bundle for the omo remote missing-session fix
+    - 03136fcc34 fix(remote): omo remote names a missing session from the engine's unknown_session too
+    - 45623f55e1 Merge origin/dev (8af3fae188) into test/o8-chain-hop-count
+    - 691a31c809 Merge origin/dev (8af3fae188) into fix/remote-closed-session-code
+    - 77cd22bba5 test(remote-cli): forward endpointCommand options in the recorded wrapper (review LOW)
+    - 5e2c28bfe5 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - 8af3fae188 Merge pull request #12709 from code-yeongyu/feat/omo-remote-session-verbs
+    - 1954eabe87 Merge pull request #12814 from cynkai/fix/12594-memory-guard-combined-handler
+    - 3a3601cb97 Merge pull request #12813 from cynkai/fix/12619-bounded-start-report-wait
+    - b90f459b2d Merge pull request #12812 from cynkai/fix/12617-release-key-test-gaps
+    - 3d4861f3cc Merge branch 'fix/12594-memory-guard-combined-handler' of https://github.com/cynkai/oh-my-openagent into fix/12594-memory-guard-combined-handler
+    - 16f3e0d83c Merge branch 'fix/12619-bounded-start-report-wait' of https://github.com/cynkai/oh-my-openagent into fix/12619-bounded-start-report-wait
+    - 3c47d39cca Merge remote-tracking branch 'origin/dev' into gf-12814
+    - 8fa43b6ce4 Merge remote-tracking branch 'origin/dev' into gf-12813
+    - b4204c1304 Merge remote-tracking branch 'origin/dev' into gf-12812
+    - 0d890b9643 Merge pull request #12723 from cynkai/fix/12646-compiled-device-login-parse
+    - 1f3a768b4b docs(changes): fragment for #12812
+    - f78dd2a722 test(release): close the three release-key guard proof gaps from #12602 (#12617)
+    - 804aa4be89 Merge origin/dev into feat/omo-remote-session-verbs
+    - 829e0f1408 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - af86cd4cd7 Merge pull request #12645 from code-yeongyu/fix/12642-dream-archive-links
+    - 210c24515c Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - f158ace1fd Merge remote-tracking branch 'origin/dev' into gf-12723
+    - 79d6a05c8f Merge pull request #11852 from code-yeongyu/fix/11732-refusal-start-order
+    - 996cad9cac Merge remote-tracking branch 'origin/dev' into stwr/11852
+    - 92133b623b test(knip): list completion-links.ts as a knip-forced unchecked entry
+    - 2840ef4d92 Merge pull request #12790 from cynkai/fix/12762-fallback-timeout-edges
+    - 0f52aff897 Merge pull request #12787 from cynkai/fix/12765-memory-core-mock-leak
+    - 414aef8d25 Merge pull request #12663 from code-yeongyu/fix/browser-doctor-outdated-extension-12662
+    - 73aa2348b0 perf(memory): load the dream archive link repair lazily, out of omo.js
+    - ee435e6c9c Merge remote-tracking branch 'origin/dev' into gf-12790
+    - f5a10e8b25 Merge remote-tracking branch 'origin/dev' into gf-12787
+    - 1403a6d95b Merge remote-tracking branch 'origin/dev' into fix/browser-doctor-outdated-extension-12662
+    - bb403852d4 Merge remote-tracking branch 'origin/dev' into fix/child-designated-chain-fail-closed
+    - 48c4a23714 Merge commit '6b030a125b6458d6e5c06bf2a170a6e39c8cc388' into feat/omo-remote-session-verbs
+    - 680a3c1a71 Merge commit '6b030a125b6458d6e5c06bf2a170a6e39c8cc388' into fix/12642-dream-archive-links
+    - 9212a29d93 Merge remote-tracking branch 'origin/dev' into gf-12723
+    - 6b030a125b Merge pull request #12659 from code-yeongyu/fix/12656-device-service-not-published
+    - cdb300bb47 chore(omo-native): regenerate reflection-lock bundle for #12645
+    - 60dab56c27 Merge origin/dev (18b5e90b55) into feat/omo-remote-session-verbs
+    - 7f263c3b4b Merge commit '18b5e90b5521339c6f57c36ba6c392a71ef96696' into fix/12656-device-service-not-published
+    - 18b5e90b55 Merge pull request #12628 from code-yeongyu/feat/10762-delete-system-ca-flag
+    - dd0c14ef69 docs(changes): fragment for #12790
+    - def7bcfbe1 fix(runtime-fallback): close the three timeout-lifecycle edges left after #11907 (#12762)
+    - ff3acfa79e Merge remote-tracking branch 'origin/dev' into fix/child-designated-chain-fail-closed
+    - 9b0ba0f5af Merge commit 'bf63f65d919b92d176ccb485a089fda73ac24b96' into fix/12642-dream-archive-links
+    - 5198b9fc35 Merge remote-tracking branch 'origin/dev' into fix/browser-doctor-outdated-extension-12662
+    - dc06c7ce16 test(memory-core): capture process-start-time by name, not by namespace spread (#12765)
+    - 4518bb986a Merge commit 'bf63f65d919b92d176ccb485a089fda73ac24b96' into fix/12656-device-service-not-published
+    - 36a25889bf Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - ef84c49067 Merge remote-tracking branch 'origin/dev' into gf-12723
+    - bf63f65d91 Merge pull request #12783 from code-yeongyu/fix/memory-retention-lint-ratchet-nonnull
+    - 435a096d38 Merge remote-tracking branch 'origin/dev' into fix/12642-dream-archive-links
+    - d426510328 test(memory-core): put node:child_process back after the win32 console-suppression tests (#12765)
+    - 44cf6b241d fix(omo-native): a memory-runtime report that throws prints one WARN line instead of ending doctor (review MEDIUM)
+    - c1b4833656 docs(changes): note the compiled doctor parity fix folded in (#12785)
+    - 633072cbaa fix(omo-native): compiled doctor prints the memory-runtime section the npm doctor prints (#12785)
+    - 040c7a27e9 Merge remote-tracking branch 'origin/dev' into fix/child-designated-chain-fail-closed
+    - 63864f2de6 chore(service-auth): regenerate service-auth.generated.js after merging dev (Linux)
+    - 5608647e04 Merge remote-tracking branch 'origin/dev' into gf-12723
+    - d4b1e352cb docs(changes): name the fragment for its PR
+    - 33890f1dab Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - bfcadc6e9c docs(changes): fragment for the retention lint-ratchet fix
+    - a1f79d2bb4 fix(memory-core): drop the non-null assertions retention added (lint ratchet)
+    - 97bfc3c1cd Merge pull request #12538 from code-yeongyu/feat/memory-runtime-size-cap-10144
+    - 86d7e04b27 Merge commit 'c634e9ad1beaf1c2b7940ab4b9a12696750b6d38' into fix/browser-doctor-outdated-extension-12662
+    - c634e9ad1b Merge pull request #12532 from code-yeongyu/feat/memory-runtime-retention-10144
+    - 0bc7657dc2 Merge pull request #12517 from code-yeongyu/fix/reflection-stale-lock-reclaim-11976
+    - eb5e2a0fa6 Merge remote-tracking branch 'origin/dev' into fix/12642-dream-archive-links
+    - 0bdbfaff8e Merge remote-tracking branch 'origin/dev' into fix/browser-doctor-outdated-extension-12662
+    - ec5318a3f0 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - 9da57285ea Merge pull request #12770 from Yoonwoo-Ha/fix/runtime-prune-followup
+    - 96a44dfb63 Merge commit 'ede17843c62858f8c1e2953666ebe48c0e0c5135' into final/b-on-a-ae041e4e71
+    - 1ebe003438 Merge commit '3e28de80638f01716851889a728c72bd76c7394e' into feat/memory-runtime-retention-10144
+    - 38e4b8275c Merge commit 'b184b26de143dba516f467a0e1c19b89b9a89dff' into fix/reflection-stale-lock-reclaim-11976
+    - b184b26de1 Merge pull request #12735 from code-yeongyu/feat/relay-adopt-from-memory
+    - 62e44bc8bb Merge remote-tracking branch 'origin/dev' into HEAD
+    - 870c813f00 Merge remote-tracking branch 'origin/dev' into gf-12770
+    - 06ad21b0f9 Merge pull request #12772 from code-yeongyu/fix/12769-windows-provisioned-launcher
+    - ae99d1537a test(audit): allowlist the /bin/omo strings in compile-entry.test.ts
+    - 2177acbb9a Merge pull request #12760 from code-yeongyu/fix/telemetry-shared-not-before
+    - fa875e285d test(omo-native): make the hand-off failure test create the real endpoint file on every platform
+    - 6987cfe6d3 Merge pull request #11907 from code-yeongyu/fix/9786-compaction-aware-fallback
+    - 71c4d3dcda docs(changes): add the #12772 fragment for #12769
+    - d420313add docs(changes): add the #12770 changelog fragment
+    - c3a4f8b0cb fix(omo-native): prune old runtimes only through a tested launch gate (#12627 follow-up)
+    - 8aba5c9d1e fix(omo-native): list processes with ps -ww so the runtime path is never cut (#12627 follow-up)
+    - 963ee543d2 fix(omo-native): keep a live pruner's runtime tree and count a concurrent rename as removed (#12627 follow-up)
+    - c5ac565032 fix(omo-native): compare provisioned runtime paths in one canonical Windows spelling (#12769)
+    - 87a5c4bd18 Merge remote-tracking branch 'origin/dev' into fix/telemetry-shared-not-before
+    - 4aa8da2c3f fix(relay): read_failed is a failed read, not an unreadable endpoint
+    - 1949c10a09 fix(relay): bundle inputs current, cause-named not-running log, knip clean
+    - 5b4bc3aae2 fix(relay): a dead relayd never fails or blocks sign-in or sign-out
+    - f2f5c3a3c3 fix(relay): re-adopt once relayd starts, not only when it already runs
+    - 18fdd403c8 fix(relay): retry the memory re-adopt after a failed hand-over
+    - ce72dee19f chore(changes): fragment for #12735
+    - 41aef33fb8 feat(relay): account floor and relayd pin 0.1.3; no-holder clause (design D PR 4, omo)
+    - 9bc7283ff3 feat(relay): hand device keys to relayd from memory, no relay keychain reads (design D PR 4, omo)
+    - a815fdfbf3 Merge pull request #12752 from code-yeongyu/release/v5.1.64-source-state
+    - bdf7f9a566 Merge origin/dev into fix/9786-compaction-aware-fallback
+    - ca434a5ce5 Merge pull request #11901 from code-yeongyu/fix/6751-runtime-fallback-position-reset
+    - 48e9910d4f fix(memory-core): link repair leaves non-UTF-8 notes byte-identical
+    - e55d22372d test(thread): pin the hop count a remote thread_send carries and b's chain_count_limit refusal (O8, R8.c)
+    - 2b7824487e chore(knip): drop loadOmowright from omowright.mjs preExistingExports (now used by browser doctor)
+    - 0366a2822a Merge pull request #12627 from Yoonwoo-Ha/fix/compiled-update-launcher-path
+    - 65574175e0 docs(changes): fragment for #12761
+    - a57ab897eb fix(telemetry-core): share a per-install not-before after a 429 across processes (#12758)
+    - 19452c4bb6 test(telemetry-core): RED - a 429 must pause every process of the install (#12758)
+    - 2078486f57 Merge origin/dev into fix/9786-compaction-aware-fallback
+    - f26b47648e docs(changes): fragment for #12756 (#12755)
+    - 76525d1a9d Merge pull request #11898 from code-yeongyu/fix/runtime-fallback-timeout-attempt-count
+    - 20926b912f fix(thread): a remote command on a closed session answers unknown_session, as locally (#12755)
+    - 9f45fdfd32 test(thread): pin a closed session's remote refusal to the local engine's code (#12755)
+    - fc5b41288b Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 89163c6708 Merge commit 'bf20c4c87e22055e6d6cc4f87a0f34cf33244438' into final/b-on-a-ae041e4e71
+    - 23df4ee359 Merge remote-tracking branch 'origin/dev' into gf-12627
+    - e44409524d Merge commit '7382828deec9bf80f8bcc070fd5b515e57fa5e2c' into feat/memory-runtime-retention-10144
+    - 7cbd98da47 Merge commit 'f2f2264ab1c15c3c6fd4045f60b99f9ff64a02a8' into fix/reflection-stale-lock-reclaim-11976
+    - a8fb2c1e73 Merge remote-tracking branch 'origin/dev' into afl-rh6-11907
+    - 1b08718254 Merge remote-tracking branch 'origin/dev' into afl-rh6-11901
+    - 91b44141d2 Merge remote-tracking branch 'origin/dev' into afl-rh6-11898
+    - 9cc975ab0e chore(omo-native): regenerate service-auth.generated.js (Linux, bun 1.4.4)
+    - 92da618b15 Merge remote-tracking branch 'origin/dev' into gf-12723
+    - 997db1f285 fix(omo-native): keep RETAINED_PREVIOUS_RUNTIMES module-private (knip unused export)
+    - 9d391ef83d Merge remote-tracking branch 'origin/dev' into gf-12627
+    - 4492b40689 Merge remote-tracking branch 'origin/dev' into afl-rh6-11901
+    - 883af7ce44 Merge remote-tracking branch 'origin/dev' into afl-rh6-11898
+    - 5b9ff443b0 Merge remote-tracking branch 'origin/dev' into afl-rh6-11907
+    - 873fdb9efb Revert "test: join the sweep tests' detached removers before removing their fixture (#11806)"
+    - 88fa065f89 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - d6360a3c87 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-session-verbs
+    - 7363f92900 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 1f5a4fb81d Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - b21d2eb62d Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - 34ec0c596d Merge remote-tracking branch 'origin/dev' into feat/omo-remote-session-verbs
+    - bfebafb812 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - c3965b0fc2 test(omo-opencode): pin the closed device-login parse against the service-auth root program (#12646)
+    - 97f6dd17b3 Merge commit '629f2adf30faa482f580a5d04ce8c6a4932902f8' into fix/12656-device-service-not-published
+    - 833a8b263f Merge commit 'b296769fc4c0f7fc924f231bd3537869c0a26ad0' into final/b-on-a-ae041e4e71
+    - 282055c617 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-session-verbs
+    - 3295a4adc1 Merge commit '39bd049c11c687caa1baa031aa2d5624a78fe01c' into feat/memory-runtime-retention-10144
+    - c28fe23399 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - 39bd049c11 Merge commit '629f2adf30faa482f580a5d04ce8c6a4932902f8' into fix/reflection-stale-lock-reclaim-11976
+    - 853d3a8c94 Merge commit '2d978abad1619593feeb0def0213ff108a8dc100' into final/b-on-a-ae041e4e71
+    - 264fae2a03 Merge commit 'c37620f73f57917587aadc46a84a491fe52e49e8' into feat/memory-runtime-retention-10144
+    - 2ed006360e Merge commit 'e6557756eabec7903f1a26c2c9df587c5d4b1218' into fix/reflection-stale-lock-reclaim-11976
+    - 19e5107b0e Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - 6fe29e36b3 Merge remote-tracking branch 'origin/dev' into feat/omo-remote-session-verbs
+    - faeea326d8 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - 5ec2945166 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 18ce92a267 docs(changes): add #12723 fragment
+    - 3e06a60b00 fix(omo-native): classify the closed-accounts device login with commands.ts's own parse (#12646)
+    - 270e493ce6 fix(omo-native): re-check live runtimes after the prune rename (#12627)
+    - 6c8a8e18ca fix(omo-native): move the changelog entry into a fragment and test linked runtimes (#12627)
+    - c5cbc9f1c4 Merge remote-tracking branch 'origin/dev' into perf/create-locate-in-open
+    - 6173c9bdda test(native): omo remote send costs one round trip after #12679
+    - 97a373941d Merge origin/dev into fix/compiled-update-launcher-path
+    - 36d79da42e Merge origin/dev (51085f9078) into feat/omo-remote-session-verbs
+    - b9a68a4e6e Merge origin/dev (c5932ec466) into perf/create-locate-in-open
+    - 00079aa0c5 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 62e69d6128 perf(omo-native): a session verb addresses its session directly, never the account-wide listing
+    - c0fb156f04 Merge commit 'f5e77e4e6cc2e8b2d6e39459f1d53ce892c84041' into final/b-on-a-ae041e4e71
+    - acb06fe2e4 Merge commit '832a63e1a16bf7943f6d23919543816194367d26' into feat/memory-runtime-retention-10144
+    - 1fcb609d32 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - d460722635 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - f643cea311 Merge origin/dev (2b589cdbe4) into perf/create-locate-in-open (generated omo.js: took dev, regenerated)
+    - 9284d60c50 docs(changes): omo remote session verbs fragment (#12709)
+    - 636ae15329 feat(remote): omo remote opens, sends to, switches the model of, interrupts and closes sessions on other devices
+    - eb70dfa908 Merge commit '715dc1b3ee52b4275a41cead59825dfc675c0b24' into final/b-on-a-ae041e4e71
+    - bb71bcd469 Merge commit 'a3f4802f7980080223afc24fb8b2336bcfd305cb' into feat/memory-runtime-retention-10144
+    - c7edb7c6a4 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - 285bf885ec Merge the base (with dev) into perf/create-locate-in-open (generated bundles regenerated)
+    - 2591131c53 Merge feat/remote-thread-one-rtt (#12672 head 4edeb9e4ed: fragment renamed to 12672.md) into perf/create-locate-in-open
+    - ac209b71d7 changes: leave #12672's fragment unchanged (fragments are immutable outside a release)
+    - c2d69af4d5 changes: fragment for #12686
+    - 7e4327f915 perf(thread): a remote create asks for its located session on open_session, skipping session.locate
+    - b266bec3d8 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - 1728771f41 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 84ce928bb0 Merge remote-tracking branch 'origin/dev' into fix/12642-dream-archive-links
+    - 22d076fd95 fix(memory): recognise the gate's link repair by recomputing it, never by a trailer (#12645 review)
+    - aaff034b96 Merge commit 'dc809877188f365d4e7d00e49fe9e1c50aa616d6' into fix/12656-device-service-not-published
+    - 7acacf9363 Merge commit '13d5a72d9fb280561743ceb8319eb0934b571846' into final/b-on-a-ae041e4e71
+    - 3d5510c3fe Merge commit '6c605dc8c98cf10a41aeb858d6cd61ad780c2703' into feat/memory-runtime-retention-10144
+    - c9a9370877 fix(memory): reconcile once per session even when the commands sidecar fails to load
+    - 350e969f3f fix(browser): type runBrowserDoctor's options so browser stays optional
+    - f2681707ff Merge remote-tracking branch 'origin/dev' into fix/browser-doctor-outdated-extension-12662
+    - f24bb2b0fd fix(browser): name the up-to-date browser when a 0.4.0 one is also connected; hermetic doctor test
+    - 55705a28e5 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - dff7e97c82 test(device-service-core): a 404 on only one signed entry file stays download_failed
+    - 01eb01612c Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - f86b068b36 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - 4d21f5ddfe Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - d7b39f9a3a docs(changes): fragment for #12663
+    - 5143615a3a fix(browser): the doctor never calls BrowserSkill extension 0.4.0 ready
+    - 70be135881 fix(device-service-core): keep ENDED_COMMAND_WAIT_MS module-internal
+    - d327aa77d4 Merge origin/dev into fix/12656-device-service-not-published (generated bundles regenerated)
+    - ca9770b7ad fix(device-service): stay quiet at start while the pinned release is unpublished
+    - fb11d6c825 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - edd5104820 test(device-service): pin the not-published release state (RED)
+    - 911e62a2c7 Merge commit '964077e6bcb220462b294eaabaa7a54401017555' into final/b-on-a-ae041e4e71
+    - 7285a56065 Merge commit '351c1a16cefd9cda0714d6cb9427a483ab960dd1' into feat/memory-runtime-retention-10144
+    - 187467d779 perf(memory): load the stale reflection-lock reaper from the commands sidecar
+    - a348e5ee8f Merge commit 'c0c3bd93de6965f217d8de920b3684116091cec7' into final/b-on-a-ae041e4e71
+    - bd2cdfc48d Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 253bd05f76 Merge commit '3fc505e1feedc3e3b2086cf1ed5305c1b161010d' into feat/memory-runtime-retention-10144
+    - fda64bf137 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - 88a3312526 Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 0de0b5583a Merge remote-tracking branch 'origin/dev' into fix/12642-dream-archive-links
+    - 4209d8cb56 Merge remote-tracking branch 'origin/dev' into fix/12642-dream-archive-links
+    - c7678c03b1 fix(memory): repair links after the completion screen; archive links only for archived paths (#12645 review)
+    - ea1ba892a7 test(memory): prove the memorySettings route resolves per-identity runtime caps
+    - 3050207ecc Merge remote-tracking branch 'origin/dev' into feat/10762-delete-system-ca-flag
+    - 1874928647 fix(memory): keep the archive path constant module-private
+    - 49bc687b11 perf(memory): resolve the retention windows and cap from settings in the commands sidecar
+    - 3e61b686e9 fix(memory): repoint links to notes a dream run removes; never reuse an archived facts ledger path
+    - 01b5c6dbf7 Merge commit '81ed5934013aeb173fa87b190e357e0ad8bdc4c7' into feat/10762-delete-system-ca-flag
+    - 7984d7d50f test(omo-native): point leak-generation mutation row at the renamed owner test (#10762)
+    - 132c970174 Merge commit '5c4c4bff685c878f276da37b90f9fb186f115975' into final/b-on-a-ae041e4e71
+    - 06fe43fcae docs(changes): add #12628 fragment
+    - 5ffe7c7b0e refactor(omo-native): delete installEngineCaTrust and its NODE_USE_SYSTEM_CA flag (#10762)
+    - b0528a78e0 Merge remote-tracking branch 'origin/dev' into afl-rh6-11907
+    - 8b9e9a49d0 fix(omo-native): prune old binary runtimes on launch (#12626)
+    - 603256556e fix(omo-native): make omo update replace the installed launcher, not the runtime copy (#12626)
+    - 9c0acc8105 Merge remote-tracking branch 'origin/dev' into afl-rh6-11901
+    - 44b8811daa refactor(memory): drop the retention pass re-exports nothing imports any more
+    - c5191dce15 Merge remote-tracking branch 'origin/dev' into afl-rh6-11898
+    - 84b062e6ce Merge remote-tracking branch 'origin/dev' into stwr/11852
+    - 56ee028c95 perf(memory): read the retention resume point from the commands sidecar
+    - 299ea87745 Merge commit '6a4b3b0f69e6b7f0cf0978f30ca33af2ee1f8b1d' into final/b-on-a-ae041e4e71
+    - dbe699cd0a perf(memory): load the maintenance retention and host-sweep bodies from the commands sidecar
+    - e0ef8a6eea Merge commit 'f128e96394dc62dffaa816ecabcbda4eab45dd10' into feat/memory-runtime-retention-10144
+    - 32619753a0 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - 41f72beb0d Merge remote-tracking branch 'origin/dev' into stwr/11852
+    - 72b1780245 Merge remote-tracking branch 'origin/dev' into stwr/11852
+    - c2bb78df25 refactor(memory): retentionCursorPath is private to the stamp module now that the maintenance pass asks retentionResumePending instead (knip, #12538 review r5 L1, #10144)
+    - 6f92a5878f test(memory): an abort the journal lock reports for the cap's last candidate rejects the cap instead of keeping that journal as state-unreadable; coverage for the abort half of the r4 race fix, already right on the current code (#12538 review r5 L2, #10144)
+    - b092e54c92 fix(memory): a cap that cannot even measure runtime/ inside the pass budget no longer re-runs retention at every bind: the pass marks its kept resume point capStalled in runtime/retention.json, the maintenance pass stamps omo.retentionAt when the stores finished and only such a cap is outstanding, and retentionDue resumes a store cursor or a cap that made progress at the next bind while a stalled cap waits for the interval (#12538 review r5 L1, #10144)
+    - a84a002b2d test(memory): RED for the #12538 review r5 L1: an identity whose cap can never measure runtime/ inside the budget must get its retention stamp and not re-run retention at the next bind inside the interval, while a cap resume point left by a pass that made progress still resumes at the next bind (#10144)
+    - 0ad12f9685 fix(memory): the size cap keeps its resume point in its own field of runtime/retention.json, read only by the cap, so a saved cap resume point never makes the store walk skip a store and every pass runs retention while the cap still resumes its tier (an old cap-only cursor is read as the cap's), and a journal that turns unreadable before the cap's locked eviction is kept as state-unreadable instead of failing the cap pass (#12538 review r4, #10144)
+    - 00a637e078 test(memory): RED cases for the #12538 review r4 findings: a saved cap resume point must not stop the retention stores, the cap resumes its tier from its own resume point and a stalled cap pass is followed by one that completes, and a journal that turns unreadable before the cap's locked eviction is kept instead of failing the pass (#10144)
+    - 50300ca54d test(memory): fold #12538 onto #12532's review-7 fixes: the --fix cap case loads the task-config source like its siblings, and task-config-entry.ts carries two omo doctor hits (#10144)
+    - 0c1fa34438 fix(memory): one bad journal entry no longer fails the cap or either doctor (skipped or kept state-unreadable), the doctors' journal measures run under their measurement deadline and the unreflected bytes are measured only where the over-cap line prints them, the cap classifies journals only in their tier, and a resumed cap pass that walks no new item keeps its cursor (#12538 review r3, #10144)
+    - 36d2bb58ee test(memory): RED cases for the #12538 review r3 findings: one bad journal entry must not fail the cap or the doctors, the doctors' journal measures run under their deadline and skip the unreflected bytes under the cap, journals are classified only in their tier, a resumed cap pass that walks no new item keeps its cursor (#10144)
+    - 909ccadc31 chore(memory): knip and command-string audit green for #12538: re-export what the cap consumes from its module, drop exports and barrel lines nothing outside their file uses, drop the bundle's unused measureRuntimeSize, categorize the new doctor hits (#10144)
+    - 31693f26e2 fix(memory): the cap treats an unread health gate as closed (type of the budgeted gate reader) (#10144)
+    - 3481745931 fix(memory): count a journal kept as state-behind-transcript as unreflected bytes the doctors report (#10144)
+    - bb2fc1224e fix(memory): doctors claim nothing evictable only when it is true, host sweep and --fix run the size cap with the retention_days journal floor, a caller abort during measurement propagates, maintenance logs why eviction continues, omo doctor measures under a deadline (#10144)
+    - 8e392df418 test(memory): RED cases for the #12538 review findings: doctor evictable claim, host-sweep and --fix cap, caller abort during measurement, maintenance log reason, CLI measurement deadline (#10144)
+    - ddec54e35f docs(changes): fragment for #12538
+    - 8144f65e18 feat(memory): per-identity runtime size cap with oldest-first eviction (#10144)
+    - ee137c0149 test(memory): RED cases for the per-identity runtime size cap (#10144)
+    - 89be2be923 fix(memory): crash tombstone removal is admitted against the pass budget like any other removal (review-8 L1) (#12479)
+    - 8bd2b42cca test(memory): RED for review-8 L1: crash tombstone removal must be admitted against the pass budget (#12479)
+    - 4041148c78 chore(memory): knip and command-string audit green for the review-7 fixes: TASK_CONFIG_RUNTIME is used by omo doctor now, categorize the new doctor hits (#12479)
+    - c65b3809cf fix(memory): classification never stops a retention pass on the time budget, a stop never moves the resume cursor back and every pass makes progress; omo doctor --fix resolves the global memory settings through the session's config loader (#12479)
+    - 2f541e9c8a test(memory): RED cases for the review-7 findings: a classify stop that moves the resume cursor back or never progresses, a shallow --fix memory-settings read, and the A29 label (#12479)
+    - f95be40080 chore(memory): knip and command-string audit green for #12532: drop exports and barrel lines nothing outside their file uses, delete the dead kibitzer tombstone alias, categorize the new doctor hits, regenerate bundles (#12479)
+    - 646c4f66ca fix(memory): keep a journal whose transcript holds rows its state never counted; bound the classify loops and read the health gate only when discard_unreflected_journals is on (#12479)
+    - 088d1cd643 test(memory): RED cases for the review-6 findings: a state.json behind its transcript, unbounded classify loops and an unconditional health gate (#12479)
+    - f3e140524a fix(memory): host sweep reads each identity's global windows and skips bound identities; one unreadable journal no longer stops the pass; a resumed budget keeps its point (#12479)
+    - e36226b7a4 test(memory): RED cases for the review-5 findings: host-sweep windows, hosted identities, resumed budget cursor, one unreadable journal (#12479)
+    - d060d42c17 docs(changes): fragment for #12532
+    - ba382369d8 chore(omo-codex): regenerate the installer bundle for the memory.runtime schema (#12479)
+    - b0453d076c test(omo-native): type the --fix retention line predicate (#12479)
+    - f3f78e1eb1 feat(memory): retention for the per-identity runtime, with a resumable budget and the host-sweep step (#12479, Part of #10144)
+    - 600c298a0e test(memory): RED cases for runtime retention (#10144)
+    - 60258e9d71 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - 01aedb6918 fix(memory): removeTree treats darwin's ENOTEMPTY from a read-only directory as a permission failure (hosted macos-combined H2 red on #12517) (#11976)
+    - f291ec3f5a chore(memory): knip, harness-neutral guard and command-string audit green for #12517: declare the omo doctor bundle entry, drop exports only their own file uses, categorize the new doctor hits (#11976)
+    - c613a62aca fix(memory): the stale-lock reaper keeps a run still launching and a torn lock with no complete host; /doctor --fix never waits on a sibling's deadline (#11976)
+    - e1ce7ef777 test(memory): RED for the #12517 review: a launching run, a torn lock with no complete host, and /doctor --fix waiting on a sibling (#11976)
+    - 90d258a103 test(memory): the unknown-flag /doctor case uses a flag that is still unknown now that --fix exists (#11976)
+    - cc2cf87d8d docs(changes): fragment for #12517
+    - 97b24d62cf test(memory): C17 ages its torn lock and sibling run past the 60-minute torn-lock floor (#11976)
+    - 5434f2feea style(memory): trailing blank line
+    - 056629825f fix(memory): session sentinel writers hold the run finalize lock so a concurrent release cannot interleave (#11976)
+    - 533f3d1a1a fix(memory): release an already-settled run inside its finalize lock; a written sentinel is always released in the same call (#11976)
+    - 2f64dd0f00 Merge remote-tracking branch 'origin/dev' into fix/reflection-stale-lock-reclaim-11976
+    - d3f9795567 test(memory): positive controls for the other-host, live-launcher and live-run cases in one --fix run (#11976)
+    - ec05275ec0 test(memory): C04 asserts the quarantined run branch is gone; C14 asserts the decision, not the sentence (#11976)
+    - d212965079 feat(memory): omo doctor --fix walks every runtime identity from one host cursor and sweeps orphan worktrees (#11976)
+    - c8ab00ec16 fix(memory): per-turn reconcile never waits on a run deadline; release-settled takes the finalize lock (#11976)
+    - 5d82f32d77 fix(memory): one stranded-run writer, release an already-settled run, park-gated pending promotion (#11976, #11920)
+    - be037da4e3 fix(memory): move a torn active.lock aside only when it is old, its launcher is dead on this host and no young or live run dir exists (#11976)
+    - 1a805e3f29 fix(memory): the CLI settles under the finalize lock and terminal claim, never promotes pending, and releases an already-settled run (#11976)
+    - cd354029e9 fix(memory): keep reconciliation strict; only unparseable or stranded ledgers read a vanished pid as dead (#11920)
+    - d202ee48fe refactor(memory): shared run-id high water, removeTree and the allocator mark live in the reaper PR (#11976, #12479)
+    - 95c4bf8ada fix(memory): one stale reflection-lock reaper for session start, each turn and omo doctor --fix (#11976, #11920)
+    - c67084cfec test(memory): RED cases C01-C18 for the stale reflection-lock reaper (#11976, #11920)
+    - bcb5d08f23 fix(memory): quarantine an unparseable-ledger run whose recorded pid is gone without a start time (#11920)
+    - 3aa60e85b3 Merge remote-tracking branch 'origin/dev' into fix/11732-start-refusal
+    - 330d6a5a2f Merge remote-tracking branch 'origin/dev' into afl-11901-devmerge
+    - f8484962af Merge remote-tracking branch 'origin/dev' into afl-11898-devmerge
+    - 02fdce2af6 Merge remote-tracking branch 'origin/dev' into afl-11907-dev-merge
+    - c01e15729f Merge remote-tracking branch 'origin/dev' into fix/6751-runtime-fallback-position-reset
+    - d572574a63 Merge remote-tracking branch 'origin/dev' into fix/runtime-fallback-timeout-attempt-count
+    - 945bcacbd7 Merge remote-tracking branch 'origin/dev' into fix/11732-start-refusal
+    - f35289794b Merge remote-tracking branch 'origin/dev' into HEAD
+    - d60ce3dcab Merge remote-tracking branch 'origin/dev' into fix/6751-runtime-fallback-position-reset
+    - 484cf05cbf Merge remote-tracking branch 'origin/dev' into fix/runtime-fallback-timeout-attempt-count
+    - ae1f450a28 Merge remote-tracking branch 'origin/dev' into fix/11732-refusal-start-order
+    - 576ba976e5 chore(knip): drop the START_REPORT_WINDOW_MS pre-existing row; the start-failure test now imports it (#11732)
+    - a2ec6c375f Merge remote-tracking branch 'origin/dev' into fix/11732-start-refusal
+    - ecb9d2a0fe Merge dev with the #11732 refusal ordering fix
+    - e25420491f chore(changes): name the change fragment for #11907
+    - 01214a50b0 chore(omo-opencode): keep the compaction and recovery helpers module-private; drop the knip rows the fix now uses
+    - b2fb7349f5 Merge remote-tracking branch 'origin/dev' into t8/9787
+    - 1532ed3981 chore(changes): add the #11901 change fragment
+    - ad86081c49 Merge remote-tracking branch 'origin/dev' into fix/6751-runtime-fallback-position-reset
+    - 38b58b8407 chore(changes): add the #11898 change fragment
+    - 748d04fc6b Merge remote-tracking branch 'origin/dev' into fix/runtime-fallback-timeout-attempt-count
+    - 3633b6a23d chore(changelog): name refusal test fragment for PR 11852
+    - 510e83f759 test(fallback): remove duplicate createFallbackState import
+    - 33d2fe3654 Merge upstream dev and preserve PR #9787 changelog
+    - b7fe6d38ee Move #9787 changelog entry to Unreleased
+    - e0e5992244 Merge upstream dev into fix/compaction-aware-runtime-fallback
+    - a73f9aa178 Merge upstream dev into fix/compaction-aware-runtime-fallback
+    - 9976bb098e Merge upstream dev into fix/compaction-aware-runtime-fallback
+    - 01b86f4b58 Merge dev into fix/compaction-aware-runtime-fallback (mechanical changelog refresh)
+    - e7a8a56838 Merge remote-tracking branch 'upstream/dev' into fix/compaction-aware-runtime-fallback
+    - ad06400a5c Merge remote-tracking branch 'upstream/dev' into fix/compaction-aware-runtime-fallback
+    - f680078f08 Merge code-yeongyu/oh-my-openagent base into fix/compaction-aware-runtime-fallback
+    - b4dc9b30b8 Merge dev into PR #9787 and retain both changelog entries
+    - 24e8e9aae2 fix(runtime-fallback): settle a compaction-time error by its in-flight dispatch; prove the guards
+    - 9511934f88 Merge commit 'e263fdb805e553172020b3bb8d996fb40f39a1af' into merge-9683-into-9787
+    - 57dc158e7b fix(runtime-fallback): settle an error that lands during an in-flight retry by that retry's outcome
+    - 3e05eb7f24 Merge dev into PR #9787 and retain both changelog entries
+    - b356cb96eb Merge dev into PR #9683 and retain both changelog entries
+    - 0ee7027701 Merge dev into PR #9683 and retain both changelog entries
+    - 1521dd2479 Merge dev into PR #9787 and retain both changelog entries
+    - fd3097e451 Merge branch 'upd9683' into upd9787
+    - d9a877df6a docs(changelog): move the entry under Unreleased
+    - 513f26d88f Merge branch 'upd9683' into upd9787
+    - 986dccff1a Merge remote-tracking branch 'origin/dev' into upd9683
+    - 35457086f1 fix(runtime-fallback): a refused competing dispatch keeps the winner's state; late declined still ends the task
+    - 89d5737896 fix(runtime-fallback): isolate compaction retries and preserve substantive retry sources
+    - 83c1fdff7c fix(runtime-fallback): release refused recovery and make decision timeout non-terminal
+    - c637b5a935 fix(background-agent): let runtime-fallback own session.error recovery before the task is finalized
+    - f8847c5818 test(runtime-fallback): wait on the gate's own queue-drain signal
+    - 68d956b25a test(runtime-fallback): fix an unreachable wait in the stale-completion test
+    - d96664dde6 fix(runtime-fallback): stop the notify toast from blocking the terminal abort
+    - 14ef0c18f5 docs(evidence): record isolated provider-backed QA for #6637 fix
+    - 904e130255 test(runtime-fallback): prove stale completion is rejected without duplication
+    - 3ef280e368 fix(runtime-fallback): revalidate ownership before the terminal abort
+    - c9dd9025e2 fix(runtime-fallback): scope timeout rollback to the owning dispatch
+    - 2e6bace393 Merge branch 'dev' into fix/6751-runtime-fallback-position-reset
+    - 307ef8f6b8 Merge branch 'dev' into fix/runtime-fallback-timeout-attempt-count
+    - 543b186610 fix(runtime-fallback): bound the session timeout fallback loop
+    - ece4a39d15 fix(test): exclude .omo and .opencode from markdown link audit (Fixes markdown local path failures)
+    - 44c7600dc3 chore(merge): sync dev c6b1d190 for sharded CI
+    - eb32b1ac01 docs(evidence): sanitize maintainer-local paths
+    - da79f4e839 test(evidence): record 6751 fallback-position QA evidence
+    - 4ec91da598 fix(runtime-fallback): keep fallback position stable across our own abort echoes
+    Thank you to 2 community contributors:
+    - @Yoonwoo-Ha:
+      - fix(omo-native): keep a live pruner's runtime tree and count a concurrent rename as removed (#12627 follow-up)
+      - fix(omo-native): list processes with ps -ww so the runtime path is never cut (#12627 follow-up)
+      - fix(omo-native): prune old runtimes only through a tested launch gate (#12627 follow-up)
+      - docs(changes): add the #12770 changelog fragment
+    - @cynkai:
+      - test(memory-core): put node:child_process back after the win32 console-suppression tests (#12765)
+      - test(memory-core): capture process-start-time by name, not by namespace spread (#12765)
+      - fix(runtime-fallback): close the three timeout-lifecycle edges left after #11907 (#12762)
+      - docs(changes): fragment for #12790
+      - test(release): close the three release-key guard proof gaps from #12602 (#12617)
+      - docs(changes): fragment for #12812
+      - Merge branch 'fix/12619-bounded-start-report-wait' of https://github.com/cynkai/oh-my-openagent into fix/12619-bounded-start-report-wait
+      - Merge branch 'fix/12594-memory-guard-combined-handler' of https://github.com/cynkai/oh-my-openagent into fix/12594-memory-guard-combined-handler
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.65
+ReleaseTime: 2026-11-09T00:19:32.0000000Z

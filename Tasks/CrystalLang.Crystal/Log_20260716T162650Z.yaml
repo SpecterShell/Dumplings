@@ -1,0 +1,188 @@
+Version: 1.21.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.21.0/crystal-1.21.0-windows-x86_64-msvc-unsupported.zip
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.21.0/crystal-1.21.0-windows-x86_64-msvc-unsupported.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Breaking changes
+    stdlib
+    - (runtime) Release: Execution Contexts (#17100, #17104, thanks @ysbaddaden)
+    - (text) Disable automatic fallback to legacy PCRE (#16924, thanks @straight-shoota)
+    Features
+    lang
+    - Add %W percent string array literals with interpolation (#16919, thanks @straight-shoota)
+    - (macros) Add TypeNode#all_methods that includes the type's ancestor's methods (#16902, thanks @Blacksmoke16)
+    stdlib
+    - (cli) Align long-only options in OptionParser help (#16914, thanks @kojix2)
+    - (collection) Make Channel(T) an Iterator(T) (#16916, thanks @jgaskins)
+    - (crypto) Add support for OpenSSL 4.0 (#16839, thanks @straight-shoota)
+    - (crypto) Support OpenSSL 4.x DLLs on Windows MSVC (#17116, thanks @HertzDevil)
+    - (networking) [experimental] Add Socket#sendfile (and Crystal::EventLoop::Socket#sendfile) (#16665, #17133, thanks @ysbaddaden, @straight-shoota)
+    - (networking) Add HTTP::WebSocket#receive as a synchronous call (#16689, thanks @jgaskins)
+    - (runtime) Add Crystal::EventLoop::FileDescriptor#pread (#17068, thanks @ysbaddaden)
+    - (runtime) Add without_main flag (#17074, thanks @kojix2)
+    - (runtime) OpenBSD: use kqueue event loop by default (#17123, thanks @ysbaddaden)
+    - (serialization) Support nested root properties in JSON::Field (#17016, thanks @tcoatswo)
+    - (serialization) Add URI::Params::Field(ignore:), ignore_serialize, ignore_deserialize (#17029, thanks @trypsynth)
+    - (specs) Allow chaining #should, #should_not expectations (#17020, thanks @straight-shoota)
+    - (system) Expose Path#kind (#16917, thanks @Sija)
+    - (system) Add splat overloads for Process.capture, .run and .new (#16975, thanks @straight-shoota)
+    - (system) Add Process::Status.[] constructor (#17003, thanks @straight-shoota)
+    - (text) Add String#present? (#16930, thanks @Sija)
+    - (text) Add UUID.v6 and .v8 generators (#17010, thanks @trypsynth)
+    compiler
+    - (cli) Classify compiler exit reasons (#17028, thanks @straight-shoota)
+    - (debugger) Improve proc debug metadata (#16830, thanks @skuznetsov)
+    - (debugger) Emit debug metadata for constants and class vars (#16831, thanks @skuznetsov)
+    - (debugger) Improve LLDB collection formatters (#16832, thanks @skuznetsov)
+    - (parser) Add ASTNode#inspect (#16699, thanks @straight-shoota)
+    - (parser) Parse MacroVar with empty expressions: %var{} (#16772, thanks @straight-shoota)
+    - (semantic) Split branches on when Bar, Baz (#17072, thanks @straight-shoota)
+    tools
+    - (docs-generator) Improve wording in warning about doc generator without LibXML2 (#16926, thanks @kojix2)
+    Bugfixes
+    stdlib
+    - (cli) Fix summary wrapping condition in OptionParser (#16915, thanks @kojix2)
+    - (cli) Avoid Process.exec on Windows and explicitly spawn subprocess (#17049, thanks @straight-shoota)
+    - (collection) Fix Iterator#compact_map with EmptyIterator (#16928, thanks @straight-shoota)
+    - (collection) Fix Iterator#compact_map with non-nilable compactor proc (#16927, thanks @straight-shoota)
+    - (concurrency) Fix swapped atomic orderings in Sync::MU fast paths (#17063, thanks @stevegeek)
+    - (llvm) Fix use line 0 for unknown debug location (#17013, thanks @straight-shoota)
+    - (networking) Fix HTTP::Request.form_params? to recognize Content-Type and charset (#16934, #16971, thanks @swsch, @straight-shoota)
+    - (networking) Fix HTTP::Client to retry for connection recovery only (#16981, thanks @straight-shoota)
+    - (networking) Disable transport read-ahead for Kernel TLS sockets (#17053, thanks @jage)
+    - (runtime) Fiber::ExecutionContext::Monitor compat with old Crystal releases (#17007, thanks @ysbaddaden)
+    - (runtime) EventLoop::IoUring#open musn't set O_NONBLOCK when blocking (#17035, thanks @ysbaddaden)
+    - (runtime) underperforming unlock conditions in Sync::MU (#17070, thanks @ysbaddaden)
+    - (runtime) fdlock#try_close? must release ref after yielding to the block (#17089, thanks @ysbaddaden)
+    - (runtime) Fiber::ExecutionContext.current? (#17092, thanks @ysbaddaden)
+    - (runtime) Refactor Win32 iocp evloop (#17101, thanks @ysbaddaden)
+    - (serialization) memory leak in XML::Node#each_namespace (#17038, thanks @ysbaddaden)
+    - (system) skip Windows registry MIME entries with an invalid Content Type (#17106, thanks @SAY-5)
+    - (text) Fix IO::Encoder#write when operating on long strings (#16797, thanks @jgaskins)
+    compiler
+    - (cli) Remedy short-flag conflict for crystal spec -p (#17062, thanks @straight-shoota)
+    - (codegen) Fix codegen treating distinct lib type aliases as the same type (#16961, thanks @stakach)
+    - (interpreter) Add interpreter upcast_distinct for Pointer to Pointer (#16962, thanks @stakach)
+    - (interpreter:repl) Fix auto-indentation in the REPL when typing classes. (#16910, thanks @I3oris)
+    - (interpreter:repl) Fix interpreter multidispatch cache collision (#16958, thanks @stakach)
+    - (parser) Fix lexing MacroVar syntax in literal (#16779, thanks @straight-shoota)
+    - (parser) Fix parsing macro var without exps followed by macro expression (#16879, thanks @straight-shoota)
+    - (parser) Fix parse parenthesized expression in block arg assignment (#16894, thanks @straight-shoota)
+    - (parser) Do not merge nested Expression and ExceptionHandler (#16852, thanks @straight-shoota)
+    - (parser) Fix parser silently ignoring &(...), &[...], &{...} in assignment (#16960, thanks @stakach)
+    - (parser) Fix parser allow / and // immediately after self, nil, true, false (#16942, thanks @stakach)
+    - (parser) Fix short block setter call end location (#17039, thanks @Sija)
+    - (semantic) Fix freeze type of variable declared with out (#16870, thanks @straight-shoota)
+    - (semantic) Fix lookup_matches_in_type to reject partial matches (#16867, thanks @straight-shoota)
+    - (semantic) Fix location of double splat named tuple typenode entry locations (#16889, thanks @Blacksmoke16)
+    - (semantic) Fix sizeof, offsetof as generic type argument in inferred ivar type (#16811, thanks @kojix2)
+    - (semantic) Fix macro argument errors for path receiver calls (#16923, thanks @kojix2)
+    - (semantic) Detect uninitialized ancestor ivars through macro_def initializers (#16959, thanks @stakach)
+    - (semantic) Preserve nil_if_read? across while cond filters (#16963, thanks @stakach)
+    - (semantic) Keep wider subclass observer when call owner narrows (#16947) (#16990, thanks @stakach)
+    - (semantic) Symmetric common_descendent for two generic class types (#10831) (#16999, thanks @stakach)
+    tools
+    - (formatter) Fix format empty then with trailing comment (#16878, thanks @straight-shoota)
+    - (formatter) Fix formatting whitespace in ternary if with trailing comments (#16880, thanks @straight-shoota)
+    - (formatter) Fix formatter on empty string literal continuation (#16817, thanks @straight-shoota)
+    - (formatter) Fix format annotations of splat parameter (#16987, thanks @straight-shoota)
+    - (formatter) Fix formatter strip empty lines in heredoc (#17034, thanks @straight-shoota)
+    Chores
+    stdlib
+    - (cli) [deprecation] Deprecate Colorize.on_tty_only! (#16859, thanks @straight-shoota)
+    - (concurrency) [deprecation] Deprecate spawn(same_thread:) (#17097, thanks @ysbaddaden)
+    - (files) [deprecation] Rename parameter to writable in IO::Memory.new (#16858, #16883, thanks @straight-shoota)
+    - (system) [deprecation] Hide platform-specific Process::Status constructor (#16997, thanks @straight-shoota)
+    Performance
+    stdlib
+    - (collection) Preallocate correct size for hash in Hash.zip (#17054, thanks @carlhoerberg)
+    Refactor
+    stdlib
+    - (cli) Split error helper for compiler CLI into independent methods (#16984, thanks @straight-shoota)
+    - (cli) Refactor compiler code to raise CompilerError instead of abort (#16995, thanks @straight-shoota)
+    - (concurrency) simplify read console (windows) (#17098, thanks @ysbaddaden)
+    - (concurrency) Process#wait on Windows (#17099, thanks @ysbaddaden)
+    - (networking) Refactor bubbling exceptions from user code in HTTP::Client#exec(&) (#16969, thanks @straight-shoota)
+    - (runtime) Internalize IO::Evented into Crystal::EventLoop::Wasi (#17030, thanks @ysbaddaden)
+    - (runtime) Fix: thread safety of the libevent event loop (#17031, thanks @ysbaddaden)
+    - (runtime) Drop unused IO::Evented and Crystal::ThreadLocalValue (#17032, thanks @ysbaddaden)
+    - (runtime) Consolidate #overlapped_connect and #overlapped_accept into EventLoop::IOCP (#17090, thanks @ysbaddaden)
+    - (runtime) OpenBSD now supports EVFILT_USER (#17121, thanks @ysbaddaden)
+    - (system) Refactor Dir::Globber to a struct with instance methods (#16899, thanks @straight-shoota)
+    - (system) Refactor internal Process constructor to receive Crystal::System::Process (#16933, thanks @straight-shoota)
+    - (system) dont parse but mmap ELF, Mach-O, PE files and some DWARF sections (#16939, #17134, thanks @ysbaddaden)
+    compiler
+    - Replace backticks with Process.capture (#17012, #17122, thanks @straight-shoota, @ysbaddaden)
+    - (codegen) Set optsize and minsize fun attributes for the -Os and -Oz optimization modes (#16983, thanks @ysbaddaden)
+    - (parser) Parse parens in type grammar into Union#parens (#16744, #16908, thanks @straight-shoota)
+    - (parser) Refactor whitespace branch in Lexer#next_macro_token [follow-up #16771] (#16776, thanks @straight-shoota)
+    - (parser) Refactor formatter, remove internal delimited_pair(advance) (#17023, thanks @straight-shoota)
+    tools
+    - (formatter) [breaking] Standardize parsing of symbol and string array literals (#16748, thanks @straight-shoota)
+    - (formatter) Drop format_binary parameter alternative (#16912, thanks @straight-shoota)
+    other
+    - Fix violations reported by ameba 1.7 (#17021, thanks @straight-shoota)
+    Documentation
+    stdlib
+    - (cli) Add missing_option to OptionParser example (#17112, thanks @LaskaIDK)
+    - (macros) Improve docs for ::delegate (#16854, thanks @straight-shoota)
+    - (text) Document null-termination on String#to_unsafe (#16869, thanks @mvanhorn)
+    - (text) Document String is not inheritable (#17000, thanks @LaskaIDK)
+    other
+    - Fix typo writable in documentation (#16848, thanks @straight-shoota)
+    - Format asciidoc (#16992, thanks @straight-shoota)
+    - rumdl: Fix MD077: Continuation line over-indented (#17085, thanks @straight-shoota)
+    Specs
+    stdlib
+    - (cli) Refactor run_git spec helper to use Process.capture_result? (#17079, thanks @straight-shoota)
+    - (collection) Add specs for Iterator.empty (#17014, thanks @straight-shoota)
+    - (concurrency) Fix: Crystal 1.0.0 is confused by file private types (#17067, thanks @ysbaddaden)
+    - (networking) Extract spec helpers close_connection and client_for for HTTP client specs (#16968, thanks @straight-shoota)
+    - (text) Add specs for range accessor with open ended exclusive range (#16849, thanks @straight-shoota)
+    compiler
+    - (cli) Add compiler-cli test suite (#17033, thanks @straight-shoota)
+    - (debugger) Fix lldb-check expectations in debug tests for compatibility with modern LLDB (#16860, thanks @straight-shoota)
+    other
+    - Remove unnecessary not_nil! in spec suite (#16865, thanks @straight-shoota)
+    - Replace not_nil! with should_not(be_nil) in spec suite (#16906, thanks @straight-shoota)
+    Infrastructure
+    - Changelog for 1.21.0 (#17095, thanks @straight-shoota)
+    - Update previous Crystal release 1.20.0 (#16844, thanks @ysbaddaden)
+    - Update previous Crystal release 1.20.1 (#16901, thanks @straight-shoota)
+    - Merge release/1.19@1.19.2 into master (#16905, thanks @straight-shoota)
+    - Merge release/1.20@1.20.1 into master (#16900, thanks @straight-shoota)
+    - Update devenv.lock (#16819, #16935, #17006, #17075, #17084, thanks @github-actions, @crysbot)
+    - Update changelog script (#16946, thanks @straight-shoota)
+    - Extract CRYSTAL_BOOTSTRAP_VERSION in bin/ci (#16966, thanks @straight-shoota)
+    - Update previous Crystal release 1.20.2 (#16954, thanks @straight-shoota)
+    - Makefile: Split install target into subcomponents (#16980, thanks @straight-shoota)
+    - Update release-update script (#16977, thanks @straight-shoota)
+    - Makefile: Build manpages for install target (#16991, thanks @straight-shoota)
+    - Apply shfmt (#17015, thanks @straight-shoota)
+    - Apply mbake formatter for Makefile (#17024, thanks @straight-shoota)
+    - infra: devenv input for git-hooks follows nixpkgs (#17064, thanks @straight-shoota)
+    - Replace markdownlint with rumdl (#17069, thanks @straight-shoota)
+    - Replace .markdownlint.yaml with rumdl.toml (#17078, thanks @straight-shoota)
+    - (ci) Fix -Devloop=io_uring flag in Linux CI (#16843, thanks @straight-shoota)
+    - (ci) Use PAT from GHA environments for backport job (#16864, thanks @straight-shoota)
+    - (ci) Use AWS credentials from GHA environments for deploy_api_docs job (#16863, thanks @straight-shoota)
+    - (ci) Update GH Actions (#16836, #16944, #17011, #17042, [#17117], thanks @renovate)
+    - (ci) Use Crysbot token in update-devenv workflow to trigger CI (#16938, thanks @straight-shoota)
+    - (ci) Fix tags for nightly docker images (#16973, thanks @straight-shoota)
+    - (ci) Drop separate aarch64 workflow (#16965, thanks @straight-shoota)
+    - (ci) Update crate-ci/typos action to v1.46.2 (#16986, thanks @renovate)
+    - (ci) Update macos-15 runners to macos-26 (#17022, thanks @straight-shoota)
+    - (ci) Upgrade library dependencies for Windows CI (#17025, thanks @straight-shoota)
+    - (ci) Upgrade windows runners to VS 2026 (#17043, thanks @straight-shoota)
+    - (ci) Upgrade nixpkgs 26.05 in Lint workflow (#17066, thanks @straight-shoota)
+    - (ci) Update previous Crystal release 1.20.3 (#17114, thanks @ysbaddaden)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/crystal-lang/crystal/releases/tag/1.21.0
+ReleaseTime: 2026-07-16T15:49:00.0000000Z

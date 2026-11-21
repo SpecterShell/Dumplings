@@ -1,0 +1,60 @@
+Version: 2.0.23-next
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anywhere-labs/dsh-desktop/releases/download/v2.0.23-next/DSH-NEXT-2.0.23-next-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This Next release upgrades upstream to DeepSeek Harness v0.2.2-rc.3, introduces the new Porcelain whale-tail app and tray icons, adds the experimental DeepSeek chat import plugin, multi-level AgentTeam collaboration, and default DeepSeek Search API integration, adds a configurable Host startup limit with slow-start plugin notices and renderer drawing diagnostics, upgrades Windows in-app updates to atomic directory replacement, and fixes macOS drag regions over scrolled content, Linux AppImage sandboxing, and Windows ACL propagation.
+    DSH NEXT is a community-maintained open-source project, not an official DeepSeek product.
+    Upstream version: DeepSeek Harness v0.2.2-rc.3.
+    New and improved
+    - New Porcelain whale-tail icons: Updated the app and tray icons to the Porcelain whale-tail design with support for macOS Default, Dark, and Tinted appearances; adopted an initial dark-mode window background on Windows to reduce startup white flashes.
+    - Upstream 0.2.2-rc.2 / rc.3 highlights: Added the experimental DeepSeek chat import plugin to bring past DeepSeek App or web conversations into a workspace; added branch/commit diff and GitHub review support in Git Worktrees, named multi-level subagents with per-session AgentTeam collaboration, default DeepSeek Search API with separate Search/Fetch billing choices, sidebar file search, automatic loading of earlier chat history on scroll, and native Office tools.
+    - Host startup limit and diagnostics: Added configurable Host startup timeouts (60–600 s or unlimited) in Desktop Settings and Quick Recovery with a 1-minute system notification naming plugins still loading; diagnostics exports and failure reports now sample renderer animations, frame rate, and long tasks, with scrollable long text and refined error summaries in the recovery assistant.
+    - Version isolation and bundled components: Prioritized the app's bundled core packages when resolving Profiles to prevent stale dependencies from breaking startup; automatically backed up and migrated retired legacy worktree and team bundles before launch; restored the optional macOS Computer Use package inside the bundle and updated dshmarket to 1.73.19.
+    Fixes
+    - Windows updater reliability and sandbox permissions: Upgraded Windows in-app updates to extract into a staging folder and swap installation directories atomically with lock retries and rollback so interrupted updates do not leave a broken installation; backfilled missed Windows ACL integrity labels inside workspace-write folders.
+    - Linux sandboxing and skill menu: Kept the Linux AppImage runner accessible inside the workspace-write sandbox so confined tools remain usable; kept skills listed in the / menu even when a session's recorded folder no longer exists.
+    - macOS window dragging and Host stability: Fixed scrolled conversation, sidebar, and plugin content blocking window dragging on top chrome bars on macOS; installed the bundled HTTP dispatcher for direct outbound connections to prevent premature socket closes from terminating an idle Plugin Host.
+    Usage notes
+    - Upcoming split macOS installers: Starting in upcoming releases, macOS builds will ship as separate Apple Silicon (ARM64) and Intel (x64) packages instead of a Universal DMG to reduce download size. In-app updates will match your Mac's architecture automatically; when downloading manually, choose the package for your chip.
+    - Quit the previous version and back up ~/.dsh (or use Back up in Settings → Desktop settings) before installing. Verify your usual plugins and workflows afterward.
+    - Before managing plugins for the desktop Profile from the bundled terminal, launch Desktop to initialize that Profile.
+    - When upgrading from 2.0.17-next or earlier, download and install manually; in-app updates in those versions may not complete the download.
+    - The Office skills install the bundled runtime under ~/.dsh/dsh-runtimes/dsh-next-primary-runtime on first use, requiring additional disk space.
+    - Defaults to the shared ~/.dsh home. Profiles do not isolate sessions, accounts, or credentials within that home.
+    - Change the data directory in Settings → Desktop settings or the recovery assistant, or set DSH_DESKTOP_NEXT_HOME to an absolute path to isolate DSH data (an in-app choice takes precedence over the environment variable); this does not isolate AA’s default shared sign-in and device-binding state.
+    Full changelog · Project website
+    DSH NEXT replaces the former Stable edition channel.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次 Next 更新将上游升级至 DeepSeek Harness v0.2.2-rc.3，换用全新瓷青“鲸尾”应用与托盘图标，带来实验性「DeepSeek 会话导入」、多层级 AgentTeam 协作与 DeepSeek Search API 默认搜索，新增 Host 启动超时配置、慢启动插件提示与渲染性能采样，并将 Windows 应用内更新升级为原子目录替换，同时修复 macOS 滚动区窗口拖动、Linux AppImage 沙箱与 Windows 权限传播等问题。
+    DSH NEXT 是社区维护的开源项目，并非 DeepSeek 官方产品。
+    上游版本： DeepSeek Harness v0.2.2-rc.3。
+    新增与改进
+    - 全新瓷青“鲸尾”图标：应用主图标与系统托盘图标升级为瓷青“鲸尾”设计，适配 macOS 默认、深色与色调外观；优化 Windows 暗色模式下的窗口初始背景，减少启动白闪。
+    - 上游 0.2.2-rc.2 / rc.3 新特性：新增实验性「DeepSeek 会话导入」插件，支持将 DeepSeek App 或网页版历史会话导入工作区继续对话；支持 Git Worktree 按分支／提交审阅改动与 GitHub 评审、多层级具名子代理及按会话开启的 AgentTeam 协作；网页搜索默认改用 DeepSeek Search API 并支持分别选择搜索与抓取计费方式；支持侧栏文件搜索、向上滚动自动加载历史消息及 Office 原生工具。
+    - Host 启动超时与诊断增强：桌面设置与恢复助手支持设置 Host 启动超时时间（60 至 600 秒或无限制），超时 1 分钟后通过系统通知列出仍在加载的插件；诊断导出与故障报告新增渲染进程动画、帧率与长任务采样，并优化恢复助手的长文本滚动与日志展示。
+    - 版本隔离与内置组件调整：优先使用安装包随附的核心组件解析版本，防止旧 Profile 中的残留依赖引发启动报错；启动前自动备份并清理退役的旧版团队协作与工作树插件配置；可选 macOS Computer Use 组件恢复随安装包提供，内置 dshmarket 更新至 1.73.19。
+    修复
+    - Windows 更新可靠性与沙箱权限：将 Windows 应用内更新改为临时目录解压校验后原子替换（支持文件占用重试与失败回滚），防止安装失败损坏现有应用；修复受限沙箱（workspace-write）对部分子目录权限传播遗漏导致无法写入的问题。
+    - Linux 沙箱与会话菜单：修复 Linux AppImage 在受限沙箱下无法调用自身运行器导致沙箱工具不可用的问题；修复会话原工作目录不存在时 / 菜单丢失技能列表的问题。
+    - macOS 窗口拖动与 Host 稳定性：修复 macOS 下聊天记录、侧栏或插件页滚动后顶部区域无法拖动窗口的问题；修复无代理环境下直连网络因底层连接提前关闭导致 Plugin Host 异常退出的问题。
+    使用提示
+    - macOS 后续分包预告：后续版本起 macOS 将改为分别提供 Apple Silicon（ARM64）与 Intel（x64）独立安装包，不再提供双架构通用包以减小体积；应用内更新将自动匹配本机芯片架构，手动下载时请注意选择对应版本。
+    - 请先退出旧版应用并备份 ~/.dsh（或在“设置 → 桌面设置”中使用“备份”），安装后验证常用插件和工作流程。
+    - 如需通过应用内终端管理 desktop Profile 的插件，请先启动 Desktop 完成该 Profile 的初始化。
+    - 从 2.0.17-next 或更早版本升级时，建议手动下载安装；旧版应用内更新可能无法完成下载。
+    - Office 文档技能首次使用时将随包运行时安装到 ~/.dsh/dsh-runtimes/dsh-next-primary-runtime，需要额外磁盘空间。
+    - 默认与旧稳定版共用 ~/.dsh；Profile 不隔离同一目录中的会话、账号和凭据。
+    - 可在“设置 → 桌面设置”或恢复助手中切换数据目录，也可通过绝对路径 DSH_DESKTOP_NEXT_HOME 隔离 DSH 数据（应用内选择优先于环境变量），但不会因此隔离 AA 的默认共享登录与设备绑定状态。
+    完整变更记录 · 项目网站
+    DSH NEXT 已取代原稳定版通道。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.23-next
+ReleaseTime: 2026-11-13T20:33:21.0000000Z

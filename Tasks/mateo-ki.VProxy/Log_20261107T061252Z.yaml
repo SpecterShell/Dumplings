@@ -1,0 +1,31 @@
+Version: 1.16.5
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.5/vpn-parser-1.16.5-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.5 发布说明 / Release Notes
+    🎉 VProxy v1.16.5 正式发布！本版本重点提升了故障可诊断性（完整错误链透传）、修复了应用内更新的重启竞态，并适配升级内置 Shoes v0.3.5 内核 (PR #11)：
+    🔍 诊断体验：GUI 错误提示完整错误链透传
+    - anyhow 错误链全量透出：
+      - 代理启停、配置读写保存、节点切换等失败时，状态栏不再只显示顶层 context（例如干巴巴的“Mihomo Rhai 覆写失败”），而是透传完整错误链直至内核原始报错，一处报错即可定位根因；
+      - 启动/停止/热切换失败详情同步落档 startup.log，崩溃与失败留档可回溯。
+    📝 配置覆写：Rhai 脚本缺 return 精确提示
+    - unit 返回前置拦截：
+      - Rhai 覆写脚本忘写 return config; 时，不再报晦涩的执行错误，而是前置拦截并精确提示“fn main(config) 必须以 `return config;` 结尾（或改用直接操作 config 变量的扁平语句写法）”；
+      - Mihomo/YAML 覆写失败的错误提示附带修复入口指引（「代理 → 策略组 → 配置」修复或清空脚本）。
+    🔄 应用内更新：安装前体面停止内核
+    - 修复更新重启竞态：
+      - 触发应用内更新时，先体面停止代理内核再交棒安装器；此前安装器强杀进程会使内核被 Job Object 连坐终止、状态残留，导致更新重启后代理连续秒败；
+      - 更新前的停止失败不再阻断更新流程，失败详情落档 startup.log。
+    👟 Shoes 内核升级至 v0.3.5 (PR #11)
+    - client 策略组字段破坏性变更适配：
+      - Shoes v0.3.5 将 client 策略组的 strategy 字段更名为 type 且无兼容别名，编译器已同步适配，并用真实内核双向 dry-run 实证通过；
+      - 内置锁定版本 SHOES_TAG 升级至 v0.3.5，三平台离线兜底摘要与体积同步更新。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.5
+ReleaseTime: 2026-11-07T05:55:09.0000000Z

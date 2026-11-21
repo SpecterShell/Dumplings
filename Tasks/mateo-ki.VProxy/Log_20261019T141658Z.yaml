@@ -1,0 +1,25 @@
+Version: 1.8.8
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.8.8/vpn-parser-1.8.8-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.8.8 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.8.8！本次更新重点修复了 Windows 注册表底层 Connections 二进制块死 PAC 脚本自动净化、测试用例与后台任务对宿主机活跃系统代理的保护隔离，进一步提升系统代理长时间挂载的绝对稳定性！
+
+    🌟 新特性与核心更新
+    🛡️ 1. Windows WinINet 底层二进制配置（Connections）深度净化
+    - 净化 DefaultConnectionSettings 与 SavedLegacySettings 二进制块：
+      - Windows 系统代理不仅存放在常规键值中，还会序列化一份二进制数据存放在 Internet Settings\Connections 下。此前外部工具（如 v2rayN）遗留的 PAC 脚本地址（127.0.0.1:10811/pac）仍固化在二进制块中，导致 Windows 或其他程序重新读取连接设置时因尝试加载死 PAC 脚本失败而自动触发操作系统底层回滚将 ProxyEnable 关停。
+      - 本次更新在启用/恢复系统代理时，底层直接将 Connections 二进制块中的 PAC URL 长度置零并同步修正状态标志，彻底阻断了 WinINet 尝试回连 10811 端口的路径。
+
+    🔒 2. 开发与运行期宿主机系统代理现场保护
+    - 单元测试注册表现场还原：
+      - 修复 test_direct_disable_wininet_proxy_atomic_executes_safely 与 test_self_heal_stale_proxy_inactive_or_safe 单元测试在运行时修改宿主机 ProxyEnable 注册表并未还原的问题，确保测试与构建过程绝不干扰前台客户端正常上网。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.8.8
+ReleaseTime: 2026-10-19T12:19:46.0000000Z

@@ -1,0 +1,16 @@
+Version: 0.2.22
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.22/Strata.Manager_0.2.22_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: "- Fixed \"Update to the new version\" and \"Switch to this version\" failing with \"the candidate has unfinished observer request records and cannot be maintained automatically\"; users no longer need to delete files or retry by hand: when the engine is killed (End task, power loss, crash), the usage journal keeps \"in-flight request\" rows that nothing clears once the service is stopped, so every update and switch was refused. Once the service is confirmed stopped, leftover rows older than 2 minutes are now cleared automatically (only that service's rows; usage statistics and history are untouched) and the task log says how many were cleared. If the leftovers are still younger than 2 minutes, the update or switch now waits for them to expire on its own (up to about 2.5 minutes; the task status says it is waiting automatically and nothing needs to be done, it can be cancelled at any time, and it does not block other operations). If the service is started during the wait the task aborts safely; only if new rows keep appearing after the full wait does it fail, with a plain-language message asking to close other programs that use Strata."
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: '- 修复「更新到新版本」「切换到此版本」报「候选存在尚未结束的观察器请求记录，不能自动维护」，用户不用再手动删文件或重试：引擎被强制结束（任务管理器结束进程、断电、崩溃）时，使用情况记录里会遗留「进行中的请求」，服务停止后没有人清理，于是每次更新和切换都被拒绝。现在确认服务已停止后，会自动清理超过 2 分钟的残留记录（只清理该服务的记录，不动使用统计与历史），任务日志里写明清理了多少条；如果残留记录还不到 2 分钟，更新或切换会自动等待它过期（最多约 2.5 分钟，期间任务状态显示「正在自动等待，无需操作」，可随时取消），不占用其它操作。等待期间服务被重新启动会安全中止；等满仍有新记录才会失败，并用大白话提示关闭其它正在使用 Strata 的程序。'
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.22
+ReleaseTime: 2026-10-25T11:51:57.0000000Z

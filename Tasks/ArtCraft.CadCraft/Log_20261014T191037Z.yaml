@@ -1,0 +1,144 @@
+Version: 0.7.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.7.0/cadcraft-0.7.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.7.0/cadcraft-0.7.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.7.0/cadcraft-0.7.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Select: pick a SOLID inside its fill, not its bounding rectangle by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/747
+    - View: refuse a view that maps to an infinite viewport view, keeping the viewport by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/749
+    - Plotting: honor model-space center and X/Y offsets by @cyfung1031 in https://github.com/storytold/cadcraft/pull/751
+    - Hatch and Gradient dialog (create and edit) by @LloydNicholson in https://github.com/storytold/cadcraft/pull/753
+    - cadcraft-cli mcp: --lazy and --launch for MCP clients that start before the app by @aldozar in https://github.com/storytold/cadcraft/pull/756
+    - POLYGON: an Edge second endpoint on the first is refused and asked again (follow-up to #735) by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/760
+    - CIRCLE: a radius point on the centre is refused and asked again (follow-up to #735) by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/761
+    - Hatch: a view covering a pattern hatch leaves its lines exactly as they are by @SBaksa in https://github.com/storytold/cadcraft/pull/762
+    - DXF/DWG: write the Model layout's plot type as extents, not "Layout information" by @EP995LAB in https://github.com/storytold/cadcraft/pull/765
+    - Active viewport highlight: selection on the GPU, hover cached apart, kept inside a clipped outline by @SBaksa in https://github.com/storytold/cadcraft/pull/770
+    - TRIM: a pick after a closed polyline's last cut keeps only the complementary run (#726) by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/771
+    - Constraints: an arc solved with a negative radius is stored turned half a turn, so its points stay put by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/772
+    - Geometry: fit splines with too many points use them as control points instead of a dense solve by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/773
+    - Autosave: a write that failed is tried again without another change by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/774
+    - Selection: rebuild the spatial index when a layer used inside blocks is hidden or shown by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/775
+    - SPLINE: cap programmatic control points like spline.cv by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/776
+    - Extents: cache block bounds per depth so a deep visit can't hide a shallow reference by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/778
+    - Engine: NEW and OPEN end a command left running in the previous drawing by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/780
+    - Keep the ACIS geometry of 3D solids, regions and bodies on save (ACDSDATA) by @aldozar in https://github.com/storytold/cadcraft/pull/781
+    - Write an unedited dimension's block as it was read by @aldozar in https://github.com/storytold/cadcraft/pull/782
+    - Don't give entities made while reading handles the file still uses by @aldozar in https://github.com/storytold/cadcraft/pull/783
+    - MTEXT: Exactly line spacing keeps the pitch when a line has taller text by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/784
+    - Geometry: spline arc length converges on tight bends, so LENGTHEN shortens to the target by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/786
+    - LINE: resolve deferred TAN first point with typed @distance by @william-wwh in https://github.com/storytold/cadcraft/pull/788
+    - i18n: Italian interface catalog (it.tsv) by @bottelliemanuele-maker in https://github.com/storytold/cadcraft/pull/789
+    - Zoom Window: the opposite corner ignores ortho, so the window stays a rectangle by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/790
+    - Geometry: keep vector midpoints finite at coordinate extremes by @webdevtodayjason in https://github.com/storytold/cadcraft/pull/793
+    - BOUNDARY: cap point list and aggregate output per call (#723) by @vangel76 in https://github.com/storytold/cadcraft/pull/795
+    - PEDIT: pre-selected line or arc asks to turn it into a polyline by @vangel76 in https://github.com/storytold/cadcraft/pull/796
+    - Show an Opening... indicator and read files off the UI thread (#694) by @vangel76 in https://github.com/storytold/cadcraft/pull/797
+    - Test: compare hatch pattern lines with tolerance (#804) by @vangel76 in https://github.com/storytold/cadcraft/pull/805
+    - Pick dimensions and multileaders anywhere on their text by @codyvogt in https://github.com/storytold/cadcraft/pull/807
+    - docs: gaps.md FF14 lists what is left of SVG import by @vangel76 in https://github.com/storytold/cadcraft/pull/814
+    - MLEADEREDIT, MLEADERALIGN, MLEADERCOLLECT by @vangel76 in https://github.com/storytold/cadcraft/pull/816
+    - REFEDIT, REFSET and REFCLOSE: edit block references in place by @vangel76 in https://github.com/storytold/cadcraft/pull/818
+    - Keep the layout tabs inside the status bar by @NakaSato in https://github.com/storytold/cadcraft/pull/821
+    - Ctrl+Z / U during LINE removes only the last segment (#750) by @vangel76 in https://github.com/storytold/cadcraft/pull/831
+    - fix(dxf): MTEXT direction ignores the embedded object's insertion point (#667) by @iHateStupidPeople in https://github.com/storytold/cadcraft/pull/834
+    - Desktop: a bare --control keeps the CADCRAFT_CONTROL_PORT port by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/848
+    - Control channel: control.methods lists the methods, ping answers by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/852
+    - CJK text: big-font cells in SHX text, CJK interface fonts in every language (#674, #513) by @aldozar in https://github.com/storytold/cadcraft/pull/861
+    - Viewport scale list: add engineering scales for imperial drawings by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/866
+    - Dynamic Input and grip fields show distances in the drawing's UNITS by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/867
+    - Double-click on text, mtext or an attribute definition starts TEXTEDIT on it by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/868
+    - DXF: read every ENTITIES section, not only the last by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/869
+    - docs: clarify control protocol command dispatch (#845) by @Zaxaerith in https://github.com/storytold/cadcraft/pull/873
+    - Xdata travels with its object: COPY, MIRROR, ARRAY and paste keep other applications' xdata by @mattlafy in https://github.com/storytold/cadcraft/pull/890
+    - Canvas: every click places a point while drawing, however fast by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/835
+    - Recent files: the Start page and File ▸ Open Recent list the drawings opened last by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/864
+    - i18n(pt-BR): complete the Brazilian Portuguese catalog by @RicSchonfelder in https://github.com/storytold/cadcraft/pull/791
+    - Command line: a bare system variable name runs SETVAR on it (part of U10) by @flyboy-byte in https://github.com/storytold/cadcraft/pull/799
+    - DXF: write viewport frozen layers as group 341 layer handles too by @mattlafy in https://github.com/storytold/cadcraft/pull/827
+    - DXF: associative hatches in blocks keep their boundary; boundaries carry the hatch reactor by @codyvogt in https://github.com/storytold/cadcraft/pull/871
+    - Save xref layer overrides with the host, in DXF and DWG by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/889
+    - STRETCH: polygon and fence selection by @NakaSato in https://github.com/storytold/cadcraft/pull/892
+    - Performance: restrict object-snap intersections to cursor aperture by @cyfung1031 in https://github.com/storytold/cadcraft/pull/701
+    - BREAK, BREAKATPOINT and JOIN: leave objects on locked layers alone (fixes #727) by @atmikshetty in https://github.com/storytold/cadcraft/pull/730
+    - Constraint point names: s2 names segment 2, as documented by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/734
+    - POLYGON: a typed radius of zero or less, or a radius point on the centre, is refused and asked again by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/735
+    - HATCH: a pattern name with no definition is refused instead of drawn as ANSI31 by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/736
+    - JOIN: an elliptical arc named twice is one object, so the joined result stays by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/739
+    - HATCHEDIT: choosing SOLID on a gradient hatch makes it a plain solid fill by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/740
+    - Geometry: param_at_length checks spline validity before clamping to the domain by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/741
+    - Dimensions: a jogged radius with a NaN or infinite radius draws no lines instead of panicking by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/742
+    - MTEXT: annotative scaling and SCALE on multileader text scale the text width and columns too by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/743
+    - Plot: model-space PNG and SVG plots honour fit: false without a scale, at 1:1 like PDF by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/744
+    - Extents: count the visible attributes of a reference to a missing block by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/746
+    - Fonts: use the TrueType typeface from a style's xdata and find families by first word by @asimfali in https://github.com/storytold/cadcraft/pull/894
+    - MTEXT: paragraph indents and tab stops are in drawing units by @asimfali in https://github.com/storytold/cadcraft/pull/895
+    - PDFBOOK: plot sheet frames in model space into one PDF per row of frames by @asimfali in https://github.com/storytold/cadcraft/pull/896
+    - Property-based and hostile-input tests for geometry numerics (gaps.md S6) by @Lion-1209 in https://github.com/storytold/cadcraft/pull/733
+    - Fix polyline offset arc bulge after joining moved endpoints (#817) by @MarekSpodBiedry in https://github.com/storytold/cadcraft/pull/825
+    - ACAD_TABLE: readable cell text from AutoCAD files (cell height, style scale, MTEXT) by @vangel76 in https://github.com/storytold/cadcraft/pull/806
+    - Select: pick a solid hatch inside its fill, islands left out, not its bounding rectangle (follow-up to #747) by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/763
+    - doc: Space::tab_name / layout / is_paper replace repeated hand-written matches by @mattlafy in https://github.com/storytold/cadcraft/pull/888
+    - Engine: run the post-command passes from one place by @mattlafy in https://github.com/storytold/cadcraft/pull/856
+    - Properties palette: numeric fields take feet and inches, show lengths in the drawing's units, and report what they can't read by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/870
+    - Update Chinese translations in zh.tsv by @mayloglog in https://github.com/storytold/cadcraft/pull/884
+    - Open damaged DWGs partially and say what was left out (acadrust 0.6.4, #800) by @aldozar in https://github.com/storytold/cadcraft/pull/859
+    - DXF: count the records the reader can't place; info reports them, convert warns by @marcoarnulfo in https://github.com/storytold/cadcraft/pull/872
+    - AutoLISP: load and run .lsp routines (fixes #758) by @SBaksa in https://github.com/storytold/cadcraft/pull/855
+    - MCP: render one area of the drawing, and read its texts (find_text) by @aldozar in https://github.com/storytold/cadcraft/pull/757
+    - Follow the operating system's animation setting; add View ▸ Accessibility ▸ Animation Effects by @JeremyYao in https://github.com/storytold/cadcraft/pull/759
+    - HATCHEDIT: refuse an explicit bad scale or angle before editing anything (#724) by @Silvertree2010 in https://github.com/storytold/cadcraft/pull/777
+    - Dynamic blocks: read parameters and actions from AutoCAD files by @codyvogt in https://github.com/storytold/cadcraft/pull/838
+    - Dynamic block references: custom properties in Properties (stacked on #838) by @codyvogt in https://github.com/storytold/cadcraft/pull/853
+    - Dynamic block references: change the visibility state (stacked on #853) by @codyvogt in https://github.com/storytold/cadcraft/pull/860
+    - Dynamic block references: distances, positions, stretch and move actions, lookups both ways (stacked on #860) by @codyvogt in https://github.com/storytold/cadcraft/pull/878
+    - Dynamic block grips: show and drag a dynamic reference's grips (stacked on #878) by @codyvogt in https://github.com/storytold/cadcraft/pull/883
+    - Multiline attributes: read, draw and save their text (they were lost on save) by @codyvogt in https://github.com/storytold/cadcraft/pull/854
+    - Attributes keep Verify, Preset and Lock position (stacked on #854) by @codyvogt in https://github.com/storytold/cadcraft/pull/876
+    - Block Editor: BEDIT, BSAVE, BSAVEAS and BCLOSE for static blocks by @codyvogt in https://github.com/storytold/cadcraft/pull/824
+    - Edit Block Definition dialog; BEDIT can start a new block (stacked on #824) by @codyvogt in https://github.com/storytold/cadcraft/pull/833
+    - Block Editor on the current drawing; a drawing with authoring elements offers it (stacked on #833) by @codyvogt in https://github.com/storytold/cadcraft/pull/885
+    - In-place MTEXT editor with formatting toolbar and ruler (#532, F9) by @vangel76 in https://github.com/storytold/cadcraft/pull/792
+    - Selection like AutoCAD: colour highlight and the Options Selection tab by @codyvogt in https://github.com/storytold/cadcraft/pull/808
+    - Draw object transparency on screen, in exports and in plots by @EP995LAB in https://github.com/storytold/cadcraft/pull/764
+    - Fix double-clicking layout viewports creating persistent selection rectangle (#823) by @GJoe2 in https://github.com/storytold/cadcraft/pull/830
+    - Add Korean interface localization and Hangul font support by @huk082 in https://github.com/storytold/cadcraft/pull/857
+    - i18n: add Swedish (sv) interface translation by @holmbom in https://github.com/storytold/cadcraft/pull/882
+    - Arabic (العربية) UI translation: language switching + font fallback by @hasan-sdaif in https://github.com/storytold/cadcraft/pull/798
+    - Zoom and pan regenerate in the background instead of freezing the window by @Lufftre in https://github.com/storytold/cadcraft/pull/903
+    New Contributors
+    - @marcoarnulfo made their first contribution in https://github.com/storytold/cadcraft/pull/747
+    - @EP995LAB made their first contribution in https://github.com/storytold/cadcraft/pull/765
+    - @Silvertree2010 made their first contribution in https://github.com/storytold/cadcraft/pull/771
+    - @william-wwh made their first contribution in https://github.com/storytold/cadcraft/pull/788
+    - @bottelliemanuele-maker made their first contribution in https://github.com/storytold/cadcraft/pull/789
+    - @codyvogt made their first contribution in https://github.com/storytold/cadcraft/pull/807
+    - @NakaSato made their first contribution in https://github.com/storytold/cadcraft/pull/821
+    - @iHateStupidPeople made their first contribution in https://github.com/storytold/cadcraft/pull/834
+    - @Zaxaerith made their first contribution in https://github.com/storytold/cadcraft/pull/873
+    - @mattlafy made their first contribution in https://github.com/storytold/cadcraft/pull/890
+    - @RicSchonfelder made their first contribution in https://github.com/storytold/cadcraft/pull/791
+    - @flyboy-byte made their first contribution in https://github.com/storytold/cadcraft/pull/799
+    - @atmikshetty made their first contribution in https://github.com/storytold/cadcraft/pull/730
+    - @asimfali made their first contribution in https://github.com/storytold/cadcraft/pull/894
+    - @JeremyYao made their first contribution in https://github.com/storytold/cadcraft/pull/759
+    - @GJoe2 made their first contribution in https://github.com/storytold/cadcraft/pull/830
+    - @huk082 made their first contribution in https://github.com/storytold/cadcraft/pull/857
+    - @holmbom made their first contribution in https://github.com/storytold/cadcraft/pull/882
+    - @hasan-sdaif made their first contribution in https://github.com/storytold/cadcraft/pull/798
+    - @Lufftre made their first contribution in https://github.com/storytold/cadcraft/pull/903
+    Full Changelog: https://github.com/storytold/cadcraft/compare/v0.6.2...v0.7.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/cadcraft/releases/tag/v0.7.0
+ReleaseTime: 2026-10-14T15:29:49.0000000Z

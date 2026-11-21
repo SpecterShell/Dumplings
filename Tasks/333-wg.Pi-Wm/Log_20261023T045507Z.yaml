@@ -1,0 +1,33 @@
+Version: 0.1.25
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/333-wg/pi-wm/releases/download/v0.1.25/Pi-Wm-0.1.25-Setup-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Pi-Wm v0.1.25：一键优化提示词与对话体验修复
+    验证记录
+    - npm run check 通过：源码、前端、E2E、12 个工作区测试类型检查，以及 8 套主题各 80 对颜色对比检查。
+    - 提示词优化定向回归：3 个文件、26 项测试通过，覆盖权限、输入限制、并发、取消、模型选择、真实 ModelRuntime 到本地模拟服务的请求，以及无效输出保留原文。
+    - npx playwright test e2e/prompt-optimizer.spec.ts e2e/background-task-panel.spec.ts e2e/project-switch.spec.ts：9 项通过，包含项目切换的 1440px / 390px 布局及旧请求隔离、优化回填/撤销/取消/失败、附件保留和连续发送后的面板状态。
+    - 已检查本轮优化中、优化完成、项目快捷按钮、手机侧栏和后台任务完成后的截图：相关控件未见遮挡或重叠。新增工作流的运行时错误断言通过；已有 Demo 对话重复键警告不属于本次优化流程的验收覆盖。
+    - npm run desktop:dist 通过：生产构建、15,823 个运行时文件清单、路径预算、安装包 SHA-512、blockmap 与公开更新源一致性检查通过。
+    - node scripts/verify-desktop.mjs --packaged=release/win-unpacked/Pi-Wm.exe 通过：移出源码目录后的构建 UI、鉴权 API/WebSocket、原生终端、渲染器隔离、单实例、项目/主题保存、令牌轮换和正常退出。未运行安装器。
+    - 版本及锁文件同步更新为 0.1.25，未改变依赖版本；提交前格式检查与 git diff --check 通过。保留现有 4 项未使用导入 lint 警告、前端主包超过 500 kB、SQLite 实验性和依赖弃用提示。
+    - macOS 工作流 39896152537 通过：Apple Silicon 与 Intel 均完成 DMG/ZIP 构建、ad-hoc 签名、原生运行时及包内应用验收，六个附件上传成功。Intel 首次在单实例检查等待第二进程退出时触发 15 秒超时；保留原代码、断言和超时设置，仅重跑失败任务后通过，未将首次失败隐藏为通过。
+    - 九个发布附件核验通过：Windows 三个文件大小及 GitHub SHA-256 与本地一致，远端 latest.yml 与本地逐字节一致；Mac 四个安装归档的 GitHub SHA-256 与对应校验文件一致，两个校验文件自身摘要也已核验。
+    - 发布后确认 GitHub Latest 指向 v0.1.25，正式版非草稿、非预发布；九个附件再次核验通过，匿名下载公开 latest.yml 与本地逐字节一致。附件核验记录保存在 test-results/release-0.1.25-assets.json。
+    Windows 安装包 SHA-256：019e59628da0b2431c7a0d120bbc2881245f5ebb06d3e7e8c97e04be5c165187（249,650,878 字节）。
+    本地证据：test-results/release-0.1.25-check.log、test-results/release-0.1.25-unit.log、test-results/release-0.1.25-e2e/、test-results/release-0.1.25-build.log、test-results/release-0.1.25-packaged.log。预览和测试数据不作为发布附件。
+    已知限制与未执行检查
+    - 提示词优化会额外调用模型并可能消耗额度，目前不计入应用内会话用量统计，请以服务商账单为准。取消不能撤销已产生的用量。
+    - JSON 格式校验不代表语义正确；模型仍可能改变原意，发送前请检查。未发起真实收费模型请求，不承诺所有第三方服务或官方账号的优化质量。草稿上限为 16000 字符，空输入和 / 开头的命令不参与优化。
+    - 独立手机访问页暂不开放提示词优化；Demo 运行时不伪造优化结果。
+    - Windows 未配置发布者签名；macOS 使用 ad-hoc 签名，未经 Apple Developer ID 签名与公证，系统可能拦截安装。
+    - 按改动风险执行定向验证，不重复全仓库测试、完整 E2E、完整桌面回归或真实安装升级矩阵；本次未修改安装器、更新器及依赖版本。常规全仓库 CI 沿用既有发布策略跳过，保留本地定向检查与 macOS 专项构建验收。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/333-wg/pi-wm/releases/tag/v0.1.25
+ReleaseTime: 2026-10-23T04:18:09.0000000Z

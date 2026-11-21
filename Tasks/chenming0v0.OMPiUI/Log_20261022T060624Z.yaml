@@ -1,0 +1,21 @@
+Version: 0.6.37
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.37/OMPiUI_0.6.37_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - fix: 保留 Windows 升级项目与快捷方式并修复模型保存竞态 (f24ae64)
+    - ui: 优化手机供应商详情与模型获取面板 (0d70098)
+    - fix: 默认新对话恢复当前服务器保存的项目，其次使用已打开工作区，最后兜底用户主目录；不再静默使用安装目录。桌面显式打开文件夹优先，快捷方式起始位置不覆盖保存的项目。
+    - fix: 供应商模型改名后按已保存身份重基后续草稿，连续改名和再次保存保留 cost、compat 等隐藏字段；复用旧模型 ID 新建模型时不复制旧模型隐藏配置。
+    - fix: 供应商保存和删除绑定原服务器及连接代次；模型更新通知和手动刷新合并干净配置，保留待保存与在途编辑。
+    - fix: Windows 安装器在旧卸载前保存完整快捷方式，避免重装升级丢失起始位置和参数；维护事务保留暂停前意图，取消且原安装完整时恢复，开始替换后禁止自动回滚。并发维护与 supervisor 使用串行生命周期锁及已核对进程句柄，等待 worker 真正退出。
+    - verification: Windows 原生 release 编译成功，隔离 supervisor/双维护 CLI 验证只发送一次关闭、监听关闭后等待进程退出、停止状态取消恢复、旧配置格式重写后恢复运行意图、替换后拒绝回滚及卸载后停止。完整安装／升级未在本机验收，按用户要求由用户下载新版本验证。
+    - verification: 供应商持久化集成回归 15 项、目录优先级 9 项、服务端目录及模型配置 15 项通过；独立浏览器验证改名后再次保存保留隐藏字段、刷新保留草稿与新会话使用原项目。官方 OMP 会话双向继续写入、只读浏览验收通过，app/server 类型检查通过。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.37
+ReleaseTime: 2026-10-22T05:38:31.0000000Z

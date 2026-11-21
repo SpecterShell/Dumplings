@@ -1,0 +1,115 @@
+Version: 10.4.1.30361
+Installer:
+- InstallerUrl: https://www.wavemetrics.net/Downloads/Win/setupIgor10.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.wavemetrics.com/news
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.wavemetrics.com/news/igor-pro-1004-released
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A new release of Igor Pro 10 is now available. A list of notable changes for this release is included below. Go to the Downloads page or select the Help→Updates for Igor Pro menu item within Igor Pro 10 to get the latest release. If you've reported an issue to us and we've told you it has been fixed, the fix will be included in this release, even if it's not mentioned below.
+    New Features
+    - Added a Simplified Chinese language translation of the user interface (menus, dialogs, etc. but not documentation). As with the German translation added in Igor Pro 10.01, we used AI for the translation so there may be mistakes. Open the Miscellaneous Settings dialog (Misc→Miscellaneous Settings menu item) and select the Environment category to select a language. If your OS language is Simplified Chinese, Igor asks you if you want to use the Simplified Chinese translation when it starts. Igor will remember your selection.
+    - ? : works with string values, not just numeric values:
+      String str = (num > 0) ? "something" : "nothing"
+    - Performance when displaying large images has been significantly improved, especially when logarithmic color scaling is enabled, resulting in much more responsive window resizing. Actual performance gains will vary depending on your hardware and image size. See the following benchmark comparison for drawing a large, 14000 x 4000 point image:
+
+    - An improved algorithm for drawing line graphs is presented as an experimental feature, which can be enabled or disabled by choosing Misc→Experimental Features. Enabling it produces significantly faster drawing of simple line graphs than the legacy renderer with much higher quality output, especially when using transparency, thicker lines widths, or data with lots of noise. See the following benchmark comparison for graph updates with a 1000 point sine wave and a 1000 point wave of pure noise:
+
+    - Improved performance of loops (for, while, and do-while) and wave assignment statements in user functions by reducing the overhead of checking for user aborts. A simple wave assignment statement that does very little work per point now runs about 40% faster.
+    - Python 3.15 is now supported.
+    - The debugger can now display information about the selected wave, such as its type, dimensions, scaling, units, size, modification date, and wave note, similar to the information shown in the Data Browser. Choose Show Wave Info from the same popup menu that offers Show Waves in Table and Show Waves in Graph.
+    - You can now rename a trace by right-clicking it in a graph and choosing Rename traceName... from the contextual menu.
+    - The Abort button in the status bar is now shown and can be clicked during PauseForUser, so you can abort a procedure that is waiting for the user.
+    - Added /D flag to PolygonOp to create double precision output waves.
+    - Improved performance for statement completion and help templates.
+    - igorpro.wave.createfrom and igorpro.wave.set_data now accept collections of igorpro.wave or igorpro.folder objects, which lets you create and set the contents of wave reference waves and data folder reference waves from Python. For example:
+      # Create a wave reference wave from a list of Igor waves
+      sourceWaves = [igorpro.wave.create(f'source{x}') for x in range(3)]
+      waveRefs = igorpro.wave.createfrom('waveRefs', sourceWaves)
+    - The set_scale method of the igorpro.wave Python class can now copy the scaling, units, and full scale from another wave. For example:
+      w.set_scale(otherWave, 'delta')
+    - Added a set_note method to the igorpro.wave Python class to set or append to a wave's note.
+    - Procedure files can now add items to the Python menu using Menu "Python", and HideIgorMenus, ShowIgorMenus, and SetIgorMenuMode now work with the Python menu.
+    - Tab labels now respect escape characters and render correctly for multi-line labels.
+    Changed Behavior
+    - When a trace's marker can't be drawn, Igor now draws a ? in its place instead of drawing nothing. This happens when the marker number is invalid or when a custom marker's SetWindow markerHook function is missing, uncompiled, or does not draw the marker. Previously a markers-only trace with such a marker silently disappeared.
+    - Histogram no longer reports an error when the bin width specified with /B={binStart, binWidth, numBins} is zero. Instead it uses a bin width of 1 with the bins centered on binStart. This also fixes problems in the image histogram, contrast, and range dialogs for images in which every pixel has the same value.
+    - CurveFit now reports an error when the /CMAG, /XW, /XHLD, /XD, or /XR flags are used without the /ODR setting they require (nonzero /ODR for /CMAG, /ODR=2 or 3 for the others) when the command is executed from the command line or via Execute. Compiled code already reported this error.
+    - PythonFile no longer reports an error when the Python script calls sys.exit() with no argument or with an exit code of 0. A non-zero exit code or a string argument is reported as an error.
+    - The Python function os.abort() now raises an exception instead of terminating Igor.
+    - When Python fails to initialize, Igor now reports the specific error right away instead of waiting for a timeout and reporting a generic error.
+    - PauseForUser now honors the idle period set by SetIdlePeriod while waiting for the user.
+    - When you click the button to install a license for all users in the license dialog, the values you already entered are now transferred to the new instance of Igor so you don't need to enter them again.
+    Bug Fixes
+    - Fixed a bug that could prevent saving an experiment containing a formatted notebook after Igor had been open for a long time. This happened when Windows Storage Sense or the user deleted the temporary file that Igor uses for the notebook.
+    - Fixed several crashes that could occur when procedure files are reloaded from disk after being modified by another program, including when a reload happened during a compile or when a command was sent via an XOP or ActiveX Automation during a compile.
+    - Fixed a crash that could occur when a queued control action procedure for a ListBox or SetVariable control ran after the control's wave was killed or recreated, for example when killing a panel.
+    - Fixed a crash (introduced in 10.03) when Grep was used with a text wave in a preemptive thread.
+    - Fixed a crash when the Dir operation was used with a string expression in a user function.
+    - Fixed a crash when drawing a ColorScale for an image using XY subset color autoscaling (ModifyImage ctabAutoscale=1) when the image was scrolled entirely off the plot area.
+    - Fixed a crash when ReorderTraces /R was used with a graph created with Display /VERT.
+    - Fixed a crash (introduced in Igor Pro 10) in ImageHistModification when used with a 3D unsigned byte wave.
+    - Fixed a crash when aborting Python code that was run from Igor.
+    - Fixed a bug in ImageInterpolate when using the Affine2D keyword with a 3D wave that could cause a crash or incorrect results.
+    - Fixed a bug in Interp4DPath that could cause incorrect results or a crash when a path point fell outside the range of the source wave.
+    - Fixed a potential crash in Project when more than 10 values were passed to the /P flag. Igor now reports an error instead.
+    - Fixed a crash when clicking a resize handle of a selected control or draw object after a previous click on a control or draw object in a window that was since closed.
+    - Fixed a bug (introduced in Igor Pro 10) that caused image plots on log axes to be drawn, autoscaled, and tagged incorrectly when an edge of the image fell at zero or a negative value.
+    - area and faverage now support 64-bit integer waves. Previously they returned NaN. Sums of 64-bit integer values are also now computed without losing precision.
+    - Fixed a bug in WaveStats that could give incorrect minimum or maximum values, or locations, for complex integer waves when multithreading was used.
+    - Fixed a rounding error in ImageInterpolate when using the Affine2D keyword that was causing output wave dimensions to be off-by-one.
+    - Fixed a bug in ImageEdgeDetection that produced incorrect results when using the Prewitt method.
+    - Fixed a bug where HDF5LoadImage converted only the first image of an image stack to RGB.
+    - Fixed a bug where Grep with /LIST but no separator, used in a user function, returned a list with no separators instead of using the default semicolon separator.
+    - Fixed a bug (introduced in 10.02) that caused procedures to auto-compile when a procedure file was opened.
+    - Fixed a bug that caused procedures to be compiled a second time after clicking the Compile button.
+    - Fixed a spurious compile error ("P or X used outside of a wave assignment loop") for a multidimensional wave assignment to a single element that uses p, q, r, or s on the right side, such as w[0][0] = w[p+1][q+1].
+    - Fixed a spurious compile error involving ErrorBars with the BOX keyword followed by nochange, for example ErrorBars data, BOX, nochange, nochange.
+    - Fixed a bug in the debugger's expression evaluation where a dimension label (as in wave[%label]) was replaced with the value of a local variable of the same name.
+    - Fixed a bug where drawing a graph that uses a custom marker hook function could change debugger settings, silently disabling NVAR SVAR WAVE checking.
+    - Fixed several problems that occurred when modifying a graph, for example changing a trace's color, while a trace was being edited with GraphWaveEdit. Previously this could partially exit edit mode, and the modifications could be lost when exiting edit mode or using undo or redo, or omitted from window recreation macros.
+    - Fixed several problems with PauseForUser: spurious "UpdtDisplay: recursion attempted" messages, a hang when quitting Igor, redraw problems, and the ability to activate windows other than the one(s) the user is supposed to interact with.
+    - Fixed a bug in LoadPICT that prevented loading SVG files that don't start with an XML declaration (<?xml ...?>). SVG files downloaded from some web services omit the declaration.
+    - Fixed SoundLoadWave so that a /S start time of 0 is accepted and /Q suppresses the error dialog for bad /S times. Negative /S times now consistently report an error.
+    - Secs2Date now honors an empty separator string when the format is -2.
+    - Fixed a bug in the Curve Fitting dialog that could report a spurious error about the number of coefficients after choosing a fit function with a different number of coefficients.
+    - Fixed a bug where selected draw text in a graph or page layout was not aligned with the text it highlights on high-DPI displays.
+    - Pressing Ctrl+C in the Python console now interrupts running Python code.
+    - Fixed a bug in PythonFile where adjacent quoted arguments in the args parameter were merged into a single argument.
+    - Fixed a bug where PythonFile could fail to find a Python file after an earlier Python command failed while retrieving return values.
+    - Fixed a memory leak each time Python code raised an exception.
+    - Fixed bugs in the Notebook operation where out-of-range values wrapped around to incorrect values instead of being clipped. This affected the pageMargins, margins, and startPage keywords and, in user functions, color components above 65535. Also, in user functions, an explicit alpha of 0 in a Notebook color is now honored instead of being treated as opaque, matching the behavior on the command line.
+    - When \s() in an annotation refers to a graph or trace that does not exist, the ? placeholder is now centered within the annotation instead of extending above it.
+    - Fixed a bug in Gizmo color scaling where values above the top of the color range were drawn using the color for values below the range.
+    - Fixed a bug in Gizmo scatter objects that caused drop lines in the Y direction to be drawn to the wrong location.
+    - Fixed AppendToGizmo /D so that it adds attributes to the display list. Also, AppendToGizmo /N with a nonexistent Gizmo window now reports "Expected Gizmo window."
+    - Fixed a bug in ModifyGizmo in user functions where outputResFactor was applied as userLevel.
+    - Fixed a bug in Gizmo where the back face shininess value of the shininess attribute was ignored and the front face value was used for both faces.
+    - Gizmo pie wedge objects now draw correctly when the end angle is less than the start angle, and draw nothing when the start and end angles are equal.
+    - Fixed the enable state of the cloud color checkbox and popup menu in the Gizmo isosurface dialog.
+    Procedures
+    - The Global Fit package (Analysis→Global Fit) now supports fitting with errors in the independent variable (X) as well as the dependent variable (Y), using the same Errors in Variables: Orthogonal Distance Regression machinery available in the Curve Fitting dialog. Assign an X Weight wave for a data set on the Data Weighting sub-panel to enable it. This release also includes several accompanying bug fixes: sub-panels are now reliably closed along with the main panel, and a missing weight or mask wave now aborts the fit with a clear error instead of proceeding silently.
+    - PeakFunctions2.ipf - Fixed several bugs affecting the reported ± uncertainty of peak coefficients and derived values in Multipeak Fitting and Curve Fitting (the fitted values themselves were not affected): the ExpConvExp peak's Location uncertainty omitted the contribution from the peak's own position parameter, and had a sign error in its degenerate-width branch; the Doniach-Sunjic peak's Location uncertainty applied a sign factor to the wrong pair of cross terms; the GaussConvExp (EMG) and LorentzianHeight peaks' Area uncertainty was scaled using the peak amplitude instead of the peak area; the LogNormal peak's Area and FWHM uncertainties erroneously squared the covariance terms, inflating them; the Voigt and VoigtArea peaks' FWHM uncertainty forced a covariance term to be positive instead of preserving its true sign; and the Voigt and VoigtArea peaks' Amplitude uncertainty omitted a sign factor for the GaussFWHM and LorentzFWHM parameters, which the amplitude formula uses only via absolute value, producing an incorrectly signed propagated error whenever either coefficient was negative.
+    - Multipeak Fitting.ipf - Fixed several issues in the Post-Collision Interaction (PCI) peak shapes: PCI Threshold no longer returns zero at x = 0, PCI Threshold now automatically switches to the PCI Approximation shape instead of producing invalid results when an unsupported asymmetry value is encountered, and a sign error in the initial-guess calculation was fixed. The PCI Threshold (Strict) shape's polarization-dependent asymmetry factor also had a sign and ratio error in its high-excess-energy branch, causing a discontinuity in the peak shape at the boundary between the two energy branches instead of matching smoothly. Added a new "2nd Electron" derived parameter reporting the calculated partner-electron energy for the PCI peak shapes.
+    - Multipeak Fitting.ipf - The Total Area uncertainty reported when simultaneously fitting multiple peaks now accounts for the covariance between peaks, instead of assuming each peak's contribution is independent.
+    - Varimax.ipf - Fixed a sign-flip bug and a bug where communalities were normalized along the wrong axis, either of which could produce incorrect Varimax-rotated factors.
+    - fuzzyClasses.ipf - Fixed a bug where two of the four fuzzy membership terms used each other's variance value, which could produce membership values that do not sum to 1.
+    - PeakFunctions2.ipf - Fixed a bug where switching a peak's fit function to Voigt in Multipeak Fitting left the width and height fields blank (NaN) instead of populating them from the existing coefficients.
+    - WMFitFunctions.ipf - Fixed the built-in DoG (Difference of Gaussians) fit function's surround term, which diverged for points far from the peak center instead of decaying to zero.
+    - Bivariate Histogram 2.ipf - Fixed BiHistWave() so that points falling below the histogram's X or Y range are excluded instead of being written into an incorrect bin.
+    - Log Histogram.ipf - Fixed a bug where a value falling exactly at (or beyond) the last bin's upper edge was written one element past the end of the destination wave instead of being excluded.
+    - leastSquaresEstimate.ipf - Fixed a bug that caused the function to read one wave element past its final computed estimate instead of returning that estimate.
+    - FilterDialog.ipf - Fixed the "dB min -50" scaling option in the Filter Design Laboratory's frequency response display, which reported magnitudes 2.5 times too large.
+    - WMBatchCurveFitResults.ipf - Fixed the nearest-point search used when displaying Batch Curve Fitting results, which applied an extra square root to only one of its two axis terms, distorting the distance metric.
+    - PeakFunctions2.ipf - Improved numerical instability in large Voigt shapes by replacing a piece of the shape expression with a better built-in Igor expression. erfc(shape)*exp(shape^2) was changed to erfcx(shape).
+    - Global Fit 2.ipf - Corrected the displayed Voigt fit function equation so that it matches the formula actually used by the fit; the fit results themselves were not affected.
+    - Global Fit 2.ipf - Fixed a bug (introduced in Igor Pro 10) where entering the number of coefficients for a user-defined fit function that lacks Curve Fitting dialog comments did not fill in the Coefficients list.
+    - WMBatchCurveFit.ipf, Scatter Dot Plot.ipf, Color Table Control Panel.ipf - Fixed control placement on Windows that mixed points and panel coordinates. This caused controls in the Batch Curve Fitting and Scatter Dot Plot panels to overlap when the panels were first opened.
+    Examples
+    - Layout Demo.pxp - Updated to walk you through creating a multi-panel figure from graphs in a page layout.
+ReleaseTime: 2026-11-03

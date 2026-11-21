@@ -1,0 +1,188 @@
+Version: 17.0.8
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.0.8/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Improved resilience against transient stream JSON parse failures by recovering completed tool calls while safely preventing incomplete, unknown, refused, or sensitive calls from executing.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Gemini Flash Cloud Code Assist empty-response retries when responses contain only intercepted planning-leak JSON.
+    - Fixed Antigravity auto-routing to correctly fail over to the sandbox endpoint when the daily endpoint exhausts its retries.
+    - Fixed OpenAI-compatible providers configured with auth: none incorrectly sending an Authorization: Bearer N/A header, which broke custom endpoints using alternative authentication headers.
+    - Fixed auth-gateway model listings exposing duplicate or ambiguous model IDs by ensuring only provider-qualified routing IDs are advertised.
+    - Improved connection error handling by classifying generic connection failures as transient, allowing them to be retried, while keeping explicit authentication rejections non-retryable.
+    - Fixed custom Anthropic base URLs losing native thinking signatures during continuation requests.
+    - Fixed Alibaba Coding Plan Custom login rejecting valid API keys on endpoints that do not serve the default validation model by validating against the model catalog instead.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for several new models across multiple providers, including MiniMax M3, Gemini 3.5 Flash Lite, Gemini 3.6 Flash (with thinking support), Hy3, Doubao-Seed-Character, LongCat 2.0, Laguna S 2.1 (free and paid tiers), Qwen 3.6 35B A3B, SWE-1.6 Slow (devin agent catalog), and XiaomiMiMo/MiMo-V2.5.
+    Changed
+    - Updated Grok 4.5 API type to "openai-responses" and updated "o3-mini" to support thinking capabilities with the "kimi" thinking format.
+    - Renamed OpenRouter-specific models and routers to include "OpenRouter" in their names (e.g., "OpenRouter Auto Router (Beta)", "OpenRouter Body Builder (beta)", and "OpenRouter Pareto Code Router").
+    - Updated context window sizes, costs, and token limits for numerous models.
+    Fixed
+    - Fixed an issue where GPT-5.6 Codex SKUs lost usable context window capacity due to dynamic discovery values overwriting bundled limits.
+    - Fixed OpenAI Codex discovery dropping account-listed ChatGPT-only models (such as GPT-5.3 Codex Spark) when they are unavailable through the public API.
+    - Fixed Codex catalog discovery hiding models when multiple OAuth accounts are configured by independently fetching and merging catalogs from all accounts.
+    - Fixed cached models reusing a bundled request model (such as GitHub Copilot long-context variants) being incorrectly flagged as unrestorable and dropped after a restart.
+    - Fixed LM Studio discovery reporting a model's theoretical maximum context length instead of the actual loaded context window size of the running instance.
+    Removed
+    - Removed several deprecated model families from the devin catalog, including Claude Fable 5, Claude Opus 4.6/4.7, Claude Sonnet 4.6/5, DeepSeek V4 Pro, Gemini 3.1 Pro, Gemini 3.5 Flash, GLM-5.2, SWE-1.6, and Nemotron 3 Ultra.
+    - Removed GPT-5 through GPT-5.3 Codex variants and GPT-5.4 nano from the openai-codex catalog.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added a /tree re-answer option for past ask tool results, allowing users to re-open the picker with original questions and branch the new answer as a sibling while keeping the original branch reachable.
+    - Added configurable Hindsight client request deadlines via hindsight.requestTimeoutMs, reflectTimeoutMs, recallTimeoutMs, and retainTimeoutMs settings (and matching HINDSIGHT_*_TIMEOUT_MS environment variables).
+    - Added omp-linux-musl-x64 and omp-linux-musl-arm64 release binaries for Alpine and other musl-based Linux distributions, with automatic musl selection in the installer and self-updater.
+    Changed
+    - Optimized edit-tool previews, diff components, and intra-line word highlighting to compute line and word diffs natively, reducing synchronous diff times by 2-10x on large inputs.
+    - Updated diff generation and rendering components to rely exclusively on native UTF-16 diff bindings, removing isWellFormed() guards and JS fallback code paths.
+    Removed
+    - Removed npm diff dependency.
+    - Fixed an issue where Ctrl+V clipboard paste was ignored while API-key and other modal prompts had focus.
+    - Fixed scripts/install.sh incorrectly installing an x86_64 build on Apple Silicon when running under Rosetta.
+    - Fixed the model picker hiding Codex models available through secondary configured ChatGPT/Codex OAuth accounts by unioning catalogs across all stored accounts.
+    - Fixed GitHub Copilot 1M-context models disappearing from the model picker on restart with a "Could not restore model" warning.
+    - Fixed --model <role> startup selection skipping configured fallback chains when the primary model is unavailable.
+    - Fixed global model role updates clobbering concurrent or external edits to config.yml by merging only the changed role instead of persisting a stale in-memory snapshot.
+    - Fixed terminal provider errors on continuation turns after failed tool results silently ending runs without persisting the error diagnostics.
+    - Fixed repeated OpenRouter Gemini stream closures consuming the full retry budget by limiting recovery attempts before surfacing the error.
+    - Fixed Agent Hub performance freezes when opening large read-only Advisor transcripts by collapsing synthetic inputs into compact summary rows and rendering Markdown lazily on expansion.
+    - Fixed /agents incorrectly showing prewalk as disabled for the bundled task agent when enabled by its runtime default.
+    - Fixed hub start waiting for the full timeout when a launched process exited or became ready quickly.
+    - Fixed tools.maxTimeout failing to clamp default tool timeouts when no explicit timeout was provided by the agent.
+    - Fixed MCP argument-shaping parity between direct and subagent tool calls, ensuring strict servers do not reject proxied calls with unrecognized keys.
+    - Fixed a crash in extensions like pi-mcp-adapter caused by the TypeBox compatibility shim omitting Type.Unsafe.
+    - Fixed omp models hanging after output by properly clearing managed extension timers and shutting down sessions before returning.
+    - Fixed HTML session exports causing browser call stack overflows when rendering deeply nested conversation trees.
+    - Fixed task agents ending prematurely on connection errors instead of entering the auto-retry path.
+    - Fixed a startup race condition where the default model role was incorrectly overridden by an unrelated provider's default on a cold cache.
+    - Fixed unqualified --model startup selection preferring unauthenticated provider catalog entries over configured providers.
+    - Fixed provider stream failures being invisible in the main log by logging a warning with error details when a turn ends in a provider error.
+    - Fixed parallel todo done calls losing completions due to asynchronous session events overwriting newer tool states.
+    - Fixed omp crashing when git is not installed or missing from the system PATH.
+    - Fixed /changelog commands reporting no entries in standalone binaries by embedding the release history as a fallback.
+    - Fixed isolated branch merge-backs rejecting committed agent edits when the parent branch had unrelated uncommitted changes in the same file.
+    - Fixed the 30-second Hindsight client timeout aborting healthy reflect operations by applying dedicated, longer deadlines.
+    - Fixed Mnemopi consolidation redundantly re-storing cumulative session transcripts after incremental auto-retain.
+    - Fixed turn-ending Codex rate-limit errors being hidden behind the Plan Review overlay.
+    - Fixed prewalked subagents continuing to display their starting model after switching to the target model.
+    - Fixed the Escape key aborting an ongoing agent turn instead of stopping text-to-speech playback.
+    - Fixed project system prompts shortening working directories to ~, which could cause models to generate incorrect absolute paths for tool calls.
+    - Fixed the TUI /usage matrix misaligning multi-account columns across quota windows.
+    - Fixed near-miss xd:// write targets silently creating filesystem paths instead of throwing a corrective URI error.
+    - Fixed the task tool rejecting valid batch calls with misleading validation errors when batching is disabled.
+    - Fixed JS/TS debug launches timing out on WSL2 with mirrored networking by waiting for the adapter's listening banner and handling transport closures immediately.
+    - Fixed post-compaction transcript rebuilds blocking the main thread by reusing settled message components and layout caches.
+    - Fixed the fullscreen Plan Review overlay remaining interactive and appearing frozen during slow asynchronous operations by locking input and showing a submitting indicator.
+    - Fixed dynamic model discovery refreshes dropping provider-level compatibility overrides from models.yml.
+    - Fixed a startup crash that locked users out of the app when prewalk.enabled was set but the prewalk hand-off target had no configured API key.
+    - Fixed in-progress aborts awaiting session_stop extension handlers whose results would be discarded.
+    - Fixed /retry reporting "Nothing to retry" after a stream stalled or aborted mid-tool-call.
+    - Fixed locally consumed extension commands triggering automatic title generation and exposing their command text to the title model.
+    @oh-my-pi/collab-web
+    Fixed
+    - Fixed an issue where IME composition (Korean, Japanese, and Chinese) duplicated the last character when pressing Enter to commit in the composer.
+    @oh-my-pi/hashline
+    Changed
+    - Improved snapshot recovery line remapping by utilizing native line diffing.
+    - Switched line anchor recovery diffs to native diffLineRuns, processing UTF-16 code units directly and removing JS diff fallback.
+    Removed
+    - Removed npm diff dependency.
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Optimized vector operations (exact vector-index search, SHMR similarity clustering, and default-similarity MMR rerank) by migrating hot loops to native batch kernels, resulting in significant performance improvements (up to 1.8x faster top-K search, 2.4x faster pairwise clustering, and 22-36x faster MMR reranking).
+    @oh-my-pi/pi-natives
+    Added
+    - Added jsdiff-compatible native diff exports: diffLines, diffWords, diffLineRuns, and structuredPatchHunks.
+    - Added batch vector kernels for mnemopi recall paths: cosineSimilarityPairs, vectorIndexTopK, and mmrRerankIndices.
+    Changed
+    - Updated diff functions (diffLines, diffWords, diffLineRuns, structuredPatchHunks) to process UTF-16 code units natively end to end via Utf16String, supporting ill-formed JS strings with unpaired surrogates without throwing or converting to UTF-8.
+    Fixed
+    - Fixed a critical issue where the in-process rm builtin treated an empty path operand as the current working directory, causing rm -rf "" to recursively delete the current directory. Empty operands are now rejected, matching GNU rm behavior.
+    Removed
+    - Removed unused similar crate dependency and dev-dependency on npm diff.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed an issue where OSC 8 hyperlinks with inline markup corrupted Markdown table column widths.
+    - Prevented duplicate autocomplete suggestions for slash commands and their matching aliases.
+    - Fixed terminal background color detection during screen refreshes (Ctrl+L) inside tmux when passthrough is enabled.
+    What's Changed
+    - fix(tui): surface provider errors above plan review by @roboomp in https://github.com/can1357/oh-my-pi/pull/6217
+    - fix(tts): prioritize playback interruption on Esc by @roboomp in https://github.com/can1357/oh-my-pi/pull/6220
+    - fix(write): reject unknown URI-like targets by @roboomp in https://github.com/can1357/oh-my-pi/pull/6222
+    - fix(tui): deduplicate slash command aliases by @roboomp in https://github.com/can1357/oh-my-pi/pull/6224
+    - fix(coding-agent): make hindsight request timeouts per-op and configurable by @roboomp in https://github.com/can1357/oh-my-pi/pull/6225
+    - fix(session): skip stop hooks during aborts by @roboomp in https://github.com/can1357/oh-my-pi/pull/6226
+    - fix(coding-agent): replay committed tasks over dirty parent by @roboomp in https://github.com/can1357/oh-my-pi/pull/6227
+    - fix(collab-web): guard composer submit against IME composition by @roboomp in https://github.com/can1357/oh-my-pi/pull/6229
+    - fix(cli): prefer authenticated provider for bare models by @roboomp in https://github.com/can1357/oh-my-pi/pull/6230
+    - fix(ai): qualify auth-gateway model IDs by @roboomp in https://github.com/can1357/oh-my-pi/pull/6231
+    - fix(release): preserve changelog source fingerprints by @roboomp in https://github.com/can1357/oh-my-pi/pull/6232
+    - fix(sdk): resolve configured default role over cold-cache discovery race by @roboomp in https://github.com/can1357/oh-my-pi/pull/6233
+    - fix(session): log provider turn errors at warn with error fields by @roboomp in https://github.com/can1357/oh-my-pi/pull/6234
+    - fix(coding-agent): show changelog in standalone binaries by @roboomp in https://github.com/can1357/oh-my-pi/pull/6235
+    - fix(git): degrade gracefully when git binary is missing by @roboomp in https://github.com/can1357/oh-my-pi/pull/6237
+    - fix(providers): suppress Bearer N/A header for keyless auth providers by @roboomp in https://github.com/can1357/oh-my-pi/pull/6239
+    - fix(tui): lock plan review overlay after a choice commits by @roboomp in https://github.com/can1357/oh-my-pi/pull/6240
+    - fix(extensibility): add Type.Unsafe to typebox shim by @roboomp in https://github.com/can1357/oh-my-pi/pull/6241
+    - fix(mcp): route task proxies through source tool and mark tools non-strict by @roboomp in https://github.com/can1357/oh-my-pi/pull/6242
+    - fix(session): persist terminal empty error turns ending the run by @roboomp in https://github.com/can1357/oh-my-pi/pull/6253
+    - fix(catalog): floor gpt-5.6 codex context window at 372k by @roboomp in https://github.com/can1357/oh-my-pi/pull/6261
+    - fix(settings): merge global model roles per-role on save by @roboomp in https://github.com/can1357/oh-my-pi/pull/6262
+    - fix(catalog): union Codex models across OAuth accounts by @roboomp in https://github.com/can1357/oh-my-pi/pull/6266
+    - fix(installer): avoid mismatched bun architecture on apple silicon by @roboomp in https://github.com/can1357/oh-my-pi/pull/6269
+    - fix(agent): bound OpenRouter thinking stream retries by @riverpilot in https://github.com/can1357/oh-my-pi/pull/6270
+    - perf(coding-agent): compute edit and word diffs natively by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/6279
+    - perf(mnemopi): run recall vector kernels natively by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/6280
+    - Fix ST-terminated OSC 8 links in Markdown tables by @pppobear in https://github.com/can1357/oh-my-pi/pull/6282
+    - fix(sdk): resolve missing role fallback chains by @roboomp in https://github.com/can1357/oh-my-pi/pull/6285
+    - fix(catalog): restore cached Copilot 1M models via requestModelId by @roboomp in https://github.com/can1357/oh-my-pi/pull/6286
+    - fix(rm): reject empty operand instead of deleting cwd by @roboomp in https://github.com/can1357/oh-my-pi/pull/6288
+    - fix(tools): cap per-tool default timeout with tools.maxTimeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/6296
+    - fix(cli): dispose model-listing extensions by @roboomp in https://github.com/can1357/oh-my-pi/pull/6298
+    - fix(coding-agent/launch): wake ready waits on sticky marker not live state by @roboomp in https://github.com/can1357/oh-my-pi/pull/6305
+    - fix(coding-agent): align bundled task prewalk display by @roboomp in https://github.com/can1357/oh-my-pi/pull/6307
+    - fix(tui): collapse synthetic advisor inputs in the transcript viewer by @roboomp in https://github.com/can1357/oh-my-pi/pull/6313
+    - feat(tui): allow re-answering a past ask from the session tree by @Mathews-Tom in https://github.com/can1357/oh-my-pi/pull/5895
+    - feat(coding-agent): add capture-only apply control to the task tool by @korri123 in https://github.com/can1357/oh-my-pi/pull/6130
+    - fix(agent): recover tools after stream parse errors by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6136
+    - fix(ai): retry provider connection failures by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6139
+    - fix(ai): recover empty Antigravity responses across endpoints by @usr-bin-roygbiv in https://github.com/can1357/oh-my-pi/pull/6180
+    - fix(coding-agent): avoid stack overflow in deeply nested HTML exports by @jiwangyihao in https://github.com/can1357/oh-my-pi/pull/6182
+    - test(agent): synchronize pause gate tool boundary by @any-victor in https://github.com/can1357/oh-my-pi/pull/6185
+    - fix(release): make package publish reruns idempotent by @any-victor in https://github.com/can1357/oh-my-pi/pull/6186
+    - fix(ai): preserve native thinking signatures through leaked-thinking wrapper by @roboomp in https://github.com/can1357/oh-my-pi/pull/6195
+    - fix(coding-agent): preserve compat overrides on model refresh by @roboomp in https://github.com/can1357/oh-my-pi/pull/6196
+    - fix(todo): prevent stale batch state replay by @roboomp in https://github.com/can1357/oh-my-pi/pull/6197
+    - fix(tui): reuse settled components after compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/6199
+    - fix(session): retry past synthetic tool results after mid-tool-call stall by @roboomp in https://github.com/can1357/oh-my-pi/pull/6200
+    - fix(auth): route smart paste into focused prompts by @roboomp in https://github.com/can1357/oh-my-pi/pull/6201
+    - fix(mnemopi): retain only unretained turns on consolidation by @roboomp in https://github.com/can1357/oh-my-pi/pull/6202
+    - fix(coding-agent): keep startup alive when prewalk target lacks auth by @roboomp in https://github.com/can1357/oh-my-pi/pull/6203
+    - fix(tui): route explicit appearance refresh through tmux by @roboomp in https://github.com/can1357/oh-my-pi/pull/6204
+    - fix(task): surface actionable shape error for batch calls by @roboomp in https://github.com/can1357/oh-my-pi/pull/6205
+    - fix(session): skip titles for local extension commands by @roboomp in https://github.com/can1357/oh-my-pi/pull/6206
+    - fix(usage): align multi-account /usage columns across windows by @roboomp in https://github.com/can1357/oh-my-pi/pull/6207
+    - fix(ai): validate custom Alibaba endpoints by model list by @roboomp in https://github.com/can1357/oh-my-pi/pull/6209
+    - fix(catalog): use LM Studio's loaded context window not the max by @roboomp in https://github.com/can1357/oh-my-pi/pull/6210
+    - fix(dap): close tcp connect race and wake pending requests on transport end by @roboomp in https://github.com/can1357/oh-my-pi/pull/6212
+    - fix(tui): refresh prewalked subagent model by @roboomp in https://github.com/can1357/oh-my-pi/pull/6214
+    - fix(prompting): preserve absolute working directory by @roboomp in https://github.com/can1357/oh-my-pi/pull/6215
+    - fix(catalog): retain ChatGPT-only Codex models by @roboomp in https://github.com/can1357/oh-my-pi/pull/6219
+    - docs: correct /advisor as session-scoped, not persisted by @roboomp in https://github.com/can1357/oh-my-pi/pull/6223
+    - feat(release): add musl-linked Linux binaries by @roboomp in https://github.com/can1357/oh-my-pi/pull/6317
+    - fix(ai): omit service tier for GitHub Copilot by @audreyt in https://github.com/can1357/oh-my-pi/pull/5160
+    New Contributors
+    - @audreyt made their first contribution in https://github.com/can1357/oh-my-pi/pull/5160
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.0.7...v17.0.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.0.8
+ReleaseTime: 2026-07-23T01:12:16.0000000Z

@@ -1,0 +1,52 @@
+Version: 1.94.1
+Installer:
+- InstallerType: burn
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-full-1.94.1.exe
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.94.1-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.94.1-amd64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.94.1-arm64.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://tailscale.com/changelog
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Note: 1.94.0 was a release candidate intended for testing only.
+    All Platforms
+    - New: tailscaled_home_derp_region_id client metrics are available.
+    - New: tailscaled_peer_relay_forwarded_packets_total and tailscaled_peer_relay_forwarded_bytes_total client metrics are available for Tailscale Peer Relays.
+    - New: Identity tokens are automatically generated for workload identities.
+    - New: --audience flag added to tailscale up command to support auto generation of ID tokens for workload identity.
+    - New: tsnet nodes can host Tailscale Services.
+    - Changed: The tailscale lock status -json command returns tailnet key authority (TKA) data in a stable format.
+    - Changed: Tailscale Peer Relays deliver improved throughput through monotonic time comparison optimizations and reduced lock contention.
+    Linux
+    - New: Custom DERP servers support Google Cloud Platform (GCP) Certificate Manager.
+    - New: Tailscale SSH authentication, when successful, results in LOGIN audit messages being sent to the kernel audit subsystem.
+    - Changed: Tailscale Peer Relay throughput is improved when the SO_REUSEPORT socket option is supported on multi-core systems.
+    - Fixed: Tailscale Peer Relay server handshake transmission is guarded against routing loops over Tailscale.
+    - Fixed: MagicDNS always resolves when using resolve.conf without a DNS manager.
+    macOS
+    - New: AuthBrowser.macos system policy sets a preferred browser for opening automatic authentication URLs.
+    - New: HideDockIcon system policy determines if the Tailscale Dock icon persists after all Tailscale windows close.
+    - New: Install and automatically update to release candidate versions of the client in the About section, Release Channel drop-down.
+    - Fixed: DNS related health warnings no longer display when Tailscale DNS is disabled.
+    - Fixed: tssentinelId command injection vulnerability has been removed. This fix addresses a security vulnerability described in TS-2026-001.
+    - Fixed: Ping view is Tailscale Peer Relay aware.
+    iOS
+    - Fixed: Ping view is Tailscale Peer Relay aware.
+    tvOS
+    - New: Use Tailscale Subnets toggle is added in Subnet Routing Settings.
+    - Fixed: Ping view is Tailscale Peer Relay aware.
+    Android
+    - Fixed: Ping view is Tailscale Peer Relay aware.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://tailscale.com/changelog/#2026-01-26-client
+ReleaseTime: 2026-01-26T00:00:00.0000000Z

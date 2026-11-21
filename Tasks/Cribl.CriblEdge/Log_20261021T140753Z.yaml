@@ -1,0 +1,131 @@
+Version: 4.20.3
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.20.3/cribl-4.20.3-ea354447-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4203/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Important Changes
+    This release includes the following important changes:
+    - Leader license persists across managed Node restarts
+    - Cribl AI model tier renaming
+    - Cribl Terraform provider is no longer in preview
+    - Notice: Static egress billing in Cribl.Cloud
+    Review the full list of important changes for additional critical updates.
+    New Features
+    This release provides the following improvements:
+    Fast Release Channel in Cribl.Cloud
+    In Cribl.Cloud, Enterprise customers can now assign each Workspace to the Fast release channel. Cribl publishes new features and services to the Fast release channel approximately weekly, so you can preview them and provide feedback before they become available on the Regular release channel.
+    Windows Event Logs: Resolve Message-File Parameter Codes
+    The Windows Event Logs Source can resolve Windows message-file parameter codes (%%NNNN) in EventData fields to the corresponding readable strings, such as %%14592 to Inbound. Enable Resolve EventData message table codes on the Source to use this behavior.
+    Billing Reader Permission for API Credentials
+    Enterprise customers can now assign the Billing Reader Permission on an Organization to API Credentials in Cribl.Cloud. This lets you automate billing and usage reporting without granting broad administrative access to your Organization, Workspaces, or products.
+    Copilot Is Now Billy
+    The AI assistant formerly known as Cribl Copilot is now Billy. All user-facing text, including titles, tooltips, placeholders, and accessibility labels, now refer to Billy. Billy has the same capabilities as Copilot. Only the name has changed.
+    MCP Server Connection Details
+    The Cribl MCP server setup experience now surfaces connection details directly in the UI, including the server URL, authentication requirements, and code snippets for connecting your MCP client. You no longer need to switch between the product UI and documentation to complete the setup.
+    Pack-Scoped Support for Leader MCP Pipeline Tools
+    Leader MCP Pipeline tools now support a packId parameter, allowing Pipelines defined inside Packs to be retrieved and modified through MCP. Previously, Pack-internal Pipelines appeared as opaque placeholders that could not be read or updated.
+    Region-Aware AWS Bedrock Support for Custom AI Providers
+    When you configure Anthropic via Amazon Bedrock as a custom AI provider, you can now select an AWS Region, such as ap-southeast-2, in the AWS Region field. Cribl uses that Region for all connection tests and runtime requests. If you leave the field blank, Cribl uses your Workspace’s Region, or us-west-2 if the Workspace Region isn’t available.
+    The configuration wizard now accepts typed model IDs for supported Claude models. This supports region-prefixed inference profile IDs, such as au.anthropic.claude-opus-4-8 or eu.anthropic.claude-sonnet-4-6, which retain standard token limits. The wizard suggests regional defaults automatically without overwriting custom entries. Existing Bedrock configurations are unaffected.
+    This release also adds Claude Opus 4.7 and Claude Opus 4.8 to the Deep tier, with Claude Opus 4.8 as the suggested default.
+    Apps
+    The Cribl Marketplace now shows which Apps are Cribl Certified, and installed Apps get tighter control over who can open them and what they can call.
+    - Certified Apps. Find Apps that meet Cribl standards for business-critical use with a new Certified filter in the Cribl Marketplace. Publishers request certification once per App, and it carries to each newer version that Cribl approves for listing.
+    - App permission models. A newly installed App uses strict policy permissions and can call only the Cribl API endpoints declared in its policies.yml, including when an administrator uses the App. An App that is already installed keeps user-based permissions, where access follows each member’s product permissions and policies.yml can add actions, and you can switch that App to strict policy permissions.
+    - Private by default. Newly installed Apps are private. Members and teams can open a new App only after an administrator uses Share to assign them the App user access level. Upgrading an App keeps its existing Share assignments.
+    - Ownership transfer. An App owner can transfer a published App to a new owner.
+    Experience Improvements
+    - We improved keyboard accessibility in popular areas of Cribl Stream, Edge, and Search. On targeted routes, keyboard users can now navigate, complete forms, and submit changes more reliably, with improved focus order, focus indicators, screen-reader markup, and color contrast.
+    - Resources that support global secrets now use separate Folder and Secret selection menus instead of a single list of <secretFolderId>/<globalSecretId> references. Also, if the secret folder doesn’t contain the global secret that you want to use, you can now create the secret within the resource configuration workflow instead of navigating to Global Settings.
+    - Cribl now applies endpoint-specific rate limits to prevent excessive traffic from interfering with normal operations. When a request exceeds the endpoint’s rate limit, the API returns the HTTP status code 429 Too Many Requests and a Retry-After header that specifies how many seconds to wait before retrying.
+    - The provisioning token list now refreshes automatically after you update or delete a token.
+    - You can now sort the Workers and Edge Node lists by provisioning token.
+    - On an App’s Key-Value Stores tab, you can now edit, clone, or delete individual key-value pairs from the Actions menu. Use this to keep an App’s seeded configuration and secrets up to date, and to duplicate an unencrypted pair instead of recreating it.
+    - Auto-Parse now detects each event’s format and extracts its top-level fields with higher throughput in the Parser Function, on Routes, and on Sources. While it’s ideal for mixed or unknown formats, a specific parser Type remains more resource-efficient for known, stable data.
+    Sources and Destinations
+    - Edge Nodes running on Azure can collect Azure host metadata, including subscription ID, resource group, VM name, region, and more. Enable the azure event metadata source under Fleet Settings > General Settings > Limits > Metadata. Collected values appear under __metadata.azure.
+    - The OpenTelemetry Destination now supports OAuth2 client credentials when Protocol is gRPC.
+    - The OpenTelemetry Source now supports CORS, so browser-based clients can send OTLP/HTTP without a reverse proxy.
+    - Saving a File Monitor Source configuration in a Single-instance deployment or when teleported to a Node no longer waits for the first file discovery to finish, reducing delays.
+    - HTTP-based Destinations now emit iometrics.events_out_rejected, which counts events rejected by downstream receivers with non-retryable responses.
+    Important Changes
+    Leader License Persists Across Managed Node Restarts
+    On-prem and hybrid Worker Nodes and Edge Nodes now save a copy of the license they receive from the Leader. If a node loses its Leader connection and restarts while the saved license remains valid, it loads the saved license instead of switching to the Free license. For details, see Licensing on Managed Node Startup.
+    Cribl AI Model Tier Renaming
+    The model tiers for Cribl Managed Models and custom AI providers (Bring Your Own Model, or BYOM) are now named Fast, Balanced, and Deep. These names replace Small, Frontier, and Reasoning, respectively. This is a display update only, with no changes to model behavior or performance.
+    Cribl Terraform Provider No Longer in Preview Status
+    The Cribl Terraform provider is no longer in Preview status and is now generally available. Use the provider to manage Cribl resources as infrastructure as code across Organizations and Workspaces.
+    Notice: Static Egress Billing in Cribl.Cloud
+    Static egress in Cribl.Cloud now consumes credits for each region where you enable it. Cribl bills an hourly infrastructure charge and a per-GB charge for the data that passes through the region’s gateways. Charges appear under Infrastructure on your invoice in the FinOps Center. Organizations that already had static egress enabled before billing began have a grace period. To control costs, enable static egress only in regions where you need a stable source IP. Static egress billing doesn’t apply to Cribl.Cloud Government. For details, see How Static Egress Is Billed.
+    Notice: Cribl as Code TypeScript and Go SDK Discontinuation
+    Cribl has stopped active development of the Cribl as Code Go and TypeScript SDKs, which were previously in preview. To give existing users a clear path forward, we have moved the SDKs from the criblio GitHub organization to the Cribl Community GitHub Organization, where they will remain as open-source community resources. This allows customers and community members to continue using the SDKs and build on them, while Cribl steps back from active feature development and long-term support.
+    The SDKs will continue to be available through their new home in the Cribl Community GitHub Organization, where users can keep using them, fork them, and extend them based on their own needs. Customers who want to stay on a supported integration should consider migrating to either the Python SDK, Terraform Provider, or direct Cribl API access.
+    Deprecation Notice: Smart Mode for Source Persistent Queue
+    To improve data integrity, Smart mode is now deprecated for Source persistent queue for hybrid and on-prem deployments. In January 2027, configurations for all deployments will automatically migrate to Always On mode, which uses a persistent queue buffer for all events.
+    Consider updating existing configurations to Always On mode prior to the automatic migration date. Before changing the configuration:
+    - Monitor your persistent queue usage so that you can allocate enough disk space.
+    - When making changes to your persistent queue, remember to first drain queues before disabling them to avoid orphaned data.
+    - Verify that data routing and filtering behaves as expected in a test environment before rolling out the new configuration to production.
+    Deprecation Notice: Disable Node Persistence
+    The Disable Node persistence setting is deprecated and will be removed in a future release. Node information is persisted by default. Use the Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    Notice: Future Removal of AppScope Source
+    The AppScope Source will be removed from Cribl Edge in a future release.
+    Corrections
+    Security Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                           |
+    | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | PLAT-16599  | When publishing a Pack, Cribl now accepts only PNG, JPEG, and WebP logos and verifies the file type during upload. Other formats, including SVG and HTML, are rejected. Convert unsupported Pack logos to an accepted format before uploading. Existing logos and Packs without logos are unaffected. |
+    | CRIBL-42592 | Installing a Pack from a URL now rejects private, loopback, and link-local addresses, including when the URL redirects to one of those addresses. On-prem Leaders can allow an internal Pack URL by setting CRIBL_PACK_SOURCE_ALLOW_PRIVATE=true and restarting. Cribl.Cloud ignores that setting.    |
+    | CRIBL-44717 | On Linux, configuration bundles and retained backup archives are now readable only by the Cribl service account or an administrator. Local backup or monitoring processes that read these files need the same access.                                                                                 |
+
+    Operational Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                                                                                                                              |
+    | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-45480 | Fixed an issue that prevented Windows Edge Nodes on unpatched 4.18.0 or 4.18.1 from completing an upgrade to a newer version. Known issue: Upgrading Cribl Edge Nodes on Windows fails with files being reported in use.                                                                                                                                                                                 |
+    | CRIBL-45487 | Fixed an issue where HTTP/2 caused bootstrap scripts from the Leader to set CRIBL_MASTER_HOST to 0.0.0.0 instead of the Leader hostname.                                                                                                                                                                                                                                                                 |
+    | CRIBL-45563 | Fixed an issue where Bytes Out on a Route could report many times the actual volume when a Pipeline emitted more than one event for a single input, such as when an Event Breaker or Unroll Function expanded events. Destination byte counts were not affected.                                                                                                                                         |
+    | CRIBL-44295 | Fixed an issue where the Event Breaker Function could permanently fall back to the System Default Rule. After a single event failed to match any Rule in the configured Ruleset, the Function stopped evaluating configured Rules for all later events.                                                                                                                                                  |
+    | CRIBL-45303 | Fixed an issue where Monitoring reported dropped events on the wrong Destination. When a non-final Route or an Output Router sent an event to more than one Destination, and a post-processing Pipeline on one Destination dropped its copy, those drops could appear on a different Destination that had not dropped any events. The Destination that showed the drops was still delivering its events. |
+    | CRIBL-25918 | Fixed an issue where the event column on the Data Preview OUT tab stayed narrower than the table after sample data loaded in Safari. The column now uses the full width of the table.                                                                                                                                                                                                                    |
+    | CRIBL-45484 | Fixed an issue where Auto-Parse in a Parser Function did not run on Edge Nodes that remained on a version older than the Leader. Those Nodes skipped the Function, so events reached Destinations unparsed. Pipeline preview still extracted fields, because preview runs on the Leader.                                                                                                                 |
+    | CRIBL-45906 | Fixed an issue where Import from Git rejected a Pack URL whose path contained a space, such as an Azure DevOps project name. Those URLs now import.                                                                                                                                                                                                                                                      |
+
+    Source and Destination Fixes
+
+    | ID          | Description                                                                                                                                                                                                                           |
+    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-45263 | Fixed an issue where a read error during Linux lastlog collection with the System State Source hung the collection.                                                                                                                   |
+    | CRIBL-44424 | Fixed an issue where the Apple Unified Logs Source would have increasing CPU usage on predicate filters that rarely found matching events.                                                                                            |
+    | CRIBL-44734 | OpenTelemetry gRPC Sources now close a connection after 30 minutes. An idle connection no longer keeps a connection slot until you restart the Source or Worker Process.                                                              |
+    | CRIBL-44852 | Fixed an issue where load-balanced Sources failed to initialize after configuration changes in Single-instance mode. See the known issue.                                                                                             |
+    | CRIBL-45424 | The Journal Files Source no longer logs a warning more often than once per minute for events whose payload uses an unsupported compression format.                                                                                    |
+    | CRIBL-45448 | Fixed an issue where a TCP JSON Destination with a persistent queue could stay blocked after the connection was healthy again. The queue stopped sending, so events did not reach the Destination until the Worker Process restarted. |
+
+    Other Functional Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                                                                                                |
+    | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | AI-5079     | Cribl AI requests using custom LiteLLM providers no longer include an unsupported parameter that caused errors when routing through Amazon Bedrock. This fix resolves an issue where Cribl AI features, such as Copilot chat and the Test Connection check, failed against Bedrock-backed models. Managed OpenAI providers remain unaffected.                              |
+    | AI-2503     | Resolved an issue where Cribl AI outbound requests ignored corporate proxy settings, causing features like Copilot, AI suggestions, BYOM providers, and external MCP connections to fail in proxy-restricted environments. All AI traffic now correctly routes through configured proxies, and proxy configuration changes take effect without requiring a Leader restart. |
+    | AI-5162     | Resolved an issue in AI Settings where connection tests failed for custom OpenAI and Azure OpenAI providers.                                                                                                                                                                                                                                                               |
+    | CRIBL-44834 | Fixed an issue where editing the key of an existing entry on App Settings > Key-Value Stores created a second key and left the original in place. The key is fixed after you create the entry.                                                                                                                                                                             |
+    | CRIBL-45429 | Fixed an issue where Upgrade failed for an App imported with Import from Git, reporting that credentials were required, even though the import had already stored those credentials.                                                                                                                                                                                       |
+    | CRIBL-45681 | Fixed an issue where Upgrade on a Pack installed from the Packs Dispensary, or an App installed from the Cribl Marketplace, always reported that the installed version was up to date, even when a newer version was published. Upgrade now uses the current version from the catalog.                                                                                     |
+    | CRIBL-45476 | Installing a Pack now rejects a package that is an App. Previously, uploading an App on the Packs page could write the package to disk without listing it as a Pack.                                                                                                                                                                                                       |
+    | CRIBL-45432 | Fixed an issue where creating or renaming a Route group or a Function group failed because Group Name and Description did not appear. You can set the name in the form again.                                                                                                                                                                                              |
+    | CRIBL-44266 | Fixed an issue in Firefox where the caret in the Mask Function’s regex editor appeared in a different position from where you selected, so typed characters were inserted in the wrong place.                                                                                                                                                                              |
+    | CRIBL-45555 | Fixed an issue on Settings > Global > Licensing where the product names in the usage chart legend overlapped.                                                                                                                                                                                                                                                              |
+
+    SDK Changelogs
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl SDKs in their GitHub repositories:
+    - Go SDK changelogs: control plane and management plane
+    - Python SDK changelogs: control plane and management plane
+    - TypeScript SDK changelogs: control plane and management plane
+ReleaseTime: 2026-10-21

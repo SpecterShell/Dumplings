@@ -1,0 +1,35 @@
+Version: 1.105.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.105.0/Lime-1.105.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.105.0
+    新功能
+    - 新增 Codex 对齐的 exec_command / write_stdin current 工具面，支持 PTY、持续会话、增量输出、超时 yield、输出预算、stdin 写入和终态回收；命令执行统一进入 App Server execution process、审批、sandbox 与 canonical Tool/Command lifecycle。
+    - spawn_agent.fork_turns 支持 all、none 与最近 N 个 canonical Turn，child 使用独立稳定 identity 重建可选历史和 provider transcript；Pending → Open crash commit 在 child 完整持久化后才发布可见状态。
+    - 新增 DeepSWE adapter、项目级 Gate candidate/coverage 入口和 Electron smoke evidence owner，为后续完整 Gate A/B 候选冻结提供可审计的 snapshot、surface contract 与证据分级。
+    修复
+    - Provider SSE 改为 300 秒空闲超时而非请求总时长上限，保留底层 transport error chain；OpenAI chat 流会忽略全空 tool-call placeholder，并对携带参数但缺少工具名的调用 fail closed。
+    - 修复 Agent final answer/commentary phase 在 TextEnd 映射时丢失、失败命令错误投影为 generic Tool，以及 streaming Turn DOM 缺少稳定终态的问题。
+    - 修复 AgentControl spawn 在 history、lineage、graph、identity 或 mailbox 写入失败后残留半成品 child 的问题；启动恢复只暴露已完成 crash commit 的 Open child。
+    优化与重构
+    - Codex 本地历史导入开始直接重建 canonical Thread/Turn/Item，移除 imported runtime event sidecar、conversationImport/thread/runtimeEvents/read、专用详情面板和 imported-only 工具投影，导入记录不再形成第二套完整历史事实源。
+    - 删除旧 Bash/PowerShell/shell alias 与独立 shell_execution owner，将 live process、PTY、输出 drain、interrupt/terminate 和 sandbox command preparation 收敛到 tool-runtime 与 App Server current owner。
+    - 删除 Renderer synthetic Team projection、Team Memory shadow、selected-team/session metadata、Workspace Agent Team settings 和旧 SubAgent 工具 whitelist；GUI、read model 与 runtime 继续只消费 canonical child Thread/graph facts。
+    - 拆分 Task Center draft-send dispatch、conversation import history builder、execution process、sandbox command 与 Electron smoke evidence 等高复杂度 owner，减少热文件体量和跨层隐式接线。
+    测试与质量
+    - 扩展 unified exec/PTY、execution process JSON-RPC、sandbox/policy、AgentControl fork/crash recovery、provider SSE、conversation import canonical mapping 与 GUI projection 的 Rust/TypeScript 回归。
+    - 新增 DeepSWE coding slice、项目 Gate candidate digest、34-surface coverage contract、Gate B execution evidence 和 App Server stdio transport fixture；旧 benchmark release 双轨脚本及其过期 manifest 已删除。
+    - 同步 App Server protocol schema、generated TypeScript client、command catalog、runtime fixture、Electron smoke 和 current docs guard。
+    文档
+    - 更新全局架构、Refactor V2 中央计划、Codex 导入路线图、Multi-Agent/Agent UI、测试策略和项目 Gate A/B 计划，记录 current owner、删除分类、候选冻结与后续验收条件。
+    其他
+    - 版本事实源更新到 1.105.0：根应用、CLI npm package、Rust workspace、lime-rs/Cargo.lock 和 release notes。
+    完整变更：v1.104.0 → v1.105.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.105.0
+ReleaseTime: 2026-07-16T04:05:57.0000000Z

@@ -1,0 +1,185 @@
+Version: 0.8.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ZSeven-W/openpencil/releases/download/v0.8.4/OpenPencil-0.8.4-x64-win-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ZSeven-W/openpencil/releases/download/v0.8.4/OpenPencil-0.8.4-arm64-win-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.8.4 has two halves.
+    The first is corrective. v0.8.3 shipped collaboration end to end, but in the
+    published builds the public relay could never start: every attempt — China
+    region or Global, owner or guest — ended with "the public relay is temporarily
+    unavailable." The service was healthy the whole time. The binaries were not.
+    The cause was a single space character, and this release fixes it along with
+    the three separate reasons that one character was able to reach users and stay
+    invisible: a build that could not detect it, an error that lied about it, and a
+    diagnostic path that erased it.
+    The second half closes a gap of a different kind. v0.8.3's presentation
+    workflow, scene-template catalogue and asset centre were reachable only from
+    the desktop's own menus, so an agent driving OpenPencil over MCP — or a script
+    driving it through the CLI — could build a deck and then had no way to hand it
+    to anyone, could not start from a template, and could not see the style guides
+    the user had imported. Six tools close that, and the CLI grows the matching
+    commands.
+    A third, unrelated failure goes with them: the in-app update check reporting
+    "cannot reach the release server, check your network connection" on networks
+    that were working fine.
+    Highlights
+    - Public relay works in published builds. The hub endpoints baked into the
+      release binaries were malformed; corrected at the source.
+    - A malformed hub endpoint now fails the build. It can no longer ship.
+    - Relay errors tell the truth. A refused sign-in, a rate-limited hub, an
+      unreachable network and a broken build are four different messages now.
+    - Decks, templates and style assets reach MCP and the CLI. Export a deck to
+      PowerPoint, HTML or PDF; start from any shipped scene template, including the
+      16:9 decks; list the style guides the user imported; batch-export every frame
+      on a page. The MCP catalogue grows from 123 tools to 129.
+    - Update checks survive shared IP addresses. The probe falls back to the
+      releases Atom feed when GitHub's anonymous API quota is exhausted.
+    The Relay Fix
+    What happened
+    The production hub URLs are deliberately absent from the open-source tree. The
+    release pipeline injects them at compile time from repository secrets, and
+    relay_bootstrap_select.rs reads them with option_env!.
+    Both secrets had been saved with a leading space:
+    " https://op.zseven.cn/api/v1/collaboration/bootstrap"
+    " https://op.zseven.tech/api/v1/collaboration/bootstrap"
+    option_env! bakes the value in exactly as stored, space and all. The runtime
+    endpoint policy is deliberately strict — it rejects any value where
+    value.trim() != value — so the injected endpoint parsed as no usable hub,
+    and every relay attempt failed before a single packet left the machine.
+    Because both secrets carried the space, switching regions changed nothing. And
+    because the bad character is invisible in every log, every dashboard, and every
+    strings dump of the binary, nothing pointed at it.
+    Why it shipped
+    A guard for exactly this already existed —
+    injected_bootstrap_urls_pass_the_endpoint_policy_or_stay_absent — and it
+    passed, vacuously. Repository secrets are not exposed to the CI test job, so
+    the assertion took its "no hubs injected, nothing to validate" branch on every
+    run. The release job is the one that receives the secrets, and it ran no
+    such assertion.
+    The fix moves the check where neither job can miss it: a build script on
+    op-collab-host validates the injected endpoints at compile time and fails the
+    build with an actionable message.
+    error: failed to run custom build command for `op-collab-host`
+      OPENPENCIL_BUILD_COLLAB_BOOTSTRAP_URL_CN is not a usable collaboration hub URL
+      (the value has leading or trailing whitespace). Expected exactly
+      `https://<host>/api/v1/collaboration/bootstrap` with no surrounding
+      whitespace; check the repository secret for a stray space or trailing newline.
+    An absent variable stays valid — open-source and fork builds legitimately carry
+    no production hub, and continue to build.
+    Honest Failure Reporting
+    The single space was hard to find because the code actively hid it. Three
+    changes fix that, and they outlive this particular bug.
+    - A broken build no longer poses as an outage. An injected endpoint that
+      fails the policy now reports as not configured rather than temporarily
+      unavailable. The old copy invited the user to wait for a condition that could
+      never resolve on its own.
+    - Control-plane failures are classified. Every call to the relay locator —
+      route publication, pairing-code publication, pairing-code claim — used to end
+      in map_err(|_| RelayUnavailable). An expired collaboration ticket, a
+      rate-limited hub, an unreachable network and a malformed response all reached
+      the user as the same sentence. A refused ticket (HTTP 401/403) is now a
+      sign-in problem, a rate-limited hub (HTTP 429) is now a retry-later problem,
+      and only genuine transport and protocol faults remain "relay unavailable".
+      This also gives collab.error.rateLimited, translated in all 15 locales since
+      v0.8.3, its first real producer.
+    - Stage diagnostics, without credentials. Control-plane failures write one
+      line naming the stage and the failure class. Only the failure enum — which
+      carries no payload — and a &'static str variant tag are ever formatted; the
+      error's own Display is deliberately never used, so a future payload field
+      cannot leak into a support log. A test enforces that every tag stays a bare
+      variant name.
+    Decks, Templates and Assets for Agents
+    Everything below already existed in v0.8.3; none of it was reachable except
+    by hand, from the desktop app's own menus. An agent could build a deck and not
+    deliver it, or be told a template catalogue existed and be unable to open it.
+    Deck export. export_deck { format, outputPath } writes the active page's
+    boards as an editable PowerPoint, one self-contained HTML file, or a
+    slide-per-page PDF — op export-deck --output PATH [--format pptx|html|pdf]
+    from the CLI. It writes a file rather than returning base64: a deck is a
+    multi-megabyte artifact and the caller wants something shareable. The
+    destination argument is outputPath, because filePath means "the .op
+    document this call targets" everywhere in this API.
+    Scene templates. list_scene_templates and use_scene_template
+    (op templates, op use-template <id>) open the shipped catalogue, the six
+    16:9 deck templates included — which makes it the entry point to the
+    presentation workflow rather than a convenience. On an untouched starter page a
+    template takes the page over; anywhere else its boards are appended to the
+    right of what is already there.
+    Style assets. list_style_guides (op styles) merges the shipped corpus
+    with the DESIGN.md files the user imported, imports first, as the Asset
+    Centre paints them. The imports were the gap that mattered: get_style_guide
+    searches the shipped corpus only, so the user's own material was invisible to
+    MCP entirely. Passing id returns one guide with its markdown, which is what
+    closes the loop for an import.
+    Batch export and deck inspection. export_frames { outputDir, format }
+    (op export-frames --output-dir DIR) writes one image per top-level frame
+    using the editor's own file naming — collisions resolved, long AI-authored
+    names capped, hidden frames skipped — and reports per-frame failures instead of
+    discarding the files that did land. get_deck_boards lists the boards a deck
+    export will walk, so a deck can be verified before one is written.
+    Slideshow control is deliberately not part of this: entering preview is a host
+    mode transition rather than document state, and a file-backed MCP session has
+    no window to present in.
+    The three file-writing tools (export_deck, export_frames,
+    list_style_guides) are local-filesystem surfaces and are denied on the online
+    multi-tenant /mcp, for the same reason save_document is.
+    Update Check
+    The in-app update check reported "cannot reach the release server, check your
+    network connection" for users whose network was fine. GitHub's anonymous API
+    allows 60 requests per hour per source IP, so anyone behind a shared egress
+    — corporate NAT, a VPN, most China-region proxies — can find the quota already
+    spent by strangers:
+    403 {"message":"API rate limit exceeded for <shared-egress-ip>."}
+    The probe now falls back to the releases Atom feed, which is served by
+    github.com rather than api.github.com and is not on that quota. The JSON API
+    stays the first choice for its richer response; the feed only has to cover the
+    case where the API refuses to answer at all. Drafts never appear in the feed,
+    which is the same rule the API path already applied.
+    Fixed
+    - Public relay unusable in all published v0.8.3 builds, in both service
+      regions, for owners and guests alike.
+    - Update check failing with a network error on shared egress IP addresses.
+    - A misconfigured relay build reporting as a temporary service outage.
+    - Expired collaboration tickets, rate-limited hubs and network faults sharing
+      one indistinguishable relay error.
+    - Deck export, the scene-template catalogue, imported style guides and batch
+      frame export being unreachable from MCP and the CLI.
+    Upgrade Notes and Compatibility
+    - Upgrade to restore the public relay. No server-side change is needed and
+      no action is required from you beyond installing this release — the v0.8.3
+      hubs, regions and pairing codes were correct throughout. Local-network
+      collaboration was never affected.
+    - Pairing codes and sessions are unchanged. The 10-character region-tagged
+      pairing code, the wire protocol, and the bootstrap document format are
+      identical to v0.8.3; a v0.8.4 peer and a v0.8.3 peer interoperate on any
+      path a v0.8.3 peer could already reach.
+    - Sign-in prompts may replace relay errors. With ticket rejection now
+      classified, a session whose sign-in has lapsed reports that directly instead
+      of blaming the relay. This surfaces a pre-existing condition; it is not a new
+      restriction.
+    - Building from source with production hubs. If you inject
+      OPENPENCIL_BUILD_COLLAB_BOOTSTRAP_URL_CN / _GLOBAL, they must now be exact
+      — https://<host>/api/v1/collaboration/bootstrap, lowercase host, no
+      surrounding whitespace — or the build fails. Builds that inject neither are
+      unaffected.
+    - New tools are additive. Nothing in the existing MCP catalogue changed
+      shape; get_style_guide still answers exactly as it did. Clients pinned to
+      the v0.8.3 catalogue keep working and simply do not see the six new tools.
+    - Prebuilt op-auth libraries are version-pinned. Their signed provenance
+      records the product version, so the v0.8.4 artifacts are required for a
+      v0.8.4 build; a v0.8.3 artifact is refused rather than silently linked.
+    Acknowledgements
+    Thanks to everyone who reported the relay failure and stayed with the
+    investigation through the server, the gateway, the trust chain and the build
+    pipeline before it came down to one byte in a repository secret.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ZSeven-W/openpencil/releases/tag/v0.8.4
+ReleaseTime: 2026-08-11T17:15:41.0000000Z

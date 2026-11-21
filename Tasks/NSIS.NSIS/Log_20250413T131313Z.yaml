@@ -1,0 +1,31 @@
+Version: "3.11"
+Installer:
+- InstallerUrl: https://sourceforge.net/projects/nsis/files/NSIS 3/3.11/nsis-3.11-setup.exe/download
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://nsis.sourceforge.io/Docs/AppendixF.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    F.1.1 Release Notes
+    Your installer will still fit on a single floppy disk. Or even eight.
+
+    F.1.2 Changelog
+
+    F.1.2.1 Security
+    - Retry creating restricted $PLUGINSDIR (thanks Sandro Poppi for responsibly disclosing, bug #1315)
+      This stops a possible privilege escalation. A malicious actor can create the temporary plugins directory ($PLUGINSDIR) at just the right time and fill it with malicious files that the installer might use. Installers running as SYSTEM use C:\windows\temp which is accessible by all users on the system. Any user can use this bug to gain SYSTEM privileges by winning the race condition with an installer that starts as SYSTEM.
+
+    F.1.2.2 Minor Changes
+    - Retry opening self if there is a sharing error (partial patch #316)
+    - Support setting source file decoding charset with magic comment (patch #292)
+    - Fixed LicenseBkColor for uninstaller (bug #1314)
+    - Handle CHARSET command line parameter in MakeNSISW (patch #315)
+    - Make System/Resource.dll reproducible (patch #312)
+    - Zip2Exe accepts .zip as command line parameter
+
+    F.1.2.3 Translations
+    - Updated Finnish (patch #313)
+- Key: ReleaseNotesUrl
+  Value: https://nsis.sourceforge.io/Docs/AppendixF.html#v3.11
+ReleaseTime: 2025-03-08

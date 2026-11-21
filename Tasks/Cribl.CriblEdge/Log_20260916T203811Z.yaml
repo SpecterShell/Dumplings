@@ -1,0 +1,145 @@
+Version: 4.20.0
+Installer:
+- InstallerUrl: https://cdn.cribl.io/dl/4.20.0/cribl-4.20.0-cee79842-win32-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://docs.cribl.io/edge/release-notes/release-v4200/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Cribl Edge 4.20.0 includes significant performance improvements, new capabilities, and important bug fixes.
+    Important Changes
+    This release introduces breaking changes and deprecations that require action if you use the affected features:
+    - Event byte limit enforces a size boundary
+    - New location for Login and SSO/SLO callback rate limits
+    - Deprecation Notice: Smart Mode for Source persistent queue
+    - Notice: Cribl as Code TypeScript and Go SDK Discontinuation
+    - Review the full list of important changes for additional critical updates.
+    New Features
+    This release provides the following improvements:
+    Apps General Availability
+    Apps are now generally available and no longer in Preview.
+    Apps let you build and run custom applications in Cribl. An App is a packaged user-interface experience that can call Cribl and third-party APIs, enabling tailored workflows and front-end experiences beyond the built-in product surfaces.
+    This release adds:
+    - Backend functions: An App can expose HTTP endpoints and run work on a schedule, so it can automate tasks instead of doing everything in the browser.
+    - External API Access: Administrators can authorize which third-party hosts each App may call, including Organization-specific domains that were not packaged with the App.
+    - Permissions review: Before you install an App, you can see the in-product permissions and external API access it declares.
+    - App limits: Administrators can control how much compute and related capacity each App can use.
+    - Scaffolding and upgrades: App builders get a clearer path from Create App through packaging, versioning, and upgrading an installed App.
+    Authentication Token Management
+    The new authentication token mechanism lets you create multiple tokens to provision Edge Nodes and Outposts. You can rotate and revoke tokens to control which Nodes can connect to the Leader.
+    On upgrade to 4.20.0, existing deployments automatically receive one legacy type token set to the value of the existing auth token.
+    No immediate action is required to migrate to the new token mechanism.
+    Cribl recommends rotating the legacy token to a new provisioning token at your earliest convenience. You can’t revoke the legacy token in a Cribl.Cloud deployment.
+    Fleet Inheritance Visibility
+    Sources, Destinations, and Pipelines in Subfleets now display information about whether their configuration is inherited from a parent Fleet, created locally, or inherited but modified locally. Helpful warnings in Source, Configuration, and Pipeline pages inform you when modifications you make would override inherited configuration.
+    Disable Remote Capture in On-Prem and Hybrid Deployments
+    In on-prem and hybrid deployments, you can now prevent a Leader from pulling event samples from an Edge Node by setting CRIBL_DISABLE_FEATURES=remote_capture on the Node. The Edge Node refuses every Live Capture request, including captures that the Leader initiates, which keeps events on the host. Because the Edge Node reads the setting from its own environment, no Leader-side change can re-enable capture.
+    Retrieve Global Secrets from Azure Key Vault
+    You can now create secret stores for global secrets that are backed by Azure Key Vault. Cribl authenticates to Microsoft Entra ID as a service principal and retrieves current secret values from the vault. Define credentials once in Azure Key Vault and reuse them across Cribl Edge deployments.
+    Parquet Schema Validation in Expressions
+    You can now validate events against a Parquet schema (a Knowledge Object) from any JavaScript expression, using C.Schema('<schema-id>', { kind: 'parquet' }).validate(<event>). A companion explain() method reports which field failed and why. This extends the existing C.Schema().validate() method, which previously supported only JSON schemas.
+    For routing, run the check once in a Source pre-processing Pipeline with an Eval Function filter, then use a Route filter or an Output Router to label conforming events for routing to your Parquet Destination and everything else to a separate Destination. Failed events stay available for inspection while you refine the schema, instead of being dropped at write time.
+    Schema validation is ideal for non-latency-sensitive troubleshooting, such as configuring new Sources and Parquet schema Knowledge Objects in a development environment for iterative review before finalizing schemas, Pipelines, and Routes.
+    Auto-Parse on Routes and Sources
+    Automatic parsing, introduced in 4.19 as the Parser Function’s Auto type, is now available on Routes and Sources as well. Toggle on Auto-parse in a Route, or in a Source’s Pre-Processing settings, and Cribl detects each event’s format and extracts its top-level fields before your Pipeline runs. This is available for raw or unstructured data Sources (such as TCP, UDP, Syslog, HTTP Raw, Splunk, files, object stores, and message queues).
+    Experience Improvements
+    - Kubernetes Logs collection performance has been improved to support up to 100,000 events per second per node.
+    - Bytes Out for Routes now estimates event size after Pipeline processing, instead of reusing the incoming event size. Because the metric responds when Functions modify, enrich, or reduce events, the Routes page and the Monitoring Routes charts show each Route’s real effect on data volume. Use it to confirm and quantify your data reduction, without sending internal metrics to a downstream system to measure it.
+    - When you select a Node on the Edge Nodes page, the details drawer now lists the Worker Processes running on that Node.
+    - Sample files are easier to scan and manage in both the Knowledge library and the Sample Data tab in Data Preview. Size and Events columns now appear in the Knowledge library table, so you can see how large a sample is and how many events it contains before you use it. In Data Preview, Import Data and Edge Data are grouped under an Import menu, with Capture Data as a separate control. All row-level actions, including Simple Preview and Full Preview, are now grouped under the row’s Actions menu.
+    - The Pipelines monitoring view now includes Errors, Total Errors, and Average Errors (EPS) alongside the existing throughput columns. These metrics show each Pipeline’s processing-error rate and count over your selected time range.
+    - Settings > Global > Upgrade > Validate CDN server certificates now includes a tooltip that explains when to disable certificate validation.
+    - TLS settings sections across Sources, Destinations, and system configuration have been reorganized to support typical logical flows when configuring TLS.
+    - To protect Leader stability, Cribl.Cloud now limits how many Worker Groups and Fleets can start a Config Helper at the same time. When the Leader is under memory or CPU pressure, or too many of these operations are already in progress, the request returns HTTP 429 with a Retry-After value. Wait for that interval and retry. This is most likely during bulk automation, such as a Terraform or API apply that creates or first configures many Worker Groups or Fleets at once.
+    Sources and Destinations
+    - The Windows Event Logs Source now offers an Include empty JSON fields option, which lets you include JSON fields whose values are - in event output. This preserves field structure for downstream systems that expect placeholder values.
+    - The new Enable discovery Throttling setting lets you throttle CPU usage for File Monitor discovery to a configurable target percentage. This can help you reduce CPU spikes on large directory trees, at the cost of higher discovery latency.
+    - The File Monitor Source now offers an Enable Load Balancing option to help handle ingesting more file data EPS than a single Worker Process can handle.
+    - The Cribl Search Destination can now send logs and native metrics over the same connection.
+    - The Kafka Destination now supports SASL OAuth.
+    - The Exabeam Destination now supports Exabeam V2 dynamic metadata.
+    - The Windows Event Forwarder Source now supports Negotiate authentication, so you can collect events from Windows hosts whose WinRM policy requires message-level encryption.
+    - The OpenTelemetry Source now supports OAuth2 client credentials as an authentication method, in addition to auth tokens and basic auth.
+    - The OpenTelemetry Source now accepts OTLP over HTTP with JSON-encoded protobuf, alongside binary protobuf.
+    - The Amazon S3 Data Lake Destination now lets you select an AWS Region, so you can send data to region-specific S3 endpoints instead of the global endpoint.
+    Important Changes
+    Event Byte Limit Enforces a Size Boundary
+    The Event byte limit on an Event Breaker Rule is now an enforced size boundary. When an event reaches the limit before the break pattern matches, Cribl splits the data into events of up to that size. Previously, Cribl kept leftover bytes and rescanned them as more data arrived. This behavior could drive up CPU and memory use and send significantly more data to your Destinations than the Source received.
+    What you need to do:
+    Review Event Breaker Event byte limit values if you rely on leftover-byte rescanning. After this change, oversized input is split into events of up to the configured size instead of accumulating and being re-emitted.
+    New Location for Login and SSO/SLO Callback Rate Limits
+    The Login rate limit and SSO/SLO callback rate limit settings moved to Settings > Global > General Settings > Limits > API for the Leader and to Fleet Settings > Limits > API for Edge Fleets. Cribl stores the values in api-limits.yml. Existing rate limits defined in cribl.yml continue to work and do not need to be migrated. To set the limits using the Cribl API, use the PATCH /system/api-limits endpoint.
+    Notice: End of Support for Edge Nodes Running Version 3.x
+    To optimize Leader performance and accelerate the delivery of modern edge observability features, Cribl is officially ending support and testing for Edge Nodes running version 3.x that connect to the Leader. To ensure a smooth transition for legacy environments, modern Leaders will not actively block inbound connections from Edge Nodes running version 3.x at this time. However, backward compatibility is no longer actively maintained or tested.
+    If you have legacy Edge Nodes running 3.x remaining in your Fleet, we strongly recommend upgrading them to a supported 4.x release to guarantee uninterrupted configuration management and telemetry collection.
+    Notice: Upcoming Removal of Legacy Edge Upgrade Option
+    The Enable Legacy Edge upgrades checkbox will be removed as an upgrade option in a future release. If you are running Cribl Edge Nodes older than version 4.5.0, they can no longer be upgraded automatically via the Leader. You must manually upgrade these specific Nodes to version 4.5.0 or later. Once they are on a modern version, they will automatically inherit the standard upgrade framework for all future updates.
+    Notice: Removal of Stream-Specific Sources
+    The following three Sources have been removed from Cribl Edge:
+    - Zscaler Cloud NSS
+    - Model Driven Telemetry
+    - Amazon Firehose
+    These Sources are designed for high-volume, remote data streaming and are architecturally optimized for Cribl Stream rather than Cribl Edge. If you are using these Sources in Cribl Edge, migrate to the Cribl Stream Sources instead.
+    Notice: Upcoming Removal of Legacy Windows Collection Settings
+    The legacy Use Windows Tools setting (found in the Windows Event Logs, Windows Metrics, and System State Sources) will be removed in a future release. This setting enables a legacy PowerShell-based collection method. By default, these Sources use the newer native collection method, which is faster, more reliable, and collects the same data.
+    No action is required. When Cribl removes these settings, affected Sources automatically use the native method.
+    Notice: Cribl as Code TypeScript and Go SDK Discontinuation
+    Cribl is stopping active development of the Cribl as Code Go and TypeScript SDKs, which were previously in preview. To give existing users a clear path forward, we are moving the SDKs from the criblio GitHub Organization to the Cribl Community GitHub Organization. We are also open sourcing them as community resources. Customers and community members can continue using and building on the SDKs while Cribl steps back from active development and long-term support.
+    The SDKs will continue to be available through their new home in the Cribl Community GitHub Organization. You can continue using, forking, and extending them based on your needs. To use a supported integration, consider migrating to the Python SDK, Terraform Provider, or direct Cribl API access. During the transition period, Cribl support will be limited to critical issues, such as security vulnerabilities or P0 blockers. On October 1, 2026, the SDK repositories will be archived and marked read-only.
+    Deprecation Notice: Smart Mode for Source Persistent Queue
+    To improve data integrity, Smart mode is now deprecated for Source persistent queue for hybrid and on-prem deployments. In January 2027, configurations for all deployments will automatically migrate to Always On mode, which uses a persistent queue buffer for all events.
+    Consider updating existing configurations to Always On mode prior to the automatic migration date. Before changing the configuration:
+    - Monitor your persistent queue usage so that you can allocate enough disk space.
+    - When making changes to your persistent queue, remember to first drain queues before disabling them to avoid orphaned data.
+    - Verify that data routing and filtering behaves as expected in a test environment before rolling out the new configuration to production.
+    Deprecation Notice: Disable Node Persistence
+    The Disable Node persistence setting is deprecated and will be removed in a future release. Node information is persisted by default. Use the Fleet-level Time to keep disconnected Nodes setting to control how long Nodes are tracked.
+    Notice: Future Removal of AppScope Source
+    The AppScope Source will be removed from Cribl Edge in a future release.
+    Corrections
+    Operational Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                                                                                            |
+    | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-44177 | Fixed an issue where an API GET request to /api/v1/products/edge/summary incorrectly returned HTTP 500: No workers registered.                                                                                                                                                                                                                                         |
+    | CRIBL-43142 | Fixed an issue where upgrading Windows Edge Nodes from 4.18.0 or 4.18.1 versions could fail, leaving the Node stuck on the affected build.                                                                                                                                                                                                                             |
+    | CRIBL-39757 | Fixed an issue where editing an inherited Destination in a Subfleet could replace a secret with its encrypted value. Any change to the Destination, including editing only the description, caused Edge Nodes in the Subfleet to send the encrypted string as the credential. This affected inline secrets such as a Splunk HEC token and TLS private key passphrases. |
+    | PLAT-14773  | Fixed an issue where an ungraceful shutdown could leave package.json empty, causing Edge Nodes to fail to start. Cribl now writes package.json more reliably and rewrites it at startup if the file cannot be parsed.                                                                                                                                                  |
+    | CRIBL-44150 | Fixed an issue where a Worker Process configuration reload could silently stop delivering events from a Syslog Source inside a Pack when the Pack Route sent data to the Fleet Route table. Affected events were assigned __outputId: "devnull:devnull" and discarded with no error logged until the Node was restarted.                                               |
+    | CRIBL-44296 | Fixed an issue where a File Monitor Source inside a Pack ignored Event Breaker Rulesets defined only in that Pack, and applied the System Default Rule instead. If a global Ruleset used the same ID as the Pack Ruleset, the Source applied the global Ruleset.                                                                                                       |
+    | CRIBL-44486 | Fixed an issue where the Edge Node bootstrap script endpoint rejected valid tag values containing non-alphanumeric characters.                                                                                                                                                                                                                                         |
+    | CRIBL-44054 | Fixed an issue where a failed SOCKS/TLS connection did not trigger a retry, which could leave a Node permanently disconnected from the Leader until restart.                                                                                                                                                                                                           |
+    | PLAT-13217  | Fixed an issue where completed Collection jobs could be marked orphaned and restarted when the Leader or jobs service starts. This could result in duplicate data at the Destination in environments with a large job history. Cribl now confirms that jobs have not already completed before marking them orphaned.                                                   |
+    | CRIBL-38779 | The Cribl Event Breaker Ruleset now uses an event’s existing _time value instead of extracting a timestamp again from the event body.                                                                                                                                                                                                                                  |
+    | CRIBL-44295 | Fixed an issue where the Event Breaker Function could permanently fall back to the System Default Rule. After a single event failed to match any Rule in the configured Ruleset, the Function stopped evaluating configured Rules for all later events.                                                                                                                |
+    | CRIBL-43782 | You can now Cmd/Ctrl/middle-click Fleets and Edge Node table rows to open them in a new browser tab.                                                                                                                                                                                                                                                                   |
+
+    Source and Destination Fixes
+
+    | ID          | Description                                                                                                                                                                                                                                                                                       |
+    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-26721 | Fixed an issue where Worker Process restarts could take three minutes or longer on Fleets that used an Azure Blob Storage Destination.                                                                                                                                                            |
+    | CRIBL-28571 | Fixed an issue where the bytes column on Monitoring > Sources stayed empty for the HTTP Source, even though the event count increased as data arrived.                                                                                                                                            |
+    | CRIBL-29524 | Fixed an issue where persistent queue metrics for HTTP-based Destinations could not be compared: pqInBytes was calculated from the _raw field while pqOutBytes was calculated from the full event size, so the two values never matched and queue health was difficult to assess.                 |
+    | CRIBL-32346 | Fixed an issue where the OpenTelemetry Source under-reported __bytes because resource attributes and scope details were excluded from the size calculation. Byte counts now include those shared resource and scope bytes for OTLP logs, metrics, and traces in both extracted and batched modes. |
+    | CRIBL-37302 | Fixed an issue where Cribl TCP to Cribl TCP delivery between separate deployments succeeded only when the shared license was listed first on the receiving Leader.                                                                                                                                |
+    | CRIBL-42745 | Fixed an issue where idle FileSystemOut-based Destinations rewrote open-file state to disk every second with no change detection, generating unnecessary disk I/O even when no events were flowing.                                                                                               |
+    | CRIBL-42779 | Fixed an issue where authentication failures on HTTP-based Destinations were reported as non-retryable, so persistent queue never engaged and events were dropped.                                                                                                                                |
+    | CRIBL-43956 | Fixed an issue where the OTLP Metrics Function counted Cribl events rather than OTLP data points toward Send batch size.                                                                                                                                                                          |
+    | CRIBL-36688 | Fixed an issue where the Splunk HEC Source logged a socket timed out error after the request had already completed, when the timeout was caused by backpressure rather than an inactive socket.                                                                                                   |
+
+    Other Functional Fixes
+
+    | ID          | Description                                                                                                                                                                                   |
+    | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | CRIBL-39850 | The Safari browser now shows the Manage as JSON option on the Pipelines page.                                                                                                                 |
+    | CRIBL-44266 | Fixed an issue in Firefox where the caret in the Mask Function’s regex editor appeared in a different position from where you selected, so typed characters were inserted in the wrong place. |
+    | PLAT-15511  | Fixed an issue where field tooltips and the Fleet selector in the Add/Update Edge Node modal were cut off and rendered behind the modal instead of on top of it.                              |
+
+    SDK Changelogs
+    The Cribl SDKs help you integrate with Cribl and reduce the need for repetitive tasks. We maintain changelogs for each version of the Cribl Python SDKs in their GitHub repositories:
+    - Control plane
+    - Management plane
+ReleaseTime: 2026-09-16

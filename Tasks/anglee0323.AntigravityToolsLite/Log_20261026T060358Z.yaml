@@ -1,0 +1,16 @@
+Version: 4.10.11
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.11/agy-switch-4.10.11-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复自动切换写入客户端数据库失败时仍报告成功的问题。备份或写入失败会暂停后续切换、保留当前账号记录，并显示失败；部分写入后不会继续重启客户端。
+    - 提高 OAuth 本地回调的稳定性：无效首连、空连接和分段请求不会提前结束授权；回调有大小、并发和等待时间限制，支持取消并校验状态。日志不再记录令牌前缀或回调原文。
+    - 修复损坏的客户端数据触发 protobuf 越界或整数溢出的问题。修正 CLI 刷新入口提示、未安装 App 时的切换检查，以及多账号列表在较小终端中的重绘和选中行显示。
+    - Windows 切换会等待客户端退出并在超时范围内重试。统一 Windows 程序和测试所需的系统控件清单，更新依赖并对齐 Tauri 前后端工具版本。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.11
+ReleaseTime: 2026-10-26T05:50:57.0000000Z

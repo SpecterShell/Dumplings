@@ -1,0 +1,28 @@
+Version: 0.67.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/badlogic/pi-mono/releases/download/v0.67.2/pi-windows-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Support for multiple --append-system-prompt flags, each value is appended to the system prompt separated by double newlines. See README.md#other-options.
+    - Support for passing inline extension factories to main() for embedded integrations and custom entrypoints.
+    - Interactive keybinding support for Kitty super-modified shortcuts such as super+k, super+enter, and ctrl+super+k. See docs/keybindings.md.
+    Added
+    - Added support for multiple --append-system-prompt flags, each value is appended to the system prompt separated by double newlines (#3171 by @aliou)
+    - Added interactive keybinding support for Kitty super-modified shortcuts such as super+k, super+enter, and ctrl+super+k (#3111 by @sudosubin)
+    - Added support for passing inline extension factories to main() for embedded integrations and custom entrypoints (#3099 by @pmateusz)
+    Fixed
+    - Fixed direct OpenAI Responses and Codex SSE requests to align prompt_cache_key, session_id, and x-client-request-id values with the same session-derived identifier, improving prompt cache affinity for append-only sessions (#3018 by @steipete)
+    - Fixed streaming-only partialJson scratch buffers leaking into persisted OpenAI Responses tool calls, which could corrupt follow-up payloads on resumed conversations.
+    - Fixed Ctrl+Alt letter key matching in tmux by falling through from legacy ESC-prefixed handling to CSI-u and xterm modifyOtherKeys parsing when the legacy form does not match (#2989 by @kaofelix)
+    - Fixed the shipped subagent example to avoid leaking Bun virtual filesystem script paths into subagent prompts (#3002 by @nathyong)
+    - Fixed bordered loaders to stop their animation timer when disposed, preventing stale loader updates after teardown.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/badlogic/pi-mono/releases/tag/v0.67.2
+ReleaseTime: 2026-04-14T21:43:27.0000000Z

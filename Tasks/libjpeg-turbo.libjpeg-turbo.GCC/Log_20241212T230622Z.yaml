@@ -1,0 +1,25 @@
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.1.0/libjpeg-turbo-3.1.0-gcc.exe
+  ProductCode: libjpeg-turbo-gcc 3.1.0
+  AppsAndFeaturesEntries:
+  - DisplayName: libjpeg-turbo SDK v3.1.0 for GCC
+    ProductCode: libjpeg-turbo-gcc 3.1.0
+- Architecture: x64
+  InstallerUrl: https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.1.0/libjpeg-turbo-3.1.0-gcc64.exe
+  ProductCode: libjpeg-turbo-gcc64 3.1.0
+  AppsAndFeaturesEntries:
+  - DisplayName: libjpeg-turbo SDK v3.1.0 for GCC 64-bit
+    ProductCode: libjpeg-turbo-gcc64 3.1.0
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Significant changes relative to 3.1 beta1:
+    1. Fixed an issue in the TurboJPEG API whereby, when generating a lossless JPEG image with more than 8 bits per sample, specifying a point transform value greater than 7 resulted in an error ("Parameter value out of range") unless TJPARAM_PRECISION/TJ.PARAM_PRECISION was specified before TJPARAM_LOSSLESSPT/TJ.PARAM_LOSSLESSPT.
+    2. Fixed a regression introduced by 1.4 beta1[3] that prevented jpeg_set_defaults() from resetting the Huffman tables to default (baseline) values if Huffman table optimization or progressive mode was previously enabled in the same libjpeg instance.
+    3. Fixed an issue whereby lossless JPEG compression could not be disabled if it was previously enabled in a libjpeg or TurboJPEG instance. jpeg_set_defaults() now disables lossless JPEG compression in a libjpeg instance, and setting TJPARAM_LOSSLESS/TJ.PARAM_LOSSLESS to 0 now disables lossless JPEG compression in a TurboJPEG instance.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/libjpeg-turbo/libjpeg-turbo/releases/tag/3.1.0
+Version: 3.1.0
+ReleaseTime: 2024-12-12T22:25:15.0000000Z

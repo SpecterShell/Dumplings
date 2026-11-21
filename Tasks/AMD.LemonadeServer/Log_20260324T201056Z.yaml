@@ -1,0 +1,90 @@
+Version: 10.0.1
+Installer:
+- InstallerUrl: https://github.com/lemonade-sdk/lemonade/releases/download/v10.0.1/lemonade-server-minimal.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Headline
+    - Debian packages are now available via PPA instead of .deb
+    - Streamlined experience for searching and adding GGUFs from Hugging Face in the app
+    - qwen3.5-4b now available on NPU via FastFlowLM v0.9.36
+    - llama.cpp uplifted to b8460 with significant Qwen3.5 optimizations
+    - Smoother FLM on Linux install process
+    Ubuntu Installation Change
+    New installation process for Ubuntu, replacing the .deb installer:
+    sudo add-apt-repository ppa:lemonade-team/stable
+    sudo apt install lemonade-server
+    Quick Install
+    Operating System Downloads
+    Windows lemonade.msi (Server + App) · lemonade-server-minimal.msi (Server Only)
+    Fedora 43 lemonade-server-10.0.1.x86_64.rpm (Server) · Lemonade-10.0.1-x86_64.AppImage (Companion Desktop App)
+    macOS (beta) Lemonade-10.0.1-Darwin.pkg (Server + App)
+    Other platforms? See our Installation Options for Docker, Snap, Arch, Fedora, Debian, and more.
+
+    What's Changed
+    Thanks @Rebreda, @abn, @bitgamma, @choppu, @de-wim, @elijahsgh, @github-actions, @ianbmacdonald, @jaeiclee, @jeremyfowers, @kenvandine, @kpoineal, @meghsat, @ramkrishna2910, @sawansri, @sofiageo, @superm1, @szkocot, @timothycarambat for your awesome contributions to this release!
+    Click to expand changelog
+    - Recommend ffmpeg in Debian package for whisper audio conversion by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1325
+    - Disable microphone when running on insecure Window by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1305
+    - feat: add whispercpp custom args config by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1310
+    - Update flm_npu_linux.html by @de-wim in https://github.com/lemonade-sdk/lemonade/pull/1344
+    - AnythingLLM Docs update by @timothycarambat in https://github.com/lemonade-sdk/lemonade/pull/1345
+    - fix: ignore stdout from flm version --json to ensure we only get valid json by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/1351
+    - Add libatomic1 as Docker runtime dependency for ROCm backend by @jaeiclee in https://github.com/lemonade-sdk/lemonade/pull/1349
+    - Update flm_npu_linux.html by @de-wim in https://github.com/lemonade-sdk/lemonade/pull/1350
+    - Attempt to preserve capabilities by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1339
+    - Add conf.d support for Lemonade config overrides by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1324
+    - Update NPU Exclusivity constraints in server_spec.md by @elijahsgh in https://github.com/lemonade-sdk/lemonade/pull/1356
+    - fix: fastflowlm guide for Arch Linux by @sofiageo in https://github.com/lemonade-sdk/lemonade/pull/1359
+    - Update NPU exclusivity section in server_spec.md by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1360
+    - add standalone CLI by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/1336
+    - Update supported configs table on the readme by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1362
+    - Fix streaming: call sink.done() on all error paths to properly terminate chunked responses by @abn in https://github.com/lemonade-sdk/lemonade/pull/1340
+    - fix(tray): use get_environment_variable_utf8 for HF cache paths by @kpoineal in https://github.com/lemonade-sdk/lemonade/pull/1311
+    - Add a model form revamp by @meghsat in https://github.com/lemonade-sdk/lemonade/pull/1355
+    - Add query parameter handling to enable firefox chatbot integration by @Rebreda in https://github.com/lemonade-sdk/lemonade/pull/1327
+    - Update CLAUDE.md for v10.0.0 by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/1383
+    - Add a new target to build the web app using system nodejs by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1369
+    - Add Linux system tray support via AppIndicator3 by @abn in https://github.com/lemonade-sdk/lemonade/pull/1300
+    - Create containers for building native packages by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1367
+    - Fix merge queue CI failures by running apt-get update before deb install by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1393
+    - Disable hardware caching for Linux by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1354
+    - Changes to prepare for native packaging by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1366
+    - Restricting the HF search to only GGUF text gen models by @meghsat in https://github.com/lemonade-sdk/lemonade/pull/1392
+    - Move to libwebsockets by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/1384
+    - AGENTS.md for non-claude agents by @sawansri in https://github.com/lemonade-sdk/lemonade/pull/1396
+    - Add libwebsockets-dev to Ubuntu PPA emulation containers by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1402
+    - Install FLM in the docker file by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1347
+    - Job reduction revisit by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1405
+    - Add Linux FLM and Fedora support to install options and release notes by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1406
+    - Add code owners for claude and agents md by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/1401
+    - fix(server): support OpenCode thinking flag by @szkocot in https://github.com/lemonade-sdk/lemonade/pull/1372
+    - Upgrade FLM version by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/1410
+    - Use native debian packaging by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1376
+    - Stricter device check for ROCm (+gfx103X support) by @jaeiclee in https://github.com/lemonade-sdk/lemonade/pull/1409
+    - Fix a PPA FTBFS on Ubuntu noble by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1415
+    - Add CI workflow to validate new llama.cpp releases by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1337
+    - d/lemonade-server.{postinst,postrm}: Migrate from /opt by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1418
+    - fix: accurate download progress and speed by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1386
+    - fix(app): prevent wrong model selection during load by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1413
+    - fix: pass global-timeout to router and use it for sd-server proxy by @ianbmacdonald in https://github.com/lemonade-sdk/lemonade/pull/1422
+    - Fix validate_llamacpp.py tray crash on headless CI by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/1424
+    - Update llama.cpp to b8460 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/1427
+    - TTS voice combobox by @choppu in https://github.com/lemonade-sdk/lemonade/pull/1328
+    - Fixes for PPA migration by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1425
+    - Add missing deps to build environment container by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1434
+    - Migrate Debian packages to Launchpad PPA by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/1416
+    New Contributors
+    - @de-wim made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1344
+    - @timothycarambat made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1345
+    - @jaeiclee made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1349
+    - @elijahsgh made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1356
+    - @github-actions[bot] made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/1427
+    Full Changelog: https://github.com/lemonade-sdk/lemonade/compare/v10.0.0...v10.0.1
+
+    Windows installers are signed. Free code signing provided by SignPath.io, certificate by SignPath Foundation. See our Code Signing Policy.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lemonade-sdk/lemonade/releases/tag/v10.0.1
+ReleaseTime: 2026-03-24T19:55:19.0000000Z

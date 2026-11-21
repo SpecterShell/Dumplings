@@ -1,0 +1,100 @@
+Version: 18.14.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.14.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Breaking Changes
+    - SentToolDefinitions.inactiveFor(messages, tools) is replaced by withInactiveTools(context), which also clears a stale inactiveTools; transformProviderContext now receives the request's inactiveTools (#17492)
+    Fixed
+    - Long tool-call intents no longer block tool execution when intent tracing is enabled (#13140).
+    @oh-my-pi/pi-ai
+    Added
+    - Added the codexAccessPrograms stream option and configureCodexAccessPrograms() process default to turn off the automatic Daybreak Blue access_programs request on Codex (#17508 by @H4vC)
+    - Added waitForSibling to RotateCredentialOptions; set it to false to skip the short sibling-unblock wait in limits.rotate() while still blocking the failed credential (#17439 by @wolfiesch)
+    Changed
+    - Cursor runs served through omp auth-gateway are limited to the client's own tools, all advertised as MCP; Cursor's built-in tools (file, shell, edit, todo, web fetch, SCM) are no longer offered on that path (#17382 by @eggpeat)
+    Fixed
+    - Fixed native judgment requests (TypeSafe, OpenRouter Decisions, OpenAI Decisions, Workers AI) sending credentials in their state unredacted while credential redaction was on (#17443)
+    - Fixed every new Codex session, including each subagent, losing a response and retrying when the native turn lane refuses live steering; once refused, later sessions on the same account, endpoint, and model queue follow-ups for four hours (#14158, #17438 by @wolfiesch)
+    - Fixed Cursor models served through omp auth-gateway being told their file and shell tools were unavailable while the client ran the calls anyway, in Cursor's own argument shape (edits failed validation); each call now reaches the client as one of its own tools and the turn stops with toolUse until the result comes back (#17382 by @eggpeat)
+    - Fixed Cursor models served through omp auth-gateway being told each tool call was handed off, which left Composer issuing calls blind and answering their results with empty stops; the gateway now keeps the Cursor run open while the client runs a step's calls and answers them in-band with the client's results on its next request (up to 30 minutes; otherwise the turn is rebuilt from history as before) (#17382 by @eggpeat)
+    - Fixed Anthropic-compatible endpoints behind a relay opening a new connection for every turn: the response body is now drained for up to 2.5 s after message_stop instead of being cancelled, so the kept-alive connection is reused (#17432 by @flosrn)
+    @oh-my-pi/pi-catalog
+    Changed
+    - Clamping a requested thinking effort now resolves through the model's effortMap alias first, so the request lands on the tier the model serves instead of the nearest lower one (#17395 by @Maziar123)
+    - Long image-heavy conversations on the official Anthropic API now keep up to 120 MB of inline images before evicting older ones, following the Messages API request limit increase from 32 MB to 128 MB
+    - The official Anthropic API now records its 128 MB request limit (request-body-byte-limit), so the newest message's images can use the 8 MB reserve and long text cannot push images past the limit (#17492 by @will-bogusz)
+    Fixed
+    - Fixed Cursor's DeepSeek V4.1 Flash 1017 reporting zero cost; every effort level now bills at Cursor's API rate of $0.30/$1.20 per million tokens, with cache reads at $0.006 (#17390 by @eggpeat)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added the providers.openai-codex.daybreak setting (default on) to stop omp from automatically requesting the Daybreak Blue cyber access program on eligible ChatGPT accounts; each session follows its own value (#17508 by @H4vC)
+    - Added queueable compaction: /compact sent with the follow-up key (Ctrl+Q) while the agent works now runs when it yields instead of interrupting it (#17397 by @H4vC)
+    - Added omp session lease [--json] -- <session-id>... and the RPC command get_session_lease, which report which sessions a running omp owns ({"held": [...], "unknown": [...]}) without taking ownership, so another program can check a session without forking it (#17428 by @andrebrait)
+    - Added opt-in title.refreshAfterPrompts: every N operator prompts, the judge model checks whether a generated session title still fits the conversation and regenerates it when it does not; user-set titles are never replaced (#17443 by @wolfiesch)
+    - Gateway rows discovered from /v1/models now keep the reasoning_effort_map and reasoning_required facts they advertise: a route that serves only low/high/max routes medium to high instead of the nearest lower tier, and a thinking-off request still sends a tier the route accepts (#17395 by @Maziar123)
+    - Computer-use scripts can wait for a window opened by an action and read it in the same call with a window filter's optional wait (#17391 by @will-bogusz)
+    Changed
+    - read of a web page keeps the title, description, author and dates of its <meta> tags and lists the others by name only, so pages cost about 6% fewer tokens (#17393 by @will-bogusz)
+    - On the Anthropic API, the newest message now keeps all its images up to the 128 MB request limit, past the 120 MB image budget (#17492 by @will-bogusz)
+    Fixed
+    - Fixed account-policy recovery repeatedly rotating through denied credentials instead of surfacing the error or using the configured model fallback, including unnecessary sibling-unblock waits after the account allowance is spent (#17439 by @wolfiesch)
+    - Startup prewalk now arms a later fallback candidate of the role named by prewalk.into when its first candidate is unavailable, matching /prewalk and /new (#17373).
+    - Fixed omp install git:github.com/user/repo treating git as the host instead of installing the GitHub plugin (#17436).
+    - Fixed read showing a zip, tar, asar or ISO archive's old contents after a same-size rewrite within milliseconds of its previous write, on filesystems with coarse timestamps such as Linux ext4 (#17389 by @will-bogusz)
+    - Browser fill in Chrome replaces the text of rich-text editors such as Slate (Discord) and Lexical instead of leaving the old text in place or breaking the editor, and an empty fill clears them (#17417 by @will-bogusz)
+    - Requests to the Anthropic API and Factory Droid's hosts now drop their oldest images when long text, tool arguments, or re-declared tool definitions would otherwise push the request past the host's size limit (#17492 by @will-bogusz)
+    - Factory Droid requests size images against what each route actually sends: Gemini models count their expanded tool schemas and no longer drop images for another model's reasoning, and only Claude models count withdrawn tool definitions (#17492)
+    @oh-my-pi/pi-natives
+    Added
+    - Added FileLock.isHeld(path), which reports whether a lock is held without acquiring it (#17428 by @andrebrait)
+    Fixed
+    - Fixed native search on Windows (the bash tool's fd, grep, glob) failing with "The filename, directory name, or volume label syntax is incorrect" or "path not found" for paths with ./.. components or / separators, including fd run without a search path
+    - Fixed glob and find on Windows reporting a symlinked file's own size and mtime instead of its target's, which dropped linked files from listings that skip empty files
+    - Fixed the bash tool's built-in rsync on Windows ignoring per-directory merge files whose name includes a directory part, such as --filter=':- ../rules'
+    @oh-my-pi/pi-tui
+    Added
+    - Added a maxRows callback to FigureMarkdown, SvgFigure and TableChartFigure so surfaces shorter than the screen can fit their figures; zero hides a figure without delaying transcript completion (#15661, #15853 by @KunoLu)
+    Fixed
+    - Fixed IME composition text in the BTW history Follow up: input appearing at the left edge instead of at the caret when the hardware cursor is enabled (#17427)
+    - Fixed session tree rows overlapping when messages, tool arguments, or labels contain carriage returns or Unicode line/paragraph separators (U+2028, U+2029), while keeping multiline formatting in the selected entry preview (#17430 by @lincicomb).
+    - Fixed the Background jobs sheet dropping a finished job and its output while you were reading it; the selected job now stays until you select another (#17506 by @H4vC)
+    @oh-my-pi/pi-utils
+    Added
+    - Added isFileLockHeld, which reports whether a file lock is held without acquiring it (#17428 by @andrebrait)
+    What's Changed
+    - fix(catalog): priced Cursor's DeepSeek V4.1 Flash 1017 by @eggpeat in https://github.com/can1357/oh-my-pi/pull/17390
+    - fix(ai): carry Cursor runs through auth-gateway by @eggpeat in https://github.com/can1357/oh-my-pi/pull/17382
+    - feat(coding-agent): queue /compact sent with the follow-up key for the next yield by @H4vC in https://github.com/can1357/oh-my-pi/pull/17397
+    - feat(tui): fit figures to a caller's maxRows ceiling by @KunoLu in https://github.com/can1357/oh-my-pi/pull/15853
+    - fix(ai): remember Codex native-lane steering refusals across sessions by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17438
+    - fix(ai): drain the Anthropic body after message_stop to keep the connection by @flosrn in https://github.com/can1357/oh-my-pi/pull/17432
+    - fix(plugins): normalized pi-style git install sources by @roboomp in https://github.com/can1357/oh-my-pi/pull/17437
+    - fix(coding-agent): bound account-policy credential rotation per retry saga by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17439
+    - fix(coding-agent): re-read an archive rewritten inside one timestamp granule by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17389
+    - feat(computer): wait for windows opened by actions by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17391
+    - feat(coding-agent): honored advertised reasoning effort aliases and mandatory reasoning by @Maziar123 in https://github.com/can1357/oh-my-pi/pull/17395
+    - fix(browser): replace a rich-text editor's text when filling it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17417
+    - fix(tui): anchored btw follow-up hardware cursor at the input caret by @roboomp in https://github.com/can1357/oh-my-pi/pull/17429
+    - fix(tui): fold carriage returns and Unicode line separators in session tree labels by @lincicomb in https://github.com/can1357/oh-my-pi/pull/17430
+    - feat(coding-agent): list unused meta tags by name in native web reads by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17393
+    - feat(coding-agent): opt-in title refresh when the judge finds a generated title stale by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17443
+    - feat(session): check session ownership leases without taking them by @andrebrait in https://github.com/can1357/oh-my-pi/pull/17428
+    - fix(agent): removed intent length rejection by @roboomp in https://github.com/can1357/oh-my-pi/pull/17486
+    - fix(tui): keep the selected finished job in the Background jobs sheet by @H4vC in https://github.com/can1357/oh-my-pi/pull/17506
+    - fix(catalog,coding-agent): keep Anthropic inline images within the 128 MB request body by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17492
+    - feat(coding-agent): add providers.openai-codex.daybreak setting to opt out of Daybreak Blue by @H4vC in https://github.com/can1357/oh-my-pi/pull/17508
+    New Contributors
+    - @flosrn made their first contribution in https://github.com/can1357/oh-my-pi/pull/17432
+    - @Maziar123 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17395
+    - @lincicomb made their first contribution in https://github.com/can1357/oh-my-pi/pull/17430
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.14.0...v18.14.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.14.1
+ReleaseTime: 2026-10-31T01:13:19.0000000Z

@@ -1,24 +1,26 @@
-$Object = Invoke-WebRequest -Uri 'https://pixso.cn/download/' | ConvertFrom-Html
-
-# Version
-$Task.CurrentState.Version = [regex]::Match(
-  $Object.SelectSingleNode('//*[contains(@class, "apps-item") and contains(./div[3]/div[1]/text(), "本地字体助手")]/p[2]').InnerText,
-  '([\d\.]+)'
-).Groups[1].Value
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.SelectSingleNode('//*[contains(@class, "apps-item") and contains(./div[3]/div[1]/text(), "本地字体助手")]/div[1]').Attributes['data-href'].Value
+$InstallerUrl = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://pixso.cn/download/'
+  Read-PlaywrightLocator -Page $Page -Selector 'xpath=//*[contains(@class, "apps-item") and contains(., "本地字体助手")]//*[contains(@data-href, ".exe")]' -Property Attribute -AttributeName data-href
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

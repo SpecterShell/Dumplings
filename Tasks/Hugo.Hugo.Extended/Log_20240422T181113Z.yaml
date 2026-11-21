@@ -1,0 +1,17 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/gohugoio/hugo/releases/download/v0.125.3/hugo_extended_0.125.3_windows-amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release fixes a security issue reported by @ejona86 (see #12411) that could allow XSS injection from Markdown content files if one of the internal link or image render hook templates added in Hugo 0.123.0 are enabled. You typically control and trust the content files, but according to Hugo's security model, we state that "template and configuration authors (you) are trusted, but the data you send in is not."
+    - markup/goldmark: Fix data race in the hugocontext wrapper 509ab08c1 @bep
+    - tpl: Escape .Title in built-in image and link render hooks 15a4b9b33 @bep
+    - tpl/tplimpl: Improve embedded templates 10a8448ee @jmooring #12396
+    - SECURITY.md: Update link to security model 722c486a3 @ejona86
+    - modules: Fix potential infinite loop in module collection f40f50ead @bep #12407
+- Key: ReleaseNotesUrl
+  Value: https://github.com/gohugoio/hugo/releases/tag/v0.125.3
+Version: 0.125.3
+ReleaseTime: 2024-04-22T17:36:07.0000000Z

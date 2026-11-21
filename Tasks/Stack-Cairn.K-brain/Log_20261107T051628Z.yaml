@@ -1,0 +1,34 @@
+Version: 0.107.25
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.25/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.25/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    K-brain v0.107.25
+    本版从 main 的 52a7370 构建，在 v0.107.24 的基础上扩大沙箱对 git 文件的保护范围。
+    沙箱
+    - 保护会改变 git 读取位置的文件（#173，#171 的一部分）：以前沙箱里的命令可以写 .git/commondir，让之后在沙箱外运行的 git commit 去读取别处的 config 和 hooks。现在以下文件也加入了保护路径：
+      - .git/commondir、.git/info/attributes（后者能让全局 ~/.gitconfig 里定义的 filter、diff 驱动在 git add 等操作时运行）；
+      - 子模块的 .git/modules/*/config、hooks/、commondir、info/attributes，以及子模块目录里的 .git 文件；
+      - 链接工作树的 .git/worktrees/*/commondir、config.worktree；
+      - 子模块配置里相对的 core.hooksPath 现在按子模块自己的目录解析。
+    - 各机制的覆盖范围：
+      - 已存在的条目在所有机制下都只读；
+      - 还不存在的条目在 macOS（seatbelt）和 Linux Landlock 模式下不能创建；
+      - 在 bubblewrap 和 Windows 两种模式下仍能创建，包括普通仓库里本来没有的 .git/commondir。这部分在 #172 跟进。
+    - 已知限制：
+      - 子模块和链接工作树按运行开始时的状态列出，运行中新加的不在保护范围内；
+      - 工作区里的 .gitattributes 和全局 core.attributesFile 同样能启用全局驱动，但属于项目的普通文件，不做保护；
+      - 在沙箱里对运行开始前就有的工作树执行 git worktree remove/prune，以及 git submodule deinit，会失败；
+      - Landlock 模式下，.git/info 不存在时也不能创建它。
+    下载与校验
+    提供 macOS、Linux、Windows 的 x64/ARM64 CLI 与 computer helper；SHA256SUMS 用于校验下载文件。
+    完整变更
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.25
+ReleaseTime: 2026-11-07T04:34:14.0000000Z

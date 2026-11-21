@@ -1,0 +1,47 @@
+Version: 0.88.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/hotovo/aider-desk/releases/download/v0.88.0/aider-desk-0.88.0-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    🛡️ Project Trust Confirmation for Safe Workspaces
+    Opening untrusted projects should never silently run unknown configurations. When opening a repository that defines custom agents, MCP servers, or project-local extensions through the UI, AiderDesk now presents a trust confirmation dialog. You can inspect the configured agents, tools, and extensions before granting permission to load them, giving you complete visibility and control over what runs in your workspace.
+    📐 LaTeX Formula Rendering in Chat Messages
+    Chat messages now feature native LaTeX formula rendering, supporting both inline ($...$) and block ($$...$$) mathematical expressions via KaTeX. Whether you are discussing machine learning architectures, reviewing numerical algorithms, or working through mathematical proofs with your agent, equations and matrices render clearly and legibly right in the conversation flow.
+    📁 File Rename Tracking in Updated Files
+    Tracking file modifications across renames is now completely seamless. The Updated Files sidebar automatically detects git renames and presents a distinct rename badge showing previous and current filenames. Opening a renamed file provides a rename-aware side-by-side diff displaying edits made alongside the rename, and single-click reverting restores both the filename and its contents. The Extension API has also been upgraded with full support for renamed files.
+    🌿 Clean Worktrees from Selected Branches
+    Branching off to test a bugfix or explore a new concept shouldn't mean carrying half-finished local edits with you. The Git branch menu now features an action to create a clean worktree from a selected branch without migrating uncommitted local changes. This lets you spin up a fresh, isolated workspace from any branch while leaving your current task working tree completely untouched.
+    🧩 Extension API: Message Transformation & Cache Control Hooks
+    The Extension API continues to expand with low-level message orchestration hooks:
+    - onTransformMessages - Allows extensions to intercept, inspect, and transform the conversation message array before dispatching requests to LLM providers.
+    - Cache control hooks - Provides extensions with fine-grained control over provider prompt caching behaviors at the individual message level.
+    - Message optimization hooks now receive transformed messages, ensuring multi-extension pipelines compose predictably.
+    ⚡ Faster Task Switching & UI Performance
+    Switching back and forth between long-running tasks is now near-instant. By preserving virtualized message size caches across task switches, the chat view avoids recalculating heights for hundreds of rendered messages, eliminating layout shift and rendering pauses. Paired with lazy item construction in the command palette, faster settings caching, and optimized task list rendering, the UI remains snappy regardless of workspace size.
+    Other Changes
+    - Command Palette:
+      - Added quick actions for switching task modes directly from the command palette.
+      - Improved background performance by constructing palette items only while the palette is open, while preserving active selections during live updates.
+    - Context Compaction:
+      - Fixed task auto-compaction not being disabled when its threshold was set to 0.
+      - Fixed image tool results triggering unintended auto-compaction caused by inflated token count estimates.
+    - Reliability & Bug Fixes:
+      - Fixed failed subagent runs incorrectly returning success with empty or partial results.
+      - Fixed bash tool calls hanging when command output processing encountered an error.
+      - Fixed token counting crashes on text containing special tokens, adding graceful fallback estimation when tokenization fails.
+      - Fixed malformed or incomplete compact diffs crashing the chat view, with automatic fallback to plain text.
+      - Fixed Aider tool responses losing their grouped visual layout after reloading tasks.
+    - Extension Settings: Fixed extension settings actions not respecting the currently selected project context.
+    🧩 Extensions
+    - Sound Notification: Added custom audio file support, allowing you to select your own audio files for task completion and event notifications.
+    - Skill Gallery: Added recursive skill scanning for nested directories and added Android source repository support.
+    - Cursor SDK: Fixed run lifecycle state handling and context message ordering for Cursor agents.
+    💡 We'd love to hear your thoughts! Your feedback helps us improve AiderDesk - feel free to share any suggestions or issues. Happy coding! 🚀
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hotovo/aider-desk/releases/tag/v0.88.0
+ReleaseTime: 2026-10-19T04:57:45.0000000Z

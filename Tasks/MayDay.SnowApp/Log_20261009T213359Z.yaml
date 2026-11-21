@@ -1,0 +1,46 @@
+Version: 0.4.19
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.19/Snow-App-Setup-0.4.19.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - ChatGPT Subscription Sign-In: OAuth sign-in gains a ChatGPT (subscription plan) provider — the official Sign in with ChatGPT flow authorizes in the browser, the local callback returns automatically, and the channel calls the official Responses API with the subscription quota.
+    - Goal Mode Auto-Continuation: When Goal Mode is on and the run stops with unfinished TODO items, the agent is automatically sent a continuation prompt listing the outstanding items and the remaining token budget, and keeps going until every item is completed.
+    Improvements
+    - Full three-language localization (Simplified Chinese / Traditional Chinese / English): a shared renderer translation entry (tGlobal) covers module-level code, injected scripts and event callbacks; the chat area, tool cards and built-in tool badges, the right panel and sidebar, the team collaboration module, the mobile remote control, and the main-process native UI (tray menu, download dialogs and notifications, webview context menu, pet menu) are all localized; dates and times follow the app language, and switching the language updates the tray and mobile copy immediately.
+    Bug Fixes
+    - Fixed empty responses (the upstream ends normally with zero output): the terminal state is now marked and persisted (empty_response / retry_exhausted), each retry is logged with its cause, the attempt count and upstream error are stored on the message and refilled after reload, and the reply shows the shared "retries exhausted" card instead of a blank bubble.
+    - Fixed user-initiated cancellation being misrecorded as an upstream empty response — cancelled and failed runs keep their own terminal state, and a migration cleans the historical dirty rows.
+    - Fixed the chat message query column-index shift introduced by the retry columns, which broke history pagination and left the message area blank when a conversation was opened; the archive database gained the same columns.
+    - Fixed conversation history losing its raw Markdown / copy / fork buttons as soon as a new prompt was sent — only the tail message of the active run is masked now.
+    - Fixed the pending-message mode chip being truncated and image thumbnails being stretched.
+    What's Changed
+    - feat(i18n/chat): 三语言 i18n 体系落地与空响应终态/取消语义闭环（19 提交） by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/186
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.18...v0.4.19
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.19
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - ChatGPT 订阅登录：OAuth 登录新增 ChatGPT（订阅计划）服务商——走官方 Sign in with ChatGPT 流程，浏览器完成授权后本地回调自动返回，渠道以订阅额度调用官方 Responses API。
+    - Goal 模式自动续跑：Goal 模式开启时，若本轮停止仍有未完成的待办，自动向 AI 追发续跑提示（列出未完成项与剩余 Token 预算），直到全部待办完成才结束。
+    改进
+    - 三语言（简中 / 繁中 / 英文）本地化全面落地：渲染层新增共享翻译出口 tGlobal，覆盖模块级代码、注入脚本与事件回调；聊天区、工具卡片与内置工具徽标、右侧面板与侧边栏、团队协作模块、手机远控以及主进程原生 UI（托盘菜单、下载对话框与通知、webview 右键菜单、宠物菜单）全部接入词条；日期时间格式跟随 App 语言，切换语言后托盘与移动端文案即时更新。
+    修复
+    - 修复空响应（上游正常收尾但零输出）无迹可寻：终态判定与落库标记（empty_response / retry_exhausted）、每次重试的原因日志、重试次数与上游错误写入消息并在重载后回填，回复显示统一的「重试已耗尽」提示卡，不再渲染空白气泡。
+    - 修复用户主动取消被误记为上游空响应：取消与失败保留各自终态，并新增迁移清理历史脏数据。
+    - 修复重试元数据新增列导致的消息查询列索引错位（历史会话分页加载失败、打开后内容区空白），归档库同步补列。
+    - 修复发送新提示词后历史回答的 Markdown 原文 / 复制 / 派生分支按钮集体消失，改为仅屏蔽当前运行的最后一条消息。
+    - 修复待发送模式标签被截断与图片缩略图变形。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0419
+ReleaseTime: 2026-10-09T18:42:01.0000000Z

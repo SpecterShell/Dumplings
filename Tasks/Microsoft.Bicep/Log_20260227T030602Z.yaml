@@ -1,0 +1,61 @@
+Version: 0.41.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.41.2/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.41.2/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.41.2/bicep-setup-win-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.41.2.15936
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - Snapshot command is GA (#19084)
+      Example usage:
+      # capture a snapshot
+      bicep snapshot main.bicepparam
+
+      # validate a snapshot
+      bicep snapshot main.bicepparam --mode validate
+
+      # capture a snapshot with Azure context
+      bicep snapshot main.bicepparam --subscription-id 3faf6056-8474-4818-a729-1aff55d6b3fa --resource-group myRg --location westus --mode overwrite
+      Walkthrough YouTube - Bicep Snapshot Demo
+      Official docs coming soon. In the meantime, see Using the snapshot command.
+    - [Experimental] @nullIfNotFound() decorator for existing resources (#18697)
+      Basic example:
+      @nullIfNotFound()
+      resource storageAccount 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
+        name: 'testStorage'
+      }
+
+      output safeLocation string? = storageAccount.?location
+      output safeSkuName string? = storageAccount.?sku.name
+      output safeAccessTier string? = storageAccount.?properties.accessTier
+
+      output locationWithDefault string = storageAccount.?location ?? 'westus'
+      output skuNameWithDefault string = storageAccount.?sku.name ?? 'Standard_LRS'
+      output accessTierWithDefault string = storageAccount.?properties.accessTier ?? 'Hot'
+    Bug Fixes and Features
+    - Add MCP server metadata JSON file to NuGet package (#18909)
+    - Add section on comments to Best Practices doc (#18913)
+    - Fix nested extendable params spread: ensure inherited spread expressions are bound correctly (#19028)
+    - add support for array splat completion in type syntax and enhance completion context (#18948)
+    - Add completions for #disable-diagnostics and #restore-diagnostics (#18919)
+    - Add extension namespace functions (#18910)
+    - [PublishExtension command] Ensure namespace functions are considered when building types archive (#18999)
+    - Use file handle URI in output (#18920)
+    - [Experimental] Visualizer V2 (#18986, #18987, #18992, #18995, #19025, #19029, #19080)
+    Community Contributions
+    - Minor typos in README.md (#19079) - thanks @gerbermarco !
+    - Enhance snapshot command documentation (#18959) - thanks @verschaevesiebe !
+    - Add snapshot command help documentation to RootCommand (#18988) - thanks @verschaevesiebe !
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.41.2
+ReleaseTime: 2026-02-27T02:10:46.0000000Z

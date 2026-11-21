@@ -1,0 +1,176 @@
+Version: 1.5.0
+Installer:
+- InstallerType: nullsoft
+  Architecture: x64
+  InstallerUrl: https://github.com/EthanYoQ/Pagekin/releases/download/v1.5.0/ai-novel-writer-setup-1.5.0.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1.5.0
+    中文
+    1.5.0 新增回收站、已定稿章节重新打开修改、人物状态与关系的逐章时间线、伏笔线索的到期提醒、蓝图的 AI 检查和正文多处批注修改，并开始支持日文界面。运行侧页的恢复卡片可以关掉，界面提示整体改短。设置和安装位置不变。用 1.5.0 打开过的作品会升级作品数据，之后 1.4.x 及更早版本打不开它，也恢复不了 1.5.0 导出的存档。
+    日文界面：
+    - 第一阶段：界面框架与报错可切换日文，其余文案仍为英文。在「设置 → 外观 → 界面语言」里选「日本語」。系统语言是日文时，首次启动默认用日文界面。日文界面下新建的作品，写作语言默认是英文。
+    回收站：
+    - 删除的章节正文和它的全部版本进回收站。回收站里有内容时，左侧流程栏在任何阶段都会出现「回收站（N）」，每项可以「恢复」或「彻底删除…」（读不全的项只能彻底删除），也可以「清空回收站…」。删除时间按你电脑的时区显示。
+    - 删掉中间一章后，全书照常可写。蓝图页说明这一章已删除，可以「恢复」，或「重写第 N 章」在原位置补写并定稿。批量创作只往后写，不补缺口。
+    - 删除确认框写明后果：正文可以从回收站原样恢复，后面的章节可能依赖这一章的情节。只想改写这一章时，改用「重新打开修改」。
+    定稿与重开：
+    - 已定稿的章可以「重新打开修改」。当前定稿复制成一份重开稿，照常编辑、审稿、修稿，定稿后替换原定稿。原定稿留在版本历史里，标为「已被替换的定稿」，只读。重开稿的「删除这一稿…」改叫「放弃修改…」，放弃后本章回到原定稿。
+    - 定稿确认框会先列出这次替换对后续章节、角色状态和线索确认的影响。定稿后本章顶部显示「第 N 章已修改」，受影响的后续章顶部各有一行说明。
+    - 替换定稿后，可以点「检查后续蓝图」。AI 给还没定稿的后续章各提至多一条修改建议，写明依据和新旧对比，你逐条「接受」或「不用」。它只改蓝图，不改正文。
+    - 定稿之前留下的旧稿不能再直接定稿、顶替现有定稿，改为「以这一稿重新打开」。
+    - 批量写作取消或中途被阻断后，批次里已定稿的章可以重新打开。审稿模式的批次在你定稿其中一章后结束。
+    - 重开再定稿时，你改过的蓝图章节要点不会被新生成的要点覆盖。
+    - 批注修改还在生成或等你审阅时，「以这一稿重新打开」和版本切换不可点，审阅中的修改不会丢。
+    人物时间线：
+    - 角色页的当前状态上方多一行「时间线 · N 处变化」。展开后按章列出状态和关系的变化与来历，来自定稿的记录可以看原文。手改状态时，可以指定从第几章起生效。
+    - 写或重写第 N 章时，提示词里的人物状态和关系按第 N 章的时间线取，不再用最新值。
+    - 定稿时会顺带记下人物关系的变化，不多发请求。和你的设定不一致时，角色页的待处理建议里出现一条，可以「采用」「保留原设定」或「以后再说」。
+    - 生成蓝图时模型提出的新角色和关系，也出现在角色页的待处理建议里。点「检查」后，逐个选择新建、对应已有角色或暂不采用，再接受或拒绝。
+    蓝图检查：
+    - 保存蓝图后，如果 AI 生成的蓝图里两人的关系和时间线相反，或安排了已死的角色，蓝图页会给一行提示并写明依据。点「这是有意安排」可以按章豁免，也可以全书豁免。写章前的预检也带上这条提示，不挡写作。
+    - 蓝图页新增「AI 检查」。点一次发一次模型请求，对照人物时间线检查全部未定稿章的蓝图，结论按章列出，可以豁免。还没有定稿章时按钮不可点。检查期间切到别的页面再回来，结果照常显示。
+    伏笔线索：
+    - 写正文时，到期和逾期的伏笔线索一定进提示词，标明「已逾期 N 章」或「本章到期」。最多 6 条列为本章要推进或回收的任务，审稿会逐条核对。导出存档再恢复后，这些任务照常保留。
+    - 写作弹层里有一行「本章要处理 N 条线索」。点开后可以「延后一章」或「延后三章」，可以撤销；还没到期的线索可以在「也可以本章推进」里点「本章推进」。线索页会记下延后历史。
+    - 审稿判定某章已回收的线索，定稿后列在「剧情与伏笔」页，点「确认已回收」就记入线索。
+    - 线索的回收章超出全书规划的章数时，线索页会标出来。
+    批注：
+    - 选中正文后可以「添加批注」。一章里加好多处批注后，点「统一修改（N）」交给模型一起改。结果在正文里用红色标删除、绿色标新增，每处可以编辑、重新生成或接受，也可以「接受全部」。全部接受后自动保存，章节页可以查看「批注历史版本」。
+    - 批注面板和审稿报告、运行侧页同一时间只开一个，用完放回原来的侧页。批注修改进行中，修稿入口不可点，修稿不会冲掉批注修改。
+    知识库与检索：
+    - 「设置 → 检索模型」多了「重排模型（可选）」。配好后，写稿取材和知识库搜索先多召回一些段落，重排后再取最相关的。重排没成功时按原顺序显示，知识库页有一行小字说明。没配重排时结果和以前一样。
+    - 没配检索模型时，中文全文检索会把查询拆成词，能找到只含部分词的段落，同分结果的顺序也固定下来。
+    - 补写中间的章时，知识库检索不再返回这一章及之后章节的定稿正文，避免提前写出后文。
+    - 没配检索模型、默认模型又不支持向量时，写作前不再发出必然失败的向量请求。
+    - 导入创作资料或角色卡时文件读不了，提示会说明是编码、文件大小还是系统不让打开，不再说成授权问题。文件夹导入里一个文件读不了，其余文件照常导入。
+    - 作品放在 exFAT 或 FAT32 磁盘上时，导入知识库会说明原因，并建议把作品文件夹移到 NTFS（Mac 上是 APFS）磁盘。
+    模型设置：
+    - 「调用协议」新增 Anthropic，服务商新增「BigModel（智谱 Anthropic）」预设。
+    - 选中模型后自动填上下文窗口，并标出来源：「来自服务商」「内置资料」「默认值」「你填的」或「实测」。你填的数优先，清空后回到自动。
+    - 写单章时服务商以超长拒绝，书童会从报错里读出真实窗口，记进模型设置，并缩减参考材料自动重写一次。
+    - 窗口来源可信时，单次输出上限收紧到窗口的一半。大窗口模型写稿、审稿、修稿时，知识库片段、线索等参考材料按窗口放，不再被 8K 字符的上限截掉。
+    - 中转站接 OpenAI 新模型时，不再因 max_tokens 报 HTTP 400，书童会换字段重发一次。
+    - 模型名称填成本机模型文件路径（例如 llama.cpp）时，生成不再被拦，生成记录里只留文件名。
+    - 删除一个正在编辑的模型后，编辑表单会关掉，不会把已删的模型存回去。
+    导入：
+    - 导入停下后（应用退出、请求次数或时长到上限、取消），点「继续导入」会接着跑完，已提交的批次不重做。
+    - 导入推演时人物多、关系引用了名单外的人，导入照常完成，补不上的关系写进运行日志。推演结果格式不对时，自动重新推演一次。
+    - 导入我的原稿时，显示每章通常要发几次请求，以及正在处理哪一章、哪一步。
+    - 选错文件夹「导入旧项目副本…」时，提示说明原因和该用的入口，不再只显示错误码。部分 1.1 版的旧项目以前复制导入时被拒，现在可以导入。
+    运行侧页与通知：
+    - 恢复卡片右上角有「不再恢复」。点了卡片移出列表，重启后不回来，提示条里可以「撤销」。已保存的审稿和修稿、已经用过或没有内容的恢复卡不再列出。蓝图恢复稿写明章节范围和生成时间，较早的几份折叠起来。
+    - 一步连续 15 秒没有进展时，运行卡片写「正在等模型回复，已等 N」，顶栏也显示已等时长。
+    - 书童在后台时，写作、审稿、修稿、定稿和批量创作结束会弹系统通知，点通知回到书童。可以在「设置 → 外观」关掉「在后台时通知我」。
+    - 你取消的运行标为「已取消」，不再显示为失败。
+    正文编辑：
+    - 草稿和修稿合并视图的动作条吸在顶部，长章节读到底也能直接定稿或「完成合并」。按 Ctrl/⌘+F 时，搜索框出现在动作条下面。
+    - 版本菜单每项的两行文字都落在高亮范围内，当前版本改用轻标识。
+    - 批量创作占着某一章时点定稿，会说明原因并提供「取消批量创作」。审稿没有需要修改的意见时，主按钮直接是定稿。
+    定稿后处理：
+    - 角色状态更新因模型回答不合格式而失败时，说明正文已保存，可以重试，或先在「分工模型」里换一个模型再重试。重试和首次一样最多请求 3 次，并用当前的分工模型。
+    - 后处理被取消、中途停下或应用退出后，没做完的步骤可以重试。取消后重试不再报额度用完。
+    - 章节要点过期后重试角色状态，会先重新生成要点，再接着写完。
+    大纲与设定生成：
+    - 逐章生成大纲时，进度按已验收的章计算，不再回退。行首是「第一次」这类写法时，不再被误判为另起一章，少发一次修正请求。
+    - 首次生成小说设定时，要求每条全局指导独占一行，减少多余的修正请求。
+    - 生成世界观时带上你的核心梗概和已采用的角色图谱。
+    - 角色状态更新的内置示例和最终格式一致，新出场的人物不会被丢掉，而是成为待确认的角色建议。
+    - 助手读超长的故事架构时，可以分段读完。
+    性能：
+    - 导入知识库时不再每次重建一个检索用不到的全文索引，省掉这部分耗时。
+    - 逐章生成大纲时，省掉一次内容没变的恢复记录写入。
+    提示与修复：
+    - 91 条界面提示改短，依次说明保住了什么、出了什么问题、能怎么办，去掉内部术语。
+    - 报错不再指向 1.3.0 已删除的「草稿箱」，改指「正文」里对应的那一章。
+    - 断网时编辑器气泡显示可读的说明，不露错误码。重新生成失败时，按失败原因给说明。
+    - 导入过我的原稿的作品，可以导出本地存档和做云备份，不再报唯一约束错误。
+    请从本页下载 Windows x64、macOS Apple Silicon 或 macOS Intel 安装包。已安装 1.1.0、1.2.x、1.3.x 或 1.4.x 的用户会在应用内收到更新提示；macOS 上提示会打开本页，需要手动下载新的安装包。
+    Windows 安装包未签名。Mac 安装包使用 ad-hoc 签名，未获 Developer ID 签名和 Apple 公证。系统可能提示未知发布者或阻止打开。
+    English
+    1.5.0 adds Trash, Reopen to edit for finalized chapters, a chapter-by-chapter timeline of character states and relationships, due-date reminders for story threads, an AI check for blueprints, and revision of many annotated passages at once. It also starts Japanese interface support. You can dismiss recovery cards in the run sheet, and interface messages are shorter. Settings and the install location are unchanged. When 1.5.0 opens a project, it upgrades the project data. After that, 1.4.x and earlier cannot open the project, and they cannot restore archives exported from 1.5.0.
+    Japanese interface:
+    - Phase 1: the interface frame and error messages can switch to Japanese. Other text stays in English. Choose 日本語 under Settings → Appearance → Interface language. If your system language is Japanese, the first launch uses the Japanese interface. Books created in the Japanese interface use English as their writing language.
+    Trash:
+    - A deleted chapter, with all its versions, goes to the trash. When the trash is not empty, the left workflow sidebar shows Trash (N) on every stage. Each item has Restore and Delete permanently… (an item that cannot be read in full can only be deleted permanently), and the dialog has Empty trash…. Deletion times use your computer's time zone.
+    - After you delete a chapter in the middle, the rest of the book stays writable. The Blueprint page says the chapter was deleted. You can Restore it, or use Rewrite chapter N to write it again in place and finalize it. Batch writing only moves forward and does not fill gaps.
+    - The delete confirmation explains the result: you can restore the chapter from the trash as it was, and later chapters may depend on its plot. To rewrite the chapter only, use Reopen to edit instead.
+    Finalization and reopening:
+    - A finalized chapter has Reopen to edit. The current final is copied into a reopened draft that you edit, review, and refine as usual. When you finalize it, it replaces the old final. The old final stays in version history as Replaced final, read-only. On a reopened draft, Delete this draft… becomes Discard changes…, which returns the chapter to its old final.
+    - The finalize dialog first lists how the replacement affects later chapters, character states, and thread confirmations. After you finalize, the chapter shows Chapter N was changed, and each affected later chapter shows a note at the top.
+    - After a replacement, you can select Check later blueprints. The AI suggests at most one change for each later chapter that is not finalized, with its basis and a before-and-after view. You choose Accept or Don’t use for each one. It changes blueprints only, never chapter text.
+    - An older draft from before finalization can no longer be finalized directly over the current final. Use Reopen with this draft instead.
+    - After batch writing is cancelled or blocked, you can reopen the chapters it finalized. A batch in review mode ends when you finalize one of its chapters.
+    - When you reopen and finalize a chapter again, chapter notes that you edited in the blueprint are not overwritten by newly generated notes.
+    - While an annotation revision is generating or waiting for your review, Reopen with this draft and the version switcher are unavailable, so the edits under review are not lost.
+    Character timeline:
+    - Above a character's current state, the cast page shows Timeline · N changes. Expand it to see each chapter's state and relationship changes with their source. For changes recorded from a final, you can read the quoted text. When you edit a state by hand, you can choose the chapter it takes effect from.
+    - When you write or rewrite chapter N, the prompt uses character states and relationships from the timeline at chapter N, not the latest values.
+    - Finalization now records relationship changes in the same request, with no extra requests. When a change differs from your setting, a suggestion appears in the cast page's pending suggestions, with Adopt, Keep my setting, and Decide later.
+    - New characters and relationships that the model proposes while it generates blueprints also appear in the pending suggestions. Select Review to create each character, match it to an existing one, or skip it, then accept or decline.
+    Blueprint checks:
+    - After you save blueprints, the Blueprint page shows a notice with its basis when an AI-generated blueprint has two characters whose relationship contradicts the timeline, or includes a character who has died. Select This is intentional to exempt one chapter or the whole book. The pre-write check shows the same notice and does not block writing.
+    - The Blueprint page has an AI check. Each click sends one model request that checks every blueprint that is not finalized against the character timeline, and lists the results by chapter. You can exempt them. The button is unavailable until at least one chapter is finalized. If you leave the page during a check and come back, the results still appear.
+    Story threads:
+    - When you write a chapter, due and overdue threads always go into the prompt, marked overdue by N chapters or due this chapter. Up to 6 of them become this chapter's tasks to advance or resolve, and review checks each one. These tasks survive archive export and restore.
+    - The write popover has a line such as N threads to handle here. Open it to use Move 1 on or Move 3 on, which you can undo. For a thread that is not due yet, open Advance one here and select Advance here. The thread page keeps a history of moves.
+    - When review finds that a chapter resolved a thread, the thread appears on the Plot & threads page after finalization. Select Confirm resolved to record it.
+    - The thread page marks threads whose payoff chapter is beyond the number of planned chapters.
+    Annotations:
+    - Select chapter text and choose Add annotation. After you add annotations to several passages, select Revise all (N) to send them to the model together. The result shows removed text in red and added text in green. You can edit, regenerate, or accept each change, or choose Accept all. When all changes are accepted, the chapter saves automatically, and the chapter page has Annotation history (N).
+    - Only one of the annotation panel, the review report, and the run sheet is open at a time. When you finish with annotations, the side panel you had open comes back. While an annotation revision is in progress, refinement actions are unavailable, so a refinement cannot overwrite it.
+    Knowledge base and search:
+    - Settings → Retrieval model has a new Reranking model (optional) section. When you set one up, drafting and knowledge-base search first collect more passages, rerank them, and then keep the most relevant ones. If reranking fails, results keep their original order, and the knowledge-base page shows a short note. Without a reranking model, results are the same as before.
+    - Without a retrieval model, Chinese full-text search splits the query into words. It finds passages that contain only some of the words, and results with equal scores keep a fixed order.
+    - When you fill in a chapter in the middle, knowledge-base search no longer returns final text from that chapter or later chapters, so the draft does not borrow later plot.
+    - If no retrieval model is set and the default model does not support embeddings, writing no longer sends an embedding request that is sure to fail.
+    - When you import planning material or character cards and a file cannot be read, the message says whether the cause is the encoding, the file size, or the system refusing access. It no longer calls this a permission problem. In a folder import, the other files still import when one file cannot be read.
+    - When a project is on an exFAT or FAT32 drive, knowledge-base imports explain why they fail and suggest moving the project folder to an NTFS drive (APFS on Mac).
+    Model settings:
+    - Protocol has a new Anthropic option, and providers include a BigModel (Zhipu Anthropic) preset.
+    - When you select a model, the context window fills in automatically with its source: From provider, Built-in data, Default, Set by you, or Measured. A value you enter wins. Clear it to go back to automatic.
+    - If a provider rejects a single-chapter request as too long, Pagekin reads the real window from the error, saves it in model settings, trims reference material, and writes the chapter again once.
+    - When the window source is reliable, the output limit for one request is capped at half the window. With large-window models, drafting, review, and refinement fit knowledge-base passages, threads, and other reference material to the window instead of an 8K-character cap.
+    - Relay services that serve new OpenAI models no longer fail with HTTP 400 because of max_tokens. Pagekin resends once with the other field.
+    - If a model name is a local model file path, for example with llama.cpp, generation is no longer blocked, and generation records keep only the file name.
+    - If you delete a model while its edit form is open, the form closes after the deletion, so Save cannot write the deleted model back.
+    Import:
+    - After an import stops because the app quit, a request or time limit was reached, or you cancelled it, Continue import finishes the work. Batches that were already committed are not redone.
+    - When inference sees many characters and relationships to people outside the cast, the import still finishes, and the run log lists the relationships it could not keep. When the inference result is malformed, Pagekin runs inference again once.
+    - When you import your own manuscript, the dialog shows the usual number of requests per chapter and which chapter and step are running.
+    - If you choose the wrong folder for Import an old project copy…, the message explains why and names the right entry point instead of showing only an error code. Some 1.1 projects that were refused as copies before can now be imported.
+    Run sheet and notifications:
+    - Each recovery card has Dismiss in its top-right corner. A dismissed card leaves the list and does not come back after a restart. The notice has Undo. Saved reviews and refinements, and recovery cards that were already used or have no text, are no longer listed. Blueprint recovery drafts show their chapter range and creation time, and older copies are collapsed.
+    - When a step makes no progress for 15 seconds, its run card says Waiting for the model, N so far, and the top bar shows the wait time.
+    - When Pagekin is in the background, it shows a system notification when writing, review, refinement, finalization, or batch writing ends. Click the notification to return to Pagekin. To turn this off, use Notify me in the background under Settings → Appearance.
+    - Runs that you cancel show Cancelled instead of a failure.
+    Chapter editing:
+    - The action bar of drafts and of the refinement merge view stays at the top, so you can finalize or select Finish merge at the end of a long chapter. Ctrl/⌘+F opens the search box below the action bar.
+    - In the version menu, both lines of each item stay inside the highlight, and the current version has a lighter marker.
+    - If batch writing holds a chapter when you finalize it, a message explains why and offers Cancel batch. When a review has nothing to revise, the main button is Finalize.
+    Finalization post-processing:
+    - When a character-state update fails because the model's answer has the wrong format, the message says the final is saved and that you can retry, or pick another model under Models by stage first. A retry now makes up to 3 requests, like the first run, and uses the current stage model.
+    - After post-processing is cancelled, stops partway, or the app quits, you can retry the unfinished steps. A retry after a cancel no longer reports that the budget is used up.
+    - When chapter notes are out of date and you retry character states, the notes are generated again first, and then the step finishes.
+    Outline and setup generation:
+    - When outlines are generated chapter by chapter, progress counts accepted chapters and no longer moves backwards. Chinese lines that start with 第一次 ("the first time") are no longer mistaken for a new chapter heading, which saves a correction request.
+    - The first novel setup asks for one global guidance rule per line, which avoids extra correction requests.
+    - World building now includes your core synopsis and the adopted character map.
+    - The built-in example for character-state updates now matches the final format, so new characters are not dropped. They become pending character suggestions.
+    - The assistant can read a long story architecture in several parts.
+    Performance:
+    - Knowledge-base imports no longer rebuild a full-text index that search never used, which removes that work from every import.
+    - Chapter-by-chapter outline generation skips a recovery write when nothing changed.
+    Messages and fixes:
+    - 91 interface messages are shorter. They say what was kept, what went wrong, and what you can do, without internal terms.
+    - Error messages no longer point to Drafts, which was removed in 1.3.0. They point to the chapter under Manuscript.
+    - When the network is down, the editor bubble shows a readable message instead of an error code. When a regeneration fails, the message explains the cause.
+    - Projects that imported your own manuscript can now be exported as local archives and backed up to the cloud without a unique-constraint error.
+    Download a Windows x64, macOS Apple Silicon, or macOS Intel installer from this page. Users on 1.1.0, 1.2.x, 1.3.x, or 1.4.x get an in-app update notice. On macOS, the notice opens this page, and you download the new installer manually.
+    Windows installers are unsigned. Mac installers are ad-hoc signed, with no Developer ID signature or Apple notarization. Your system may show an unknown-publisher warning or block the app.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EthanYoQ/Pagekin/releases/tag/v1.5.0
+ReleaseTime: 2026-11-18T03:25:38.0000000Z

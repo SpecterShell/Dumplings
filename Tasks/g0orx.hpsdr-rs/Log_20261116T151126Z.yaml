@@ -1,0 +1,28 @@
+Version: 0.15.2
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/g0orx/hpsdr-rs/releases/download/v0.15.2/hpsdr-rs-0.15.2-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VFOs
+    - Click (or tap, on a touch screen) VFO-A or VFO-B to open the frequency keypad. It was right-click or a long press.
+    - Scroll over a digit of a VFO to step that digit up or down, one per wheel notch. The digit under the mouse is underlined. In the main window and extra receivers.
+    - Scrolling the spectrum or waterfall now moves by the VFO step (beside VFO-A), landing on multiples of it, as the controller's VFO knob does. Shift (100 Hz, 10 Hz in CW), Alt (10 Hz) and Ctrl (10 kHz, 1 Hz in CW) keep their fixed steps. MIDI VFO Step Up/Down use the VFO step too.
+    - The window size popup shown while resizing is gone.
+    Receive-only radios
+    - An RTL-SDR, MSI.SDR, RX-888, or a Pluto on its wide stream can no longer be put into transmit from a controller, MIDI, CAT, TCI or a serial PTT line (its MOX button was already hidden). TCI tells clients receive_only:true for these.
+    Linux / Raspberry Pi audio
+    - (System Default) now plays and records through PipeWire or PulseAudio (ALSA's pipewire or pulse device) when there is one, so hpsdr-rs appears in pavucontrol and follows the output you choose there. If neither will open, it uses ALSA's own default as before.
+    - If PipeWire is running but ALSA can't reach it, Settings → Audio says so: install pipewire-alsa (sudo apt install pipewire-alsa) and restart. Without it, a Raspberry Pi's default is the bcm2835 headphone jack, so a USB headset or HDMI monitor stays silent.
+    - hpsdr-remote does the same for its default output and mic, with the warning on its status line.
+    - The audio output reopens itself if ALSA leaves it dead after a "POLLERR" error, instead of staying silent.
+    Documentation
+    - Manual: "No sound on Linux or a Raspberry Pi" in Settings: Audio; the manual PDF builds again.
+    - README features rewritten, and a project website: https://g0orx.github.io/hpsdr-rs/
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/g0orx/hpsdr-rs/releases/tag/v0.15.2
+ReleaseTime: 2026-11-16T14:03:41.0000000Z

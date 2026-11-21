@@ -1,0 +1,71 @@
+Version: 0.43.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.43.0/codeg_0.43.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.43.0/codeg_0.43.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds conversation moves between folders, clearer tracking of background work, and more convenient repository collaboration, while improving file search, memory usage and agent compatibility.
+    New
+    - Move idle conversations that are not tied to a task between open folders, individually or in bulk, with menu selection and folder search while keeping their history.
+    - Control the desktop Web Service from the status bar, with its current status, start/stop controls and a new option to allow connections only from this computer.
+    - PR/MR lists show CI status, passing/total counts and approval reminders, with direct access to check details and approval of GitHub workflows awaiting maintainer authorization.
+    - Agents can attach files and images when creating to-do tasks, keeping reference material alongside the task instructions.
+    Improved
+    - Track background tasks and sub-agents from the running count above the chat input, including work that continues after a reply ends and delegated agents awaiting your response.
+    - Redesigned Session Details and message navigation make it easier to find the running message, inspect sub-agents and review file changes.
+    - Codex sub-agent activities now appear as expandable timeline steps, with task details, replies, errors and a shortcut to open the child conversation.
+    - Task completion comments can include an agent-drafted reply that you review and edit before publishing, with an optional Codeg footer.
+    - File search uses less frontend memory and avoids repeatedly scanning the same workspace, while keeping results current as files change in open projects. (#1116 by @kogekiplay)
+    - Updated Cursor to 2026.11.11-b912975, Kimi Code to 2.6.0, Qoder to 1.1.87, CodeBuddy to 2.183.0 and the ZCode bridge to 0.84.2.
+    Fixed
+    - Further reduced memory retained by very long tool output and closed HTML previews. (#1132, #1137 by @kogekiplay)
+    - Codex MCP screenshots and image results display correctly in desktop and Web chat, including after reopening a conversation. (#1134 by @PengXiaoyi)
+    - Kimi MCP authorization correctly shows the browser authorization link and reconnection status while waiting. (#1133 by @Cuinnchen)
+    - Kimi Code 2.6.0 plan reviews no longer incorrectly appear as tool failures when you approve, dismiss or request changes, both during the conversation and in its history.
+    - The ZCode bridge supports encrypted credentials used by ZCode 3.18+, fixing related execution failures and improving handling of duplicate history messages and replies.
+    - Interactive question cards for agents such as DeepSeek Harness correctly display the question text and option descriptions, fixing cases where only a short label appeared. (#1140 by @mvanhorn)
+    - Antigravity instances configured as custom agents correctly display interactive questions and preserve your selections in conversation history. (#1127 by @ana52070)
+    - Questions that only accept preset choices, including applicable Antigravity and Pi questions, no longer offer an unsupported “Other” input, preventing typed answers from being treated as cancellations. (#1131 by @ana52070)
+    - Custom Antigravity instances on Windows now include their startup temporary files in automatic cleanup, reducing disk space buildup after repeated launches. (#1139 by @ana52070)
+    - Long content in dialogs such as the model picker no longer causes horizontal overflow or clips buttons.
+    - Fixed an occasional cleanup error when an agent connection ends.
+    Thanks to @kogekiplay, @ana52070, @PengXiaoyi, @Cuinnchen and @mvanhorn for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版支持跨文件夹移动会话，让后台任务进度更清晰、仓库协作更方便，并改进文件搜索、内存占用和智能体兼容性。
+    新增
+    - 支持将未绑定任务的空闲会话单独或批量移到其他已打开的文件夹，可通过菜单选择或搜索目标文件夹，并保留历史记录。
+    - 桌面端状态栏新增 Web 服务入口，可查看运行状态、快速启停，并支持将访问范围设为仅限本机。
+    - PR/MR 列表直接显示检查状态、通过数与总数，并提示等待批准的工作流，可点击查看检查详情或批准 GitHub 工作流运行。
+    - 智能体创建待办任务时可以附带文件和图片，方便将参考资料与任务说明一起交给后续执行者。
+    改进
+    - 输入框上方集中显示后台任务和子智能体的运行数量与详情，回复结束后仍可跟踪未完成的工作，并提示等待你回应的委派任务。
+    - 重新设计会话详情与消息导航，更方便定位正在执行的消息、查看子智能体和审阅文件改动。
+    - Codex 子智能体活动统一展示为可展开的时间线步骤，可查看任务、回复和错误，并直接打开子会话。
+    - 任务完成后回写到 Issue 或 PR 的评论支持由智能体起草、经你审阅修改后发布，并可选择是否附带 Codeg 落款。
+    - 文件搜索减少前端内存占用和重复扫描，并随已打开项目中的文件变化更新搜索结果。（#1116 by @kogekiplay）
+    - Cursor 更新至 2026.11.11-b912975，Kimi Code 更新至 2.6.0，Qoder 更新至 1.1.87，CodeBuddy 更新至 2.183.0，ZCode 桥接更新至 0.84.2。
+    修复
+    - 进一步减少超长工具输出和已关闭 HTML 预览的内存占用。（#1132、#1137 by @kogekiplay）
+    - Codex 的 MCP 截图和图片结果可在桌面端与 Web 端正常预览，重新打开会话后也能正确显示。（#1134 by @PengXiaoyi）
+    - Kimi 等待 MCP 授权时会正确显示浏览器授权链接和重连状态。（#1133 by @Cuinnchen）
+    - Kimi Code 2.6.0 中批准计划、关闭审批或要求修改后，不再误显示为工具执行失败，实时对话和历史记录均能正确展示。
+    - ZCode 桥接兼容 3.18 及更新版本的加密凭据，修复相关执行失败，并改善历史消息和回复重复显示的问题。
+    - DeepSeek Harness 等智能体的提问卡片能正确显示问题正文和选项说明，修复只显示简短标题、缺少问题内容或选项解释的情况。（#1140 by @mvanhorn）
+    - 以自定义智能体接入的 Antigravity 能正常显示交互式提问，并在历史记录中保留你的选择。（#1127 by @ana52070）
+    - Antigravity、Pi 中仅支持预设选项的提问不再显示「其他」输入框，避免手动输入的回答被误当作取消。（#1131 by @ana52070）
+    - Windows 上的自定义 Antigravity 实例会将启动临时文件纳入自动清理，减少反复启动后的磁盘空间占用。（#1139 by @ana52070）
+    - 模型选择等弹窗遇到较长内容时不再横向溢出或遮挡按钮。
+    - 修复智能体连接结束时偶发的清理异常。
+    感谢 @kogekiplay、@ana52070、@PengXiaoyi、@Cuinnchen 和 @mvanhorn 为本次发布做出的贡献。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.43.0
+ReleaseTime: 2026-11-12T16:10:05.0000000Z

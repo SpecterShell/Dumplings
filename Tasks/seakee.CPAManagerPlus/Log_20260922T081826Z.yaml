@@ -1,0 +1,100 @@
+Version: 1.13.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.2_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.2/cpa-manager-plus_v1.13.2_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.13.2_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.13.2/cpa-manager-plus_v1.13.2_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.13.2
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.2 is a maintenance release focused on provider compatibility and quota/accounting correctness. The main addition is end-to-end Muse / Meta integration in CPA Manager Plus, covering OAuth Device Flow, credential identity, quota windows and historical snapshots, Meta API-key provider management, model discovery, health checks, and monitoring source resolution.
+    This release also closes three correctness gaps. Codex Reset Credit count evidence and detail evidence are now tracked independently so count-only refreshes or stale snapshots cannot incorrectly refresh details. xAI Weekly windows remain visible when valid period metadata exists without a numeric usage percentage, while zero monthly limits no longer synthesize nonexistent Monthly windows. Devin usage now uses the correct cache-input accounting semantics and automatically reconciles affected historical derived data.
+    Highlights
+    Muse / Meta
+    - Add Muse / Meta provider identity with canonical ID meta and compatibility alias muse. (Web / Manager Server)
+    - Integrate CPA Meta OAuth Device Flow so CPAMP can request the authorization URL and device code and poll login status. (Web / CPA)
+    - Show Muse quota and reset windows in Accounts and persist them through the existing quota snapshot/history pipeline. Valid windows without a usable percentage remain successful unknown observations instead of being reported as 0%. (Web / Manager Server)
+    - Add meta-api-key provider management, including create/edit/delete, enable/disable, priority/weight, model mappings, model discovery, connectivity, and health checks. (Web / CPA)
+    - Recognize Meta sources and runtime identities in Request Monitoring and Usage Analytics. (Web)
+    - Keep OAuth DCA credentials strictly separate from Meta inference API keys. DCA values are rejected from inference-provider save, discovery, connectivity, and health-check paths. (Web / CPA)
+    Codex Reset Credits
+    - Track Reset Credit available-count evidence and detail-list evidence independently so a count-only refresh cannot extend stale detail validity. (Web / Manager Server)
+    - Preserve a local invalidation boundary after Reset Credit consumption so older quota snapshots cannot restore consumed counts or details. (Web / Manager Server)
+    - Preserve an explicit empty detail list as authoritative zero-credit evidence, while missing or malformed detail payloads cannot clear trusted existing details. (Web / Manager Server)
+    - Trigger a single on-demand detail refresh when the Quota tab opens and Reset Credit details are missing, stale, or older than five minutes. (Web)
+    - Show expiration remaining time in days, hours, minutes, or less than one minute, and remove expired credits once the boundary is reached. (Web)
+    xAI Quota
+    - Preserve the Weekly quota card when xAI returns valid Weekly period boundaries without usagePercent, showing unknown progress and the correct reset metadata. (Web / Manager Server)
+    - Stop treating monthlyLimit = 0 as evidence for a Monthly financial quota window across Accounts, Monitoring, and Manager Server inspection. (Web / Manager Server)
+    Devin Usage Accounting
+    - Add the read_included_creation_separate cache-input accounting mode: cache reads are deducted from prompt input while cache creation is counted separately in total input, preventing Devin usage from being over- or under-counted. (Web / Manager Server)
+    - Apply this mode with priority to Devin executors, providers, and model prefixes while preserving an explicit positive upstream total_tokens value as authoritative. (Web / Manager Server)
+    - Automatically advance usage_cache_accounting_semantics_revision to revision 2 and re-derive only affected historical Devin rollups. (Manager Server)
+    Docs
+    - Document Muse / Meta OAuth, AI Provider, Accounts, and capability behavior, including the CPA v7.3.4+ full-support baseline and the DCA / meta-api-key credential boundary.
+    Upgrade Notes
+    - Complete Muse / Meta support requires CPA v7.3.4 or later. CPA v7.3.4 introduced the native Meta (Muse Code) provider, Meta OAuth management endpoint, and meta-api-key management support.
+    - No manual database migration or offline maintenance is required. On startup, Manager Server checks the Devin cache-accounting semantics revision. Instances without historical Devin usage complete revision 2 immediately; affected instances automatically recalculate the relevant usage and derived rollups.
+    - Muse / Meta quota snapshots, Codex Reset Credit evidence separation, and the xAI Weekly fixes add no new database tables or columns.
+    - Downgrading from v1.13.2 does not require a database rollback, but older versions cannot preserve the new explicit-empty Reset Credit detail semantics and may temporarily fall back to older snapshot details until fresh quota evidence is collected.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.1...v1.13.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.2-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.13.2 是一个围绕提供商兼容和额度/计费正确性的维护版本。核心变化是完成 Muse / Meta 在 CPA Manager Plus 中的端到端接入：从 OAuth Device Flow、凭证识别、额度窗口与历史快照，到 Meta API Key 提供商管理、模型发现、健康检查和监控来源解析，均纳入现有 CPAMP 工作流。
+    本版本同时收口三类 correctness 问题：Codex Reset Credit 的数量证据与明细证据现在独立维护，避免旧快照或仅数量响应误刷新明细；xAI 在只有有效周周期元数据但缺少百分比时仍会保留 Weekly 窗口，同时不再把 0 月额度合成为不存在的 Monthly 窗口；Devin 则新增正确的缓存输入计费语义，并自动重算受影响的历史派生数据。
+    Highlights
+    Muse / Meta
+    - 新增 Muse / Meta 提供商识别，规范 ID 为 meta，同时兼容 muse 别名。（Web / Manager Server）
+    - 接入 CPA 的 Meta OAuth Device Flow，可在 CPAMP 中获取授权地址、设备码并轮询登录状态。（Web / CPA）
+    - 在 Accounts 中展示 Muse 额度与重置窗口，并接入现有 quota snapshot / history 流程；当上游只提供窗口信息而没有可用百分比时，保留“未知进度”而不是伪造 0%。（Web / Manager Server）
+    - 新增 meta-api-key 提供商管理，包括新增、编辑、删除、启停、优先级/权重、模型映射、模型发现、连通性与健康检查。（Web / CPA）
+    - Request Monitoring 与 Usage Analytics 现在可以识别 Meta 来源以及相关运行时身份。（Web）
+    - OAuth DCA 凭证与 Meta 推理 API Key 保持严格隔离；DCA 不会作为推理密钥进入保存、模型发现或健康检查请求。（Web / CPA）
+    Codex Reset Credits
+    - 将 Reset Credit 的“可用次数”与“明细列表”拆分为独立证据时间，避免仅数量刷新错误延长旧明细的有效期。（Web / Manager Server）
+    - 消耗 Reset Credit 后保留本地失效边界，旧 quota snapshot 不再把已消耗的次数或明细恢复回来。（Web / Manager Server）
+    - 明细接口显式返回空列表时会作为权威的 0 次证据保留；缺字段或异常响应不会清除已有可信明细。（Web / Manager Server）
+    - 打开额度详情时，如 Reset Credit 明细缺失、过期或与数量不一致，会按需单次刷新明细。（Web）
+    - Reset Credit 到期剩余时间细化到天、小时、分钟和少于 1 分钟，并在真正到期后移除显示。（Web）
+    xAI Quota
+    - 当 xAI 返回有效 Weekly 周期起止时间但没有 usagePercent 时，仍保留 Weekly 额度卡片，并显示未知进度与正确的重置时间。（Web / Manager Server）
+    - monthlyLimit = 0 不再被解释为存在 Monthly 金额额度窗口，Accounts、Monitoring 和 Manager Server inspection 行为保持一致。（Web / Manager Server）
+    Devin Usage Accounting
+    - 新增 read_included_creation_separate 缓存输入计费模式：cache read 从 prompt input 中扣除，cache creation 单独计入 total input，避免 Devin 用量重复或漏计。（Web / Manager Server）
+    - Devin executor、provider 与模型前缀会优先使用该计费语义，并保持上游显式 total_tokens 的权威性。（Web / Manager Server）
+    - Manager Server 会将 usage_cache_accounting_semantics_revision 自动推进到 revision 2，并只对受影响的 Devin 历史记录重新派生 rollup。（Manager Server）
+    Docs
+    - 补充 Muse / Meta OAuth、AI Provider、Accounts 与能力矩阵文档，明确 CPA v7.3.4+ 完整支持基线和 DCA / meta-api-key 凭证边界。
+    Upgrade Notes
+    - 完整 Muse / Meta 功能要求 CPA v7.3.4 或更高版本。 CPA v7.3.4 首次加入原生 Meta（Muse Code）提供商、Meta OAuth 管理接口和 meta-api-key 管理能力。
+    - 无需手动数据库迁移或离线维护。 Manager Server 启动后会自动检查 Devin cache accounting semantics revision；没有 Devin 历史记录的实例会直接完成 revision 2 标记，有受影响记录时会自动重算对应 usage 与派生 rollup。
+    - Muse / Meta quota snapshot、Codex Reset Credit 证据拆分和 xAI Weekly 修复均不新增数据库表或列。
+    - 从 v1.13.2 降级到旧版本不会要求数据库回滚，但旧版本无法保留新的 Reset Credit 显式空明细语义，并可能在下一次新鲜额度观测前短暂回退到旧快照。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.13.1...v1.13.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.13.2-zh.md
+ReleaseTime: 2026-09-22T04:10:46.0000000Z

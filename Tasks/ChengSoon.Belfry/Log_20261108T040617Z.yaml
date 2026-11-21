@@ -1,0 +1,46 @@
+Version: 0.23.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.23.0/Belfry_0.23.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.23.0/Belfry_0.23.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v0.23.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 协作房间按「统筹 + 成员」重做：一间房对应一个需求。统筹拆需求、派活、跟进度并向你汇报，成员各管自己的职责，成员不能给别的成员派活。房间带需求简报（目标、当前重点、约束）和共享任务板（T 编号、待开工 / 进行中 / 已完成 / 归档、前置依赖）。模型参照 CCCC（Apache-2.0）。
+    - 成员命令：belfry room status / say / log / task / brief。消息不写收件人时发给统筹，统筹发的发给全体；@角色 只发给那个人；--ask 要求回复，对方回复前一直挂着「等回复」。
+    - 协作流程图：房间里切到「流程」，从左往右看你 → 统筹 → 各位成员，连线上标着谁手上有什么活，正在做的、刚有消息的、在等你选择的会动起来。
+    - 在房间里直接替成员选择：成员卡在确认框时，房间顶部显示原问题、要执行的命令和选项，点一下即替你按下；画面变了就不发。读不出选项时给「去终端处理」。
+    - 发送文件：选择、拖进中栏或直接粘贴（截图、Finder / 资源管理器复制的文件）。单个 ≤ 20 MB，每条最多 10 个；成员收到本地路径按需读取。
+    - 发给你的消息有提醒：统筹或成员发给你的消息，房间关着时弹系统通知，房间列表亮未读点，侧栏「协作房间」按钮计数；对话里画「新消息」分隔线。
+    - 输入框打 @ 弹出成员名单；消息按 Markdown 渲染，正文里的项目文件路径可点开预览。
+    - 暂停房间：消息只记在房间里、不送进成员终端，空闲提醒也停。成员菜单可清除上下文。
+    - 统筹优先派活：你发给统筹的消息附上成员名单；房间安静 3 分钟且有成员空闲时提醒统筹一次。
+    - 断线或进程退出后自动恢复会话，并用最新的原生会话 ID 续接历史对话。
+    改进
+    - 协作房间界面改用 shadcn/ui（MIT）组件；Tailwind 只作用于房间，其他面板不受影响。
+    - 「要求回复」默认打开。
+    - 消息账本过大时启动时自动压缩。
+    修复
+    - 修复成员执行新的 belfry room 命令时报「协作请求格式无效」：后台服务不再按自己的命令表解析请求，命令原样转给应用。
+    - 修复短消息投递后误报「协作任务尚未确认开始处理」并暂停后续投递：输入区清空即视为已提交；补上 Codex 0.16x「正在工作」和确认框的识别。
+    - 修复房间对话区往上滚动被拽回底部、滚动卡顿的问题。
+    升级提示
+    - 协作房间换了新的数据格式和位置，0.22 版建的房间不会出现在新版里（旧文件 rooms.json 原样留在应用数据目录，不会被删除）。需要的话重新建房间。
+    - 「协作请求格式无效」的修复在后台服务里：升级后已在运行的后台服务仍是旧版本，需要它重启一次（例如重启电脑）后才生效；之后再加新命令不会再出现这个问题。
+    - 旧版本拉起的成员会话拿到的是旧说明，建议在新房间里重新添加成员。
+    - macOS 安装包为 ad-hoc 签名、未经 Apple 公证；Windows 未签名，SmartScreen 会提示「未知发布者」。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#0230---2026-11-08
+ReleaseTime: 2026-11-08T03:23:18.0000000Z

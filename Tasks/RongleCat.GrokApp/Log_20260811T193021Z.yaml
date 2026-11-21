@@ -1,0 +1,78 @@
+Version: 0.2.15
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/RongleCat/grok-app/releases/download/v0.2.15/Grok_0.2.15_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.15
+    Highlight: Tool/activity timeline shows real expandable output and explore groups; session open never hangs on MCP/OAuth; ask-user with rpcId 0 works; sticky composer target and optimistic Stop; project drag-reorder.
+    中文 · 亮点： 工具活动轨真实可展开输出与「探索」分组；连接打开会话不再被 MCP/OAuth 卡住；rpcId=0 问卷正常弹出；发送绑定当前会话与乐观停止；侧栏项目拖拽排序。
+    Added
+    - Tool timeline / activity rail: Live and history tool steps show type + call-arg labels with expandable real tool output (stdout/file text). Mixed read/search bursts collapse into an “Explore · N searches, M files” group. Thought steps expand to full text; finished thinking blocks auto-collapse like work blocks.
+    - Sidebar project drag-reorder: Pin-group-aware drag + Move Up/Down menu; order persisted.
+    - Plan-mode bare chip exit: Transient plan mode is never inherited as a global/project default (heals old mode:"plan" data); empty plan-mode strip gains an exit control.
+    中文 · 新增
+    - 工具/活动时间线：一级类型+参数文案，真实工具输出可展开；混合读/搜合并为「探索」；思考全文可展开并在结束后自动折叠。
+    - 侧栏项目拖拽排序：置顶分组内排序 + 上移/下移，顺序持久化。
+    - 计划模式条退出：计划模式为临时态，不再当全局默认；空计划条可退出。
+    Changed
+    - Stop is optimistic: UI unlocks immediately; agent cancel runs in the background. Sticky “thinking” after a dropped stream is healed via journal reconcile.
+    - Automations chat fences: Can update an existing task by id/title (no duplicate create); post-turn reconcile applies missed fences.
+    中文 · 变更
+    - 停止改为乐观解锁：UI 立即恢复；代理取消后台执行；流中断导致的「思考中」卡死由 journal 对账修复。
+    - 自动化围栏：可按 id/标题更新已有任务；回合结束对账补漏。
+    Fixed
+    - ACP connect never blocks on MCP/OAuth: Session open builds mcpServers from config only (no grok mcp list / network token refresh), with a 2s budget and empty-inject fallback so session/load|new still proceeds when ChatCut OAuth or CLI probe hangs. Expired OAuth remotes are skipped on connect.
+    - Tool output after reload: Journal \u0001output is mapped on load; standalone/unwoven tool rows recover the same expand body as live rows.
+    - Ask-user questionnaire with JSON-RPC id 0: First question no longer silently drops (2-minute hang).
+    - Composer sticky send target: Sends bind to the viewed session so switching chats mid-turn no longer mis-routes prompts into the previous busy session.
+    - Replayed tool kind/label: History tool rows recover kind and humanized labels after session reload.
+    中文 · 修复
+    - 连接打开会话不再被 MCP/OAuth 阻塞：config-only 注入 + 2 秒预算 + 空列表兜底；过期 OAuth 远程直接跳过。
+    - 历史回放工具输出/类型标签：journal 输出与独立工具行展开与 live 一致。
+    - rpcId 为 0 的问卷正常弹出。
+    - 发送绑定当前查看会话：忙时切换会话不再发错聊天。
+    - 回放工具 kind/标签恢复。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Grok App v0.2.15
+    Highlight: Tool/activity timeline shows real expandable output and explore groups; session open never hangs on MCP/OAuth; ask-user with rpcId 0 works; sticky composer target and optimistic Stop; project drag-reorder.
+    中文 · 亮点： 工具活动轨真实可展开输出与「探索」分组；连接打开会话不再被 MCP/OAuth 卡住；rpcId=0 问卷正常弹出；发送绑定当前会话与乐观停止；侧栏项目拖拽排序。
+    Added
+    - Tool timeline / activity rail: Live and history tool steps show type + call-arg labels with expandable real tool output (stdout/file text). Mixed read/search bursts collapse into an “Explore · N searches, M files” group. Thought steps expand to full text; finished thinking blocks auto-collapse like work blocks.
+    - Sidebar project drag-reorder: Pin-group-aware drag + Move Up/Down menu; order persisted.
+    - Plan-mode bare chip exit: Transient plan mode is never inherited as a global/project default (heals old mode:"plan" data); empty plan-mode strip gains an exit control.
+    中文 · 新增
+    - 工具/活动时间线：一级类型+参数文案，真实工具输出可展开；混合读/搜合并为「探索」；思考全文可展开并在结束后自动折叠。
+    - 侧栏项目拖拽排序：置顶分组内排序 + 上移/下移，顺序持久化。
+    - 计划模式条退出：计划模式为临时态，不再当全局默认；空计划条可退出。
+    Changed
+    - Stop is optimistic: UI unlocks immediately; agent cancel runs in the background. Sticky “thinking” after a dropped stream is healed via journal reconcile.
+    - Automations chat fences: Can update an existing task by id/title (no duplicate create); post-turn reconcile applies missed fences.
+    中文 · 变更
+    - 停止改为乐观解锁：UI 立即恢复；代理取消后台执行；流中断导致的「思考中」卡死由 journal 对账修复。
+    - 自动化围栏：可按 id/标题更新已有任务；回合结束对账补漏。
+    Fixed
+    - ACP connect never blocks on MCP/OAuth: Session open builds mcpServers from config only (no grok mcp list / network token refresh), with a 2s budget and empty-inject fallback so session/load|new still proceeds when ChatCut OAuth or CLI probe hangs. Expired OAuth remotes are skipped on connect.
+    - Tool output after reload: Journal \u0001output is mapped on load; standalone/unwoven tool rows recover the same expand body as live rows.
+    - Ask-user questionnaire with JSON-RPC id 0: First question no longer silently drops (2-minute hang).
+    - Composer sticky send target: Sends bind to the viewed session so switching chats mid-turn no longer mis-routes prompts into the previous busy session.
+    - Replayed tool kind/label: History tool rows recover kind and humanized labels after session reload.
+    中文 · 修复
+    - 连接打开会话不再被 MCP/OAuth 阻塞：config-only 注入 + 2 秒预算 + 空列表兜底；过期 OAuth 远程直接跳过。
+    - 历史回放工具输出/类型标签：journal 输出与独立工具行展开与 live 一致。
+    - rpcId 为 0 的问卷正常弹出。
+    - 发送绑定当前查看会话：忙时切换会话不再发错聊天。
+    - 回放工具 kind/标签恢复。
+
+    Assets are attached below. Install help (macOS xattr / Gatekeeper, Windows SmartScreen, Linux packages, CLI): README · README 中文 · Full history: CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RongleCat/grok-app/releases/tag/v0.2.15
+ReleaseTime: 2026-08-11T18:01:42.0000000Z

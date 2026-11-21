@@ -1,0 +1,40 @@
+Version: 0.4.11
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/certimate-go/certimate/releases/download/v0.4.11/certimate_v0.4.11_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  InstallerUrl: https://github.com/certimate-go/certimate/releases/download/v0.4.11/certimate_v0.4.11_windows_arm64.zip
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    ✨ 新增功能
+    - 支持申请、上传、部署 IP 地址证书（注：目前公共 CA 仅 Let's Encrpyt 可签发）
+    - Azure 授权凭据支持配置“订阅 ID”、“资源组名称”
+    - HTTP-01 质询时，SSH 提供商可回退为 SCP
+    🐛 修复 Bug
+    - 修复申请证书时域名字段可以错误地填入 IPv4 地址的问题
+    - 修复系统设置页面部分 UI 响应式问题
+    - 修复 #1116 相关问题
+    - 修复 #1117 相关问题
+    - 修复 #1118 相关问题
+    - 修复 #1122 相关问题
+    - 修复 #1123 相关问题
+    🛠 优化 & 其他改动
+    - 前端编辑授权凭据、工作流节点等抽屉表单中，保存时可选择“保存并继续”以不自动关闭抽屉
+    - 优化验证上传证书或私钥的表单验证
+    - 优化部分 SDK 客户端的日志记录
+    - 升级 gomod 依赖项
+    - 升级 npm 依赖项
+
+    Breaking Changes
+    原有的 Webhook 部署中回调数据 ${DOMAIN} 等变量，及工作流消息通知中 {{certificate.domain}} 等模板插值，在新版本中命名会有所变化，以便更好地符合 IP 地址证书等场景下的语义。具体变化可在 WebUI 的相关表单中查看。
+    为兼容用户现有数据，之前版本的回调数据变量或通知模板插值仍可正常被解析。
+
+    Comparing changes: https://github.com/certimate-go/certimate/compare/v0.4.10...v0.4.11, by @fudiwei @mercury7720 @teaim
+- Key: ReleaseNotesUrl
+  Value: https://github.com/certimate-go/certimate/releases/tag/v0.4.11
+ReleaseTime: 2025-12-26T10:04:06.0000000Z

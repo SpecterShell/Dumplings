@@ -1,0 +1,102 @@
+Version: 4.43.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/DNSControl/dnscontrol/releases/download/v4.43.0/dnscontrol_4.43.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/DNSControl/dnscontrol/releases/download/v4.43.0/dnscontrol_4.43.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Greetings DNS fans!
+    Release v4.43.0 highlights:
+    - 4 New Providers! The most new providers we've had in one release in a long time! Thanks and welcome to our newest maintainers! We look forward to great things!
+      - DYNU (#4364) thanks to @DustyRah!
+      - OpenWRT (#4166) thanks to @huskyistaken!
+      - GIGAHOST (#4394) thanks to @jochristian!
+      - SCALEWAY (#4462) thanks to @alessiopcc!
+    - AUTODNS now supports child domains. Thanks, @arnoschoon!
+    - ROUTE53 can now edit SOA records. Thanks, @istenrot!
+    - AXFRDDNS now supports communication over Unix domain sockets. Thanks, @tomfitzhenry!
+    - GANDI_V5 now supports HTTPS/SVCB, NAPTR, LOC, OPENPGPKEY record types. Thanks @francois2metz!
+    - "init" support added for AKAMAIEDGEDNS, AUTODNS, CLOUDNS, SeSEC, DNSSCCALE, DNSMADEEASY, FORTIGATE, JOKER, LINODE, MIKROTIK, and PORKBUN. If you haven't tried "dnscontrol init" yet, it's one of the coolest new features.
+    - The HETZNER provider has been removed, having been replaced by HETZNERV2, thanks to @das7pad!
+    Upcoming releases:
+    - The next release will be "v4.43.1-rc1". It will have no changes. We're just testing the ability to create release candidates. Release candidates will not appear in Homebrew or (maybe) Docker.
+    - There may be a v4.43.2 soon (again, no changes) if we need to flush out rc1. For example, if Homebrew publishes rc1 as the default.
+    Thanks to all contributors involved in this release! This is a community project and we couldn't do it without all of your contributions!
+    Sincerely,
+    --Tom Limoncelli
+    Monthly video call!
+    Everyone is invited to the Monthly DNSControl Community Video Conference Call on the 2nd Tuesday of each month. Join whether you are a new user with questions or an experienced developer that wants to discuss DNSControl internals... or anything in between! Meeting details on
+    GitHub Discussions.
+    Changelog
+    Major features:
+    - f1d056a9fb81c656daca884de52b0b8eef5328ff: NEW PROVIDER: DYNU (#4364) (@DustyRah)
+    - 1e113ccf2d10f9b4250ad587fa3831089488c928: NEW PROVIDER: OpenWRT (#4166) (@huskyistaken)
+    Provider-specific changes:
+    - e5a85ad5aac39ae47e13f558eb38ead56bfab61f: AKAMAIEDGEDNS: support init command (#4270) (@TomOnTime)
+    - ae7eca6528b36de938e772f567a47ae4f44fec70: AUTODNS: optionally include sub-user (children) zones in get-zones (#4391) (@arnoschoon)
+    - 21642681393b592a3c1153ec5b65f4d1de4c1c23: AUTODNS: reject TXT values that AutoDNS cannot store losslessly (#4392) (@arnoschoon)
+    - 02a4641cf2cee014a6f62611afd0d4ef300e0898: AUTODNS: support init command (#4272) (@TomOnTime)
+    - 89d514e38222d6eaf4fb370fafc49e9ee0dfbe91: AXFRDDNS: support unix domain sockets in update-mode/transfer-mode (#4304) (@tomfitzhenry)
+    - d1afeea00dc835a194a41decbb7ad4c269ca5f53: BUGFIX: GANDI_V5: Add missing apiurl field to profile.json (#4416) (@TomOnTime)
+    - dcdbd2b71292d2efd4eb38dc51f0d9eba2c3d528: CLOUDNS: support init command (#4277) (@TomOnTime)
+    - 0b36a3ddf056f0884b5c5a6813f2d29b07b62fff: CNR: Skip ALIAS on DNSSEC-signed zones, add SMIMEA + AUTODNSSEC support, and enhance SVCB handling (#4401) (@AsifNawaz-cnic)
+    - dd7c6eb48eadd4a20a37d845439c8ea752b457c3: DESEC: support init command (#4279) (@TomOnTime)
+    - 877286279e4cb8c8e36c927534f25dff9552d8b5: DNSCALE: support init command (#4281) (@TomOnTime)
+    - 635baec79224a92cec34ba2b2764a4502b2bac33: DNSMADEEASY: fix PortalURL (#4467) (@vojtad)
+    - 7186be84c5a708799503e7e7c59163987d906184: DNSMADEEASY: support init command (#4283) (@TomOnTime)
+    - 237c44c4edb7f988dc50449a7dc2496f651fec82: FORTIGATE: support init command (#4284) (@TomOnTime)
+    - 257953302ad7d8625f1b50924069fc9d21a594e9: GANDI_V5: add HTTPS, NAPTR, LOC, OPENPGPKEY and NVCB records (#4387) (@francois2metz)
+    - 3d0372b83ede0707f4f1d33c5a72aa8810e0a310: GIGAHOST: Add Gigahost DNS provider (#4394) (@jochristian)
+    - ea09988cac956599e93b5dc0abc567a7ad2f34cd: JOKER: support init command (#4294) (@TomOnTime)
+    - ff7b5610360df3fd7b25745356645f6e1ac7c3b1: LINODE: support init command (#4295) (@TomOnTime)
+    - d1b5dcb23b75f6830043655add5d616a39042ec5: LuaDNS: Skip changing nameserver TTL (#4470) (@riku22)
+    - ec83f32129fb0042a166db792d8f54f765369b93: LuaDNS: add integration test support (#4472) (@riku22)
+    - fa9626bd21f65ea54f656fceefda41e519506297: MIKROTIK: support init command (#4297) (@TomOnTime)
+    - cd0d84bc8bf6bfe90efc442edf659fdf03a33d28: NETBIRD: Add apiurl creds argument (#4486) (@3l0w)
+    - b2fe8df325a938de4af57859ce3af31703d5f417: PORKBUN: support init command (#4418) (@imlonghao)
+    - b7d62d010a398212628ac43cf5fcf42c2a8bed6c: ROUTE53: Enable SOA record editing (#4402) (@istenrot)
+    - d0166afc677ebde6ddd4b6e0e683ee9afa3d9e31: ROUTE53: Enable SOA record editing, v2 (#4406) (@istenrot)
+    - a0f8f19c6a943d54ff1fd7ac9f716ffb14414bd2: Revert "ROUTE53: Enable SOA record editing (#4402)" (#4403) (@TomOnTime)
+    - 9328279d9012685db390f197d75f0e3498d218e1: SCALEWAY: Add Scaleway DNS provider (#4462) (@alessiopcc)
+    - 8f70e869b73f3e2fc3cb8477ee21aba68bfdec7a: TENCENTDNS: Support line and weight metadata (#4482) (@5aaee9)
+    Documentation:
+    - ce8d993698dd4c4f39a8e6bde0c6222a549c88a6: DOCS: Change "Feature Flags" to "Feature Summary" (#4474) (@TomOnTime)
+    - 5143ffd062b4d3bf182af745012bae64d6e3cb28: DOCS: every provider doc includes feature flags automatically (#4173) (@chicks-net)
+    CI/CD:
+    - df8100e79dd3f6cf98814e9f33949d62febf89ee: Build(deps): Bump actions/cache from 5.0.5 to 6.0.0 (#4397) (@dependabot[bot])
+    - b40aa654f6e602b0af9a42b5a7f13eb4e05f6148: Build(deps): Bump actions/cache from 6.0.0 to 6.1.0 (#4408) (@dependabot[bot])
+    - e60e683d068ee9dcba3d8a4898a6a0e8041eb722: Build(deps): Bump actions/checkout from 6 to 7 (#4398) (@dependabot[bot])
+    - a804cea7dbf493326b31f6115cef5689939cc09f: Build(deps): Bump actions/setup-node from 6 to 7 (#4477) (@dependabot[bot])
+    - 566f1687b26a81bf075e82b4d83fecfc994f7709: Build(deps): Bump alpine from 3.23.4 to 3.24.1 (#4407) (@dependabot[bot])
+    - d3cd6edccd11055384fa2a5f2f568e8ead9ad710: Build(deps): Bump go.mongodb.org/mongo-driver from 1.13.1 to 1.17.7 (#4386) (@dependabot[bot])
+    - 8cfbff44f87d0fab46e92d1e8b1bd21a086e475b: Build(deps): Bump js-yaml from 4.1.1 to 4.2.0 (#4384) (@dependabot[bot])
+    - 4673302402104cc34838bbb8cd72c3b237ec7556: Build(deps): Bump ws from 8.20.1 to 8.21.0 (#4385) (@dependabot[bot])
+    Dependencies:
+    - 64beb5a3f0bb75e88dc95b0cb1e990b13d74f007: CHORE: Update dependencies (#4404) (@TomOnTime)
+    - a6288ff03de5238e8475c45a8c3c7ab7e8558714: CHORE: Update dependencies (#4413) (@TomOnTime)
+    - 41f07494107c0a46dac8d0b17a2dadcfb7a6e6df: CHORE: Update dependencies (#4457) (@TomOnTime)
+    - ee3c4cd7353cc03b48ace4e965e4ba2574a70141: CHORE: Update dependencies (#4506) (@TomOnTime)
+    - 76266855f1bdedc37acebb1c01a8a61ae9bf83b0: CHORE: Update dependencies (#4507) (@TomOnTime)
+    Other changes and improvements:
+    - 237650bb360da055ae059257745430375593cd8e: BACKPORT: Make merge to release_candidate_v5 easier (#4445) (@TomOnTime)
+    - 71cdc59a067a039bc71522edb2593f0822f397e7: CHORE: Add utilities: ToFqdnWithDot(), ToFqdnNoDot(), ToShort() (#4502) (@TomOnTime)
+    - b6faabc2c543d35069dacb2b1a0cdf30e176ce0a: CHORE: Fix GoReleaser to skip release candidates (#4485) (@TomOnTime)
+    - bf4bfa15cdd2276cb4b5f4119501937d36c959e2: CHORE: Move NewDomainConfig (#4443) (@TomOnTime)
+    - 42ad458c9b7871d4125ba4dbe34bae2a8398161f: HETZNER: remove defunct provider (#4456) (@das7pad)
+    - 7ba346ef9b9a8a4e572da760a152b52efcb3ca46: Misc fixes: GANDI_V5, SVCB/HTTPS records, linting and more (#4399) (@TomOnTime)
+    - ed603bfb6fc02167313c00e21eb4f7bda0bef44e: REFACTOR: Add models.MustNewDomainConfig for test fixtures (#4458) (@TomOnTime)
+    - 0fb9c591501718c292729ffc731333df58c06bc5: REFACTOR: Backport changes from release_candidate_v5 (#4442) (@TomOnTime)
+    - 1ae213e120f4cb8cbcd5de45eabb185310a87d84: REFACTOR: Change signature of EnsureZoneExists to include "dc" (#4441) (@TomOnTime)
+    - c8d102a06c38bffbf5a24f78286b133704da7895: Remove v5 files that crept into main (#4505) (@TomOnTime)
+    - 3a2f06f916d188ae84ac79e4c0d6749c4914f981: TEST: Add validations and tests for SOA records to reject multiple SOAs (#4417) (@istenrot)
+    Deprecation warnings
+    Warning
+
+    - REV() will switch from RFC2317 to RFC4183 in v5.0. This is a breaking change. Warnings are output if your configuration is affected. No date has been announced for v5.0. See https://docs.dnscontrol.org/language-reference/top-level-functions/revcompat
+    - NAMEDOTCOM, OPENSRS and SOFTLAYER need maintainers! These providers have no maintainer. Maintainers respond to PRs and fix bugs in a timely manner, and try to stay on top of protocol changes.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/DNSControl/dnscontrol/releases/tag/v4.43.0
+ReleaseTime: 2026-07-20T15:08:59.0000000Z

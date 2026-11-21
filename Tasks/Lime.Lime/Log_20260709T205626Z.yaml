@@ -1,0 +1,39 @@
+Version: 1.97.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.97.0/Lime-1.97.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.97.0
+    新功能
+    - Agent Runtime 增加 provider source backend、response event materializer、tool input delta 和 reasoning delta 投影，使 provider streaming 能更直接进入 current timeline / read model。
+    - App Server / protocol 新增 voiceTranscription/polishText 主链，并接入前端语音输入，支持实时预览转写和最终文本润色。
+    - Agent / Claw 工作区补齐任务中心首页热路径、计划确认、审批输入栏优先级、图片工作台发送路由和会话文件自动初始化控制。
+    - 新增版本级 benchmark release gate 脚本与 manifest，能生成 context、checklist、P1 dry-run / preflight、summary、baseline 和严格 gate 证据。
+    修复
+    - 修复 provider tail idle 后已有纯文本输出仍被判失败的问题，降低长流式回复末尾超时导致空结果的风险。
+    - 修复 Electron App Server sidecar 在 macOS / Linux / Windows 下加载同目录运行时库的环境变量传递，并补齐主窗口媒体权限处理。
+    - 修复历史会话 hydrate、thread item 投影、reasoning 内容同步、输入框发送、任务中心草稿和 workspace 初始导航中的状态边界。
+    - 修复模型选择器在模型未加载或未知模型场景下的自动切换逻辑，避免覆盖用户仍有效的模型选择。
+    优化与重构
+    - 将 lime-rs/vendor/aster-rust 物理删除，迁移剩余 Aster-shaped adapter 到 crates/agent-compat 临时 owner，并收敛相关 governance guard。
+    - 拆分 provider trace、reply backend、reply loop、tool lifecycle、approval decision contract、projection store 和 voice text processing 等 runtime 领域边界。
+    - 清退旧浏览器工作区 home hint、旧 StreamingWriteFileCard、旧 text normalization 和若干旧 tool display copy 分支。
+    - 优化输入栏语音采样、实时转写拼接、CJK 语种空格处理、图片生成偏好刷新和资源管理器搜索 / 工具栏展示。
+    测试与质量
+    - 新增和更新 provider stream idle、reply source backend、response materializer、approval decision、permission preflight、session hydration projection、voice polish 和 Electron media permission 回归。
+    - 扩展 Claw current fixture、session history fixture、code artifact workbench fixture、benchmark runner 和 app-server asset / sidecar 脚本测试。
+    - 更新 App Server protocol schema、generated TypeScript types、client methods、command policy guard、Aster migration boundary 和脚本治理检查。
+    - 当前 benchmark release gate 仍 fail closed：P1 Terminal-Bench / DeepSWE true-run 依赖 Docker / runner 环境，尚不能作为正式放行依据。
+    文档
+    - 新增和更新 Aster Phase 6 provider reply backend、迁移收口、dead code deletion、benchmark release、approval HITL 和 Clawstream guardrail 相关计划与路线图。
+    - 更新 Aster migration、governance、执行计划索引、benchmark dataset / progress / version test plan 和测试场景 ledger / registry。
+    其他
+    - 版本事实源更新到 1.97.0：根应用、CLI npm package、Rust workspace、lime-rs/Cargo.lock 和 release notes。
+    完整变更：v1.96.0 → v1.97.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.97.0
+ReleaseTime: 2026-07-09T18:43:42.0000000Z

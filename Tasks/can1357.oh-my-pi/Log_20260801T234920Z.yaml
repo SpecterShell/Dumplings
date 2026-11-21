@@ -1,0 +1,116 @@
+Version: 17.2.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed Codex V2 remote compaction bypassing the provider's live WebSocket transport before trying SSE (#7198).
+    - Tool calls skipped mid-batch to service queued steering/peer input now distinguish calls that never entered tool.execute (SyntheticToolResultDetails, executed: false) from in-flight calls that may have performed partial work (execution: "started"), allowing UI/telemetry consumers to render normal steering control flow without misreporting execution state (#7199).
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Codex WebSocket tool-result turns replaying full history when the preceding tool-call ID required Responses API normalization (#7279).
+    - Fixed direct Anthropic provider streams ignoring model.compat.streamIdleTimeoutMs. Requests dispatched through streamAnthropic can now widen the inter-event idle watchdog or set it to 0 to disable that watchdog; caller options and environment overrides retain precedence. Setting the compat value to 0 disables only the inter-event watchdog and leaves the first-event watchdog enabled; wider idle values continue to floor the first-event budget under the existing timeout contract.
+    - Fixed OpenRouter DeepSeek models failing structured subagents when the upstream returns an opaque HTTP 400 for a strict yield schema, retrying once without strict tools and remembering the fallback for the provider session (#7264).
+    - Fixed provider-native Codex compaction streams bypassing WebSocket-first transport selection and SSE transport fallback (#7198).
+    - Fixed SqliteAuthCredentialStore.open() running the auth_credential_refresh_leases DDL (CREATE TABLE/CREATE INDEX) with Bun's default busy_timeout=0, before the constructor's #initializeSchema() installed the busy handler. Under a concurrent write lock (e.g. WAL recovery on parallel omp startups) the lock-taking DDL failed immediately and, since the error wasn't BUSY-classified, bypassed open()'s bounded retry loop. The busy handler is now installed on the connection immediately after it opens, before any lock-taking statement, honoring the issue-#2421 invariant on every entry path. (#7298)
+    - Fixed a corrupt credential store (agent.db) silently disabling every persisted rate-limit block. AuthStorage caught unrecoverable SQLite errors (SQLITE_CORRUPT family / SQLITE_NOTADB) from the persisted block read/write paths at debug level with no latch, so the broken store was re-queried on every credential evaluation while blocks quietly stopped applying. The first unrecoverable error is now reported once at error level with the store location and repair guidance, and every later persisted-block read/write short-circuits for the process lifetime; in-memory backoff still preserves availability (#7296).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added AnthropicCompat.streamIdleTimeoutMs and propagated it through buildAnthropicCompat so direct Anthropic provider streams can configure their inter-event idle watchdog.
+    - Fixed Ollama Cloud DeepSeek V4 Pro/Flash models (including dated tag variants such as deepseek-v4-flash:0731) reporting an incorrect max-output-tokens figure by pinning it to the deployment's enforced 65536-token output ceiling (#7266).
+    Fixed
+    - Fixed gen:models Codex discovery to union models across every stored OAuth account and fail closed on partial resolution, matching runtime discovery (#6265); restored the bundled gpt-5.4, gpt-5.6-sol, and gpt-5.3-codex-spark entries a single-account regen had dropped.
+    - Fixed google-antigravity models always reporting $0 cost: Antigravity discovery carries no pricing, so the generator now back-fills each model with its Google list price (Gemini ids from the google provider, including -preview id aliases; Claude ids from google-vertex, falling back to anthropic).
+    - Fixed OpenRouter deepseek/deepseek-v4-flash-0731 exposing only high thinking effort by consuming the live reasoning.supported_efforts and default_effort metadata and bundling its low/high/max ladder. (#7307)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added requestIdFormat ("string" | "number", default "number") to MCP server config, honored by the stdio, HTTP, and SSE transports. JSON-RPC 2.0 permits both id shapes, but Apple's xcrun mcpbridge decodes id as an integer only and silently drops string ids (mcpbridge.DecodeError Code=1), hanging every request until it times out. The option is OMP-specific, so set it in an OMP-owned config (.omp/mcp.json, ~/.omp/agent/mcp.json, a project mcp.json/.mcp.json, or an OMP plugin); servers imported from another tool's config ignore it (#7053).
+    - Fixed Anthropic web search sending unsupported temperature parameters to sampling-restricted Claude models (#7195 by @will-bogusz).
+    - Fixed mid-turn steering/peer-interrupt tool skips rendering as errors (red ✘, red border/text) in the TUI; pending and in-flight interrupt placeholders now render as neutral info cards while preserving whether tool.execute started (#7199).
+    - Added Shift+Up as a second default for the message dequeue, so the shortcut is reachable in macOS Terminal.app where Option is consumed for character composition.
+    - Added in-process pgrep, pkill, pidwait, and top shell builtins with cross-platform process discovery, BSD/procps-style filters, pidfile handling, signal selection, waiting, and snapshots.
+    Changed
+    - Headless hosts (print/RPC/ACP/eval/SDK) now use a 1s SQLite busy_timeout for the session-critical databases (agent.db, history.db, stats.db), so lock contention no longer freezes the protocol loop for the full interactive 5s timeout; interactive hosts keep the 5s timeout. The interactive-host flag is now declared before settings load so the first database opens see the correct timeout.
+    - The model picker (/switch, alt+p) no longer blocks models whose context window is smaller than the live session: over-context rows stay grayed but selectable, and picking one compacts with the current model first, then switches. A cancelled or failed compaction keeps the current model.
+    - MCP JSON-RPC request ids now default to per-connection sequential integers instead of snowflake strings, matching the wider MCP ecosystem and making integer-only decoders like Apple's xcrun mcpbridge work without configuration; set requestIdFormat: "string" per server to restore collision-resistant string ids (#7053).
+    - secret-placeholder.key now resolves under XDG state ($XDG_STATE_HOME/omp/secret-placeholder.key) instead of the agent config directory, so it follows the same XDG layout as other state files.
+    - Daemon runtime directories (run/daemons/<hash>) and provider in-flight tracking (run/provider-inflight) now resolve under XDG state ($XDG_STATE_HOME/omp/run/) instead of the config root, keeping ephemeral runtime state out of ~/.config.
+    - marketplaces.json now resolves under XDG data ($XDG_DATA_HOME/omp/marketplaces.json) instead of the config root, aligning with the XDG data category for user-scoped registry files.
+    - Existing XDG installs keep their placeholder key and marketplace registry: the legacy ~/.omp/agent/secret-placeholder.key and ~/.omp/marketplaces.json are copied to their XDG locations on first resolution.
+    Fixed
+    - Fixed sessions without a granted write tool hiding discoverable and MCP tools behind the unusable xd:// transport; those sessions now disable device mounting and expose the tools directly without gaining write access.
+    - Fixed collab guest prompts being sent to models as unframed developer context, so guest messages now retain their transcript attribution while reaching the model as prioritized user interjections (#7288).
+    - Fixed /memory stats and /memory diagnose showing "Memory stats is not available for the off backend" when memory is off, in both the TUI and ACP/RPC slash-command handlers; the off backend now says memory is off directly instead of naming itself as an unsupported backend (#7251 by @KennethHoff).
+    - Fixed /reload-plugins retaining stale context-file contents and activation state in the current system prompt (#7258).
+    - Fixed compiled binaries failing to import nested wildcard export subpaths such as @oh-my-pi/pi-coding-agent/slash-commands/helpers/active-oauth-account. Node matches * in an exports pattern across /, but the bundled registry enumerated only the top level and skipped any key containing a slash, so such an import resolved from source and died under bunfs — reproducible on the published 17.2.1 binary.
+    - Fixed concurrent session appends during /move recreating an orphaned .jsonl fragment in the old session directory (#7270).
+    - Fixed interactive launches hanging silently when a host project or its .env sets NODE_ENV=test or BUN_ENV=test (#7261).
+    - Fixed a subagent killed from the Agent Hub (x) reappearing as a parked row after closing and reopening the hub in a local session; the kill now leaves the ref registered as terminal aborted instead of unregistering it, so the persisted-subagent rescan no longer re-adopts the surviving transcript (#7250).
+    - Fixed manual and automatic Codex compaction dropping the configured OpenAI WebSocket preference (#7198).
+    - Fixed two remaining tool-card double renders: a superseded assistant turn no longer leaves its never-run cards above the re-run's fresh cards (a TTSR rewind retracts them immediately; an auto-retry removes the synthetic-settled failure cards when it supersedes the turn — while a genuinely terminal failure keeps its card visible), and a successful read whose persisted result wins a transcript-rebuild race no longer creates a fallback read group when its delayed live completion arrives (#6879).
+    - Fixed a tool card rendering twice when the provider rewrites a streamed tool call's id mid-stream — GitHub Copilot's call_id|id transport, or any stream that delivers the tool name/arguments before the id — so the block appears first with an empty or partial id and is populated in a later delta. The transcript keyed the live card by that mutable id, so the changed id spawned a second card: the old-id card orphaned as a blue pending preview while the new-id card took the result. Streamed tool cards are now re-keyed in place when their id changes, using the block's position in the streaming message as a stable identity (#6879).
+    - Withheld advisor nits and concerns while the primary turn is explicitly marked in progress, while still allowing blockers for unrecoverable active side effects.
+    - Preserved explicit -e/--extension and --hook packages under
+      --no-extensions while excluding ambient extension factories and sibling
+      capabilities from settings or installed OMP packages.
+    - Fixed explicit thinking metadata in models.yml custom definitions and modelOverrides being replaced by canonical catalog policy during model rebuilding. (#7307)
+    - Fixed the auto-titler installing a model's whole answer as the session title when the tiny title model ignored the titling task and answered the first user message instead. normalizeGeneratedTitle now rejects overlong output (>80 chars or >12 words) so the caller defers titling to the next user turn rather than accepting a full sentence (#7303).
+    - Fixed the in-process kill builtin to validate signals, preserve negative PID operands, signal every process in pipeline jobs, continue after bad targets, and refuse non-probe signals aimed at the host process or process group.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed provider usage window stats silently showing no data during SQLite contention by installing a five-second busy timeout on read-only agent database connections (#7300).
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed animated Loader paints saturating a CPU core on slow WSL/ConPTY terminals by applying cost-aware cadence backpressure while preserving 30fps on cheap frames (#7290).
+    - Fixed interactive terminals suppressing all output and input when the host project sets NODE_ENV=test or BUN_ENV=test (#7261).
+    @oh-my-pi/pi-utils
+    Added
+    - Added getSecretPlaceholderKeyPath(), getDaemonRuntimeDir(), getProviderInFlightRoot(), and getMarketplacesRegistryPath() to resolve secret key, daemon runtime, provider in-flight, and marketplace registry paths under their respective XDG categories (state, data) instead of the config root.
+    - Existing installs enabling XDG keep their data: a legacy ~/.omp/agent/secret-placeholder.key or ~/.omp/marketplaces.json is copied to its XDG location on first resolution, so persisted transcripts still deobfuscate and added marketplaces survive the move.
+    Changed
+    - Headless hosts (print/RPC/ACP/eval/SDK) now use a 1s SQLite busy_timeout for the session-critical databases (agent.db, history.db, stats.db) via getDbBusyTimeoutMs(), so lock contention no longer freezes the protocol loop for the full interactive 5s timeout; interactive hosts keep the 5s timeout.
+    Fixed
+    - Fixed Bun test-runtime detection treating application-owned NODE_ENV=test and BUN_ENV=test values as test-runner signals (#7261).
+    What's Changed
+    - fix(coding-agent): retract superseded turn's tool cards to stop double render by @roboomp in https://github.com/can1357/oh-my-pi/pull/6881
+    - feat(mcp): let a server opt into integer JSON-RPC request ids by @kodlian in https://github.com/can1357/oh-my-pi/pull/7107
+    - feat(keybindings): accept shift+up for the steering dequeue by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7149
+    - fix(coding-agent): omit unsupported Anthropic search temperature by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/7195
+    - fix(agent): route codex v2 compaction through websockets by @roboomp in https://github.com/can1357/oh-my-pi/pull/7202
+    - fix(tui): render mid-turn steering skips as info, not errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/7203
+    - fix(ai): honor model.compat.streamIdleTimeoutMs in the Anthropic idle watchdog by @excniesNIED in https://github.com/can1357/oh-my-pi/pull/7230
+    - fix(coding-agent): refresh context files on plugin reload by @roboomp in https://github.com/can1357/oh-my-pi/pull/7262
+    - fix(tui): prevent test env from suppressing interactive launch by @roboomp in https://github.com/can1357/oh-my-pi/pull/7263
+    - fix(ai): retry opaque OpenRouter strict-tool errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/7265
+    - fix(catalog): inherit base model limits for ollama tag variants by @roboomp in https://github.com/can1357/oh-my-pi/pull/7267
+    - fix(session): fence appends during session moves by @roboomp in https://github.com/can1357/oh-my-pi/pull/7271
+    - fix(extensions): bundle nested wildcard export subpaths for compiled binaries by @harshav167 in https://github.com/can1357/oh-my-pi/pull/7277
+    - fix(ai): preserve Codex WebSocket chaining for normalized IDs by @roboomp in https://github.com/can1357/oh-my-pi/pull/7281
+    - fix(coding-agent): preserve explicit extensions in isolation by @alphastorm in https://github.com/can1357/oh-my-pi/pull/7285
+    - fix(collab): treat guest prompts as user interjections by @roboomp in https://github.com/can1357/oh-my-pi/pull/7289
+    - fix(tui): backpressure slow loader paints by @roboomp in https://github.com/can1357/oh-my-pi/pull/7291
+    - fix(ai): install auth-db busy handler before open()-path leases DDL by @roboomp in https://github.com/can1357/oh-my-pi/pull/7304
+    - fix(ai): latch and surface a corrupt credential-block store by @roboomp in https://github.com/can1357/oh-my-pi/pull/7305
+    - fix(title): reject overlong auto-generated session titles by @roboomp in https://github.com/can1357/oh-my-pi/pull/7306
+    - fix(stats): wait for contended usage snapshot reads by @roboomp in https://github.com/can1357/oh-my-pi/pull/7308
+    - fix(catalog): honor openrouter deepseek effort metadata by @roboomp in https://github.com/can1357/oh-my-pi/pull/7311
+    - fix(coding-agent): suppress WIP advisor non-blockers by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/6756
+    - fix(xdg): fix files and folder for xdg-maintained by @Parsifa1 in https://github.com/can1357/oh-my-pi/pull/7065
+    - Bound synchronous SQLite busy-waits in headless hosts by @pi3123 in https://github.com/can1357/oh-my-pi/pull/7240
+    - fix(memory): clarify /memory stats and /memory diagnose message when memory is off by @KennethHoff in https://github.com/can1357/oh-my-pi/pull/7251
+    - fix(coding-agent): keep hub-killed subagent from resurrecting as parked by @roboomp in https://github.com/can1357/oh-my-pi/pull/7252
+    New Contributors
+    - @kodlian made their first contribution in https://github.com/can1357/oh-my-pi/pull/7107
+    - @excniesNIED made their first contribution in https://github.com/can1357/oh-my-pi/pull/7230
+    - @alphastorm made their first contribution in https://github.com/can1357/oh-my-pi/pull/7285
+    - @pi3123 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7240
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.3...v17.2.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.4
+ReleaseTime: 2026-08-01T22:58:37.0000000Z

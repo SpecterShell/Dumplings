@@ -1,0 +1,43 @@
+Version: 5.10.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anyme123/Any-code/releases/download/v5.10.6/Any.Code_5.10.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/anyme123/Any-code/releases/download/v5.10.6/Any.Code_5.10.6_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v5.10.6 修复总结
+    1. i18n 国际化补全
+       添加 projectList.sessionStats（会话统计）
+       添加 projectList.hooksConfig（钩子配置）
+       添加 projectList.deleteProject（删除项目）
+    2. 环境变量删除修复
+       问题：保存时 ...settings?.env 保留所有原有变量，导致删除无效
+       方案：只保留 ANTHROPIC_* 代理商变量，其他由 UI 完全管理
+    3. MCP 服务器编辑优化
+       新增 JSON 模式，支持直接粘贴配置
+       参数、环境变量、请求头现在可直接编辑（移除 disabled）
+       支持完整 { "mcpServers": { "id": } } 格式，自动提取 ID
+    4. 对话自动滚动修复
+       问题：依赖 displayableMessages.length，流式输出时内容变长但数量不变
+       方案：使用 lastMessageHash 检测内容变化，触发滚动
+    Downloads
+    Choose the appropriate installer for your platform:
+    - macOS (Apple Silicon): *-aarch64.dmg or *-aarch64.app.tar.gz
+    - macOS (Intel): *-x64.dmg or *-x64.app.tar.gz
+    - Windows (安装版): *-setup.exe (NSIS) or *.msi - 支持自动更新
+    - Windows (免安装版): *.exe (Portable) - 需手动更新
+    - Linux: *.AppImage or *.deb
+    Auto-Update Support
+    安装版本（NSIS/MSI）支持自动更新，应用会自动检查并提示更新。
+    免安装版本（Portable）不支持自动更新，需要手动下载新版本。
+    What's Changed
+    See the full changelog at https://github.com/anyme123/Any-code/commits/v5.10.6
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anyme123/Any-code/releases/tag/v5.10.6
+ReleaseTime: 2025-12-16T09:22:13.0000000Z

@@ -1,0 +1,67 @@
+Version: 0.9.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.9.0/Agentero_0.9.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.9.0/Agentero_0.9.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.9.0 focuses on enriching library metadata, refining PDF annotation interactions, and improving Agent/external-tool connectivity. It adds a local loopback MCP server, a first-vault feature tour, Markdown block selection, and a unified right-hand annotation comment rail, while also improving publication display and bulk backfill, Agent panel refresh, and provider configuration in Settings.
+    Features
+    - Local loopback MCP server: When enabled in Settings, Agentero exposes the current Vault over Streamable HTTP to ChatGPT/Codex, with tools for paper metadata, import, NOTES.md read/write, and tag management. (74067fae by @Phil-Fan, #391)
+    - First-vault feature tour: New users see a driver.js highlight walkthrough the first time a Vault opens, covering the sidebar, magic wand, workspace, Agent panel, and title bar; it can be replayed from Settings. (e96b7773 by @qychen2001)
+    - Markdown block selection: The editor now supports block drag handles, block-level selection, and highlighting so you can select whole paragraphs or blocks by dragging. (f1a24e20 by @ffy6511, #390)
+    - Unified PDF annotation comment rail: All annotation comments now edit in-place in the right-edge comment rail; hovering a comment highlights the corresponding page region, visual marks appear in the rail, and PDF left toggles are consolidated into the new PdfLeftToolbar. (105eed53, 5d8ac1b5, ce21be7e by @Phil-Fan, #379, #385)
+    - Library publication column and bulk backfill: A dedicated publication column is added after the year column; click the column header to bulk backfill missing venues. Imports prefer arXiv journal_ref and fall back to Semantic Scholar, while backfills run in the background with 10-way concurrency. (1ba98983, 377fdc76, e3a86cd7, f889f8c6 by @Phil-Fan, #389)
+    Improvements
+    - Agent registry events via lifecycle bus: agent:registry-changed is now routed through the lifecycle bus, removing the leaky promise-based Tauri wire listener, and the Agent panel refreshes with debouncing so changes made in Settings appear immediately. (812fbd03, 6f7fadf0 by @qychen2001)
+    - Settings layout provider configuration: The Layout pane now lists every remote provider as a credential card; backend selects only include local plus providers with an API key, and defaults are prefilled instead of shown as placeholders. (0b6656ca by @qychen2001, #394)
+    - Simplified Agent citation display: Inline citation badges are removed from chat messages; only the bottom sources list remains. (da3befeb by @Phil-Fan, #378)
+    - Library refresh performance and progress: Publication refresh now runs concurrently with live UI updates, uses lower concurrency, shows per-paper stats, and starts progress at 0. (ee25385a, 90c16a67, 607c2162 by @Phil-Fan)
+    - MCP server metadata: The MCP server advertises app icon data URIs on initialize and attaches outputSchema to tools so ChatGPT clients can parse structured results. (a92067a3 by @Phil-Fan)
+    - Upgrade dsh ACP dependencies: Bumped the dsh npm stack and launcher to 0.1.1-rc.2 to maintain Agent protocol compatibility. (2202dc7e by @Phil-Fan, #374)
+    Fixes
+    - Vault tree folders first: In the default folder sort mode, organization folders now appear before paper folders, matching conventional library behavior. (ef1ce18b by @Phil-Fan, #387)
+    - Markdown H1 top spacing: Reduced the top margin on H1 headings so notes starting with # Title no longer have a large empty gap. (87df769d by @Phil-Fan, #377)
+    - ModelScope plaza tour blocked scrolling: Suppressed the antd5 onboarding tour injected by ModelScope, which set overflow-y: hidden and prevented the plaza panel from scrolling. (ae46fe72 by @Phil-Fan, #375)
+    - Hide arXiv subject tags: arXiv subject classes are now stored with an @arxiv: prefix and treated as hidden tags, so they no longer clutter normal tags, search, or filters; the CLI also hides them unless --all is used. (1074ee71 by @Phil-Fan, #380)
+    - PDF highlight coordinate normalization: Highlight rectangles are normalized to page-relative coordinates to keep annotations aligned across zoom and render modes. (8e7f3783 by @Phil-Fan)
+    - Disable text selection on comment cards: Prevents page text selection when interacting with cards in the right-hand comment rail. (2905fc70 by @Phil-Fan)
+    - Migrate legacy library column order: Existing column orders are automatically migrated so publication follows year after upgrade. (8cef7c99 by @Phil-Fan)
+    Full Changelog: v0.8.2...v0.9.0
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.9.0 围绕「论文库信息补全、PDF 批注交互、Agent 与外部工具连接」进行迭代。新增本地 MCP 回环服务器、首次打开 Vault 的功能导览、Markdown 块级选区，以及统一的右侧批注评论列；同时优化了论文 publication 字段的展示与批量回填、Agent 面板刷新和设置页服务商配置。
+    新功能
+    - 本地 MCP 回环服务器：在 Settings 中开启后，Agentero 会通过 Streamable HTTP 向 ChatGPT/Codex 暴露当前 Vault，支持查询论文元数据、导入论文、读写 NOTES.md 与管理标签。(74067fae by @Phil-Fan, #391)
+    - 首次打开 Vault 的功能导览：基于 driver.js 的高亮引导，首次进入 Vault 时依次介绍侧边栏、魔棒、工作区、Agent 面板与标题栏，可在 Settings 中重新播放。(e96b7773 by @qychen2001)
+    - Markdown 块级选区：编辑器新增块拖拽手柄、块级选择与高亮，支持通过拖拽选中整段或整块内容。(f1a24e20 by @ffy6511, #390)
+    - 统一的 PDF 右侧批注评论列：所有批注评论统一在右侧评论列中就地编辑；悬停评论卡片会高亮对应页面区域，视觉批注也纳入评论列；PDF 左侧切换按钮统一为新的 PdfLeftToolbar。(105eed53, 5d8ac1b5, ce21be7e by @Phil-Fan, #379, #385)
+    - 论文库 Publication 列与批量回填：论文库新增独立的 publication 列并默认置于年份之后；支持从列标题一键批量回填缺失的 venue，导入时优先解析 arXiv journal_ref 并回退到 Semantic Scholar，批量回填使用 10 并发后台执行。(1ba98983, 377fdc76, e3a86cd7, f889f8c6 by @Phil-Fan, #389)
+    改进
+    - Agent 注册表事件走生命周期总线：agent:registry-changed 改为通过 lifecycle bus 分发，避免直接监听 Tauri wire 事件的泄漏型 Promise 模式，并在 Agent 面板中防抖刷新列表，确保 Settings 中安装/探测 Agent 后切换器立即更新。(812fbd03, 6f7fadf0 by @qychen2001)
+    - 设置页布局服务商配置：Layout 设置面板改为以 credential 卡片形式列出所有远程服务商，未配置 API Key 的服务商不会出现在后端选择列表中；默认值直接预填入输入框而非仅作占位提示。(0b6656ca by @qychen2001, #394)
+    - Agent 对话引用展示简化：移除消息内联的引用角标，仅保留底部的 sources 列表。(da3befeb by @Phil-Fan, #378)
+    - 论文库刷新性能与进度：批量刷新 publication 改为并发执行并实时更新 UI，降低并发数、显示每篇论文的统计信息并从 0 开始展示进度。(ee25385a, 90c16a67, 607c2162 by @Phil-Fan)
+    - MCP 服务器元信息：MCP 初始化时返回应用图标数据 URI，并为工具附加 outputSchema，便于 ChatGPT 等客户端结构化解析返回结果。(a92067a3 by @Phil-Fan)
+    - 升级 dsh ACP 依赖：将 dsh npm 包与 launcher 更新到 0.1.1-rc.2，保持 Agent 协议兼容。(2202dc7e by @Phil-Fan, #374)
+    修复
+    - 文件树文件夹优先排序：默认文件夹排序模式下，组织文件夹现在排在论文文件夹之前，符合常见文献库习惯。(ef1ce18b by @Phil-Fan, #387)
+    - Markdown H1 顶部间距：收紧编辑器中 H1 的顶部边距，减少笔记开头 # Title 前的大段空白。(87df769d by @Phil-Fan, #377)
+    - ModelScope 广场导览阻塞滚动：屏蔽 ModelScope 论文广场首次加载时弹出的 antd5 tour，避免其注入 overflow-y: hidden 导致面板无法滚动。(ae46fe72 by @Phil-Fan, #375)
+    - arXiv 学科标签隐藏：arXiv 导入的学科分类现在以 @arxiv: 前缀存储并按隐藏标签处理，不再混入普通标签、搜索与筛选，CLI 默认也不输出，除非使用 --all。(1074ee71 by @Phil-Fan, #380)
+    - PDF 高亮坐标归一化：将高亮矩形坐标统一归一化为页相对坐标，避免不同缩放或渲染模式下批注位置偏移。(8e7f3783 by @Phil-Fan)
+    - 评论卡片禁用文本选择：防止鼠标在右侧评论列批注卡片上触发页面文本选择。(2905fc70 by @Phil-Fan)
+    - 旧版论文库列顺序迁移：自动将旧版列顺序迁移为「年份后紧跟 publication」，避免升级后列顺序异常。(8cef7c99 by @Phil-Fan)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.9.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.9.0
+ReleaseTime: 2026-08-27T05:24:24.0000000Z

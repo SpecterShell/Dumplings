@@ -1,0 +1,42 @@
+Version: 0.7.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.7.1/Mini-Term_0.7.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.7.1/Mini-Term_0.7.1_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    上一版让手机能看桌面上跑着的 AI，这一版让手机能开一个新的：右下角 + → 选项目 → 选启动器，桌面端后台把 agent 拉起来，不打断你桌面上正在看的现场。
+    自托管中转的用户请注意：本版中转协议升到 v2 并加了桌面端接入密钥，必须重新部署中转并配置 MT_RELAY_DESKTOP_KEY，否则桌面端连不上（fail-closed 的有意代价）。三步走完即恢复，见部署文档的「升级与运维」一节。
+    新功能
+    - 手机发起新 AI 会话 — 右下角 + → 选项目 → 选 AI 启动器，桌面端在该项目后台开一个终端标签并把 agent 拉起来；会话真起来后手机自动进入它的对话镜像，桌面端弹通知提示（凭证被盗时这是唯一的审计迹象，所以即便不切过去也要弹）。
+    - AI 启动器 — 桌面端「移动端」面板里维护的具名条目（名称 / shell / 命令，默认预置 Claude / Codex）。手机只按 id 引用、只看得到名字，命令文本从不经过手机或中转——这是设计边界，不是实现细节。
+    - 选项目按桌面端分组层级展示 — 发起弹层里的项目列表还原桌面端侧栏的分组结构：折叠箭头 + 组名 + 项目计数，可逐级折叠。折叠状态存在手机本地，桌面端折叠了什么与手机无关。
+    - 会话重命名 — 手机上给会话改个看得懂的名字（列表行的 ✎ 或镜像页标题），同步显示在桌面端的终端标签上；留空恢复默认名。
+    变更
+    - 中转协议 v2 — 桌面端接入中转需要携带共享密钥 MT_RELAY_DESKTOP_KEY。中转地址不是秘密（PWA 就托管在它上面，地址早已躺在手机浏览器历史里），因此 /ws/desktop 端点必须自己鉴权。未配置密钥的中转会拒绝一切桌面端连接——"能跑起来"不等于"配好了"，宁可让你立刻发现。
+    - 版本不匹配时握手明确拒绝并提示升级，不会静默错乱；填错密钥时桌面端显示「接入密钥不正确」并停止重连（配置问题不是网络问题，重试无意义）。
+    安全性
+    - 中转日志只记录鉴权失败这件事，不记录密钥本身。
+    - 移动端发起会话时，桌面端只校验"目标项目存在且支持"，不校验命令内容——命令来自桌面端自己的配置，这道边界本身就是防线。
+    - SSH 远程项目与 WSL 根项目在发起弹层里置灰：在那里开会话只能盲发指令、看不到回复。
+    下载
+
+    | 平台                  | 产物                                                                                      |
+    | --------------------- | ----------------------------------------------------------------------------------------- |
+    | Windows               | Mini-Term_0.7.1_x64-setup.exe（推荐）· Mini-Term_0.7.1_x64_en-US.msi                      |
+    | macOS (Apple Silicon) | Mini-Term_0.7.1_aarch64.dmg · Mini-Term_aarch64.app.tar.gz                                |
+    | Linux                 | Mini-Term_0.7.1_amd64.AppImage · Mini-Term_0.7.1_amd64.deb · Mini-Term-0.7.1-1.x86_64.rpm |
+
+    macOS 提示：产物未经 Apple Developer ID 签名，双击可能提示「已损坏，移到废纸篓」。把 .app 拖入 /Applications 后执行一次 xattr -cr /Applications/Mini-Term.app 即可正常启动，每次升级后需重新执行。
+    平台支持：Windows 为主要支持平台，macOS / Linux 代码层面已支持但未经充分打磨。
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.7.0...v0.7.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.7.1
+ReleaseTime: 2026-07-26T01:50:55.0000000Z

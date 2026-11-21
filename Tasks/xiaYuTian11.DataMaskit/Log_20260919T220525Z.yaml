@@ -1,0 +1,345 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xiaYuTian11/maskit/releases/download/v0.3.0/Maskit_0.3.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    新增 / Added
+    - 内置本地 AI 实体识别（NER，配置项 ner_enabled，默认关）：本地 ONNX 模型识别人名 / 机构 / 地址，补齐确定性规则覆盖不到的自由文本；设置页可开关，模型或依赖缺失时界面与健康检查直接说明原因。实测「规则 + NER」联动下，样例集敏感值的明文残留从 74% 降到 11%。
+      前提：该效果需要 99MB 的本地模型文件与 onnxruntime / tokenizers（二者在 requirements-dev.txt，不在运行时依赖里）。模型不入仓库、CI 也不下载，官方安装包与 Docker 镜像均不含模型——那两种方式安装的用户开启 NER 只会看到「模型文件缺失」，效果数字不适用。需要该能力请用源码态运行或自行补齐模型目录。
+      New built-in local AI entity recognition (NER, config key ner_enabled, off by default): a local ONNX model detects person / organisation / address names that deterministic rules cannot cover; toggle in settings, and the reason is spelled out in the UI and health check when the model or its dependencies are missing. On the sample set, combining rules with NER cuts the plaintext left in requests from 74% to 11%.
+      Prerequisite: those numbers require the 99 MB local model plus onnxruntime / tokenizers (both in requirements-dev.txt, not runtime deps). The model is not in the repository and CI does not download it, so neither the official installer nor the Docker image ships it — users installing those ways see only "model file missing" and the figures do not apply. Run from source, or supply the model directory yourself.
+    - 安全审计新增提示词注入检测：伪造协议级系统轮次、索要系统提示词、凭据外发指令、base64/转义编码绕过；泛化的「忽略以上指令」句式只在同现客观载荷时上报，避免把模型讲解误判成投毒。
+      New prompt-injection detection in the security audit: faked protocol-level system turns, system-prompt extraction requests, credential-exfil instructions, and base64/escape-encoded payloads; ordinary "ignore previous instructions" wording is reported only when an objective payload co-occurs, so explanations are not mistaken for poisoning.
+    - 扩展设置页新增「推荐站点」：18 个国内外常见 AI 站点一键授权添加（含 Gemini / Grok / Perplexity / Copilot / Mistral / Poe、DeepSeek / 豆包 / 通义千问 / Qwen / Kimi / 元宝 / 智谱 / 文心一言 / 讯飞星火 / 小米 MiMo），路径未实测的站点统一打「未实测」标记。
+      New "Recommended sites" list in the extension options page: 18 common AI sites added with a single grant (Gemini, Grok, Perplexity, Copilot, Mistral, Poe, DeepSeek, Doubao, Tongyi Qianwen, Qwen, Kimi, Yuanbao, ChatGLM, ERNIE Bot, iFlytek Spark, Xiaomi MiMo). Sites whose request paths are unverified are marked as such.
+    - 浏览器扩展桥接（extension/，Chrome/Edge MV3）：把网页版 AI（ChatGPT / Claude）发出的请求接入本地引擎打码、回包流式还原。100% 本地运算，零外传。
+      Browser extension bridge (extension/, Chrome/Edge MV3): routes web-AI (ChatGPT / Claude) requests through the local engine for masking and restores responses as they stream. 100% local, zero egress.
+    - 引擎新增 /api/ext/ping|mask|restore|rotate-token 四个端点与 ext_bridge_enabled / ext_token / ext_block_when_engine_down / ext_record_events 四个配置项。
+      New engine endpoints /api/ext/{ping,mask,restore,rotate-token} and config keys ext_bridge_enabled / ext_token / ext_block_when_engine_down / ext_record_events.
+    - 事件与统计新增「入口」维度（代理链路 / 浏览器扩展）：事件页可筛选，词榜与首页词明细按入口分组同屏，分享战绩卡改为仅统计代理链路并在卡面标注口径。
+      New "ingress" dimension (proxy link vs browser extension) in events and stats: filterable in the log page, word rankings grouped side by side, and the share card now covers only the proxy link with its scope stated on the card.
+    - 设置页新增「浏览器扩展」区块（链路开关、访问令牌、旋转确认），高级设置新增「记录浏览器扩展流量」开关（默认开）。
+      New "Browser extension" settings section (toggle, token, rotation confirmation) and a "Record browser-extension traffic" switch under advanced settings (on by default).
+    - 内网 IPv6 规则（IPV6_PRIVATE，默认关）：fe80:: 链路本地与 fc00::/7 ULA，语义校验排除公网/文档段与 MAC 地址。
+      Private IPv6 rule (IPV6_PRIVATE, default off): fe80:: link-local and fc00::/7 ULA, with semantic validation excluding public/doc ranges and MAC addresses.
+    - USCC 校验位验证（GB 32100-2015 MOD31）：开启规则后误伤率压至 1/31。
+      USCC check-digit validation (GB 32100-2015 MOD31): false-positive rate down to 1/31 when the rule is enabled.
+    - README 部署章节补单端口模式（5802 路径前缀路由）说明。
+      README deployment docs: single-port mode (5802 path-prefix routing) section.
+    - 仪表盘新增「出口代理已启用但无客户端勾选」状态横幅与「MASKIT_PANEL_TOKEN 被忽略」提醒（stderr 双写 + 面板可见）。
+      Dashboard banners for "egress enabled but unused" and "MASKIT_PANEL_TOKEN rejected" (now also double-written to stderr).
+    - 浏览器扩展静态门禁（scripts/check-extension.mjs）并入全量门禁（13 → 14 项）：校验扩展 i18n 双语键集、脚本加载顺序、manifest 与静态站点清单一致性、驼峰 runAt、本机外请求等红线；新增 JS 引用的 DOM id 必须存在于对应 HTML（拦住「按钮点了没反应」那一类）。
+      New browser-extension static gate (scripts/check-extension.mjs) added to the full gate set (13 → 14 items): checks i18n key parity, script load order, manifest/site-list consistency, camelCase runAt, and off-machine request red lines; now also asserts every DOM id referenced by JS exists in the matching HTML (catches the "buttons do nothing" class).
+    - 自定义敏感词改用确定性占位符 + 常驻映射：同一敏感词跨会话、跨重启都拿到同一后缀，长任务与 Agent 工具调用不再因 TTL 过期或引擎重启而还原不回来。
+      Custom sensitive words now use deterministic placeholders with a resident mapping: the same word gets the same suffix across sessions and restarts, so long tasks and agent tool calls no longer become unrestorable after TTL expiry or an engine restart.
+    - 浏览器扩展新增独立发布包 Maskit_<版本>_extension.zip，随 Release 一起分发：扩展不在桌面安装包里，不用源码的用户此前无处可下，现在下载解压即可在 chrome://extensions 加载。
+      The browser extension now ships as its own release asset, Maskit_<version>_extension.zip: it is not inside the desktop installer, so web-app users without the source tree had nowhere to get it — now they download, unzip and load it from chrome://extensions.
+    修复 / Bug Fixes
+    - 引擎：消除 Python 3.13 下子进程 bufsize=1 二进制模式运行告警，发版脚本增加一体包模型完整性自检与前置门禁。
+      Engine: eliminate Python 3.13 RuntimeWarning on subprocess bufsize=1 in binary mode; add all-in-one bundle preflight gates to release scripts.
+    - 脱敏：NER 在经规则替换后的文本上识别实体会导致上下文被截断、实体残片明文泄漏（如「西城区」被打码后，其后的「网点营业厅」失去前序上下文漏打码）；现改为在干净原文上抽取实体，经 OffsetMap 坐标单调映射回伤疤文本，并在映射失败时安全降级跳过 NER、绝不混用原文与伤疤坐标系，同起点实体按长区间贪心优先。
+      Masking: running NER on text already mutated by deterministic rules truncated entity context and leaked entity fragments in plaintext (e.g. masking "Xicheng District" caused following "branch office" to lose its context and go unmasked); entities are now extracted from the clean original and translated back via a monotonic OffsetMap, with graceful degradation skipping NER on mapping errors without cross-coordinate mixing, and greedy longest-span selection for identical starts.
+    - 脱敏：数值型敏感值、敏感值当 JSON 键名、重复键三条路径既不命中也不抛异常，于是「零改写」分支把客户端原始字节原样放行——明文出网，而 fail-closed 只兜异常、兜不住「静默判定为无需改写」。三条现全部覆盖；协议字段、工具名与 JSON Schema 骨架按白名单保持原样。
+      Masking: three paths — numeric sensitive values, sensitive values used as JSON key names, and duplicate keys — neither matched nor raised, so the zero-rewrite branch passed the client's original bytes upstream verbatim: plaintext egress, and fail-closed only covers exceptions, not a silent "no rewrite needed". All three are covered now; protocol fields, tool names and JSON Schema skeletons stay intact via a whitelist.
+    - 脱敏：顶层键名扫描只在扩展链路生效，同一个请求体走代理链路与走扩展链路会得到不同结果；两条链路现共用同一判据。
+      Masking: top-level key-name scanning only applied on the extension link, so the same request body produced different results through the proxy link; both links now share one predicate.
+    - 扩展：扩展总开关关闭（enabled=false）后内容脚本照常送原文打码、页面照常被改写，而 popup 显示「已停用」；文本与文档两条链路现已认账。
+      Extension: with the master switch off (enabled=false) the content script kept sending plaintext for masking and pages kept being rewritten while the popup said "disabled"; both the text and document links now honour it.
+    - 扩展：令牌可被发往任意外域——地址框旁的「测试连接」按钮不校验主机就存盘，而真正持有令牌的 SW 也不自校验；现校验下沉到 SW 并只允许 127.0.0.1 / localhost。
+      Extension: the token could be sent to an arbitrary host — the "test connection" button next to the address field saved without any host check, and the service worker that actually holds the token did not validate either; the check now lives in the service worker and only 127.0.0.1 / localhost are allowed.
+    - 扩展：≤80 字符的写请求整体跳过打码（与 multipart 分支不一致），属静默未脱敏；下限降到 8。
+      Extension: write requests of ≤80 characters skipped masking entirely (inconsistent with the multipart branch) — a silent unmasked path; the floor is now 8.
+    - 扩展：24–25MB 的 Office 附件必然硬失败——整份文件 base64 后超过引擎 32MB 闸门，413 被当作阻断 → 页面直接网络错误；上限对齐到 23MB，超限改为原样透传并明确提示未脱敏。
+      Extension: Office attachments of 24–25 MB always failed hard — base64 inflation pushed the body past the engine's 32 MB gate, the 413 counted as blocking, and the page saw a network error; the limit is aligned to 23 MB, and oversize files now pass through with an explicit "not masked" notice.
+    - 扩展：/api/ext/restore 没有体积闸门、ext_frames 没有条目上限，启用站点上的任意脚本都能用它撑大引擎内存；两者均已补齐。
+      Extension: /api/ext/restore had no size gate and ext_frames no entry cap, so any script on an enabled site could grow engine memory; both are now bounded.
+    - 扩展：扩展链路落库的事件对象里，dialog / req_preview / resp_preview 直接写原文切片，凭据因此进了本地事件库（items[] 本身是合规的，只看它就发现不了）；写侧与 /api/logs 读侧现都做凭据清洗，普通 PII 原文照常保留供详情弹窗对照。
+      Extension: the event object written by the extension link put raw text slices into dialog / req_preview / resp_preview, so credentials reached the local event store (items[] itself was compliant, which is why checking only that missed it); both the write side and the /api/logs read side now scrub credentials, while ordinary PII plaintext is still kept for the detail dialog's before/after view.
+    - 审计：PEM 私钥正则在「只有 BEGIN 没有 END」的文本上二次回溯，12KB 响应体就要约 2.8 秒，且审计扫描吃全量响应体——上游回一个畸形 4xx 就能把本地代理的事件循环 CPU 打满；现改为线性匹配，并把扫描输入截断（结构化解析仍读全量，否则换芯检测会静默失效）。
+      Audit: the PEM private-key regex backtracked quadratically on text containing BEGIN without END — about 2.8 s for a 12 KB body — and the audit scanned the full response body, so one malformed 4xx from upstream could saturate the local proxy's event loop; matching is now linear and the scan input is truncated (structured parsing still reads everything, otherwise model-swap detection would silently break).
+    - 审计：换芯检测被「响应文本块非空」门控，而判定只看模型字段——tool_use-only、reasoning-only、拒答空答这些编程助手最主流的响应形态上检测完全失效，恶意中转回一个空 content 即可绕过；现已与文本内容解耦。
+      Audit: model-swap detection was gated on "response has a non-empty text chunk" although the verdict only uses the model field, so it was entirely dead on the response shapes coding assistants mostly produce — tool_use-only, reasoning-only, empty refusals — and a malicious relay could bypass it by returning an empty content; detection is now decoupled from text content.
+    - 审计：审计中心在后端读失败（引擎未运行 / 5xx / 令牌失效）时渲染成绿色「未发现任何篡改或泄漏行为」，把「没读到」显示成「没问题」；现区分两者并给出失败原因与重试，同时说明筛选只作用于最近 500 条。
+      Audit: when the backend read failed (engine down, 5xx, invalid token) the audit centre rendered the green "no tampering or leakage detected" state, showing "nothing read" as "nothing wrong"; the two are now distinguished, with the failure reason and a retry, plus a note that filters only cover the latest 500 events.
+    - 审计：清空审计留痕没有二次确认，误点即丢失唯一的篡改/泄漏证据链；已加确认弹窗。
+      Audit: clearing the audit trail had no confirmation, so a stray click destroyed the only tampering/leakage evidence chain; a confirmation dialog was added.
+    - 审计：讲解 ChatML / Llama 特殊 token 的回复被误判为提示词注入（成对标记齐全即报 MEDIUM）；现跳过代码块并要求标记行首锚定，真注入照常检出。
+      Audit: answers explaining ChatML / Llama special tokens were flagged as prompt injection (two markers in a row meant MEDIUM); code blocks are now skipped and a marker must be line-anchored, while real injections are still detected.
+    - 审计：SSE 解析要求 data: 后必须带空格，而规范里空格可选——发无空格形态的上游会让换芯与流异常两项审计静默失效（还原路径不受影响，所以表面完全正常）；已按规范解析。
+      Audit: SSE parsing required a space after data: although the spec makes it optional, so upstreams emitting the no-space form silently disabled model-swap and stream-anomaly auditing (the restore path was unaffected, so nothing looked wrong); parsing now follows the spec.
+    - NER：预算耗尽或推理异常时的部分实体结果被写入缓存，此后该文本一直返回残缺结果；同时空结果不写负缓存导致无实体的长文本每次重复推理。现只缓存完整结果，空结果也进负缓存。
+      NER: partial entity results from an exhausted budget or an inference error were written to the cache, so that text kept returning incomplete results; empty results were also not negatively cached, so entity-free long text was re-inferred on every request. Only complete results are cached now, and empty results are negatively cached too.
+    - NER：地名识别把「北京」「中国」这类裸行政区当成地址脱敏，造成过度脱敏与词榜噪声；现跳过裸行政区（含区/省/自治区后缀），带门牌或机构名的地址照常识别。
+      NER: bare administrative names such as "Beijing" or "China" were masked as addresses, over-masking and polluting the word rankings; bare regions (including district/province/autonomous-region suffixes) are now skipped, while addresses carrying a street number or a place name are still detected.
+    - NER：实体标签为空时索引越界抛异常；重叠实体的裁剪按起点整条丢弃，在被后缀扩充推过起点时会把尾部区间漏成明文。两处均已修。
+      NER: an empty entity label caused an index error, and overlap trimming dropped whole entities by start offset, leaking the tail span as plaintext when a suffix expansion pushed past the next start. Both fixed.
+    - 打包：.dockerignore 没有排除 99MB 的 NER 模型目录，而容器根本不装 onnxruntime / tokenizers，带进去只是白占镜像层；同时误把根目录冒烟语料的排除项覆盖成了模型子目录。已修正。
+      Build: .dockerignore did not exclude the 99 MB NER model directory even though the container ships neither onnxruntime nor tokenizers, wasting an image layer; it had also overwritten the smoke-data exclusion with a model subdirectory. Both corrected.
+    - 文档：NER 的「明文残留 74%→11%」未标注前提（模型与 onnxruntime 不在官方安装包与 Docker 镜像里），已补注。
+      Docs: the NER "plaintext left 74% → 11%" figure lacked its prerequisite (the model and onnxruntime ship in neither the official installer nor the Docker image); noted now.
+    - 浏览器扩展：在面板重新打开桥接开关（或用户改对令牌）后，扩展侧退避仍把接下来的请求按直通发出去——最长 5s 明文出网且页面无任何提示；现首次进入退避的下一次调用立刻探测，探测再失败仍保持 5s 间隔（防洪不变），并把两条已与实现漂移的扩展 e2e 断言改成真契约。
+      Browser extension: after the bridge switch was turned back on in the panel (or the token fixed), the extension's backoff still passed the following requests straight through — up to 5 s of plaintext egress with no signal on the page; the next call after first entering the backoff now probes immediately, repeated failures keep the 5 s spacing (flood protection unchanged), and two extension e2e assertions that had drifted from the implementation were rewritten to the real contract.
+    - 脱敏：整词匹配（sensitive_word_whole）对中文词等于「永不脱敏」——汉字之间没有词边界，把汉字放进两侧边界字符类后，开了整词的中文词 100% 漏打码且毫无提示；现按词形分档（中文词退化为子串匹配，宁可多打码不可漏打码），并把一条恒为真的整词断言改成真断言。
+      Masking: whole-word mode (sensitive_word_whole) silently disabled masking for Chinese words, since CJK text has no word boundaries and including CJK in the boundary class left them unmasked with no warning; boundaries are now picked per word shape (CJK falls back to substring matching, over-masking rather than leaking) and a vacuously-true whole-word assertion was replaced with real ones.
+    - 脱敏：新增自定义敏感词不与全局占位符后缀查重，撞上活跃后缀（同标签即完整占位符相同）时会静默改写该占位符指向，换会话后把另一实体的原文还原到它身上；现并入全局后缀索引避让并加回归用例。
+      Masking: a newly added custom word did not check the global placeholder suffix index, so a collision with a live suffix (same label meant the identical placeholder) silently repointed that placeholder and restored another entity's plaintext at its position in later sessions; new words now avoid every live suffix, with a regression test.
+    - 配置：default_config() 漏声明 ner_enabled / sensitive_word_whole / wizard_done / meta，config.json 损坏走降级分支时这几个键经增量接口保存会被判「未知配置项」400；已补齐并加键位对齐回归。
+      Config: default_config() left ner_enabled / sensitive_word_whole / wizard_done / meta undeclared, so on the degraded path (corrupt config.json) patching them answered 400 "unknown config key"; all are declared now, with a key-parity regression added.
+    - 脱敏：开启 NER 时，实体若与已有占位符相交，整段（含其中的明文）会被原样放行——多轮对话历史带回占位符即触发，属漏脱敏。现按区间替换并在占位符边界切开，两侧明文分别打码；同时去掉「每个实体做一次全文正则替换」带来的二次耗时。
+      Masking: with NER on, an entity overlapping an existing placeholder was dropped whole and its plaintext went upstream — any multi-turn history carrying placeholders triggered it. Entities are now applied by span and split at placeholder boundaries so both sides get masked; the per-entity full-text replacement (69 s on a 100k-character body) is gone.
+    - 脱敏：NER 的失败路径此前完全静默（模型缺失、依赖未装、推理异常、超长跳过、预算耗尽），表现为「开了没效果」。现每类原因留一条日志，并在 /api/status 与 /api/health 暴露可用性；超长文本与时间预算加硬上限，不再可能把代理冻住。
+      Masking: NER failure paths were completely silent (missing model, missing dependencies, inference errors, over-length skips, exhausted budget), looking like "enabled but no effect". Each cause now logs once and availability is exposed via /api/status and /api/health; long text and time budgets are now hard-capped so the proxy can no longer be frozen.
+    - 审计：/api/audit/events 的读侧降噪过滤被一并作用在检测读路径上，被隐藏的信号在风险矩阵里永远看不到，而矩阵照样显示绿色。探针结果聚合现已显式绕开该过滤。
+      Audit: the read-side noise filter on /api/audit/events also applied to the detection read path, so hidden signals could never surface in the risk matrix while it still rendered green. Probe aggregation now bypasses that filter explicitly.
+    - 统计：首页与统计页的「告警」不含审计高危信号，换芯、投毒、凭据外发只能靠主动翻审计页才能发现。现按同一口径并入（含按小时与按天曲线）。
+      Stats: the "alerts" figure on the dashboard and stats page excluded audit high-severity findings, so model swaps, poisoning and credential exfiltration were only discoverable by opening the audit page. They are now folded into the same figure, hourly and daily curves included.
+    - 打包：build.ps1 的运行时产物清理会连 NER 模型自带的 config.json 一起删掉（该目录不入库，删了不可恢复）；PyInstaller spec 又无条件收录该目录（干净检出上直接构建失败），且 excludes 排掉了 NER 必需的 numpy / tokenizers。三处已修，并新增打包前模型完整性自检。
+      Build: build.ps1's runtime-artifact cleanup also deleted the NER model's own config.json (the directory is not in git, so this was unrecoverable); the PyInstaller spec then included that directory unconditionally (failing clean-checkout builds) while excludes dropped the numpy / tokenizers the NER engine needs. All three are fixed, with a pre-pack model integrity check added.
+    - 测试：NER 用例硬断言模型在位，门禁结果取决于本机是否恰好有那个 98MB 目录（本地绿、CI 红）。模型相关用例改为 skip 守卫，并补上不依赖模型的回归：实体与占位符相交不得漏明文、失败必须留痕、长度与预算护栏。
+      Tests: NER cases hard-asserted the model was present, so the gate depended on whether the machine happened to have that 98 MB directory (green locally, red in CI). Model-dependent cases now skip, and model-free regressions were added: entities overlapping placeholders must not leak plaintext, failures must be logged, and the length/budget guardrails must hold.
+    - 安全审计：模型换芯检测在所有 OpenAI 兼容流式响应上完全失效（响应 model 只在 Claude 的 message_start 里提取），现已覆盖流式 chunk；同时新增同家族「偷偷换档」检测（gpt-4o → gpt-4o-mini 记中危）。
+      Security audit: identity-swap detection was dead on every OpenAI-compatible streaming response (the response model was read only from Claude's message_start); it now covers stream chunks, and same-family tier downgrades (gpt-4o → gpt-4o-mini) are reported as medium.
+    - 安全审计：同一次换芯会落库两条完全相同的发现（主检测块被复制成两份）。
+      Security audit: a single identity swap was recorded twice (the main detection block had been duplicated).
+    - 浏览器扩展：同一个 SSE 事件块里混有两种 data 行时，未命中豆包信封的行既不还原也不再交给标准管线，占位符原样留在页面上。
+      Browser extension: when one SSE event block carried two data lines, lines that missed the Doubao envelope were neither restored nor handed to the standard pipeline, leaving raw placeholders on the page.
+    - 脱敏还原：收尾补发在无模板可克隆时裸拼文本，SSE/NDJSON 客户端按规范整行忽略导致丢字；整包 NDJSON 回退路径还漏了收尾补发。
+      Restore: the tail flush appended bare text when no template was available, which SSE/NDJSON clients discard as an unparsable line; the bulk NDJSON fallback path also skipped the tail flush entirely.
+    - 脱敏还原：响应嵌套超过 24 层时占位符既不还原也不计数，排障时分不清「没还原」和「本来就没有占位符」。
+      Restore: placeholders in responses nested deeper than 24 levels were neither restored nor counted, making "not restored" indistinguishable from "nothing to restore".
+    - 浏览器扩展：文件脱敏失败（引擎超时/掩码失败/解包失败）时 popup 仍报「已脱敏 N 个文件」，把最危险的失败模式包装成成功。
+      Browser extension: when file masking failed (engine timeout, mask failure, unpack failure) the popup still reported "N files masked", disguising the most dangerous failure mode as success.
+    - 浏览器扩展：模型逐 token 输出时占位符会被 SSE 事件边界切开，页面上留下裸 {{...}} 而不是还原成原文。现改由引擎按事件与字段粒度还原（与代理链路同一份实现），并顺带消除正文与工具参数共用一个还原缓冲导致的串字。
+      Browser extension: placeholders split across SSE event boundaries while the model streamed token by token, leaving raw {{...}} on the page instead of the original text. Restoration now runs per event and per field in the engine (the same implementation the proxy link uses), which also removes the text corruption caused by sharing one restore buffer between message text and tool arguments.
+    - 浏览器扩展：引擎状态不会随实际情况更新——引擎关掉后 popup 仍绿标（状态停在上一次的值），改对令牌后红标也不消失（启动时空令牌必然吃一次 403，状态被钉死）。现已按 ping 结果显式更新状态。
+      Browser extension: engine status never followed reality — the popup stayed green after the engine was stopped (status frozen at its previous value) and stayed red after the token was fixed (a cold start always takes one 403 with an empty token, pinning the status). Status is now updated explicitly from the ping result.
+    - 浏览器扩展：拦截默认采用精准对话模式（已知对话接口），杜绝非对话业务数据污染，并保留广泛模式开关供按需启用。
+      Browser extension: interception now defaults to precise mode (known chat endpoints) to avoid contaminating non-chat data, with an optional wide mode switch retained.
+    - 浏览器扩展：附件（multipart）此前整包跳过，文本字段里的敏感信息裸着发出。现按字段处理——文本字段打码、文件原样透传、boundary 重新生成；检测到图片/文件时弹窗明说「附件内容不脱敏」。
+      Browser extension: multipart attachments were skipped wholesale, leaking whatever sensitive text sat in their text fields. Now handled field by field — text fields masked, files passed through byte-for-byte, boundary regenerated — and the popup states plainly that attachment contents are not masked.
+    - 浏览器扩展：检测不到本地引擎时不再静默不生效，弹窗显示「未检测到本地程序」并给出下载地址（地址由 manifest 的 homepage_url 推导，扩展代码内无外域字面 URL）；令牌错误时不显示该引导，避免把人带去重装。
+      Browser extension: no longer fails silently when the local engine is missing — the popup says so and offers a download link (derived from the manifest's homepage_url, so no off-machine URL literal lives in extension code). The hint is suppressed on token errors so users are not sent to reinstall.
+    - 浏览器扩展：删掉的站点仍在打码。ChatGPT / Claude 是 manifest 静态注册的脚本，无法用 API 注销，用户删除后脚本照样注入、照样送 body，界面却显示「已删除」；现在以配置为准在打码入口兜底，不启用就不打码。同时去掉设置页「内置 / 已添加」标签，所有站点一律可新增可删除。
+      Browser extension: deleted sites were still being masked. ChatGPT / Claude are statically declared in the manifest and cannot be unregistered via API, so their scripts kept injecting and forwarding bodies while the UI said "deleted". Masking now honours the config at the entry point, and the options page no longer labels any site "built-in" — every site can be added and removed alike.
+    - 浏览器扩展：推荐站点里两个域名是错的、四个海外站点的对话接口漏过路径白名单，加起来 6 个站「添加了却完全不脱敏」（页面毫无异常）。域名按实测落点纠正（文心一言 yiyan.baidu.com → wenxin.baidu.com，小米 MiMo xiaomimimo.com → mimo.xiaomi.com），白名单补 Gemini / Grok / Perplexity / Poe 的 RPC 形态路径；未登录探测确认「命中上述路径形态的请求必被打码」，这 16 个站的真实对话路径仍未验证，界面维持「未实测」标记。
+      Browser extension: two recommended domains were wrong and four overseas sites' chat endpoints slipped past the path allowlist — 6 sites were "added but never masked", with no visible symptom. Domains corrected to where the sites actually land (ERNIE Bot yiyan.baidu.com → wenxin.baidu.com, Xiaomi MiMo xiaomimimo.com → mimo.xiaomi.com) and RPC-style paths added for Gemini / Grok / Perplexity / Poe. A logged-out probe confirms requests matching those path shapes are always masked; the real chat endpoints of those 16 sites remain unverified, so the UI keeps the "unverified" mark.
+    - 浏览器扩展：多个时机同时重注册动态脚本（安装 / 启动 / 设置页刷新）会互相踩，Chrome 报重复脚本 ID 后该站点静默不注入。已加并发锁，同一时刻只跑一次重注册。
+      Browser extension: concurrent re-registrations (install / startup / options resync) raced each other and Chrome rejected some with a duplicate script ID, silently dropping injection for those sites. Now serialised with an in-flight lock.
+    - 扩展设置页与后台的通信整体失灵（「测试连接」必失败、会话占用恒空白、添加站点拿不到重注册确认）：后台用 !sender.tab 判断"是不是扩展自己的页面"，而以标签页打开的设置页 sender.tab 是有值的，导致管理消息全部超时。已改为按 sender.url 的 scheme 判定，并加静态门禁拦住同类写法。
+      Extension options page could not talk to its background worker at all ("Test connection" always failed, session usage stayed blank, added sites reported no confirmation) because the background judged "extension's own page" by !sender.tab, while an options page opened as a tab does have sender.tab. Now judged by the sender.url scheme, with a static gate to block the same mistake.
+    - 扩展添加站点：后台没回应时不再报「已保存」成功，改为黄标提示需重新加载（写进存储 ≠ 脚本真的注入了）。
+      Adding a site no longer reports success when the background does not respond; it warns that a reload is needed (persisted ≠ actually injected).
+    - 扩展弹窗的「设置 / 刷新」按钮点了没反应：popup.html 漏写 id="recentTitle"，渲染时抛异常把初始化掐断在绑定按钮之前；已补齐 id，并把事件绑定提到取数之前，渲染失败不再连坐按钮。
+      Extension popup's Settings/Refresh buttons did nothing: popup.html was missing id="recentTitle", so a render-time error aborted initialisation before the click handlers were bound. The id is restored and binding now happens before data loading, so a render failure can no longer take the buttons down.
+    - 透传兜底层：https 出口代理按 TLS 编排 CONNECT（原明文直连必握手失败）；上游空闲超时 900s→300s，mid-stream 失败不再叠加错误状态行；同名多值请求头合并转发不再丢值；恢复透传 accept-encoding（仅还原映射非空时降级为 gzip/deflate 并流式解压后再还原，br/zstd 在该情形下被拒；映射为空则原样透传）。
+      Passthrough: https egress proxies now do TLS-then-CONNECT (was plaintext and always failed); upstream idle timeout 900s→300s with no status-line corruption on mid-stream failures; duplicate request headers joined instead of dropped; Accept-Encoding passed through again (degraded to gzip/deflate with stream decompression only while a restore map is active — br/zstd are dropped in that case — and passed through untouched otherwise).
+    - 扩展桥接：令牌失效或面板关开关时不再每个流式分片都重试（原先一条回答就把引擎 800 行运行日志冲干净），改为退避 + 每 5 秒低速探测，改对令牌后自动秒级恢复；popup 红标文案区分「token 失效」与「引擎未运行」。
+      Extension bridge: no longer retries on every streaming chunk when the token is invalid or the panel switch is off (a single answer used to wipe the engine's 800-line runtime log). Now backed off with a 5s low-rate probe that self-heals seconds after the token is fixed; the popup red status distinguishes "token invalid" from "engine not running".
+    - 诊断包泄漏明文敏感词：词榜的词面在「统计记录明文」开启时是明文，原先原样进包（诊断包是发给开发者的），现只脱敏词面、保留类别与计数。
+      Diagnostics bundle leaked plaintext sensitive words: word faces are plaintext when "record plaintext words" is on, and were shipped as-is in a bundle meant to be sent to developers. Now only the word face is scrubbed; labels and counts are kept.
+    - 重复的浏览器扩展设置页「在本机面板旋转令牌」按钮永远失败（该端点需要面板令牌，扩展只有扩展令牌），改为打开面板设置页。
+      The browser-extension options page's "rotate token in the panel" button could never succeed (that endpoint requires the panel token while the extension only holds the extension token) — it now opens the panel settings page instead.
+      - 三处测试结果不确定（两处读本机真实事件库、一处并发用例靠线程调度赌胜负），跑过真实代理或负载一变就随机红；已分别改为显式隔离与确定性握手复现。
+        Three non-deterministic tests (two read the real local event store, one raced on thread scheduling) failed randomly once a real proxy run existed or load changed; now explicitly isolated, with the race reproduced deterministically via an explicit handshake.
+    - /v1 通配卡片不再同时展示两个相同的 Base URL 复制项。
+      /v1 wildcard cards no longer show two identical Base URL copy entries.
+    - 自定义敏感词：禁用后不再永久豁免回收（此前要改两次配置才生效，且禁用词的明文会一直留在内存里可还原），其映射也不再挤占普通条目的复用额度。
+      Custom words: disabling one now takes effect in the same reload instead of the next, its plaintext no longer stays restorable in memory, and its mappings no longer eat into the reuse budget of ordinary entries.
+    - 还原容错：模型把占位符写成 {{ TOKEN_x }}、\{\{...\}\} 或只剩单花括号时，原先会留下 {{ / \{\ 残渣（值出来了但命令仍是坏的，容易被误判成还原成功），现在整体吃掉、零残渣。
+      Restore tolerance: when the model wrote a placeholder as {{ TOKEN_x }}, \{\{...\}\} or with a single brace, residue like {{ and \{\ used to survive (the value came back but the command stayed broken, easily mistaken for success); the whole form is now consumed with no residue.
+    - 内网 IPv6 规则（默认关）漏检：gateway:fd00::5 这类紧跟冒号的写法整段匹配不到，Fe80::1 这类混合大小写会被特征预检整条跳过且不留痕，两处均已修正。
+      Private-IPv6 rule (off by default): addresses right after a colon (gateway:fd00::5) matched nothing, and mixed-case forms like Fe80::1 were skipped by the marker pre-check with no trace; both fixed.
+    - 透传兜底层：上游谎报 Content-Encoding: gzip（正文其实是明文）时，客户端原先拿到「200 + 静默截断的 body」，现在改为原样整段透传。
+      Passthrough: when an upstream lied about Content-Encoding: gzip (body actually plaintext), clients used to get a 200 with a silently truncated body; the bytes now pass through untouched.
+    - 门禁污染本机数据：透传用例会把假 PASS 事件写进开发者本机的真实事件库（跑一次门禁就多几条），已在用例内隔离。
+      Gate runs polluted local data: passthrough tests wrote fake PASS events into the developer's real event store on every run; now isolated in the test.
+    优化 / Changed
+    - 配置：删除从未被任何代码消费的 NER_AI 规则开关（点了没用的假开关），config.example.json 补上 ner_enabled（模板缺项时手工改配置的用户看不到这项能力）。
+      Config: removed the NER_AI rule switch, which no code ever consumed (a toggle that did nothing), and added ner_enabled to config.example.json (template omissions hid the feature from users who hand-edit config).
+    - 全局 UI 视觉重构：新增深浅自适应「天境流光」旗舰默认壁纸与通透毛玻璃参数，侧边栏、顶栏、弹窗遮罩与浮层实现全景联动，消除厚重视觉割裂。
+      Global UI visual overhaul: added an adaptive "Ambient Flow" flagship default wallpaper and frosted-glass preset, unifying sidebar, header, dialog overlay, and popovers with consistent translucency.
+    - 扩展内部重复的常量与函数（站点清单、路径未适配清单、域名校验与 match pattern）收敛为单一来源 extension/shared.js，消除三份实现互相漂移的隐患。
+      Duplicated constants and helpers inside the extension (site list, unsupported-paths list, domain validation and match pattern) are consolidated into a single extension/shared.js, removing the risk of three implementations drifting apart.
+    - 扩展端点不再放行 Origin: null（无来源上下文没有合法调用方）；事件「入口」维度的取值改为白名单归一化（非法值回落 proxy，不再产生筛不出来的隐形分组）。
+      Extension endpoints no longer allow Origin: null (no-source contexts have no legitimate caller); the events "ingress" dimension is now allowlist-normalized (unknown values fall back to proxy instead of forming an invisible, unfilterable bucket).
+    - 运行日志尾部通道补上 ingress 与 client_app 字段（原先该视图看不到入口、也看不到是谁发的）。
+      Tail-channel log records now carry ingress and client_app (previously the tail view showed neither the ingress nor the caller).
+    - 「出口代理已启用但没人勾选」不再在每次保存配置时弹 toast（改为仪表盘常驻状态横幅）。
+      "Egress enabled but unused" no longer toasts on every config save (persistent dashboard banner instead).
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增 / Added
+    - 内置本地 AI 实体识别（NER，配置项 ner_enabled，默认关）：本地 ONNX 模型识别人名 / 机构 / 地址，补齐确定性规则覆盖不到的自由文本；设置页可开关，模型或依赖缺失时界面与健康检查直接说明原因。实测「规则 + NER」联动下，样例集敏感值的明文残留从 74% 降到 11%。
+      前提：该效果需要 99MB 的本地模型文件与 onnxruntime / tokenizers（二者在 requirements-dev.txt，不在运行时依赖里）。模型不入仓库、CI 也不下载，官方安装包与 Docker 镜像均不含模型——那两种方式安装的用户开启 NER 只会看到「模型文件缺失」，效果数字不适用。需要该能力请用源码态运行或自行补齐模型目录。
+      New built-in local AI entity recognition (NER, config key ner_enabled, off by default): a local ONNX model detects person / organisation / address names that deterministic rules cannot cover; toggle in settings, and the reason is spelled out in the UI and health check when the model or its dependencies are missing. On the sample set, combining rules with NER cuts the plaintext left in requests from 74% to 11%.
+      Prerequisite: those numbers require the 99 MB local model plus onnxruntime / tokenizers (both in requirements-dev.txt, not runtime deps). The model is not in the repository and CI does not download it, so neither the official installer nor the Docker image ships it — users installing those ways see only "model file missing" and the figures do not apply. Run from source, or supply the model directory yourself.
+    - 安全审计新增提示词注入检测：伪造协议级系统轮次、索要系统提示词、凭据外发指令、base64/转义编码绕过；泛化的「忽略以上指令」句式只在同现客观载荷时上报，避免把模型讲解误判成投毒。
+      New prompt-injection detection in the security audit: faked protocol-level system turns, system-prompt extraction requests, credential-exfil instructions, and base64/escape-encoded payloads; ordinary "ignore previous instructions" wording is reported only when an objective payload co-occurs, so explanations are not mistaken for poisoning.
+    - 扩展设置页新增「推荐站点」：18 个国内外常见 AI 站点一键授权添加（含 Gemini / Grok / Perplexity / Copilot / Mistral / Poe、DeepSeek / 豆包 / 通义千问 / Qwen / Kimi / 元宝 / 智谱 / 文心一言 / 讯飞星火 / 小米 MiMo），路径未实测的站点统一打「未实测」标记。
+      New "Recommended sites" list in the extension options page: 18 common AI sites added with a single grant (Gemini, Grok, Perplexity, Copilot, Mistral, Poe, DeepSeek, Doubao, Tongyi Qianwen, Qwen, Kimi, Yuanbao, ChatGLM, ERNIE Bot, iFlytek Spark, Xiaomi MiMo). Sites whose request paths are unverified are marked as such.
+    - 浏览器扩展桥接（extension/，Chrome/Edge MV3）：把网页版 AI（ChatGPT / Claude）发出的请求接入本地引擎打码、回包流式还原。100% 本地运算，零外传。
+      Browser extension bridge (extension/, Chrome/Edge MV3): routes web-AI (ChatGPT / Claude) requests through the local engine for masking and restores responses as they stream. 100% local, zero egress.
+    - 引擎新增 /api/ext/ping|mask|restore|rotate-token 四个端点与 ext_bridge_enabled / ext_token / ext_block_when_engine_down / ext_record_events 四个配置项。
+      New engine endpoints /api/ext/{ping,mask,restore,rotate-token} and config keys ext_bridge_enabled / ext_token / ext_block_when_engine_down / ext_record_events.
+    - 事件与统计新增「入口」维度（代理链路 / 浏览器扩展）：事件页可筛选，词榜与首页词明细按入口分组同屏，分享战绩卡改为仅统计代理链路并在卡面标注口径。
+      New "ingress" dimension (proxy link vs browser extension) in events and stats: filterable in the log page, word rankings grouped side by side, and the share card now covers only the proxy link with its scope stated on the card.
+    - 设置页新增「浏览器扩展」区块（链路开关、访问令牌、旋转确认），高级设置新增「记录浏览器扩展流量」开关（默认开）。
+      New "Browser extension" settings section (toggle, token, rotation confirmation) and a "Record browser-extension traffic" switch under advanced settings (on by default).
+    - 内网 IPv6 规则（IPV6_PRIVATE，默认关）：fe80:: 链路本地与 fc00::/7 ULA，语义校验排除公网/文档段与 MAC 地址。
+      Private IPv6 rule (IPV6_PRIVATE, default off): fe80:: link-local and fc00::/7 ULA, with semantic validation excluding public/doc ranges and MAC addresses.
+    - USCC 校验位验证（GB 32100-2015 MOD31）：开启规则后误伤率压至 1/31。
+      USCC check-digit validation (GB 32100-2015 MOD31): false-positive rate down to 1/31 when the rule is enabled.
+    - README 部署章节补单端口模式（5802 路径前缀路由）说明。
+      README deployment docs: single-port mode (5802 path-prefix routing) section.
+    - 仪表盘新增「出口代理已启用但无客户端勾选」状态横幅与「MASKIT_PANEL_TOKEN 被忽略」提醒（stderr 双写 + 面板可见）。
+      Dashboard banners for "egress enabled but unused" and "MASKIT_PANEL_TOKEN rejected" (now also double-written to stderr).
+    - 浏览器扩展静态门禁（scripts/check-extension.mjs）并入全量门禁（13 → 14 项）：校验扩展 i18n 双语键集、脚本加载顺序、manifest 与静态站点清单一致性、驼峰 runAt、本机外请求等红线；新增 JS 引用的 DOM id 必须存在于对应 HTML（拦住「按钮点了没反应」那一类）。
+      New browser-extension static gate (scripts/check-extension.mjs) added to the full gate set (13 → 14 items): checks i18n key parity, script load order, manifest/site-list consistency, camelCase runAt, and off-machine request red lines; now also asserts every DOM id referenced by JS exists in the matching HTML (catches the "buttons do nothing" class).
+    - 自定义敏感词改用确定性占位符 + 常驻映射：同一敏感词跨会话、跨重启都拿到同一后缀，长任务与 Agent 工具调用不再因 TTL 过期或引擎重启而还原不回来。
+      Custom sensitive words now use deterministic placeholders with a resident mapping: the same word gets the same suffix across sessions and restarts, so long tasks and agent tool calls no longer become unrestorable after TTL expiry or an engine restart.
+    - 浏览器扩展新增独立发布包 Maskit_<版本>_extension.zip，随 Release 一起分发：扩展不在桌面安装包里，不用源码的用户此前无处可下，现在下载解压即可在 chrome://extensions 加载。
+      The browser extension now ships as its own release asset, Maskit_<version>_extension.zip: it is not inside the desktop installer, so web-app users without the source tree had nowhere to get it — now they download, unzip and load it from chrome://extensions.
+    修复 / Bug Fixes
+    - 引擎：消除 Python 3.13 下子进程 bufsize=1 二进制模式运行告警，发版脚本增加一体包模型完整性自检与前置门禁。
+      Engine: eliminate Python 3.13 RuntimeWarning on subprocess bufsize=1 in binary mode; add all-in-one bundle preflight gates to release scripts.
+    - 脱敏：NER 在经规则替换后的文本上识别实体会导致上下文被截断、实体残片明文泄漏（如「西城区」被打码后，其后的「网点营业厅」失去前序上下文漏打码）；现改为在干净原文上抽取实体，经 OffsetMap 坐标单调映射回伤疤文本，并在映射失败时安全降级跳过 NER、绝不混用原文与伤疤坐标系，同起点实体按长区间贪心优先。
+      Masking: running NER on text already mutated by deterministic rules truncated entity context and leaked entity fragments in plaintext (e.g. masking "Xicheng District" caused following "branch office" to lose its context and go unmasked); entities are now extracted from the clean original and translated back via a monotonic OffsetMap, with graceful degradation skipping NER on mapping errors without cross-coordinate mixing, and greedy longest-span selection for identical starts.
+    - 脱敏：数值型敏感值、敏感值当 JSON 键名、重复键三条路径既不命中也不抛异常，于是「零改写」分支把客户端原始字节原样放行——明文出网，而 fail-closed 只兜异常、兜不住「静默判定为无需改写」。三条现全部覆盖；协议字段、工具名与 JSON Schema 骨架按白名单保持原样。
+      Masking: three paths — numeric sensitive values, sensitive values used as JSON key names, and duplicate keys — neither matched nor raised, so the zero-rewrite branch passed the client's original bytes upstream verbatim: plaintext egress, and fail-closed only covers exceptions, not a silent "no rewrite needed". All three are covered now; protocol fields, tool names and JSON Schema skeletons stay intact via a whitelist.
+    - 脱敏：顶层键名扫描只在扩展链路生效，同一个请求体走代理链路与走扩展链路会得到不同结果；两条链路现共用同一判据。
+      Masking: top-level key-name scanning only applied on the extension link, so the same request body produced different results through the proxy link; both links now share one predicate.
+    - 扩展：扩展总开关关闭（enabled=false）后内容脚本照常送原文打码、页面照常被改写，而 popup 显示「已停用」；文本与文档两条链路现已认账。
+      Extension: with the master switch off (enabled=false) the content script kept sending plaintext for masking and pages kept being rewritten while the popup said "disabled"; both the text and document links now honour it.
+    - 扩展：令牌可被发往任意外域——地址框旁的「测试连接」按钮不校验主机就存盘，而真正持有令牌的 SW 也不自校验；现校验下沉到 SW 并只允许 127.0.0.1 / localhost。
+      Extension: the token could be sent to an arbitrary host — the "test connection" button next to the address field saved without any host check, and the service worker that actually holds the token did not validate either; the check now lives in the service worker and only 127.0.0.1 / localhost are allowed.
+    - 扩展：≤80 字符的写请求整体跳过打码（与 multipart 分支不一致），属静默未脱敏；下限降到 8。
+      Extension: write requests of ≤80 characters skipped masking entirely (inconsistent with the multipart branch) — a silent unmasked path; the floor is now 8.
+    - 扩展：24–25MB 的 Office 附件必然硬失败——整份文件 base64 后超过引擎 32MB 闸门，413 被当作阻断 → 页面直接网络错误；上限对齐到 23MB，超限改为原样透传并明确提示未脱敏。
+      Extension: Office attachments of 24–25 MB always failed hard — base64 inflation pushed the body past the engine's 32 MB gate, the 413 counted as blocking, and the page saw a network error; the limit is aligned to 23 MB, and oversize files now pass through with an explicit "not masked" notice.
+    - 扩展：/api/ext/restore 没有体积闸门、ext_frames 没有条目上限，启用站点上的任意脚本都能用它撑大引擎内存；两者均已补齐。
+      Extension: /api/ext/restore had no size gate and ext_frames no entry cap, so any script on an enabled site could grow engine memory; both are now bounded.
+    - 扩展：扩展链路落库的事件对象里，dialog / req_preview / resp_preview 直接写原文切片，凭据因此进了本地事件库（items[] 本身是合规的，只看它就发现不了）；写侧与 /api/logs 读侧现都做凭据清洗，普通 PII 原文照常保留供详情弹窗对照。
+      Extension: the event object written by the extension link put raw text slices into dialog / req_preview / resp_preview, so credentials reached the local event store (items[] itself was compliant, which is why checking only that missed it); both the write side and the /api/logs read side now scrub credentials, while ordinary PII plaintext is still kept for the detail dialog's before/after view.
+    - 审计：PEM 私钥正则在「只有 BEGIN 没有 END」的文本上二次回溯，12KB 响应体就要约 2.8 秒，且审计扫描吃全量响应体——上游回一个畸形 4xx 就能把本地代理的事件循环 CPU 打满；现改为线性匹配，并把扫描输入截断（结构化解析仍读全量，否则换芯检测会静默失效）。
+      Audit: the PEM private-key regex backtracked quadratically on text containing BEGIN without END — about 2.8 s for a 12 KB body — and the audit scanned the full response body, so one malformed 4xx from upstream could saturate the local proxy's event loop; matching is now linear and the scan input is truncated (structured parsing still reads everything, otherwise model-swap detection would silently break).
+    - 审计：换芯检测被「响应文本块非空」门控，而判定只看模型字段——tool_use-only、reasoning-only、拒答空答这些编程助手最主流的响应形态上检测完全失效，恶意中转回一个空 content 即可绕过；现已与文本内容解耦。
+      Audit: model-swap detection was gated on "response has a non-empty text chunk" although the verdict only uses the model field, so it was entirely dead on the response shapes coding assistants mostly produce — tool_use-only, reasoning-only, empty refusals — and a malicious relay could bypass it by returning an empty content; detection is now decoupled from text content.
+    - 审计：审计中心在后端读失败（引擎未运行 / 5xx / 令牌失效）时渲染成绿色「未发现任何篡改或泄漏行为」，把「没读到」显示成「没问题」；现区分两者并给出失败原因与重试，同时说明筛选只作用于最近 500 条。
+      Audit: when the backend read failed (engine down, 5xx, invalid token) the audit centre rendered the green "no tampering or leakage detected" state, showing "nothing read" as "nothing wrong"; the two are now distinguished, with the failure reason and a retry, plus a note that filters only cover the latest 500 events.
+    - 审计：清空审计留痕没有二次确认，误点即丢失唯一的篡改/泄漏证据链；已加确认弹窗。
+      Audit: clearing the audit trail had no confirmation, so a stray click destroyed the only tampering/leakage evidence chain; a confirmation dialog was added.
+    - 审计：讲解 ChatML / Llama 特殊 token 的回复被误判为提示词注入（成对标记齐全即报 MEDIUM）；现跳过代码块并要求标记行首锚定，真注入照常检出。
+      Audit: answers explaining ChatML / Llama special tokens were flagged as prompt injection (two markers in a row meant MEDIUM); code blocks are now skipped and a marker must be line-anchored, while real injections are still detected.
+    - 审计：SSE 解析要求 data: 后必须带空格，而规范里空格可选——发无空格形态的上游会让换芯与流异常两项审计静默失效（还原路径不受影响，所以表面完全正常）；已按规范解析。
+      Audit: SSE parsing required a space after data: although the spec makes it optional, so upstreams emitting the no-space form silently disabled model-swap and stream-anomaly auditing (the restore path was unaffected, so nothing looked wrong); parsing now follows the spec.
+    - NER：预算耗尽或推理异常时的部分实体结果被写入缓存，此后该文本一直返回残缺结果；同时空结果不写负缓存导致无实体的长文本每次重复推理。现只缓存完整结果，空结果也进负缓存。
+      NER: partial entity results from an exhausted budget or an inference error were written to the cache, so that text kept returning incomplete results; empty results were also not negatively cached, so entity-free long text was re-inferred on every request. Only complete results are cached now, and empty results are negatively cached too.
+    - NER：地名识别把「北京」「中国」这类裸行政区当成地址脱敏，造成过度脱敏与词榜噪声；现跳过裸行政区（含区/省/自治区后缀），带门牌或机构名的地址照常识别。
+      NER: bare administrative names such as "Beijing" or "China" were masked as addresses, over-masking and polluting the word rankings; bare regions (including district/province/autonomous-region suffixes) are now skipped, while addresses carrying a street number or a place name are still detected.
+    - NER：实体标签为空时索引越界抛异常；重叠实体的裁剪按起点整条丢弃，在被后缀扩充推过起点时会把尾部区间漏成明文。两处均已修。
+      NER: an empty entity label caused an index error, and overlap trimming dropped whole entities by start offset, leaking the tail span as plaintext when a suffix expansion pushed past the next start. Both fixed.
+    - 打包：.dockerignore 没有排除 99MB 的 NER 模型目录，而容器根本不装 onnxruntime / tokenizers，带进去只是白占镜像层；同时误把根目录冒烟语料的排除项覆盖成了模型子目录。已修正。
+      Build: .dockerignore did not exclude the 99 MB NER model directory even though the container ships neither onnxruntime nor tokenizers, wasting an image layer; it had also overwritten the smoke-data exclusion with a model subdirectory. Both corrected.
+    - 文档：NER 的「明文残留 74%→11%」未标注前提（模型与 onnxruntime 不在官方安装包与 Docker 镜像里），已补注。
+      Docs: the NER "plaintext left 74% → 11%" figure lacked its prerequisite (the model and onnxruntime ship in neither the official installer nor the Docker image); noted now.
+    - 浏览器扩展：在面板重新打开桥接开关（或用户改对令牌）后，扩展侧退避仍把接下来的请求按直通发出去——最长 5s 明文出网且页面无任何提示；现首次进入退避的下一次调用立刻探测，探测再失败仍保持 5s 间隔（防洪不变），并把两条已与实现漂移的扩展 e2e 断言改成真契约。
+      Browser extension: after the bridge switch was turned back on in the panel (or the token fixed), the extension's backoff still passed the following requests straight through — up to 5 s of plaintext egress with no signal on the page; the next call after first entering the backoff now probes immediately, repeated failures keep the 5 s spacing (flood protection unchanged), and two extension e2e assertions that had drifted from the implementation were rewritten to the real contract.
+    - 脱敏：整词匹配（sensitive_word_whole）对中文词等于「永不脱敏」——汉字之间没有词边界，把汉字放进两侧边界字符类后，开了整词的中文词 100% 漏打码且毫无提示；现按词形分档（中文词退化为子串匹配，宁可多打码不可漏打码），并把一条恒为真的整词断言改成真断言。
+      Masking: whole-word mode (sensitive_word_whole) silently disabled masking for Chinese words, since CJK text has no word boundaries and including CJK in the boundary class left them unmasked with no warning; boundaries are now picked per word shape (CJK falls back to substring matching, over-masking rather than leaking) and a vacuously-true whole-word assertion was replaced with real ones.
+    - 脱敏：新增自定义敏感词不与全局占位符后缀查重，撞上活跃后缀（同标签即完整占位符相同）时会静默改写该占位符指向，换会话后把另一实体的原文还原到它身上；现并入全局后缀索引避让并加回归用例。
+      Masking: a newly added custom word did not check the global placeholder suffix index, so a collision with a live suffix (same label meant the identical placeholder) silently repointed that placeholder and restored another entity's plaintext at its position in later sessions; new words now avoid every live suffix, with a regression test.
+    - 配置：default_config() 漏声明 ner_enabled / sensitive_word_whole / wizard_done / meta，config.json 损坏走降级分支时这几个键经增量接口保存会被判「未知配置项」400；已补齐并加键位对齐回归。
+      Config: default_config() left ner_enabled / sensitive_word_whole / wizard_done / meta undeclared, so on the degraded path (corrupt config.json) patching them answered 400 "unknown config key"; all are declared now, with a key-parity regression added.
+    - 脱敏：开启 NER 时，实体若与已有占位符相交，整段（含其中的明文）会被原样放行——多轮对话历史带回占位符即触发，属漏脱敏。现按区间替换并在占位符边界切开，两侧明文分别打码；同时去掉「每个实体做一次全文正则替换」带来的二次耗时。
+      Masking: with NER on, an entity overlapping an existing placeholder was dropped whole and its plaintext went upstream — any multi-turn history carrying placeholders triggered it. Entities are now applied by span and split at placeholder boundaries so both sides get masked; the per-entity full-text replacement (69 s on a 100k-character body) is gone.
+    - 脱敏：NER 的失败路径此前完全静默（模型缺失、依赖未装、推理异常、超长跳过、预算耗尽），表现为「开了没效果」。现每类原因留一条日志，并在 /api/status 与 /api/health 暴露可用性；超长文本与时间预算加硬上限，不再可能把代理冻住。
+      Masking: NER failure paths were completely silent (missing model, missing dependencies, inference errors, over-length skips, exhausted budget), looking like "enabled but no effect". Each cause now logs once and availability is exposed via /api/status and /api/health; long text and time budgets are now hard-capped so the proxy can no longer be frozen.
+    - 审计：/api/audit/events 的读侧降噪过滤被一并作用在检测读路径上，被隐藏的信号在风险矩阵里永远看不到，而矩阵照样显示绿色。探针结果聚合现已显式绕开该过滤。
+      Audit: the read-side noise filter on /api/audit/events also applied to the detection read path, so hidden signals could never surface in the risk matrix while it still rendered green. Probe aggregation now bypasses that filter explicitly.
+    - 统计：首页与统计页的「告警」不含审计高危信号，换芯、投毒、凭据外发只能靠主动翻审计页才能发现。现按同一口径并入（含按小时与按天曲线）。
+      Stats: the "alerts" figure on the dashboard and stats page excluded audit high-severity findings, so model swaps, poisoning and credential exfiltration were only discoverable by opening the audit page. They are now folded into the same figure, hourly and daily curves included.
+    - 打包：build.ps1 的运行时产物清理会连 NER 模型自带的 config.json 一起删掉（该目录不入库，删了不可恢复）；PyInstaller spec 又无条件收录该目录（干净检出上直接构建失败），且 excludes 排掉了 NER 必需的 numpy / tokenizers。三处已修，并新增打包前模型完整性自检。
+      Build: build.ps1's runtime-artifact cleanup also deleted the NER model's own config.json (the directory is not in git, so this was unrecoverable); the PyInstaller spec then included that directory unconditionally (failing clean-checkout builds) while excludes dropped the numpy / tokenizers the NER engine needs. All three are fixed, with a pre-pack model integrity check added.
+    - 测试：NER 用例硬断言模型在位，门禁结果取决于本机是否恰好有那个 98MB 目录（本地绿、CI 红）。模型相关用例改为 skip 守卫，并补上不依赖模型的回归：实体与占位符相交不得漏明文、失败必须留痕、长度与预算护栏。
+      Tests: NER cases hard-asserted the model was present, so the gate depended on whether the machine happened to have that 98 MB directory (green locally, red in CI). Model-dependent cases now skip, and model-free regressions were added: entities overlapping placeholders must not leak plaintext, failures must be logged, and the length/budget guardrails must hold.
+    - 安全审计：模型换芯检测在所有 OpenAI 兼容流式响应上完全失效（响应 model 只在 Claude 的 message_start 里提取），现已覆盖流式 chunk；同时新增同家族「偷偷换档」检测（gpt-4o → gpt-4o-mini 记中危）。
+      Security audit: identity-swap detection was dead on every OpenAI-compatible streaming response (the response model was read only from Claude's message_start); it now covers stream chunks, and same-family tier downgrades (gpt-4o → gpt-4o-mini) are reported as medium.
+    - 安全审计：同一次换芯会落库两条完全相同的发现（主检测块被复制成两份）。
+      Security audit: a single identity swap was recorded twice (the main detection block had been duplicated).
+    - 浏览器扩展：同一个 SSE 事件块里混有两种 data 行时，未命中豆包信封的行既不还原也不再交给标准管线，占位符原样留在页面上。
+      Browser extension: when one SSE event block carried two data lines, lines that missed the Doubao envelope were neither restored nor handed to the standard pipeline, leaving raw placeholders on the page.
+    - 脱敏还原：收尾补发在无模板可克隆时裸拼文本，SSE/NDJSON 客户端按规范整行忽略导致丢字；整包 NDJSON 回退路径还漏了收尾补发。
+      Restore: the tail flush appended bare text when no template was available, which SSE/NDJSON clients discard as an unparsable line; the bulk NDJSON fallback path also skipped the tail flush entirely.
+    - 脱敏还原：响应嵌套超过 24 层时占位符既不还原也不计数，排障时分不清「没还原」和「本来就没有占位符」。
+      Restore: placeholders in responses nested deeper than 24 levels were neither restored nor counted, making "not restored" indistinguishable from "nothing to restore".
+    - 浏览器扩展：文件脱敏失败（引擎超时/掩码失败/解包失败）时 popup 仍报「已脱敏 N 个文件」，把最危险的失败模式包装成成功。
+      Browser extension: when file masking failed (engine timeout, mask failure, unpack failure) the popup still reported "N files masked", disguising the most dangerous failure mode as success.
+    - 浏览器扩展：模型逐 token 输出时占位符会被 SSE 事件边界切开，页面上留下裸 {{...}} 而不是还原成原文。现改由引擎按事件与字段粒度还原（与代理链路同一份实现），并顺带消除正文与工具参数共用一个还原缓冲导致的串字。
+      Browser extension: placeholders split across SSE event boundaries while the model streamed token by token, leaving raw {{...}} on the page instead of the original text. Restoration now runs per event and per field in the engine (the same implementation the proxy link uses), which also removes the text corruption caused by sharing one restore buffer between message text and tool arguments.
+    - 浏览器扩展：引擎状态不会随实际情况更新——引擎关掉后 popup 仍绿标（状态停在上一次的值），改对令牌后红标也不消失（启动时空令牌必然吃一次 403，状态被钉死）。现已按 ping 结果显式更新状态。
+      Browser extension: engine status never followed reality — the popup stayed green after the engine was stopped (status frozen at its previous value) and stayed red after the token was fixed (a cold start always takes one 403 with an empty token, pinning the status). Status is now updated explicitly from the ping result.
+    - 浏览器扩展：拦截默认采用精准对话模式（已知对话接口），杜绝非对话业务数据污染，并保留广泛模式开关供按需启用。
+      Browser extension: interception now defaults to precise mode (known chat endpoints) to avoid contaminating non-chat data, with an optional wide mode switch retained.
+    - 浏览器扩展：附件（multipart）此前整包跳过，文本字段里的敏感信息裸着发出。现按字段处理——文本字段打码、文件原样透传、boundary 重新生成；检测到图片/文件时弹窗明说「附件内容不脱敏」。
+      Browser extension: multipart attachments were skipped wholesale, leaking whatever sensitive text sat in their text fields. Now handled field by field — text fields masked, files passed through byte-for-byte, boundary regenerated — and the popup states plainly that attachment contents are not masked.
+    - 浏览器扩展：检测不到本地引擎时不再静默不生效，弹窗显示「未检测到本地程序」并给出下载地址（地址由 manifest 的 homepage_url 推导，扩展代码内无外域字面 URL）；令牌错误时不显示该引导，避免把人带去重装。
+      Browser extension: no longer fails silently when the local engine is missing — the popup says so and offers a download link (derived from the manifest's homepage_url, so no off-machine URL literal lives in extension code). The hint is suppressed on token errors so users are not sent to reinstall.
+    - 浏览器扩展：删掉的站点仍在打码。ChatGPT / Claude 是 manifest 静态注册的脚本，无法用 API 注销，用户删除后脚本照样注入、照样送 body，界面却显示「已删除」；现在以配置为准在打码入口兜底，不启用就不打码。同时去掉设置页「内置 / 已添加」标签，所有站点一律可新增可删除。
+      Browser extension: deleted sites were still being masked. ChatGPT / Claude are statically declared in the manifest and cannot be unregistered via API, so their scripts kept injecting and forwarding bodies while the UI said "deleted". Masking now honours the config at the entry point, and the options page no longer labels any site "built-in" — every site can be added and removed alike.
+    - 浏览器扩展：推荐站点里两个域名是错的、四个海外站点的对话接口漏过路径白名单，加起来 6 个站「添加了却完全不脱敏」（页面毫无异常）。域名按实测落点纠正（文心一言 yiyan.baidu.com → wenxin.baidu.com，小米 MiMo xiaomimimo.com → mimo.xiaomi.com），白名单补 Gemini / Grok / Perplexity / Poe 的 RPC 形态路径；未登录探测确认「命中上述路径形态的请求必被打码」，这 16 个站的真实对话路径仍未验证，界面维持「未实测」标记。
+      Browser extension: two recommended domains were wrong and four overseas sites' chat endpoints slipped past the path allowlist — 6 sites were "added but never masked", with no visible symptom. Domains corrected to where the sites actually land (ERNIE Bot yiyan.baidu.com → wenxin.baidu.com, Xiaomi MiMo xiaomimimo.com → mimo.xiaomi.com) and RPC-style paths added for Gemini / Grok / Perplexity / Poe. A logged-out probe confirms requests matching those path shapes are always masked; the real chat endpoints of those 16 sites remain unverified, so the UI keeps the "unverified" mark.
+    - 浏览器扩展：多个时机同时重注册动态脚本（安装 / 启动 / 设置页刷新）会互相踩，Chrome 报重复脚本 ID 后该站点静默不注入。已加并发锁，同一时刻只跑一次重注册。
+      Browser extension: concurrent re-registrations (install / startup / options resync) raced each other and Chrome rejected some with a duplicate script ID, silently dropping injection for those sites. Now serialised with an in-flight lock.
+    - 扩展设置页与后台的通信整体失灵（「测试连接」必失败、会话占用恒空白、添加站点拿不到重注册确认）：后台用 !sender.tab 判断"是不是扩展自己的页面"，而以标签页打开的设置页 sender.tab 是有值的，导致管理消息全部超时。已改为按 sender.url 的 scheme 判定，并加静态门禁拦住同类写法。
+      Extension options page could not talk to its background worker at all ("Test connection" always failed, session usage stayed blank, added sites reported no confirmation) because the background judged "extension's own page" by !sender.tab, while an options page opened as a tab does have sender.tab. Now judged by the sender.url scheme, with a static gate to block the same mistake.
+    - 扩展添加站点：后台没回应时不再报「已保存」成功，改为黄标提示需重新加载（写进存储 ≠ 脚本真的注入了）。
+      Adding a site no longer reports success when the background does not respond; it warns that a reload is needed (persisted ≠ actually injected).
+    - 扩展弹窗的「设置 / 刷新」按钮点了没反应：popup.html 漏写 id="recentTitle"，渲染时抛异常把初始化掐断在绑定按钮之前；已补齐 id，并把事件绑定提到取数之前，渲染失败不再连坐按钮。
+      Extension popup's Settings/Refresh buttons did nothing: popup.html was missing id="recentTitle", so a render-time error aborted initialisation before the click handlers were bound. The id is restored and binding now happens before data loading, so a render failure can no longer take the buttons down.
+    - 透传兜底层：https 出口代理按 TLS 编排 CONNECT（原明文直连必握手失败）；上游空闲超时 900s→300s，mid-stream 失败不再叠加错误状态行；同名多值请求头合并转发不再丢值；恢复透传 accept-encoding（仅还原映射非空时降级为 gzip/deflate 并流式解压后再还原，br/zstd 在该情形下被拒；映射为空则原样透传）。
+      Passthrough: https egress proxies now do TLS-then-CONNECT (was plaintext and always failed); upstream idle timeout 900s→300s with no status-line corruption on mid-stream failures; duplicate request headers joined instead of dropped; Accept-Encoding passed through again (degraded to gzip/deflate with stream decompression only while a restore map is active — br/zstd are dropped in that case — and passed through untouched otherwise).
+    - 扩展桥接：令牌失效或面板关开关时不再每个流式分片都重试（原先一条回答就把引擎 800 行运行日志冲干净），改为退避 + 每 5 秒低速探测，改对令牌后自动秒级恢复；popup 红标文案区分「token 失效」与「引擎未运行」。
+      Extension bridge: no longer retries on every streaming chunk when the token is invalid or the panel switch is off (a single answer used to wipe the engine's 800-line runtime log). Now backed off with a 5s low-rate probe that self-heals seconds after the token is fixed; the popup red status distinguishes "token invalid" from "engine not running".
+    - 诊断包泄漏明文敏感词：词榜的词面在「统计记录明文」开启时是明文，原先原样进包（诊断包是发给开发者的），现只脱敏词面、保留类别与计数。
+      Diagnostics bundle leaked plaintext sensitive words: word faces are plaintext when "record plaintext words" is on, and were shipped as-is in a bundle meant to be sent to developers. Now only the word face is scrubbed; labels and counts are kept.
+    - 重复的浏览器扩展设置页「在本机面板旋转令牌」按钮永远失败（该端点需要面板令牌，扩展只有扩展令牌），改为打开面板设置页。
+      The browser-extension options page's "rotate token in the panel" button could never succeed (that endpoint requires the panel token while the extension only holds the extension token) — it now opens the panel settings page instead.
+      - 三处测试结果不确定（两处读本机真实事件库、一处并发用例靠线程调度赌胜负），跑过真实代理或负载一变就随机红；已分别改为显式隔离与确定性握手复现。
+        Three non-deterministic tests (two read the real local event store, one raced on thread scheduling) failed randomly once a real proxy run existed or load changed; now explicitly isolated, with the race reproduced deterministically via an explicit handshake.
+    - /v1 通配卡片不再同时展示两个相同的 Base URL 复制项。
+      /v1 wildcard cards no longer show two identical Base URL copy entries.
+    - 自定义敏感词：禁用后不再永久豁免回收（此前要改两次配置才生效，且禁用词的明文会一直留在内存里可还原），其映射也不再挤占普通条目的复用额度。
+      Custom words: disabling one now takes effect in the same reload instead of the next, its plaintext no longer stays restorable in memory, and its mappings no longer eat into the reuse budget of ordinary entries.
+    - 还原容错：模型把占位符写成 {{ TOKEN_x }}、\{\{...\}\} 或只剩单花括号时，原先会留下 {{ / \{\ 残渣（值出来了但命令仍是坏的，容易被误判成还原成功），现在整体吃掉、零残渣。
+      Restore tolerance: when the model wrote a placeholder as {{ TOKEN_x }}, \{\{...\}\} or with a single brace, residue like {{ and \{\ used to survive (the value came back but the command stayed broken, easily mistaken for success); the whole form is now consumed with no residue.
+    - 内网 IPv6 规则（默认关）漏检：gateway:fd00::5 这类紧跟冒号的写法整段匹配不到，Fe80::1 这类混合大小写会被特征预检整条跳过且不留痕，两处均已修正。
+      Private-IPv6 rule (off by default): addresses right after a colon (gateway:fd00::5) matched nothing, and mixed-case forms like Fe80::1 were skipped by the marker pre-check with no trace; both fixed.
+    - 透传兜底层：上游谎报 Content-Encoding: gzip（正文其实是明文）时，客户端原先拿到「200 + 静默截断的 body」，现在改为原样整段透传。
+      Passthrough: when an upstream lied about Content-Encoding: gzip (body actually plaintext), clients used to get a 200 with a silently truncated body; the bytes now pass through untouched.
+    - 门禁污染本机数据：透传用例会把假 PASS 事件写进开发者本机的真实事件库（跑一次门禁就多几条），已在用例内隔离。
+      Gate runs polluted local data: passthrough tests wrote fake PASS events into the developer's real event store on every run; now isolated in the test.
+    优化 / Changed
+    - 配置：删除从未被任何代码消费的 NER_AI 规则开关（点了没用的假开关），config.example.json 补上 ner_enabled（模板缺项时手工改配置的用户看不到这项能力）。
+      Config: removed the NER_AI rule switch, which no code ever consumed (a toggle that did nothing), and added ner_enabled to config.example.json (template omissions hid the feature from users who hand-edit config).
+    - 全局 UI 视觉重构：新增深浅自适应「天境流光」旗舰默认壁纸与通透毛玻璃参数，侧边栏、顶栏、弹窗遮罩与浮层实现全景联动，消除厚重视觉割裂。
+      Global UI visual overhaul: added an adaptive "Ambient Flow" flagship default wallpaper and frosted-glass preset, unifying sidebar, header, dialog overlay, and popovers with consistent translucency.
+    - 扩展内部重复的常量与函数（站点清单、路径未适配清单、域名校验与 match pattern）收敛为单一来源 extension/shared.js，消除三份实现互相漂移的隐患。
+      Duplicated constants and helpers inside the extension (site list, unsupported-paths list, domain validation and match pattern) are consolidated into a single extension/shared.js, removing the risk of three implementations drifting apart.
+    - 扩展端点不再放行 Origin: null（无来源上下文没有合法调用方）；事件「入口」维度的取值改为白名单归一化（非法值回落 proxy，不再产生筛不出来的隐形分组）。
+      Extension endpoints no longer allow Origin: null (no-source contexts have no legitimate caller); the events "ingress" dimension is now allowlist-normalized (unknown values fall back to proxy instead of forming an invisible, unfilterable bucket).
+    - 运行日志尾部通道补上 ingress 与 client_app 字段（原先该视图看不到入口、也看不到是谁发的）。
+      Tail-channel log records now carry ingress and client_app (previously the tail view showed neither the ingress nor the caller).
+    - 「出口代理已启用但没人勾选」不再在每次保存配置时弹 toast（改为仪表盘常驻状态横幅）。
+      "Egress enabled but unused" no longer toasts on every config save (persistent dashboard banner instead).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.3.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xiaYuTian11/maskit/releases/tag/v0.3.0
+ReleaseTime: 2026-09-19T15:04:06.0000000Z

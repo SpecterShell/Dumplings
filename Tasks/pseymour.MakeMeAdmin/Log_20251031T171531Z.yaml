@@ -1,0 +1,48 @@
+Version: "2.4"
+Installer:
+- Architecture: x64
+  InstallerLocale: en-US
+  InstallerUrl: https://github.com/pseymour/MakeMeAdmin/releases/download/v2.4/MakeMeAdmin.2.4.0.x64.en-us.msi
+- Architecture: x64
+  InstallerLocale: da
+  InstallerUrl: https://github.com/pseymour/MakeMeAdmin/releases/download/v2.4/MakeMeAdmin.2.4.0.x64.da.msi
+- Architecture: x64
+  InstallerLocale: fr
+  InstallerUrl: https://github.com/pseymour/MakeMeAdmin/releases/download/v2.4/MakeMeAdmin.2.4.0.x64.fr.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/pseymour/MakeMeAdmin/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added an optional dialog box to prompt the user to enter their reason for needing administrator rights.
+    - Added the ability to log off a user when their administrator rights expire. The message displayed before log off is customizable.
+    - Added logging of elevated processes.
+    - Added the ability to prompt the user for authentication before rights are granted.
+    - Added a setting to control which port the remote feature uses.
+    - Added feature to allow renewal of rights after expiration.
+    - Added a setting to control whether the UI closes after the user's rights expire.
+    - Added Danish translation, thanks to Bjørn Kelsen.
+    - Modified the installer to remove the added user XML file upon uninstallation.
+    - Modified the installer to add the product version to the registry.
+      - The version number will be stored in the value InstalledVersion at HKEY_LOCAL_MACHINE\SOFTWARE\Sinclair Community College\Make Me Admin.
+    Changed
+    - Significant speed improvement in the code that checks the user against the allowed and denied lists, thanks to Martin Sheppard.
+    - Changed the service's Event Log source name to "Make Me Admin," adding spacing between the words.
+    - Updated group policy templates to reflect change from SIDs only to SIDs or names, thanks to Jakob Dahl.
+    - Migrated from .NET Framework version 4.5.2 to version 4.8.
+    Removed
+    - Removed the Exit button from the UI.
+    - Turned off automatic logging for service start and stop events.
+    Fixed
+    - Fixed an issue that would prevent syslogging from working if the syslog server was not in DNS.
+    - Fixed an issue where the service would check the authorization of the wrong principal, in automatic-add scenarios. (Issue #50)
+    - Fixed typos in French translation.
+    - Added better error handling in the UI app if the service is not listening.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/pseymour/MakeMeAdmin/blob/HEAD/CHANGELOG.md#240---2025-10-31
+ReleaseTime: 2025-10-31T11:16:13.0000000Z
+RealVersion: 2.4.0

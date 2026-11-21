@@ -1,0 +1,32 @@
+Version: 0.4.2-r.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/miaotouy/aio-hub/releases/download/v0.4.2-r.1/AIO.Hub_0.4.2-r.1_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    AIO Hub v0.4.2-r.1 🎉 新版本发布
+    🌟 核心功能 (Core Features)
+    🧩 高级上下文注入策略 (Advanced Context Injection Strategy)
+    我们重构了 LLM 上下文的构建引擎，引入了一套声明式的消息注入策略。现在，你可以精确控制每一条预设消息在最终发送给模型的上下文中的位置和顺序。
+    - 深度注入 (depth): 将消息插入到距离对话历史末尾 n 层的位置。
+    - 锚点注入 (anchorTarget): 将消息精准地插入到系统锚点（如 chat_history, user_profile）的前面或后面。
+    - 顺序控制 (order): 通过优先级数字，决定在同一点注入多条消息时的最终顺序。
+    - UI 集成：在智能体预设编辑器中，可以为每条消息单独配置注入策略。
+    🍻 SillyTavern 兼容性与导入 (SillyTavern Compatibility & Import)
+    为了方便用户迁移和复用社区资源，我们正式支持了 SillyTavern 的角色卡和预设导入功能。
+    - 角色卡导入：支持直接导入 .json 格式或内嵌数据的 .png 角色卡文件，角色头像和设定会被自动解析并创建为新的 AIO 智能体。
+    - 预设文件导入：支持在智能体预设中追加导入 SillyTavern 的提示词预设文件（.json / .yaml），系统会自动解析其结构，并提示用户是否应用其中的模型参数。
+    ⚙️ 架构重构与优化 (Refactoring & Improvements)
+    - 上下文构建模块化：复杂的上下文构建逻辑被拆分为独立的、可维护的模块 (useContextInjection, useContextLimiter, useContextPreview)，提升了代码的可维护性。
+    - 智能体复制增强：
+      - 复制智能体时，现在会自动处理其私有的头像文件，确保副本拥有独立的头像资产。
+      - 优化了命名逻辑，复制后的智能体 displayName 会自动添加编号以保证唯一性。
+    - 状态管理优化：上下文的 Token 和字符统计逻辑被集中到 llm-chat Store 中统一管理，避免了在多个组件中重复计算。
+    变更内容
+    查看完整的 Changelog
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/miaotouy/aio-hub/releases/tag/v0.4.2-r.1
+ReleaseTime: 2025-12-05T05:26:03.0000000Z

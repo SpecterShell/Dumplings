@@ -1,0 +1,90 @@
+Version: 1.1.100
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.100/Stelliberty-v1.1.100-windows-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.100/Stelliberty-v1.1.100-windows-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    📦 构建信息
+    项目 内容
+    包名 stelliberty
+    版本号 1.1.100
+    Mihomo 核心 1.19.17
+    提交哈希 24eb022c1504e468c83f967779b01b95e0f706e1
+    📋 更新日志
+    自 v1.1.81 以来的功能和修复：
+    修复代理页多个体验问题
+    修复：
+    - 修复后台切回前台时按钮会闪烁的问题
+    - 修复不在代理页时外部控制器切换节点不同步的问题
+    - 修复更新订阅后超时节点的延迟值不会被清空的问题
+    改进：
+    - 测试完的延迟值现在会保留 5 分钟，从后台返回时不会消失
+    - 更新订阅后会自动停止正在进行的延迟测试并清空旧结果
+    - 测试延迟时布局切换按钮会置灰禁用，避免误操作
+    提交：24eb022 | 作者：ONEUI9
+    内部优化
+    - 使用宏消除 IPC 连接获取和归还的重复代码
+    提交：89bbf50 | 作者：ONEUI9
+    内部优化
+    - 优化 IPC 连接池配置（上限 30，超时 35s，并发限制 20）
+    - 添加连接重试机制（最多 3 次，间隔 50ms）
+    提交：ebe0178 | 作者：ONEUI9
+    内部优化
+    - 提取 IPC 请求处理公共逻辑，封装 handle_ipc_request_with_retry
+    - 代码量减少约 271 行
+    提交：2a59fa2 | 作者：ONEUI9
+    修复电脑休眠唤醒后程序无响应的问题
+    提交：ae8c4e2 | 作者：ONEUI9
+    内部优化
+    - 单节点延迟测试完全迁移至 Rust 层
+    - 移除 Dart 层 delay_tester.dart
+    提交：c46744e | 作者：ONEUI9
+    内部优化
+    - 信号定义合并到业务模块，消除独立 signals.rs 文件
+    - 代码量减少约 128 行
+    提交：724bb5a | 作者：ONEUI9
+    修复连接页偶尔会不显示
+    提交：aa3dd94 | 作者：ONEUI9
+    内部优化
+    - 迁移延迟测试和覆写下载到 Rust 层
+    - 新增 delay_test 和 overrides/downloader 模块
+    提交：6a82ae6 | 作者：ONEUI9
+
+    ❓ 故障排查
+    Linux 启动问题
+    如果无法启动应用，请确保已为可执行文件赋予运行权限：
+    # 进入应用目录
+    cd /path/to/stelliberty
+
+    # 赋予权限
+    chmod +x ./stelliberty
+    端口被占用（Windows）
+    如果遇到端口冲突：
+    # 1. 查找占用端口的进程
+    netstat -ano | findstr :端口号
+
+    # 2. 结束进程（以管理员身份运行）
+    taskkill /F /PID XXX
+    ⚠️ 重要：必须以管理员身份运行命令提示符。服务模式启动的核心进程需要提升权限才能终止。
+    软件工作不正常
+    路径要求（ZIP 和 EXE 均适用）：
+    - 路径中不应包含特殊字符（空格除外）
+    - 路径中不应包含非 ASCII 字符（如中文字符）
+    - 支持空格：D:\Program Files\Stelliberty ✅
+    EXE 安装程序的位置限制：
+    如果使用 EXE 安装程序，还有额外的安装位置限制：
+    - 系统盘（C:）：仅允许 %LOCALAPPDATA%\Programs\*（如 C:\Users\用户名\AppData\Local\Programs\Stelliberty）
+    - 其他盘（D:、E: 等）：无限制
+    💡 如需安装到 EXE 不允许的位置，请使用便携版 ZIP（无位置限制，但仍可能受系统目录权限影响）。
+    缺少运行库（Windows）
+    如果应用程序在 Windows 上无法启动或立即崩溃，可能是缺少必需的 Visual C++ 运行库。
+    解决方案：
+    安装 Visual C++ 运行库：vcredist - Visual C++ 运行库合集
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kindness-Kismet/Stelliberty/releases/tag/v1.1.100
+ReleaseTime: 2025-12-16T07:53:11.0000000Z

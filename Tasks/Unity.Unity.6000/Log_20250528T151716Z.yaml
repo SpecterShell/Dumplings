@@ -1,0 +1,165 @@
+Version: 6000.0.50f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/f1ef1dca8bff/Windows64EditorInstaller/UnitySetup64-6000.0.50f1.exe
+  ProductCode: Unity 6000.0.50f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/f1ef1dca8bff/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.50f1.exe
+  ProductCode: Unity 6000.0.50f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.50
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.50f1
+    - Asset - Database: Crash on "The GUID inside 'Assets/asset.png.meta' cannot be extracted by the YAML Parser." when opening the project (UUM-107711)
+    - Cloud Diagnostics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - DirectX12: Crash on D3D12CommonShader::ApplyGpuProgram when attaching material which samples "_UnityFBInput0" to "Full Screen Pass Renderer Feature" Component (UUM-105412)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - Graphics Device Features: Graphics.RenderMeshIndirect does not issue multi-draw rendering commands when using a graphics API capable of multi-draw commands (UUM-91617)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (UUM-103995)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (licensing client path is not found) (UUM-103996)
+    - Lighting: All baked data for all scenes using APV is always loaded in Editor (UUM-104833)
+    - Lighting: Android Player freezes on some Mali GPU devices when Lighting Cast Shadows changed to OFF at runtime (UUM-105246)
+    - Mono: UnmanagedReadOrWrite objects are not disposed off when GZipStream is used in the "using" statement (UUM-105139)
+    - OpenGL: [Linux] Crash on glXCreateGLXPixmap when hovering over labels in the Inspector window (UUM-87106)
+    - Platform Audio: Android Player freezes when an Audio Source is playing and an incoming call is picked up and then hung up and the Audio Source is started again (UUM-103525)
+    - SRP Foundation: Game View turns black, Scene View turns grey, Console error NullReferenceException when Wireframe is turned on because the DecalGBufferRenderPass references a non existent GBuffer (UUM-103836)
+    - SRP XR: GameObjects are transparent when a custom fog renderer feature is enabled (UUM-104832)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    6000.0.50f1 Release Notes
+    Features
+    - HDRP: Upgraded FSR2 from v2.2.0 to v2.2.1, release notes from FSR2:
+      - Fixed DRS issue where resource was not correctly cleared on first use
+      - Fixed issue where luma instability logic could introduce output artefacts with strobing lights
+      - Fixed incorrect luma resource size.
+    Improvements
+    - Documentation: Added remarks, API references and code samples to AMD.AMDUnityPlugin.
+    - Documentation: Added remarks, API references and code samples to AMD.FSR2CommandExecutionData.
+    - Documentation: Added remarks, API references and code samples to AMD.FSR2Context.
+    - Documentation: Added remarks, API references and code samples to AMD.FSR2Quality.
+    - Documentation: Added remarks, API references and code samples to AMD.FSR2TextureTable.
+    - Documentation: Added remarks, API references and code samples to AMD.GraphicsDevice.
+    - Editor: Improving startup speed of LicensingClient 1.17.0.
+    - Graphics: Improved CopyTexture documentation (warning about using Apply, mentions of the readability property, and general improvements).
+    - Graphics: Optimized Skinned Mesh Renderer matrix calculations to enable Unity to parallelize matrix calculations even when using the non-optimized import setting. (UUM-105251)
+    - UI Toolkit: Removed few gc allocs from TextElement's internal implementation. (UUM-103707)
+    API Changes
+    - Physics: Added: Added Physics.GetCurrentIntegrationInfo in order to allow retrieving an instance of IntegrationInfo containing data about the currently running Physics SDK integration.
+    - Physics: Added: Exposed the IntegrationInfo type containing basic data about the currently used Physics SDK integration.
+    Fixes
+    - 2D: Fixed case where sprite does not update when playing Animation. (UUM-104198)
+    - 2D: Fixed issue in the Tile Palette window where the brushes toolbar expands its height when its width is reduced to a certain level. (UUM-103089)
+    - 2D: Fixed issue where an error message is shown in the console window when the Tile Palette clipboard is open with an invalid width or height. (UUM-103942)
+    - 2D: Fixed issue where the mask interaction settings of one TilemapRenderer can persist to the next immediate TilemapRenderer. (UUM-103926)
+    - 2D: Fixed RGB 48 bit format for SpriteAtlas. (UUM-104007)
+    - 2D: Fixed TextureImporter meta file modification when reimporting a texture while the "Default Behaviour Mode" is set to 2D for new imported files. (UUM-104536)
+    - 2D: Fixed the Sprite Editor Toolbar module dropdown visual overlap when selecting an imported non-sprite texture in a 3D project. (UUM-104519)
+    - 2D: Fixed uninitialized sprite shader properties when used with mesh renderers. (UUM-95758)
+    - Accessibility: Fixed multiple accessibility node focus issues on Android. (UUM-103808)
+    - AI: The HeightMesh was sometimes containing faulty polygons that stretched between arbitrary vertices over long distances. (UUM-78065)
+    - Animation: Fixed an issue where undoing the creation of an AnimatorController layer while the layer view was not visible in the Animator Window would throw exceptions. (UUM-104017)
+    - Asset Pipeline: Fixed problem where main thread in editor or player could become blocked, while async loading is in progress. (UUM-104218)
+    - Documentation: Added documentation for CommandBuffer.BuildRayTracingAccelerationStructure method parameters.
+    - Editor: Before running the macOS Editor, perform a check if Rosetta is installed and if not then prompt to install it. (UUM-104562)
+    - Editor: Changing the UnityEvent target in the inspector will now clear the method when incompatible. (UUM-101710)
+    - Editor: Editor can crash when playable graph topology is changed by an animation event callback. (UUM-104081)
+    - Editor: Editor: Enum fields not showing on click for OSX when TapToClick is enabled. (UUM-91306)
+    - Editor: Fixed a crash when exiting the editor after removing the HDRP package. (UUM-97847)
+    - Editor: Fixed a GRD memory leak that happened in some cases when materials changed.
+    - Editor: Fixed an issue on Windows where some popups appear incorrectly scaled when displayed close to the border between two monitors with different DPI scaling settings. (UUM-86925)
+    - Editor: Fixed an issue where passing a long string label for a dialog box could cause an editor crash. (UUM-90434)
+    - Editor: Fixed crash that could occur when repeatedly performing actions that require a progress dialog such as saving and entering play mode at the same time. (UUM-104261)
+    - Editor: Fixed Editor hangs when cutting and pasting a Script to another folder during Play Mode. (UUM-104031)
+    - Editor: Fixed exceptions thrown when using function key shortcuts to select Terrain tools when Terrain Tools package is installed. (UUM-97013)
+    - Editor: Fixed function key shortcuts for Terrain Trees and Details tools.
+    - Editor: Fixed invalid a tag exception with UITK. (UUM-90526)
+    - Editor: Fixed issue with static time access to BuildTargetDiscovery causes importer to fail. (UUM-105132)
+    - Editor: Fixed link tag broken when used with ellipsis in UITK. (UUM-103041)
+    - Editor: Fixed some performance issues when moving Terrain objects (eg. for shifting world origin to support large worlds) while Tree rendering is disabled. Renderers for tree instances would still be updated but this is not particularly useful or wanted if you are using some other system to render Tree instances. So now the updating of tree instances is bypassed in this scenario. Re-enabling tree rendering will resume updating tree instance and detail renderers. When tree rendering is enabled, performance remains roughly the same as before. (UUM-98086)
+    - Editor: Fixed stray error message in the console when changing Shader settings in a build profile. (UUM-81556)
+    - Editor: Fixed stray error message in the console when changing XCode settings for tvOS. (UUM-96819)
+    - Editor: Resolved an issue where components were visible in the Add Component menu when [AddComponentMenu("")] was used. (UUM-99267)
+    - Editor: The icon for editor plugin settings now uses the correct icon when using the dark theme. (UUM-104115)
+    - Editor: Updated Build Profile window icons for Web platform. (UUM-82559)
+    - Editor: When a BuildProfile is renamed, update the BuildProfileEditor to refresh the name displayed. (UUM-104263)
+    - GI: Adaptive Probe Volumes Fails to Bake with Dilation Enabled and exception "Cannot allocate more brick chunks, probe volume brick pool is full" is printed. (UUM-103976)
+    - GI: Fixed a bug where the unity_RendererBounds_Min and unity_RendererBounds_Max uniforms would be set to random uninitialized memory in the ShadowCaster pass. (UUM-100264)
+    - Graphics: Fixed glFramebufferTexture2DMultisampleEXT failure on Adreno drivers when per-format max MSAA limit exceeds global max MSAA limit. (UUM-76807)
+    - Graphics: Fixed infinite progress bar when converting PostProcess v2 from Built-in Render Pipeline to Universal Render Pipeline in the Converter. (UUM-102790)
+    - Graphics: Fixed Input Attachments + MSAA not working on platforms that emulate it using texture lods. (UUM-67324)
+    - Graphics: Fixed issues with recycling buffers in WebGPU. (UUM-97406)
+    - Graphics: Fixed memcpy crash with "load texture data on demand" related to UnityDefaultRuntimeTheme.tss. (UUM-86164)
+    - Graphics: Upgraded DLSS version from v3.1.10 to v3.7.20, fixing some ghosting artifacts and improving image stability. (UUM-102344)
+    - HDRP: Custom mesh for the water system is rendering the normal map the same as the water surface regardless of a world position. (UUM-95800)
+    - HDRP: Fixed a crash in AMDUnityPlugin.dll when there are multiple cameras and one is toggled off. (UUM-88980)
+    - HDRP: Fixed a ghosting issue with DX11. (UUM-102605)
+    - IL2CPP: Fixed incorrect exception handler generation when an exception handler with a filter throws an exception. (UUM-91180)
+    - iOS: Fixed "Unexpected duplicate tasks" error when appending builds. (UUM-104527)
+    - iOS: Fixed UI behavior when entering custom ODR variant settings in PlayerSettings. (UUM-103881)
+    - Package Manager: Fixed the issue where sometimes the display name of a package does not show up immediately when the list is visible. (UUM-104296)
+    - Package Manager: Make GetPatckagesPath thread/serialization safe. (UUM-104998)
+    - Physics: Clamp Linear and Angular dampling in rigidbody Physics component from 0 to Infinity. (UUM-104920)
+    - Physics: Fixed an issue where ArticulationBody components would disregard update calls from Animator components playing a clip which animates an ArticulationBody property. (UUM-84463)
+    - Physics 2D: Fixed "Physics2D.GetRayIntersection" overload to correctly use the "layerMask" argument. (UUM-103933)
+    - Physics 2D: Fixed an issue when modifying the sub-colliders a CompositeCollider2D uses when inside a prefab. (UUM-103177)
+    - Physics 2D: Fixed tooltip rendering for the Rigidbody2D Simulation Mode layer selection in the Physics2DSettings. (UUM-105521)
+    - Scripting: Binary2text crashed if a TypeTree was missing. (UUM-100864)
+    - Shadergraph: Fixed additional cases where certain Node Reference sample graphs would report unsaved changes on open. (UUM-76080)
+    - SRP Core: Fixed a memory leak when entering and leaving editor playmode. (UUM-104541)
+    - SRP Core: Fixed out of bounds read in CoreUnsafeUtils.FixedBufferStringQueue.TryPop when the remaining bytes in the buffer is less than 4. (UUM-104687)
+    - SRP Core: Subpass attachment indices are updated when adding a depth attachment to the renderpass in RenderGraph. (UUM-99670)
+    - TextCore: Resolve TextCore selection issues for single-character lines. (UUM-103255)
+    - UI: Display proper message when multiple build profiles selected. (UUM-77826)
+    - UI Elements: Assertion error thrown when discarding changes in builder. (UUM-99290)
+    - UI Toolkit: Added clarity around selection in the samples window. (UUM-87336)
+    - UI Toolkit: Aligned text and arrow icon for TreeView and MultiColumnTreeView in the samples window. (UUM-104924)
+    - UI Toolkit: Fixed a cosmetic issue where toolbar buttons shrank when the container shrank. (UUM-104876)
+    - UI Toolkit: Fixed an issue where resetting a data source would not always register to the INotifyBindablePropertyChanged callbacks. (UUM-104829)
+    - UI Toolkit: Fixed bindings for BaseField elements of UnityEngine.Object derived types. (UUM-104241)
+    - UI Toolkit: Fixed exception when unbinding UxmlObjectReference fields. (UUM-104574)
+    - UI Toolkit: Fixed issue when dragging a reorderable list view item on the X axis making the item disappear from the list. (UUM-103527)
+    - UI Toolkit: Fixed RuntimePanelUtils.CameraTransformWorldToPanel sometimes not working for secondary displays in the editor. (UUM-102346)
+    - UI Toolkit: Fixed the position of the Editor Only label in the tree view mode of the UI Builder Library. (UUM-102817)
+    - UI Toolkit: Fixed tooltip rect calculation for BaseField when showing label tooltip. (UUM-102885)
+    - UI Toolkit: Fixed USS preview is not updated when a selector is moved to a new USS file. (UUM-104904)
+    - UI Toolkit: Removed the invalid "Add Selector" option from the StyleSheet context menu in the UI Builder. (UUM-102726)
+    - UI Toolkit: Use icons instead of text for slice type in UIBuilder. (UUM-103768)
+    - Undo System: Don't overwrite flags which are updated during Awake or OnEnable. (UUM-96314)
+    - Universal RP: Fixed linear upscale wrong color space by clearing keywords set by previous upscale settings. (UUM-102082)
+    - URP: Check that GBuffers are valid before using them in the DecalGBufferRenderPass. (UUM-103836)
+    - Version Control: Fixed false positive error showing in console if creating a workspace from the Hub with a version of the Unity Editor shipping with a default Version Control package older than version 2.7.1.
+    - VFX Graph: Domain reload does not trigger a reimport of VFX asset opened in VFX window. (UUM-57043)
+    - VFX Graph: Fixed in-graph error feedback. (UUM-104768)
+    - VFX Graph: Opening/Closing subgraphs in VFX window does not trigger a recompilation of its dependent VFX anymore. This has to be done explicitely by saving the subgraph. (UUM-97016)
+    - Video: Editor is stuck on loading bar or freezes when playing 8K video using Video Player. (UUM-75813)
+    - Video: Fixed an edge case in error handling when attempting to open a video file on Android. (UUM-88992)
+    - Video: Fixed output of stale frames by the Video Player after a seek. (UUM-58173)
+    - VisionOS: Updated visionOS trampoline to respect RunInBackground setting. VisionOS apps now pause when the user opens the home screen if RunInBackground is set to false. Note that this changes the behavior for the default value of this setting, which is false. (UUM-103799)
+    - Web: Fixed a bug where rapid touch inputs could caused performance degradation. (UUM-26629)
+    - Web: Fixed the diagnostic overlay to be available for PWA and minimal Web template builds. (UUM-103203)
+    - WebGL: Fixed a WebGL error with URP and MSAA, when a depth only render pass is involved. (UUM-90459)
+    - Windows: Added warning for windows Arm64 when selecting a Graphics API other than Dx11 or Dx12. (UUM-51898)
+    - XR: Fixed a specific instance where the player would render a black screen when using XR and the copydepth pass. (UUM-84612)
+    - XR: Fixed issue where Quest Link would fail when using DX12 and single pass rendering.
+    Package changes in 6000.0.50f1
+    Packages updated
+    - com.unity.addressables: 2.4.6 to 2.5.0
+    - com.unity.collab-proxy: 2.8.1 to 2.8.2
+    - com.unity.scriptablebuildpipeline: 2.3.8 to 2.4.0
+    - com.unity.splines: 2.8.0 to 2.8.1
+    Packages deprecated
+    - com.unity.services.ugc - "This package is no longer supported. The UGC service associated with this package is no longer accessible as of May 11th 2025."
+    - com.unity.services.ugc.bridge - "This package is no longer supported. The UGC service associated with this package is no longer accessible as of May 11th 2025."
+ReleaseTime: 2025-05-28T15:00:23.5230000Z

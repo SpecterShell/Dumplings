@@ -1,0 +1,46 @@
+Version: 0.20.0.20261116.0557
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.20.0/Runner-Setup-0.20.0.20261116.0557-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.20.0 is a feature release for macOS, Windows and Linux on top of 0.19.9, with first-run setup, a git Changes view with Split diffs, and one theme picker for the app and its terminals.
+    New
+    - First-run setup. A fresh install now opens on Setup instead of an empty launcher. It lists the agents Runner found, installs Claude Code, Codex, GitHub Copilot CLI and pi through npm when it is available, opens a terminal to finish sign-in, and offers a Pair coding starter crew built from your installed agents, two different ones when you have them. Start your first chat creates the crew (unless you choose Don't create) and opens the launcher with an editable sample prompt; Skip setup goes straight to the launcher. Reopen it anytime from Settings → Agents → Open setup. Fresh installs no longer get a Codex-only crew seeded before any agent is found; installations you have already used keep their crews and skip Setup. (#1171)
+    - Install agents from Settings. Settings → Agents shows Install for missing npm-packaged agents (Claude Code, Codex, GitHub Copilot CLI, pi) when npm is available, running as a background task you can follow, answer if it asks for input, retry or stop. (#1171)
+    - Git Changes in the side panel. Open Changes from + (or with C) in the side panel, or switch to its tab beside Files on a terminal-only tab. It shows All changes on your branch, Uncommitted changes and up to 200 recent commits since the base branch, with a flat or tree file list, +/− line counts and a syntax-highlighted diff. Mark files Viewed to dim them across open windows; a viewed file that changes again is flagged changed in amber. Keyboard navigation covers commits, files, hunks (] / [) and the diff. Turn it off in Settings → Side panel. (#1141)
+    - Split diffs and a maximized side panel. Switch any diff between Unified and Split; the choice is shared by Changes and Files. The maximize button in the side panel's header, or ⇧⌘↩ on macOS (Ctrl+Shift+Enter on Windows and Linux) while the panel has focus, lets Changes, Files, Sessions or Info fill the tab, and Restore chat brings the chat or mission back. Picking Split in a narrow panel maximizes it automatically. (#1141)
+    - Diff from an open file. A file open in Files with uncommitted changes shows a Diff button beside Open in, which swaps the tab in place between the file and its working-tree diff against HEAD. (#1141)
+    - One theme for the app and its terminals. Settings → Appearance now has Light theme and Dark theme galleries of six paired app and terminal themes each: Runner Light / Runner, Catppuccin Latte / Mocha, Rosé Pine Dawn / Moon, Tokyo Night Day / Tokyo Night, Gruvbox Light / Dark and Solarized Light / Dark. Picking a theme recolors the app and open terminals at once. The separate Settings → Terminal → Colors setting is gone; your saved app themes carry over, and terminals now follow each theme's paired palette. (#1319)
+    - Custom launch flags per agent. Settings → Agents → agent → Launch adds Custom flags, passed before role arguments to every chat, role, mission, resume and fork of that agent and shown in the command preview. Runner refuses unclosed quotes and flags it manages itself, and warns when a flag is not in the agent's --help. (#1285)
+    - Side panel keeps its width. Once Files or Changes widens the side panel, it stays that wide when you switch to Sessions or Info, close the last open file tab, switch tabs, or close the surface. (#1344)
+    Bug fixes
+    - OpenCode needs v2. Runner now labels the runtime OpenCode v2 and requires OpenCode 2.0.0 or later. When OpenCode v1 is on PATH, Runner lists OpenCode v2 under Not installed instead of failing at launch on --standalone, shows its path, version and the v2 requirement in Settings → Agents, rejects overrides below 2.0.0, and offers Open Settings when a launch or resume is refused. (#1251)
+    - Starting stays up until the agent appears. The Starting… and Resuming… indicator no longer disappears after a second over a blank pane or old text; it stays until the agent's first screen or shell prompt draws. (#1201)
+    - Remote unread dots clear. Viewing a running or completed chat on a remote computer in an active window, or replying in an already-selected remote chat, now clears its green unread dot on both the host and the remote sidebar and keeps it cleared when switching tabs. (#1315)
+    - No terminal flash on Windows for Antigravity usage. Antigravity CLI usage checks on Windows now read saved sign-in credentials and query the quota API over HTTPS directly instead of starting agy, so scheduled and manual refreshes no longer flash a console or Windows Terminal window. (#1324)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.20.0 是 macOS、Windows 和 Linux 上基于 0.19.9 的功能版本，新增首次启动设置、带并排对比的 git Changes 视图，以及统一的应用与终端主题选择。
+    新功能
+    - 首次启动设置。 全新安装后不再打开空白启动器，而是进入 Setup：列出 Runner 检测到的 agent；在 npm 可用时直接安装 Claude Code、Codex、GitHub Copilot CLI 和 pi；打开终端完成登录；并用你已安装的 agent 组成 Pair coding 入门 crew（有两个不同的 agent 时会分别使用）。Start your first chat 会创建该 crew（除非选择 Don't create），并打开带可编辑示例提示词的启动器；Skip setup 直接进入启动器。之后可随时在 Settings → Agents → Open setup 重新打开。全新安装不再在检测 agent 之前预置只用 Codex 的 crew；已经使用过的安装保留原有 crew，并跳过 Setup。 (#1171)
+    - 在设置中安装 agent。 当 npm 可用时，Settings → Agents 为未安装的 npm 包 agent（Claude Code、Codex、GitHub Copilot CLI、pi）显示 Install，安装作为后台任务运行，可查看输出、在需要输入时响应、重试或停止。 (#1171)
+    - 侧面板中的 git Changes。 从侧面板的 +（或按 C）打开 Changes，或在纯终端标签页中切换到 Files 旁的 Changes 标签页。它会显示当前分支的 All changes、Uncommitted changes 以及自基准分支以来最近最多 200 个提交，支持平铺或树形文件列表、+/− 行数统计和语法高亮的 diff。将文件标记为 Viewed 后会在已打开的窗口间同步变暗；查看后再次改动的文件会以琥珀色标为 changed。提交、文件列表、差异块（] / [）和 diff 均支持键盘导航。可在 Settings → Side panel 中关闭。 (#1141)
+    - 并排 diff 与侧面板最大化。 任意 diff 都可在 Unified 和 Split 之间切换，Changes 与 Files 共用这一选择。点击侧面板标题栏的最大化按钮，或在焦点位于侧面板时按 macOS 上的 ⇧⌘↩（Windows 和 Linux 上为 Ctrl+Shift+Enter），可让 Changes、Files、Sessions 或 Info 占满当前标签页，点击 Restore chat 即可恢复聊天或 mission。在较窄的侧面板中选择 Split 会自动最大化面板。 (#1141)
+    - 从打开的文件查看 diff。 Files 中打开的文件有未提交改动时，会在 Open in 旁显示 Diff 按钮，可在文件内容与其相对 HEAD 的工作区 diff 之间原地切换。 (#1141)
+    - 应用与终端共用一个主题。 Settings → Appearance 现在提供 Light theme 和 Dark theme 两组各六款成对的应用与终端主题：Runner Light / Runner、Catppuccin Latte / Mocha、Rosé Pine Dawn / Moon、Tokyo Night Day / Tokyo Night、Gruvbox Light / Dark 和 Solarized Light / Dark。点选主题会立即同时更新应用界面与已打开的终端。单独的 Settings → Terminal → Colors 设置已移除；原有的应用主题选择会保留，终端改为跟随所选主题配对的调色板。 (#1319)
+    - 每个 agent 的自定义启动参数。 Settings → Agents → agent → Launch 新增 Custom flags，会在角色参数之前传给该 agent 的所有聊天、角色、mission、恢复和分叉，并显示在命令预览中。Runner 会拒绝未闭合的引号和它自己管理的参数，参数不在 agent 的 --help 中时会给出提醒。 (#1285)
+    - 侧面板保持宽度。 Files 或 Changes 将侧面板加宽后，切换到 Sessions 或 Info、关闭最后一个打开的文件标签页、切换标签页或关闭该界面时，侧面板都保持加宽后的宽度。 (#1344)
+    问题修复
+    - OpenCode 需要 v2。 Runner 现在将该运行时标为 OpenCode v2，并要求 OpenCode 2.0.0 及以上版本。当 PATH 中为 OpenCode v1 时，Runner 会将 OpenCode v2 列在 Not installed 下，不再因不支持 --standalone 而在启动时失败；Settings → Agents 会显示其路径、版本和 v2 要求，拒绝低于 2.0.0 的自定义路径，并在启动或恢复被拒绝时提供 Open Settings。 (#1251)
+    - Starting 提示保持到 agent 出现。 Starting… 和 Resuming… 提示不再在一秒后消失并露出空白窗格或旧内容，而是保持到 agent 的第一屏或终端提示符绘制出来。 (#1201)
+    - 远程未读标记可正常清除。 在活动窗口中查看远程电脑上运行中或已完成的聊天，或在已选中的远程聊天中回复时，主机和远程侧边栏上的绿色未读圆点现在都会被清除，并在切换标签页后保持已读。 (#1315)
+    - Windows 上 Antigravity 用量检查不再闪终端窗口。 Windows 上的 Antigravity CLI 用量检查改为直接读取已保存的登录凭据并通过 HTTPS 查询配额接口，不再启动 agy，因此定时和手动刷新都不会再闪出控制台或 Windows Terminal 窗口。 (#1324)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.20.0
+ReleaseTime: 2026-11-16T06:48:01.0000000Z

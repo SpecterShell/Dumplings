@@ -1,0 +1,37 @@
+Version: 0.13.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.13.1/codeg_0.13.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.13.1/codeg_0.13.1_x64_en-US.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.13.1/codeg_0.13.1_arm64-setup.exe
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.13.1/codeg_0.13.1_arm64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - fix(transport): Web mode no longer hangs on the "Connecting…" state when an ACP agent initializes before the WebSocket subscription is ready.
+    - fix(transport): mid-session WebSocket reconnects now restore ACP state automatically, so open conversations keep running without a manual reload.
+    - fix(acp): switching the agent or session at the same workspace tab no longer lets a stale snapshot overwrite the new connection's state.
+    - fix(transport): closing or switching a remote workspace fully releases its WebSocket, avoiding zombie reconnects and unexpected login redirects.
+    - fix(install): the install scripts now remove shadowing codeg-server binaries by default (--no-cleanup to opt out) and exit non-zero when the new install isn't what runs.
+    - fix(install): the Windows installer also cleans shadows on first install when its destination is freshly appended to PATH.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复(传输)：当 ACP 代理在 WebSocket 订阅完成前就初始化完成时，Web 端不再卡在「正在连接」。
+    - 修复(传输)：会话进行中 WebSocket 重连后会自动恢复 ACP 状态，无需手动刷新即可继续。
+    - 修复(ACP)：同一工作区标签内切换代理或会话时，旧连接的过期快照不再覆盖新连接的状态。
+    - 修复(传输)：关闭或切换远端工作区时彻底释放对应的 WebSocket，避免僵尸重连和意外的登录跳转。
+    - 修复(安装)：安装脚本默认会清理排在新安装之前的旧 codeg-server 二进制（--no-cleanup 可关闭），新安装未生效时返回非零退出码。
+    - 修复(安装)：Windows 安装脚本在首次安装将目标目录追加到 PATH 时也会清理影子二进制。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.13.1
+ReleaseTime: 2026-05-14T10:50:33.0000000Z

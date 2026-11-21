@@ -1,28 +1,34 @@
-$Object = Invoke-RestMethod -Uri 'https://update-officeaddin.grammarly.com/update' -Method Post -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://update-officeaddin.grammarly.com/update' -Method Post -Body (
   @{
-    currentVersion = $Task.LastState.Version ?? '6.8.263'
+    currentVersion = $this.LastState.Version ?? '6.8.263'
   } | ConvertTo-Json -Compress
 )
 
 # Version
-$Task.CurrentState.Version = $Object.version -join '.'
+$this.CurrentState.Version = $Object1.version -join '.'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.installerUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.installerUrl
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

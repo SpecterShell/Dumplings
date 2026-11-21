@@ -1,0 +1,105 @@
+Version: 0.11.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.2/Agentero_0.11.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.2/Agentero_0.11.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release focuses on reading and writing workflows: add inline comments to PDFs, Markdown notes, and AI conversations via text selection; keep the Library tab pinned by default; export PDFs with embedded highlights and annotations; use image groups and column layouts in the editor; and expand the Agent ecosystem with MiniMax Code, bundled Claude/Codex adapters, and a new Dsh profile. It also fixes math rendering, translation, LaTeX compilation, sidebar scrolling, and Agent installation stability.
+    Features
+    - Selection annotations: Select text in PDFs, Markdown notes, or AI conversations and click "Add to chat" to add, edit, delete, and locate inline comments. (#580 by @Miracle-0)
+    - Pinned Library tab: The Library tab is now pinned by default and won't close accidentally; a pin icon is shown and can be toggled via right-click; pinned state is persisted with the layout. (a2ae0f9 by @Phil-Fan)
+    - Annotated PDF export: Export the current PDF with all highlights and comments embedded; available from the PDF tab context menu and command palette. (d39c30d, 4e2841c, 0f16a30 by @Phil-Fan)
+    - Image groups and column layouts: Adjacent images in Markdown can fold into Feishu-style image groups with drag-to-reorder; new /columns slash command and drag-to-column layouts. (8970549, 4913b7a, 0992e7e, 4f14c14 by @Phil-Fan)
+    - MiniMax Code ACP: Added MiniMax Code ACP support to the Agent catalog. (0dbd0f5 by @Phil-Fan)
+    - Bundled Claude/Codex adapters: Falls back to build-in JS-only adapters when Claude/Codex ACP is not installed in PATH, reducing first-install failures. (1b12fa1 by @Phil-Fan)
+    - Custom translation prompt: Settings → Translate now lets you override the default academic translator prompt with your own template, supporting {{targetLang}} / {{sourceLang}} variables. (5509c8d by @Phil-Fan)
+    - Multi-file LaTeX project compile: Compile button, ⌘S save, and split-pane compile now auto-resolve the project root (magic comment / reverse scan) instead of building the triggered child file. (99b8874, 2ef710b by @Phil-Fan)
+    Improvements
+    - MCP tunnel lifecycle: Fixed tunnel-client.exe process leaks on Windows when stopping, rebuilding, or exiting; sweeps orphaned processes at startup. (#588 by @Zhou1317fe5)
+    - KaTeX render caching: Caches rendered KaTeX HTML to significantly reduce CPU usage for Markdown notes with many formulas. (baf42f2 by @Phil-Fan)
+    - Sidebar scroll stability: Fixed the file tree jumping back to top when toggling the left rail or revealing the selected item. (7ea0069 by @Phil-Fan)
+    - Agent CLI status probe: Moved CLI install status probing off the main thread to prevent ~1.5s UI freezes when opening About. (5f0817f by @chenjiahe)
+    - Zotero import precision: Importing a single Zotero folder now scopes the collection tree to the selected subtree only. (54e5fad by @chenjiahe)
+    - Internal refactoring: Unified duplicated logic across selection, translate, ask, dnd, wiki, and fs modules; removed dead code and unused dependencies. (multiple commits by @QiyuanChen)
+    Fixes
+    - Agent message math truncation: Fixed formulas like x_{<n} being truncated by remend after streaming settled. (d382e60 by @Phil-Fan)
+    - PDF dual-pane translation: Fixed bytes-backed PDF dual-pane translation failing due to tab id suffix mismatches. (5c35d03 by @Phil-Fan)
+    - Vault busy flag deadlock: Fixed the busy flag getting stuck when a restored vault path was invalidated mid-load. (6f256c2 by @chenjiahe)
+    - Agent npm cache EPERM: Fixed managed installs failing when npm cache was written by root/sudo on Windows/macOS; now auto-isolates to an Agentero-owned cache when the system cache is unwritable. (1c03213, 7c76448 by @chenjiahe)
+    - Windows adapter staging: Fixed bundled adapter staging failing on Windows Release builds because execFileSync cannot directly execute .cmd batch files; now invokes npm through a shell on Windows. (a5f0034 by @Phil-Fan)
+    - Dsh ACP profile: Migrated to the new umbrella dsh --profile acp to resolve version mismatch with the old standalone package. (f09ea73 by @Phil-Fan)
+    - Jianguoyun icon: Settings WebDAV sync provider now shows the correct Jianguoyun icon. (212e297 by @Phil-Fan)
+    - Paper tab rehydration: Fixed restored paper-folder placeholder tabs being misclassified as plain directories and flipped to Library before the vault tree loaded. (93f0494 by @Phil-Fan)
+    - PAPER.md detection: Paper folders without NOTES.md are now detectable via PAPER.md. (6e215f8 by @Phil-Fan)
+    Resolved Issues
+    - Selection annotations: Add inline comments to PDF, Markdown, and AI chat selections. (#579)
+    - PDF annotation export: Export PDFs with highlights and comments embedded. (#562)
+    - Markdown formula rendering performance: Cache KaTeX renders to speed up reflows. (#583)
+    - KaTeX formula parse error: Fix math formulas containing < being truncated in messages. (#584)
+    - Sidebar file tree jumping: Prevent the tree from jumping to top when toggling the rail or revealing selections. (#576)
+    - LaTeX multi-file compile: Auto-resolve and build the project root. (#575)
+    - Dual-pane translation failure: Fix translation pane state key errors for bytes-backed PDFs. (#574)
+    - DSH ACP error: Migrate to the new dsh --profile acp. (#569)
+    - Built-in Claude/Codex ACP: Provide bundled adapter fallback. (#590)
+    - Custom translation prompt: Allow users to override the default translation prompt. (#582)
+    - ACP install failures: Fix npm cache permission issues blocking installs. (#542)
+    - Windows stuck entering vault: Fix Vault busy flag stuck after restored path invalidated. (#560)
+    - Note image features: Support image groups and column layouts. (#566)
+    Full changelog: v0.11.1...v0.11.2
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布聚焦阅读与写作体验：划词即可在 PDF、Markdown 和 AI 对话中插入批注；Library 标签页默认常驻；PDF 支持导出带高亮与批注的文件；编辑器新增图片组和分栏布局；Agent 生态继续扩展，支持 MiniMax Code、Claude/Codex 内置适配器与 Dsh 新 profile；同时修复了公式渲染、翻译、LaTeX 编译、侧边栏滚动和 Agent 安装稳定性等一众问题。
+    新功能
+    - 划词批注：在 PDF、Markdown 笔记和 AI 对话中选中文字后点击「加入对话」，即可就地添加、编辑、删除批注，并支持来源定位与上下文汇总。（#580 by @Miracle-0）
+    - Library 常驻标签页：Library 标签页默认 pinned，不会被误关闭；标签上显示 pin 图标，右键可 Pin/Unpin；pinned 状态随布局持久化。（a2ae0f9 by @Phil-Fan）
+    - PDF 批注导出：可将当前 PDF 连同高亮与注释一并导出为新的 PDF 文件；导出入口位于 PDF 标签右键菜单与命令面板。（d39c30d, 4e2841c, 0f16a30 by @Phil-Fan）
+    - 图片组与分栏布局：Markdown 编辑器支持将相邻图片折叠为飞书式图片组，并可通过拖拽重排；新增 /columns 分栏命令与拖拽分栏布局。（8970549, 4913b7a, 0992e7e, 4f14c14 by @Phil-Fan）
+    - MiniMax Code ACP: Agent 目录新增 MiniMax Code ACP 支持。（0dbd0f5 by @Phil-Fan）
+    - Claude/Codex 内置适配器：当系统 PATH 中未安装 Claude/Codex ACP 时，应用会 fallback 到构建时内置的 JS-only 适配器，减少首次安装失败。（1b12fa1 by @Phil-Fan）
+    - 自定义翻译提示词：设置 → 翻译新增「翻译提示词」输入框，非空时整体替换默认学术译者指令，支持 {{targetLang}} / {{sourceLang}} 变量。（5509c8d by @Phil-Fan）
+    - LaTeX 多文件项目编译：编译按钮、⌘S 保存和分屏编译现在会自动解析项目根文件（magic comment / 反向扫描），避免直接编译子文件失败。（99b8874, 2ef710b by @Phil-Fan）
+    改进
+    - MCP 隧道进程治理：修复 Windows 上 tunnel-client.exe 在停止、重建或退出时泄漏的问题；启动时自动清扫历史孤儿进程。（#588 by @Zhou1317fe5）
+    - KaTeX 渲染加速：缓存已渲染的 KaTeX HTML，显著降低包含大量公式的 Markdown 笔记的 CPU 占用。（baf42f2 by @Phil-Fan）
+    - 侧边栏滚动稳定性：修复左侧栏收起/展开或选中项揭示时文件树自动跳回顶部的问题。（7ea0069 by @Phil-Fan）
+    - Agent CLI 状态探测：将 CLI 安装状态探测移到非主线程，避免 About 面板打开时 UI 冻结约 1.5 秒。（5f0817f by @chenjiahe）
+    - Zotero 导入精度：导入单个 Zotero 文件夹时不再重建整个收藏夹树，只创建选中子树。（54e5fad by @chenjiahe）
+    - 内部重构：统一 selection、translate、ask、dnd、wiki、fs 等模块的重复逻辑，删除 dead code 与未使用依赖，提升可维护性。（多处 by @QiyuanChen）
+    修复
+    - Agent 消息公式截断：修复流式消息落定后 remend 误把 x_{<n} 中的 <n} 当作未闭合 HTML 标签截断的问题。（d382e60 by @Phil-Fan）
+    - PDF 双栏翻译：修复基于 bytes 的 PDF 在双栏翻译时因 tab id 后缀变化导致翻译窗格无法打开或自动启动失败的问题。（5c35d03 by @Phil-Fan）
+    - Vault busy 状态卡死：修复恢复 Vault 路径在 tree 加载中途被验证清除后，busy flag 无法复位的问题。（6f256c2 by @chenjiahe）
+    - Agent npm cache EPERM: 修复 Windows/macOS 上 npm cache 被 root/sudo 写入后导致托管安装失败的问题；不可写时自动隔离到 Agentero 自有缓存目录。（1c03213, 7c76448 by @chenjiahe）
+    - Windows 适配器打包：修复 bundled adapter staging 在 Windows Release 构建中因 execFileSync 无法直接执行 .cmd 批处理而失败的问题；改为在 Windows 上通过 shell 调用 npm。（a5f0034 by @Phil-Fan）
+    - Dsh ACP profile: 迁移到新版 umbrella dsh --profile acp，解决旧独立包停滞在 prerelease 导致的版本不匹配。（f09ea73 by @Phil-Fan）
+    - 坚果云图标：设置页 WebDAV 同步提供商现在使用正确的坚果云图标。（212e297 by @Phil-Fan）
+    - Paper tab 恢复：修复 Vault tree 加载完成前恢复的 paper 文件夹占位 tab 被错误识别为普通目录并翻转成 Library 的问题。（93f0494 by @Phil-Fan）
+    - PAPER.md 检测：没有 NOTES.md 的论文文件夹现在可通过 PAPER.md 被正确识别为论文目录。（6e215f8 by @Phil-Fan）
+    已解决问题
+    - 划词批注：支持在 PDF、Markdown 和 AI 对话中添加内联批注。（#579）
+    - PDF 导出批注：支持导出带有高亮和注释的 PDF。（#562）
+    - Markdown 公式渲染性能：缓存 KaTeX 渲染结果以加速重排。（#583）
+    - KaTeX 公式解析错误：修复含 < 的数学公式在消息中被截断。（#584）
+    - 侧边栏文件树跳动：切换左侧栏或揭示选中项时不再跳回顶部。（#576）
+    - LaTeX 多文件编译：自动解析根文件并编译项目根。（#575）
+    - 双栏翻译失效：修复 bytes-backed PDF 的翻译窗格状态键错误。（#574）
+    - DSH ACP 错误：迁移到新版 dsh --profile acp。（#569）
+    - 内置 Claude/Codex ACP: 提供内置适配器 fallback。（#590）
+    - 自定义翻译提示词：允许用户覆盖默认翻译提示词。（#582）
+    - ACP 安装失败：修复 npm cache 权限问题导致的安装失败。（#542）
+    - Windows 卡在进入知识库：修复 Vault busy flag 在恢复路径失效时卡住。（#560）
+    - 笔记图片功能：支持图片组与分栏布局。（#566）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.2
+ReleaseTime: 2026-09-20T06:31:36.0000000Z

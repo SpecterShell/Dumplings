@@ -1,0 +1,120 @@
+Version: 6000.0.51f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/01c3ff5872c5/Windows64EditorInstaller/UnitySetup64-6000.0.51f1.exe
+  ProductCode: Unity 6000.0.51f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/01c3ff5872c5/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.51f1.exe
+  ProductCode: Unity 6000.0.51f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.51
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.51f1
+    - Android: [GameActivity] Crash on "UnityMotionEventCallbacks::_GetPointerIdImpl" when giving 9+ simultaneous touch inputs (UUM-108743)
+    - Cloud Diagnostics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - DirectX12: Crash on D3D12CommonShader::ApplyGpuProgram when attaching material which samples "_UnityFBInput0" to "Full Screen Pass Renderer Feature" Component (UUM-105412)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - Graphics Device Features: Graphics.RenderMeshIndirect does not issue multi-draw rendering commands when using a graphics API capable of multi-draw commands (UUM-91617)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (UUM-103995)
+    - Hub: Licensing Client fails to launch when opening Unity Hub (licensing client path is not found) (UUM-103996)
+    - Lighting: All baked data for all scenes using APV is always loaded in Editor (UUM-104833)
+    - Lighting: Android Player freezes on some Mali GPU devices when Lighting Cast Shadows changed to OFF at runtime (UUM-105246)
+    - Mono: UnmanagedReadOrWrite objects are not disposed off when GZipStream is used in the "using" statement (UUM-105139)
+    - Platform Audio: Android Player freezes when an Audio Source is playing and an incoming call is picked up and then hung up and the Audio Source is started again (UUM-103525)
+    - SRP XR: GameObjects are transparent when a custom fog renderer feature is enabled (UUM-104832)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    - Vulkan: [Android] Runtime performance deteriorates on certain Android devices when Graphics API is set to Vulkan on an upgraded project (UUM-107530)
+    6000.0.51f1 Release Notes
+    Features
+    - Package Manager: Added pinnedPackages optional property to the project manifest. This feature forces specified direct dependencies to use their exact manifest versions during package resolution and project update.
+    Improvements
+    - Documentation: Removed the CreateRenderGraphTexture API references from the create-custom-renderer-feature page.
+    - Physics: Better tooltips for PhysicsSettings window. (UUM-105527)
+    API Changes
+    - Kepler: Added: Launch Arguments API.
+    Changes
+    - Package Manager: Removed the overrideBuiltIns property making all builtin packages with semver version unable to be overridden.
+    Fixes
+    - 2D: Fixed a rendering issue where soft shadows were darker than expected. (UUM-18392)
+    - 2D: Fixed case where last segment is missed if any of the segment uses Null Sprite inbetween. (UUM-105570)
+    - 2D: Fixed FullScreenRendererFeature exception when use with Rendergraph 2D. (UUM-104830)
+    - 2D: Fixed hdr encoding and postprocess resolve for rendergraph 2d. (UUM-105392)
+    - 2D: Fixed normals to account for Sprite FlipXY. (UUM-104352)
+    - Android: Fixed Integer input field allowing multiple "-" symbols under certain conditions. (UUM-103402)
+    - Android: The application will continue to update/render while built for 'GameActivity + run in split screen + permission dialog is shown' if RunWithFocus is set to true. Previously the application would pause for GameActivity, but would continue to run if built for Activity. (UUM-105630)
+    - Editor: Added emoji font fallback on WIN, OSX and Linux. (UUM-97030)
+    - Editor: Added new callback onDeleteArrayElementCallback to ReorderableList. This is called from the "Delete Array Element" context menu to let you control the removal, like onRemoveCallback. (UUM-104534)
+    - Editor: Fixed a bug where the 'RectTransform' component values were set to NaN when scaling UI elements using the Scene Rect Tool. (UUM-102690)
+    - Editor: Fixed a bug whereby when evaluating an interrupted transition, the Animator writes the last evaluated values for all values instead of correctly defaulting to the state's current configuration. (UUM-99493)
+    - Editor: Fixed a Windows Editor crash on exit that could occur with some specific combinations of packages such as Google Mobile Ads and JetBrains Rider integration. (UUM-103723)
+    - Editor: Fixed an issue where Scene view gizmo icons were not loaded properly if "Load textures on demand" was enabled in project settings. (UUM-104825)
+    - Editor: Fixed an issue where, for compressed cubemap texture assets, the 'CubemapInspector' would display controls that perform operations unsupported by such textures. This also fixes an issue where merely inspecting a crunched cubemap texture asset would provoke errors. (UUM-86485)
+    - Editor: Fixed case where ScreenCapture.CaptureScreenshotAsTexture() could cause the player or editor to crash when a XR device was connected. (UUM-103220)
+    - Editor: Fixed IMGUI Errors on LinuxEditor arising when RepaintImmediately() called on window currently being painted. (UUM-104622)
+    - Editor: Fixed issue with TMP bloom effects not working anymore. (UUM-90091)
+    - Editor: Fixed LinuxEditor failing to trigger some shortcuts when InputManager is disabled. (UUM-104604)
+    - Editor: Fixed macOS progress bars always being shown on the main display rather than over the main Editor window. (UUM-102920)
+    - Editor: Fixed OverlayMenu behaviour when deleting or reverting presets. (UUM-103066)
+    - Editor: Fixed OverlayMenu width when preset name is very long. (UUM-103059)
+    - Editor: Fixed tooltip position when mouse is over Scripting Defines in Build Profiles window. (UUM-104272)
+    - Editor: Fixed UnityEvent drawer changing the object argument when editing multiple objects. (UUM-104854)
+    - Editor: Fixed PlayerSettings icon APIs so that GetIcons, GetIconsForTargetGroup, GetIconSizes, and GetIconSizesForTargetGroup return the correct icon arrays for the provided NamedBuildTarget or BuildTargetGroup argument. (UUM-97474)
+    - Editor: RG16 texture format is now fully supported and available in Editor Inspector. (UUM-81515)
+    - Graphics: BatchRendererGroup's OnPerformCulling function now correctly checks for job safety between the provided buffers and the JobHandle returned by the user. (UUM-98559)
+    - Graphics: Fixed a potential deadlock that could freeze players when loading or unloading AssetBundles with threaded texture uploads enabled. (UUM-102896)
+    - Graphics: Fixed an issue where mesh changes would not propagate correctly when using GPU Resident Drawer and GPU Occlusion Culling. (UUM-103207)
+    - Graphics: Fixed an issue where the value reported by "Texture.nonStreamingTextureMemory" would not update when mipmap limits were modified. (UUM-79327)
+    - Graphics: Fixed duplicated color resolve when mixing native render pass and set render target workflows. (UUM-103751)
+    - Graphics: Fixed libGLES.so crash on small subset of PowerVR devices. (UUM-102249)
+    - Graphics: Fixed shadow culling not working correctly for intermediate renderers like Graphics.RenderMesh or Terrain. (UUM-96217)
+    - Graphics: Removed an assert exception in UnityEngine.Rendering.CreateDrawBatchesJob.ProcessRenderer when changing a material property of a material used in MeshRenderers with multiple submeshes, after re-importing URP or HDRP. (UUM-103975)
+    - HDRP: Prevent CustomPass using camera depth if the injection point is set to AfterPostprocess. Show a warning in the CustomPass inspector if this configuration is present. (UUM-79283)
+    - iOS: Fixed warning in the Xcode console when keyboard is open and changing orientation on iPad. (UUM-95530)
+    - Kernel: JobHandle.Complete() goes to sleep sooner when there is no work to steal. This allows the waiting thread to give up the CPU core sooner to allow another thread to perform work or to preserve battery life. (UUM-83082)
+    - Package Manager: Fixed an issue where installing a git package using Git LFS would not work with Git LFS 3.6.0 and higher. (UUM-91342)
+    - Package Manager: Fixed the issue where Assets cannot be imported when the Asset package contains project settings and all project settings are unchanged. (UUM-100078)
+    - Package Manager: Fixed the issue where extension buttons are not consistently shown. (UUM-84399)
+    - Package Manager: UnityEditor.PackageManager.UI.Sample.FindByPackage will no longer throw an exception when passed an unknown package. (UUM-86326)
+    - Player: Fixed an issue where the startup logs would be missing from the normal log file (or standard output) when the "Capture Startup Logs" player setting was enabled. (UUM-102670)
+    - Terrain: Ensure that TreeRenderer position is initialized when creating Terrain camera render data. (UUM-104978)
+    - Text: Fixed IME issue. (UUM-100552)
+    - Text: Improved WeakReference handling to protect against the (extremely unlikely, but still possible) event that the GC runs between checking that the handle is alive and dereferencing it. (UUM-86325)
+    - Text: Removed redundant check for null SpriteCharacters when generating text meshes. (UUM-86328)
+    - UI Elements: Fixed the items not expanding on creation when autoExpand is set to true. (UUM-107968)
+    - UI Toolkit: Batched the scroll events on fixed height virtualizations for ListView and TreeView controls. (UUM-55912)
+    - UI Toolkit: Fixed "UnityException: Load can only be called from the main thread" when generating the text meshes. (UUM-91740)
+    - UI Toolkit: Fixed incorrect reporting of 'Out of root' elements in the UI Layout Debugger. (UUM-86327)
+    - UI Toolkit: Fixed the ListView content disappearing when removing items outside of the offset. (UUM-104445)
+    - UI Toolkit: Fixed the threshold on drag when near the end of the ListView. (UUM-44911)
+    - UI Toolkit: Fixed USS selector is reparented when clicking on stylesheet after applying to element. (UUM-104962)
+    - Undo System: Keep undo stack in sync during project load by pausing serialization. (UUM-97070)
+    - URP: Fixed IndexOutOfRangeException by allocating size with respect to visible light's length. (UUM-102022)
+    - URP: Fixed unclear warnings when user creates more lights than the light limit when using Deferred rendering path. (UUM-102023)
+    - VFX Graph: Fixed matrix 4x4 was overflowing when displayed in a context block. (UUM-102349)
+    - VFX Graph: Fixed rendering of volumetric output connected to particle strips. (UUM-102654)
+    - VFX Graph: Fixed VFX command culling when using Custom Passes in HDRP. (UUM-83094)
+    - Video: Fixed double invocation of onLoopPoint callback when skipOnDrop is false and codec is decoding to memory. (UUM-97953)
+    Package changes in 6000.0.51f1
+    Packages updated
+    - com.unity.visualscripting: 1.9.6 to 1.9.7
+    - com.unity.netcode.gameobjects: 1.12.0 to 1.13.0
+    - com.unity.ai.navigation: 2.0.7 to 2.0.8
+    - com.unity.polyspatial: 2.2.4 to 2.3.1
+    - com.unity.polyspatial.visionos: 2.2.4 to 2.3.1
+    - com.unity.polyspatial.xr: 2.2.4 to 2.3.1
+    - com.unity.polyspatial.extensions: 2.2.4 to 2.3.1
+    - com.unity.xr.visionos: 2.2.4 to 2.3.1
+ReleaseTime: 2025-06-11T09:43:13.5700000Z

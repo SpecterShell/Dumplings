@@ -1,0 +1,172 @@
+Version: 3.100.0
+Installer:
+- InstallerUrl: https://logtalk.org/files/logtalk-3.100.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Logtalk compiler and runtime
+    - ADDED: New logtalk::halt/0-1 public predicates and logtalk::halt_hook/2 user-defined hook predicate.
+    Documentation
+    - ADDED: Handbook libraries overview grouped by scope.
+    - FIXED: Sequence non-terminals in the Handbook grammar section.
+    Library
+    - RENAMED: The ccsds library to ccsds_packets for consistent naming after the new CCSDS libraries added in this release.
+    - RENAMED: The classifier_protocols library to classification_protocols for more consistent naming with other machine learning libraries.
+    - RENAMED: The ada_boost, c45, knn, naive_bayes, nearest_centroid, and random_forest libraries to adaptive_boosting_classifier, c45_classifier, knn_classifier, naive_bayes_classifier, nearest_centroid_classifier, and random_forest_classifier, respectively.
+    - RENAMED: The export predicates for all classifier libraries to export_to_clauses/4 and export_to_file/4 for uniform naming across all machine learning libraries.
+    - CHANGED: The isolation_forest_anomaly_detector library to depend on the new anomaly_detection_protocols library instead of classification_protocols (functionality preserved but four export and print predicates were renamed with this change).
+    - CHANGED: The geospatial library geographic coordinate representation from (Latitude,Longitude) pairs to geographic(Latitude,Longitude) terms.
+    - CHANGED: The repetition-allowed ordered-selection predicates were moved from the permutations library to the new arrangements library. The former cartesian_product/3 predicate is replaced by the arrangements/3-4 and arrangement/3-4 predicates.
+    - CHANGED: The derangements predicates were moved from the permutations library to the new derangements library.
+    - CHANGED: The repetition-allowed unordered-selection functionality was moved from the combinations library to the new multisets library. The former combinations_with_replacement/3-4, combination_with_replacement/3-4, and count_combinations_with_replacement/3 predicates are replaced by the multisets/3-4, multiset/3-4, and count_multisets/3 predicates.
+    - ADDED: New arrangements library implementing predicates for generating, counting, indexing, and randomly selecting ordered selections with replacement.
+    - ADDED: New cartesian_products library implementing predicates for generating, counting, indexing, lexicographic stepping, and randomly selecting Cartesian-product tuples, including distinct-value variants.
+    - ADDED: New derangements library implementing predicates for generating, counting, indexing, and randomly selecting fixed-point-free permutations.
+    - ADDED: New multisets library implementing predicates for generating, counting, indexing, and randomly selecting unordered selections with replacement.
+    - ADDED: New partitions library implementing predicates for generating, counting, indexing, random selection, lexicographic stepping, and deduplicating set partitions of lists, including exact-block counts.
+    - ADDED: Predicates nth_combination/5, combination_index/5, count_distinct_combinations/3, nth_distinct_combination/4, distinct_combination_index/4, random_distinct_combination/3, sample_combinations/4, sample_distinct_combinations/4, next_combination/3, and previous_combination/3 to the combinations library.
+    - ADDED: Predicates nth_permutation/4, permutation_index/4, count_distinct_permutations/2, nth_distinct_permutation/3, distinct_permutation_index/3, random_distinct_permutation/2, sample_permutations/3, and sample_distinct_permutations/3 to the permutations library.
+    - ADDED: New linear_algebra library implementing predicates for numeric vectors and matrices.
+    - ADDED: Predicates check_classifier/1 and valid_classifier/1 to the classification_protocols library. Also added protected predicates for training dataset validation used by the classifier libraries.
+    - ADDED: New clustering_protocols library providing protocols and datasets to support the implementation of clustering libraries.
+    - ADDED: New agglomerative_clusterer library implementing bottom-up agglomerative clustering for continuous datasets.
+    - ADDED: New dbscan_clusterer library implementing deterministic density-based clustering for continuous datasets using epsilon neighborhoods and minimum point counts.
+    - ADDED: New gaussian_mixture_clusterer library implementing Gaussian mixture model clustering for continuous datasets using deterministic expectation-maximization with diagonal covariance matrices.
+    - ADDED: New hdbscan_clusterer library implementing a simplified deterministic HDBSCAN-style clusterer for continuous datasets.
+    - ADDED: New hierarchical_clustering library implementing full hierarchical clustering for continuous datasets with deterministic dendrogram cutting.
+    - ADDED: New kcenters_clusterer library implementing k-centers clustering for continuous datasets using a deterministic farthest-first center selection heuristic.
+    - ADDED: New kmeans_clusterer library implementing k-means clustering for continuous datasets using Lloyd's algorithm with deterministic initialization.
+    - ADDED: New kmedians_clusterer library implementing k-medians clustering for continuous datasets using iterative median updates.
+    - ADDED: New kmedoids_clusterer library implementing k-medoids clustering for continuous datasets using iterative medoid updates.
+    - ADDED: New kmodes_clusterer library implementing k-modes clustering for discrete datasets using iterative mode updates.
+    - ADDED: New kprototypes_clusterer library implementing k-prototypes clustering for mixed datasets with continuous and discrete attributes.
+    - ADDED: New optics_clusterer library implementing deterministic OPTICS clustering for continuous datasets with epsilon-based cluster extraction.
+    - ADDED: New pattern_mining_protocols, frequent_pattern_mining_protocols, and sequential_pattern_mining_protocols libraries with protocols and datasets for use in the implementation of machine learning pattern-finding algorithms.
+    - ADDED: New apriori_pattern_miner library implementing Apriori frequent itemset mining for transaction datasets.
+    - ADDED: New eclat_pattern_miner library implementing Eclat frequent itemset mining for transaction datasets.
+    - ADDED: New fp_growth_pattern_miner library implementing FP-growth frequent itemset mining for transaction datasets.
+    - ADDED: New prefix_span_pattern_miner library implementing PrefixSpan sequential pattern mining for sequence datasets.
+    - ADDED: New clo_span_pattern_miner library implementing CloSpan sequential pattern mining for sequence datasets.
+    - ADDED: New gsp_pattern_miner library implementing GSP sequential pattern mining for sequence datasets.
+    - ADDED: New spade_pattern_miner library implementing SPADE sequential pattern mining for sequence datasets.
+    - ADDED: New regression_protocols library with protocols and datasets for use in the implementation of machine learning regression algorithms.
+    - ADDED: New bayesian_ridge_regression library implementing Bayesian ridge regression for continuous and mixed-feature datasets using evidence maximization for the coefficient and noise precisions plus posterior predictive uncertainty estimates.
+    - ADDED: New gradient_boosting_regression library implementing gradient boosting regression using regression trees as additive base learners fitted to successive residuals.
+    - ADDED: New gaussian_process_regression library implementing exact Gaussian process regression for continuous and mixed-feature datasets using a squared-exponential covariance kernel, deterministic log-marginal-likelihood hyperparameter optimization, and predictive uncertainty estimates.
+    - ADDED: New knn_regression library implementing k-nearest neighbors regression with multiple distance metrics, weighting schemes, optional feature scaling, and mixed-feature support.
+    - ADDED: New linear_regression library implementing linear regression for continuous and mixed-feature datasets using a direct ordinary least-squares solve with pivoted orthogonal rank handling.
+    - ADDED: New ridge_regression library implementing ridge regression for continuous and mixed-feature datasets using a direct weighted linear-system solve with scale-aware L2 regularization.
+    - ADDED: New lasso_regression library implementing lasso regression for continuous and mixed-feature datasets using coordinate descent with L1 regularization.
+    - ADDED: New elastic_net_regression library implementing elastic net regression for continuous and mixed-feature datasets using coordinate descent with mixed L1/L2 regularization.
+    - ADDED: New regression_tree library implementing regression trees for continuous and mixed-feature datasets using recursive variance-reduction splits.
+    - ADDED: New random_forest_regression library implementing random forest regression using regression trees trained on bootstrap samples and random feature subsets.
+    - ADDED: New dimension_reduction_protocols library with protocols and datasets for use in the implementation of machine learning dimension reduction algorithms.
+    - ADDED: New ica_projection library implementing Independent Component Analysis reducer for continuous datasets.
+    - ADDED: New kernel_pca_projection library implementing Kernel Principal Component Analysis reducer for continuous datasets.
+    - ADDED: New lda_projection library implementing Linear Discriminant Analysis projection for labeled continuous datasets.
+    - ADDED: New nmf_projection library implementing Non-negative Matrix Factorization dimension reduction for non-negative continuous datasets.
+    - ADDED: New pca_projection library implementing Principal Component Analysis dimension reduction for continuous datasets.
+    - ADDED: New pls_projection library implementing Partial Least Squares projection for target-valued continuous datasets.
+    - ADDED: New probabilistic_pca_projection library implementing Probabilistic Principal Component Analysis reducer for continuous datasets.
+    - ADDED: New random_projection library implementing seeded random projection for continuous datasets.
+    - ADDED: New truncated_svd_projection library implementing Truncated Singular Value Decomposition dimension reduction for continuous datasets.
+    - ADDED: New anomaly_detection_protocols library defining common protocols, benchmark datasets, and smoke tests for anomaly-detection algorithms.
+    - ADDED: New cusum_anomaly_detector library implementing a configurable CUSUM (Cumulative Sum Control Chart) anomaly detector for continuous sequence-like datasets.
+    - ADDED: New ewma_anomaly_detector library implementing a configurable EWMA (Exponentially Weighted Moving Average) anomaly detector for continuous sequence-like datasets.
+    - ADDED: New knn_distance_anomaly_detector library implementing a portable k-nearest-neighbor distance anomaly detector with mixed-feature and missing-value support.
+    - ADDED: New lof_anomaly_detector library implementing a portable Local Outlier Factor anomaly detector with mixed-feature and missing-value support.
+    - ADDED: New z_score_anomaly_detector library implementing a configurable statistical Z-score anomaly detector for continuous datasets.
+    - ADDED: New modified_z_score_anomaly_detector library implementing a configurable statistical modified Z-score anomaly detector for continuous datasets.
+    - ADDED: New iqr_anomaly_detector library implementing a configurable statistical interquartile-range anomaly detector for continuous datasets.
+    - ADDED: New ranking_protocols library defining common protocols, shared test datasets, and smoke tests for machine learning ranking algorithms.
+    - ADDED: New borda_ranker library implementing grouped relevance ranking using the Borda count method.
+    - ADDED: New bradley_terry_ranker library implementing pairwise preference ranking using the Bradley-Terry model.
+    - ADDED: New colley_ranker library implementing pairwise preference ranking using the Colley matrix method.
+    - ADDED: New copeland_ranker library implementing pairwise preference ranking using Copeland scores.
+    - ADDED: New elo_ranker library implementing pairwise preference ranking using deterministic batch Elo rating updates.
+    - ADDED: New glicko2_ranker library implementing pairwise preference ranking using a deterministic single-period Glicko-2 update over aggregated pairwise outcomes.
+    - ADDED: New glicko2_periodic_ranker library implementing full multi-period Glicko-2 updates over temporal pairwise game datasets with explicit rating periods and support for draws and inactivity.
+    - ADDED: New hodge_rank library implementing pairwise measurement ranking using a weighted graph-Laplacian least-squares fit with explicit edge residual diagnostics.
+    - ADDED: New kemeny_young_ranker library implementing exact pairwise preference consensus ranking using Kemeny-Young optimization with deterministic optimal-order tie breaking.
+    - ADDED: New massey_ranker library implementing pairwise preference ranking using the Massey matrix method.
+    - ADDED: New plackett_luce_ranker library implementing grouped ranking using a tie-aware top-choice Plackett-Luce model.
+    - ADDED: New plackett_luce_last_ranker library implementing grouped ranking using a tie-aware Plackett-Luce-last model.
+    - ADDED: New rank_centrality library implementing pairwise preference ranking using the Rank Centrality method.
+    - ADDED: New regularized_bradley_terry_ranker library implementing pairwise preference ranking using a regularized Bradley-Terry model.
+    - ADDED: New schulze_ranker library implementing pairwise preference ranking using the Schulze strongest-path method.
+    - ADDED: New ranked_pairs library implementing pairwise preference ranking using the Ranked Pairs lock-graph method.
+    - ADDED: New thurstone_mosteller_ranker library implementing pairwise preference ranking using a deterministic Thurstone-Mosteller Case V fit.
+    - ADDED: New logistic_regression_classifier library implementing logistic regression for binary and multiclass classification on continuous and mixed-feature datasets using batch gradient descent.
+    - ADDED: New linear_svm_classifier library implementing linear support vector machine classification for binary and multiclass continuous and mixed-feature datasets using one-vs-rest hinge-loss training.
+    - ADDED: New gradient_boosting_classifier library implementing gradient boosting classification using regression trees as additive base learners fitted to softmax residuals.
+    - ADDED: New kernel_svm_classifier library implementing kernel support vector machine classification for binary and multiclass continuous and mixed-feature datasets using one-vs-rest dual training.
+    - ADDED: New lda_classifier library implementing Linear Discriminant Analysis classification for labeled continuous datasets using pooled covariance estimates and regularized discriminant scores.
+    - ADDED: New qda_classifier library implementing Quadratic Discriminant Analysis classification for labeled continuous datasets using class-specific covariance estimates and regularized discriminant scores.
+    - ADDED: New sgd_classifier library implementing stochastic gradient descent classification for binary and multiclass continuous and mixed-feature datasets using one-vs-rest linear models with configurable losses.
+    - ADDED: New ccsds_frames, ccsds_link_profiles, ccsds_packet_services, ccsds_packetization, ccsds_tc_services, ccsds_time_codes, and ccsds_time_fields libraries.
+    - ADDED: New ieee_754 library supporting parsing and generating IEEE 754 floating-point encodings.
+    - ADDED: New hmac library providing a portable implementation of HMAC (Keyed-Hashing for Message Authentication) as specified in RFC 2104.
+    - ADDED: New message_pack library implementing the MessagePack binary data format.
+    - ADDED: New crs_projections library implementing common coordinate reference systems and transformations for 2D and 3D WGS84 geodetic coordinates, Web Mercator, World Mercator, ECEF, local ENU tangent-plane, Lambert azimuthal equal-area, and UTM.
+    - ADDED: New geojson library implementing the GeoJSON (RFC 7946) standard.
+    - ADDED: New nmea library implementing parsing of NMEA 0183 sentences from GPS/GNSS receivers with typed semantic decoding for common sentence types.
+    - ADDED: New tle_orbits library implementing parsing of Two-Line Element sets plus approximate portable orbit propagation with low-order B* drag handling, near-earth short-period corrections, automatic deep-space branching, a separate deep-space approximation, propagated state and velocity queries, a two-body baseline model, and ground-track generation with ECI, ECEF, and WGS84 3D outputs.
+    - ADDED: New geohash library implementing GeoHash encoding and decoding, adjacency and neighborhood queries, fixed and adaptive bounding-box covering, hierarchy navigation and compression, integer-backed and bit-precision representations, and polygon and polyline covering predicates.
+    - ADDED: New iso_639 library implementing the ISO 639 standard for language codes. Requires a backend supporting Unicode and the encoding/1 directive.
+    - ADDED: New iso_3166 library implementing the ISO 3166 standard for country codes. Requires a backend supporting Unicode and the encoding/1 directive.
+    - ADDED: New iso_4217 library implementing the ISO 4217 standard for currency codes. Requires a backend supporting Unicode and the encoding/1 directive.
+    - ADDED: New iso_9362 library implementing the ISO 9362 standard for BIC/SWIFT codes. Requires a backend supporting Unicode and the encoding/1 directive.
+    - ADDED: New iso_13616 library implementing the ISO 13616 standard for IBAN strings. Requires a backend supporting Unicode and the encoding/1 directive.
+    - ADDED: New json_pointer library implementing the RFC 6901 standard.
+    - ADDED: New wkt_wkb library implementing the Well-Known Text and Well-Known Binary geometry interchange format.
+    - ADDED: Support to the hashes library for computing keyed digests and access metadata for fixed-size cryptographic hash objects that can be safely used with HMAC.
+    - ADDED: Support for diagnostics and classifier metadata to the classifier libraries, allowing more detailed exports.
+    - ADDED: New skip_code_coverage.lgt file with a hack for running the Logtalk distribution tests in a CI/CD pipeline without generating code coverage stats for faster run times.
+    - ADDED: New numberlist::minkowski_distance/4 predicate to the types library.
+    - ADDED: New bell/2, catalan/2, fibonacci/2, lucas/2, multinomial/2, falling_factorial/3, rising_factorial/3, partition_number/2, stirling_first/3, stirling_second/3, and subfactorial/2 predicates to the types library natural object.
+    - ADDED: New predicates bbox_overlaps/2, bbox_intersects_polygon/2, bbox_contains_polygon/2, and bbox_intersects_polyline/2 to the geospatial library. Also extended the bbox_contains/2 predicate to support bounding-box containment checks.
+    - ADDED: New intervals library functionality implementing James F. Allen interval relations over concrete intervals, relation algebra and canonical relation-set predicates, and symbolic interval constraint networks with path-consistency propagation, explanations, and inspection/comparison predicates.
+    - IMPROVED: Code refactoring of the classifier libraries by introducing a new classifier_common category with shared code.
+    - IMPROVED: The numberlist::softmax/2-3 library predicates by making their implementation numerically stable.
+    - IMPROVED: Rewritten two amqp library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten avro library auxiliary non-terminal to be tail-recursive.
+    - IMPROVED: Rewritten base58 library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten two hashes library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten three json_ld library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten json_schema library auxiliary predicates to be tail-recursive.
+    - IMPROVED: The pairing_heap(_Order_)::top_next/5 library predicate to use a tail-recursive auxiliary predicate.
+    - IMPROVED: Rewritten two c45_classifier library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten two graphs library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten base58 library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten mime_types library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten naive_bayes_classifier library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten nearest_centroid_classifier library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten toml library auxiliary predicates to be tail-recursive.
+    - IMPROVED: Rewritten toon library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten tzif library auxiliary predicate to be tail-recursive.
+    - IMPROVED: Rewritten url library auxiliary non-terminal to be tail-recursive.
+    - IMPROVED: Rewritten two yaml library auxiliary predicates to be tail-recursive.
+    - UPDATED: The json_schema library to reuse the new json_pointer library.
+    - UPDATED: The avro, cbor, and protobuf libraries to reuse the new ieee_754 library.
+    - FIXED: The linda, tzif, ulid, url, and yaml libraries to compile all their entities in optimal mode.
+    - FIXED: Deleted dead code in the linda, meta_compiler, sockets, toml, and validations libraries.
+    - FIXED: The numberlist object average/2, median/2, and softmax/2-3 predicate to workaround SWI-Prolog returning integers for float operations.
+    Tools
+    - ADDED: New option, -z, to the logtalk_doclet and logtalk_tester Bash and PowerShell scripts to make a sound on completion.
+    - IMPROVED: Rewritten sarif tool auxiliary predicate to be tail-recursive.
+    - FIXED: Deleted dead code in the dead_code_scanner tool.
+    - FIXED: The dead_code_scanner tool accidental requirement for backends supporting the discontiguous/1 directive.
+    - FIXED: The dead_code_scanner tool warning message for likely unused predicates/non-terminals breaking VSCode code actions.
+    Examples
+    - ADDED: New eclipse_tests_dsl example illustrating how to run tests written using the ECLiPSE tests dialect using the lgtunit tool.
+    - UPDATED: The philosophers multi-threading example tests for faster runtime.
+    - FIXED: The neo4j example classpath scripts and notes to only load the client-side Neo4j Java driver JARs, fixing test failures with recent Neo4j releases.
+    IDEs, text editors, and syntax highlighters support
+    - ADDED: Syntax highlight support for the Fresh editor.
+    - FIXED: The syntax highlight test files contained an incorrect example of the Logtalk use_module/1 directive.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#31000---may-14-2026
+ReleaseTime: 2026-05-14

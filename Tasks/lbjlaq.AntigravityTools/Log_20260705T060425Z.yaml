@@ -1,0 +1,20 @@
+Version: 4.3.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.3.2/Antigravity.Tools_4.3.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.3.2/Antigravity.Tools_4.3.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心修复] 解决由于代理强制重写命令行工具名为 local_shell_call 导致工具调用失败的 Bug (Dynamic Shell Tool Resolution):
+      - 动态解析机制：取消了流式与非流式响应中将所有 shell / bash / local_shell 工具名称强制改写为 local_shell_call 的硬编码限制。现在，代理层会根据客户端在当前请求中实际声明 of 工具列表（如 bash 或 shell）动态匹配并映射。
+      - 向后兼容性：若客户端当前请求未携带任何工具信息，则默认回退到原有名称 local_shell_call，保证旧版客户端的平滑兼容。
+      - 相关 Issue: 详见 Issue #3224
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.3.2
+ReleaseTime: 2026-07-05T03:20:02.0000000Z

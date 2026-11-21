@@ -1,0 +1,63 @@
+Version: 26.1.1
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.1/dbeaver-ce-26.1.1-windows-x86_64.exe
+  ProductCode: DBeaver (current user)
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.1/dbeaver-ce-26.1.1-windows-x86_64.exe
+  ProductCode: DBeaver
+- Architecture: arm64
+  Scope: user
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.1/dbeaver-ce-26.1.1-windows-aarch64.exe
+  ProductCode: DBeaver (current user)
+- Architecture: arm64
+  Scope: machine
+  InstallerUrl: https://github.com/dbeaver/dbeaver/releases/download/26.1.1/dbeaver-ce-26.1.1-windows-aarch64.exe
+  ProductCode: DBeaver
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SQL Editor:
+        - Fixed autocomplete after SELECT with table with alias
+        - Fixed column highlighting with typecasts
+        - Fixed single/multiple tab mode toggle state when several editors are opened
+        - Fixed an issue where SQL templates showed an incorrect list of columns
+        - Disabled spell checking for annotations
+        - Added autocomplete suggestions for dialect-specific global variables, such as SYSDATE, SYSTIMESTAMP, current_date, and current_timestamp (thanks to @alonfaraj)
+    - AI Assistant: Fixed prompt of AI command results
+    - Data Editor:
+        - Added the ability to save the current filter as the default and reset it
+        - Fixed total row count calculation in the toolbar (thanks to @odegroot1234)
+    - Data Transfer:
+        - Fixed CSV import with multi-character delimiters, quotes, and escape values
+        - Added XML escaping for JSON and JSONB columns when exporting data to DBUnit format
+    - Database Tasks: Fixed task failures when using newly created or recreated database objects
+    - Navigator:
+        - Fixed schema filter dialog opening in Simple view mode(thanks to @xingxing21)
+        - Fixed the delete objects dialog layout for large database selections
+    - New driver: Added connector for Apache Doris(thanks to @xylaaaaa)
+    - Security:
+        - Fixed the high vulnerability (CVE-2026-44249) in the netty-handler library. The netty-bom library was updated to version 4.2.15.
+    - General:
+        - Application was migrated to Eclipse 2026-05
+        - Tycho library was updated to version 5.0.3
+    - Databases:
+        - CockroachDB: Fixed SSL connection issues
+        - CUBRID: Fixed table list opening when connecting with a generic JDBC driver (thanks to @Srltas)
+        - Databricks driver was updated to version 3.4.1
+        - Firebird: Fixed SQL injection vulnerabilities (thanks to @fdcastel)
+        - Oracle:
+            - Added an option to show column comments in the data grid (thanks to @EastLord)
+            - Fixed the ability to CREATE VIEW statements ending with CASE...END (thanks to @a3894281)
+            - Added details into NO_DATA_FOUND error message (thanks to @mgustimz)
+        - Redshift: Improved performance for queries with many columns by reducing unnecessary metadata calls during result set loading
+        - Snowflake: Fixed an issue where the connection failed due to an incorrect URL template
+    - Localization:
+        - German localization was improved (thanks to @polluks)
+        - Fixed pluralization in the auto-refresh interval label in the Data Editor (thanks to @Jashan66)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/dbeaver/dbeaver/releases/tag/26.1.1
+ReleaseTime: 2026-06-21T18:17:39.0000000Z

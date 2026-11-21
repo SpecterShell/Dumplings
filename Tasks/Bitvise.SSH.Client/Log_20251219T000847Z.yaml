@@ -1,0 +1,18 @@
+Version: "9.53"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-953.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9-5#953
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - General:
+      - Improved consistency of window titles.
+    - Graphical terminal:
+      - Version 9.51 introduced section-based text rendering to accommodate font ligatures. This can cause problems if Unicode characters are included in a sequence that's rendered together. All Unicode characters outside of the ASCII range are now again rendered per-character.
+        As a consequence, text sequences such as Hebrew will once again render left-to-right, not right-to-left. This is necessary for cursor behavior to match what is displayed when editing text in the terminal.
+      - The graphical terminal now supports Unicode non-spacing marks as long as they can be folded onto the preceding character. For example, the sequence "A" U+0302 U+0303 may now be rendered as the single character "Ẫ" (U+1EAA).
+        If non-spacing marks cannot be folded onto the preceding character, they are still rendered separately. For example, the partially invalid sequence "A" U+0303 U+0302 is now rendered as "Ã" (U+00C3), followed by a separate U+0302. Exact normalization behavior depends on the version of Windows.
+ReleaseTime: 2025-12-18

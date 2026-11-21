@@ -1,50 +1,69 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&product=Foxit-Enterprise-Reader&formId=pdf-reader-enterprise-register'
-
-# Version
-$Task.CurrentState.Version = $Version = $Object1.package_info.version[0]
+$Object1 = Invoke-RestMethod -Uri 'https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&formId=download-reader'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down
-}
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerType = 'inno'
-  InstallerUrl  = 'https://cdn01.foxitsoftware.com' + $Object1.package_info.down.Replace('.exe', '_Prom.exe')
+  InstallerUrl  = Join-Uri 'https://cdn01.foxitsoftware.com' $Object1.package_info.down.Replace('_Prom', '')
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.package_info.release, 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact($Object1.package_info.release, 'MM/dd/yy', $null).ToString('yyyy-MM-dd')
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    $InstallerFileExtracted = New-TempFolder
+    7z.exe e -aoa -ba -bd -y '-t#' -o"${InstallerFileExtracted}" $InstallerFile '2.msi' '3.msp' | Out-Host
+    $InstallerFile2 = Join-Path $InstallerFileExtracted '2.msi'
+    $InstallerFile3 = Join-Path $InstallerFileExtracted '3.msp'
+    $Params = @{}
+    if (Test-Path -Path $InstallerFile3) { $Params['PatchPath'] = $InstallerFile3 }
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile2 | Read-ProductVersionFromMsi @Params
+    # AppsAndFeaturesEntries + ProductCode
+    $this.CurrentState.Installer[0]['AppsAndFeaturesEntries'] = @(
+      [ordered]@{
+        ProductCode   = $this.CurrentState.Installer[0]['ProductCode'] = $InstallerFile2 | Read-ProductCodeFromMsi @Params
+        UpgradeCode   = $InstallerFile2 | Read-UpgradeCodeFromMsi @Params
+        InstallerType = 'wix'
+      }
+    )
+    Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
 
     try {
-      # ReleaseNotes (en-US)
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='version_${Version}_detail']")
+      $Object2 = Invoke-WebRequest -Uri 'https://www.foxit.com/pdf-reader/version-history.html' | ConvertFrom-Html
+
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@id='Version_$($this.CurrentState.RealVersion)_detail']")
       if ($ReleaseNotesNode) {
-        $Task.CurrentState.Locale += [ordered]@{
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNode.SelectNodes('./*[position()>2]') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
-
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

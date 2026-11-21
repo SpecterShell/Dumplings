@@ -1,0 +1,18 @@
+Version: 3.0.4
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/norsehorse-dev/PGPonyDesktop/releases/download/v3.0.4/PGPony-windows.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    PGPony Desktop 3.0.4
+    Fixed
+    - Key Detail showed the wrong algorithm on the primary key row of a post-quantum key. For a key with an ML-KEM encryption subkey, the row named the whole key's type, such as ML-KEM-1024+X448 (v6), although the primary is a classical key such as Ed25519. It now shows the primary key's own algorithm. Only the label was wrong; the keys themselves were fine.
+    - A key's stored copy and its export could differ in their Base64 even though they hold the same packets. PGPony kept some packets in the legacy OpenPGP header format, which RFC 9580 says new data should not use, while exports used the current format. Keys are now stored in the current format, and keys saved by earlier versions are converted the first time they are opened. Only the packet headers change: fingerprints, signatures and key material stay byte for byte the same.
+    Reported by email.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/norsehorse-dev/PGPonyDesktop/releases/tag/v3.0.4
+ReleaseTime: 2026-10-30T21:41:34.0000000Z

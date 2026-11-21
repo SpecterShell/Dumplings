@@ -1,0 +1,77 @@
+Version: 0.16.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.16.1/Agentero_0.16.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.16.1/Agentero_0.16.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds the Zen multi-conversation workspace, PDF underlines, and a dictionary mode for short selections, along with the keyless Index-Translate service and Git HTTP / custom-certificate sync. The matching CLI is installed at startup, translation checks layout completeness first, and tables of contents, formulas, and abstracts reflow more reliably. Google Translate and DeepLX have been removed.
+    Features
+    - Zen multi-conversation workspace: Opening Zen from the Agent node keeps multiple conversations in parallel, grouped by harness. Open sessions and history share one list, and background sessions keep streaming independently. (65f6ae873 by @Phil-Fan; 5b2a16685 by @Phil-Fan; 958a0258a by @Phil-Fan)
+    - PDF underline annotations: Underline shares the five-color palette with highlight, and a right-click on a swatch flips that color between the two shapes. Exported PDFs keep the native underline type, and Option+digit forces underline from the selection palette. (#1083 by @Phil-Fan)
+    - Selection dictionary mode: Selections of one to three words can switch to a dictionary definition instead of a full-sentence translation. (ee86d15a7 by @Phil-Fan; 71af8635e by @Phil-Fan)
+    - Index-Translate free translation: A keyless Index-Translate public API is now available, and Bilibili translation streams into the selection card. (2023b03f7 by @Phil-Fan; 4e724d1a2 by @Phil-Fan)
+    - Git HTTP and custom certificates: Settings and the CLI can opt in to a plain HTTP remote or trust a PEM certificate for self-signed HTTPS. Sync failures keep the git error and tell you to store credentials or a certificate first. (#1057 by @JiaheChen2002)
+    - Automatic CLI install at startup: Opening the main window downloads and installs the matching agentero command. An explicit uninstall is remembered until you install it again from Settings, and failure toasts distinguish install from update failures. (#976 by @JiaheChen2002)
+    - Layout completeness before translation: Missing layout pages or an untrusted text layer produce a warning with the affected page ranges, and you can reparse before translating. When auto-translate is on, a reparse is followed by translation. (#1105 by @ffy6511)
+    - Smart-highlight concurrency and timeout: Settings now expose smart-highlight concurrency and timeout. Each request stays within 64 questions so the Decision API does not fail over the limit. (#1101 by @JiaheChen2002)
+    Improvements
+    - Kept background tasks: Completed, failed, and cancelled background tasks stay in the list until you clear them. The list still shows the latest six entries and is not restored after a restart. (aa39a6aae by @ffy6511)
+    - Complete-translation job name: A new job started from missing segments is labeled "Complete translation", so it is not confused with an in-flight full translation. (b6727ff85 by @ffy6511)
+    - Faster Zen history loading: Initialized agent connections are reused and the rail session list is cached, so opening history no longer cold-starts a process every time. (6e3dae68d by @Phil-Fan; 64beb4bee by @Phil-Fan)
+    Fixes
+    - Table-of-contents layout: Reflow keeps table-of-contents rows, right-aligns chapter page numbers, and adds leaders only to sub-entries. (c73996148 by @ffy6511)
+    - Inline formula placement: Formulas are anchored by their full bounds, so brackets, radicals, and fractions stay on their source line. (024ed930e by @ffy6511; 20834d7c6 by @ffy6511)
+    - Translation preview memory: Large-page previews stay within the wasm heap budget and retry at a lower scale, so long translations are not cut off by allocation failures. (4837320b5 by @ffy6511)
+    - Nested formula protection: Formulas, LaTeX, citations, and links are replaced in one pass, so markers no longer wrap each other and fail to restore. (#1111 by @ffy6511)
+    - Low-confidence layout skipping body text: Low-confidence algorithm or footnote boxes no longer exclude body text from translation. (#1110 by @ffy6511)
+    - Abstract and later-page translation: Abstracts and later-page body text are no longer mistaken for first-page metadata and left untranslated. (#1114 by @ffy6511)
+    - Windows paper parse: Release CLI archives ship the matching PDFium library, so paper parse on Windows no longer fails because the library cannot be loaded. (#1025 by @JiaheChen2002)
+    - Connector port recovery: An occupied listen port is retried every five seconds, and Settings shows a persistent, localized error with a manual retry. (#959 by @Phil-Fan)
+    - Empty history sessions: Opening a Zen history session no longer lands on an empty chat; the restore skeleton is shown until the transcript loads. (43f20879f by @Phil-Fan; 44ce1bb8a by @Phil-Fan)
+    - Selection toolbar jump: Hovering the selection palette no longer shifts or jitters the toolbar actions. (63c520236 by @Phil-Fan; 7f5974268 by @Phil-Fan)
+    Breaking Changes
+    - Google Translate and DeepLX removed: These translation providers have been removed from the app. If you used them, switch to another configured service or to the new Index-Translate provider. (4bd955a76 by @Phil-Fan)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.16.0...v0.16.1
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新加入 Zen 多会话工作区、PDF 下划线和划词词典模式，并新增 Index-Translate 免费翻译，以及 Git 的 HTTP / 自签证书同步。启动时会自动安装同版本 CLI，翻译前会检查版面是否完整，目录、公式和摘要的排版也更稳定。Google 翻译和 DeepLX 已移除。
+    新功能
+    - Zen 多会话工作区：从 Agent 节点打开 Zen 后，可以按助手并行保留多个会话。侧栏按助手分组，当前会话与历史列在一起；后台会话会继续输出，互不影响。（65f6ae873 by @Phil-Fan；5b2a16685 by @Phil-Fan；958a0258a by @Phil-Fan）
+    - PDF 下划线标注：下划线与高亮共用五色色板，右键色块即可为该颜色在高亮和下划线之间切换。导出保留原生下划线类型；在划词色板上可用 Option+数字强制下划线。（#1083 by @Phil-Fan）
+    - 划词词典模式：选中 1 到 3 个词时，可以切换为词典释义，而不再按整句翻译。（ee86d15a7 by @Phil-Fan；71af8635e by @Phil-Fan）
+    - Index-Translate 免费翻译：新增无需密钥的 Index-Translate 公共接口；Bilibili 翻译结果会流式写入划词卡片。（2023b03f7 by @Phil-Fan；4e724d1a2 by @Phil-Fan）
+    - Git HTTP 与自签证书：设置和 CLI 支持显式启用明文 HTTP 远端，以及为自签 HTTPS 指定 PEM 证书。同步失败会保留 git 错误，并提示先保存凭证或证书。（#1057 by @JiaheChen2002）
+    - 启动时自动安装 CLI: 主窗口启动时会下载并安装同版本 agentero 命令。若你曾主动卸载，启动不会再装回去，可在设置中重新安装；失败时会说明是安装还是更新失败。（#976 by @JiaheChen2002）
+    - 翻译前检查版面完整性：版面缺页或文本层不可信时，会先提示受影响页码，并可选择重新解析后再翻译。若开启了自动翻译，重新解析完成后会接着翻译。（#1105 by @ffy6511）
+    - 智能高亮并发与超时：设置中可调整智能高亮的并发数和超时。单次请求会拆到 64 个问题以内，避免 Decision API 因超限失败。（#1101 by @JiaheChen2002）
+    改进
+    - 后台任务保留：已完成、失败或取消的后台任务会留在列表中，直到你清除。列表仍只显示最近六条，重启后不会恢复。（aa39a6aae by @ffy6511）
+    - 补全翻译任务名：从缺失片段发起的新任务会标为「补全翻译」，避免和正在进行的全文翻译混淆。（b6727ff85 by @ffy6511）
+    - Zen 历史加载：复用已初始化的助手连接，并缓存侧栏会话列表，避免每次打开历史都冷启动助手进程。（6e3dae68d by @Phil-Fan；64beb4bee by @Phil-Fan）
+    修复
+    - 目录排版：重排时保留目录行，章节页码右对齐，并只给下级条目加引导线。（c73996148 by @ffy6511）
+    - 行内公式位置：公式按完整边界锚定，括号、根号和分式不再把公式挤出原来的行。（024ed930e by @ffy6511；20834d7c6 by @ffy6511）
+    - 译文预览内存：大页预览会受 wasm 堆预算限制，必要时降低缩放，避免长文翻译因分配失败中断。（4837320b5 by @ffy6511）
+    - 嵌套公式保护：公式、LaTeX、引用和链接会一次性替换，避免标记互相包裹导致恢复失败。（#1111 by @ffy6511）
+    - 低置信度版面跳过正文：不再因低置信度的算法或脚注框把正文排除在翻译之外。（#1110 by @ffy6511）
+    - 摘要与后续页翻译：摘要和后续页的正文不再被误判为首页元数据而漏译。（#1114 by @ffy6511）
+    - Windows 论文解析：CLI 和发行包会附带匹配的 PDFium，Windows 上解析 PDF 不再因找不到库而失败。（#1025 by @JiaheChen2002）
+    - Connector 端口占用：监听端口被占用时每五秒自动重试，并在设置中显示可手动重试的持久错误状态。（#959 by @Phil-Fan）
+    - 历史会话打开为空：打开 Zen 历史会话时不再先进入空对话；加载完成前会显示恢复骨架。（43f20879f by @Phil-Fan；44ce1bb8a by @Phil-Fan）
+    - 划词工具栏跳动：悬停划词色板时，工具栏不再左右移动或跳动。（63c520236 by @Phil-Fan；7f5974268 by @Phil-Fan）
+    破坏性变更
+    - 移除 Google 翻译和 DeepLX: 这两个翻译源已从应用中移除。若你之前使用它们，请改用其他已配置的翻译服务，或新增的 Index-Translate。（4bd955a76 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.16.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.16.1
+ReleaseTime: 2026-11-14T10:19:54.0000000Z

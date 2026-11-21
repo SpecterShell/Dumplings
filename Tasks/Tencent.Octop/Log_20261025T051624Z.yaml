@@ -1,0 +1,71 @@
+Version: 1.0.3b1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.3b1/Octop-desktop-windows-amd64-1.0.3b1.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/TencentCloud/Octop/releases/download/v1.0.3b1/Octop-desktop-windows-arm64-1.0.3b1.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 建用户时可以同时创建一个默认专家。权限按页面 Tab 拆开，也可以按组折叠
+    - 用户组可以限制技能包、知识库、连接器、模型、存储和专家谁能看见
+    - 技能包可以共享，并用文件树编辑。创建专家、团队等资源时可以选头像
+    - 表单和对话可以让 AI 润色。搜索增加 DeepSeek 与元宝，模型支持 OpenAI Responses API
+    修复
+    - 云端协同共享后可以直接对话。回复进行中不会被刷新冲掉，也不能删掉这场会话
+    - 手机截图写到专家自己的工作区。只改定时任务文案时，间隔任务不再重新计时
+    - 浏览器工作台恢复中文输入。主动关怀等对话安静后再发
+    - 向导密码随数据目录迁移。Linux 桌面无边框窗口可以拖边缘调整大小
+    变更
+    - 云端协同默认打码对端地址和账号。共享来的资源在头像上做标记
+    - 支持子路径部署。飞牛原生包标记为 x86
+    安全
+    - 密钥改为加密保存，旧明文仍能读出。插件上传和解压限制了体积
+    What's Changed
+    - chore: sync main into develop after 1.0.2 by @github-actions[bot] in https://github.com/TencentCloud/Octop/pull/2186
+    - fix(infra): relocate wizard password file under OCTOP_HOME with legacy fallback (#2171) by @legend91019 in https://github.com/TencentCloud/Octop/pull/2174
+    - fix(dashboard): keep the media provider modal usable when a tool switch is off by @Jay0130-a in https://github.com/TencentCloud/Octop/pull/2105
+    - fix(portable): propagate bundled packages to Python subprocesses by @chqcjq in https://github.com/TencentCloud/Octop/pull/2044
+    - fix(desktop): add frameless edge and corner resize handles for Linux by @jayfeng7 in https://github.com/TencentCloud/Octop/pull/1657
+    - fix(plugins): bound uploads, downloads and ZIP extraction by @AbelTomato in https://github.com/TencentCloud/Octop/pull/1758
+    - feat(skills): shared packages, file tree editor, and BOM-safe frontmatter by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2226
+    - feat(models): 支持选择 Responses API 与受控协议回退 by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/1984
+    - feat(search): 支持 DeepSeek Search by @Pandakingxbc in https://github.com/TencentCloud/Octop/pull/2180
+    - fix(api): localize JWT middleware auth errors via Accept-Language by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2248
+    - fix(chat): refuse to delete a conversation while a reply is in progress by @huangcheng in https://github.com/TencentCloud/Octop/pull/2222
+    - fix(proactive): send care only after the chat has gone quiet by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2229
+    - feat(users): limit resource visibility by user group by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2224
+    - feat(search): add Yuanbao Search to the built-in provider catalog by @Master-Frank in https://github.com/TencentCloud/Octop/pull/2275
+    - feat(dashboard): shared resource avatar picker across create/edit drawers by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2285
+    - fix(browser): restore IME input and editing keys by @fabianxagent in https://github.com/TencentCloud/Octop/pull/970
+    - fix: encrypt secrets at rest, subpath deploy, decision defaults by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2295
+    - feat: unify AI text assist for forms and chat polish by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2300
+    - feat: unify resource visibility UI and extend sharing polish by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2307
+    - feat: share experts by group and separate incoming shares by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2320
+    - fix(fnos): stamp native packages as x86 or arm by @liukewia in https://github.com/TencentCloud/Octop/pull/2323
+    - feat(dashboard): mask peer address and account in bridge connection cards by @ideshun in https://github.com/TencentCloud/Octop/pull/2168
+    - fix(chat): skip vacuum on delete-only conversation removal by @Bosheng0422 in https://github.com/TencentCloud/Octop/pull/2261
+    - feat(experts): align built-in templates with the market and the editor by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2338
+    - fix(chat): subscribe WS thread before steer admission awaits by @huangcheng in https://github.com/TencentCloud/Octop/pull/2340
+    - fix: keep remote experts, mentions, cron, and MCP schema errors accurate by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2355
+    - fix(mobile): save screenshots into the agent real workspace so the agent can read them (#2334) by @huangcheng in https://github.com/TencentCloud/Octop/pull/2367
+    - feat: let shared cloud experts be used without owner controls by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2385
+    - feat(dashboard): fold permission groups and left-align mobile AI answers by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2393
+    - fix(chat): keep a live reply on screen and unblock side panels by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2397
+    - fix(chat): show only the cloud icon in the expert nav by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2399
+    - chore: release 1.0.3b1 by @jubaoliang in https://github.com/TencentCloud/Octop/pull/2400
+    New Contributors
+    - @legend91019 made their first contribution in https://github.com/TencentCloud/Octop/pull/2174
+    - @Jay0130-a made their first contribution in https://github.com/TencentCloud/Octop/pull/2105
+    - @chqcjq made their first contribution in https://github.com/TencentCloud/Octop/pull/2044
+    - @jayfeng7 made their first contribution in https://github.com/TencentCloud/Octop/pull/1657
+    - @AbelTomato made their first contribution in https://github.com/TencentCloud/Octop/pull/1758
+    - @fabianxagent made their first contribution in https://github.com/TencentCloud/Octop/pull/970
+    Full Changelog: https://github.com/TencentCloud/Octop/compare/v1.0.2...v1.0.3b1
+- Key: ReleaseNotesUrl
+  Value: https://github.com/TencentCloud/Octop/releases/tag/v1.0.3b1
+ReleaseTime: 2026-10-25T03:36:56.0000000Z

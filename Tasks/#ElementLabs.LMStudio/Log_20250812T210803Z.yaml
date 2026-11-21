@@ -1,0 +1,27 @@
+Version: 0.3.23
+Installer: []
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.3.23 - Release Notes
+    Build 3
+    - [llama.cpp][MoE] Add ability to offload expert weights to CPU/GPU RAM via "Force Model Expert Weights onto CPU" in advanced load settings
+    - Tool names are normalized before being provided to the model (replace whitespaces, special chars)
+    Build 2
+    - Fix "Complete Download" button sometimes not working when downloading a staff-picked model
+    - Fix "Fix" button not working for extension packs (like Harmony)
+    - Fix "Cannot read properties of undefined (reading 'properties')" for certain tools-containing requests to /v1/chat/completions
+    - Fix Error: EPERM: operation not permitted, unlink when auto-updating harmony
+    Build 1
+    - Bug fixes resulting in significant improvements for in chat tool calling reliability
+    - Fixed a bug where some old conversations won't load in the app
+    - Fixed a bug where tool call will fail sometimes when used via OpenAI compatible API in non-streaming mode
+    - Fix models not outputting thinking tags in v1/chat/completions
+      - For gpt-oss:
+        - message.content will not include reasoning content or special tags
+        - This matches the behavior of o3-mini.
+        - Reasoning content will be in choices.message.reasoning (stream=false) and choices.delta.reasoning (stream=true)
+    - Fix "TypeError: Invalid Version" causing app functionality issues on machines with AMD+NVIDIA GPUs
+    - Fix bug where MCP plugin chip name was not rendering in User Mode
+    - Fix bug where search results were refreshing on click

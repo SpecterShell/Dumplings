@@ -1,0 +1,132 @@
+Version: 0.4.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.4.0/filmcraft-0.4.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.4.0/filmcraft-0.4.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/filmcraft/releases/download/v0.4.0/filmcraft-0.4.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Windows on ARM64: release builds, PE header check, install test on ARM64 hardware by @echelon in https://github.com/storytold/filmcraft/pull/69
+    - codecs: resampled MP4 audio reads apply the edit list once by @punkhop in https://github.com/storytold/filmcraft/pull/42
+    - engine: file.exportInterchange refuses an unknown format by @punkhop in https://github.com/storytold/filmcraft/pull/46
+    - interchange: an export names every title it cannot carry by @punkhop in https://github.com/storytold/filmcraft/pull/51
+    - engine: a project saved after an interchange import opens again by @punkhop in https://github.com/storytold/filmcraft/pull/43
+    - engine: sequence.inspect reports clip ends, gain and marker comments by @punkhop in https://github.com/storytold/filmcraft/pull/48
+    - engine: sequence.inspect reports a reversed clip by @punkhop in https://github.com/storytold/filmcraft/pull/59
+    - engine: clip.replaceFromBin can keep the clip's source In by @punkhop in https://github.com/storytold/filmcraft/pull/49
+    - engine: Replace With Clip reports clips that run past the new media by @punkhop in https://github.com/storytold/filmcraft/pull/50
+    - engine: a command whose targets are named in the parameters does not need a selection by @punkhop in https://github.com/storytold/filmcraft/pull/52
+    - filmcraft: --help prints usage and an unknown option is an error by @punkhop in https://github.com/storytold/filmcraft/pull/47
+    - engine: naming a track that does not exist is an error by @punkhop in https://github.com/storytold/filmcraft/pull/44
+    - engine: timeline.place on an audio track places the sound there by @punkhop in https://github.com/storytold/filmcraft/pull/60
+    - engine: timeline.move takes linked partners along by @punkhop in https://github.com/storytold/filmcraft/pull/45
+    - edit: a ripple trim takes a later split edit along by @punkhop in https://github.com/storytold/filmcraft/pull/56
+    - edit: ripple delete closes one gap for a clip with a split edit by @punkhop in https://github.com/storytold/filmcraft/pull/57
+    - edit: a speed change with ripple moves later clips once by @punkhop in https://github.com/storytold/filmcraft/pull/58
+    - i18n: Japanese interface language (uses an installed system font) by @midasdf in https://github.com/storytold/filmcraft/pull/38
+    - MEM1–MEM4 + HW1: clip memory on a timeline from 12 GB to 1.9 GB; hardware decode actually on by @justjohn12345 in https://github.com/storytold/filmcraft/pull/41
+    - Docs: hardware decode correction; log the 2026-10-06 community batch by @echelon in https://github.com/storytold/filmcraft/pull/72
+    - Fonts: use craft-fonts as an optional build input (Japanese UI and title fallback) by @echelon in https://github.com/storytold/filmcraft/pull/81
+    - Tests: fix seed_sweep overflow and the speed-dependent export progress test by @justjohn12345 in https://github.com/storytold/filmcraft/pull/77
+    - interchange: an FCP7 master clip lands in its bin when a sequence used it first by @punkhop in https://github.com/storytold/filmcraft/pull/64
+    - project: Clear deletes a bin it is given, with everything in it by @punkhop in https://github.com/storytold/filmcraft/pull/68
+    - timeline.move: report the clips an overwrite move covers by @punkhop in https://github.com/storytold/filmcraft/pull/96
+    - codecs: look video frames up by the nearest timestamp unit (WebM at 30 fps drops every third frame) by @EthanSuquet in https://github.com/storytold/filmcraft/pull/83
+    - h264enc: strict ffmpeg oracle that sees damaged slices (#74) by @EthanSuquet in https://github.com/storytold/filmcraft/pull/101
+    - codecs: an MP4/MOV clip lasts as long as its edit list plays it by @EthanSuquet in https://github.com/storytold/filmcraft/pull/102
+    - codecs: MP4/MOV pixel format and alpha come from hvcC, avcC and the ProRes frame header (#103) by @HEOJUNFO in https://github.com/storytold/filmcraft/pull/118
+    - gpu: upload and composite the alpha plane of Y'CbCr frames by @dcarnelutti in https://github.com/storytold/filmcraft/pull/109
+    - graphics: all eight layer handles scale towards the pointer by @justjohn12345 in https://github.com/storytold/filmcraft/pull/79
+    - Timeline: the wheel scrolls as in Premiere, and the view cannot be lost by @justjohn12345 in https://github.com/storytold/filmcraft/pull/120
+    - Packaging: describe FilmCraft, not PhotoCraft, in package metadata (#94, #100) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/126
+    - i18n: Spanish interface language (Español) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/127
+    - Icons: draw straight lines on whole device pixels by @punkhop in https://github.com/storytold/filmcraft/pull/128
+    - docs: add star history chart to README by @coygeek in https://github.com/storytold/filmcraft/pull/122
+    - Window ▸ Workspaces: save your own workspaces, like Premiere by @punkhop in https://github.com/storytold/filmcraft/pull/121
+    - Ripple trim: a shorter head on a J-cut take is no longer refused by @punkhop in https://github.com/storytold/filmcraft/pull/104
+    - Ripple trim: a shorter head after an L cut keeps the earlier sound in place by @punkhop in https://github.com/storytold/filmcraft/pull/124
+    - Control: close the connection on input that isn't a request (#119) by @Luskish in https://github.com/storytold/filmcraft/pull/123
+    - Sequence: Add Tracks… opens Premiere's dialog (amount, placement, track type) by @justjohn12345 in https://github.com/storytold/filmcraft/pull/117
+    - HE-AAC plays at its output rate; AAC export caps the bitrate (#108, parts 1–2) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/129
+    - Audio: mix playback 200 ms ahead so a busy Mac doesn't drop sound by @punkhop in https://github.com/storytold/filmcraft/pull/131
+    - Audio: play a sequence on a device at another rate without phase jumps by @punkhop in https://github.com/storytold/filmcraft/pull/132
+    - Nested sequences: interchange (AAF compositions, OMF rendered sound, EDL reel AX) by @justjohn12345 in https://github.com/storytold/filmcraft/pull/116
+    - NEST4–NEST8: nest toggle, sequences as sources, Reveal in Project, Multi-Camera submenu by @justjohn12345 in https://github.com/storytold/filmcraft/pull/112
+    - Timeline: sequence tabs, Premiere-style clip menu, Nest name dialog by @justjohn12345 in https://github.com/storytold/filmcraft/pull/78
+    - NEST1–NEST3: nested sequences safety and Premiere-matching Nest (fixes two crashes) by @justjohn12345 in https://github.com/storytold/filmcraft/pull/82
+    - Nested sequences: rendering fidelity (sizes, speed, effects, captions, waveforms) by @justjohn12345 in https://github.com/storytold/filmcraft/pull/113
+    - Nested sequences: Timeline tabs (view per sequence, tab menu, reorder, restore on open) by @justjohn12345 in https://github.com/storytold/filmcraft/pull/115
+    - Codecs: add clean-room APV (RFC 9924) decoder, encoder, container support, and export presets by @mweinbach in https://github.com/storytold/filmcraft/pull/105
+    - Theme: interface type closer to Premiere's by @punkhop in https://github.com/storytold/filmcraft/pull/130
+    - Hardening: hostile MP4 edit lists and cyclic subclip chains (#66) by @echelon in https://github.com/storytold/filmcraft/pull/142
+    - Tests: image-sequence oracle fixtures are written atomically (#125) by @echelon in https://github.com/storytold/filmcraft/pull/143
+    - MCP: render_frame and render_preview leave the playhead where it was (#114) by @echelon in https://github.com/storytold/filmcraft/pull/144
+    - Transcripts: builds without speech-to-text say so (#97, #98, #89) by @echelon in https://github.com/storytold/filmcraft/pull/146
+    - Packaging: the rpm requires glibc >= 2.35, as the deb does (#93) by @echelon in https://github.com/storytold/filmcraft/pull/147
+    - Bridge: a blocking export runs as an app job, so it neither times out nor freezes the app (#91, #92) by @echelon in https://github.com/storytold/filmcraft/pull/154
+    - Transcripts: disabled, not failing, in builds without speech-to-text (#89, #97, #98) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/151
+    - Docs: releasing guide, CLI export options, README and CLAUDE.md drift (#85, #86, #87, #88, #99) by @echelon in https://github.com/storytold/filmcraft/pull/156
+    - Packaging: the Flatpak can read a project's media wherever it lives (#107) by @echelon in https://github.com/storytold/filmcraft/pull/158
+    - Web: window.filmcraft rejects with Error objects everywhere (#90) by @echelon in https://github.com/storytold/filmcraft/pull/159
+    - Rename PrintCraft to PdfCraft by @echelon in https://github.com/storytold/filmcraft/pull/177
+    - Graphics: point text and paragraph text, as Premiere has them by @justjohn12345 in https://github.com/storytold/filmcraft/pull/166
+    - Graphics: only selected layers have a box, and a hidden layer has none by @justjohn12345 in https://github.com/storytold/filmcraft/pull/182
+    - Graphics: New Layer from File anchors the picture at its own centre by @ajsongpilot in https://github.com/storytold/filmcraft/pull/190
+    - Color Matte: pick the color on creation and change it later (#29) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/145
+    - h264enc: 1-pass bitrate modes no longer starve the opening second by @EthanSuquet in https://github.com/storytold/filmcraft/pull/148
+    - Playback: a stalled audio device no longer freezes the playhead (#136) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/155
+    - Media Browser: probing a file doesn't read it whole (#157) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/165
+    - Shortcut recorder accepts modifier chords; Add Edit cuts only selected clips (#164, items 1 and 5) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/173
+    - i18n: add Brazilian Portuguese (pt-br) UI translation by @RicSchonfelder in https://github.com/storytold/filmcraft/pull/176
+    - platform: opt-in hardware H.264 encoding with VideoToolbox by @dcarnelutti in https://github.com/storytold/filmcraft/pull/183
+    - render: composite only what overlays cover, and reuse the float images by @dcarnelutti in https://github.com/storytold/filmcraft/pull/184
+    - export: show the estimated time left of a render next to its percentage by @dcarnelutti in https://github.com/storytold/filmcraft/pull/185
+    - platform: H.265 (HEVC) export with VideoToolbox by @dcarnelutti in https://github.com/storytold/filmcraft/pull/186
+    - Engine: project.selectAll and project.deselectAll for the Project panel (#168) by @Luna161 in https://github.com/storytold/filmcraft/pull/189
+    - Windows: Media Foundation/D3D11 hardware H.264 + HEVC decode by @SaymonMaster14 in https://github.com/storytold/filmcraft/pull/141
+    - M10: choose vertical titles from the Type tool flyout by @midasdf in https://github.com/storytold/filmcraft/pull/195
+    - Engine: file.import refreshes the offline-missing list (#110) by @Luna161 in https://github.com/storytold/filmcraft/pull/175
+    - Windows: VP9 + AV1 hardware decode (Media Foundation / DXVA) by @SaymonMaster14 in https://github.com/storytold/filmcraft/pull/162
+    - Windows: NVENC H.264 hardware encoding for Export (opt-in) by @SaymonMaster14 in https://github.com/storytold/filmcraft/pull/180
+    - Q/W ripple trim only the selected clips' tracks (#164) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/207
+    - Ripple delete names the sync-locked track in the way; playhead snaps to cuts (#164, items 2, 3 and snap) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/203
+    - Stabilize project lifecycle, timeline, audio and export workflows by @cirocueto2013-wq in https://github.com/storytold/filmcraft/pull/192
+    - #199: make Ctrl+C / Ctrl+X / Ctrl+V work on Windows and Linux by @DWAA1660 in https://github.com/storytold/filmcraft/pull/204
+    - fix: support integer CPAL devices and recover voice-over/audio failures by @cirocueto2013-wq in https://github.com/storytold/filmcraft/pull/209
+    - Web: Link Media Locate… links the chosen file to the selected missing clip (#111) by @Luna161 in https://github.com/storytold/filmcraft/pull/174
+    - #188: regression test — a copied Graphic clip pastes at the playhead by @echelon in https://github.com/storytold/filmcraft/pull/212
+    - fix: validate hostile project, export and MXF inputs by @cirocueto2013-wq in https://github.com/storytold/filmcraft/pull/210
+    - About: contributor and model credits compiled in (grab bag + table, self-submitted names) by @echelon in https://github.com/storytold/filmcraft/pull/215
+    - Speed/Duration opens its dialog; dragging an effect parameter is one undo step (#201) by @carlitosteso3 in https://github.com/storytold/filmcraft/pull/213
+    - Release: FreeBSD, Flatpak x86_64/aarch64, AppImage zsync; README Downloads by @echelon in https://github.com/storytold/filmcraft/pull/267
+    - README Downloads: where to get it, then builds (Windows first) by @echelon in https://github.com/storytold/filmcraft/pull/271
+    New Contributors
+    - @punkhop made their first contribution in https://github.com/storytold/filmcraft/pull/42
+    - @midasdf made their first contribution in https://github.com/storytold/filmcraft/pull/38
+    - @justjohn12345 made their first contribution in https://github.com/storytold/filmcraft/pull/41
+    - @EthanSuquet made their first contribution in https://github.com/storytold/filmcraft/pull/83
+    - @HEOJUNFO made their first contribution in https://github.com/storytold/filmcraft/pull/118
+    - @dcarnelutti made their first contribution in https://github.com/storytold/filmcraft/pull/109
+    - @carlitosteso3 made their first contribution in https://github.com/storytold/filmcraft/pull/126
+    - @coygeek made their first contribution in https://github.com/storytold/filmcraft/pull/122
+    - @Luskish made their first contribution in https://github.com/storytold/filmcraft/pull/123
+    - @mweinbach made their first contribution in https://github.com/storytold/filmcraft/pull/105
+    - @ajsongpilot made their first contribution in https://github.com/storytold/filmcraft/pull/190
+    - @RicSchonfelder made their first contribution in https://github.com/storytold/filmcraft/pull/176
+    - @Luna161 made their first contribution in https://github.com/storytold/filmcraft/pull/189
+    - @SaymonMaster14 made their first contribution in https://github.com/storytold/filmcraft/pull/141
+    - @cirocueto2013-wq made their first contribution in https://github.com/storytold/filmcraft/pull/192
+    - @DWAA1660 made their first contribution in https://github.com/storytold/filmcraft/pull/204
+    Full Changelog: https://github.com/storytold/filmcraft/compare/v0.2.1...v0.4.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/filmcraft/releases/tag/v0.4.0
+ReleaseTime: 2026-10-08T14:41:28.0000000Z

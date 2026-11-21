@@ -1,0 +1,30 @@
+Version: 0.1.35
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.35/ddc-v0.1.35-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.35/ddc-v0.1.35-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.35
+    Fully static musl Linux builds, plus install and CI coverage for them.
+    - New release assets: x86_64-unknown-linux-musl and
+      aarch64-unknown-linux-musl. These are fully static (no dynamic NEEDED
+      entries), so they run on Alpine and any other musl distribution.
+    - The npm wrapper detects musl at install time and picks the matching
+      static asset; cargo-binstall resolves the musl target triples from the
+      same raw-binary naming.
+    - CI builds and smoke-tests the x86_64 musl target on every push and
+      asserts the binary is not dynamically linked.
+    - README install docs list the new musl binaries; the generated npm
+      package description follows whichever target set the release contains.
+    - This release keeps the v0.1.34 quality-first baseline: javac parse gate,
+      full-classpath semantic battery, cure's exact simplification, and the
+      dependency-closure getclass path.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.34...v0.1.35
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.35
+ReleaseTime: 2026-11-02T07:52:05.0000000Z

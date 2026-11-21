@@ -1,0 +1,23 @@
+Version: 0.25.9
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.25.9/MuteMe-Client-0.25.9 Setup.exe
+- InstallerType: wix
+  InstallerUrl: https://mutemedownloads.s3.us-east-2.amazonaws.com/main/0.25.9/MuteMe-Client.msi
+  ProductCode: '{3938636D-2AB9-44F7-8A50-B1429CB49D1E}.msq'
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    We’re pleased to announce MuteMe version 0.25.9, a focused maintenance release that addresses several bugs and reliability issues, particularly around app shutdown behavior and firmware updates on both macOS and Windows. This release also includes updates required to keep pace with recently deprecated system APIs.
+    #381 – Fixed: App Fails to Quit When Status Bar Is Active
+    Resolved an issue where the app would not fully quit if the status bar component was active. The shutdown logic could be blocked by an in progress operation, preventing a clean exit. This has now been corrected on both macOS and Windows..
+    #382 – Improved: Firmware Downloads via Electron Fetch
+    Firmware updates previously relied on direct CDN downloads via Shopify, which could fail in certain environments, especially behind corporate proxies or systems with custom certificate authorities.
+    Firmware downloads now use Electron’s built in fetch handler, which provides improved support for local certificates and enterprise network configurations. This significantly improves firmware update reliability on both macOS and Windows.
+    #383 – Fixed: Windows Firmware Update Failures Due to WMIC Deprecation
+    Firmware updates on Windows were failing due to reliance on WMIC, which was officially deprecated by Microsoft in November 2025.
+    The app now uses PowerShell based commands instead, restoring firmware update functionality and ensuring forward compatibility with current and future Windows releases.
+    #338 – Fixed: Corrupted macOS App Icons
+    Addressed an issue where macOS app icons could appear corrupted or damaged. The underlying ICNS file has been rebuilt and replaced, resolving the issue seen in the wild across multiple macOS versions.
+ReleaseTime: 2026-01-06

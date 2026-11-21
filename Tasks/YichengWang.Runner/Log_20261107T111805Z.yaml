@@ -1,0 +1,46 @@
+Version: 0.19.5.20261107.1021
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.19.5/Runner-Setup-0.19.5.20261107.1021-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.5 is a feature release for macOS, Windows and Linux on top of 0.19.4.
+    New
+    - Browse a project's files beside your work. The side panel gets a Files view: the checkout or worktree a chat, terminal or mission works in, as a tree with its git status. Changed files carry a coloured letter (M, A, R, U, !), folders mark changes beneath them, and the tree updates as files change on disk. Click the checkout's name to show another worktree or any folder. (#634)
+    - Read files without leaving Runner. Click a file to open it in a tab, read-only, with line numbers and syntax highlighting for about two dozen common languages in your terminal palette's colors. Markdown opens rendered, and the </> button shows its source. ⌘F (Ctrl+F) searches the file, and Open in sends it to an editor such as Zed, VS Code or Cursor, or to your default app, at the line in view. While no file is open, the view lists the checkout's changed files. (#634)
+    - Find and open files fast. ⇧⌘O (Ctrl+Shift+O) finds a file by name from anywhere in a chat or mission. ⌘-click (Ctrl-click) a file path in a terminal opens it in the side panel at that line, and a path outside the folder shown opens in your editor. (#634)
+    - Settings → Side panel. Choose which views the side panel's + offers, the file icons (Catppuccin, Material or Minimal), the code font and size, and whether Markdown opens rendered or as source. (#634)
+    - A quieter update flow on every platform. An icon beside the Runner name replaces Sparkle's windows on macOS and the update dialog on Windows and Linux: a ring while an update downloads, then a green restart arrow when it is ready. Clicking it then opens a small popover that says how many agents are working, with Restart to update, What's new and Later; the rest lives in Settings → Updates, and the command palette's Show Runner update reaches both from the keyboard. macOS still downloads only when you click, and Windows and Linux keep Automatically download updates. Restart to update reopens Runner on the new version with no installer window. You will see this flow from the next update on; installing 0.19.5 itself still uses the previous one. (#1204)
+    - Answer a mission's question with a note. runner mission answer takes --note <text> or --note-file <path|->, so a condition the choices do not cover arrives with the answer in one message. (#1127)
+    Bug fixes
+    - Closing a tab lands on your last tab. Archiving or closing the tab you are viewing now opens the tab you viewed before it, instead of the launcher; the launcher shows only when no tab is left. A second ⌘W (Ctrl+Shift+W) right after landing is ignored, so a double press cannot close the next terminal too. Archiving a mission you are viewing lands the same way. (#1211)
+    - The New tab row stays where you opened it. ⌘N (Ctrl+N) and New tab always start in Recents with no project selected, and the dashed row no longer jumps between projects as you change the launcher's project or folder; what you start still goes to the project the picker shows. A project's + puts the row under that project and locks the picker to it. (#1211)
+    - Remote terminals send whole screens. Runner now merges a burst of terminal output into one message before sending it to a remote client, so a redraw is less likely to arrive half-finished, while typing echo still goes out at once. (#1079)
+    - A mission listed under its chat highlights across the whole row, and clicking anywhere on the row opens it. (#1210)
+    Nightly channel
+    - Preview Nightly is quiet for now. File preview has landed in this release, so Preview Nightly gets no new builds until the next large feature uses it. Installing a Nightly or stable build by hand moves an install back.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.19.5 是 macOS、Windows 和 Linux 上基于 0.19.4 的功能版本。
+    新功能
+    - 在工作旁浏览项目文件。 侧边面板新增 Files 视图：以树形显示聊天、终端或 mission 所在的 checkout 或 worktree，并标出 git 状态。有改动的文件带彩色字母（M、A、R、U、!），文件夹会标出其下的改动，磁盘上的文件变化时树会随之更新。点击 checkout 名称可显示其他 worktree 或任意文件夹。(#634)
+    - 不离开 Runner 就能阅读文件。 点击文件即在标签页中以只读方式打开，带行号，约二十多种常用语言按终端配色方案高亮。Markdown 默认渲染显示，</> 按钮可切换到源码。⌘F（Ctrl+F）在文件内搜索，Open in 会用 Zed、VS Code、Cursor 等编辑器或默认应用打开该文件，并定位到当前可见的行。没有打开文件时，视图会列出 checkout 中有改动的文件。(#634)
+    - 快速查找和打开文件。 在聊天或 mission 中任意位置按 ⇧⌘O（Ctrl+Shift+O）即可按文件名查找。在终端中 ⌘-点击（Ctrl-点击）文件路径，会在侧边面板中打开该文件并定位到对应行；所显示文件夹之外的路径会在编辑器中打开。(#634)
+    - Settings → Side panel。 可设置侧边面板的 + 提供哪些视图、文件图标（Catppuccin、Material 或 Minimal）、代码字体和字号，以及 Markdown 默认渲染还是显示源码。(#634)
+    - 所有平台上更安静的更新流程。 Runner 名称旁的图标取代了 macOS 上 Sparkle 的窗口和 Windows、Linux 上的更新对话框：下载时显示进度环，准备就绪后显示绿色的重启箭头。此时点击会打开一个小弹窗，显示正在工作的 agent 数量，并提供 Restart to update、What's new 和 Later；其余操作都在 Settings → Updates 中，也可以用键盘通过命令面板的 Show Runner update 打开它们。macOS 仍然只在你点击后才下载，Windows 和 Linux 保留 Automatically download updates 设置。Restart to update 会在新版本上重新打开 Runner，不再出现安装程序窗口。新流程从下一次更新开始生效；安装 0.19.5 本身仍使用之前的流程。(#1204)
+    - 回答 mission 的问题时可附带备注。 runner mission answer 支持 --note <text> 或 --note-file <path|->，选项无法表达的条件会和答案作为一条消息一起送达。(#1127)
+    问题修复
+    - 关闭 tab 后回到上一个 tab。 归档或关闭当前查看的 tab 时，现在会打开你之前查看的 tab，而不是启动页；只有没有剩余 tab 时才显示启动页。切换后紧接着的第二次 ⌘W（Ctrl+Shift+W）会被忽略，连按也不会关掉下一个终端。归档当前查看的 mission 时也一样。(#1211)
+    - New tab 条目停留在打开它的位置。 ⌘N（Ctrl+N）和 New tab 总是从 Recents 开始，且不选择项目；更改启动页的项目或文件夹时，虚线条目不再在项目之间跳动，新建的内容仍归入选择器所示的项目。项目的 + 会把条目放在该项目下，并锁定项目选择器。(#1211)
+    - 远程终端按整屏发送。 Runner 现在会把一连串终端输出合并成一条消息再发给远程客户端，重绘不太会只显示一半，键入回显仍会立即发送。(#1079)
+    - 聊天下方列出的 mission 整行高亮， 点击该行任意位置即可打开。(#1210)
+    Nightly 渠道
+    - Preview Nightly 暂时停止更新。 文件预览已在本版本中发布，因此在下一个大型功能使用它之前，Preview Nightly 不会有新构建。手动安装 Nightly 或正式版构建即可切回。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.19.5
+ReleaseTime: 2026-11-07T10:52:26.0000000Z

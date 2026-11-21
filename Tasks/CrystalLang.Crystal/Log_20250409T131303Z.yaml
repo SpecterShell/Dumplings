@@ -1,0 +1,192 @@
+Version: 1.16.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.16.0/crystal-1.16.0-windows-x86_64-msvc-unsupported.zip
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/crystal-lang/crystal/releases/download/1.16.0/crystal-1.16.0-windows-x86_64-msvc-unsupported.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    lang
+    - Support Slice.literal in the interpreter (#15531, thanks @HertzDevil)
+    - Support Slice.literal with inferred element type (#15529, thanks @HertzDevil)
+    - (macros) Error on TypeNode#instance_vars, #has_inner_pointers? macros in top-level scope (#15293, thanks @straight-shoota)
+    - (macros) Support sizeof and alignof inside macros for stable types (#15497, thanks @HertzDevil)
+    stdlib
+    - Fix Box(Pointer).box to not allocate pointer storage on the heap (#15562, thanks @ysbaddaden)
+    - (collection) Add Indexable#find and #find! (#15552, #15589, thanks @punteek, @Sija)
+    - (llvm) Add LLVM.version (#15354, thanks @straight-shoota)
+    - (llvm) Support LLVM 20 (#15412, #15418, thanks @HertzDevil, @straight-shoota)
+    - (llvm) Add LLVM.init_native_target and LLVM.init_all_targets (#15466, thanks @HertzDevil)
+    - (llvm) Support $LLVM_VERSION, $LLVM_TARGETS, and $LLVM_LDFLAGS (#15091, thanks @HertzDevil)
+    - (llvm) Add LLVM::CodeModel::Tiny (#15608, thanks @HertzDevil)
+    - (macros) Implement StringLiteral#scan (#15398, thanks @homonoidian)
+    - (networking) Add Path as possible argument type to UNIXSocket and UNIXServer (#15260, thanks @BigBoyBarney)
+    - (networking) Add Cookies#== (#15463, thanks @straight-shoota)
+    - (runtime) Add EventLoop#wait_readable, #wait_writable methods methods (#15376, thanks @ysbaddaden)
+    - (runtime) Initialize Fiber with an explicit stack (#15409, thanks @ysbaddaden)
+    - (runtime) Add fiber queues for execution context schedulers (#15345, thanks @ysbaddaden)
+    - (runtime) RFC 2: Skeleton for ExecutionContext (#15350, #15596, thanks @ysbaddaden)
+    - (runtime) RFC 2: Add Fiber::ExecutionContext::SingleThreaded scheduler (#15511, thanks @ysbaddaden)
+    - (runtime) RFC 2: Add Fiber::ExecutionContext::Isolated (#15513, thanks @ysbaddaden)
+    - (runtime) RFC 2: Add Fiber::ExecutionContext::Monitor (#15599, thanks @ysbaddaden)
+    - (runtime) RFC 2: Add Fiber::ExecutionContext::MultiThreaded (#15517, thanks @ysbaddaden)
+    - (serialization) Add Union.from_json_object_key? (#15411, thanks @straight-shoota)
+    - (system) Add Process::Status#description (#15468, thanks @straight-shoota)
+    - (text) Add IO overloads to Char#upcase, #downcase, #titlecase (#15508, thanks @HertzDevil)
+    - (text) [breaking] New algorithm for File.match? (#15607, thanks @straight-shoota)
+    compiler
+    - (cli) Support --output long option in crystal build (#15519, thanks @HertzDevil)
+    - (cli) Support directory name in --output CLI option (#15471, thanks @straight-shoota)
+    - (cli) [breaking] Add compiler path to $PATH and $CRYSTAL_EXEC_PATH for subcommands (#15186, thanks @straight-shoota)
+    - (cli) Respect --mcpu=help in the compiler (#15595, thanks @HertzDevil)
+    - (cli) Add CRYSTAL_EXEC_PATH to crystal env [followup #15186] (#15632, thanks @straight-shoota)
+    - (codegen) Set linkage of __crystal_* funs to internal (#15439, thanks @ysbaddaden)
+    - (codegen) Add function name to CRYSTAL_DEBUG_CODEGEN log helper (#15506, thanks @HertzDevil)
+    - (parser) Handle properly stringifying multiline macro expressions (#15305, thanks @Blacksmoke16)
+    - (parser) [breaking] Check that def, macro, and block parameters don't end with ? or ! (#12197, thanks @potomak)
+    tools
+    - (docs-generator) Add docs to enum member helper methods (#15379, thanks @nobodywasishere)
+    - (docs-generator) Add :showdoc: directive for private and protected objects (RFC #0011) (#15337, thanks @nobodywasishere)
+    - (docs-generator) Add documentation support for lib, fun, union, cstruct, external, and type (RFC #0011) (#15447, thanks @nobodywasishere)
+    Bugfixes
+    stdlib
+    - (collection) Fix hash @indices can grow larger than Int32::MAX bytes (#15347, thanks @ysbaddaden)
+    - (collection) Fix Tuple#to_a(&) for arbitrary block output type (#15431, thanks @straight-shoota)
+    - (collection) Fix Range#size for unsigned edge cases (#14978, thanks @straight-shoota)
+    - (collection) [breaking] Fix the return type of Enumerable#sum, #product for union elements (#15314, thanks @rvprasad)
+    - (concurrency) Fix Reference#exec_recursive, #exec_recursive_clone to be fiber aware (#15361, thanks @ysbaddaden)
+    - (concurrency) RFC 2: MT safe fiber context switch on ARM (#15582, thanks @ysbaddaden)
+    - (crypto) Fix argument type for EVP_CIPHER_get_flags (#15392, thanks @miry)
+    - (files) Never remove UNC share name in Path#dirname (#15583, thanks @HertzDevil)
+    - (files) Fix File.exists? for special devices on Windows (#15587, thanks @HertzDevil)
+    - (llvm) Fix LLVM version detection for -rc1 (#15410, thanks @HertzDevil)
+    - (networking) [breaking] Fix parsing HTTP resource string that looks like absolute URL (#15499, thanks @straight-shoota)
+    - (runtime) Fix pkg_config name for libgc bindings on FreeBSD (#15532, thanks @straight-shoota)
+    - (runtime) RFC 2: MT safe fiber context switch on AArch64 (#15581, thanks @ysbaddaden)
+    - (runtime) Add thread safety to at_exit (#15598, thanks @ysbaddaden)
+    - (runtime) Remove top-level calls to LibGC.has_method? for backwards compat (#15635, thanks @straight-shoota)
+    - (serialization) Fix Union.from_yaml to prioritize String for quoted scalar (#15405, thanks @straight-shoota)
+    - (system) signal handler mustn't depend on the event loop (#15325, thanks @ysbaddaden)
+    - (system) Corrects Windows lib lookup in case-sensitive OSes (#15362, thanks @luislavena)
+    - (system) Fix permissions application in File.copy (#15520, thanks @straight-shoota)
+    - (system) [security] Strip periods, spaces for batch file filtering on Windows (#15573, thanks @GeopJr)
+    - (system) Extend Windows Process completion key's lifetime (#15597, thanks @HertzDevil)
+    compiler
+    - (cli) Fix query runtime version of LLVM (#15355, thanks @straight-shoota)
+    - (cli) Fix handling of double dashes -- in crystal eval command (#15477, thanks @kojix2)
+    - (codegen) don't set external linkage when @[NoInline] is specified (#15424, thanks @ysbaddaden)
+    - (codegen) Allow multiple redefinitions of the same top-level fun (#15553, thanks @HertzDevil)
+    - (codegen) Respect $MACOSX_DEPLOYMENT_TARGET on macOS hosts (#15603, thanks @HertzDevil)
+    - (interpreter) Fix pkg_config name for libffi bindings (#15533, thanks @straight-shoota)
+    - (parser) Lexer: Fix location of token after line continuation (#15454, thanks @FnControlOption)
+    - (parser) Add locations to When nodes (#15481, thanks @Sija)
+    - (parser) Fix end location of call with block arg and no parentheses (#15502, thanks @FnControlOption)
+    - (parser) Fix location of MacroExpression nodes (#15524, thanks @Sija)
+    - (parser) Reject invalid operator names for implicit object calls (#15526, thanks @nobodywasishere)
+    tools
+    - (formatter) Add uninitialized variables to formatter variable scopes (#15578, thanks @HertzDevil)
+    Chores
+    stdlib
+    - (llvm) [breaking] Remove the LibLLVM::IS_* constants (#15464, thanks @HertzDevil)
+    compiler
+    - (interpreter:repl) Update REPLy version (#15328, thanks @oprypin)
+    Performance
+    stdlib
+    - (files) Optimize Path#drive, #root, and #anchor (#15584, thanks @HertzDevil)
+    - (files) Optimize Path#relative_to? (#15594, thanks @HertzDevil)
+    - (runtime) Shrink Crystal::System.print_error's output size (#15490, thanks @HertzDevil)
+    compiler
+    - (codegen) Replace inline type IDs with global constants in LLVM IR (#15485, #15505, thanks @HertzDevil)
+    - (codegen) Do not load Path call receiver if known to be pure load (#15488, thanks @HertzDevil)
+    - (codegen) Only refer to LLVM symbol table in calls to Symbol#to_s (#15486, thanks @HertzDevil)
+    - (debugger) Read all DWARF abbreviations tables in a single pass (#15515, thanks @HertzDevil)
+    - (debugger) Use binary search to search DWARF line numbers (#15539, thanks @HertzDevil)
+    - (debugger) Remove op_index and end_sequence from Crystal::DWARF::LineNumbers::Row (#15538, thanks @HertzDevil)
+    Refactor
+    stdlib
+    - Use splat parameter to put Tuples in large Array constants (#15495, thanks @HertzDevil)
+    - (collection) Simplify Enumerable#to_a (#15432, thanks @straight-shoota)
+    - (concurrency) Use Crystal::PointerLinkedList instead of Deque in Mutex (#15330, thanks @ysbaddaden)
+    - (concurrency) Add fiber safety to crystal/once (#15370, thanks @ysbaddaden)
+    - (concurrency) ARM: reduce duplication in fiber context switch (#15585, thanks @ysbaddaden)
+    - (files) Add nanosecond precision to File.utime on Unix (#15335, thanks @ysbaddaden)
+    - (llvm) [deprecation] Make LLVM::ABI internal (#15559, thanks @HertzDevil)
+    - (llvm) Only initialize LLVM::Attribute's class variables on demand (#15534, thanks @HertzDevil)
+    - (macros) Generate Object getter/property macros to remove duplications (#15386, thanks @ysbaddaden)
+    - (networking) Refactor extract HTTP::Cookies to its own file (#15500, #15618, thanks @straight-shoota)
+    - (runtime) Add Crystal.print_buffered(io) and Crystal.print_error_buffered (#15343, thanks @ysbaddaden)
+    - (runtime) Explicit init of Thread and Fiber class variables (#15369, thanks @ysbaddaden)
+    - (runtime) Add Crystal.once_init replacing __crystal_once_init (#15371, thanks @ysbaddaden)
+    - (runtime) Move shadow space reservation to x86_64 makecontext (#15434, thanks @ysbaddaden)
+    - (runtime) Add Crystal::EventLoop#sleep(duration) method (#15564, thanks @ysbaddaden)
+    - (system) Extract File.match? to separate source file (#15574, thanks @straight-shoota)
+    compiler
+    - (codegen) Rework initialization of constants & class variables (#15333, thanks @ysbaddaden)
+    - (codegen) Remove unnecessary calls to Crystal::CodeGenVisitor#union_type_and_value_pointer (#15491, thanks @HertzDevil)
+    - (parser) Simplify Call.new convenience overloads (#15427, thanks @straight-shoota)
+    - (parser) Add Call.new constructor overload without obj parameter (#15441, thanks @straight-shoota)
+    - (semantic) Extract regex_value helper for macro methods (#15435, thanks @straight-shoota)
+    Documentation
+    lang
+    - Document alignof and instance_alignof (#15576, thanks @HertzDevil)
+    - (macros) Document macro sizeof and alignof [followup #15497] (#15575, thanks @HertzDevil)
+    stdlib
+    - Fix Colorize::ObjectExtensions#colorize(r, g, b) comment (#15521, thanks @Sija)
+    - Rework docs for getter, setter and property macros (#15428, thanks @ysbaddaden)
+    - Add missing files for API docs (#15622, thanks @straight-shoota)
+    - (runtime) Document ::debugger (#15579, thanks @HertzDevil)
+    compiler
+    - (cli) Convert crystal.1 manpage to asciidoc (#15478, thanks @straight-shoota)
+    - (cli) Split combined manpage into individual ones for each command (#15509, thanks @straight-shoota)
+    - (cli) Document environment variable CRYSTAL_EXEC_PATH [followup #15186] (#15631, thanks @straight-shoota)
+    other
+    - Add sample fibonacci numbers (#15550, thanks @666hwll)
+    Specs
+    stdlib
+    - Fix invalid returns in class getter's lazy evaluation blocks (#15364, thanks @ysbaddaden)
+    - (specs) Add specs for File.match? (#15348, thanks @straight-shoota)
+    - (text) Add specs for File.match? from fast-glob (#15604, thanks @straight-shoota)
+    - (text) Add specs for File.match? with multibyte characters (#15601, thanks @straight-shoota)
+    compiler
+    - (parser) Add specs for block association in nested calls (#15461, thanks @straight-shoota)
+    Infrastructure
+    - Changelog for 1.16.0 (#15602, thanks @straight-shoota)
+    - Update previous Crystal release 1.15.0 (#15339, thanks @straight-shoota)
+    - Make: Fix make uninstall to remove fish completion (#15367, thanks @straight-shoota)
+    - Merge release/1.15@1.15.1 (#15422, thanks @straight-shoota)
+    - Fix: Remove reverted PR from changelog for 1.15.1 (#15415, thanks @straight-shoota)
+    - Update previous release: 1.15.1 (#15417, thanks @straight-shoota)
+    - Add backports to changelog generator (#15413, thanks @straight-shoota)
+    - Makefile: Expand DESTDIR outside of prefixed dir variables (#15444, thanks @straight-shoota)
+    - Add git mailmap (#15396, thanks @straight-shoota)
+    - Rename find-llvm-config to find-llvm-config.sh (#15448, thanks @straight-shoota)
+    - Makefile: Remove crystal from DATADIR (#15467, thanks @straight-shoota)
+    - Add scripts/update-shards.sh (#15462, thanks @straight-shoota)
+    - Enhance .gitignore (#15469, thanks @straight-shoota)
+    - Introduce shellcheck to lint shell scripts (#15169, thanks @straight-shoota)
+    - Trim CHANGELOG.md (#15627, thanks @straight-shoota)
+    - Update scripts/generate_llvm_version_info.cr (#15465, thanks @HertzDevil)
+    - (ci) Fix shards packaging for mingw-w64 (#15451, thanks @straight-shoota)
+    - (ci) Add workflow for backporting PRs to release branches (#15372, #15378, thanks @straight-shoota)
+    - (ci) Update cygwin/cygwin-install-action action to v5 (#15346, thanks @renovate)
+    - (ci) Extract forward compatibility checks and run on nightly schedule (#15437, thanks @straight-shoota)
+    - (ci) Use MSYS2 Crystal package for mingw-w64 workflow (#15453, #15476, thanks @HertzDevil, @straight-shoota)
+    - (ci) Filter runs of LLVM Test workflow (#15458, thanks @straight-shoota)
+    - (ci) Filter runs of regex engine workflow (#15460, thanks @straight-shoota)
+    - (ci) Filter runs of OpenSSL Test workflow (#15459, thanks @straight-shoota)
+    - (ci) Filter runs of Smoke Test workflow (#15457, thanks @straight-shoota)
+    - (ci) Introduce actionlint to lint GitHub Actions workflows (#15449, thanks @straight-shoota)
+    - (ci) Fix MinGW-W64 workflow to run compiler tests with fresh compiler (#15522, thanks @straight-shoota)
+    - (ci) Update GH Actions (#15525, thanks @renovate)
+    - (ci) Update GH Actions (#15551, thanks @renovate)
+    - (ci) Update library versions for MSVC CI (#15554, thanks @HertzDevil)
+    - (ci) Increase memory for aarch64-*-test-compiler runners to 16GB (#15572, thanks @straight-shoota)
+    - (ci) Add AArch64 Linux workflow using GitHub's runner (#15600, thanks @HertzDevil)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/crystal-lang/crystal/releases/tag/1.16.0
+ReleaseTime: 2025-04-09T11:18:33.0000000Z

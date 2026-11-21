@@ -1,50 +1,62 @@
-# International
-$Object1 = Invoke-RestMethod -Uri "https://intl.meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($Task.LastState.Version ?? '9.7.7')"
-$Version1 = $Object1.upgradeVersion
+# Global
+$Object1 = Invoke-RestMethod -Uri "https://intl.meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($this.LastState.Version ?? '9.7.7')"
+if ($Object1.isConsistent) {
+  $this.Log("The version for the global edition from the last state $($this.LastState.Version) is the latest, skip checking", 'Info')
+  return
+}
 
-# Chinese
-$Object2 = Invoke-RestMethod -Uri "https://meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($Task.LastState.Version ?? '9.7.7')"
-$Version2 = $Object2.upgradeVersion
+# China
+$Object2 = Invoke-RestMethod -Uri "https://meeting.huaweicloud.com/v1/usg/tms/softterm/version/query?userType=cloudlink-windows&currentVersion=$($this.LastState.Version ?? '9.7.7')"
+if ($Object2.isConsistent) {
+  $this.Log("The version for the China edition from the last state $($this.LastState.Version) is the latest, skip checking", 'Info')
+  return
+}
 
-if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+if ($Object1.upgradeVersion -ne $Object2.upgradeVersion) {
+  $this.Log("Global version: $($Object1.upgradeVersion)")
+  $this.Log("China version: $($Object2.upgradeVersion)")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Object1.upgradeVersion
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = $Object1.versionPath
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   InstallerUrl    = $Object2.versionPath
 }
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.versionDescriptionEn | Format-Text
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.versionDescriptionEn | Format-Text
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object2.versionDescription | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object2.versionDescription | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

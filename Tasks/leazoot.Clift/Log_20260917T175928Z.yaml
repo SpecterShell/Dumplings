@@ -1,0 +1,33 @@
+Version: 0.1.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: clift-0.1.2-x86_64-pc-windows-msvc/clift.exe
+  - RelativeFilePath: clift-0.1.2-x86_64-pc-windows-msvc/clift-relayd.exe
+  InstallerUrl: https://github.com/leazoot/clift/releases/download/v0.1.2/clift-0.1.2-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - Fast Mode speaks SFTP over the system ssh (ssh -s <host> sftp) instead of driving the sftp program. Authentication, known_hosts, agent and ProxyJump are still handled by ssh. The sftp program is no longer needed, and doctor no longer checks for it.
+    - The hotkey helper keeps its connection open between presses. connection.persist now defaults to 1 hour (was 10 minutes) and allows up to 24 hours (was 1 hour). After changing it, run clift hotkey --install to restart the helper.
+    - setup records the host's cache directory, so a send logs in once. Run clift setup again for targets set up with an earlier version.
+    - Fewer round trips per send. --verbose shows how long each remote step took.
+    Fixed
+    - Windows: Fast Mode sends took close to a minute. They now log in once.
+    - Windows: sending a file by path failed with stat ////?//D://....
+    - Windows: permissions listed as drwx****** could not be checked.
+    - A request that ran out of time could be sent again.
+    - A missing file was reported as a clipboard failure, with a remedy PowerShell cannot run.
+    Security
+    - rustls 0.23.45, for RUSTSEC-2026-0285.
+    Downloads
+    Binaries for macOS (Apple Silicon and Intel), Linux (x86_64 and aarch64, static) and Windows (x86_64). Install with install.sh / install.ps1 from the repository, which verify against SHA256SUMS. Every file is signed with Sigstore by this release workflow's own identity; the .sigstore.json next to each file is its bundle, and SECURITY.md shows how to verify one. The two .cdx.json files are CycloneDX SBOMs for clift and clift-relayd.
+    Full Changelog: https://github.com/leazoot/clift/compare/v0.1.1...v0.1.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/leazoot/clift/releases/tag/v0.1.2
+ReleaseTime: 2026-09-15T09:16:38.0000000Z

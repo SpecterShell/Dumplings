@@ -1,0 +1,48 @@
+Version: 0.3.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Victor-Quqi/Axiopera/releases/download/v0.3.3/axiopera-v0.3.3-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - A global --caller <agent>:<session ID> names the calling session where the host's session variable does not reach axiopera, such as over ssh, docker exec or WSL. Without it such an agent was taken for user and shared the terminal's inbox. axiopera guide tells an agent taken for user to add the option. See "指定调用方" in docs/usage.md.
+    - Each task records the model and effort it actually runs on, also when spawned without --model. status, the result line of each turn, the turn lines of log and the task title in top show them.
+    - axiopera models <agent> names in its first line what a spawn without --model runs on: the model from Axiopera's configuration, or else the one the agent's CLI picks from your own settings.
+    - Each task's events.jsonl gets a delivered event when inbox, result or a push hands something to a caller: who received it, how, and which events and results went along. Tools that read the data directory can tell from it what a command or a pushed message gave the agent. Pushes and reminders sent into Codex sessions carry a client message ID starting with axiopera:, which tells them from what the user typed.
+    Fixed
+    - Grok: --model and --effort were ignored and the task ran on Grok's default model and effort. They now apply, and an invalid value is reported with the model list.
+    - Codex: an approval request that Codex withdraws before anyone decides (network approvals, from Codex 0.167) no longer stays waiting for you, and no stale refusal reason is sent into the turn afterwards.
+    - Codex: messages pushed into a host session no longer begin with an [axiopera:<id>] mark.
+    Other notes
+    - Grok's read tier refuses models that run on another harness, such as codex: switching to one drops the read tier's tool limits. Use the work or full tier for those models.
+    - models --json: Grok's current_model is replaced by native_model and native_effort, which all three agents now report.
+    - A push that an earlier version left unconfirmed may be sent once more after the upgrade.
+    - Stop the daemon with axiopera daemon stop before replacing the executable.
+    - Updating the Codex plugin may require trusting it again.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    任务现在显示实际使用的模型和推理强度，跨 ssh、容器调用时可以指明自己的会话，Grok 的 --model 和 --effort 开始生效。
+    新增
+    - 全局选项 --caller <名称>:<会话 ID>：经 ssh、docker exec、WSL 等调用 axiopera 时，宿主的会话变量传不过去，用它指明调用方会话。此前这类 agent 会被当成 user，与终端共用收件箱。axiopera guide 会提示被当成 user 的 agent 加上这个选项。详见 docs/usage.md 的「指定调用方」。
+    - 每个任务记录实际使用的模型和推理强度，不带 --model 派发的也有。status、每轮结果行、log 的轮次行和 top 的任务标题都会显示。
+    - axiopera models <agent> 首行写明不带 --model 派发时使用的模型：有 Axiopera 配置时是配置值，否则是原生 CLI 按你自己的设置选出的模型。
+    - inbox、result 或推送把内容交给调用方后，在涉及任务的 events.jsonl 中各记一条 delivered 事件：交给了谁、以哪种方式、带了哪些事件和结果。读取数据目录的工具可以据此知道一条命令或一条推送消息交给了 agent 什么。推入 Codex 会话的消息和提醒带有以 axiopera: 开头的客户端消息 ID，可据此与用户输入区分。
+    修复
+    - Grok：--model 和 --effort 此前不生效，任务仍按 Grok 的默认模型和推理强度运行。现在生效，取值无效时报错并附模型列表。
+    - Codex：Codex 在裁决前自行撤回的审批请求（0.167 起的网络审批）不再一直等你处理，之后也不会再把过时的拒绝理由送进轮次。
+    - Codex：推入宿主会话的消息不再以 [axiopera:<id>] 标记开头。
+    其它说明
+    - Grok 的 read 档拒绝运行在其他 harness 上的模型（如 codex）：切换过去会丢掉 read 档的工具限制。这些模型请用 work 或 full 档。
+    - models --json：Grok 的 current_model 改为 native_model 和 native_effort，三家现在都会报告这两项。
+    - 旧版本留下的未确认推送，升级后可能再发送一次。
+    - 替换程序前先执行 axiopera daemon stop。
+    - 更新 Codex 插件后可能需要重新信任插件。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Victor-Quqi/Axiopera/releases/tag/v0.3.3
+ReleaseTime: 2026-11-11T04:39:23.0000000Z

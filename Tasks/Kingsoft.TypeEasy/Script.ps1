@@ -1,24 +1,34 @@
-$Object = (Invoke-RestMethod -Uri 'https://rubik.wps.cn/rubik-service/project/deploy?position=51dzt').data.project_components.Where({ $_.Name -eq 'dzt-banner' })[0].user_props
-
-# Version
-$Task.CurrentState.Version = [regex]::Match($Object.downloadVersion, '（([\d\.]+)）').Groups[1].Value
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = (($Object.download | ConvertFrom-Json).event | Where-Object({ $_.type -eq 'openLink' })).params.url
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.51dzt.com/rubik-ssr/51dzt'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.state.application.project_components.find((obj) => obj.name === "dzt-banner").user_props'
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match($Object.downloadVersion, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.downloadVersion, '（([\d\.]+)）').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = ($Object1.download | ConvertFrom-Json).event.Where({ $_.type -eq 'openLink' }, 'First')[0].params.url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Object1.downloadVersion, '(\d{4}\.\d{1,2}\.\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

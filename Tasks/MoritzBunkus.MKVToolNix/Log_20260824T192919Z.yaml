@@ -1,0 +1,34 @@
+Version: "101.0"
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/101.0/mkvtoolnix-32-bit-101.0-setup.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/101.0/mkvtoolnix-64-bit-101.0-setup.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/101.0/mkvtoolnix-32-bit-101.0.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://mkvtoolnix.download/windows/releases/101.0/mkvtoolnix-64-bit-101.0.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New features and enhancements
+    - translations: substantial extension of the Czech translation by Michal Várady.
+
+    Bug fixes
+    - mkvmerge: TrueHD parser: fixed mkvmerge dropping the last TrueHD frame if its size was smaller than 12 bytes. Fixes #6296.
+    - MKVToolNix GUI: job runner: the variable <MTX_INSTALLATION_DIRECTORY> will be replaed in the executable position of the command-line for the program to execute again. Fixes #6299.
+    - Windows: fixed converting the scalable SVG icons into the bitmap .ico ones used on Windows so that the grey background remains uniform & doesn't get garbled. Fixes #6280.
+
+    Build system changes
+    - The bundled libraries libEBML & libMatroska were updated to v1.4.7 & v1.7.2 respectively. Those versions fix various possible invalid memory accesses when reading data broken in certain, very specific ways, making them security sensitive.
+    - libEBML v1.4.7 & libMatroska v1.7.2 are now required.
+    - The meta info file org.bunkus.mkvtoolnix-gui.appdata.xml was renamed to org.bunkus.mkvtoolnix-gui.metainfo.xml.
+ReleaseTime: 2026-08-24
+RealVersion: 101.0.0

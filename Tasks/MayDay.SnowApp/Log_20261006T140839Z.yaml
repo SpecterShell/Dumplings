@@ -1,0 +1,55 @@
+Version: 0.4.15
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.15/Snow-App-Setup-0.4.15.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Dockable Explorer: The project explorer can move between the sidebar and a right-panel tab (one click from its toolbar, plus a + menu entry while docked right); the placement is remembered and the current directory is kept when moving.
+    - Directory-Scoped File Mentions: @:directory/ first picks a workspace directory — members of the linked project group included, the active one flagged — then searches inside it; results from sibling projects carry a project-name badge.
+    - Configurable Session Cache TTL: General settings gain a Sessions section where the conversation message cache TTL is adjustable (default 60 minutes, range 1-10080); a timed sweep releases conversations unviewed for longer than that, while conversations being viewed or actively running are never evicted.
+    - Snow Bot Streaming Cursor: The streaming indicator gains a "Snow Bot" animated flow style.
+    - About GitHub Repository Entry: The About section now links the GitHub repository.
+    Improvements
+    - The default terminal font stack includes Nerd Fonts (Maple Mono, JetBrainsMono, MesloLGS, ...), so Oh My Posh / starship prompts render out of the box; terminal settings offer a font preset dropdown (#178).
+    - Branch listing now uses git for-each-ref (1129ms → 112ms on a repository with 12 worktrees) (#177).
+    - Plugin market force-refresh purges the jsDelivr mirror cache first, so refreshing is no longer defeated by stale CDN copies.
+    - The built-in browser MCP server is disabled by default and enabled per project, keeping its tools out of the model context until opted in.
+    - The built-in general subagent's defaults (system prompt and tool list) refresh automatically.
+    - Compaction summary messages use a compact divider-bar style, with copy and rollback inline.
+    Bug Fixes
+    - Fixed Git branch dropdown interactions: clicking the trigger twice no longer closes and immediately reopens it, the popup width follows the space actually available to the right of the trigger (no clipping in narrow windows or under display scaling), and worktree rows keep their action buttons.
+    What's Changed
+    - fix(git): repair branch dropdown click and width, speed up branch listing by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/177
+    - fix(terminal): make Nerd Font glyphs render out of the box by @ShiroEirin in https://github.com/MayDay-wpf/snow-app/pull/178
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.14...v0.4.15
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.15
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 资源管理器可停靠右侧面板：资源管理器可在左侧栏与右侧面板标签页之间切换（管理器工具栏内一键切换；右侧面板模式下顶栏 + 菜单提供入口），位置偏好持久化，切换时保持当前浏览的目录。
+    - 文件提及按工作目录定位：输入 @:工作目录/ 先选择工作目录、再在目录内搜索文件；关联项目组的成员目录均可选，当前目录带「当前」标记，来自兄弟项目的结果带项目名徽标。
+    - 会话缓存保活时长可配置：通用设置新增「会话」分区，会话消息缓存 TTL 可调（默认 60 分钟，范围 1-10080 分钟）；配合定时清扫，超时未查看的会话自动从内存释放，正在查看或运行中的会话不受影响。
+    - Snow Bot 流式光标：流式指示器新增「Snow Bot」动态流光样式。
+    - 关于页 GitHub 仓库入口。
+    改进
+    - 终端默认字体栈内置 Nerd Font（Maple Mono、JetBrainsMono、MesloLGS 等），Oh My Posh / starship 提示符图开箱即渲染；终端设置新增字体预设下拉（#178）。
+    - Git 分支列表改用 git for-each-ref：12 个工作树的仓库实测 1129ms → 112ms（#177）。
+    - 插件市场强制刷新前先清理 jsDelivr 镜像缓存，刷新不再受 CDN 旧副本影响。
+    - 内置浏览器 MCP 服务器改为默认关闭、按项目显式启用，浏览器工具不再默认注入模型上下文。
+    - 内置通用子代理的默认配置（系统提示词与工具清单）随版本自动刷新。
+    - 压缩摘要消息改为紧凑分割条样式，复制与回滚按钮并入。
+    修复
+    - 修复 Git 分支下拉交互：连点分支按钮不再「关闭后立即重开」；弹窗宽度按触发器右侧实际可用空间计算，窄窗口与显示缩放下不再被裁切，工作树行的操作按钮不再被挤出。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0415
+ReleaseTime: 2026-10-06T07:22:26.0000000Z

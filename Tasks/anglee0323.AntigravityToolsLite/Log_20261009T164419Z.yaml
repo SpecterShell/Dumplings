@@ -1,0 +1,17 @@
+Version: 4.10.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.2/agy-switch-4.10.2-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复“确认任务空闲后切换”停在等待状态的问题。即使由 Claude/GPT 的低额度触发，也会等待 Gemini 等全部 App 对话和后台执行器空闲，再自动关闭相关客户端、切号并重新打开。
+    - macOS 下，已验证的 App 数据 Hub 不再仅因常驻 agy 进程而阻止切换。关闭前重新检查其任务状态，切号后恢复此前运行的 Hub；启动参数只在内存中保留，不写入日志。
+    - 关闭客户端前保存重启计划，并在临时进程检查失败时保留。设置、菜单栏和 CLI 状态区分等待任务、自动关闭、关闭失败和换号后重启失败，避免笼统要求用户手动关 App。
+    - 修复 Claude Opus 4.6 等已知模型的 -thinking 名称匹配，桌面、菜单栏和 CLI 使用一致的官方价格估算。简化费用卡片说明，将圆环中的“已计价小计”改为“预估费用”；无法匹配的价格仍不计入估算。
+    - 双模型系列额度显示中，每个账号保留主名称，副名称位置改为 Gemini 与 Claude/GPT 分组标题；两组分别显示“5 小时”和“每周”，增加间距与分隔线。单系列显示保留邮箱/备注副名称。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.2
+ReleaseTime: 2026-10-09T16:15:50.0000000Z

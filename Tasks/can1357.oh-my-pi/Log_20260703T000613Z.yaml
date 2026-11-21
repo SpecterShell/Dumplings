@@ -1,0 +1,122 @@
+Version: 16.3.3
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.3.3/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Enabled dynamic model resolution to support seamless mid-run model switching.
+    Fixed
+    - Fixed an issue in the Cursor agent where assistant messages containing native tool calls could duplicate text blocks on replay.
+    - Fixed a bug where Cursor agent exec-channel tools (such as bash, write, and delete) were executed a second time after server-side execution.
+    - Improved error handling for tool calls interrupted by upstream provider stream errors, distinguishing transport/provider failures from local tool execution failures in the CLI, events, and messages.
+    @oh-my-pi/pi-ai
+    Added
+    - Added comprehensive tracking and credential-ranking support for Anthropic per-tier and weekly usage limits, including Claude Fable weekly caps. This prevents a single exhausted model-scoped cap from blocking the entire OAuth credential and improves credential selection based on drain-rate pressure.
+    Changed
+    - Updated Claude Fable reasoning replay to use bare text instead of wrapped thinking tags
+    Fixed
+    - Improved robustness of single-argument tool calls by automatically remapping mislabeled string arguments.
+    - Fixed Anthropic OAuth usage reporting to stop retrying on 429 rate-limit errors.
+    - Fixed usage cache to correctly persist null values during cold-start failure backoff windows.
+    - Fixed cursor-agent persisted transcripts losing tool-call structure for native execution tools, ensuring replayed tool results are correctly paired with their corresponding calls.
+    - Fixed OpenAI-compatible streaming usage parsing to prefer non-zero nested cached token counts when the root cached_tokens value is zero.
+    - Added automatic detection and remediation for custom proxies returning signature errors on Anthropic thinking blocks, allowing the client to automatically retry with unsigned blocks and prompt the user to adjust their configuration.
+    - Fixed potential hangs in GitLab Duo Workflow setup by adding proper timeout and abort signal handling to REST fetches.
+    - Fixed Cursor proxy tunnel setup hanging indefinitely by adding abort and timeout handling.
+    - Fixed Devin Connect streaming reader vulnerability to corrupt frame lengths by capping payloads at 16 MiB and throwing an envelope error immediately.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Extended Anthropic-compatible signing-endpoint recognition to Cloudflare AI Gateway, Google Vertex, AWS Bedrock, and Azure AI Inference / Foundry to ensure consistent reasoning-replay and signature-stripping behavior, and exposed ResolvedAnthropicCompat.signingEndpoint in the public API.
+    - Fixed Zhipu Coding Plan runtime discovery to prioritize account-scoped model lists over bundled fallback models, preventing routing errors for valid non-z.ai keys.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed _input as a supported alias for the edit tool input field
+    Changed
+    - Refined advisor note card visuals with a dedicated rail character and bold label headers
+    - Deferred session_stop extension hooks and incomplete-todo reminders until all agent-owned background jobs (such as async bash or task spawns) are fully idle
+    - Restyled the advisor note card so notes no longer blend into thinking output: bold label-tag header, heavier severity-tinted rail, and note body on the default text color instead of thinking-gray
+    Fixed
+    - Fixed TUI loading animation sometimes failing to render during interactive mode status updates
+    - Fixed race conditions and potential hangs during agent startup by improving process lifecycle management
+    - Fixed RpcClient startup errors intermittently losing the child's stderr (e.g. the "Unknown provider" message) by waiting for the process to exit — and its stderr to fully drain — before reporting a failed start; also fixed an unhandled rejection when the agent process is killed before becoming ready
+    - Improved reliability of file edits when snapshots share identical hash tags
+    - Fixed terminal creation in ACP by properly wrapping shell commands and arguments, resolving execution failures (such as ENOENT errors) on Windows and POSIX platforms
+    - Fixed inference worker subprocesses (such as TTS, STT, and embeddings) discarding stderr, ensuring unexpected crashes and exit traces are properly captured and surfaced in logs
+    - Fixed potential session data loss on Windows during atomic compaction rewrites by preventing concurrent writes from overwriting the session file during exit or compaction
+    - Fixed transcript scrollback boundaries to prevent duplicate rows from appearing when live blocks grow
+    - Fixed macOS SSHFS mount detection to avoid redundant remounting attempts when the mountpoint is unavailable
+    - Fixed SSH streamed placeholders and partial frames leaving stale rows in the TUI viewport and scrollback
+    - Fixed Gemini web search to correctly honor the configured search model (providers.webSearchGeminiModel or GEMINI_SEARCH_MODEL) for both OAuth and Developer API grounding requests
+    - Fixed omp install rejecting valid npm package specifications
+    - Improved MCP OAuth reauthorization error messages when dynamic client registration is closed, directing users to configure client credentials
+    - Fixed omp update -l to correctly support the plugin-update shorthand for upgrading marketplace plugins
+    - Fixed /advisor on command to correctly rebuild the advisor runtime and bind to the newly configured model
+    - Fixed edit tool failures on large source files after a structural-summary read by automatically merging unseen anchor lines into the snapshot
+    - Fixed potential hangs and process leaks in the Debug Adapter Protocol (DAP) client by introducing write timeouts and ensuring detached adapter processes are terminated on connection failures
+    - Fixed status-line GitHub PR lookup hangs by enforcing a command timeout
+    - Fixed potential pipe-buffer deadlocks during plugin installation, uninstallation, and updates by concurrently draining stdout and stderr
+    - Fixed SSH tool hangs on unreachable hosts by enforcing a 30-second timeout on pre-command connection and host probes
+    - Fixed models.yml schema validation to surface warnings for invalid custom provider configurations instead of silently ignoring them
+    - Fixed potential network hangs in omp update, Hindsight recall, and Smithery registry lookups by adding fetch timeouts
+    - Reduced TUI CPU overhead during streaming and idle waits by dropping the redundant pre-render on every session event, iterating shimmer text in place instead of allocating a code-point array per animation frame, and coalescing the live-tool spinner render cadence to its glyph-advance rate (#4353).
+    @oh-my-pi/collab-web
+    Fixed
+    - Improved input detection for the edit tool's summary and body views.
+    @oh-my-pi/hashline
+    Breaking Changes
+    - Removed SnapshotStore.byHashExact. Consumers should now use byHash, which resolves collisions by returning the most recently recorded version.
+    Changed
+    - Improved patch application robustness by resolving 16-bit snapshot tag collisions to the most recent version instead of rejecting them.
+    Fixed
+    - Fixed frequent edit rejections after a structural-summary read (affecting parseable code over 100 lines) by automatically inlining unseen anchor lines and merging them into the snapshot's seen lines, allowing immediate retries to succeed without requiring a separate range re-read.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed keyboard fallback behavior (modifyOtherKeys) on unknown SSH terminals, resolving broken Shift input in iOS SSH clients like Redock.
+    - Fixed a native scrollback rendering bug where finalized transcript rows below an active block would duplicate when the active block expanded.
+    - Fixed autocomplete popups remaining active with stale suggestions after destructive text editing (such as Ctrl+W, Ctrl+U, Ctrl+K, Alt+Backspace, Alt+D, paste, or yank), preventing input corruption when pressing Tab or Enter.
+    - Skipped Markdown re-lex + re-wrap when setText receives the identical text, mirroring the equality guard on Text.setText — cuts one of the top streaming CPU hotspots when providers re-emit unchanged content (#4353).
+    What's Changed
+    - feat(ai): track Claude Fable weekly usage separately in omp usage by @joswha in https://github.com/can1357/oh-my-pi/pull/4344
+    - fix(catalog): disable custom Anthropic unsigned replay by default by @roboomp in https://github.com/can1357/oh-my-pi/pull/4298
+    - fix(tui): invalidate autocomplete on destructive edits and guard stale Tab/Enter acceptance by @roboomp in https://github.com/can1357/oh-my-pi/pull/4301
+    - fix(agent): rebuild advisor on explicit enable by @roboomp in https://github.com/can1357/oh-my-pi/pull/4303
+    - fix(coding-agent): surface invalid models.yml errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/4309
+    - fix(providers): make Gemini web_search model configurable by @roboomp in https://github.com/can1357/oh-my-pi/pull/4313
+    - fix(tui): repaint SSH topology flips by @roboomp in https://github.com/can1357/oh-my-pi/pull/4315
+    - fix(tool): detect macOS sshfs mounts without mountpoint by @roboomp in https://github.com/can1357/oh-my-pi/pull/4320
+    - fix(agent): distinguish synthetic placeholder tool results from real tool failures by @roboomp in https://github.com/can1357/oh-my-pi/pull/4322
+    - fix(subprocess): capture worker stderr so exit-code-7 crashes stop being invisible by @roboomp in https://github.com/can1357/oh-my-pi/pull/4327
+    - fix(tui): skip unsafe SSH keyboard fallback by @roboomp in https://github.com/can1357/oh-my-pi/pull/4328
+    - fix(tui): repair audited scrollback tail rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/4330
+    - fix(acp): wrap bash tool shell line in /bin/sh -c for terminal/create by @roboomp in https://github.com/can1357/oh-my-pi/pull/4335
+    - fix(ai): parse nested cached token hits when root cache is zero by @roboomp in https://github.com/can1357/oh-my-pi/pull/4339
+    - fix(session): preserve tail after atomic compaction rewrites by @roboomp in https://github.com/can1357/oh-my-pi/pull/4343
+    - fix(cursor): synthesize toolCall blocks for exec-channel native tools by @roboomp in https://github.com/can1357/oh-my-pi/pull/4351
+    - fix(hashline): reveal seen-line-guard content and merge into snapshot on reject by @roboomp in https://github.com/can1357/oh-my-pi/pull/4225
+    - fix(ai/devin): bound Connect frame payload at 16 MiB by @roboomp in https://github.com/can1357/oh-my-pi/pull/4284
+    - fix(ssh): bound pre-command SSH helpers with ptree.exec timeout by @roboomp in https://github.com/can1357/oh-my-pi/pull/4286
+    - fix(plugins): drain subprocess pipes concurrently with proc.exited by @roboomp in https://github.com/can1357/oh-my-pi/pull/4287
+    - fix(pi-iso): drain git apply stderr during patch writes by @roboomp in https://github.com/can1357/oh-my-pi/pull/4288
+    - fix(ai): time out Cursor proxy tunnels by @roboomp in https://github.com/can1357/oh-my-pi/pull/4289
+    - fix(cli): add timeouts to stalled fetches by @roboomp in https://github.com/can1357/oh-my-pi/pull/4290
+    - fix(gitlab-duo-workflow): bounded signal/timeout on post-start REST setup fetches by @roboomp in https://github.com/can1357/oh-my-pi/pull/4291
+    - fix(clipboard): read the system clipboard via Bun.spawn instead of execSync by @roboomp in https://github.com/can1357/oh-my-pi/pull/4292
+    - fix(status-line): route gh pr lookup through git.github.run with timeout signal by @roboomp in https://github.com/can1357/oh-my-pi/pull/4293
+    - fix(coding-agent/dap): bound writeMessage flush and clean up leaked adapter processes by @roboomp in https://github.com/can1357/oh-my-pi/pull/4294
+    - fix(catalog): restore Zhipu Coding Plan availability by @roboomp in https://github.com/can1357/oh-my-pi/pull/4300
+    - fix(cli): route update plugin shorthand by @roboomp in https://github.com/can1357/oh-my-pi/pull/4306
+    - fix(mcp): explain missing client_id when DCR was rejected by @roboomp in https://github.com/can1357/oh-my-pi/pull/4308
+    - fix(cli): accept npm protocol plugin installs by @roboomp in https://github.com/can1357/oh-my-pi/pull/4311
+    - fix(tui): cut TUI CPU overhead during interactive sessions by @roboomp in https://github.com/can1357/oh-my-pi/pull/4354
+    New Contributors
+    - @joswha made their first contribution in https://github.com/can1357/oh-my-pi/pull/4344
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.3.2...v16.3.3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.3.3
+ReleaseTime: 2026-07-02T23:16:06.0000000Z

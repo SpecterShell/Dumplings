@@ -1,0 +1,22 @@
+Version: 0.15.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/g0orx/hpsdr-rs/releases/download/v0.15.1/hpsdr-rs-0.15.1-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes from issue #15:
+    - CW sidetone: the PC sidetone is now generated in the audio callback, with smooth 5 ms edges. That removes the clicks and the low-level ticks.
+    - Sidetone settings: the level is shown as 0–100%, and 100% is now full volume. The frequency range is 300–1200 Hz.
+    - FM: the filter width goes up to 8 kHz (±8 kHz). There's a new FM deviation setting (Settings → TX) with a 5 kHz default. CTCSS was too weak at the old fixed 2.5 kHz deviation.
+    - AF Gain: remembered separately for each mode, so FM and SSB no longer share one level.
+    - Transmit without a mic: Enable Transmit now works without an audio input device, for example on a Raspberry Pi with no USB sound card.
+    - Windows discovery: discovery now binds any free UDP port instead of the fixed ports 5000 and 50000, which Windows can reserve for Hyper-V, WSL or Docker. It also keeps listening through Windows receive errors.
+    Also:
+    - Raspberry Pi controller: if GPIO lines are busy, the error now says which lines and what holds them (SPI, or a config.txt overlay).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/g0orx/hpsdr-rs/releases/tag/v0.15.1
+ReleaseTime: 2026-11-15T15:33:46.0000000Z

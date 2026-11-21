@@ -1,0 +1,88 @@
+Version: 2.4.3
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EasyTier/EasyTier/releases/download/v2.4.3/easytier-windows-i686-v2.4.3.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EasyTier/EasyTier/releases/download/v2.4.3/easytier-windows-x86_64-v2.4.3.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EasyTier/EasyTier/releases/download/v2.4.3/easytier-windows-arm64-v2.4.3.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🚀 Feature Enhancements
+    - Custom STUN Servers – Introduce support for configuring custom STUN servers to improve NAT traversal success rate @fanyang89 #1212
+    - Magisk Module Enhancements
+      - Add local hotspot-to-LAN forwarding for easy mobile network sharing @ThermalEng #1252
+      - Allow custom command-line arguments for advanced users @TigerBeanst #1236
+    - Shared Node Uptime Monitor – Track uptime of EasyTier public shared nodes to help with operations and statistics @KKRainbow #1250
+    - Group-based ACL Rules – Extend ACL with group-based rules and related structures for more flexible access control @xzzpig #1265
+    - tokio-console Support – Integrate tokio-console for asynchronous task debugging and performance analysis @fanyang89 #1259
+    - LoongArch64 Memory Optimizations – Switch to mimalloc on Linux LoongArch64 to avoid page size issue @Glavo #1257
+    - Android Development Experience – Provide a dedicated flake.nix for Android to streamline local development, testing, and building @21paradox #1237
+    - CLI / GUI Usability Improvements
+      - CLI now lists the local IP first for instant visibility @fanyang89 #1256
+      - GUI peer list can be sorted to quickly locate nodes @fanyang89 #1278
+      - Tray menu moves “Quit” to the bottom to reduce accidental clicks @fanyang89 #1291
+    🐞 Bug Fixes
+    - Traffic Accounting Fix – Proxy traffic is now correctly counted in statistics @KKRainbow #1229
+    - Dockerfile Corrections – Resolve dependency and path issues encountered during image builds @KKRainbow #1219
+    - Instant Overflow Panic – Eliminate panic caused by std::Instant overflow under certain conditions @KKRainbow #1243
+    - Deadlocks & Panics
+      - Fix potential deadlock in tokio-smoltcp @KKRainbow #1270
+      - Prevent panic when accepting smoltcp sockets @KKRainbow #1272
+    - QUIC Transport Fixes – Address sporadic connection failures and unexpected disconnects in QUIC transport @KKRainbow #1293
+    - KCP Behavior Correction – Resolve cases where KCP did not behave as expected @KKRainbow #1285
+    - TUN Device Retry – Automatically recreate TUN device if it is unexpectedly closed, ensuring network continuity @KKRainbow #1279
+    - Magic DNS Robustness – Strengthen domain validation to prevent resolution failures with malformed input @KKRainbow #1288
+    - Disable NAT4 Hole Punching – New option to turn off NAT4 hole punching in networks where it causes compatibility issues @KKRainbow #1277
+    - TCP Proxy Keepalive – Fixed keep-alive not working on accepted TCP proxy connections @KKRainbow #1302
+    - IPv6 MTU Setting – Fixed TUN initialization failure caused by setting IPv6 MTU @KKRainbow #1300
+    - OSPF Route Panic – Eliminated potential panic in OSPF route calculation @KKRainbow #1304
+    🛠️ Build & Documentation
+    - Nix Flake Refactor – Refactor the Nix Flake and migrate Android support for consistent cross-platform builds @xzzpig #1280
+    - README Updates – Refresh QQ group contact details in both Chinese and English README files for easier community access @KKRainbow #1275 #1274
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 新功能 / Feature Enhancements
+    - 自定义 STUN 服务器 - 支持在配置中指定自定义 STUN 服务器，提高 NAT 穿透成功率 @fanyang89 #1212
+    - Magisk 模块增强
+      - 新增热点局域网转发功能，便于移动端共享网络 @ThermalEng #1252
+      - 支持自定义启动参数，满足高级用户需求 @TigerBeanst #1236
+    - 共享节点在线监控 - 为 EasyTier 公共共享节点引入在线时长监控，方便运维与统计 @KKRainbow #1250
+    - 基于分组的 ACL 规则 - ACL 新增 group-based 规则及配套结构，实现更灵活的访问控制 @xzzpig #1265
+    - tokio-console 支持 - 集成 tokio-console，便于异步任务调试与性能分析 @fanyang89 #1259
+    - LoongArch64 内存优化 - Linux LoongArch64 平台改用 mimalloc，避免页面大小问题导致启动失败 @Glavo #1257
+    - Android 开发体验 - 新增 Android 专用 flake.nix，简化本地开发、测试与构建流程 @21paradox #1237
+    - CLI/GUI 体验优化
+      - CLI 将本地 IP 置顶显示，一目了然 @fanyang89 #1256
+      - GUI 节点列表支持排序，便于快速定位 @fanyang89 #1278
+      - 托盘菜单将“退出”项移至底部，减少误操作 @fanyang89 #1291
+    🐞 问题修复 / Bug Fixes
+    - 流量统计修正 - 修复代理流量未被计入统计的问题，确保数据准确 @KKRainbow #1229
+    - Dockerfile 修复 - 修正构建镜像时可能遇到的依赖与路径问题 @KKRainbow #1219
+    - 时间溢出 panic - 修复 std::Instant 溢出导致的 panic，提升稳定性 @KKRainbow #1243
+    - 死锁与 panic 修复
+      - 解决 tokio-smoltcp 中的潜在死锁 @KKRainbow #1270
+      - 避免 smoltcp socket accept 时 panic @KKRainbow #1272
+    - QUIC 传输修复 - 修复 QUIC 传输层偶现的连接失败与异常断开 @KKRainbow #1293
+    - KCP 行为修正 - 修复 KCP 在特定场景下未按预期工作的问题 @KKRainbow #1285
+    - TUN 设备重试 - 当 TUN 设备被异常关闭时自动重试创建，保障网络连续性 @KKRainbow #1279
+    - Magic DNS 健壮性 - 增强域名检查逻辑，避免因异常输入导致解析失败 @KKRainbow #1288
+    - 禁用 NAT4 打洞选项 - 新增开关，允许在特定网络环境中关闭 NAT4 打洞以提升兼容性 @KKRainbow #1277
+    - TCP 代理 Keepalive - 修复已接受的 TCP 代理连接 keep-alive 失效问题 @KKRainbow #1302
+    - IPv6 MTU 设置 - 修复设置 IPv6 MTU 时可能导致 TUN 初始化失败的问题 @KKRainbow #1300
+    - OSPF 路由 Panic - 修复 OSPF 路由计算过程中可能出现的 panic @KKRainbow #1304
+    🛠️ 构建与文档
+    - Nix Flake 重构 - 重构 Nix Flake 并迁移 Android 支持，提升跨平台构建一致性 @xzzpig #1280
+    - README 更新 - 更新中英文 README 中的 QQ 群联系方式，方便社区交流 @KKRainbow #1275 #1274
+- Key: ReleaseNotesUrl
+  Value: https://github.com/EasyTier/EasyTier/releases/tag/v2.4.3
+ReleaseTime: 2025-08-27T07:12:19.0000000Z

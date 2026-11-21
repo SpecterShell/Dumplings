@@ -1,0 +1,24 @@
+Version: 1.0.54
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/download/v1.0.54/dws-windows-amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/download/v1.0.54/dws-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release promotes the validated v1.0.54-beta.2 baseline to stable. It restores the default transport envelope for personal event output with opt-in flattening, plus Schema CLI path and plugin overlay compatibility fixes.
+    Changed
+    - Personal event output compatibility (#743) — event consume once again preserves the transport envelope by default for ndjson/json/pretty, while retaining the existing compact processor. New Agent workflows opt into the event-specific top-level DTO with --flatten, which is mutually exclusive with -f raw and --debug-raw-events; event schema --flatten describes that DTO, while the default schema describes type/event_type/data/headers and points to .data | fromjson.
+    Fixed
+    - Schema CLI path compatibility (#738) — user-facing Schema lookups once again accept space-, dot-, and slash-separated CLI paths without weakening strict canonical identity resolution.
+    - Plugin CLI overlays (#701) — installed plugins register their manifest-authored command trees again for HTTP and stdio servers, and a plugin may now replace a hidden compatibility fallback (for example conference) instead of being skipped as a distribution conflict.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/DingTalk-Real-AI/dingtalk-workspace-cli/releases/tag/v1.0.54
+ReleaseTime: 2026-07-21T16:06:59.0000000Z

@@ -1,0 +1,29 @@
+Version: 3.9.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win32/3.9.0/snowflake32_odbc-3.9.0.msi
+- Architecture: x64
+  InstallerUrl: https://sfc-repo.snowflakecomputing.com/odbc/win64/3.9.0/snowflake64_odbc-3.9.0.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://docs.snowflake.com/en/release-notes/clients-drivers/odbc-2025.html
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Private Preview (PrPr) features
+    - Added support for Workflow Identity Federation in the AWS, Azure, GCP, and Kubernetes platforms.
+      - These features can only be accessed by setting the SF_ENABLE_EXPERIMENTAL_AUTHENTICATION environment variable to true.
+      - You should use these features only with non-production data.
+      - Support is unavailable for these PrPr features. However, the Product and Engineering teams are available for consultation during PrPr.
+      - Contact your account team for participation and documentation.
+    New features and updates
+    - Added the LOCAL_APPLICATION default for the oauth_client_id and oauth_client_secret OAUTH parameters.
+    - Extended the Windows UI of the ODBC driver with key-pair authentication parameters PRIV_KEY_FILE and PRIV_KEY_FILE_PWD.
+    - Added support virtual-style domains.
+    - Added the DriverManagerOverride configuration parameter, which allows specifying the driver manager on Linux and MacOS.
+    Bug fixes
+    - Fixed the incorrect error thrown by fetching the cancellation request.
+    - Fixed the issue triggered by using bulk fetching first (retrieve multiple rows per fetch call), then switching to single row mode.
+    - Fixed the issue when handling easy-logging configuration could break the connection.
+    - Fixed an OCSP validation issue on session resuming that could lead to out of memory problem.
+ReleaseTime: 2025-06-12T13:43:36.0000000Z

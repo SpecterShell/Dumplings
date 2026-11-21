@@ -1,0 +1,48 @@
+Version: 4.0.13
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.13/boxplayer-4.0.13-win-ia32.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.13/boxplayer-4.0.13-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v4.0.13/boxplayer-4.0.13-win-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    BoxPlayer v4.0.13 Release Notes
+    ✨ 新功能
+    🎵 音乐库（全新）
+    - 新增「音乐」顶部 Tab，提供独立的音乐浏览/播放体验
+    - 支持跨网盘（阿里云盘 / 123 / 115 / 百度 / PikPak / Dropbox / OneDrive / Box）的音频文件聚合扫描
+    - 沉浸式音乐播放器，支持播放列表、随机/顺序/单曲循环
+    - 自动音频元数据刮削（标题、艺术家、专辑、封面）
+    - 新增 music_track 表（Dexie v11 升级）
+    📺 媒体库扫描增强
+    启动时后台静默扫描视频/音乐媒体库，配合下列开关精细控制：
+    设置项（设置 → 网盘） 默认值 说明
+    音乐库自动刮削 (uiLibraryAutoScanMusic) 关 启动后后台扫描所有网盘内的音频文件并入库
+    视频媒体库自动刮削 (uiLibraryAutoScanVideo) 关 启动后后台扫描所有网盘内的视频文件
+    仅扫描增量 (uiLibraryIncrementalScan) 开 按时间间隔节流，只处理新增/变更文件，避免每次启动重跑
+    扫描间隔 (uiLibraryScanIntervalHours) 24 小时 增量模式下两次全量扫描的最短间隔（1–720 小时）
+    媒体源文件夹自动更新 (uiLibraryFollowManualScans) 开 把手动扫描过的文件夹自动注册到下次自动扫描队列
+    多账号独立开关 (uiLibraryAutoScan{Music,Video}DisabledUsers) 全开 每个登录账号独立的「音乐 / 视频」开关，支持一键全开/全关
+    音乐手动扫描注册表 (uiMusicAutoScanFolders) [] 用户在网盘中右键加入的音乐扫描目录，可在设置中查看与清空
+    附带行为优化：
+    - 登录弹窗 仅在用户主动新登录时出现，启动加载/账号切换不再打扰
+    - 文件删除清理 Hook：删除文件时自动清理已刮削的元数据并取消扫描注册
+    👀 文件夹悬浮预览（修复 + 配置）
+    - 文件夹支持鼠标悬停 显示 预览窗口视图。
+    设置项（设置 → 网盘） 默认值 说明
+    悬浮预览开关 (uiFolderPreviewEnabled) 开 鼠标悬停文件夹时，弹窗预览文件夹内的文件
+    自动隐藏延迟 (uiFolderPreviewAutoHide) 6 秒 离开后多少秒自动隐藏预览弹窗
+    🎨 UI 重构
+    Lucide 图标全量迁移
+    - 项目所有图标从 iconfont 迁移到 lucide-vue-next（639 处替换，覆盖 80+ 文件）
+    - 新增 IconFont.vue 兼容层，120+ 旧类名映射到 Lucide 组件，零侵入完成迁移
+    - 移除 iconfont.css / iconfont.woff2 资源（减小体积）
+    - 移除 main.html / main2.html 中的 iconfont link 引用
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gaozhangmin/boxplayer/releases/tag/v4.0.13
+ReleaseTime: 2026-05-27T03:52:27.0000000Z

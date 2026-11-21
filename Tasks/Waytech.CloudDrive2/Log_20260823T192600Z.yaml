@@ -1,0 +1,20 @@
+Version: 1.0.15
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v1.0.15/CloudDrive2Setup-X64-1.0.15.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/cloud-fs/cloud-fs.github.io/releases/download/v1.0.15/CloudDrive2Setup-Arm64-1.0.15.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1. 优化后台多线程下载算法，提高从网盘下载的速度，高码率视频播放会更流畅
+    2. 备份：实时监控启动失败时会明确报错。 以前监控没有真正启动时，界面仍然显示空闲，与正常状态无法区分，实际上文件改动没有被备份，现在会显示错误原因，Linux 上如果被监控的目录数量超过系统上限（群晖默认 8192），以前整个监控会失效且没有任何提示；现在会提示如何调大这个上限，并保留已经生效的那部分监控
+    3. 修复备份导致的磁盘空间不释放。 源文件删除后空间不会被回收，需要重启服务才能恢复的问题
+    4. 修复将文件或文件夹重命名为一个已存在的名字时，缓存报错并在日志中重复输出错误的问题
+    5. 修复修改设备名称后需要重新登录的问题
+    6. 其它 bug 修复和性能改进
+- Key: ReleaseNotesUrl
+  Value: https://github.com/cloud-fs/cloud-fs.github.io/releases/tag/v1.0.15
+ReleaseTime: 2026-08-23T18:52:42.0000000Z
+RealVersion: "1.0"

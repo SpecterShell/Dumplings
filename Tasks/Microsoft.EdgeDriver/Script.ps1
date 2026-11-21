@@ -1,48 +1,31 @@
-$Content = (Invoke-WebRequest -Uri 'https://msedgedriver.azureedge.net/LATEST_STABLE' | Read-ResponseContent).Trim()
+$Object1 = (Invoke-WebRequest -Uri 'https://msedgedriver.microsoft.com/LATEST_STABLE' | Read-ResponseContent).Trim()
 
 # Version
-$Task.CurrentState.Version = $Version = $Content
+$this.CurrentState.Version = $Object1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x86'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win32.zip"
-  NestedInstallerFiles = @(
-    @{
-      RelativeFilePath     = 'msedgedriver.exe'
-      PortableCommandAlias = 'msedgedriver'
-    }
-  )
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = "https://msedgedriver.microsoft.com/$($this.CurrentState.Version)/edgedriver_win32.zip"
 }
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture         = 'x64'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_win64.zip"
-  NestedInstallerFiles = @(
-    @{
-      RelativeFilePath     = 'msedgedriver.exe'
-      PortableCommandAlias = 'msedgedriver'
-    }
-  )
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = "https://msedgedriver.microsoft.com/$($this.CurrentState.Version)/edgedriver_win64.zip"
 }
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture         = 'arm64'
-  InstallerUrl         = "https://msedgedriver.azureedge.net/${Version}/edgedriver_arm64.zip"
-  NestedInstallerFiles = @(
-    @{
-      RelativeFilePath     = 'msedgedriver.exe'
-      PortableCommandAlias = 'msedgedriver'
-    }
-  )
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'arm64'
+  InstallerUrl = "https://msedgedriver.microsoft.com/$($this.CurrentState.Version)/edgedriver_arm64.zip"
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

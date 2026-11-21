@@ -1,48 +1,102 @@
-# International x64
-$Object1 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
-# International x86
-$Object2 = (Invoke-RestMethod -Uri 'https://updater.maxthon.com/mx6/com/updater_x86.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
-# Chinese x64
-$Object3 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
-# Chinese x86
-$Object4 = (Invoke-RestMethod -Uri 'https://updater.maxthon.cn/mx6/cn/updater_x86.json').maxthon | Where-Object -Property 'channels' -Contains -Value 'stable'
+$Object1 = Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/bloodchen/mxfast/main/u1.txt'
 
-if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Length -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+$Content = [Convert]::FromBase64String($Object1)
+
+$Aes = [System.Security.Cryptography.AesManaged]@{
+  Padding = [System.Security.Cryptography.PaddingMode]::PKCS7
+  Mode    = [System.Security.Cryptography.CipherMode]::CBC
+  Key     = [System.Text.Encoding]::UTF8.GetBytes($Global:DumplingsSecret.MaxthonKey)
+  IV      = [byte[]]($Content[0..15])
+}
+$AesDecryptor = $Aes.CreateDecryptor()
+
+$Object2 = [System.Text.Encoding]::UTF8.GetString($AesDecryptor.TransformFinalBlock($Content, 16, $Content.Length - 16)) | ConvertFrom-Json
+
+$Aes.Dispose()
+$AesDecryptor.Dispose()
+
+# Global x86
+# $Object3 = $Object2.win10.en.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+# Global x64
+$Object4 = $Object2.win10.en.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
+# China x86
+# $Object5 = $Object2.win10.cn.maxthon86.Where({ $_.channels -contains 'stable' }, 'First')[0]
+# China x64
+$Object6 = $Object2.win10.cn.maxthon64.Where({ $_.channels -contains 'stable' }, 'First')[0]
+
+# if ((@($Object3, $Object4, $Object5, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
+if ((@($Object4, $Object6) | Sort-Object -Property 'version' -Unique).Count -gt 1) {
+  # $this.Log("Global x86 version: $($Object3.version)")
+  $this.Log("Global x64 version: $($Object4.version)")
+  # $this.Log("China x86 version: $($Object5.version)")
+  $this.Log("China x64 version: $($Object6.version)")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Object1.version
+$this.CurrentState.Version = $Object4.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $Object2.url
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture  = 'x86'
+#   InstallerType = 'exe'
+#   InstallerUrl  = $Object3.url
+# }
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture        = 'x86'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object3.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
+$this.CurrentState.Installer += [ordered]@{
+  Architecture  = 'x64'
+  InstallerType = 'exe'
+  InstallerUrl  = $Object4.url
 }
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = $Object1.url
-}
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerLocale = 'zh-CN'
-  Architecture    = 'x86'
-  InstallerUrl    = $Object4.url
-}
-$Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
+#   Architecture        = 'x64'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object4.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale = 'zh-CN'
+#   Architecture    = 'x86'
+#   InstallerType   = 'exe'
+#   # InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object5.version)_x64.exe"
+#   InstallerUrl    = $Object5.url
+# }
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale     = 'zh-CN'
+#   Architecture        = 'x86'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object5.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
-  InstallerUrl    = $Object3.url
+  InstallerType   = 'exe'
+  # InstallerUrl    = "https://dl-cn.maxthon.com/mx7/maxthon_$($Object6.version)_x64.exe"
+  InstallerUrl    = $Object6.url
 }
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerLocale     = 'zh-CN'
+#   Architecture        = 'x64'
+#   InstallerType       = 'zip'
+#   NestedInstallerType = 'portable'
+#   InstallerUrl        = $Object6.url -replace 'maxthon_', 'maxthon_portable_' -replace '\.exe$', '.zip'
+# }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and (@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property 'version' -Unique).Length -eq 1 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

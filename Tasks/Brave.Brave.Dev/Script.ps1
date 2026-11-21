@@ -14,36 +14,39 @@ $Object1 = Invoke-RestMethod -Uri 'https://updates.bravesoftware.com/service/upd
 </request>
 "@
 
-if (($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Length -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+if (@($Object1.response.app.updatecheck.manifest.version | Sort-Object -Unique).Count -gt 1) {
+  $this.Log("x86 version: $($Object1.response.app[0].updatecheck.manifest.version)")
+  $this.Log("x64 version: $($Object1.response.app[1].updatecheck.manifest.version)")
+  $this.Log("arm64 version: $($Object1.response.app[2].updatecheck.manifest.version)")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
+$this.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase + $Object1.response.app[0].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[0].updatecheck.manifest.packages.package.name
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[1].updatecheck.manifest.packages.package.name
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'arm64'
-  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
+  InstallerUrl = $Object1.response.app[2].updatecheck.urls.url.Where({ $_.codebase.Contains('//updates-cdn.bravesoftware.com/') }, 'First')[0].codebase + $Object1.response.app[2].updatecheck.manifest.packages.package.name
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

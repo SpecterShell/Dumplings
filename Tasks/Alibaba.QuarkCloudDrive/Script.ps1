@@ -6,20 +6,46 @@ $Hash = [System.BitConverter]::ToString(
   )
 ).Replace('-', '').ToLower().Substring(0, 8)
 
-$Task.CurrentState = Invoke-RestMethod -Uri "https://pan.quark.cn/update/win32/$($Task.LastState.Version ?? '2.5.1')/latest.yml" -Headers @{
+$Prefix = "https://pan.quark.cn/update/win32/$($this.LastState.Version ?? '2.5.1')/"
+
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" -Headers @{
   'x-guid'        = $Guid
   'x-tm'          = $Time
   'authorization' = $Hash
-} | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Locale 'zh-CN'
+} | ConvertFrom-Yaml
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Version
+$this.CurrentState.Version = $Object1.version
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.releaseNotes | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

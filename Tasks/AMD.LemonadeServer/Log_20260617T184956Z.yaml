@@ -1,0 +1,112 @@
+Version: 10.8.0
+Installer:
+- InstallerUrl: https://github.com/lemonade-sdk/lemonade/releases/download/v10.8.0/lemonade-server-minimal.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Headline
+    - Live model management: auto-unload is available, along with the ability to pin models to prevent eviction.
+    - LMX-Omni image generation gains fine-grained parameters, unified collection import/export, and Hugging Face distribution.
+    - Cloud offload serves chat completions from any OpenAI-compatible provider alongside local models.
+    - New MCP gateway and lemonade launch pi integrations let external tools and agents call local models.
+    - Expanded platform support adds Moonshine speech-to-text, NVIDIA GB10 arm64, Debian 13, and ROCm for Radeon GPUs.
+    Breaking Changes
+    - vLLM model IDs renamed from Qwen3.5-*-vLLM to Qwen3.5-*-FP16-vLLM.
+    - The --flm-args CLI flag and flm_args API parameter have been removed.
+    - Recipe-configuration environment variables have been removed.
+    - The legacy GUI collection export bundle format can no longer be imported.
+    - The default ctx_size changed from 4096 to -1 (auto-tuned).
+    Lemonade Server
+    Operating System Downloads
+    Windows lemonade.msi
+    Ubuntu 24.04+ Launchpad PPA
+    Debian 13 lemonade-server_10.8.0-debian13_amd64.deb
+    Fedora 43 lemonade-server-10.8.0-fc43.x86_64.rpm
+    Fedora 44 lemonade-server-10.8.0-fc44.x86_64.rpm
+    macOS Lemonade-10.8.0-Darwin.pkg
+    Other platforms? See our Installation Options for Docker, Snap, Arch, Debian, and more.
+    Embeddable Lemonade
+    Portable binaries for bundling into your own installer. Run lemond ./ as a subprocess.
+    Platform Download
+    Ubuntu x64 lemonade-embeddable-10.8.0-ubuntu-x64.tar.gz
+    Windows x64 lemonade-embeddable-10.8.0-windows-x64.zip
+    macOS arm64 lemonade-embeddable-10.8.0-macos-arm64.tar.gz
+
+    What's Changed
+    Thanks @Geramy, @Kushal1213, @abn, @anditherobot, @bitgamma, @blackdeathdrow, @ckuethe, @clemperorpenguin, @fl0rianr, @github-actions, @iswaryaalex, @jeremyfowers, @kenvandine, @neoblizz, @noamsto, @ramkrishna2910, @sawansri, @siavashhub, @superm1, @vgodsoe for your awesome contributions to this release!
+    Click to expand changelog
+    - ci: wire HF_TOKEN into linux distro builds; drop Fedora by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2169
+    - Fix light theme persistence by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2121
+    - cli: group run/load recipe options by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2144
+    - docs: document pre-v10 legacy Linux config.json path by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2145
+    - fix(vllm): report streaming TTFT and TPS by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2009
+    - Fix compat with vscode by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2146
+    - trivial: Run pre-commit whitespace hook by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2140
+    - feat(backends): add Moonshine streaming STT backend (#2115) by @Geramy in https://github.com/lemonade-sdk/lemonade/pull/2178
+    - Rewrite heartbeat + monitor workflows by @vgodsoe in https://github.com/lemonade-sdk/lemonade/pull/1960
+    - ci(windows): migrate Windows builds to Visual Studio 2026 by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2199
+    - fix: remove load options environment variable support from lemonade CLI by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2185
+    - feat: auto-detect MTP capability from GGUF metadata by @blackdeathdrow in https://github.com/lemonade-sdk/lemonade/pull/2176
+    - moonshine follow-ups: dedupe realtime docs (#2192), GUI label (#2193), platform list by @Geramy in https://github.com/lemonade-sdk/lemonade/pull/2196
+    - fix(ui): connect log stream on main HTTP port instead of dedicated WebSocket port by @blackdeathdrow in https://github.com/lemonade-sdk/lemonade/pull/2191
+    - Add support for launching pi.dev by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2198
+    - fix: use Win32 API fallback for create_directories on symlinked Huggi… by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2184
+    - fix: enable TheRock ROCm installation on Windows for Radeon RX GPUs by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2093
+    - Add triage dashboard with GitHub Pages auto-publish by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2159
+    - Fix CUDA backend on NVIDIA GB10 (sm_121) arm64 by @kenvandine in https://github.com/lemonade-sdk/lemonade/pull/2203
+    - Refactor codebase to drop so much #ifdef _WIN32 by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2142
+    - ci: narrow API key CLI smoke tests by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2149
+    - Fix: recipe/backend status resolution for duplicated backend definition by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2206
+    - docs: add LangChain integration guide for Lemonade Server by @Kushal1213 in https://github.com/lemonade-sdk/lemonade/pull/2038
+    - vllm: rename built-in models with -FP16- suffix by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2155
+    - Enable ROCm on gfx1152 by @ckuethe in https://github.com/lemonade-sdk/lemonade/pull/2186
+    - Show models of several backends in agent launch model picker by @sawansri in https://github.com/lemonade-sdk/lemonade/pull/2205
+    - ci: add engine::moonshine to auto-labeling by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2209
+    - ci: grant pull-requests:read to triage dashboard workflow by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2210
+    - Add instructions about dkms conflict for users that run into that by @vgodsoe in https://github.com/lemonade-sdk/lemonade/pull/2208
+    - feat(cli): add interactive chat in the terminal by @siavashhub in https://github.com/lemonade-sdk/lemonade/pull/2207
+    - Fix AMD GPU architecture detection for CDNA datacenter parts by @neoblizz in https://github.com/lemonade-sdk/lemonade/pull/2182
+    - feat(config): honor LEMONADE_DEFAULTS_PATH for non-FHS installs by @noamsto in https://github.com/lemonade-sdk/lemonade/pull/2220
+    - fix(cli): lemonade launch claude fails to launch on Windows, throws Error 193 by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2213
+    - Fix download speed and ETA display at very low speeds by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2219
+    - Cloud offload: provider-agnostic OpenAI-compat backend + UI by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/1785
+    - Generate an artifact for Debian 13 by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2240
+    - Add inotify to extra models directory by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2217
+    - feat: Add backend watchdog for hung child servers by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2028
+    - Update llama.cpp to b9632 by @github-actions[bot] in https://github.com/lemonade-sdk/lemonade/pull/2238
+    - docs(config): document defaults.json seeding and LEMONADE_DEFAULTS_PATH by @noamsto in https://github.com/lemonade-sdk/lemonade/pull/2221
+    - feat: opt-in dynamic VRAM management (auto-evict idle models) by @clemperorpenguin in https://github.com/lemonade-sdk/lemonade/pull/2183
+    - fix(rocm): repair stable runtime when backend is update_required by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2003
+    - Drop support for flm_args by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2015
+    - fix: re-download missing checkpoint files automatically (no restart needed) by @blackdeathdrow in https://github.com/lemonade-sdk/lemonade/pull/2239
+    - trivial: Update debian/copyright by @superm1 in https://github.com/lemonade-sdk/lemonade/pull/2244
+    - cli: use long read timeout for pull and install streams by @abn in https://github.com/lemonade-sdk/lemonade/pull/2222
+    - docs: add release process guide by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2200
+    - Fix(Omni): image tool options for Omni image generation by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/1998
+    - fix(windows): set safe cwd for backend child processes by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2246
+    - ci: keep Windows inference cache outside workspace by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2148
+    - ci: drop src/cpp from distro build triggers by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2170
+    - fix: align moonshine backend lifecycle with watchdog by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2252
+    - test: pre-warm ROCm (TheRock) runtime before rocm-backend tests by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2250
+    - fix(server): handle Moonshine directory variants correctly by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2248
+    - fix(ui): visual reload of cloud provider text by @fl0rianr in https://github.com/lemonade-sdk/lemonade/pull/2247
+    - feat: implement safe model pinning to prevent auto-eviction by @abn in https://github.com/lemonade-sdk/lemonade/pull/2226
+    - Remember downloaded-only model filter by @anditherobot in https://github.com/lemonade-sdk/lemonade/pull/2119
+    - feat: Migrate whisper.cpp builds to whisper.cpp-rocm and add ROCm backend to Lemonade whisper by @iswaryaalex in https://github.com/lemonade-sdk/lemonade/pull/2188
+    - Unified collection import/export format; LMX collections distributed via Hugging Face by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2099
+    - Automatically determine context size by @bitgamma in https://github.com/lemonade-sdk/lemonade/pull/2235
+    - fix(server): prevent SIGPIPE crash in macOS DirectoryWatcher on kevent failure by @jeremyfowers in https://github.com/lemonade-sdk/lemonade/pull/2261
+    - Add MCP gateway: drop Lemonade into Claude Desktop, VS Code or Cursor in 30 seconds by @siavashhub in https://github.com/lemonade-sdk/lemonade/pull/2131
+    - Rev lemonade version to 10.8 by @ramkrishna2910 in https://github.com/lemonade-sdk/lemonade/pull/2271
+    New Contributors
+    - @blackdeathdrow made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2176
+    - @neoblizz made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2182
+    - @clemperorpenguin made their first contribution in https://github.com/lemonade-sdk/lemonade/pull/2183
+    Full Changelog: https://github.com/lemonade-sdk/lemonade/compare/v10.7.0...v10.8.0
+
+    Windows installers are signed. Free code signing provided by SignPath.io, certificate by SignPath Foundation. See our Code Signing Policy.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lemonade-sdk/lemonade/releases/tag/v10.8.0
+ReleaseTime: 2026-06-17T18:04:03.0000000Z

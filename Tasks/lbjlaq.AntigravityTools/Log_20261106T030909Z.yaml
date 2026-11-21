@@ -1,0 +1,189 @@
+Version: 5.0.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v5.0.3/Antigravity.Tools_5.0.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v5.0.3/Antigravity.Tools_5.0.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [Quota Attribution Governance: Root-Fixing 503 Misattribution & Quota False-Death; Refactoring Bucket Scheduling and Priority Competition] (Fixes #3838, #3841, #3821, PR #3845, Ref #3827, #3840):
+      - Eradicate 503 Attribution Pollution (92.6% of all 5xx): Unified all internal gateway throttling predicates into the single source of truth policy::is_internal_gateway_exhaustion, covering the previously mis-detected All accounts rate-limited (the old list only matched all accounts limited), so local pool throttling is no longer reported as an upstream 503; converged the two other drifting implementations in rate_limit.rs and token_manager.rs. (Fixes #3838)
+      - Dedicated 403 Ban Attribution: Added the account_forbidden error code with 12-language copy for TOS_VIOLATION / PERMISSION_DENIED, so a banned account is no longer conflated with capacity exhaustion after the 403→503 mapping. (Fixes #3838)
+      - Decouple Quota Exhaustion from the Adaptive Circuit Breaker: Established the invariant that an upstream-declared quota exhaustion is an objective physical fact and must never be gated by the breaker switch. Fixed the defect where if !config.enabled { return; } short-circuited before the quota predicate, silently dropping Individual quota reached so the account was neither zeroed nor locked; added is_quota_exhausted_or_explicit_limited so QuotaExhausted accounts are intercepted even with the breaker disabled. (PR #3845, Thanks to @cubelikeplayDaniel)
+      - Account Exclusion in Retry Loops: Each protocol retry loop now maintains attempted_accounts and passes it into get_token_filtered, eliminating the P2C behavior that kept re-selecting an account that had just returned 429 based on historical quota weights, and failing fast once the pool is exhausted. (PR #3845, Thanks to @cubelikeplayDaniel)
+      - Eliminate Zero-Quota High-Priority Pool Starvation (Priority Inversion Deadlock): Moved the target-model positive-quota filter ahead of priority convergence in select_with_p2c, establishing that “priority only competes among healthy accounts holding a valid positive quota for that model”; fixed the severe defect where a drained account boosted to priority=1 still evicted every healthy full-quota account and returned “no available accounts”. (Ref #3840)
+      - Authoritative Quota Diagnostics from Upstream: Added L1 quotaResetTimeStamp priority locking so all four bucket classes (Argon standalone / Ultra shared / standard Gemini / 3P) adopt the official recovery instant when exhausted; the lock source now prefers hard quotas, the false-full blind spot caused by an omitted remainingFraction is fixed, and the all-pool-zero-quota pass-through hole is closed. (Fixes #3841)
+      - Frontend Circuit Breaker Default Corrected: circuit_breaker now initializes with enabled: true, preventing an accidental breaker shutdown when saving the settings page. (PR #3845)
+    - [Pedal Mode Rebuilt as Top Scheduling Priority] (PR #3840, Thanks to @zepeng-jin):
+      - From Hard Disabling to Priority Competition: Activating pedal mode no longer suspends other accounts via proxy_disabled = true; expiring accounts are instead promoted to priority 1 (default 50). This eliminates three pathologies at once: Prompt Cache invalidation from forced failover, 429s from squeezing all concurrency onto a single account, and cross-model collateral damage from account-level disabling. Existing sessions stay bound to their account to preserve cache, new sessions consume the expiring quota first, and concurrent traffic spills over automatically. (PR #3840, Thanks to @zepeng-jin)
+      - Smooth Automatic Recovery: Once the pedal account's weekly quota is fully drained (0%) or its reset time arrives, original priorities are restored precisely from originalPriorities, with tolerant cleanup retained for stale suspended state left by older versions. (PR #3840, Thanks to @zepeng-jin)
+    - [Timeout Contract and Stream Lifecycle Unification: Hard Truncation Removed, Four Protocols Share One Pipeline] (Fixes #3816, Fixes #3821, Ref #3763, PR #3817):
+      - Hardcoded Truncation Abolished: Retired the 135s/160s hard truncation (below the measured medium p90 of 130.9s, which reversed legitimately slow requests into 504s and triggered retry storms); the first-byte baseline is restored to 180s, multimodal ceiling to 270s, and the 270s global request budget is pushed down into the pipeline, short-circuiting immediately when remaining budget is insufficient. (Fixes #3821)
+      - Codex / Legacy Converged onto the Shared Lifecycle: create_codex_sse_stream and create_legacy_sse_stream moved from hand-rolled select! drivers to ProtocolStreamHandler adapters under run_stream_lifecycle, unifying 3s heartbeats, initial-TTFT grace, thinking/content phase promotion, steady-state sliding timeouts, and abnormal finalization; Gemini gained is_thinking_active so the thinking phase is no longer misjudged as a transition cliff. (Ref #3816, PR #3817, Thanks to @cubelikeplayDaniel)
+      - Transition-Cliff Adaptive Promotion: Fixed the failure where a deep-thinking model emits thought blocks and then goes silent while upstream buffers a monolithic functionCall, causing the 120s steady-state timeout to truncate the stream into a false HTTP 200 with no output; the silent window now promotes to the Transition phase with a 180s grace window and : ping keep-alives. (Fixes #3816, Thanks to @mclinyeshi)
+      - Sticky Unbinding Across All Terminal States: TerminalDisposition now folds FirstByte / Upload / GlobalBudget into abandon_sticky_account, eliminating the deadlock where clients waited out multiple three-minute attempts on the same slow account. (Fixes #3821)
+      - Upload and Replay Guards: Upload stall timeouts are decoupled from the adaptive upload budget and floored at the connect timeout; the cross-account replay threshold for large bodies is widened to 4MB with a cap of 3 attempts to suppress upstream amplification. (Fixes #3821)
+    - [Model Routing and Gates: Custom Mapping Takes Top Precedence, Legacy Models Hard-Retired] (Fixes #2065, Ref #3764, #3769, #3815, PR #3787):
+      - Four-Stage Inbound Model Gate: Missing model → 404 model not exist; custom mappings first (exact / case-insensitive / normalized / wildcard); the resolved target must exist in “downstream exposure ∪ agent tool list ∪ official catalog ∪ mapping values”; all-pool zero quota → 502 no quota accounts; fail-open on cold start without metadata, and gateway self-answered 404/502 go through the single-source is_gateway_self_answer exemption so accounts are never locked or unbound. (Ref #3764, #3769)
+      - Custom Mappings Elevated to the Very Front: Ahead of official hot-update deprecation redirects, fixing the post-hoc resolve_bare_tiered_model_route rewrite into tiered/medium; the default tier selector flipped to prefer High, with in-place promotion to High on upstream 503 MODEL_CAPACITY_EXHAUSTED.
+      - Legacy Model Retirement with Map-Before-Judge Ordering: Hard gates for Claude 3.x / < 4.6 and Gemini 2.x (image-generation families exempted independently), with the “map first, then judge” order locked so legacy names remain valid inbound aliases. (Ref #3815)
+      - Pool-Adaptive Dark Routing: Removed the static CLAUDE_TO_GEMINI hardcoded map and added auto:gemini-flash-low / auto:claude-opus / auto:claude-opus-4-7 adaptive targets that pick and downgrade among Opus 5.5 / 4.6 / 4.7 by live positive quota; custom_mapping is decoupled from custom_mapping_expose with a builtin_mapping_version seamless migration. (Fixes #2065, PR #3787, Thanks to @cubelikeplayDaniel)
+      - Upstream Physical Model Convergence: Removed the modelVersion override of upstream_model (internal build names polluted the already-arbitrated routing result); X-Upstream-Model is now the single authoritative source across protocols. (Ref #3658, #3654)
+      - Official Thinking Migration Alignment: thinkingLevel first with thinkingBudget fallback; outbound fingerprint calibrated to 2.28.0 / CL 1008300195; model lists and one-click presets expose only models an account can actually use. (Ref #3751)
+    - [Multimodal Self-Healing and Freshness Sliding Window: In-Place Bad-Image Repair, Responses Protocol Parity] (Fixes #3758, #3824, #3756, PR #3759, PR #3830):
+      - In-Place Bad-Image 400 Self-Healing: On 400 Unable to process input image the pipeline no longer locks the account or unbinds stickiness (preserving Prefix Cache), replacing the corrupted image with a structured placeholder and retrying in place; single-image cases record a SHA-256 fingerprint into ImageBlacklist (FIFO, cap 2000) for persistent immunity, while multi-image cases are replaced for the current turn only to avoid false positives. (Fixes #3758, PR #3759, Thanks to @cubelikeplayDaniel)
+      - Multimodal Freshness Sliding Window Enabled by Default: enable_sliding_window = true keeping the latest 5 images by default; with the window enabled the gateway entry hard-limit on accumulated images is bypassed so the pipeline can prune, preventing long Codex conversations from being killed. (Fixes #3824)
+      - Responses Protocol Parity: Simple-log mode now recursively redacts Base64 in input_image, inline Data URLs, and function_call_output; the token estimator gained a Responses branch with vision-token accounting. (PR #3830, Thanks to @mclinyeshi)
+      - Image-Generation Watchdog Widened with Empty-Image Diagnostics: Primary endpoint 90s, fallback 45s, total budget 135s; a protocol-agnostic empty-image diagnostic extractor means an upstream 200 without an image is no longer treated as a false success. (Fixes #3756)
+      - Cowork Auto-Compact Alignment: Removed the blanket 1M-model exemption and the mid-tool-call block, triggering compression precisely at effective_threshold, backed by a 10-case dual-track control matrix unit test. (Fixes #3821, PR #3835, PR #3836, Thanks to @cubelikeplayDaniel)
+    - [Prompt Sanitization Track Separation and Inbound Security Hardening] (Fixes #3764, #3781, Ref #425, #146, PR #3746):
+      - Sanitization Tracks Converged to System / Content / Anchored: The current turn only sanitizes inside <system*> / <identity*> tags while user text outside them is preserved verbatim, so single-turn translation, proofreading, and code-audit requests are no longer rewritten into an official identity; the injection-zone boundary is determined by “the last text part of the last user message”. (Fixes #3764)
+      - Dual Identity-Regex Protection and Multi-Pass Idempotence: Bridge segments no longer span lines, with interrogative and cross-clause exemptions added, protecting compute_prefix_hash prefix stability and Prompt Caching. (Fixes #3764)
+      - Adaptive CTF / Security-Policy Stripping: Injected CTF and defensive-disclaimer text is stripped on both the System and full-text tracks, code blocks are deeply isolated, and empty parts are physically removed (an empty systemInstruction is unregistered). (Fixes #3781)
+      - Inbound Gzip Decompression: Mounted RequestDecompressionLayer after auth (zip-bomb defense) and before monitor (so auditing sees the real decoded text). (Ref #425, #146, PR #3746, Thanks to @cubelikeplayDaniel)
+    - [Account System and Enterprise Access: GCP Vertex AI, IDE 2.6.0 Switching, Multi-Link Consistency] (Fixes #3823, #3829, #3806, #3802, #3791, #3754):
+      - GCP / Vertex AI Enterprise Accounts: Aligned with the official enterprise client credential system, enabling standalone antigravity_gcp registration and dynamic authentication; the account detail dialog gained Project ID viewing/editing and one-click auto-fetch (loadCodeAssist sniffing cloudaicompanionProject, timeout 3s→12s, wired into the global proxy pool), and the misclassification of ordinary accounts as ENTERPRISE is fixed. (Fixes #3823)
+      - Antigravity IDE 2.6.0+ Account Switching: Triple-write across SQLite state.vscdb, the system Keyring, and file fallback, with expires_in / id_token_email field alignment; process identity collapsed into the single classify_process entry point that trusts only executable names/paths, preventing taskkill /F /T from killing VS Code; orphan agy language servers are swept per target. (Fixes #3762, #3770, #3778, #3829, Thanks to @modded-soldier-9, @fuyangtian2003-beep)
+      - Classic Edition Switching Completed: The local fallback credential jetski-standalone-oauth-token is now written uniformly, with an atomic backup plus dual-write of state.vscdb. (Fixes #3829)
+      - Account Deletion Consistency: The dispatch pool treats accounts.json as the sole admission list, logging orphan credential files instead of deleting them; the delete flow moves failure points to the front (commit the index before removing credential files). (Fixes #3806, Thanks to @cubelikeplayDaniel, @dnmdngcsb)
+      - Web / Docker Links: OAuth fixes (no duplicate Prepare, forced loopback fallback for the built-in client, dirty-state cleanup on exchange failure, resilient manual-input parsing); an opt-in “remember login credential” toggle; the update-settings endpoint now merges partial patches, fixing 400 responses and channel resets. (Fixes #3802, #3791, #3754, Thanks to @cubelikeplayDaniel, @dandelion-promise520)
+      - DeepSeek Harness One-Click Sync: Covers macOS / Windows / Linux, writing cordis.patch.yml and .credentials.yaml, with antigravity-tools sync added to the CLI; lookahead regex was replaced by a plain-text chunking state machine, eradicating Regex panics. (PR #3761, Thanks to @wakeupnotfound)
+    - [Platform Stability: Linux Remote-Desktop Keep-Alive, macOS Mini HUD, UI Zoom] (Fixes #3752, #3757, #3744, Ref #3748, PR #3766):
+      - Linux X11/xrdp Keep-Alive: Hooked XSetIOErrorHandler and rebuilt _exit into thread-level isolation so a remote-desktop disconnect no longer kills the 8045 proxy; GTK tray menus are dispatched to the main thread; xrdp / VNC sessions automatically enable WebKit software rendering. (Fixes #3752, #3757, Thanks to @hazerwin)
+      - macOS Mini HUD: switch_to_main_window now returns to the native main thread and Mini activation uses the Accessory policy, removing foreground cascade jumps and cross-thread deadlocks; the bottom CSS shadow was replaced with native rounded corners. (Fixes #3744, Ref #3748)
+      - UI and Font Zoom: Native webview.setZoom() on desktop with a CSS zoom fallback for the web, Cmd/Ctrl + = / - / 0 shortcuts, 85%~150% presets, and a double guard that isolates Mini from zoom changes. (PR #3766, Thanks to @nicolastinkl)
+      - Tray and Interaction: New tray_click_action preference, 5px ultra-thin scrollbars that fade in on hover, and a temporary APIKEY.FUN Double 11 badge (with a bump-version expiry reminder). (Ref #3748)
+    - [Performance and Observability: Tool Signature Cache Rebuild, Token Dual-Perspective Stats, QoS Deadlock Fix] (PR #3765, PR #3774, Fixes #3810, #3749, #3783):
+      - Tool Signature Cache Rebuild: L1 moved from Mutex<HashMap> to sharded DashMap with capacity raised 500→10000; a new ag-tool-sig-writer background thread (bounded queue, up to 512 rows per transaction) plus PERSIST_SEQ two-level watermarks prevents dirty-signature resurrection; the read path batches IN queries with a 4-connection read-only pool; a new CacheProfile adapts to CPU, memory, and deployment shape. (PR #3765, PR #3774, Thanks to @zepeng-jin)
+      - Token Dual-Perspective Stats + TTFT: token_usage gained requested_model / ttft_ms, separating the “actual routed model” from the “requested model” with automatic historical migration; first-token latency is integrated across the overview, deep-insight, and classic dashboards, and the control bar was redesigned for minimalism. (Fixes #3810)
+      - QoS Fixes and Switch: Fixed the DashMap same-thread read/write self-deadlock in the expiry sweeper (two-phase collect-then-swap); added qos_auto_jail (default off) which clears the whole pool's jails and skips strike evaluation when disabled. (Fixes #3749, #3783, Thanks to @TakimotoUki)
+      - True TTFT Closure: StreamTtftCapture backfills the pure first-chunk latency of the effective endpoint after the stream completes, with frontend guards rejecting <= 0; Gemini stream interruptions now relay the real finishMessage and gatewayError. (Fixes #3813)
+    - [Scheduling Stickiness and 3P Quota Governance] (Fixes #3789, #3809, #3795, #3750, #3797):
+      - Multi-Agent Root Session Normalization: extract_root_session_id trims derived suffixes such as :step:N / :agent:... / --step-N so the affinity key collapses onto the root session; added AffinityScope::ApiKey for credential-level strong stickiness (ANTIGRAVITY_SCHEDULING_AFFINITY_SCOPE). (Fixes #3789)
+      - 3P Phantom Quota Governance: The generic 3P quota group is stripped when an account has no Claude/GPT entitlement, rendering - placeholders instead of a false 100%; the default quota refresh interval moved from 15 to 10 minutes. (Fixes #3809)
+      - Argon / Ultra Convergence: Unified hasAccountArgonCapability and checkArgonEligibility criteria; Ultra legally inherits the shared Gemini quota pool, fixing scheduling 503s and hidden badges. (Fixes #3750)
+      - Hub Fingerprint and Gate Diagnostics: The official Hub fingerprint was upgraded to 2.28.0 / CL 1008300195 with asynchronous Headless detection; 12-language gateway error diagnostics and a settings-save fix were added. (Fixes #3797, Ref #3750)
+    - [Release Notes] (Ref #3845): This is the stable promotion of the 5.0.3 pre-release line (beta.0 ~ beta.5) and is functionally identical to the latest beta; v5.0.3-beta.4 never produced a Release because of a transient GitHub API 500 in the publish step, and its fix shipped with the following versions. Thanks to every contributor in this cycle: @cubelikeplayDaniel, @mclinyeshi, @modded-soldier-9, @zepeng-jin, @fuyangtian2003-beep, @wakeupnotfound, @wthsama, @nicolastinkl, @hazerwin, @ddmixi, @dandelion-promise520, @dnmdngcsb, @EricZhou05, @Ran-Xing, @TakimotoUki, @W2514, @lbjlaq.
+
+    - [配额归因治理：根治 503 污染与配额假死，重构大桶调度与优先级竞争] (Fixes #3838, #3841, #3821, PR #3845, Ref #3827, #3840):
+      - 根除 503 归因污染（占全量 5xx 的 92.6%）: 网关内部限流判据统一收敛至 policy::is_internal_gateway_exhaustion 单一权威源，补全此前漏判的 All accounts rate-limited（旧列表只写 all accounts limited），本地号池限流不再被误报为上游 503；同步收敛 rate_limit.rs 与 token_manager.rs 中另两处漂移实现。(Fixes #3838)
+      - 403 封禁专用归因：为 TOS_VIOLATION / PERMISSION_DENIED 新增 account_forbidden 错误码与 12 语言文案，账号封禁不再被 403→503 映射后与容量枯竭混淆。(Fixes #3838)
+      - 配额耗尽与自适应熔断彻底解耦：确立不变式「上游告知的配额耗尽是客观物理事实，绝不受熔断开关影响」。修复熔断关闭时 if !config.enabled { return; } 抢先拦截导致 Individual quota reached 被丢弃、账号既不置 0% 也不锁定的缺陷；新增 is_quota_exhausted_or_explicit_limited，熔断关闭时同样拦截 QuotaExhausted 账号。(PR #3845, Thanks to @cubelikeplayDaniel)
+      - 重试循环引入账号排除机制：各协议重试循环维护 attempted_accounts 并传入 get_token_filtered，根治 P2C 依据历史配额权重反复锤击刚 429 账号的问题，全池遍历后快速失败。(PR #3845, Thanks to @cubelikeplayDaniel)
+      - 消除 0 配额高优账号饥饿全池（优先级倒置死锁）: 将 select_with_p2c 的配额过滤前置于优先级收敛，确立「优先级只在具备该模型有效正配额的健康账号之间竞争」；修复临期账号被置 priority=1 后配额归零仍剔除全部满额账号并报「无可用账号」的严重缺陷。(Ref #3840)
+      - 配额诊断采信上游权威信号：新增 L1 上游 quotaResetTimeStamp 优先锁定，四类配额桶（Argon 独立桶 / Ultra 共享大桶 / 普通 Gemini 大桶 / 3P 桶）耗尽时直接采信官方恢复时刻；锁定源按硬配额优先排序，修复上游省略 remainingFraction 时被读成满额的假满额盲区，并封堵全池 0 配额裸奔放行漏洞。(Fixes #3841)
+      - 前端熔断默认值修正：circuit_breaker 初始默认改为 enabled: true，避免在设置页点击保存时意外关闭熔断器。(PR #3845)
+    - [蹬额度模式重构为最高调度优先级] (PR #3840, Thanks to @zepeng-jin):
+      - 解除暴力禁用，改为优先级竞争：激活时不再通过 proxy_disabled = true 挂起其他账号，改为将临期账号优先级提升至 1（默认 50），彻底消除 Prompt Caching 击穿、并发挤压唯一账号触发 429、以及账号实体级禁用造成跨模型误伤三重顽疾；老会话留在原账号保住缓存，新会话优先消耗临期额度，并发自动外溢。(PR #3840, Thanks to @zepeng-jin)
+      - 平滑自动恢复：待蹬账号周配额耗尽（0%）或到达重置时间后，按 originalPriorities 精准恢复初始优先级，并保留旧版本残留挂起状态的容错清理。(PR #3840, Thanks to @zepeng-jin)
+    - [超时契约与流式生命周期统一：解除硬截断、四协议共用一条流水线] (Fixes #3816, Fixes #3821, Ref #3763, PR #3817):
+      - 废除硬编码截断：下线 135s/160s 硬截断（低于 medium 实测 p90 130.9s，会把本可成功的慢长请求反向判为 504 并引发重试风暴）；首字基准恢复 180s、多模态上限 270s、全局请求预算 270s 统一下沉至 pipeline，剩余预算不足时直接短路。(Fixes #3821)
+      - Codex / Legacy 收敛至统一生命周期：create_codex_sse_stream 与 create_legacy_sse_stream 由手写 select! 改为 ProtocolStreamHandler 适配器，统一交由 run_stream_lifecycle 接管 3s 心跳、首字宽限、思考/正文阶段跃迁、稳态滑动超时与异常收尾；Gemini 补齐 is_thinking_active，思考期不再被误判为过渡断崖。(Ref #3816, PR #3817, Thanks to @cubelikeplayDaniel)
+      - 过渡断崖自适应跃迁：修复深思考模型输出思考块后上游整包缓冲巨型 functionCall 引发长静默、被 120s 稳态超时截断导致 HTTP 200 无输出的硬伤，静默期自动跃迁至 Transition 阶段并给予 180s 宽限与 : ping 保活。(Fixes #3816, Thanks to @mclinyeshi)
+      - 终态全量解绑会话粘性：TerminalDisposition 将 FirstByte / Upload / GlobalBudget 全部纳入 abandon_sticky_account，消除卡在同一慢账号反复等满多轮 3 分钟的死锁。(Fixes #3821)
+      - 上传与重放护栏：上传停滞超时与自适应上传预算解耦并保底不低于连接超时；大请求体跨账号重放门限放宽至 4MB、上限 3 次，抑制上行放大。(Fixes #3821)
+    - [模型路由与门禁：自定义映射最高优先级、旧版模型硬下线] (Fixes #2065, Ref #3764, #3769, #3815, PR #3787):
+      - 入站模型门禁四道判定：缺失 model → 404 model not exist；自定义映射优先（精确 / 大小写 / 规范化 / 通配符）；映射结果须存在于「下游开放列表 ∪ agent 工具列表 ∪ 官方目录 ∪ 映射值」；全池无正配额 → 502 no quota accounts；冷启动无元数据时 fail-open，网关代答的 404/502 走 is_gateway_self_answer 单源豁免，不再锁号或解绑粘性。(Ref #3764, #3769)
+      - 自定义映射升为物理最前位：高于官方热更新淘汰重定向，修复映射命中后被 resolve_bare_tiered_model_route 二次篡改为 tiered/medium 的缺陷；默认档位翻转为 High 优先，上游 503 MODEL_CAPACITY_EXHAUSTED 时原地升档自愈。
+      - 旧版模型硬下线与先映射后判定：Claude 3.x / < 4.6 与 Gemini 2.x 硬门禁（生图族独立豁免），并锁定「先映射后判定」顺序，允许旧名作为入站别名指向合规模型。(Ref #3815)
+      - 号池自适应暗路由：删除 CLAUDE_TO_GEMINI 静态硬编码，新增 auto:gemini-flash-low / auto:claude-opus / auto:claude-opus-4-7 自适应目标，依据实时正配额在 Opus 5.5 / 4.6 / 4.7 间择优降级；custom_mapping 与 custom_mapping_expose 解耦并引入 builtin_mapping_version 无感迁移。(Fixes #2065, PR #3787, Thanks to @cubelikeplayDaniel)
+      - 上游物理模型收敛：移除 modelVersion 覆写 upstream_model 的逻辑（上游内部构件名会污染已仲裁好的路由结果），统一以各协议 X-Upstream-Model 为唯一权威源。(Ref #3658, #3654)
+      - 官方思考迁移对齐：thinkingLevel 优先、thinkingBudget 兜底，出站指纹校准至 2.28.0 / CL 1008300195，列表与一键配置仅暴露账号真实可用模型。(Ref #3751)
+    - [多模态自愈与保鲜滑窗：坏图就地修复、Responses 协议补齐] (Fixes #3758, #3824, #3756, PR #3759, PR #3830):
+      - 坏图 400 就地自愈：识别 400 Unable to process input image 后不锁号、不解绑粘性以保护 Prefix Cache，原地替换结构化占位符并即时重试；单图场景写入 SHA-256 至 ImageBlacklist（FIFO 上限 2000）持久免疫，多图场景仅做当轮替换防误杀。(Fixes #3758, PR #3759, Thanks to @cubelikeplayDaniel)
+      - 多模态保鲜滑窗默认开启：enable_sliding_window = true、默认保留最新 5 张图；开启滑窗时豁免网关入口多图硬拦截，交由管线裁剪，避免 Codex 长对话误杀。(Fixes #3824)
+      - Responses 协议补齐：简要日志对 input_image / Data URL / function_call_output 递归 Base64 脱敏，Token 估算器新增 Responses 分支与视觉 Token 折算。(PR #3830, Thanks to @mclinyeshi)
+      - 生图看门狗放宽与空图诊断：首选端点 90s、备选 45s、总预算 135s；新增协议无关的空图诊断提取器，上游 200 但无图不再视为假成功。(Fixes #3756)
+      - Cowork 自动压缩对齐：移除 1M 模型一刀切豁免与工具轮次阻断，按 effective_threshold 精准触发，并补齐 10 次双轨对照实验矩阵单测。(Fixes #3821, PR #3835, PR #3836, Thanks to @cubelikeplayDaniel)
+    - [提示词清洗分轨与入站安全加固] (Fixes #3764, #3781, Ref #425, #146, PR #3746):
+      - 清洗轨道收敛为 System / Content / Anchored: 当前轮只清洗 <system*> / <identity*> 标签内部，标签外用户正文逐字保留，单轮翻译、校对、代码审计不再被改写为官方身份；注入区边界按「最后一条 user 消息的最后一个 text part」裁定。(Fixes #3764)
+      - 身份正则双重防护与多轮幂等：桥接段不跨行，新增疑问句与跨子句连词豁免，保护 compute_prefix_hash 的前缀稳定性与 Prompt Caching。(Fixes #3764)
+      - CTF / 安全策略自适应剥离：在 System 轨与全文本轨正则剥离注入的 CTF/安全免责声明，代码块深度隔离，空 Part 自动剔除、空 systemInstruction 物理注销。(Fixes #3781)
+      - Gzip 入站解压：挂载 RequestDecompressionLayer，置于 auth 之后（防解压炸弹）、monitor 之前（保证审计拿到真实明文）。(Ref #425, #146, PR #3746, Thanks to @cubelikeplayDaniel)
+    - [账号体系与企业接入：GCP Vertex AI、IDE 2.6.0 切号、多条链路一致性] (Fixes #3823, #3829, #3806, #3802, #3791, #3754):
+      - GCP / Vertex AI 企业账号支持：对齐官方企业客户端凭据体系，支持 antigravity_gcp 独立注册与动态鉴权；账号详情新增 Project ID 查看/修改与「自动获取」（loadCodeAssist 嗅探 cloudaicompanionProject，超时 3s→12s 并接入全局代理池），修复普通账号被误标 ENTERPRISE 的判据。(Fixes #3823)
+      - Antigravity IDE 2.6.0+ 切号：SQLite state.vscdb + 系统 Keyring + 文件三级双写，字段对齐 expires_in / id_token_email；进程身份判定收敛为 classify_process 单一入口，只认可执行文件名/路径，杜绝 taskkill /F /T 误杀 VS Code；孤儿 agy 语言服务按目标隔离清理。(Fixes #3762, #3770, #3778, #3829, Thanks to @modded-soldier-9, @fuyangtian2003-beep)
+      - 经典版切号补全：统一写入 jetski-standalone-oauth-token 本地降级凭据，并原子备份 + 双写 state.vscdb。(Fixes #3829)
+      - 账号删除一致性：调度池以 accounts.json 索引为唯一准入清单，孤儿凭据文件只告警不删；删除流程失败点前置（索引先落盘再删文件）。(Fixes #3806, Thanks to @cubelikeplayDaniel, @dnmdngcsb)
+      - Web / Docker 链路：OAuth 修复（禁止重复 Prepare、内置客户端强制 loopback 回退、换码失败主动清理脏状态、手动输入弹性解析）；新增「记住登录凭据」；更新设置接口改为局部补丁合并，修复返回 400 与通道被重置。(Fixes #3802, #3791, #3754, Thanks to @cubelikeplayDaniel, @dandelion-promise520)
+      - DeepSeek Harness 一键同步：覆盖 macOS / Windows / Linux，写入 cordis.patch.yml 与 .credentials.yaml，CLI 新增 antigravity-tools sync；移除 lookahead 正则改用纯文本分块状态机，根治 Regex panic。(PR #3761, Thanks to @wakeupnotfound)
+    - [平台稳定性：Linux 远程桌面保活、macOS Mini 视窗、界面缩放] (Fixes #3752, #3757, #3744, Ref #3748, PR #3766):
+      - Linux X11/xrdp 保活：挂载 XSetIOErrorHandler 并重构 _exit 线程级隔离，远程桌面断开不再秒杀 8045 反代；GTK 托盘菜单调度至主线程；xrdp / VNC 环境自动启用 WebKit 软件渲染。(Fixes #3752, #3757, Thanks to @hazerwin)
+      - macOS Mini 视窗：switch_to_main_window 统一回到原生主线程，Mini 唤起统一 Accessory 策略，消除前台级联跳出与跨线程死锁；底部 CSS 阴影改为原生圆角。(Fixes #3744, Ref #3748)
+      - 界面与字体缩放：桌面端 webview.setZoom()、Web/CSS zoom 回退，支持 Cmd/Ctrl + = / - / 0 与 85%~150% 档位，Mini 双重守卫隔离缩放。(PR #3766, Thanks to @nicolastinkl)
+      - 托盘与交互：托盘左键行为偏好 tray_click_action、5px 超细滚动条移入渐显、APIKEY.FUN 双 11 临时活动标签（含 bump-version 到期自动提醒）。(Ref #3748)
+    - [性能与可观测性：工具签名缓存重构、Token 双视角统计、QoS 死锁修复] (PR #3765, PR #3774, Fixes #3810, #3749, #3783):
+      - 工具签名缓存重构：L1 由 Mutex<HashMap> 改 DashMap 分片、容量 500→10000；新增 ag-tool-sig-writer 后台线程（有界队列 + 单事务 512 条）与 PERSIST_SEQ 双层水位防脏签名复活；读路径批量 IN 查询 + 4 条只读连接池；新增 CacheProfile 按 CPU/内存/部署形态自适应。(PR #3765, PR #3774, Thanks to @zepeng-jin)
+      - Token 统计双视角 + TTFT: token_usage 新增 requested_model / ttft_ms，区分「实际路由模型」与「请求模型」并自动迁移历史数据；总览、深度洞察与经典看板全量集成首字延迟，控制栏极简重构。(Fixes #3810)
+      - QoS 修复与开关：修复到期巡检 DashMap 同线程读写自死锁（两阶段读取 + 置换）；新增 qos_auto_jail（默认关闭），关闭时清零全池小黑屋并跳过 Strike 判定。(Fixes #3749, #3783, Thanks to @TakimotoUki)
+      - 真实 TTFT 闭环：StreamTtftCapture 在流结束后回填生效端点的纯净首包耗时，前端拦截 <= 0 防负数展示；Gemini 流中断透传 finishMessage 与 gatewayError 真实原因。(Fixes #3813)
+    - [调度粘性与 3P 配额治理] (Fixes #3789, #3809, #3795, #3750, #3797):
+      - 多智能体根会话归一化：extract_root_session_id 裁剪 :step:N / :agent:... / --step-N 等派生后缀，粘性键归拢到根会话；新增 AffinityScope::ApiKey 凭据级强粘性（环境变量 ANTIGRAVITY_SCHEDULING_AFFINITY_SCOPE）。(Fixes #3789)
+      - 3P 幽灵配额治理：无 Claude/GPT 授权时主动剥离通用 3P 配额组，前端渲染 - 占位，消除虚假 100% 满额；配额刷新默认间隔 15→10 分钟。(Fixes #3809)
+      - Argon / Ultra 收敛：统一 hasAccountArgonCapability 与 checkArgonEligibility 判据，Ultra 合法继承 Gemini 通用配额池，修复调度 503 与徽章隐藏。(Fixes #3750)
+      - Hub 指纹与门禁诊断：官方 Hub 指纹升级至 2.28.0 / CL 1008300195 并支持 Headless 异步探测；补齐 12 语种网关错误诊断与设置保存修复。(Fixes #3797, Ref #3750)
+    - [发布说明] (Ref #3845): 本版为 5.0.3 预发布线（beta.0 ~ beta.5）的正式转正，功能与此前 beta 完全一致；v5.0.3-beta.4 因发布流水线 GitHub API 瞬时 500 未产出 Release，其修复已随后续版本交付。感谢本轮全部贡献者：@cubelikeplayDaniel、@mclinyeshi、@modded-soldier-9、@zepeng-jin、@fuyangtian2003-beep、@wakeupnotfound、@wthsama、@nicolastinkl、@hazerwin、@ddmixi、@dandelion-promise520、@dnmdngcsb、@EricZhou05、@Ran-Xing、@TakimotoUki、@W2514、@lbjlaq。
+    What's Changed
+    - fix(proxy): 修复角色交替合规、工具声明保序、降级限流盲区与流终结防重 (Fixes #3695) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3696
+    - fix(proxy): 修复长上下文首字延迟抖动、429 配额瞬时误解锁与签名流水线缺陷 (Fixes #3697, Ref #3693, Ref #3506) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3698
+    - fix(openai): 补充 handle_completions 并发统计与 Responses API 路径映射归一化 (Ref #3697) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3699
+    - fix(session): 修复短输入指纹漂移、多模态哈希雪崩与未闭合 System 标签截断 (Ref #3697) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3700
+    - fix(claude,upstream): 规整孤儿工具结果回退标识并补齐终端端点自适应看门狗 (Ref #3697) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3701
+    - fix(proxy): 修复 countTokens 请求信封污染上游 400 与全局思考预算配置继承缺失 (Ref #3697) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3702
+    - fix(proxy): 修复 PipelineTokenEstimator 漏计 tool_use 思考签名导致 Cowork 自动压缩阈值穿透 (Ref #3697) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3705
+    - fix(proxy): 修复代理池健康检查凭据清洗顺序与专属账号防 Direct 泄漏机制 (Fixes #3703, Ref #3323) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3706
+    - feat(proxy): add /props, /version, and model context resolution endpoints for Hermes and agent tooling compatibility by @CarlitoDon in https://github.com/lbjlaq/Antigravity-Manager/pull/3708
+    - feat(proxy): 引入基于纯净同侪校准与阶梯探针的自适应 QoS 调度系统 (Fixes #3720) by @jeikl in https://github.com/lbjlaq/Antigravity-Manager/pull/3725
+    - feat(ui,proxy): Mini 桌面悬浮视窗圆角真透明、跨窗口同步与 Claude 拓扑防御增强 (Fixes #3733, Ref #3718, #3721) by @lbjlaq in https://github.com/lbjlaq/Antigravity-Manager/pull/3738
+    - fix(ui): 修复 Mini 悬浮窗加载 index.html 触发 React Router 404 错误边界与同步判定失效 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3741
+    - fix(proxy): 允许 Streaming 阶段在巨型工具调用缓冲静默时自动跃迁至 Transition 宽限期 (Fixes #3739) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3740
+    - fix(proxy): 修复 Claude 模型思考预算未配置时回退官方模型结构体默认值 (Ref #3735) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3742
+    - fix(proxy): 引入上游看门狗全链路超时动态预算与算力枯竭快速探活机制 (Ref #3713, Ref #3506, Ref #3525) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3714
+    - fix(proxy,qos): 修复 QoS 到期巡检 DashMap 自死锁与 Docker Headless Argon 熔断 (Fixes #3749, Fixes #3750) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3751
+    - feat(proxy): 支持入站请求 Gzip 解压缩并完善鉴权防御与模型审计 (Ref #425, Ref #146) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3746
+    - feat(sync,cli,ui): 支持 DeepSeek Harness 一键配置 (Web GUI 与 CLI 适配) 并对齐 Agent 工具交互规范 by @wakeupnotfound in https://github.com/lbjlaq/Antigravity-Manager/pull/3761
+    - fix(proxy): 400 Unable to process input image 坏图就地自愈与指纹黑名单免疫 (Fixes #3758) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3759
+    - fix(proxy): 大文件上传分阶段超时与四协议签名/思考治理统一 (Fixes #3763) by @jeikl in https://github.com/lbjlaq/Antigravity-Manager/pull/3767
+    - perf(proxy,db): 消除多轮工具历史重放时工具签名 SQLite 同步重复写库与逐次全表修剪阻塞 (Ref #753) by @zepeng-jin in https://github.com/lbjlaq/Antigravity-Manager/pull/3765
+    - perf(proxy): 签名读路径批量化、只读连接池与环境自适应缓存 (Ref #753, #3765) by @jeikl in https://github.com/lbjlaq/Antigravity-Manager/pull/3774
+    - [DO NOT MERGE] fix(proxy): 首响应头并入统一首字延迟，四协议预算与重放护栏 by @jeikl in https://github.com/lbjlaq/Antigravity-Manager/pull/3775
+    - test(proxy): 对齐思考签名/预算/图片用例到当前实现（承接 #3776） by @jeikl in https://github.com/lbjlaq/Antigravity-Manager/pull/3777
+    - feat(ui): 支持界面与字体缩放及全局快捷键调节 by @nicolastinkl in https://github.com/lbjlaq/Antigravity-Manager/pull/3766
+    - fix(integration): 修复 Antigravity IDE 2.6.0+ 切号失败与后台孤儿进程问题 (Fixes #3778, Fixes #3770, Ref #3762) by @lbjlaq in https://github.com/lbjlaq/Antigravity-Manager/pull/3780
+    - fix(accounts): 解除 QoS 小黑屋后直接重拉账号列表，避免徽章残留 (Ref #3749, Ref #3768) by @wthsama in https://github.com/lbjlaq/Antigravity-Manager/pull/3782
+    - fix(proxy,qos): 修复大请求上传超时挤压重放与思考模型小黑屋误封 (Ref #3763, Fixes #3772, Ref #3768, Ref #3781, Ref #3783) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3784
+    - feat(web,auth): 支持 Web/Docker 模式记住登录凭据选项 (Fixes #3791) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3792
+    - feat(proxy,models): 支持 Claude Code 2.1.312 新一代模型映射与门禁放行 (Fixes #2065, Ref #1724, Ref #3731, Ref #3751) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3787
+    - fix(proxy): 修复流式长文本中途异常截断丢弃与代码块破坏 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3794
+    - feat(proxy,ui): 升级 User-Agent 官方 Hub 指纹、强化多语种门禁诊断与修复设置保存 (Fixes #3797, Ref #3750) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3800
+    - feat(accounts,quota): 支持账号周配额临期“蹬额度模式”与自动熔断恢复机制 (Fixes #3795) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3796
+    - fix(oauth): 换码异常时主动清理 Flow 脏状态并补齐手动回填 CSRF 双向校验 (Fixes #3802, Ref #3804) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3805
+    - fix(account,proxy): 清理已删除账号的残留孤儿文件并在调度池强制校验索引白名单 (Fixes #3806) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3807
+    - fix(quota,dashboard): 3P 模型解耦与无授权留空，杜绝虚假满额与报错 (Fixes #3809, Ref #3811) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3812
+    - fix(config): 将自动刷新配额默认间隔调整为 10 分钟 (Fixes #3809) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3814
+    - fix(proxy,codex): 修复 Codex/Responses 流式过渡断崖误判超时导致 200 无输出及首字预算硬上限截断 (Fixes #3816) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3817
+    - fix(proxy): 网关超时全链路预算安全截断与终态会话粘性解绑 (Fixes #3821) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3822
+    - fix(claude): 修复普通长文本对话误触发 Cowork 自动压缩 400 假限额报错 (Ref #3821) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3828
+    - fix(proxy,responses): 修复 Responses 协议多模态滑窗入口误杀、简要日志 Base64 膨胀与 Token 估算异常 by @mclinyeshi in https://github.com/lbjlaq/Antigravity-Manager/pull/3830
+    - Revert "fix(claude): 修复普通长文本对话误触发 Cowork 自动压缩 400 假限额报错 (Ref #3821)" by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3831
+    - fix(claude): 移除 1M 豁免并放行工具轮次确保 Cowork 按配置阈值自愈压缩 (Fixes #3821, #3826) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3835
+    - test(claude): 补充 Cowork 自动压缩与防误杀 10 次双轨对照实验矩阵单测 (Fixes #3821, Ref #3826) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3836
+    - fix(proxy/upstream): 修复主端点偶发抖动沙箱降级抢占导致的端点毒化 (Fixes #3827) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3833
+    - fix(desktop/integration): 修复经典版切号遗漏本地降级凭据及状态双写导致重新认证 (Fixes #3829) by @modded-soldier-9 in https://github.com/lbjlaq/Antigravity-Manager/pull/3834
+    - fix(proxy): 放宽长上下文大请求体跨账号重放护栏门槛至 4MB 并提升上限至 3 次 (Fixes #3821, Ref #3835) by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3839
+    - fix(pedal): 重构蹬额度模式为最高调度优先级，消除会话粘性破坏与多会话并发挤兑 by @zepeng-jin in https://github.com/lbjlaq/Antigravity-Manager/pull/3840
+    - fix(proxy,quota): 解耦客观物理配额耗尽与自适应熔断，增加单请求重试账号排除防反复锤击 by @cubelikeplayDaniel in https://github.com/lbjlaq/Antigravity-Manager/pull/3845
+    New Contributors
+    - @wakeupnotfound made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3761
+    - @nicolastinkl made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3766
+    - @wthsama made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3782
+    - @mclinyeshi made their first contribution in https://github.com/lbjlaq/Antigravity-Manager/pull/3830
+    Full Changelog: https://github.com/lbjlaq/Antigravity-Manager/compare/v4.9.8...v5.0.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v5.0.3
+ReleaseTime: 2026-11-06T02:42:37.0000000Z

@@ -1,0 +1,215 @@
+Version: 1.10.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/esengine/DeepSeek-Reasonix/releases/download/v1.10.0/reasonix-windows-amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/esengine/DeepSeek-Reasonix/releases/download/v1.10.0/reasonix-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    - 6617c81bf672482863a04355b0a0d9aae4cf86be Merge pull request #4890 from esengine/refactor/branchmeta-schema-version
+    - 7ebb08e87e263dc371a43c0d6dcc98a5e6c437f2 refactor(agent): version BranchMeta counts instead of overloading Turns==0
+    - ef7bf970050f2293d85d44e689be1ec108b56fc0 Merge pull request #4888 from esengine/perf/memory-writes-off-controller-lock
+    - f6ba7553d7ba5a6a6057bcca84f1ed6fe0811150 perf(control): move memory-write disk I/O off the controller lock
+    - 33545f644cee5768c0b19f4555932755c26747ae Merge pull request #4886 from esengine/perf/drop-redundant-session-disk-cache
+    - 5db1d0b760aaad511a06636cf58bd46406618f93 perf(desktop): drop the now-redundant project-session disk cache
+    - 69ccca3f5c7089ed0cce9ae56080c10d6bc5db73 Merge pull request #4884 from esengine/fix/fork-sidecar-and-control-cleanups
+    - 73e20250746cca868ac08c3e8342e370e92d1989 fix(control): seed fork/branch sidecar counts; tighten two latent issues
+    - 7b051ee0339ee39097aa5cd4122b539aebd6a08b Merge pull request #4882 from esengine/perf/session-list-sidecar-counts
+    - 249a4f8b70e454b0ec0fae51b08609f83f38ed36 perf(sessions): cache turn count + preview in the .meta sidecar
+    - 7032f39336f4ae5f216e1fcb3368e5f679723490 Merge pull request #4871 from eghrhegpe/pr-skill-scripts
+    - 60dfc0de58f88a1e9ebb1b4df167b90ab906ddd1 Tighten skill script cache guard
+    - db43de8974cd895c8627b9c8866a8e131dc9a43e Merge pull request #4866 from SivanCola/fix/mcp-plugin-integration-4788
+    - dd753d0c9662e9a1593d8cccbfd74b13ce121c05 optimize: align loadBodyWithScripts style with loadBodyWithReferences
+    - 87d9d12d88d97a139ae23f9c21db83c7f9f73803 Address MCP integration review findings
+    - 26f86be20b273b50a0cfcdc718d6e1c12b5ed463 fix: filter hidden files and non-script extensions in scripts/ listing
+    - 9e17a6079a35870620532cc119a3f2e13d3bd304 Fix lifecycle MCP spawn coalescing
+    - 379ef9f783f965d3ea939df4a784dcb2205eacd4 Merge pull request #4788 from cyq1017/codex/reasonix-4734-http-session-reinit
+    - d3bfc928de123fca17d195cadd436136803e0d51 feat(skill): list scripts/ directory in skill body for bash execution
+    - 02c85a8a06044ef2ad30ebda67f7513160dd8515 Merge pull request #4862 from eghrhegpe/feat/session-tools
+    - 15eedba89bafce0885d9c5127f942534e82a50a3 Stabilize background task panic test
+    - ee6b2a4ef08ac4cd9daaf9fa4526679b8448dcc3 Fix session tool schema validation
+    - 040043c2ead78c920aa465b06620a840db601cd5 feat: add list_sessions and read_session tools for cross-session AI context sharing
+    - 48eaeffef1a8c665985a66e4b85bd1ff05c5f815 Merge pull request #4865 from SivanCola/feature/crash-stats-long-tail
+    - 193ab2ff2ce09085ac6011a46b510b5cbf9c31ec Merge main-v2 into HTTP MCP session PR
+    - 21fbec6845796571c7e63ce3c8343099dcdf7292 Fix stats window metric counts
+    - 54d60e64df8c3247226f27325d7c5e78a5495326 Merge pull request #4811 from wangwangcodecode/fix/unify-history-normalization
+    - ca10c069890d466ce80c36880c2ff57213f45059 Stabilize ACP delete teardown test
+    - 5082b12a32ee13955fed450faccf9de563d46048 Merge remote-tracking branch 'origin/main-v2' into fix/mcp-plugin-integration-4788
+    - 27a9ea7c6067146f1e53ac40819efce405afc44b Fix atomic write permission test on Windows
+    - 607cb9b95a126d270bf3daffad57d9162295f53b Fix session-safe history normalization
+    - 6486cec5f6ad3ebed44cb7e205ab2736a7a8bde7 fix(agent,provider): unify history normalization into single NormalizeMessages entry point
+    - e4f157c3bb410623bf77ad1846b90ac6328f69ec Format integrated Go changes
+    - 6e4a8e5ff2b927f1354e6a8d4542f9eee5e3c0c6 Merge pull request #4856 from CVEngineer66/fix/todo-panel-and-prompt-cards
+    - 3791f7a37f9da18977eefc1de1461cbbfcf2782d Clean integrated config migration test formatting
+    - 22879629b0fa19e751500cbd2e26aaa70bd40032 Improve crash stats dashboard navigation
+    - 5e4c70eb292ab6f042f2de198d9022fa3dfdda27 Fix HTTP MCP session reinit race
+    - 425445e73db19803883ccf685b2759c762c56881 fix(plugin): reinitialize expired HTTP MCP sessions
+    - ce0b46089fd511895e851664668a22f9102d51d5 fix: don't truncate MCP paths containing spaces
+    - 4bf191962b78a0c6ec328b4fe48fd764b2832534 fix: resolve temp file leaks, HljsDiff virtualization bugs, and tighten credential dir permissions
+    - 0fc430346931cdd0deb7c1cf62b1d6044b3dd05b feat: data directory separation and frontend virtualization
+    - 7596ac9c3bbbccf3b00c26d198395a4a14c5db14 Fix HTTP MCP session reinit race
+    - ae1da05c5867fe548c096491500cde9a6924de06 fix(prompt): restore numeric option labels
+    - 6d6e1e8b7007edda9956c3b52dd8f05f637d9493 Merge pull request #4801 from Li-Charles-One/feat/creation-desktop-style-scaffold
+    - 948a34a683b003283c848f76a01b014322888a0f Fix creation layout localization polish
+    - 78181b9793bd35e10ece1bc84d5c7577e02f20a8 feat: add list_sessions and read_session tools for cross-session AI context sharing
+    - 3ba5ebdd405b9d331cc28b7a4a3e1059280b713a Merge pull request #4857 from GTC2080/GTC/desktop-settings-lazy-secondary-pages
+    - 7106a8e236f71c0e74ceb7d23c0b87ef60c1d969 Merge pull request #4839 from assoyuan/fix/desktop-display-mode-persistence
+    - b42a362100101aacb8dfa7723c2c5608be52b0e9 Merge pull request #4848 from ttmouse/pr/fix-memory-tab-label
+    - f6d3b5a8ebdfa60e19100a485f0ca321ccfebd98 feat: add list_sessions and read_session tools for cross-session AI context sharing
+    - 2c415def3e02a4e9ba9e6039ebcbadac0224bd61 Merge pull request #4858 from ttmouse/pr/session-cache
+    - 4cf8164ffb16f11afa29091d644b8b1a710eb7ea fix: restore project tree session cache validity
+    - 428313f292c5b6b0fa0930d5db8dc58bd38a7404 knownSessionDirs: 跳过不存在的项目目录，防止 os.ReadDir 挂载卡死
+    - e1b554baa73e1f0f91e6b8b6a46d42251326ca36 gofmt
+    - 86935d642e8487dda3bbc67e2a06459dbc0f64b1 perf(desktop): lazy load secondary settings code
+    - d29e591100054cd08db411963b5ec37e3e74799d sidebar: 会话列表加载性能优化
+    - fb2d6b37a8f399fd124ba1ed1ad82b99508e5004 fix(todo): tighten readiness gating and canonical snapshots
+    - 988eb855c5ac2ea2a9274717565caff34271f3d3 fix(memory): 自定义工作区下拉框 + 去重 + 刷新修复
+    - e5f431ea38bb456bed3b914c8f595ac1a5eba19c feat(desktop): tune creation theme accents
+    - a9788eb4bca1b27c25bb53a70b23a6e81ba21a50 feat(desktop): polish creation light settings
+    - ae8570cd11624703c6287ba0377a7eae1c042d64 fix(memory): 工作区去重 + 切换时清空旧数据
+    - 6ee3c64daec39818ff206c8be0cf851960ea17e5 feat(desktop): refine creation settings panel
+    - fa663892275033e17a024237d2be6b184da913d5 fix(desktop): clear creation light footer
+    - 41e0322c4e0a74914d8fd5a4a2befe1f072b1106 fix(todo): restore task panel and simplify prompt cards
+    - cf1d129f3be8ea197d2f25022321e8e3e091fe67 feat(desktop): tint creation light canvas
+    - 56aa58f438d25727aa6e2c2002bd4d5584bcb258 fix(desktop): neutralize creation theme tinting
+    - 6875fd9102fa7281ea88fb565e3ccedea3029a0f feat(desktop): unify creation dark surfaces
+    - 955c4139ee1b058b7d6455b977a67c5c54e2f27e fix(desktop): label creation tool folds
+    - 277f7b8479a1a9082049e265291ed79c8ab0af50 feat(desktop): polish creation sidebar and welcome
+    - 395baf980ef77299a25c53ca29650866bcee18ed feat(desktop): refine creation message chrome
+    - a1c24c682d7bd489fb50bf0bf35da44938e401d0 feat(desktop): move creation automation entry
+    - 3c3ffac05be974398178ca5e00b8e0d601addcb9 fix(memory): 标签选择器显示项目名而非模型名
+    - 26668a5be595f1ed83fbf51c49b67cf431836850 feat(desktop): refine creation sidebar
+    - ef12be0ed7bb96891e01228c69f7af7003d78a5c feat(desktop): refine creation topicbar editing
+    - 96161aaf8bbfe2b9b415cd8cdb598848a782c8c7 feat(desktop): lighten creation run status
+    - b756e924a222c2fd1d9828d434d69f71f3164942 fix(desktop): use z-index token for creation composer
+    - f3190edf460c2cb6fdb70a6d7397ea01453ead68 feat(desktop): polish creation composer
+    - 70a9ce94c97ea4e6c2cd17af1cc2e88095a7aac5 feat(desktop): refine creation welcome screen
+    - 60bb6182a0d085ff04ade0c789b3be6c2227995a fix(desktop): align creation context metrics
+    - 8107cb3eea97be976a24bbce0ab784c5a2860d9b feat(desktop): polish creation context panel
+    - 10c8d9e68f03971e7eaf1c4ec73c3029a89b00e5 feat(desktop): 优化 creation 会话界面
+    - b02a1f65abee1a3607ce9a3525457ad2ccd4737c fix(config): 补全 creation 文档注释与测试，修复 styles.css EOF 空行
+    - 09f29d33cf96b1ac33dcc3df4a122e82caded4aa fix(config): 放行 creation 桌面风格的后端校验
+    - f9d17de88aca5808e811716ee4ae3773bef8bc3c feat(desktop): 新增「创作」桌面风格脚手架
+    - ee36325bfcdfd7be5b5b0da085e6a49344f4756d fix(desktop): persist transcript display mode in user config / 修复会话展示模式无法保存
+    - ba7a50b2d1d129b1b7eb7009ee36f8efb1f17135 Merge pull request #4833 from SivanCola/fix/cache-impact-guard-hardening
+    - 734f93d1ffd135cd176924adb77bbb2c9605920c Merge pull request #4832 from SivanCola/fix/codeql-bare-ref-path
+    - 44072a80fbd047ab752743dd7762e548f2acad15 ci: harden cache impact guard
+    - 0d044521c352c2f5e0d0c716276e0801fa7fec5d Fix unsafe bare ref path probing
+    - 987db664a790fc165a99038e26430b27946a63b6 Merge pull request #4829 from SivanCola/fix/cache-impact-review-gate
+    - 6e6f1854a0f660141c6cd3fb1bb4133a5386ee74 ci: require cache impact notes for sensitive PRs
+    - 65bd190a76df42f5e2464310df3bfd7b3e20fcec Merge pull request #4757 from GTC2080/GTC/fix-codegraph-daemon-idle
+    - 0b3c12013cd8079c6a5062aa161e748cf62f8aaa Merge pull request #4760 from GTC2080/GTC/fix-4751-desktop-mcp-persistence
+    - 02f787396b38efc23f16be407af821d91303ddae Merge pull request #4761 from GTC2080/GTC/fix-4759-session-project-restore
+    - d8d3f5fbfb5f73410729ecc53894c571bd5a1feb Merge pull request #4762 from GTC2080/GTC/issue-4758-empty-new-session
+    - 8afe6f074be570329b314c1dc39cef650fb94de7 Merge pull request #4795 from GTC2080/GTC/fix-official-provider-context-window
+    - cf28aebc97ed8b8c0386b555c824d52f6bb35182 Merge pull request #4827 from eghrhegpe/main-v2
+    - 2bed4482c8b9817a88b22548c276ef699d5ba061 fix: keep parallel orchestration cache conservative
+    - 4a59ba2eb08a9eb70fec34eb81b429fcece84144 Merge pull request #4828 from SivanCola/fix/tui-transcript-divider-width
+    - 264f60034571953eff149c1dda1ed6fdba2fa369 fix: stabilize goal orchestration changes
+    - e2acf5afc1d00b1ca83d485bf82d6fa40f81ef7a Merge main-v2 into new-session history fix
+    - 51e30f228e65c24ccd131ab594245d1e218a4d62 fix: remove conflicting planApprovedMessage; consolidate parallel hint
+    - 036e337ca935432a342ddb98133f9f88772f8392 Fix TUI transcript divider width
+    - 1e51cde2f8f66bb8e666457bb04390f808a1074a optimize: reduce token overhead per SivanCola feedback
+    - 4f03bd9238f1ef7664b367431b83a03a4359af17 feat(skill): enable parallel_tasks in explore/research subagents
+    - a79acae95f4a4e7c863838b7e4adf2fd229f62d8 enhance(prometheus): add parallel research hint to prompts
+    - 31e30df61b7ccdc81e41c3b18f82c5fec709b2a0 style: gofmt fixes for CI compliance
+    - 0034cc8bafcd3dfbe0362740a57b62aa670f27ff Merge pull request #4825 from esengine/dependabot/npm_and_yarn/workers/crash-report/multi-6269ed2cd4
+    - f08fd17df995a88290f639d4b80e61d14d18390e Merge pull request #4793 from ttmouse/pr/shared-mcp
+    - a38f9354a5e019c714eaf262119ff35d0bf35743 enhance: file-based wisdom, module preview, deep module scan
+    - 842ba015c367b1af335af1ef49778d86c082279f feat(plan-exec): auto-detect project modules for task routing
+    - 0d82184ad44901dbe2c7b0c7a6e0e17440bd3b50 enhance(plan-exec): module-aware task routing
+    - 89c2d814c0edfd7f6779940ac31a6c017eb3beb6 feat: wisdom accumulation in parallel_tasks + goal state persistence
+    - 61aa616bc1aa5b7279bd1e88508ed76e11e23ca2 feat(ui): strip goal markers from display text
+    - df6b4db13b5d347d23405bd14db123dc928e16b8 docs: add Prometheus interview section
+    - d397380d84686ee431b6cefa4373ec034fee1abc feat: add /prometheus interactive planning interview
+    - 8bc676a65fdcc766f845a42f161d00cc385e0de3 enhance(plan-exec): add structured batch execution with --strict support
+    - c7f7370026818f0ea934cfbb359dc44e9757ff47 fix: address P2 review feedback
+    - 50a17187ce4f0b986f9d4d09018d32374e2b3459 feat(control): add /plan-exec command for parallel plan execution
+    - 0bc446bd7255674f1f80e40398f9978b1ce73fda feat(plan): suggest parallel_tasks for independent plan steps
+    - 72b34ee2e44524e29903f65d7bb967acdbb4fbb2 feat(parallel_tasks): add depends_on for task dependency ordering
+    - b74987193f191c573403777ef7b4dc085c1c8917 docs: add Goal enforcement guide in Chinese
+    - 6c873e564e1e053e3b0a3052eb07b97ac8160cb3 feat(goal): add idle detection in goal loop
+    - 58b815f3bc698dd60090bd0f08ce3901fc449e16 Fix per-tab shared MCP disable
+    - 6ef7588f04e182dadc918ad5cf44ca3a312a4d3c chore(deps): bump undici and wrangler in /workers/crash-report
+    - 8688ce1ff17907a6e915a62d73a79d486aaa881f Merge pull request #4824 from esengine/feature/integrate-goal-contributor-prs
+    - 57a95b5bfc8ce7fadae11536496bdf30a9622de0 merge: sync goal integration with main-v2
+    - 951588bf29081dc8be446e5ee9f833d3e1a9041d fix: address goal enforcement review findings
+    - e34cb1ca1df7eccf36dcf77c6624a9afda9ef18d Merge pull request #4823 from esengine/feature/goal-autoresearch-upgrade
+    - a2bd224437c24c2d7dfa25d0578c358791fa74ba Fix shared MCP spawn race
+    - bc9961751d51af6273af290ec1ac1dadf1ced4b8 fix(goal): preserve AutoResearch startup context
+    - 96e9a53d4fafd492d34a5dee8f64b9802295b0a0 fix: satisfy CI formatting and lint
+    - b4b9f4ae7f684864c314022754db6599d9c6a72c Merge main-v2 into shared MCP host PR
+    - 424e9246412dbb42a89490f9bab6513013a84ac4 fix: preserve draft when enabling goal mode
+    - f005031621dba9e3e7caae886fad4a95e5bd986f Fix shared MCP host concurrency and lifecycle
+    - 6e5f1b84c474053bcab8e5189d9ca1c496162892 feat(goal): add OMO-inspired enforcement features
+    - 6ffb765071149eb8fac03797720b278d8ccb6009 fix: 根据 Codex review 修复 10 个问题 + 追加子代理审核的 3 个 nit
+    - 95b8b590ebb817f0798f67b81756bfa0154b629a feat(goal): auto-start AutoResearch for strong goals
+    - ebea82bdae911acd90e632ff833cd7a9eea15cc8 Merge pull request #4813 from ttmouse/pr/heartbeat-tasks
+    - a7b7e8f294301b4dc3db689a65a8dd97de2c3b90 Respect Reasonix state dir for heartbeat tasks
+    - a3e63f5503bbe9afbb6b72006c16c72de648d682 Merge pull request #4819 from SivanCola/fix/reusable-blank-tab-title
+    - 259b3c8c69a919986823fc80610f90b2c6a13c39 Keep active tab stable on title reset failure
+    - 40437e04963f436abdb022c1587d389dc0aadc9f Fix heartbeat scheduling and safe submission
+    - 2cc29c5ef9a93a2f48b67ea3fa79648032aba829 Merge pull request #4815 from assoyuan/feature/workbench-folder-ux
+    - 965ab31eaa592b3be02fc94eed553a84eb88b1ac Fix reusable blank tab title reset
+    - fb4c0c56b08d1c7a9e4ff8c1aed281d6a15f609c Merge pull request #4817 from esengine/feature/auto-research-skill
+    - 14029f2148025bcee442b2528c2d7e6389002236 Merge pull request #4816 from SivanCola/perf/desktop-startup-settings-integration
+    - 35e774f89421b7590e06adc6a131a3fa2d30ec72 feat(skill): add built-in auto research protocol
+    - f4d17cad6a7e42aa518068148e8f41c450bb74bb fix: reduce Settings CPU spike from redundant re-renders and forced layout
+    - 78180424b8b96aa9b326381749c7ec8915f1f25a perf(desktop): split startup bundle
+    - d97eafc6eae52b28d0a3256ebd83df953f589cb5 perf(desktop): avoid full settings load on startup
+    - 013ecb350f055e48a68e9f4a36c103c0fcc37581 fix: cache settings credential lookups
+    - be2a076b868a463543ca049a95c581174c0587cf fix(desktop): refine project tree folder hover and startup expansion / 优化项目树文件夹悬停 icon 和启动时的文件夹展开逻辑
+    - 863498f9a661dfaff512205291119383bac9e176 Merge pull request #4710 from lifu963/pr/desktop-clear-session-jobs-artifacts
+    - 01be75333f18b69e9bd9f899480df9ff7e961a6d fix(desktop): guard live settings during active work
+    - 25ab916ac0b36d7c9ad6cfdac1655f158d12cb22 fix: 修复 Codex 审核提出的 8 个问题
+    - 21dafbf65dd912944f2d15b449acd025319d006e fix: gofmt 格式修正 + lint errcheck 修复
+    - dd44f3a879c857b2a955b67743d0d3aa54e39458 feat: 心跳任务系统 — 定时 AI 提示词注入
+    - 726e32dedd9eb5d69a080f578d32c7bc13c989b7 fix(acp): reconcile pending metadata cleanup
+    - 96a1db21fea07e148915afa7ef7f50642914f652 fix(desktop): make pending trash reconciliation idempotent
+    - fc5fe53e2dc970162bc57ae1e343ba8c91acffc5 fix(config): backfill official context windows
+    - ef953ee2f8098d2a3322fb3e502c34d266f10676 fix(desktop): share plugin.Host across tabs per workspace root
+    - 89c771591b3230234a1f03e11e248ba81f1ebe55 fix(plugin): reinitialize expired HTTP MCP sessions
+    - 00a3d29d660f2c13876713b328d62b0d8922e864 Revert "fix(provider): backfill tool-result name on old-session replay (#4775)" (#4778)
+    - d8e0e738bb0712b52e6078e0dc25cc54f2174d1f chore(teardown): clarify cleanup pending edge cases
+    - cffc5dca408e7cc040507f91d41f748e04ea1cb9 fix(teardown): reconcile pending cleanup on boot
+    - f99684a7a218248d0671814c4af2f7c490124e68 fix(provider): backfill tool-result name on old-session replay (#4775)
+    - b772895d05d14121832cd030ce21acd813cf2483 fix(desktop): ignore stale history loads after new session
+    - 924b48fc2a658f9f330394b5889dd4f9bda5a275 fix(desktop): restore session workspace from pinned metadata
+    - 07e688bbaa7249ca64418a4189ba26a492db6059 fix(desktop): persist MCP JSON server edits
+    - af84b038117044b985c2f53e0afef6f6ba568a54 test(teardown): relax stuck-job timing on Windows
+    - 7b282ef713d56503c5b30c2762445d8ce5e6640b Merge origin/main-v2 into cleanup-pending visibility fixes
+    - bf2abf64c4c36ab0029c55c85ea2db795b636ec0 fix(plugin): bound codegraph daemon idle timeout
+    - cd380f294591c4e37077440a03331ef58d6e4675 test(history): cover pending cleanup tool retrieval
+    - af57f01f95761406f6a48fb166d47dd921b47967 fix(history): skip cleanup-pending transcripts
+    - 6aa8215e3671acd7bfc1b36578d11f86dc29a29f fix(teardown): hide pending sessions from branches
+    - ef1f38c898405bd222bb38bd80c5af07ac5d3ce4 Merge pull request #4721 from GTC2080/GTC/desktop-performance-audit
+    - 884c4acf4cf8936e10b7a7e1eee95fba0ed42229 fix(test): clean up teardown CI failures
+    - ade40e08774d548b8e9d523219736a03331ba006 Merge bounded background teardown fixes
+    - 310c321f7d9f123d073ab91e916af6b9797c8fbc fix(teardown): hide cleared sessions before async cleanup
+    - 1e5d796c610dbd2b073ac8c8187366ca37794a0b test(provider): cover tool-call name backfill; skip copy when unneeded
+    - bd19a28c42cd3aaf7930ba243c1a32f3bc719254 fix(teardown): block cleanup-pending CLI resumes
+    - abb0310402aca385a897a1fe58b95416125f1da6 fix(provider): backfill empty tool-call name/arguments on old-session replay (#4727)
+    - 423f07165d6e8cb5d2cc74fc73cf59ace6344182 fix(teardown): skip cleanup-pending topic sessions
+    - e7fbb07219875162fb5f0d532ae90108c79831b7 ci(desktop): gate stable Windows signing until the release cert is ready
+    - 94aefd32aba69d119849d36a4322c2e235bc4613 fix(teardown): block cleanup-pending resumes
+    - c34508df3397d4259d8b25abd637199ff7e3717a fix(teardown): hide cleanup-pending API sessions
+    - 998750f133b08d6146dbfc2143123aa2be72fd78 fix(teardown): avoid duplicate destroy grace waits
+    - 6a6e665a75465fc5ed03ff674f04ce3d58370b7e ci(desktop): Authenticode-sign the Windows installer via SignPath
+    - 6350c29b9357466c9fc0850529965312ea531d98 fix(teardown): delay delete and trash cleanup
+    - 49fb97dd6fcf0b53671a8f898ae03ca94a0a381f fix(teardown): defer cleanup for stuck jobs
+    - 7a7962d6882060092428a5a52f140aa66ab06242 fix(agent): hide cleanup-pending sessions
+    - a2cd780dfbca7333b4a8d3e96540583cdd49c97e fix(control): delay cleanup after teardown timeout
+    - f77fe10531acbff5b1be053bbbe1e5601c1bfe2e fix(jobs): bound background teardown waits
+    - dcc434e56257178cef4f65792faf6b56b580df82 perf: avoid redundant desktop session reloads
+    - 7e7c47d7e204ca4afdf542537a58582c24715996 fix(desktop): remove job artifacts on clear
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/esengine/DeepSeek-Reasonix/releases/tag/v1.10.0
+ReleaseTime: 2026-06-20T04:20:46.0000000Z

@@ -1,0 +1,112 @@
+Version: 3.99.0
+Installer:
+- InstallerUrl: https://logtalk.org/files/logtalk-3.99.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Logtalk compiler and runtime
+    - ADDED: New force target to the logtalk_make/1 built-in predicate to force reloading of all files that were loaded without an explicit reload/1 option.
+    - ADDED: New logtalk_load_context/2 key term_position(Term) to access a term position while verifying that the position is for the given term.
+    - FIXED: The portability linter warning for the write_term/3 predicate variable_names/1 option when its value is bound at runtime.
+    - FIXED: Protect file compilation/loading, make, dynamic entity creation, and dynamic binding cache update operations with mutexes when using multi-threaded backends. Thanks to Lindsey Spratt for help in debugging the race conditions.
+    - FIXED: Bug when handling entity operators defined in an included file where they would be visible outside the entity.
+    - FIXED: Workaround mishandling of multifile and dynamic predicates by some backends such as ECLiPSe and Trealla Prolog.
+    Documentation
+    - ADDED: Documentation on limitations when using conditional compilation directives in included files.
+    - FIXED: The Handbook sections on entity properties were missing the info/1 property.
+    Library
+    - REMOVED: The dates library valid_date_time/2 predicate.
+    - REMOVED: The linda library shutdown_server/0 and close_client/0 predicates.
+    - CHANGED: The linda library to provide linda_server and linda_client categories. A default linda object importing both categories is provided for backward compatibility.
+    - CHANGED: The linda library exception when a client is not connected from linda_error(not_connected) to linda_error(not_connected(AddressOrAlias)).
+    - CHANGED: The dates library name_of_day/3 predicate to use ISO 8601 numbering for consistency with other predicates.
+    - ADDED: New application library for declaring application metadata.
+    - ADDED: New character_sets library implementing conversion between character codes and bytes plus character set metadata.
+    - ADDED: New hashes library implementing commonly used hashing algorithms.
+    - ADDED: New toml library for parsing and generating TOML v1.0.0 files.
+    - ADDED: New tzif library for parsing TZif v1/v2/v3 files, persisting parsed snapshots, and answering UTC-based offset, DST, and abbreviation queries.
+    - ADDED: New dates_tz library linking the dates and tzif libraries for zone-aware date-time conversions.
+    - ADDED: New mime_types library providing convenience predicates for mapping file extensions, file names, and URL-like resources to MIME media types and content encodings.
+    - ADDED: A 2-3 tree implementation to the dictionaries library. Contributed by Michael T. Richter.
+    - ADDED: Support to the linda library for clients to connect to multiple servers.
+    - ADDED: Support to the linda library for clients to define aliases for servers connections.
+    - ADDED: New character set, hexadecimal, to the type library object and to the arbitrary library category.
+    - ADDED: Support to the json_schema library for schema references to local files.
+    - ADDED: Predicate server_open/4 to the sockets library.
+    - ADDED: Predicate file_path_components/2 to the url library for converting a file-system path into file URL components (handles Windows drive-letter and UNC paths).
+    - ADDED: Predicates day_of_year_date/3, month_weekday_date, before/2, after/2, same_instant/2, compare_date_time/3, and format_date_time/4 to the dates library.
+    - ADDED: Support for calendar-aware year/month period arithmetic to the dates library.
+    - ADDED: Support for version 3 and 5 UUIDs to the uuid library.
+    - IMPROVED: The implementation os::shell/1-2 library predicates for SICStus Prolog to avoid quoting issues on POSIX systems.
+    - FIXED: The implementation of the os::absolute_file_name/2 predicate for the Ciao Prolog, CxProlog, ECLiPSe, GNU Prolog, JIProlog, SICStus Prolog, Tau Prolog, and Trealla Prolog backends to preserve a slash at the end of the input argument in the expanded path.
+    - FIXED: The implementation of the socket::server_accept/4 predicate for GNU Prolog.
+    - FIXED: The implementation of the os::is_absolute_file_name/1 predicate for ECLiPSe when running on Windows.
+    - FIXED: The implementation of the os::sleep/1 predicate for JIProlog.
+    - FIXED: The implementation of the os::temporary_directory/1 predicate for Windows to not try to use the system temporary directory as backup as it isn't writable by non-admin users.
+    - FIXED: Portability of the process library on Windows systems.
+    - FIXED: Bug in the linda library where a permission error would be thrown in the server when a client sent the linda::shutdown_server/1 message.
+    - FIXED: Bug in the linda library where the in/1 and in_noblock/1 predicates would remove non-matching tuples. Thanks to Paul Brown for the bug report.
+    - FIXED: Predicate synchronization bug in the linda library when handling tuples.
+    - FIXED: The linda library shutdown_server/1 predicate to no longer require a follow-up client connection to complete server shutdown.
+    - FIXED: Non-determinism bug in the strings library atomics_to_string/3 predicate. Thanks to Felix Weitkämper for the bug report.
+    - FIXED: Portability issue in the isolation_forest library when calling the format/3 de facto standard predicate.
+    - FIXED: Spurious choice-points in the url library public predicates.
+    - FIXED: The url library generate/2 predicate to return a normalized URL.
+    - FIXED: The url library normalize/2 predicate to normalize all characters that must be percent-encoded.
+    - FIXED: Tests for the format library when run on Windows with backends that use CRLF instead of LF.
+    - FIXED: Tests for the time_scales library when run on Windows with some backends.
+    - FIXED: Repeated test name for the hook_objects library when running on Windows.
+    - FIXED: Bug in the sockets library with the SWI-Prolog backend where IPv4 and IPv6 mismatches could happen between client and server.
+    - FIXED: Spurious choice-point when calling the date::valid_date_time/2 library predicate.
+    Tools
+    - CHANGED: The code_metrics tool coupling_metric metric representation of entity scores to include the Distance from Main Sequence metric value.
+    - CHANGED: The lgtunit tool clean_directory/1 predicate to also delete non-empty directories.
+    - ADDED: New tool_diagnostics tool for supporting generating diagnostics by other developer tools.
+    - ADDED: New sarif tool for generating SARIF reports from diagnostics generated by other developer tools.
+    - ADDED: New mutation_testing tool for mutation-based testing.
+    - ADDED: New sbom tool for generating SBOMs for loaded applications.
+    - ADDED: New linter_reporter tool support for generating diagnostics that can be used by tools such as sarif.
+    - ADDED: Support to the dead_code_scanner, lgtdoc, and lgtunit tools for generating diagnostics that can be used by tools such as sarif.
+    - ADDED: Support for caller diagrams to the diagrams tool.
+    - ADDED: Implementations of the Lines, Maintainability Index, Lack of Cohesion Of Methods (LCOM4), Weighted Methods per Class (WMC), Response For a Class (RFC), and Cognitive Complexity metrics to the code_metrics tool.
+    - ADDED: Support to the diagrams tool for coupling metrics overlay in entity nodes depending on the new metrics_overlay(Boolean) option.
+    - ADDED: Support to the diagrams tool for highlighting cyclic relations in directory dependency diagrams, library dependency diagrams, and entity diagrams by coloring edges red depending on the new cycle_detection(Boolean) option.
+    - ADDED: Support to the diagrams tool for exporting diagrams in the Cytoscape Exchange (CX2) JSON format.
+    - ADDED: Support to the diagrams tool for exporting diagrams in the PlantUML format.
+    - ADDED: Support to the diagrams tool lgt2svg.sh and lgt2svg.ps1 scripts to export diagrams in formats other than SVG.
+    - ADDED: Support to the packs tool for lock files for deterministic installs and CI/CD reproducibility.
+    - ADDED: Programmatic query API to the packs tool.
+    - ADDED: Support to the lgtunit tool for exporting code coverage stats in Cobertura XML and LCOV formats.
+    - ADDED: Support to the lgtunit tool for exporting tests results in the Subunit and CTRF (Common Test Report Format) formats.
+    - ADDED: New lgtunit tool file_url/2 protected predicate.
+    - ADDED: Support to the logtalk_tester.sh and logtalk_tester.ps1 testing automation scripts for concurrent running of tests sets with a new -j option.
+    - UPDATED: The logtalk_tester.sh and logtalk_tester.ps1 testing automation scripts to also print the batch run time when using the -o minimal option.
+    - UPDATED: The tutor tool to explain the new dead_code_scanner tool linter warnings.
+    - UPDATED: The tutor tool to provide a tutor_explanations category with the public explain//1 non-terminal that can be used independently by other tools.
+    - FIXED: Bug in the code_metrics tool cc_metric::rdirectory_score/2 predicate where the top directory score was ignored.
+    - FIXED: Bug in the code_metrics tool cc_metric::rlibrary_score/2 predicate where the exclude_libraries/1 option was ignored.
+    - FIXED: Spurious choice-point when calling the code_metrics tool metrics entity_score/2 predicate.
+    - FIXED: Bug in the packs tool registries::defined/4 predicate where local registries that are git repos would not be recognized as such.
+    - FIXED: Bug in the logtalk_tester.ps1 PowerShell script where the test results summary will fail to account for all the tests that were run.
+    - FIXED: Bug in the logtalk_tester.ps1 PowerShell script that prevented using the ECLiPSe backend.
+    - FIXED: Tests for the debug_messages tool when run on Windows with backends that use CRLF instead of LF.
+    Examples
+    - RENAMED: The permutations example to list_permutations to avoid a library alias clash with the new permutations library.
+    - FIXED: Tests for the hello_world examples when run on Windows.
+    Contributions
+    - ADDED: Predicates time_string/3 and date_time_string/3 to the iso8601 contribution. Also extend the interval_string/2 predicate to support additional interval endpoints.
+    - ADDED: Support to the iso8601 for comma as a fractional separator in time and date representations.
+    Ports
+    - CHANGED: The toychr port by moving its operator directives to a file that is included in the toychrdb and in the example objects.
+    - FIXED: Compatibility of the toychr port with the SICStus Prolog backend.
+    Tests
+    - FIXED: Tests for the format/2-3 de facto standard predicates when run on Windows with backends that use CRLF instead of LF.
+    IDEs, text editors, and syntax highlighters support
+    - ADDED: VSCode support for checking the portability of loaded code.
+    - UPDATED: The Context7 MCP server context7.json support file to the latest format.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#3990---april-9-2026
+ReleaseTime: 2026-04-09

@@ -1,0 +1,34 @@
+Version: 0.16.1.20261014.1019
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.16.1/Runner-Setup-0.16.1.20261014.1019-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.1 is a feature release for macOS and Windows on top of 0.16.0.
+    New
+    - Desktop notifications when an agent needs you. While Runner is in the background, it notifies you when a chat needs your input, finishes a turn, or fails. Clicking a notification takes you to that chat or mission, and Runner clears it once you look at the session. Choose which events notify you in the new Settings → Notifications pane: chat notifications are on by default, and mission notifications (a crew member asks you a question, needs your input or fails, or the whole mission goes idle) are off until you turn them on. On macOS, Runner asks for permission when it launches; banner style and sound stay in System Settings → Notifications → Runner. (#701, #891)
+    - OpenCode v2 support. OpenCode joins the agents you can run in chats, roles and crews, with resume by exact session, its own model and effort choices, and Skills and MCP settings. Fork, usage and update controls are not available for OpenCode yet. (#876)
+    - Newest first within a project. A new tab or mission created inside a project or in Recents now appears at the top of its list. Dragging still reorders, and existing rows keep their order. (#884, #892)
+    - Direct's agent picker remembers what you use. The Start Chat picker lists recently started agents first and opens on the last one you started; the Settings default applies until you have started one. (#894)
+    Bug fixes
+    - Pasting a large image no longer disconnects Runner. Image paste now lets the agent read the clipboard itself instead of sending the image through Runner's background service, so a large image cannot drop the connection, and TIFF-only clipboard images paste too. Any other oversized request now fails on its own instead of disconnecting every pending call. (#877, #880)
+    - MCP servers set up differently per agent are no longer flagged. Settings → MCP drops the amber warning for servers whose definitions differ between agents, such as per-agent arguments, and editing one agent's entry no longer turns on Also update for agents whose entry differs. (#895)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.1 是 macOS 和 Windows 上基于 0.16.0 的功能版本。
+    新功能
+    - 智能体需要你时发送桌面通知。 Runner 在后台时，聊天需要你输入、完成一轮回复或失败时会通知你。点击通知会跳转到对应的聊天或任务，你查看该会话后 Runner 会清除这条通知。可以在新的 Settings → Notifications 面板中选择哪些事件需要通知：聊天通知默认开启；任务通知（成员向你提问、需要你输入或失败，或整个任务进入空闲）默认关闭，需要手动开启。在 macOS 上，Runner 启动时会请求通知权限；横幅样式和声音仍在 System Settings → Notifications → Runner 中设置。 (#701, #891)
+    - 支持 OpenCode v2。 OpenCode 现在可以用于聊天、角色和团队，支持按确切会话恢复、使用其自身的模型和推理强度选项，以及 Skills 和 MCP 设置。OpenCode 暂不支持分叉、用量和更新控制。 (#876)
+    - 项目内最新的排在最前。 在项目或 Recents 中新建的标签或任务现在会出现在列表顶部。拖动仍可调整顺序，已有条目保持原有顺序。 (#884, #892)
+    - Direct 的智能体选择器会记住你的使用习惯。 Start Chat 选择器会把最近启动过的智能体排在前面，并默认选中你上次启动的那个；在你启动过任何智能体之前，仍使用 Settings 中的默认设置。 (#894)
+    问题修复
+    - 粘贴大图片不再导致 Runner 断开连接。 粘贴图片时，现在由智能体直接读取剪贴板，不再经由 Runner 的后台服务传输图片，因此大图片不会再导致连接断开，仅含 TIFF 格式的剪贴板图片也可以粘贴。其他超大请求现在只会让该请求本身失败，不会断开所有待处理的调用。 (#877, #880)
+    - 不同智能体配置不同的 MCP 服务器不再被标记。 Settings → MCP 不再为各智能体定义不同的服务器（例如各智能体自己的参数）显示琥珀色警告；编辑某个智能体的条目时，也不再为定义不同的智能体默认开启 Also update。 (#895)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.16.1
+ReleaseTime: 2026-10-14T10:32:53.0000000Z

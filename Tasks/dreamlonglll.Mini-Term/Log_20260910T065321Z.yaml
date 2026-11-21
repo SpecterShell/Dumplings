@@ -1,0 +1,32 @@
+Version: 1.2.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.2.9/Mini-Term_1.2.9_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    性能
+    - Markdown 预览按块虚拟化 — 长文档预览滚动不再卡顿。预览把文档拆成块逐块渲染，只为视口附近的块做布局，不再每滚一格就把整篇重排一遍：65KB、17 张表格的实测文档，每帧主线程 CPU 从 152ms 掉到 23ms；226 项的长列表从 145ms 掉到 49ms。滚动位置照旧保住——切源码 / 预览、保存、拖分栏之后回到预览，位置像素级不动。
+    新功能
+    - 提交历史标出上游分支 — 查看本地分支的历史时，除了本地分支名，还会把它的上游（origin/xxx）作为一枚弱化胶囊钉在它真正指向的那次提交上：本地领先几个提交、最新代码推没推上去，一眼看到。提交或推送之后胶囊立即跟着走。
+    - 分支徽章按名字自适应宽度 — Git 面板仓库栏的分支徽章去掉了固定宽度上限，按分支名的自然宽度展示，只有仓库栏真挤不下时才截断并挂上全名 tooltip（收缩时优先保全分支名）。
+    修复
+    - Markdown 预览在长文档里滚动时，标题块会画到相邻块上造成显示错乱——按块虚拟化后一并消除。
+    - 各面板长文本截断补上省略号 — 此前挤不下的文本只是被裁掉，看着像被生生切了一刀。现在文件查看器面包屑、Git 变更 / 差异的路径与分组名、Git 工作树、项目列表的项目名 / 描述 / 分支与远程徽章、搜索结果路径、设置页签与主题包名、SSH 面板分组与连接名、面板预览卡的项目路径，截断后都会带上 …。
+    下载
+
+    | 平台                | 文件                                                                                            |
+    | ------------------- | ----------------------------------------------------------------------------------------------- |
+    | Windows x64         | Mini-Term_1.2.9_x64-setup.exe                                                                   |
+    | macOS Apple Silicon | Mini-Term_1.2.9_aarch64.dmg（首次打开若提示已损坏，执行 xattr -cr /Applications/Mini-Term.app） |
+    | macOS Intel         | Mini-Term_1.2.9_x64.dmg（同上需 xattr -cr）                                                     |
+    | Linux x64           | Mini-Term_1.2.9_amd64.deb / Mini-Term_1.2.9_amd64.tar.gz                                        |
+
+    Full Changelog: https://github.com/dreamlonglll/mini-term/compare/v1.2.8...v1.2.9
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.2.9
+ReleaseTime: 2026-09-10T03:36:20.0000000Z

@@ -1,32 +1,48 @@
 $Prefix = 'https://oss-arena.5eplay.com/client/'
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'en-US'
+$Object1 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object1 = Invoke-RestMethod -Uri 'https://api-client-arena.5eplay.com/api/home'
+# Version
+$this.CurrentState.Version = $Object1.version
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      # ReleaseNotes (zh-CN)
-      if ($Task.CurrentState.Version -eq $Object1.data.login_version_note.version) {
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $Object1.data.login_version_note.content.ForEach({ $_.category_name + "`n" + $_.list.ForEach({ $_.title + "`n" + $_.content }) -join "`n" }) -join "`n`n" | Format-Text
-        }
-      } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
-      }
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate | Get-Date -AsUTC
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    try {
+      if ($Global:DumplingsStorage.Contains('5EClient') -and $Global:DumplingsStorage['5EClient'].Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage['5EClient'][$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

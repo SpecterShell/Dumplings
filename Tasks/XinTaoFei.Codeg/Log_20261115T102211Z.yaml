@@ -1,0 +1,43 @@
+Version: 0.45.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.45.0/codeg_0.45.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.45.0/codeg_0.45.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release keeps tasks running while agents finish background work, makes configuration sync safer and adds appearance settings to it, adds Claude Code cache mode settings, reduces memory retained after closing conversations, and updates several agents.
+    New
+    - Tasks and automation runs now wait for background work to finish. Previously a run could end, and its background commands or sub-agents be cut off, as soon as the agent's reply finished. Now the run stays open until that work completes and the agent's follow-up reply arrives, and that reply becomes the run's summary. The task card shows how many background jobs are still running and offers a "Stop waiting" action.
+    - Configuration sync now includes appearance settings: light/dark mode, theme color, zoom, fonts, background display and custom styles.
+    - New Cache mode settings in the Claude Code config panel, with switches for the one-hour prompt cache of the main conversation and of sub-agents.
+    Improved
+    - Updated Claude Code (claude-agent-acp 0.107.0) and OpenCode to 2.3.0, DeepSeek to 0.11.0, Cursor to 2026.11.13, Kimi Code to 2.6.2, Qoder to 1.1.89, ZCode to 0.85.2 and Command Code to 1.89.1. The DeepSeek settings follow the new version's setup: it uses the Anthropic-compatible endpoint by default and requires Node.js 22.19.0 or later.
+    Fixed
+    - Configuration sync no longer overwrites settings uploaded from another machine. Fresh installs and machines that have not synced in a while no longer replace a newer remote snapshot. Instead, you can see where the snapshot came from and choose to restore it or replace it. Opening codeg in a new browser also no longer resets the server's appearance settings. (#1149, reported by @zinsser901224)
+    - Reduced memory retained after closing a conversation that showed a streamed reply. (#1157 by @kogekiplay)
+    - Connected agent sessions are no longer shown as "connecting". (#1152 by @kogekiplay)
+    Thanks to @kogekiplay for contributing to this release, and to @zinsser901224 for reporting the sync issue.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版让任务等智能体的后台工作完成后再结束，提升配置同步的安全性并支持同步外观设置，新增 Claude Code 缓存模式设置，减少关闭会话后的内存残留，并更新多个智能体。
+    新增
+    - 待办任务和自动化运行会等后台工作完成后再结束。 以前智能体一回复完，运行就可能结束，后台命令或子智能体也会被中断。现在会等这些工作完成、智能体发出后续回复后再结束，并以这条回复作为运行总结。任务卡片会显示仍在运行的后台工作数量，也可以随时「停止等待」。
+    - 配置同步现在包含外观设置：明暗模式、主题色、缩放、字体、背景显示和自定义样式。
+    - Claude Code 配置面板新增「缓存模式」设置，可分别开关主会话和子智能体的一小时提示词缓存。
+    改进
+    - Claude Code（claude-agent-acp）更新至 0.107.0，OpenCode 更新至 2.3.0，DeepSeek 更新至 0.11.0，Cursor 更新至 2026.11.13，Kimi Code 更新至 2.6.2，Qoder 更新至 1.1.89，ZCode 更新至 0.85.2，Command Code 更新至 1.89.1。 DeepSeek 设置已适配新版的配置方式：默认使用 Anthropic 兼容接口，并要求 Node.js 22.19.0 及以上版本。
+    修复
+    - 配置同步不再覆盖其他设备上传的配置。 新安装或久未同步的设备不会再替换云端较新的快照，而是显示快照的来源，由你选择恢复还是替换。在新浏览器中打开 codeg 也不会再重置服务器上的外观设置。（#1149，由 @zinsser901224 反馈）
+    - 减少关闭显示过流式回复的会话后的内存残留。（#1157 by @kogekiplay）
+    - 修复已连接的智能体会话被显示为「连接中」的问题。（#1152 by @kogekiplay）
+    感谢 @kogekiplay 为本次发布做出的贡献，也感谢 @zinsser901224 反馈同步问题。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.45.0
+ReleaseTime: 2026-11-15T09:37:42.0000000Z

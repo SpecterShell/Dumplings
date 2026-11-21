@@ -1,33 +1,41 @@
-$Object = Invoke-WebRequest -Uri 'https://www.ugnas.com/download' | ConvertFrom-Html
-
-$Node = $Object.SelectSingleNode('//div[contains(@class, "type1")]/div[contains(./div[5], "Windows")]')
+$Object1 = Invoke-RestMethod -Uri 'https://cloud.ugreengroup.com/api/system/v1/softVer/latest' -Method Post -Body (
+  @{
+    appNo = 'com.ugreenNas.win'
+  } | ConvertTo-Json -Compress
+) -ContentType 'application/json'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Node.SelectSingleNode('./div[2]').InnerText, 'V([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.data.verName -replace '^v'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Node.SelectSingleNode('./div[8]/a').Attributes['href'].Value.Trim()
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.data.pkgUrl
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Node.SelectSingleNode('./div[3]').InnerText | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.data.pubTime | ConvertFrom-UnixTimeMilliseconds
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Node.SelectSingleNode('./div[6]/div[2]/div') | Get-TextContent | Format-Text
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.desc | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,234 @@
+Version: 2.93.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lidge-jun/opencodex/releases/download/v2.93.0/OpenCodex-2.93.0-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release notes
+    - GPT-6.1 Terra support (Codex native, OpenAI API, OpenRouter, Copilot and other providers; not Cursor) (#7779).
+    - Required tool calls are now enforced in two places, with distinct error codes: a buffered native combo child that skips a required tool_choice fails with required_tool_contract_unsatisfied (HTTP 502, eligible for the existing fallback; HTTP 400 with x-should-retry: false after a hosted effect) (#7741), and a translated Chat route fails with required_tool_not_called (#7463). Streaming native combo children are not covered yet (#7456 stays open).
+    - Anthropic: routed compaction now preserves cache prefixes; 413 recovery behavior is unchanged (#7749).
+    Known issue
+    - On a Remote Link Child, ocx stop leaves Codex pointed at the stopped Child, so Codex requests fail until ocx start (or ocx sync --restart-codex) reapplies routing. This comes from #7564, which keeps a connected client's integrations across stop; restoring native routing on an explicit Child stop is tracked in #7736.
+    Published to npm as @bitkyc08/opencodex@2.93.0 with dist-tag latest.
+    New Features
+    - Price and seed Kimi K3.1 Pro on Kimi Code and Moonshot (#7657)
+    - Expose JEV session pin in Combo editor (#7664)
+    - Use Bun native CRC32 for Kiro frame validation (#7631)
+    - Avoid input Buffer copies in gzip requests (#7671)
+    - Avoid repeated growing-buffer prefix extraction in SSE decoding (#7676)
+    - Seed Kimi K3.1 Pro on the Moonshot API preset (#7695)
+    - Bound timeline aggregation scratch memory and avoid argument overflow (#7679)
+    - Validate audit UTF-8 without round-trip Buffer copies (#7672)
+    - Avoid quadratic copying of fragmented frames (#7673)
+    - Coalesce queued thought-signature snapshot writes (#7675)
+    - Skip unchanged partial-tail reads and SQLite metadata rewrites (#7680)
+    - Ocx sync --expect-link / --expect-hub-key refuses a different Home (#7694) (#7707)
+    - Use native SHA-256 for tool identity digests (#7670)
+    - Bound upload waiters and release completed read results (#7661)
+    - Connect named Hermes profiles (#7674) (#7700)
+    - Bound CONNECT header buffering and avoid repeated prefix copies (#7663)
+    - Add opt-in cooldown recovery with configurable interval (#7723)
+    - Expose opt-in Flex tier for eligible routed models (#7534)
+    - Connect Qoder CN and WorkBuddy desktop editions (#7665)
+    - Add AI Stupid Level API-key preset (#7623)
+    - Add GPT-6.1 Terra alongside GPT-5.6 Terra (non-Cursor providers, catalog, pricing, docs) (#7779)
+    Bug Fixes
+    - Launch native Windows CLIs and refuse empty-arg-dropping dispatchers (#7527)
+    - Pin zod 4.6.6 and body-parser 2.4.0 for audit:high (#7642)
+    - Bump gui happy-dom to 21.0.4 (GHSA-834v-8h66-3h79) (#7644)
+    - Provider-only catalog, replay-envelope refusal and isolated status (#7545)
+    - List pool accounts without a native home and expose safe slot identity metadata (#7551)
+    - Rotate on insufficient-credit refusals (#7558)
+    - Calibrate Business Premium display capacity (#7557)
+    - Check the first hard-lock profile destination (#7589)
+    - Bind ownership lease release to its acquisition (#7543)
+    - Cancel Remote Link sheet focus work (#7611) (#7650)
+    - Patch Hono and ip-address advisories and align qs (#7647)
+    - Resolve ACL principal natively without cold PowerShell (#7656)
+    - Preserve sync edits with canonical sandbox checks (#7659)
+    - Keep a connected client's integrations across ocx stop; status names ocx sync --restart-codex (#7563) (#7564)
+    - Keep a role's model when auto-assign finds an equal-priced tie (#7617)
+    - Validate subagent limit boundaries before writes (#7276)
+    - Isolate Anthropic reasoning state from native passthrough (#7504)
+    - Complete Turkish dashboard copy and documentation (#7565)
+    - Wake the PR gate when attribution-approved is applied (#7698)
+    - Fail over accounts when overage quota is exhausted (#7687)
+    - Detect LazyCodex installed from the marketplace (#7692)
+    - Answer MODEL_NOT_IN_PLAN once as a model-scoped 400 (#7696)
+    - Bind exception approval labels to the evaluated head (#7699)
+    - Release detached sweep hooks and preserve replacement timers (#7678)
+    - Observe Pi prompt failures before acknowledgement (#7669)
+    - Bound snapshot persistence under sustained updates (#7666)
+    - Inspect hard-lock fallback without selecting candidates (#7683)
+    - Honor backpressure in pinned HTTP responses (#7667)
+    - Select Docker smoke for actual image build inputs (#7689)
+    - Preserve gateway citations during native compact (#7682)
+    - Deliver partial response payloads promptly and release terminal sockets (#7662)
+    - Account for Antigravity direct Chat IR (#7724)
+    - Classify legacy Desktop aliases before native fallback (#7721)
+    - Use Bun timeout flag in temporary-file diagnostics (#7715)
+    - Declare Hermes profile discovery route (#7729)
+    - Preserve disabled sidecars when targets retire (#7420)
+    - Preserve destinations when refreshing saved model rosters (#7735)
+    - Use Bun glob matching for native grep (#7630)
+    - Notice a Codex WebSocket that dies after the response started (#7725)
+    - Clamp native efforts to selected model ladder (#7731)
+    - Preserve literal SSH include names on Bun 1.4.4 (#7629)
+    - Enforce the Bun patch floor in automatic PATH fallback (#7734)
+    - Bound closing handshakes for non-reused upstream WebSockets (carry #7681) (#7743)
+    - Bind usage trials to fresh package proof (#7709)
+    - Fail unmet required client tool completions (#7463)
+    - Verify installer signature before administrative extraction (#7421)
+    - Preserve Windows probe support across Node and Bun (#7722)
+    - Bind and serialize queue lock ownership (#7508)
+    - Retain Kiro prompt estimates in hosted tool paths (carry #7620) (#7744)
+    - Support Vercel JEV decisions and thinking model reasoning replay (#7574)
+    - Join the Windows npm tree before stage cleanup (#7751)
+    - Restore official V4 Pro availability (#7591)
+    - Bound WebSocket close without releasing live ownership (#7635)
+    - Send local stop requests directly to the loopback runtime (#7754)
+    - Preserve cache prefixes during routed compaction (#7307) (#7749)
+    - Move to GA MiniMax-M3.1-Flash and rename the retired preview id (#7746)
+    - Reject buffered required-tool false successes (#7741)
+    - Keep Codex routing for the restarted proxy during an update (#7423) (#7747)
+    - Renew credit evidence for namespace-bound Direct accounts (#7621)
+    - Separate support, thinking toggles and effort controls (#7531)
+    - Fence uncertain catalog entry identity (#7610)
+    - Keep sideband admission until the upstream closes after client cancellation (#7767)
+    - Preserve credit recovery retry hints and scoped cooldowns (#7622)
+    - Drain parent ACL flights before intercept secret writes (#7777)
+    - Skip optional hardening for non-directory homes (#7688)
+    Documentation
+    - Qualify Qoder native executable precedence across PATH folders (#7615)
+    - Translate Mistral and OpenGateway provider behavior across locales (#7646)
+    - Align Korean installation guide with Bun 1.4.4 pin (#7616)
+    - Correct ADR-7517 contract owner (#7686)
+    Chores
+    - Settle Windows ACL work and owner locks before fixture removal (#7528)
+    - Make codex-runtime, client-connect and loopback-listener tests deterministic (#7552)
+    - Keep cold first-exec and PowerShell start out of two timed cases (#7598)
+    - Run docker/keyring smoke and React Doctor on PRs only when their inputs change (#7658)
+    - Isolate agent-task-recovery fixtures (#7613) (#7649)
+    - Align Bun runner with the 1.4.4 security baseline (#7627)
+    - Isolate port reclaim fixture identity and clock (#7706)
+    - Copy launcher module dependencies into activation fixtures (#7733)
+    - Let the forged sibling-env start bind its own port (#7740)
+    - Run import-graph tests on pull requests and verify merged batches on dev (#7782)
+    Other Changes
+    - Open dev at 2.93.0 before releasing 2.92.0 (#7633)
+    - Promote frozen tip 2606f6f922 to main as 2.93.0 (#7805)
+    Changelog
+    Full Changelog: https://github.com/lidge-jun/opencodex/compare/v2.92.0...v2.93.0
+    - #7276 fix(codex): validate subagent limit boundaries before writes @luvs01
+    - #7420 fix(config): preserve disabled sidecars when targets retire @luvs01
+    - #7421 fix(ci): verify installer signature before administrative extraction @luvs01
+    - #7463 fix(chat): fail unmet required client tool completions @Ingwannu
+    - #7504 fix(chat): isolate Anthropic reasoning state from native passthrough @luvs01
+    - #7508 fix(test): bind and serialize queue lock ownership @luvs01
+    - #7527 fix(coding-agent): launch native Windows CLIs and refuse empty-arg-dropping dispatchers @lidge-jun
+    - #7528 test: settle Windows ACL work and owner locks before fixture removal @lidge-jun
+    - #7531 fix(reasoning): separate support, thinking toggles and effort controls @norths7ar
+    - #7534 feat(codex): expose opt-in Flex tier for eligible routed models @Transient-Onlooker
+    - #7543 fix(service): bind ownership lease release to its acquisition @luvs01
+    - #7545 fix(qoder): provider-only catalog, replay-envelope refusal and isolated status @lidge-jun
+    - #7551 fix(codex): list pool accounts without a native home and expose safe slot identity metadata @lidge-jun
+    - #7552 test: make codex-runtime, client-connect and loopback-listener tests deterministic @lidge-jun
+    - #7557 fix(codex): calibrate Business Premium display capacity @lidge-jun
+    - #7558 fix(command-code): rotate on insufficient-credit refusals @lidge-jun
+    - #7564 fix(link): keep a connected client's integrations across ocx stop; status names ocx sync --restart-codex (#7563) @lidge-jun
+    - #7565 fix(i18n): complete Turkish dashboard copy and documentation @ardakrt
+    - #7574 fix(router): support Vercel JEV decisions and thinking model reasoning replay @omar391
+    - #7589 fix(fallback): check the first hard-lock profile destination @luvs01
+    - #7591 fix(deepseek): restore official V4 Pro availability @norths7ar
+    - #7598 test: keep cold first-exec and PowerShell start out of two timed cases @lidge-jun
+    - #7610 fix(codex): fence uncertain catalog entry identity @luvs01
+    - #7615 docs(providers): qualify Qoder native executable precedence across PATH folders @lidge-jun
+    - #7616 docs(getting-started): align Korean installation guide with Bun 1.4.4 pin @mvanhorn
+    - #7617 fix(codex): keep a role's model when auto-assign finds an equal-priced tie @LilMGenius
+    - #7621 fix(codex): renew credit evidence for namespace-bound Direct accounts @Caledvwlch
+    - #7622 fix(codex): preserve credit recovery retry hints and scoped cooldowns @Caledvwlch
+    - #7623 feat(providers): add AI Stupid Level API-key preset @StudioPlatforms
+    - #7627 chore(test): align Bun runner with the 1.4.4 security baseline @luvs01
+    - #7629 fix(link): preserve literal SSH include names on Bun 1.4.4 @luvs01
+    - #7630 fix(cursor): use Bun glob matching for native grep @luvs01
+    - #7631 perf(eventstream): use Bun native CRC32 for Kiro frame validation @luvs01
+    - #7633 chore(release): open dev at 2.93.0 before releasing 2.92.0 @github-actions[bot]
+    - #7635 fix(live): bound WebSocket close without releasing live ownership @luvs01
+    - #7642 fix(deps): pin zod 4.6.6 and body-parser 2.4.0 for audit:high @lidge-jun
+    - #7644 fix(deps): bump gui happy-dom to 21.0.4 (GHSA-834v-8h66-3h79) @lidge-jun
+    - #7646 docs: translate Mistral and OpenGateway provider behavior across locales @lidge-jun
+    - #7647 fix(deps): patch Hono and ip-address advisories and align qs @lidge-jun
+    - #7649 test(server): isolate agent-task-recovery fixtures (#7613) @lidge-jun
+    - #7650 fix(gui): cancel Remote Link sheet focus work (#7611) @lidge-jun
+    - #7656 fix(windows): resolve ACL principal natively without cold PowerShell @lidge-jun
+    - #7657 feat(usage): price and seed Kimi K3.1 Pro on Kimi Code and Moonshot @lidge-jun
+    - #7658 ci: run docker/keyring smoke and React Doctor on PRs only when their inputs change @lidge-jun
+    - #7659 fix(codex): preserve sync edits with canonical sandbox checks @lidge-jun
+    - #7661 perf(socks5): bound upload waiters and release completed read results @luvs01
+    - #7662 fix(socks5): deliver partial response payloads promptly and release terminal sockets @luvs01
+    - #7663 perf(proxy): bound CONNECT header buffering and avoid repeated prefix copies @luvs01
+    - #7664 feat(gui): expose JEV session pin in Combo editor @lidge-jun
+    - #7665 feat(clients): connect Qoder CN and WorkBuddy desktop editions @Flowershangfromthebranches
+    - #7666 fix(quota): bound snapshot persistence under sustained updates @luvs01
+    - #7667 fix(transport): honor backpressure in pinned HTTP responses @luvs01
+    - #7669 fix(remote-workspace): observe Pi prompt failures before acknowledgement @luvs01
+    - #7670 perf(adapters): use native SHA-256 for tool identity digests @luvs01
+    - #7671 perf(responses): avoid input Buffer copies in gzip requests @luvs01
+    - #7672 perf(codex): validate audit UTF-8 without round-trip Buffer copies @luvs01
+    - #7673 perf(eventstream): avoid quadratic copying of fragmented frames @luvs01
+    - #7675 perf(responses): coalesce queued thought-signature snapshot writes @luvs01
+    - #7676 perf(streams): avoid repeated growing-buffer prefix extraction in SSE decoding @luvs01
+    - #7678 fix(runtime): release detached sweep hooks and preserve replacement timers @luvs01
+    - #7679 perf(usage): bound timeline aggregation scratch memory and avoid argument overflow @luvs01
+    - #7680 perf(history): skip unchanged partial-tail reads and SQLite metadata rewrites @luvs01
+    - #7682 fix(responses): preserve gateway citations during native compact @luvs01
+    - #7683 fix(routing): inspect hard-lock fallback without selecting candidates @luvs01
+    - #7686 docs: correct ADR-7517 contract owner @luvs01
+    - #7687 fix(kiro): fail over accounts when overage quota is exhausted @martinbcg
+    - #7688 fix(config): skip optional hardening for non-directory homes @luvs01
+    - #7689 fix(ci): select Docker smoke for actual image build inputs @luvs01
+    - #7692 fix(codex): detect LazyCodex installed from the marketplace @LilMGenius
+    - #7695 feat(providers): seed Kimi K3.1 Pro on the Moonshot API preset @lidge-jun
+    - #7696 fix(command-code): answer MODEL_NOT_IN_PLAN once as a model-scoped 400 @lidge-jun
+    - #7698 fix(ci): wake the PR gate when attribution-approved is applied @lidge-jun
+    - #7699 fix(ci): bind exception approval labels to the evaluated head @lidge-jun
+    - #7700 feat(integrations): connect named Hermes profiles (#7674) @lidge-jun
+    - #7706 test(server): isolate port reclaim fixture identity and clock @luvs01
+    - #7707 feat(sync): ocx sync --expect-link / --expect-hub-key refuses a different Home (#7694) @lidge-jun
+    - #7709 fix(desktop): bind usage trials to fresh package proof @luvs01
+    - #7715 fix(scripts): use Bun timeout flag in temporary-file diagnostics @luvs01
+    - #7721 fix(claude): classify legacy Desktop aliases before native fallback @luvs01
+    - #7722 fix(service): preserve Windows probe support across Node and Bun @luvs01
+    - #7723 feat(combos): add opt-in cooldown recovery with configurable interval @artur-safonov
+    - #7724 fix(protocols): account for Antigravity direct Chat IR @luvs01
+    - #7725 fix(responses): notice a Codex WebSocket that dies after the response started @FredAmartey
+    - #7729 fix(management): declare Hermes profile discovery route @luvs01
+    - #7731 fix(codex): clamp native efforts to selected model ladder @Plamyth
+    - #7733 test(cli): copy launcher module dependencies into activation fixtures @luvs01
+    - #7734 fix(cli): enforce the Bun patch floor in automatic PATH fallback @luvs01
+    - #7735 fix(meta): preserve destinations when refreshing saved model rosters @luvs01
+    - #7740 test(cli): let the forged sibling-env start bind its own port @lidge-jun
+    - #7741 fix(combo): reject buffered required-tool false successes @lidge-jun
+    - #7743 fix(responses): bound closing handshakes for non-reused upstream WebSockets (carry #7681) @lidge-jun
+    - #7744 fix(usage): retain Kiro prompt estimates in hosted tool paths (carry #7620) @lidge-jun
+    - #7746 fix(minimax): move to GA MiniMax-M3.1-Flash and rename the retired preview id @lidge-jun
+    - #7747 fix(update): keep Codex routing for the restarted proxy during an update (#7423) @lidge-jun
+    - #7749 fix(anthropic): preserve cache prefixes during routed compaction (#7307) @lidge-jun
+    - #7751 fix(update): join the Windows npm tree before stage cleanup @lidge-jun
+    - #7754 fix(stop): send local stop requests directly to the loopback runtime @lidge-jun
+    - #7767 fix(live): keep sideband admission until the upstream closes after client cancellation @lidge-jun
+    - #7777 fix(claude): drain parent ACL flights before intercept secret writes @lidge-jun
+    - #7779 feat(models): add GPT-6.1 Terra alongside GPT-5.6 Terra (non-Cursor providers, catalog, pricing, docs) @lidge-jun
+    - #7782 ci: run import-graph tests on pull requests and verify merged batches on dev @lidge-jun
+    - #7805 release: promote frozen tip 2606f6f922 to main as 2.93.0 @lidge-jun
+    Code signing
+    Windows binaries follow the code signing policy.
+    Free code signing provided by SignPath.io, certificate by SignPath Foundation.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lidge-jun/opencodex/releases/tag/v2.93.0
+ReleaseTime: 2026-10-27T07:19:45.0000000Z

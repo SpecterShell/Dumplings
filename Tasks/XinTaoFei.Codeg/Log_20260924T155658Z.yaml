@@ -1,0 +1,83 @@
+Version: 0.32.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.32.2/codeg_0.32.2_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.32.2/codeg_0.32.2_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This one teaches the built-in browser two things: marking up a screenshot before it goes to the agent, and working inside remote workspace windows, where the remote host's own pages now load. Session warnings and errors now all arrive the same way — as a notification you can find again in the status bar — leaving the banner under the composer to what's still in progress.
+    Alongside that: the network proxy gets a bypass list and no longer breaks OpenCode and Antigravity when it runs on another machine, links in replies stop turning into "[blocked]", dragging a tab no longer empties it, and Antigravity moves up to 1.2.1, which installs on Intel Macs too.
+    New
+    - You can mark up a screenshot before sending it to a conversation — "Send to chat" in the built-in browser's address bar gains "Mark up a screenshot…" for drawing numbered boxes and arrows, and the agent also gets where each mark sits on the page, so "box 2" in your message points at something real. (#817, @xintaofei)
+    - Remote workspace windows get the built-in browser, and the remote host's own pages load in it — an address that lives on the remote host (a localhost:3000 an agent printed there, a container's IP) opens in a tab whose every connection leaves from the remote host through its codeg server, and a page that can't be reached says why. (#822, #824, @xintaofei)
+    - The network proxy gets a "Bypass proxy for" list — in Settings → System → Network Proxy, enter the domains and IP addresses to reach directly, separated by commas; localhost, 127.0.0.1 and ::1 always connect directly.
+    - Antigravity can be installed on Intel Macs — 1.2.1 is its first release with an Intel build.
+    Improved
+    - Updated bundled agents: CodeBuddy 2.157.0, Antigravity 1.2.1.
+    - Session warnings and errors now arrive as notifications instead of on the session banner — each pops up once as a toast carrying its Sign in, Retry or New session button and stays in the status bar's Alerts list, while the banner under the composer only shows what's still in progress, such as a retry with its attempt count and countdown.
+    - The composer's agent connection icon says why the last connection attempt failed, instead of just showing a dimmed "Disconnected".
+    - More agent errors read in your language — a failed mode switch or setting change, an image the agent didn't receive, or a session that couldn't be restored and started over, which now also says the agent has lost the earlier context.
+    - Codex's "long threads and multiple compactions" warning no longer pops up after every compaction — the compaction divider already shows it.
+    Fixed
+    - Relative file links in replies open — ./index.html no longer fails with "File does not exist", and index.html, ../docs/a.md, a.ts:12, Dockerfile or ~/notes.md no longer show as "[blocked]"; each opens from the conversation's folder, in thinking blocks too. (#815, @nnnmdzz)
+    - Dragging a conversation tab no longer empties its messages or closes another tab, and its context usage, session details and Diff panel keep up with the conversation after the move. (#726, @Adam-Dalloul)
+    - On Windows, a conversation you reopen no longer comes up with a message box you can't type in — after a restart or reload, its text area could shrink to nothing once the folder and branch row appeared beneath it, leaving only the border and buttons. (#828, @tangsenfei)
+    - OpenCode and Antigravity work with a proxy on another machine — their connections to their own local services now skip the proxy instead of failing with "OpenCode service failure" or "Failed to connect to WebSocket". (#804 reported by @zhou51320)
+    - A Codex conversation you edited or retried in the Codex desktop app shows its current history — the earlier turns followed by the new ones rather than the old version — and is listed once instead of twice. (#823 reported by @isCopyman)
+    - A web page opened beside a conversation over To-dos, Infinite Conversations or the Repository panel now shows, instead of leaving the side panel blank. (#824, @xintaofei)
+    - What you send from the built-in browser looks the same live, in history and on other clients — the message keeps the badge you sent ("Page screenshot", "3 console errors", a picked element) with the site it came from beneath it, instead of coming back named after the page's address.
+    - A link that is still streaming in reads as plain text instead of "[blocked]" — in replies and thinking blocks it turns into its link or file badge as soon as it closes, rather than sometimes staying "[blocked]" until the turn ends.
+    - Session, commit and agent references in thinking blocks render as badges, as they do in replies, instead of "[blocked]".
+    - A Claude Code message that's only an attachment no longer shows up twice — sending a file, or a page from the built-in browser, with nothing typed used to repeat the message and its reply while it ran.
+    - A failed Grok context compaction shows on the compaction divider with its reason, live and in history, like Claude Code's and Codex's.
+    Note
+    - Remote tabs need the remote codeg server on 0.32.2 as well — an older server has no tunnel for them, and the tab says so.
+    - Server deployments can narrow where remote tabs may connect with CODEG_BROWSER_TUNNEL — all (the default), private or off.
+    - On macOS, a remote tab shows the remote host's localhost as remote.localhost in the address bar; a link you copy from it, and a page you send to a conversation, use the real address.
+    - Agents can't use the built-in browser in a remote workspace window — they run on the remote host, so sharing a page with them stays off there.
+    - Custom install of Antigravity now needs version 1.2.0 or later — Google renamed the downloads from 1.2.0 on, so an older version fails to download (on an Intel Mac, 1.2.1 or later).
+    Thanks to @nnnmdzz, @Adam-Dalloul and @tangsenfei for contributing to this release, and to @zhou51320 and @isCopyman for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版给内置浏览器添了两样本事：截图可以先标注再交给智能体；远端工作区窗口里也能用上它，远端主机自己的页面可以直接打开。会话的警告和错误统一改为通知，事后还能在状态栏里找回，输入框下方的横幅只留给正在进行的事。
+    同期还有：网络代理新增「不走代理的地址」，代理设在另一台机器上时，OpenCode 和 Antigravity 也能正常使用了；回复里的链接不再动不动变成「[blocked]」；拖动标签页也不会再清空消息；Antigravity 升级到 1.2.1，Intel 芯片的 Mac 也能安装了。
+    新增
+    - 截图可以先标注再发给对话——内置浏览器地址栏的「发给对话」新增「标注一张截图…」，可以在截图上画带编号的方框和箭头；智能体还会拿到每个标注在页面上的位置，你在消息里说「2 号框」它就能对上。（#817，@xintaofei）
+    - 远端工作区窗口有了内置浏览器，远端主机自己的页面也能在里面打开——远端主机上的地址（比如那边的智能体打印出的 localhost:3000，或容器的 IP）会在标签页中打开，所有连接都经由远端的 codeg 服务器从远端主机发出；页面打不开时，标签页会说明原因。（#822、#824，@xintaofei）
+    - 网络代理新增「不走代理的地址」——在「设置 → 系统 → 网络代理」里填写需要直连的域名或 IP，用英文逗号分隔；localhost、127.0.0.1、::1 始终直连，无需填写。
+    - Intel 芯片的 Mac 也能安装 Antigravity 了——1.2.1 是它第一个提供 Intel 版本的发布。
+    改进
+    - 内置智能体版本更新： CodeBuddy 2.157.0、Antigravity 1.2.1。
+    - 会话的警告和错误改为以通知呈现，不再挂在会话横幅上——每条只弹一次 toast，「去登录」「重试」「新建会话」等按钮就在上面，并留存在状态栏的「告警」列表里；输入框下方的横幅只显示正在进行的事，比如带次数和倒计时的重试。
+    - 输入框里的智能体连接图标会显示上一次连接失败的原因，不再只是一个灰掉的「未连接」。
+    - 更多智能体报错会以界面语言显示——切换模式或更改设置失败、智能体没收到附带的图片、会话无法恢复而改为新开等；最后一种还会说明智能体已不再保有之前的上下文。
+    - Codex 每次压缩后不再弹出「长对话和多次压缩」的警告——压缩分隔线已经说明了这件事。
+    修复
+    - 回复里的相对路径文件链接可以打开了——./index.html 不再报「File does not exist」，index.html、../docs/a.md、a.ts:12、Dockerfile、~/notes.md 这类链接也不再显示成「[blocked]」，都会按会话所在的文件夹打开，思考内容里的链接也一样。（#815，@nnnmdzz）
+    - 拖动会话标签页不再清空消息，也不会顺带关掉别的标签页，移动之后上下文用量、会话详情和 Diff 面板也会继续跟着会话更新。（#726，@Adam-Dalloul）
+    - 在 Windows 上，重新打开的会话不会再出现输入框只剩边框和按钮、无法输入的情况——此前重启或刷新后，输入框下方的文件夹和分支栏一出现，输入区域就会缩成零大小。（#828，@tangsenfei）
+    - 代理设在另一台机器上时，OpenCode 和 Antigravity 也能正常使用——它们访问自身本机服务的连接改为直连，不再报「OpenCode service failure」或「Failed to connect to WebSocket」。（#804 由 @zhou51320 反馈）
+    - 在 Codex 桌面版里编辑或重试过消息的会话，会显示它当前的历史——之前的回合接上新的内容，不再停在旧版本，会话列表里也只出现一次而不是两次。（#823 由 @isCopyman 反馈）
+    - 在待办任务、无限会话或仓库面板上，会话旁打开的网页可以正常显示了，侧栏不再一片空白。（#824，@xintaofei）
+    - 从内置浏览器发出的内容，实时、历史记录和其他客户端里显示一致——消息保留发送时的胶囊（「页面截图」「3 条控制台报错」或选中的元素），下方注明页面来自哪个网站，重新打开后不再变成以页面地址命名。
+    - 流式输出中还没写完的链接先显示为普通文字，不再显示「[blocked]」——回复和思考内容里的链接一写完就变成链接或文件胶囊，不会再偶尔一直停在「[blocked]」直到回合结束。
+    - 思考内容里的会话、提交和智能体引用会像回复里一样显示为胶囊，不再显示「[blocked]」。
+    - 只带附件、没有输入文字的 Claude Code 消息不再显示两遍——比如单独发送一个文件或内置浏览器交来的页面，此前运行过程中消息和回复都会重复出现一次。
+    - Grok 上下文压缩失败时，会像 Claude Code 和 Codex 一样显示在压缩分隔线上并给出原因，实时和历史记录里都是如此。
+    注意
+    - 远端标签页要求远端的 codeg 服务器也升级到 0.32.2——旧版服务器没有对应的隧道，标签页会如实说明。
+    - 服务器部署可以用 CODEG_BROWSER_TUNNEL 限制远端标签页能连接的范围——all（默认）、private 或 off。
+    - 在 macOS 上，远端标签页的地址栏会把远端主机的 localhost 显示为 remote.localhost；从中复制的链接、发送到对话的页面用的都是真实地址。
+    - 远端工作区窗口里的智能体用不了内置浏览器——它们运行在远端主机上，所以这类窗口里不能把页面共享给智能体。
+    - Antigravity 的「自定义安装」现在需要 1.2.0 及以上版本——Google 从 1.2.0 起更换了下载文件的命名，更早的版本会下载失败（Intel 芯片的 Mac 需要 1.2.1 及以上）。
+    感谢 @nnnmdzz、@Adam-Dalloul、@tangsenfei 为本次发布做出的贡献，也感谢 @zhou51320 和 @isCopyman 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.32.2
+ReleaseTime: 2026-09-24T11:04:21.0000000Z

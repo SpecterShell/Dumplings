@@ -1,0 +1,110 @@
+Version: 1.5.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/usestrix/strix/releases/download/v1.5.0/strix-1.5.0-windows-x86_64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: strix-1.5.0-windows-x86_64.exe
+    PortableCommandAlias: strix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(cli): align View label spacing in final panel by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/918
+    - fix viewer tool call collisions across agents by @bearsyankees in https://github.com/usestrix/strix/pull/917
+    - fix: recoverable guardrail blocks and decoupled crash-notify by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/919
+    - Scope viewer session cookie to the bound port by @yoni-at-strix in https://github.com/usestrix/strix/pull/922
+    - fix(cost): capture OpenRouter streamed usage.cost (fixes $0 kimi-k3 c… by @bearsyankees in https://github.com/usestrix/strix/pull/929
+    - fix(runtime): label docker sandbox containers with the run id for teardown by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/933
+    - feat(llm): custom request headers for OpenAI-compatible endpoints via LLM_EXTRA_HEADERS by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/936
+    - fix(llm): pass LLM_EXTRA_HEADERS through ModelSettings so they reach the agent loop by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/937
+    - feat(llm): opt-in LLM_DISABLE_STREAMING for non-streaming OpenAI-compatible endpoints by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/938
+    - fix(llm): prevent ChatGPT subscription scan freezes by @chunguscodes in https://github.com/usestrix/strix/pull/943
+    - fix(llm): surface structured provider refusals by @bearsyankees in https://github.com/usestrix/strix/pull/944
+    - fix: pre-v1-style lifecycle resilience — mailbox delivery, uniform revival, unexitable runner, waiting timeout, broader retries, crash-safe identity by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/923
+    - docs(prompt): teach agents to recognize Caido proxy error pages instead of chasing them by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/955
+    - fix(core): explicit lifecycle contract — plain text never ends a run; respond_to_user / wait_for_agents split by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/954
+    - docs(llm-providers): explain the structured tool_calls requirement for local endpoints (#520) by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/901
+    - feat(config): accept STRIX_REASONING_EFFORT=max for providers that support it by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/956
+    - fix(tools): accept both the string and structured form of every tool argument by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/957
+    - perf(cli): ~10x faster startup via lazy imports by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/920
+    - fix(core): a child never leaves its parent waiting silently by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/959
+    - feat(runtime): mount local targets instead of copying them in by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/958
+    - fix: calibrate vulnerability severity to demonstrated impact by @bearsyankees in https://github.com/usestrix/strix/pull/962
+    - feat(tui): replace Textual with a Go/Bubble Tea interface by @kusonooyasumi in https://github.com/usestrix/strix/pull/941
+    - Create credential files with owner-only permissions by @lukiod in https://github.com/usestrix/strix/pull/945
+    - fix(tui): remove the shift+enter newline hint from the setup footer by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/968
+    - feat: support API specs and Postman collections as targets by @5h4d0wr007 in https://github.com/usestrix/strix/pull/866
+    - fix(tui): keep a long error inside the status row by @0xallam in https://github.com/usestrix/strix/pull/970
+    - feat(reporting): record transitive dependency chain on SCA findings by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/971
+    - fix(llm): keep tool-call ids unique so a recycled id can't erase history by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/976
+    - fix(llm): cap the tool calls one assistant response may queue by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/977
+    - fix(llm): abandon a model stream that stops producing events by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/978
+    - fix(agents): collapse repeated waits queued inside one model turn by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/979
+    - feat(reporting): structured reachability evidence ladder for dependen… by @bearsyankees in https://github.com/usestrix/strix/pull/974
+    - feat(reporting): require repo-relative manifest_path on dependency CVE findings by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/982
+    - prompt changes by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/984
+    - update readme by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/985
+    - feat: agent-ready — installable SKILL.md skills, AGENTS.md, coding-ag… by @bearsyankees in https://github.com/usestrix/strix/pull/926
+    - docs(skills): require per-CVE affected-symbol matching in dependency reachability analysis by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/986
+    - chore: release v1.5.0 + bump sandbox image to 1.3.0 by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/987
+    - ci: fix Windows release build — TUI-sidecar archive check used forward-slash paths by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/990
+    - ci: tolerate repr-escaped backslashes in the release TUI-sidecar check by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/991
+    New Contributors
+    - @chunguscodes made their first contribution in https://github.com/usestrix/strix/pull/943
+    - @lukiod made their first contribution in https://github.com/usestrix/strix/pull/945
+    - @5h4d0wr007 made their first contribution in https://github.com/usestrix/strix/pull/866
+    Full Changelog: https://github.com/usestrix/strix/compare/v1.4.1...v1.5.0
+    What's Changed
+    - fix(cli): align View label spacing in final panel by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/918
+    - fix viewer tool call collisions across agents by @bearsyankees in https://github.com/usestrix/strix/pull/917
+    - fix: recoverable guardrail blocks and decoupled crash-notify by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/919
+    - Scope viewer session cookie to the bound port by @yoni-at-strix in https://github.com/usestrix/strix/pull/922
+    - fix(cost): capture OpenRouter streamed usage.cost (fixes $0 kimi-k3 c… by @bearsyankees in https://github.com/usestrix/strix/pull/929
+    - fix(runtime): label docker sandbox containers with the run id for teardown by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/933
+    - feat(llm): custom request headers for OpenAI-compatible endpoints via LLM_EXTRA_HEADERS by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/936
+    - fix(llm): pass LLM_EXTRA_HEADERS through ModelSettings so they reach the agent loop by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/937
+    - feat(llm): opt-in LLM_DISABLE_STREAMING for non-streaming OpenAI-compatible endpoints by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/938
+    - fix(llm): prevent ChatGPT subscription scan freezes by @chunguscodes in https://github.com/usestrix/strix/pull/943
+    - fix(llm): surface structured provider refusals by @bearsyankees in https://github.com/usestrix/strix/pull/944
+    - fix: pre-v1-style lifecycle resilience — mailbox delivery, uniform revival, unexitable runner, waiting timeout, broader retries, crash-safe identity by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/923
+    - docs(prompt): teach agents to recognize Caido proxy error pages instead of chasing them by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/955
+    - fix(core): explicit lifecycle contract — plain text never ends a run; respond_to_user / wait_for_agents split by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/954
+    - docs(llm-providers): explain the structured tool_calls requirement for local endpoints (#520) by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/901
+    - feat(config): accept STRIX_REASONING_EFFORT=max for providers that support it by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/956
+    - fix(tools): accept both the string and structured form of every tool argument by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/957
+    - perf(cli): ~10x faster startup via lazy imports by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/920
+    - fix(core): a child never leaves its parent waiting silently by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/959
+    - feat(runtime): mount local targets instead of copying them in by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/958
+    - fix: calibrate vulnerability severity to demonstrated impact by @bearsyankees in https://github.com/usestrix/strix/pull/962
+    - feat(tui): replace Textual with a Go/Bubble Tea interface by @kusonooyasumi in https://github.com/usestrix/strix/pull/941
+    - Create credential files with owner-only permissions by @lukiod in https://github.com/usestrix/strix/pull/945
+    - fix(tui): remove the shift+enter newline hint from the setup footer by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/968
+    - feat: support API specs and Postman collections as targets by @5h4d0wr007 in https://github.com/usestrix/strix/pull/866
+    - fix(tui): keep a long error inside the status row by @0xallam in https://github.com/usestrix/strix/pull/970
+    - feat(reporting): record transitive dependency chain on SCA findings by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/971
+    - fix(llm): keep tool-call ids unique so a recycled id can't erase history by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/976
+    - fix(llm): cap the tool calls one assistant response may queue by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/977
+    - fix(llm): abandon a model stream that stops producing events by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/978
+    - fix(agents): collapse repeated waits queued inside one model turn by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/979
+    - feat(reporting): structured reachability evidence ladder for dependen… by @bearsyankees in https://github.com/usestrix/strix/pull/974
+    - feat(reporting): require repo-relative manifest_path on dependency CVE findings by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/982
+    - prompt changes by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/984
+    - update readme by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/985
+    - feat: agent-ready — installable SKILL.md skills, AGENTS.md, coding-ag… by @bearsyankees in https://github.com/usestrix/strix/pull/926
+    - docs(skills): require per-CVE affected-symbol matching in dependency reachability analysis by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/986
+    - chore: release v1.5.0 + bump sandbox image to 1.3.0 by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/987
+    - ci: fix Windows release build — TUI-sidecar archive check used forward-slash paths by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/990
+    - ci: tolerate repr-escaped backslashes in the release TUI-sidecar check by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/991
+    - ci: publish nested standalone archives as release assets by @devin-ai-integration[bot] in https://github.com/usestrix/strix/pull/994
+    New Contributors
+    - @chunguscodes made their first contribution in https://github.com/usestrix/strix/pull/943
+    - @lukiod made their first contribution in https://github.com/usestrix/strix/pull/945
+    - @5h4d0wr007 made their first contribution in https://github.com/usestrix/strix/pull/866
+    Full Changelog: https://github.com/usestrix/strix/compare/v1.4.1...v1.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/usestrix/strix/releases/tag/v1.5.0
+ReleaseTime: 2026-08-07T02:16:36.0000000Z

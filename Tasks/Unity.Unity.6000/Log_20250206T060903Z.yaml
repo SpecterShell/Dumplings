@@ -1,0 +1,123 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/090b7797214c/Windows64EditorInstaller/UnitySetup64-6000.0.37f1.exe
+  ProductCode: Unity 6000.0.37f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/090b7797214c/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.37f1.exe
+  ProductCode: Unity 6000.0.37f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.37
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.37f1
+    - 3D Physics: "Failed to create Convex Mesh from source mesh" PhysX errors are thrown when looking around the Scene View while Collision Geometry is set to true (UUM-93081)
+    - Audio Authoring: Audio Reverb Zone still produces sound when the Audio Source volume is 0 (UUM-92689)
+    - Audio Authoring: Audio Source clip is not audible when exceeding a high number of active Audio Sources (UUM-91256)
+    - DirectX12: A memory leak occurs in Play mode when using Direct3D12 Graphics API (UUM-91900)
+    - DirectX12: Allocated graphics memory does not get released when the Editor is out of focus while using D3D12 graphics API (UUM-86354)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - HDRP: Graphics Compositor breaks Unity rendering when the "Output Camera" is changed to a scene Camera and one Camera SubLayer is active.
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84610
+    - Materials: Decal Projector produces artifacts when the normal and decal are projected in negative z-direction and Normal Blend is set to 1 (UUM-92200)
+    - Packman: Unable to install ProBuilder package when project is located in an external FAT32/exFAT drive (UUM-86351)
+    - Scripting Runtime: Crash on UnityEditor.AssetDatabase:StopAssetEditing when removing HDRP Package after having imported Water Samples (UUM-78164)
+    - Serialization: The "UniversalRenderPipelineGlobalSettings.asset" is creating noise in the git diff when building a Player (UUM-80052)
+    - Serialization: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - SpeedTree: This release of SpeedTree includes a change to the interface of the SpeedTree8Wind shadergraph node. If you have an animated SpeedTree in the shadergraph, be sure to connect an ObjectSpacePosition node to the input of the SpeedTree8Wind. If the wind node does not have an input on the ObjectSpacePosition port, the mesh will be shrunk down to a point at origin (making it seem to vanish).
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84616
+    - Texture: Sprite Atlas Override for iOS setting remains disabled when saving its change to enabled (UUM-90066)
+    6000.0.37f1 Release Notes
+    API Changes
+    - GI: Added: LightingDataAsset.SetLights() which lets you overwrite the lights associated with a specific Lighting Data Asset. This can be used to change lights between baked and realtime without rebaking. (UUM-78573)
+    - GI: Added: Lightmapping.GetLightingDataAssetForScene() and Lightmapping.SetLightingDataAssetForScene() which let you get or set the Lighting Data Asset associated with a particular scene. (UUM-78573)
+    Fixes
+    - 2D: Fixed an issue where when pushing property block by index to SpriteShapeRenderer crashes. (UUM-90089)
+    - 2D: Fixed an issue with the Unlit shader for Skinning. (UUM-92940)
+    - 2D: Fixed Sprite Editor Window's 'Apply' and 'Revert' button positions are swapped. (UUM-92562)
+    - Accessibility: Fixed an issue by updating the invalid USS selector. (UUM-95326)
+    - AI: Fixed an issue where sometimes the navigation path contained points outside of the shortest trajectory. (UUM-78679)
+    - Android: Fixed an issue where StartActivityIndicator is displayed outside of safe area. (UUM-82238)
+    - Android: Fixed an issue where the AndroidActivityIndicatorStyle enum did not change. (UUM-79911)
+    - Android: Fixed an issue where the Player lost focus when UnityEngine.Handheld.StartActivityIndicator() was used with the Facebook SDK. (UUM-87564)
+    - Android: Fixed build and run to work correctly when exporting an app bundle project. (UUM-91102)
+    - Asset Bundles: Fixed an issue by adding a new flag BuildAssetBundleOptions.StripUnatlasedSpriteCopies to the legacy asset bundle system. Currently if we have assets in multiple bundles that depend upon a source texture we copy it into all relevant bundles. Setting this new flag will keep from creating duplicates if the texture does not belong to a sprite atlas. (UUM-83067)
+    - Editor: Fixed a crash when exiting and re-entering play mode with incomplete InstantiateAsync operations. (UUM-86892)
+    - Editor: Fixed a issue where the Shortcut HelperBar could not be reactivated after being disabled in the preferences. (UUM-92862)
+    - Editor: Fixed an editor crash when a null object is passed in to EnsureUniqueSiblingName. (UUM-91927)
+    - Editor: Fixed an inconsistencies with available EditorToolContexts and EditorTools when Inspectors are locked or Property Windows are used. EditorToolContexts and EditorTools are now only available for the active selection. (UUM-95441)
+    - Editor: Fixed an InvalidOperationException that was thrown when switching to a custom Debug Draw Mode in Scene View. (UUM-90587)
+    - Editor: Fixed an issue by making fog density field use Slider(). (UUM-83752)
+    - Editor: Fixed an issue to WindowsEditor keeps the main EditorWindow snapped when the Layout changes. (UUM-90338)
+    - Editor: Fixed an issue where baked only shadows caused an increase in light intensity. (UUM-93148)
+    - Editor: Fixed an issue where enabling the scene view camera overlay would trigger synchronous shader compilation even if asynchronous compilation is enabled (UUM-79996)
+    - Editor: Fixed an issue where horizontal scrolling would not work when using a trackpad gesture. (UUM-84867)
+    - Editor: Fixed an issue where navigating Scene View with a pen tablet would not work after returning to the Editor from another application. (UUM-90436)
+    - Editor: Fixed an issue where pressing Shift+Tab in the inspector would focus a completely different tab. (UUM-87588)
+    - Editor: Fixed an issue where progress bar status was not updated during Android and iOS builds. (UUM-93106)
+    - Editor: Fixed crash in Font Asset Creator. (UUM-91956)
+    - Editor: Fixed for macOS player auto-connecting to the profiler. (UUM-95378)
+    - Editor: Fixed memory leak in LineRendering. (UUM-91900)
+    - Editor: Fixed missing icon of "Edit Light Probes" overlay in Scene View and make toggle working. (UUM-83379)
+    - Editor: Fixed rectangular selection in Scene View where objects weren't selected if they where rendered through the GPU Resident Drawer. (UUM-90229)
+    - Editor: Fixed the classic asset bundle pipeline to recursively collect dependencies for prefab instances of a scene. Previously this was working correctly on a full build, but not an incremental one. (UUM-88032)
+    - Editor: Fixed the Override Global Scene List checkbox fails to reset in the Inspector. (UUM-84085)
+    - Editor: Fixed the selected marker on the timeline being offset incorrectly when zoomed out. (UUM-55366)
+    - Editor: Fixed UnauthorizedAccessException when edits are made to SceneTemplateSettings with Perforce Integration Enabled. (UUM-93720)
+    - Editor: Fixed vertex snapping not working in Scene View for objects rendered through the GPU Resident Drawer. (UUM-66422)
+    - Editor: Picking tests were previously removed due to instabilities, but are being added back following investigation and successful testing on Yamato (no failures or timeouts). (UUM-77441)
+    - Editor: Slight optimization to loading/processing Profile traces. (UUM-92831)
+    - Editor: Update Editor splash screen copyright to 2025. (UUM-93029)
+    - GI: Fixed an issue where baking only Adaptive Probe Volumes would update lights in an unpersistent way, causing double contribution with realtime lighting after scene reload. (UUM-78573)
+    - GI: Fixed an issue where lighting data was missing for scenes loaded from asset bundles in editor. (UUM-93115)
+    - GI: Fixed an issue where some files produced by Adaptive Probe Volume baking would be read-only. (UUM-90236)
+    - GI: Fixed to work the baked lightmap debug mode with HDRP terrains. (UUM-82974)
+    - Graphics: Fixed a regression where texture data does not end up in Player builds when "Load texture data on demand" is enabled in the Editor settings and Mip Stripping is enabled. (UUM-53664)
+    - Graphics: Fixed an issue where there was no warning when running CopyTexture with compressed texture formats unsupported by the current device. (UUM-89001)
+    - Graphics: Fixed an issue with BatchRendererGroup picking when using different draw command types. (UUM-91356)
+    - Graphics: Fixed vkUpdateDescriptorSetWithTemplateKHR crash on Linux when using Vulkan graphics API. (UUM-85263)
+    - HDRP: Fixed artifacts when blending cascade shadows and distance shadowmask. (UUM-90909)
+    - HDRP: Fixed wrong SSR when using a shader graph with a clear coat value of 0. (UUM-84980)
+    - IL2CPP: Fixed erroneous numeric conversion involving enum values (UUM-91859)
+    - IL2CPP: Fixed MethodAccessException when using the the AsyncOperation<T>.Result value as a generic interface. (UUM-86794)
+    - IL2CPP: Fixed occasional crash when master C++ Compiler configuration is enabled. (UUM-89094)
+    - IMGUI: Fixed certain usages of <a href> tag in IMGUI (UUM-89093)
+    - Input System: Fixed an issue causing the player to fail to exit when using the new Input System and on Windows 11 (24H2). (UUM-91181)
+    - iOS: Fixed an issue by running [AVCaptureSession startRunning] in a background thread as suggested by Apple. Consequently it also fixed the issue where a PlayerLoop was called recursively when running the iPhone app on Mac. (UUM-90986)
+    - Kernel: Fixed job system atomic synchronization bug which could cause a hang. (UUM-95841)
+    - Package Manager: Fixed an issue where refreshing built in page in the Package Manager window makes scoped registry packages disappear. (UUM-92446)
+    - Scene/Game View: Fixes crashes when returning instanceIDs of ScriptableObjects from the new RenderPickingCallback. (UUM-76301)
+    - Search: Fixed Index Manager's "ForceRebuild" not re-indexing assets. (UUM-87574)
+    - Shaders: Fixed a performance regression in Camera.Render(). (UUM-66763)
+    - SRP Core: Fixed a crash on leaking streaming scratch buffer differently sized into the current pool. (UUM-83271)
+    - TextMeshPro: Fixed dropdown content being misplaced when created inside a prefab scene. (UUM-90249)
+    - UI Elements: Prevent negative value for font-size in UIBuilder (UUM-76820)
+    - UI Toolkit: Fixed an issue by adding padding to UI Builder inspector to compensate for TwoPaneSplitView styles. (UUM-90621)
+    - UI Toolkit: Fixed an issue where docking, maximizing and minimizing the UI Builder window would throw an exception. (UUM-93248)
+    - UI Toolkit: Fixed document save while editing name attribute. (UUM-90258)
+    - UI Toolkit: Fixed the two pane split view's drag line position is not updated after viewData is restored. (UUM-83458)
+    - UI Toolkit: Fixed tooltips in PropertyFields using a TooltipAttribute with elided text. (UUM-90014)
+    - Undo System: Fixed escaping undo actions when selecting Cancel in dialog boxes. (UUM-91449)
+    - URP: Fixed depth texture format exception when pressing the Ctrl key in the scene view with URP. (UUM-91862)
+    - URP: Fixed unclear error message while updating volume stack before Universal Render Pipeline is created. (UUM-91000)
+    Package changes in 6000.0.37f1
+    Packages updated
+    - com.unity.adaptiveperformance: 5.1.0 to 5.1.1
+    - com.unity.burst: 1.8.18 to 1.8.19
+    - com.unity.xr.arcore: 6.0.3 to 6.0.5
+    - com.unity.xr.arfoundation: 6.0.3 to 6.0.5
+    - com.unity.xr.arkit: 6.0.3 to 6.0.5
+    - com.unity.learn.iet-framework: 4.0.3 to 4.0.4
+Version: 6000.0.37f1
+ReleaseTime: 2025-02-04T16:57:15.7990000Z

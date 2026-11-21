@@ -1,0 +1,29 @@
+Version: 2025.1.962
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/datalust/seqcli/releases/download/v2025.1.962/seqcli-2025.1.962-win-x64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: seqcli-2025.1.962-win-x64\seqcli.exe
+    PortableCommandAlias: seqcli
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    [!IMPORTANT]
+    This release updates seqcli to use Seq 2025.1 API features. Some features are incompatible with earlier Seq versions; we recommend using seqcli versions 2024.3.* and earlier for administration of matching server versions.
+    - #372 — the syslog alert level is now mapped to LogEventLevel.Fatal for level comparison purposes (@KodrAus)
+    - #375 — adds seqcli cluster health command (@KodrAus)
+    - #376 — update .NET SDK and dependencies (@KodrAus)
+    - #385 — update dependencies; seqcli search uses WebSocket streaming by default and adds --no-websockets flag to return to the earlier behavior e.g. in environments with older load balancers/application firewalls &c; seqcli log now unnests properties with dotted names and accepts message templates that use them; seqcli search and seqcli query accept --trace to enable detailed internal query tracing (@nblumhardt)
+    - #377 — add --wait-until-healthy to seqcli cluster health
+    - #379 — fix verbs in command documentation (@liammclennan)
+    - #380 — add --simulations option to seqcli sample ingest to control data volume (@nblumhardt)
+    - #381 — add no_cache directive to seqcli bench queries (@liammclennan)
+    - #382 — increase timeout in seqcli bench (@liammclennan)
+    - #383 — add --wait-until-healthy to seqcli node health (@nblumhardt)
+    - #384 — improve default seqcli bench benchmarks (@liammclennan)
+    Breaking changes
+    It's now necessary to pass --no-websockets to seqcli search when querying Seq versions before Seq 2025.1.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/datalust/seqcli/releases/tag/v2025.1.962
+ReleaseTime: 2025-05-12T00:11:21.0000000Z

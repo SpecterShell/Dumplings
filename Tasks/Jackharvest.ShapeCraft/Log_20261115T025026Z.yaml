@@ -1,0 +1,37 @@
+Version: 0.8.5-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.8.5-alpha/shapecraft-0.8.5-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.8.5-alpha/shapecraft-0.8.5-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Large projects import, save and select much faster, and .shapr imports bring in more of the model.
+    Changed
+    - Big projects are much quicker to work with. A .shapr import rebuilds its bodies on several cores (157 s to 38 s
+      on a project of about 1,700 bodies), saving no longer slows down with the square of the body count (over ten
+      minutes to about 14 s), picking something with History open no longer replays the whole history on every click,
+      and autosave writes in the background so the window keeps answering. Thanks
+      @chickey (#28).
+    Fixed
+    - .shapr imports bring in imported bodies that nothing changed afterwards, which could be missing before, give
+      bodies that a later step changed the names they have in the file, and accept a face on the offset of a sweep whose
+      path changes speed (it was refused as a crease). Thanks @chickey (#27).
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.8.5-alpha
+ReleaseTime: 2026-11-14T18:22:51.0000000Z
+RealVersion: 0.8.5

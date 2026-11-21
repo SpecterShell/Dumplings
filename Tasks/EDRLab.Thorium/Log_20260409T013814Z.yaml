@@ -1,0 +1,36 @@
+Version: 3.4.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium.Setup.3.4.0.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/edrlab/thorium-reader/releases/download/v3.4.0/Thorium.Setup.3.4.0-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Summary
+    Version 3.4.0 was released on 08 April 2026.
+
+    This release includes the following (notable) new features, improvements and bug fixes:
+    - Upgraded to Electron v41, Chromium v146, NodeJS v24
+    - Updated translations
+    - Fixed accessibility issues with screen reader heading hierarchy and keyboard tab cycling order
+    - New feature: filtering and sorting directly in the publication "grid" mode of the library window (complements existing "table" view functionality)
+    - New feature: favorite OPDS feed sorting
+    - New feature: keyboard shortcut "export to HTML" function
+    - Updated feature: the LCP passphrase input text field can now show unmasked clear text
+    - Fixed OPDS "breadcrumb" user interface affordance
+    - Fixed MathML support, MathJax could not be activated
+    - Fixed a zoom issue with "fixed layout" / pre-paginated EPUBs
+    - Fix in TTS readaloud and EPUB Media Overlays, the temporary disabling of popup footnotes wasn't being restored properly, as well as the notes highlights (annotations and bookmarks)
+    - Fixed MacOS issue when bringing re-activating the application to bring the reader window into the foreground (over the library window)
+    - Fixed "customization profiles" (new feature which was broken on Windows in version 3.3.0). Reminder: this feature offers an alternative to forking the Thorium Desktop codebase, via a plugin mechanism that declaratively expresses modifications to "vanilla" Thorium Desktop reader (color themes, bundled publications and feeds, application logo, etc.)
+    - Fixed notification toasts which were sometimes incorrectly terminated
+    - Fix: LCP passphrase prompt was incorrectly displayed when imported protected publications (directly as EPUB or via LCPL) were added and non-already existing in the bookshelf (but with an existing cached valid passphrase based on provider mapping)
+    - Fix: network requests at application launch (i.e. telemetry ping and version check) could potentially delay the boot process and compromise the application "ready" state
+    - Fixed bookshelf table layour, translated column headers.
+    - Fix: in version 3.3.0 a more performant filesystem persistence of "notes" (i.e. annotations and bookmarks) was introduced, using a dedicated SQLite database separate from other scopes of application state. Backward compatibility with the JSON format of older versions of the application was preserved but this caused application shutdown to be very slow (sometimes even hanging and ultimately crashing). In version 3.4.0, the backward compatibility is removed and consequently users are advised to manually backup their notes when they wish to revert to an older version of Thorium Desktop reader
+    - Fix: under the hood, further changes to filesystem persistence (i.e. preservation of application state) were introduced in order to improve performance and hopefully address rare data loss issues experienced by some Windows users. The user interface indicates missing publications and additional logging is now available for remote troubleshooting (user-accessible text files created in Thorium Desktop's application data folder). This is groundwork for a planned future feature that will allow users to store publications inside an arbitrary folder (this might be useful to address filesystem storage limitations, notably on Windows where a large amount of ebooks / audiobooks could cause the operating system to interfere with application data and potentially corrupt Thorium Desktop's internal database)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/edrlab/thorium-reader/releases/tag/v3.4.0
+ReleaseTime: 2026-04-09T00:20:46.0000000Z

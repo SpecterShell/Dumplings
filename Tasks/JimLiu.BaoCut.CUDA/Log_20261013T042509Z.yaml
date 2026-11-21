@@ -1,0 +1,42 @@
+Version: 3.4.2-build.71
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/JimLiu/baocut/releases/download/baocut-v3.4.2-build.71/BaoCut-3.4.2-build.71-win-x64-cuda-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's changed in 3.4.2 (Build 71)
+    Translation and subtitles
+    - Retranslate one sentence, or all out-of-date and untranslated sentences, directly from the subtitle panel using the model API. You can also hand the selected sentence or batch to the Agent in the video's current conversation, and mark or clear an out-of-date flag. Editing a translation clears its stale flag in the same undo step. Implementation
+    - Refresh translations in place: keep the existing translation document and unaffected sentences, and update the changed sentences in all subtitle layers derived from it in one undoable edit. Agent edits to an existing translation also synchronize its derived captions. Implementation
+    - The AI tools page now supports calling a model directly to refresh stale translations. Choose a translation and model, review the sentence count, follow progress, cancel, and undo the resulting edit. Sentences cut from the original still need the Agent. This also fixes an unstable job-state subscription in the translation list. Implementation
+    - Web retains translation counts, stale marking and copy; direct model refresh and Agent handoff remain desktop actions. The updated controls and messages cover all 15 shipped languages.
+    Video downloading and website sign-in
+    - A new Settings › Video downloader section brings together yt-dlp status, maintenance and website sign-in browser selection. Download pages show a compact summary and a link to these settings. Implementation
+    - Behavior change: website sign-in defaults to all detected browsers. The choice applies to Download video, transcription from a link, and Agent/CLI downloads when no per-call choice is supplied. Select no browsers, or pass cookieBrowsers: [], for an anonymous download. Browser choices are frozen when a job is submitted; changing settings requires submitting a new job rather than retrying the old one. Web displays detected browsers read-only; external MCP services remain anonymous.
+    - Fix Agent download and transcription tools dropping an explicit cookieBrowsers choice. Confirmation shows the selected browsers, job inspection exposes the frozen choice, and login/cookie failures point to the downloader settings with actionable recovery guidance. Fix
+    Local image generation
+    - Add Qwen-Image-2.1 Turbo as a separate local image model, with a fixed eight-step sampling schedule and pinned, checksum-verified model files. The image tool and editor show its fixed step count instead of an editable step input, with messages in all shipped languages. The bundle is marked non-commercial in the model catalog. Bundle and schedule, controls
+    - Reduce Qwen-Image text-encoding memory by reading only the embedding-table rows used by the prompt, including the unquantized table in the Turbo pack. Shared ASR/TTS decoding remains unchanged. MLX fix
+    - The source also adds the candle Turbo bundle and its packed-weight/PyTorch VAE compatibility for Windows/Linux. This release publishes Mac and Windows CPU, CUDA and Vulkan packages from the same source commit. Candle support
+    Mac release reliability
+    - Retry Apple ticket attachment and validation in place when diagnostics identify a dropped connection or timeout: up to five attempts with bounded backoff. Persistent errors and ticket, signature, TLS or Gatekeeper rejection still stop publication; notarization submissions are not repeated by this retry path. This covers the App, extracted ZIP and DMG, including public download verification. Fix
+    Release scope and verification
+    Changes cover 3.4.1 Build 69 → 3.4.2 Build 71: all 26 commits were reconciled in two source-review batches, including prototypes, documentation, merge commits, previous-release feeds and version metadata. Source commit: 0bcea3385193e8ee5ef137f86bd8b44678740bbd.
+    Local checks passed: 15 Mac release-script tests covering retry recovery/exhaustion, permanent rejection, artifact integrity and publication behavior. Native signing, notarization, Gatekeeper, packaged Runtime/Worker startup, and Windows installer/update/ZIP checks are recorded in the platform sections below. Real model/GPU inference, UI/export and paid Agent calls were not run by this release task.
+    This recovery release covers Mac and Windows CPU, CUDA and Vulkan variants from the same frozen source. The release task did not exercise real image inference or paid Agent calls.
+
+    BaoCut 3.4.2 (Build 71) for Apple Silicon, macOS 14+.
+    Bundle ID: com.baocut.app. Developer ID signed, hardened runtime and Apple notarization accepted for both App and DMG.
+    Runtime and native Worker startup, signer fingerprint, staple and Gatekeeper checks passed. UI/export, real model inference and paid Agent calls were not exercised by this workflow. ffmpeg/ffprobe and an agent engine are external dependencies.
+    Source: 0bcea3385193e8ee5ef137f86bd8b44678740bbd
+    Actions: https://github.com/JimLiu/baocut/actions/runs/38332346836
+    Windows x64
+    Variants: cpu, cuda, vulkan. NSIS installers and portable ZIPs are unsigned. Real credential migration and model/Agent/GPU inference were not exercised by the installer tests. Requires the Microsoft Visual C++ v14 x64 Redistributable; the current package does not bundle the VC runtime DLLs.
+    Native build and installer verification: https://github.com/JimLiu/baocut/actions/runs/38332542582
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/JimLiu/baocut/releases/tag/baocut-v3.4.2-build.71
+ReleaseTime: 2026-10-13T02:05:00.0000000Z

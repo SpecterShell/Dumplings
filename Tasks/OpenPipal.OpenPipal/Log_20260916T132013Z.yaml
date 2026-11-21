@@ -1,0 +1,30 @@
+Version: 1.2.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.0/openpipal-1.2.0-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.0/openpipal-1.2.0-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds Teams (several Pals working one topic together), lets any conversation talk to another conversation, and gives every avatar a second colour. Under the hood, built-in assistants and Pals are now one kind of thing, and old agent templates have become Pals.
+    What's new
+    - Teams. Click + next to Teams in the sidebar and you are talking to a new team's lead. Tell it what the team is for and it names the team, writes the charter and creates or invites members as you go — no forms. Topics run under the lead, who hands work to members through the existing subagent tool; members report back and cannot hand off further. Teams keep their own shared folder, memory and rules; what a topic learns is filed into team memory when it finishes. Tool boundaries and permission tiers only narrow inside a team, never widen, and the audit log names which member acted.
+    - Cross-conversation messaging. A new conversations tool lets the assistant list the other stand-alone conversations on this Mac, read one, or send it a message. The target answers inside its own conversation (marked "from another conversation"), the reply comes straight back to the sender, and the sidebar lights an unread dot. A busy conversation gets the message queued behind its current turn. Team topics are out of scope, and a hop limit stops two conversations from triggering each other forever. Built-in assistants have the tool by default; a Pal opts in with enabledTools: ["conversations"] in its tools/config.json.
+    - Two-tone avatars. The body now carries the main colour and the accessory a second one, chosen from a curated pairing table when a look is generated; in the avatar studio you pick both freely. Stacked team-member avatars are cut out of each other so the front one reads as in front.
+    - Drop files anywhere. Drag a file over any part of the window: the conversation area shows a dashed frame, and dropping adds the file to the composer exactly like the + button. Images arrive inline.
+    - One identity model. Built-in assistants and Pals resolve through one registry; the old agent templates are migrated into Pals on first launch (old conversations and tasks still recognise them). The role belongs to each conversation — there is no longer a global "current assistant". My Pals groups by category with filter chips and search.
+    - Smarter permissions. MCP tools are graded by the annotations their server declares (read-only runs without a prompt, destructive shows the high-risk card). eval / exec-style indirection asks for confirmation inside the sandbox instead of being refused outright. Writing an artifact file directly with write or bash is reconciled into the artifact panel afterwards rather than blocked.
+    - Facts up front. The assistant is told its environment, the artifact's file path and the render limits before it acts, and every refusal names an allowed alternative. Generated files land in outputs/<conversation id>/. Full-page renders capture in segments so long pages come through complete. copy_starter_component copies a starter component into the working folder.
+    - Sidebar. Group labels, channel labels and items sit on three distinct levels; conversations are one list ordered by recent activity; titles use the full row width and hover controls float over the end of the row.
+    What's fixed
+    - Tool cards no longer collide on id inside a conversation, and a refused append falls back to a full rewrite instead of freezing new-conversation and switch.
+    - A conversation's model is pinned as "what you chose, else the global default at first run"; an empty conversation follows a global switch.
+    - Context-window overflow is judged by payload share against the known window; the "measured ceiling" experiment was removed.
+    - Reconnect counts are reported honestly; several on-device visual nits.
+    Windows installers are rebuilt from the same source. There is still no OS sandbox on Windows (the agent asks before running shell commands).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yuanlang12/OpenPipal/releases/tag/v1.2.0
+ReleaseTime: 2026-09-16T11:14:02.0000000Z

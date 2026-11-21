@@ -1,0 +1,79 @@
+Version: 0.11.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.4/Agentero_0.11.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.11.4/Agentero_0.11.4_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release focuses on PDF reading, the Library, and Agent integration. Pages with /Rotate render upright again, text-selection highlights hug the glyphs, and a new copy action was added to the selection toolbar. The Library gains editable tag colors, draggable and remembered column widths, sorting by date added, and automatic adoption of custom folders under papers/. On the Agent side, a new Antigravity preset was added, Windows bundled ACP and the OpenCode 2 custom model catalog were fixed, and the whole arXiv Daily list can be referenced with @. Workspace layout persistence, Vault sidebar stability, and mobile builds were also fixed.
+    Features
+    - Copy from PDF selection: The PDF selection toolbar gains a Copy button (⌘C on macOS) after Translate. Clicking it copies the selected text, dismisses the selection menu, and clears the selection. (#640 by @bet4it)
+    - Antigravity preset: The Agent catalog adds an official Google Antigravity ACP preset that installs, updates, and uninstalls through the existing Settings flow. Versions and platform archives are read from Google's official ACP Registry with no hard-coded fallback. (#629 by @Zhou-Ruichen)
+    - Whole arXiv Daily list: The @ menu adds a "Today's recommendations (N)" entry that hands the Agent the full abstract directory of the day at once. When deeper reading is needed, the model can request up to three full texts and the app follows up automatically with a final report. (#626 by @ForeverHYX)
+    - Editable tag colors: Existing Library tag colors can be edited in place and are saved with the tag metadata, mirrored in the sidebar and the paper info panel. (#642, 84ccc2dd by @qychen2001)
+    - Remembered column widths: Library columns can be resized by dragging, and the widths persist through settings so the previous layout is restored next time. (#612, b0178408 by @qychen2001)
+    - Sorting by date added: The Library can be sorted by date added, switchable from the table header. (#620, 8d1a207c by @qychen2001)
+    - Automatic papers/ adoption: Custom subfolders placed under papers/ are adopted as papers automatically: the main PDF is renamed to {id}.pdf, extras move to attachments/, a NOTES shell is written, the catalog row is upserted, and background metadata recognition is triggered. Failures never delete the user folder. The autoIngest setting is on by default, and folders created while the app was closed are adopted on the next launch. (#549, 424ef5f2, 4ac91fd6 by @Phil-Fan)
+    - OpenCode 2 model catalog: When OpenCode 2 returns both an incomplete configOptions catalog and a more complete raw model directory, the complete one is used, so custom-provider models reappear in the picker. OpenCode was also upgraded to v2. (#638, a1665652, 88418fe4 by @Phil-Fan)
+    Improvements
+    - Layout persistence: Sidebar and split widths you drag are remembered per layout and restored after relaunch, fixing widths snapping back to defaults when switching layouts, opening the Agent rail, or clicking the sidebar. (#624, 17416e9d, 9bb8c238, 55351c5a by @qychen2001)
+    - PDF/Notes split: Opening or closing the Notes split keeps its proportion relative to the PDF instead of resetting it. (a6a46391 by @qychen2001)
+    - Library stays first: The Library tab stays first in the tab bar instead of being pushed behind other tabs. (#631, 486c5fd3 by @qychen2001)
+    - Paper path breadcrumb: An active PDF panel shows a clickable paper-path breadcrumb at the top, with hover candidates and a jump back to the matching Library location. (#613, efe00580, 560d276c by @Phil-Fan)
+    - OpenAI-compatible translation: Documentation for configuring a custom OpenAI-compatible translation service now clarifies how to fill in the endpoint. (#621, 0c620050, 2c6d2f2e by @Phil-Fan)
+    Fixes
+    - Rotated PDF pages: Pages with /Rotate were laid out and tiled at their unrotated size, so landscape tables rendered sideways and overlapped the page shell. They now render upright in display orientation. (#604, 6d074dfd, 9a7dcaee by @Phil-Fan)
+    - Selection highlight bounds: Highlight annotations use tight glyph bounds and no longer bleed vertically into neighboring lines or overlap each other. (#639 by @Immortal-Fates)
+    - Deleted translation cards: After deleting a translation card, late provider callbacks or an in-flight write no longer bring the result back. Switching cards normally does not cancel the background completion. (#627 by @Zhou-Ruichen)
+    - Windows bundled ACP: Bundled ACP entry-script paths are normalized against the \\?\ prefix, fixing bundled Codex ACP exiting before initialization and failing to connect on Windows. (#633 by @llamapw)
+    - hermes model picker: The legacy top-level models field is supported again and the warm session/new budget for heavy agents is widened to 30s, fixing the empty model list for the hermes agent. (#628 by @Zhou1317fe5)
+    - Blank Vault sidebar: The whole-rail compositing layer was removed, fixing the sidebar going fully black after opening a paper, switching tabs, or importing, which previously required scrolling to recover. (#607, d341fe27 by @Phil-Fan)
+    - Selection overlay vs. docking: While the selection toolbar or ask card is open, Dockview tab/group dragging is frozen so a drag on the tab strip cannot split the layout. Tab clicks still work. (#608, a3c80932 by @Phil-Fan)
+    - Remote access: The relay endpoint was updated and remote catalog snapshots are published consistently, fixing bridge connection failures when pairing a mobile client. (#619, 45871f8d, cf9b4730 by @Phil-Fan, @qychen2001)
+    - Mobile builds: Plaza scratch PDF parsing is compiled out on iOS/Android without breaking the build, fixing the v0.11.3 Android and TestFlight builds. Existing cache copies can still be reused. (83cb906e by @Phil-Fan)
+    Security
+    - Markdown dependency: platejs and its lockstep @platejs/core were upgraded to 53.3.14, patching the HTML deserialization advisory (Dependabot #49). (4f05d2c4 by @Phil-Fan)
+    https://github.com/poco-ai/Agentero/compare/v0.11.3...v0.11.4
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布围绕 PDF 阅读、Library 与 Agent 接入三块改进：/Rotate 旋转页面恢复按显示方向正立渲染，划词高亮更贴合文字并新增一键复制；Library 支持编辑标签颜色、拖动并记忆列宽、按加入日期排序，还能自动收纳 papers/ 下的自定义文件夹；Agent 侧新增 Antigravity 官方预设，修复 Windows 内置 ACP 与 OpenCode 2 自定义模型目录，并可用 @ 一次引用整份 arXiv 每日推荐。工作区布局持久化、Vault 侧栏稳定性与移动端构建也一并修好。
+    新功能
+    - PDF 划词复制：PDF 划词工具栏新增「复制」按钮（macOS 为 ⌘C），放在翻译之后；点击后复制选中文字、收起划词菜单并清除选区。（#640 by @bet4it）
+    - Antigravity 官方预设：Agent catalog 新增 Google Antigravity ACP 预设，安装、更新、卸载沿用设置页既有流程；版本与平台压缩包直接读取官方 ACP Registry，不硬编码、无旧版本回退。（#629 by @Zhou-Ruichen）
+    - 整份 arXiv 每日推荐：@ 菜单新增「今日推荐（N 篇）」条目，一次把当日推荐摘要目录交给 Agent；需要深读时模型可请求最多 3 篇全文，前端自动续轮给出最终报告。（#626 by @ForeverHYX）
+    - Library 标签颜色：可以直接在 Library 修改已有标签的颜色，颜色随标签元数据保存，侧栏与论文信息面板同步显示。（#642, 84ccc2dd by @qychen2001）
+    - Library 列宽记忆：Library 各列可拖动调整宽度，并随设置持久化，下次打开保持上次比例。（#612, b0178408 by @qychen2001）
+    - Library 排序：支持按「加入日期」排序，可在表头切换。（#620, 8d1a207c by @qychen2001）
+    - papers/ 自动收纳：放进 papers/ 下的自定义子文件夹会被自动识别并收纳为论文——主 PDF 改名为 {id}.pdf、附件归位、写入 NOTES 壳、登记 Catalog 并触发后台元信息识别；失败不会删除用户目录。设置里的 autoIngest 开关默认开启，应用关闭期间新建的文件夹在下次启动时补收纳。（#549, 424ef5f2, 4ac91fd6 by @Phil-Fan）
+    - OpenCode 2 模型目录：当 OpenCode 2 同时返回不完整的 configOptions 与更完整的原始模型目录时，改用更完整的目录解析，自定义 provider 的模型重新出现在模型选择器；并升级到 OpenCode v2。（#638, a1665652, 88418fe4 by @Phil-Fan）
+    改进
+    - 布局持久化：手工调整的侧栏与分屏比例会按布局记住并在重启后恢复，修复切换布局、打开 Agent 或点击侧栏后宽度回退到默认的问题。（#624, 17416e9d, 9bb8c238, 55351c5a by @qychen2001）
+    - PDF 与笔记分屏比例：打开或关闭笔记分屏后保持 PDF 与笔记的比例，不再被重置。（a6a46391 by @qychen2001）
+    - Library 常驻首位：Library 标签固定显示在标签栏第一个，不再被其它标签顶到后面。（#631, 486c5fd3 by @qychen2001）
+    - 论文路径面包屑：阅读 PDF 时在面板顶部显示可跳转的论文路径面包屑，悬停可预览候选、点击可返回 Library 对应位置。（#613, efe00580, 560d276c by @Phil-Fan）
+    - OpenAI 兼容翻译：补充自定义 OpenAI 兼容翻译服务的配置说明，明确端点填写方式。（#621, 0c620050, 2c6d2f2e by @Phil-Fan）
+    修复
+    - PDF 旋转页面：修复 /Rotate 页面被按未旋转尺寸布局与切图、导致横向表格竖排错位并溢出重叠的问题，页面按显示方向正立渲染。（#604, 6d074dfd, 9a7dcaee by @Phil-Fan）
+    - 划词高亮边界：高亮批注改用紧致字形边界，不再纵向溢出到相邻行或相互重叠。（#639 by @Immortal-Fates）
+    - 删除翻译卡后重现：删除翻译卡后，迟到的 provider 回调或已开始的写盘不会再让结果重新出现；普通切换卡片不会取消后台完成。（#627 by @Zhou-Ruichen）
+    - Windows 内置 ACP: 规范化带 \\?\ 前缀的适配器入口脚本路径，修复 Windows 安装版内置 Codex ACP 在初始化前退出、无法连接的问题。（#633 by @llamapw）
+    - hermes 模型选择器：兼容旧的顶层 models 字段，并把重型 Agent 的 warm session/new 预算放宽到 30 秒，修复 hermes 模型列表为空、无法选模型的问题。（#628 by @Zhou1317fe5）
+    - Vault 侧栏黑屏：去掉整条侧栏的合成层，修复打开论文、切换标签或导入后侧栏整片变黑、需要滚动才恢复的问题。（#607, d341fe27 by @Phil-Fan）
+    - 划词浮层误触布局：划词工具栏与问答卡打开时冻结 Dockview 的标签/分组拖拽，避免在标签栏上的拖动把布局误分成多栏，标签点击不受影响。（#608, a3c80932 by @Phil-Fan）
+    - 远程访问连接：更新中继（relay）端点，并让远程端发布的目录快照保持一致，修复移动端配对时 bridge 连接失败。（#619, 45871f8d, cf9b4730 by @Phil-Fan, @qychen2001）
+    - 移动端构建：广场缓存论文的 PDF 解析在 iOS/Android 上被编译剔除后不再导致构建失败，修复 v0.11.3 的 Android 与 TestFlight 构建；已有缓存副本仍可复用。（83cb906e by @Phil-Fan）
+    安全性
+    - Markdown 依赖：升级 platejs 及 lockstep 的 @platejs/core 到 53.3.14，修复 HTML 反序列化安全公告（Dependabot #49）。（4f05d2c4 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.4
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.11.4
+ReleaseTime: 2026-09-26T05:13:32.0000000Z

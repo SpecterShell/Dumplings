@@ -1,0 +1,61 @@
+Version: 0.1.13
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.13/ddc-v0.1.13-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.13/ddc-v0.1.13-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc 0.1.13
+    Decompilation quality — four-APK javac battery 33,922 → 26,672 (-21.4%):
+    (reqable 1,053 / weibo 10,623 / lark 5,834 / weixin 9,162; note: batch javac counts are
+    suppression-sensitive — fixes that unmask hub errors can raise one family while the total
+    falls, so per-family deltas below are the honest measure)
+    Control flow:
+    - Undefined-label family eliminated (966 → 0): dangling depth-0 gotos from irreducible
+      flow (protobuf state machines — jadx ERROR-dumps whole methods here) render as honest
+      $DDC: unresolved jump markers with dead-tail truncation instead of guaranteed
+      break L<id> compile errors; jdc-core loop/switch labels now always-wrap and prune
+      post-conversion so late-born breaks keep their label.
+    Names and signatures:
+    - JLS inner classification requires the formal-0 outer ctor param: Kotlin lambda classes
+      capture this into a field also named this$0 at an arbitrary position — the field-only
+      check hijacked an int capture as the qualified-new outer ((this.w+1).new q17(this));
+      capture-style classes now declare static nested and render plain full-arg new (lark -2,373).
+    - Method-rename hierarchy consistency (weibo -1,771): erasure-clash groups keep the
+      ancestor-declared member under its original name and rename the rest; every method rename
+      propagates down the transitive subclass/implementer closure, so abstract declarations and
+      their implementations never drift apart (class a2 extends a2 self-renders fixed too,
+      via display-simple import deduplication).
+    - Impostor overrides (R8 generic specialization leaving a method whose return type satisfies
+      no ancestor declaration) rename through the registry and get ART-faithful AbstractMethodError
+      stubs; stub synthesis now walks super-chain interfaces plus a table of classic framework
+      interface methods (Runnable.run, Parcelable.writeToParcel, Closeable.close, ...) with
+      three guards against stub-hostile shapes (weixin -287).
+    Overload resolution (ambiguous 615 → 126):
+    - Descriptor-exact pins: bare null and strict-subtype args cast to the dex descriptor's
+      formal when the pool owner declares competing same-name overloads; android.jar-provided
+      packages (org.json, org.w3c, org.xml, org.xmlpull, org.apache.http, junit) count as
+      resolvable; framework owners pin only via allowlists (append/println/valueOf null shape,
+      putExtra/schedule/submit subtype shape) — a blanket framework cast breaks generic
+      inference on erased type variables.
+    Constructors (ctor-not-first -115):
+    - Kotlin default-args preludes fold: the diamond folder now peels nested blocks recursively,
+      so if ((mask&2)==0) v=p; else v=0; collapses to a ternary that inlines into the hoisted
+      this(...) delegation.
+    - StringBuilder mutation preludes fold into fluent chains —
+      super(new SB(x).append(a).append(b).toString()) — reconstructing the exact original
+      shape the strict-occurrence inliner had to refuse.
+    Exceptions:
+    - Multi-catch alternatives shadowed by a supertype are dropped (caught set unchanged);
+      framework hierarchies resolve through a bundled JDK/Android exception-super table (58 → 0).
+    Hygiene: clippy zero warnings (both crates, --all-targets); deterministic output verified
+    by 0-diff double decompiles on weibo/weixin/lark. Depends on jdc-core 0.2.8.
+    Tests: ddc 70, jdc-core 14 — all green.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.12...v0.1.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.13
+ReleaseTime: 2026-09-25T01:20:55.0000000Z

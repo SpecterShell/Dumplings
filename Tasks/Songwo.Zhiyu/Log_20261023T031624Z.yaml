@@ -1,0 +1,30 @@
+Version: 1.12.0
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/Songwo/zhiyu/releases/download/v1.12.0/Zhiyu-1.12.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    知屿 Zhiyu 1.12.0
+    清单里放不下的东西，现在可以自己定义类型来管理：家用 NAS、游戏账号、设备保修、车辆保险……已有资料沿用原数据目录，可在应用内更新。
+    自定义资产类型
+    - 服务资产页新增「管理类型」：新建、修改、删除自定义类型。每个类型有名称（最多 40 字）、16 种图标之一，以及最多 12 个字段；字段类型为文本、链接、日期、数字。最多 30 个类型。
+    - 「添加服务」的「资产类型」下拉在内置类型之外列出自定义类型，选中后显示它的字段；下拉末尾的「＋ 新建自定义类型…」可以边录入边新建，新建后自动选中。
+    - 卡片显示类型图标和名称，以及前三个已填字段；资产详情页显示全部字段，链接字段（仅 http / https）可点击打开。服务资产页顶部按类型筛选，列表搜索也会匹配类型名和字段内容。
+    - 自定义类型的资产仍是服务资产，所以费用与到期日、续费日历与「已续费」、标签、关联、备份与恢复、AI 助手都照常可用；AI 检索会带上类型名与字段内容。
+    - 删除类型不会删除资产：它们保留名称、费用、到期日、标签和关联，回到「其他服务」，自定义字段值一并清除。
+    - 字段内容与资产的其他资料一样明文保存在本机，编辑器里有提示：不要填写密码或密钥，凭据请放进密钥库。
+    校验与兼容
+    - 主进程校验类型与字段值：数量、长度、重复标识和危险键名；本机文件或备份里格式不对的类型会被丢弃，不影响其他资料。
+    - 没有使用自定义类型的资料格式不变，旧版本数据可直接升级。
+    升级与发行
+    Windows 附件为安装包 Zhiyu-1.12.0-setup.exe、便携版 Zhiyu-1.12.0-portable-x64.zip、浏览器插件 Zhiyu-1.12.0-browser-extension.zip 与 SHA256SUMS.txt；应用内更新沿用同次构建的 latest.yml 和 .exe.blockmap。安装包与便携版均未做代码签名，请核对 SHA256。浏览器插件仅同步版本号。
+    验证
+    - TypeScript、ESLint、i18n、989 项后端与脚本单元测试和 103 项前端单元测试通过；新增类型与字段校验、服务资产带类型、快照校验和 AI 索引的测试。
+    - 浏览器集成测试覆盖工作流、首页 hydration、服务资产、前端、助手输入区与编辑器；另用演示数据走通新建类型、新建资产、筛选、详情、链接和删除类型的完整流程。
+    - 已知：agent-workspace 的桌面输入区贴底断言（8px 间距）以及 usage-charts、usage-insights、relations-usage-ui、mail-push、probe-desktop 在 1.10.0 上同样失败，与本版改动无关。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Songwo/zhiyu/releases/tag/v1.12.0
+ReleaseTime: 2026-10-23T02:37:57.0000000Z

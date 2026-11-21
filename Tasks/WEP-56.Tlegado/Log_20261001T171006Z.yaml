@@ -1,0 +1,26 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/WEP-56/Tlegado/releases/download/v0.2.0/tlegado-win32-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Tlegado v0.2.0
+    本次更新重点改善 Legado 动态书源兼容性与「发现」功能。
+    主要更新
+    - 修复已开启发现的书源因分类解析失败而从列表中消失的问题；发现开关与搜索开关独立。
+    - 分类改为选择书源后后台加载，支持错误提示、重试、重新加载与过期结果丢弃，减少启动和导入时的等待。
+    - 跳过空链接的分组标题，自动选择有效分类；补充常用只读 Jsoup 接口、详情页回退及分页错误处理。
+    - 统一普通 HTTP 与 JavaScript 请求的书源会话，共享 Cookie、登录 headers、源变量和缓存，并按用户及书源隔离。
+    - 持久化书源会话，支持重启恢复、存档校验和写入失败回滚。
+    - 完善 JS HTTP 响应方法、登录失败传播和不支持的 WebView 请求提示。
+    - 界面版本号统一读取 Cargo 包版本。
+    验证与兼容范围
+    本轮功能完整回归为 236 项通过、0 项失败、1 项真实站点联网测试跳过。测试覆盖本地 HTTP 夹具、会话恢复与隔离、发现分类和分页，不代表所有第三方书源均可联网使用。
+    登录表单、交互式发现控件、WebView 与完整 Java/Rhino API 尚未支持；需要登录或浏览器验证的书源仍可能不可用。会话存档采用未加密 JSON，可能包含登录凭据，请勿公开分享。
+    详细适配范围见仓库中的 docs/discovery.md 和 docs/source-runtime.md。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/WEP-56/Tlegado/releases/tag/v0.2.0
+ReleaseTime: 2026-09-30T07:44:16.0000000Z

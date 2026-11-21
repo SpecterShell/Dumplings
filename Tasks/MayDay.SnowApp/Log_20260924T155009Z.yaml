@@ -1,0 +1,62 @@
+Version: 0.4.8
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.4.8/Snow-App-Setup-0.4.8.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Plugin Write Capabilities: The plugin runtime gains api.write — 201 write actions covering memos, project memory, scheduled tasks, image-library albums, conversations, projects and collections, system interactions (notifications, clipboard, reveal in folder), plus browser data, SSH, remote control and settings domains; each action requires its privacy scope to be declared, and the metadata catalog shows writable capabilities with their grant state.
+    - Settings Search: A search box in the settings sidebar finds any setting and walks through nested tabs to reach it, flashing the matched entry; the global search drops its duplicate settings group.
+    - Shortcut Enhancements: A searchable shortcut help overlay (default mod+/) and inline shortcut badges on UI buttons; actions with "foreground only" off are registered globally in the main process so they fire while the window is unfocused; a new mod+shift+y toggles message timestamps.
+    - Horizon and Tesseract Themes: Two edge-to-edge compact themes (light and dark palettes each) with micro-interactions and signature header stripes.
+    - Terminal Font Zoom and Path Drop: Resize the terminal font from the settings panel or with Ctrl/Cmd + wheel, and drop files onto the terminal to insert their paths at the cursor, quoted per shell.
+    - Grouped Question Cards: askUserQuestion calls in one batch merge into a single grouped card with per-question answers and state; mirrored on mobile.
+    - Message Timestamps: User messages, AI replies, thinking blocks and tool cards can show their creation time (clock icon with a full-timestamp tooltip).
+    Improvements
+    - Markdown rendering is now chunk-incremental: the worker only splits at safe boundaries (closed code fences, paired $$, balanced handoff tags) and the main thread rebuilds only the changed chunks — the tail chunk appends in place — so long streaming replies are no longer re-rendered wholesale.
+    - Streaming auto-follow now pins to the bottom in the same frame as content growth instead of animating; the run summary bar became its own component.
+    - Panel resizing writes DOM variables and commits state once on release, so dragging no longer re-renders the UI every frame.
+    - Sidebar collapse panels (sub-agents, workflow nodes) load lazily: collapsing unmounts the content and expanding shows a skeleton first.
+    - Memos, project memory, scheduled tasks and plugins turn from modals into standalone lazy-loaded pages.
+    - grep-search gains a timeout and cancellation: a timed-out search stops its background thread and returns promptly.
+    - Outbound request tail guard: Gemini rejects requests ending on a model turn, so payloads drop text-less model turns and append a "Continue." user turn when needed.
+    Bug Fixes
+    - Fixed /clear command argument passing and the handling of an empty projectId in the pending state.
+    - Checkpoint fault tolerance: a single unreadable file no longer breaks a whole diff or rollback batch, missing objects are skipped gracefully, and Windows reserved device names are skipped.
+    What's Changed
+    - feat(theme): add Horizon and Tesseract edge-to-edge compact themes by @BaSui01 in https://github.com/MayDay-wpf/snow-app/pull/157
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.4.7...v0.4.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.4.8
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新功能
+    - 插件可写能力：插件运行时新增 api.write——201 个写动作覆盖备忘录、项目记忆、定时任务、图像库相册、会话、项目与分组、系统交互（通知 / 剪贴板 / 打开目录）以及浏览器数据、SSH、远控、配置等域；每个动作需声明对应隐私范围，元数据目录同步展示可写能力与授权状态。
+    - 设置搜索：设置侧栏新增搜索框，可检索全部设置项并逐层进入目标标签页、闪烁高亮命中条目；全局搜索移除重复的设置分组。
+    - 快捷键增强：新增可搜索的快捷键帮助浮层（默认 mod+/）与按钮内联快捷键徽章；关闭「仅前台生效」的动作改由主进程全局注册，窗口失焦也能触发；新增 mod+shift+y 切换消息时间显示。
+    - Horizon 与 Tesseract 主题：两套无边紧凑主题（各含明暗配色），带微交互与标志性头部条纹。
+    - 终端字号与路径拖放：终端支持字号调整（设置面板或 Ctrl/Cmd + 滚轮），拖入文件即在光标处插入路径（按 shell 自动加引号转义）。
+    - 提问分组卡片：同一批 askUserQuestion 调用合并为一张分组卡片，逐题作答、各自独立状态；手机端同步支持。
+    - 消息时间戳：用户消息、AI 回复、思考块与工具卡可按需显示创建时间（时钟图标 + 完整时间悬停提示）。
+    改进
+    - Markdown 渲染改为块级增量：worker 只在安全边界（代码围栏闭合、$$ 成对、handoff 配对）切块，主线程只重建变化块、尾块原地追加文本，长回复流式渲染不再整段重算。
+    - 聊天流式跟随改为内容增长的同帧即时钉底，去掉平滑动画；运行汇总条拆分为独立组件。
+    - 面板拖动缩放改写 DOM 变量并在松手后一次性提交状态，拖动期间不再逐帧重渲染界面。
+    - 侧栏折叠面板（子代理、Workflow 节点）改为懒加载：收起即卸载，展开先渲染骨架再填充内容。
+    - 备忘、项目记忆、定时任务与插件由模态框改为独立懒加载页面。
+    - grep-search 增加超时与取消：超时的搜索会终止后台线程并尽快返回。
+    - 外发请求尾部保护：Gemini 不接受以模型轮结尾的请求，出站前丢弃无可见文本的模型轮，必要时追加「Continue.」用户轮。
+    修复
+    - 修复 /clear 命令参数传递错误，以及待发消息状态中空 projectId 的处理。
+    - 检查点容错增强：单个文件读取失败不再拖垮整批 diff 与回滚，缺失对象降级跳过，并跳过 Windows 保留设备名。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v048
+ReleaseTime: 2026-09-24T13:29:24.0000000Z

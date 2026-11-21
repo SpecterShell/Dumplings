@@ -1,0 +1,80 @@
+Version: 0.2.16
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Niko1221/Strata/releases/download/v0.2.16/Strata-0.2.16-windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Strata 0.2.16: Strata's own engine code, a new folder layout, and a long list of fixes
+    The app and the Terminal are 0.2.16. The engines are 0.1.62 on every platform, and so is Control, the small program that installs and updates them (there is no engine 0.1.61 release; Control and the engines share one number from here). The update feed is sequence 128.
+    What changes for you
+    - Update as usual (see Updating below). Your models, chats and settings stay.
+    - The engines are new downloads: strata update and the app fetch them. Every platform has one (Windows, Linux, Mac, DGX Spark).
+    - Mac M1, M2, M3 or M4 with UD-Q4_K_XL: update. 0.2.15 gave wrong results there (next section).
+    - Two ways Strata could stop with no message are fixed: a crash at start on some Windows accounts, and Ubuntu's memory guard ending a model load (reduced, not removed: see Known problems).
+    - On Windows, typing strata in a default PowerShell works now.
+    - If you build Strata from a clone: the top-level folders moved into engine/, app/, terminal/, docs/ and tools/. Build the engine with cmake -S engine.
+    - New settings are off by default.
+    Mac M1 to M4: 0.2.15 gave wrong results with UD-Q4_K_XL (fixed, #4141)
+    On an M1, M2, M3 or M4, 0.2.15 computed only a quarter of the columns in some layers (160 of 640 in the layer we measured). The text still read fluently, so a short answer does not show it. The M5 was not affected. Against the same Mac's default path, on 6 prompts of 512 to 8,192 tokens, the first-token difference (KL) fell from 0.303 to 0.0068, and the top token differed on 1 of 6 prompts instead of 3 of 6. We measured this on an M5 Max forced onto the older kernels, because we had no M1 to M4 Mac. Fix by macintog.
+    What is new
+    - Strata's own engine code. The engines for NVIDIA, AMD, Intel Arc and the Mac run on Strata's own code, with no ggml and no llama.cpp matrix kernels. The picture reader is Strata's own too: its file went from 53,864,888 bytes to 807,976 bytes on NVIDIA.
+    - The answers did not change. On our 10 test prompts (chat, code, a tool call, long pastes, Chinese, German, a picture), the new engines gave the same tokens as 0.2.15's on the RTX PRO 5000 (9 of 9), Tesla P100 (10 of 10), Radeon R9700 (10 of 10), Arc A750 (9 of 9), M5 Max (10 of 10) and Strix Halo (9 of 9 text prompts). The exceptions: the Strix Halo picture answer (intended change in the picture reader), 4 short prompts on the DGX Spark (small number differences, same tokens), and the Windows CUDA 12 engine on an RTX 5070 (2 of 10 answers differ, because it now has native code for that card).
+    - Faster long prompts on older NVIDIA cards. Tesla V100, a 26,000-token prompt: 17,464 ms with 0.1.58 and 15,068 ms now. RTX 2080 Ti at 26,000 tokens, speed against 0.1.58: 0.885 in 0.2.15 and 1.088 now.
+    - The chat shows what the model is doing ("Thinking…", "Calling read…", "Writing file app.js…"). A tool call that cannot run no longer ends the turn: the agent gets an error that lists its tools and goes on (20 of 20 in our live check).
+    Fixed
+    Windows
+    - A crash at start on accounts that Windows refuses a system query (WMI), such as a standard user over ssh, is fixed. The background program, the server and the engine ended about 5 seconds after start. On Strix Halo, 3 of 3 starts crashed before; after the fix a full strata launch served after 73 s with a chat, a tool call and a picture. A normal desktop user on an RTX 5070 PC was not affected. 0.2.15 has the crash too. Issue #4200 may be the same cause; we could not check it.
+    - strata works in a default PowerShell. Before, PowerShell refused strata.ps1 ("running scripts is disabled"). An older install is fixed on its first strata command after the update.
+    - install.ps1 no longer rewrites your user PATH. It added Strata's folder but changed the type of the value and dropped the last ;.
+    - UPDATE.bat of an old clone ends with exit code 0. Before, it printed "The batch file cannot be found." twice and exited with 1.
+    - After a failed model load, the app's Settings > Updates buttons work again.
+    Linux
+    - Ubuntu's memory guard (systemd-oomd) could end strata launch in a normal terminal while a big model loaded. The window and the engine vanished. It ended 3 of 3 loads in our first round and 2 of 2 in the second, on a Tesla P100 PC with 62 GiB of RAM. Strata now frees the memory that still holds the model's old file copies before the engine starts, and pauses it if memory gets tight. With other programs open, 0 of 5 loads survived without it and 6 of 7 with it (3 of 4 with 12 GiB of other programs open). If it still happens, the next strata launch says what happened.
+    - setup.sh on a Tesla P100 used to compile the engine (6.5 minutes). It now downloads the ready-made one.
+    - The installer names every card by its own name ("2 x NVIDIA RTX A4000", "AMD Radeon AI PRO R9700"). Before: "NVIDIA NVIDIA RTX A4000", one card named on a two-card PC, or a raw PCI line.
+    - A false warning on a Tesla P100 ("built for sm_0, sm_1 ... but a graphics card in use is sm_60") is gone.
+    - setup.sh with --gguf-dir no longer asks which model; it picks the same drafter as the Terminal; its tuning question defaults to no and says so; setup.sh --update prints one line instead of about 15,000 lines of git's list.
+    Mac
+    - The app and engine now need macOS 15.0. The public 0.2.15 files needed macOS 27.2.
+    - The engine no longer stops itself after 60 seconds during long replies in two or more chats at once.
+    - A UD-IQ1_M model that answered with garbage text is fixed. Metal memory no longer grows between requests (16.9 GB over 4 rounds before, 0.23 GB now).
+    The Terminal (strata launch)
+    - The Save screen lists what will be downloaded, with sizes, and says "Nothing needs to be downloaded" only when that is true. Offline, it lists what is missing and how to put it in place.
+    - A model that does not fit the free disk reads "not enough disk space". Before, files in your own folder were marked too (5 of 5 Linux PCs).
+    - Tuning starts on Skip (before: Quick, about 20 minutes before the first answer). On the Advanced step, Enter goes on and e edits.
+    - When port 8080 is taken, press u to use 8081.
+    - The end of a big download says "Finishing the last pieces (310 MB left, 0.4 MB/s)", and the bar no longer goes backwards.
+    The app
+    - First run: "Already on this computer" for model files that are there (it said "58.5 GB Download size"). "Checking what your computer can run…" replaces a bare "Connect engine". The first look at the PC took 23 s on an RTX 5070 PC and takes about 2 s.
+    - The same chat open in two windows now shows the running reply in both.
+    - The app's local /v1 address accepts any model name when one model is loaded (it answered HTTP 400).
+    - Settings > Updates no longer ends with "The app updater is not ready yet" after a finished update.
+    - On NVIDIA Blackwell cards, the CUDA 12 engine's first answer took 173.0 s and now takes 0.34 s (#5784).
+    Known problems
+    - Windows, Strix Halo and PCs with a small page file: the engine can stop with no message (exit code 0xC0000409) when Windows' memory limit (memory plus page file) runs out. The model's card now shows a notice after the model has loaded. What to do: make the Windows page file larger, choose a shorter context, or use --expert-cache 8192 in the Terminal (it left 18.4 GB free in our test). The same in 0.2.15 (#1607).
+    - Windows from 0.2.15 after the crash above: one strata update can leave the engine behind. It says "Engine 0.1.60 NOT changed ... Run strata update --force". What to do: run strata update again. In the app: press the Strata row in Settings > Updates, then the Engine row.
+    - Ubuntu and other desktops with the memory guard: a big model load can still be ended when little memory is free (3 of 4 loads survived with 12 GiB of other programs open). What to do: close other programs (a web browser uses a lot), or start Strata from a text console or over ssh. We tested one PC (Ubuntu 24.04, 62 GiB).
+    - A saved --drafting off stays off after an update. What to do: --drafting auto.
+    - Strix Halo with 32 GB of RAM: a second chat can wait for minutes with no sign of it (up to 602 s in our test). What to do: wait, or use one chat at a time.
+    - After a change in Settings > Tools, the next message in another chat can fail after up to 2 minutes with "Another chat is still working, so your new Tools settings are not in use yet. Send your message again when that chat has finished." What to do: send it again.
+    - After you restart the app, load the model again from Models (49.2 s on our RTX 5070 PC). Your chats come back.
+    - If the window says Strata isn't connected, close Strata and open it again.
+    - Long silent pauses while the model writes a big file (316 s in one case). The turn is not stuck.
+    - An agent workspace inside a big git repository makes every turn slow. What to do: add large folders to .gitignore, or use a folder outside the repository.
+    - After a turn, the command an agent ran and its output cannot be seen.
+    - After you uninstall the Windows app, four small files stay in %LOCALAPPDATA%\Strata, unless you tick "Also remove my Strata data". Your models and chats are not touched.
+    - Not reproduced: an Intel Arc B70 instruction-following report (#5653, we have no B-series card) and Radeon R9700 crashes on Linux in long thinking and tool-call runs (#5559 is the closest candidate).
+    - Not tested: a Mac M1 to M4; the in-app update on Windows and on the Mac; the Windows RX 6000 and RX 7000 changes.
+    How we tested
+    - Long runs: 21.4 hours, 14,976 requests and 23,919 tool calls on 5 PCs: 0 garbage answers, no stop we did not plan, the longest request 159 s. The app on Strix Halo ran 5.97 and 8.35 hours with real tool calls.
+    - Clean-PC tests on the final files: the Windows RTX 5070 PC as a normal user: strata launch served in 71 s; START-HERE.bat on a fresh clone installed in 114 s and started in 44 s; the app's first look at the PC took 2.8 s; each answered a 3-turn chat, a picture and a tool call; an old clone's real 0.2.15 UPDATE.bat ended in 8 s with exit code 0. Strix Halo as a standard Windows user: the one-line install, strata launch, the update from 0.2.15 and the installer passed, and 4 of 4 starts answered the 3-turn chat, the picture and the tool call. Linux on an RTX PRO 5000 (offline), 2 x RTX A4000 (offline), a Radeon AI PRO R9700 (offline) and an Arc A750: install and strata launch passed the same checks (on the Arc A750 without the picture, which is not available on Intel Arc yet); on a Tesla P100 PC the app updated itself from 0.2.15 with the real signature in 21 s. Mac M5 Max: install in 3 s, the same checks passed, and strata update from 0.2.15 took 7 s. DGX Spark: the same checks passed, 56 to 75 tokens per second. A rented 2 x RTX 4090 from a clean start: the 84.5 GB model downloaded from Hugging Face in about 14 minutes, the chat was ready about 16 minutes after the first key, 136 to 201 tokens per second.
+    - Test suites on the release: 4,040 Terminal tests, 1,910 server tests, 1,775 tool tests and 2,025 app tests passed on Linux with 0 failed; on Windows 3,980 and 2,144 passed with 0 failed.
+    Credits
+    Thanks to macintog (#4141, the Mac fix), bitaccesscomau (#5860, #5862, #5864, the two-card work), noahark (#4968, the Monitor model card), Alex Yong (#5793, Mac sensors without root) and Gabriel A. Devenyi (six API fixes, #4829 to #4835). Many more people reported problems and sent fixes; their commits keep their names in the history.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Niko1221/Strata/releases/tag/v0.2.16
+ReleaseTime: 2026-11-18T21:57:34.0000000Z

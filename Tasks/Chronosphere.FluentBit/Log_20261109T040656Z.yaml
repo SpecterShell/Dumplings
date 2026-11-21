@@ -1,0 +1,127 @@
+Version: 5.2.0
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-win32.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-win64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-winarm64.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.2.0-win32\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-win32.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.2.0-win64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-win64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.2.0-winarm64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.2.0-winarm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    https://fluentbit.io/announcements/v5.2.0/
+    What's Changed
+    - workflows: bump github/codeql-action/upload-sarif from 4.38.3 to 4.39.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12607
+    - workflows: bump reviewdog/action-actionlint from 1.80.1 to 1.80.4 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12619
+    - motd: update banner to v5.2 by @edsiper in https://github.com/fluent/fluent-bit/pull/12627
+    - release: prepare master for v5.2.0 development by @edsiper in https://github.com/fluent/fluent-bit/pull/12625
+    - workflows: prepare release routing for v5.2 by @edsiper in https://github.com/fluent/fluent-bit/pull/12626
+    - workflows: verify and set release PR base branches by @edsiper in https://github.com/fluent/fluent-bit/pull/12629
+    - lib: upgrade bundled jemalloc to 5.4.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12493
+    - lib: upgrade LuaJIT and fix CMake wrapper compatibility by @edsiper in https://github.com/fluent/fluent-bit/pull/12503
+    - lib: fix jemalloc header detection on older compilers by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12634
+    - lib: cfl: upgrade to v1.1.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12630
+    - lib: ctraces: upgrade to v0.8.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12637
+    - lib: cmetrics: upgrade to v2.3.1 by @edsiper in https://github.com/fluent/fluent-bit/pull/12641
+    - in_tail: mitigate access violation on windows by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12642
+    - processor_fts: add Fluent Typed Scripting processor by @edsiper in https://github.com/fluent/fluent-bit/pull/12589
+    - wasm: add experimental browser runtime and SDK by @edsiper in https://github.com/fluent/fluent-bit/pull/12429
+    - upstream: network: mitigate tcp dns timeouts by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12644
+    - wasm: enable Fluent Typed Scripting in browser artifacts by @edsiper in https://github.com/fluent/fluent-bit/pull/12645
+    - tests: integration: cover processor worker isolation after FTS by @edsiper in https://github.com/fluent/fluent-bit/pull/12511
+    - processor_sql: preserve resource and scope groups when filtering logs by @edsiper in https://github.com/fluent/fluent-bit/pull/12506
+    - processor: fuse compatible body content modifier chains by @edsiper in https://github.com/fluent/fluent-bit/pull/12505
+    - lib: Import fluent/onigmo change by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12669
+    - workflows: enable unit tests for 5.1 pull requests by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12674
+    - in_opentelemetry: process eligible logs in HTTP workers by @edsiper in https://github.com/fluent/fluent-bit/pull/12673
+    - lib: chunkio: upgrade to v1.5.5 by @edsiper in https://github.com/fluent/fluent-bit/pull/12699
+    - lib: yyjson: upgrade to v0.13.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12698
+    - lib: restore jemalloc 5.3.0 memory baseline by @edsiper in https://github.com/fluent/fluent-bit/pull/12701
+    - ci: fix macOS shutdown, test fixtures, and browser teardown by @edsiper in https://github.com/fluent/fluent-bit/pull/12702
+    - build: parallelize library builds and reuse core objects by @edsiper in https://github.com/fluent/fluent-bit/pull/12706
+    - processor_journald_otel: handle journald as otel processed logs by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12387
+    - in_forward: Added a small protection to secure Forward with a preflight scanner by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12686
+    - tests: parallelize six runtime suites by @edsiper in https://github.com/fluent/fluent-bit/pull/12707
+    - build: libyaml: find libyaml without pkg-config by @edsiper in https://github.com/fluent/fluent-bit/pull/12708
+    - build: upgrade SQLite to 3.54.1 and parallelize compilation by @edsiper in https://github.com/fluent/fluent-bit/pull/12716
+    - build: correct generated dependency include paths by @edsiper in https://github.com/fluent/fluent-bit/pull/12719
+    - wasm: filter_wasm: pack value len pair for returned format of wasm by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12518
+    - out_opentelemetry: respect dropped count metadata boundaries by @edsiper in https://github.com/fluent/fluent-bit/pull/12507
+    - http_server: suppress HEAD bodies and preserve HTTP/2 trailers by @edsiper in https://github.com/fluent/fluent-bit/pull/12727
+    - processor_fts: add reusable typed policy packs by @edsiper in https://github.com/fluent/fluent-bit/pull/12731
+    - processor_fts: add JSON field decoding and log body unpacking by @edsiper in https://github.com/fluent/fluent-bit/pull/12732
+    - out_forward: preserve log groups with dynamic tags by @edsiper in https://github.com/fluent/fluent-bit/pull/12728
+    - out_vivo_exporter: fix telemetry loss and add compressed OTLP JSON by @edsiper in https://github.com/fluent/fluent-bit/pull/12418
+    - processor_fts: add LuaLS definitions and JSON API export by @edsiper in https://github.com/fluent/fluent-bit/pull/12733
+    - bin: generate YAML configuration from CLI options by @edsiper in https://github.com/fluent/fluent-bit/pull/12353
+    - wasm: add local pipeline drain and reduce browser run latency by @edsiper in https://github.com/fluent/fluent-bit/pull/12730
+    - workflows: publish validated experimental browser SDK releases by @edsiper in https://github.com/fluent/fluent-bit/pull/12717
+    - fix(in_statsd): add missing break in STATSD_TYPE_TIMER case by @AruneshDwivedi in https://github.com/fluent/fluent-bit/pull/12494
+    - out_stackdriver: mitigate oob on stack driver by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12743
+    - out_chronicle: fix chronicle initialization leaks by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12736
+    - http_server: keep cached metrics when a push overlaps a read by @locker95 in https://github.com/fluent/fluent-bit/pull/12684
+    - aws: Mitigate the AWS credential URI bypass by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12620
+    - in_syslog: mitigate potential overflow on payloads by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12584
+    - tests: fix HTTP JSON stream runtime assertions by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12582
+    - packaging: distros: almalinux: rockeylinux: centos: update requested packages by @sxd in https://github.com/fluent/fluent-bit/pull/12711
+    - oauth2_jwt: in_http: in_opentelemetry: Implement configurable OAuth2 jwks buffer size and its limit by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12694
+    - regex: mitigate regex unlimited stacks by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12734
+    - filter_rewrite_tag: fix emitter lifecycle and record preservation by @edsiper in https://github.com/fluent/fluent-bit/pull/12668
+    - out_file: Mitigated the File output cardinality gap by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12676
+    - out_file: out_nats: Sanitize malicious tags by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12587
+    - upstream: out_s3: out_azure_blob: out_gcs: out_stackdriver: mitigate unexpectedly using plaintext payload on https scheme by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12622
+    - in_forward: in_syslog: in_unix_socket: harden unix input sockets by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12703
+    - socket: config: input: engine: Fix channel descriptor initialization and cleanup for descriptors by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12720
+    - http_client: out_opentelemetry: mitigate unbounded http ng requests by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12665
+    - in_prometheus_textfile: append multiple contexts of prometheus texts payloads by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12576
+    - out_kafka: avro: revise kafka schema validation by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12738
+    - http_server: mitigate fragmented HTTP/1 header reparsing with configurable limits by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12718
+    - in_node_exporter_metrics: add scrape_on_start option by @stondo in https://github.com/fluent/fluent-bit/pull/12638
+    - tls: propagate verify_hostname settings on tls context by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12635
+    - tests: integeration: config_format: address newer python failures and windows failures on integration tests by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12677
+    - utils: plugins: Implemented the path-shadowing mitigation for shadowed relative files by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12682
+    - output: engine: output_throttle: Implement throttle operations for output plugins by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12393
+    - output: mitigate heavy loaded case by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12484
+    - http_server: in_opentelemetry: plug decompress explosion possibilities by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12568
+    - filter_rewrite_tag: add opt-in input processor batching and supporting fixes by @edsiper in https://github.com/fluent/fluent-bit/pull/12697
+    - http_server: mitigate automatic inflation bypass by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12581
+    - out_azure_blob, out_azure_kusto: fix buffered memory safety by @edsiper in https://github.com/fluent/fluent-bit/pull/12748
+    - in_opentelemetry: bound OTLP decoding allocations by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12705
+    - workflows: allow package reads in master integration tests by @edsiper in https://github.com/fluent/fluent-bit/pull/12749
+    - pipe, engine, processor_fts, tests: fix 5.2 release blockers by @edsiper in https://github.com/fluent/fluent-bit/pull/12750
+    - oauth2_jwt: enforce JWKS connection and response deadlines by @edsiper in https://github.com/fluent/fluent-bit/pull/12752
+    - filter_record_modifier: drop batches when all fields are removed by @edsiper in https://github.com/fluent/fluent-bit/pull/12753
+    - filter_modify: reject rules with excess arguments by @edsiper in https://github.com/fluent/fluent-bit/pull/12754
+    - documentation: fts: fix timestamp missing policy example by @edsiper in https://github.com/fluent/fluent-bit/pull/12756
+    - filter_lua: isolate protected callback errors to the failing record by @edsiper in https://github.com/fluent/fluent-bit/pull/12755
+    - input: fix collector crashes and 5.2 release regressions by @edsiper in https://github.com/fluent/fluent-bit/pull/12758
+    New Contributors
+    - @AruneshDwivedi made their first contribution in https://github.com/fluent/fluent-bit/pull/12494
+    - @locker95 made their first contribution in https://github.com/fluent/fluent-bit/pull/12684
+    Full Changelog: https://github.com/fluent/fluent-bit/compare/v5.1.5...v5.2.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/fluent/fluent-bit/releases/tag/v5.2.0
+ReleaseTime: 2026-11-09T04:04:12.0000000Z

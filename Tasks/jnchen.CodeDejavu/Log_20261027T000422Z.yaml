@@ -1,0 +1,23 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jnchen/code_dejavu/releases/download/v0.6.0/code-dejavu_0.6.0_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jnchen/code_dejavu/releases/tag/v0.6.0
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 新增 DeepSeek Harness（dsh）会话来源：读取 $DSH_HOME（默认 ~/.dsh）下
+      sessions/--<project>--/<session>/session[.vN].jsonl[.zstd]，兼容 raw JSONL 与
+      Zstandard 压缩日志，并解析会话、消息、思考、工具调用/结果、用量、会话内搜索和子代理。
+    - 每个 Agent 的恢复命令都可在设置页自定义模板，占位符：{session}（带引号 ID）、
+      {session_raw}、{project}、{project_raw}；留空回退各 Agent 默认命令。
+      各桌面端预设：Claude Desktop 用官方 claude --desktop --resume <id> 直达会话；
+      Codex Desktop 用 codex://threads/<id> 深链；OpenCode Desktop 与 DSH Web/Desktop
+      暂无会话级链接，预设以 opencode://open / dsh://open 唤起应用后手动选择会话；
+      DSH 另提供 Web / Headless 预设。DSH 亦支持快照/恢复、全局与项目 AGENTS.md 指令。
+ReleaseTime: 2026-10-26T23:50:48.0000000Z

@@ -1,0 +1,170 @@
+Version: 1.0.0-beta12
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/looplj/axonhub/releases/download/v1.0.0-beta12/axonhub_1.0.0-beta12_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/looplj/axonhub/releases/download/v1.0.0-beta12/axonhub_1.0.0-beta12_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(responses): preserve additional tools across forwarding by @llc1123 in https://github.com/looplj/axonhub/pull/2627
+    - fix(antigravity): report merged 5h and weekly quota windows by @Yuna-Celisse in https://github.com/looplj/axonhub/pull/2626
+    - fix(responses): keep tool outputs adjacent to the calls that requested them by @remote-controlled-man in https://github.com/looplj/axonhub/pull/2633
+    - fix: count message audio as content in empty response detection by @remote-controlled-man in https://github.com/looplj/axonhub/pull/2634
+    - fix(storage): disable default trailing checksums for S3-compatible object stores by @myml in https://github.com/looplj/axonhub/pull/2637
+    - chore: sync model developers data by @github-actions[bot] in https://github.com/looplj/axonhub/pull/2643
+    - fix(codex): honour the user-agent pass-through switch and stop leaking client headers by @myml in https://github.com/looplj/axonhub/pull/2638
+    - fix(orchestrator): refresh channel credentials before same-channel retry by @keeyangyy in https://github.com/looplj/axonhub/pull/2545
+    - fix: models association dialog have double vertical scrollbar by @BLumia in https://github.com/looplj/axonhub/pull/2649
+    - fix(images): forward Codex requests through native Images endpoints by @llc1123 in https://github.com/looplj/axonhub/pull/2651
+    - fix(responses): retry structured Codex overload failures by @llc1123 in https://github.com/looplj/axonhub/pull/2657
+    - feat(responses): add HTTP and WebSocket protocol endpoints by @llc1123 in https://github.com/looplj/axonhub/pull/2656
+    - fix(billing): fall back to model library price when a channel has no price by @EJCrystal in https://github.com/looplj/axonhub/pull/2655
+    - feat(codex): add PAT-compatible Codex provider surface by @llc1123 in https://github.com/looplj/axonhub/pull/2640
+    - fix(responses): restrict websocket ALPN to HTTP/1.1 by @llc1123 in https://github.com/looplj/axonhub/pull/2664
+    - fix(codex): size usage-guide tabs to content and align setup examples by @llc1123 in https://github.com/looplj/axonhub/pull/2672
+    - fix(responses): surface stale WebSocket failures instead of replaying by @llc1123 in https://github.com/looplj/axonhub/pull/2669
+    - feat(gemini): bind Vertex API keys to GCP projects and regions by @llc1123 in https://github.com/looplj/axonhub/pull/2673
+    - fix(stream): separate terminal outcome, delivery acknowledgement, and usage accounting by @llc1123 in https://github.com/looplj/axonhub/pull/2659
+    - fix(codex): preserve third-party channel credentials and catalog by @llc1123 in https://github.com/looplj/axonhub/pull/2675
+    - fix(stream): preserve delivery acknowledgement after cancellation by @llc1123 in https://github.com/looplj/axonhub/pull/2677
+    - fix(stream): require delivery provenance after cancellation by @llc1123 in https://github.com/looplj/axonhub/pull/2678
+    - fix(stream): preserve delivery capabilities through response decorators by @pandada8 in https://github.com/looplj/axonhub/pull/2679
+    - feat(anthropic): enable cache for converted requests by @llc1123 in https://github.com/looplj/axonhub/pull/2697
+    - fix(anthropic): normalize managed platform cache control by @llc1123 in https://github.com/looplj/axonhub/pull/2702
+    - refactor(anthropic): share cache control slot traversal by @llc1123 in https://github.com/looplj/axonhub/pull/2703
+    - fix(httpclient): recover unterminated final SSE line at stream EOF by @djdembeck in https://github.com/looplj/axonhub/pull/2692
+    - chore: add new team member by @looplj in https://github.com/looplj/axonhub/pull/2716
+    - fix(quota): keep Antigravity Gemini and Claude/GPT pools routable independently (#2666) by @EJCrystal in https://github.com/looplj/axonhub/pull/2667
+    - fix(channels): add updateChannelSettings patch mutation by @amghazanfari in https://github.com/looplj/axonhub/pull/2699
+    - feat(channel): let a channel override the global single-channel retry count by @keeyangyy in https://github.com/looplj/axonhub/pull/2660
+    - fix(responses): stop repeating tool call id and name in the arguments done chunk by @Sriram-PR in https://github.com/looplj/axonhub/pull/2686
+    - fix(openai): index streamed tool calls that arrive without an index by @pcbeingused333 in https://github.com/looplj/axonhub/pull/2707
+    - fix(openai): drop tool_choice when no tools are sent by @holtwood in https://github.com/looplj/axonhub/pull/2706
+    - fix(metrics): record chat request and token metrics by @amghazanfari in https://github.com/looplj/axonhub/pull/2698
+    - feat(channels): allow configuring typesafe/systemone endpoints on OpenAI channels by @Silentely in https://github.com/looplj/axonhub/pull/2685
+    - ci: scope Docker GHA cache by architecture --issue=#2711 by @zouxingyuks in https://github.com/looplj/axonhub/pull/2712
+    - chore(deps-dev): bump vite from 7.3.5 to 7.3.7 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2710
+    - fix(deps): synchronize compress 1.18.7 across Go modules by @llc1123 in https://github.com/looplj/axonhub/pull/2723
+    - build: pin Go builder image to 1.27.3 (CVE-2026-111943) by @bestnite in https://github.com/looplj/axonhub/pull/2719
+    - chore(deps): configure Dependabot for all dependency surfaces by @llc1123 in https://github.com/looplj/axonhub/pull/2725
+    - chore(deps): bump github.com/alicebob/miniredis/v2 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2734
+    - chore(deps): bump cloud.google.com/go/storage in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2732
+    - chore(deps): bump github.com/openai/openai-go/v3 in /integration_test/openai by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2731
+    - chore(deps): bump go.uber.org/zap in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2729
+    - chore(deps): bump google.golang.org/genai in /integration_test/gemini by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2728
+    - chore(deps): bump node from 22-alpine to 25-alpine by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2726
+    - chore(deps): bump github.com/anthropics/anthropic-sdk-go in /integration_test/anthropic by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2727
+    - chore(deps): bump ariga.io/atlas in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2735
+    - chore(deps): bump golang.org/x/sync in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2730
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2736
+    - chore(deps): bump github.com/Masterminds/semver/v3 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2733
+    - chore(deps): bump vite, @vitejs/plugin-react-swc and @tailwindcss/vite in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2738
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2/feature/s3/manager in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2737
+    - chore(deps): bump @google/genai from 1.31.0 to 2.30.0 in /integration_test/gemini/node by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2739
+    - feat: add server-side Claude auto-mode reviewer by @happyaron in https://github.com/looplj/axonhub/pull/2722
+    - feat(ui): categorize channels with filter pills and section headers in provider quota popover by @EJCrystal in https://github.com/looplj/axonhub/pull/2688
+    - feat(requests): show the cache hit rate in the tokens column by @keeyangyy in https://github.com/looplj/axonhub/pull/2661
+    - fix(channels): make channel table responsive on mobile and narrow viewports by @EJCrystal in https://github.com/looplj/axonhub/pull/2689
+    - feat(channel): configurable multi-key selection strategies (sticky/random/round-robin/priority/fixed) by @keeyangyy in https://github.com/looplj/axonhub/pull/2548
+    - feat(channels): add Cloudflare Workers AI channel type by @bestnite in https://github.com/looplj/axonhub/pull/2674
+    - feat(quota): support Synthetic search and weekly credits by @djdembeck in https://github.com/looplj/axonhub/pull/2743
+    - fix(build): restore Corepack and validate Docker builds by @djdembeck in https://github.com/looplj/axonhub/pull/2744
+    - feat(provider-quota): remove Wafer quota provider by @djdembeck in https://github.com/looplj/axonhub/pull/2745
+    - docs: document OpenCode V1 and V2 tracing configuration --issue=#2747 by @zouxingyuks in https://github.com/looplj/axonhub/pull/2748
+    - fix: support Claude Code WebSearch through Responses backends by @happyaron in https://github.com/looplj/axonhub/pull/2750
+    - fix(anthropic): estimate and calibrate initial input usage for Claude Code by @happyaron in https://github.com/looplj/axonhub/pull/2749
+    - chore(deps): bump zod from 4.3.6 to 4.6.6 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2746
+    - fix(ui): repair provider quota popover grouping and sort by @djdembeck in https://github.com/looplj/axonhub/pull/2751
+    - ci: add Go vulnerability scanning by @djdembeck in https://github.com/looplj/axonhub/pull/2753
+    - fix(users): use AutoCompleteSelect for Add User picker by @djdembeck in https://github.com/looplj/axonhub/pull/2752
+    - fix(system): raise the per-channel max retry limit to 10 by @keeyangyy in https://github.com/looplj/axonhub/pull/2663
+    - chore: sync model developers data by @github-actions[bot] in https://github.com/looplj/axonhub/pull/2693
+    - perf(dashboard): reduce aggregate load by @djdembeck in https://github.com/looplj/axonhub/pull/2755
+    - chore: sync model developers data by @github-actions[bot] in https://github.com/looplj/axonhub/pull/2756
+    - chore(deps): bump @radix-ui/react-scroll-area from 1.2.10 to 1.4.0 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2759
+    - chore(deps): bump @radix-ui/react-avatar from 1.1.11 to 1.3.1 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2760
+    - chore(deps): bump @tanstack/react-router from 1.167.4 to 1.170.45 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2761
+    - chore(deps): bump i18next from 25.8.18 to 26.5.5 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2762
+    - chore(deps): bump cloud.google.com/go/storage in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2764
+    - chore(deps): bump github.com/anthropics/anthropic-sdk-go in /integration_test/anthropic by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2765
+    - chore(deps): bump github.com/openai/openai-go/v3 in /integration_test/openai by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2766
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2/config in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2767
+    - chore(deps): bump github.com/coreos/go-oidc/v3 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2770
+    - perf(dashboard): use PostgreSQL DISTINCT ON for fastest rankings by @djdembeck in https://github.com/looplj/axonhub/pull/2780
+    - fix(biz): strip NUL escapes before storing bodies in jsonb by @pcbeingused333 in https://github.com/looplj/axonhub/pull/2779
+    - chore(deps): bump google.golang.org/genai in /integration_test/gemini by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2778
+    - fix(deploy): verify PID ownership before trusting the Windows PID file by @keeyangyy in https://github.com/looplj/axonhub/pull/2772
+    - fix(anthropic): accept thinking.type=between_tools and pass it through by @pcbeingused333 in https://github.com/looplj/axonhub/pull/2771
+    - fix(orchestrator): let a channel opt 429 into same-channel retry by @keeyangyy in https://github.com/looplj/axonhub/pull/2668
+    - feat(minimax): suggest Flash and M3 while preserving saved models by @octo-patch in https://github.com/looplj/axonhub/pull/2715
+    - feat(analytics): filter by a second-precision time range by @QriDoki in https://github.com/looplj/axonhub/pull/2775
+    - style(analytics): tabular numerals for numeric cells in usage detail table by @QriDoki in https://github.com/looplj/axonhub/pull/2774
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2/service/s3 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2769
+    - chore(deps): bump nanoid from 6.0.0 to 6.0.2 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2758
+    - fix(gemini): keep tool_calls finish reason across stream chunks by @xlb3055 in https://github.com/looplj/axonhub/pull/2713
+    - feat(quota): read Ollama Cloud quota with the account API key by @x-adam in https://github.com/looplj/axonhub/pull/2628
+    - feat(safeguards): configure Claude Code review policies and system settings by @happyaron in https://github.com/looplj/axonhub/pull/2777
+    - chore(deps): bump node from 24-alpine to 26-alpine by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2763
+    - chore(deps): bump use-stick-to-bottom from 1.1.3 to 1.1.6 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2795
+    - chore(deps): bump github.com/gin-contrib/static in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2794
+    - chore(deps): bump tailwind-merge from 3.5.0 to 3.7.0 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2792
+    - chore(deps): bump github.com/dlclark/regexp2/v2 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2789
+    - chore(deps): bump @tabler/icons-react from 3.40.0 to 3.49.0 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2788
+    - chore(deps): bump github.com/openai/openai-go/v3 in /integration_test/openai by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2787
+    - chore(deps): bump @vvo/tzdb from 6.198.0 to 6.201.1 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2785
+    - chore(deps): bump zod from 4.6.6 to 4.6.7 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2786
+    - chore(deps): bump github.com/eko/gocache/lib/v4 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2790
+    - chore(deps): bump github.com/gin-contrib/cors in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2793
+    - chore(deps): bump github.com/eko/gocache/store/go_cache/v4 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2791
+    - chore(deps): bump github.com/go-jose/go-jose/v4 from 4.1.4 to 4.1.6 by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2796
+    - fix(api-keys): enforce scope grants for service account keys by @looplj in https://github.com/looplj/axonhub/pull/2741
+    - chore(*): upgrade deps to resolve security issues by @looplj in https://github.com/looplj/axonhub/pull/2811
+    - fix(typesafe): unwrap provider result envelopes in responses by @myml in https://github.com/looplj/axonhub/pull/2636
+    - fix(anthropic): carry allowed_callers through the tool conversion by @myml in https://github.com/looplj/axonhub/pull/2639
+    - feat(channels): support per-channel response timeout override by @myml in https://github.com/looplj/axonhub/pull/2630
+    - fix(gql): raise the multipart upload cap so large restores work by @zgq354 in https://github.com/looplj/axonhub/pull/2625
+    - chore: sync model developers data by @github-actions[bot] in https://github.com/looplj/axonhub/pull/2829
+    - feat: add provider quota state change webhook events by @djdembeck in https://github.com/looplj/axonhub/pull/2828
+    - chore(deps): bump @google/genai from 2.30.0 to 2.32.0 in /integration_test/gemini/node by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2837
+    - chore(deps): bump @hookform/resolvers from 5.2.2 to 6.0.2 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2835
+    - chore(deps): bump google.golang.org/genai in /integration_test/gemini by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2836
+    - chore(deps): bump js-cookie from 3.0.7 to 3.0.8 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2834
+    - chore(deps): bump @radix-ui/react-tabs from 1.1.13 to 1.2.1 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2833
+    - chore(deps): bump @radix-ui/react-separator from 1.1.8 to 1.2.0 in /frontend by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2832
+    - fix(openai): preserve explicit image response format by @llc1123 in https://github.com/looplj/axonhub/pull/2838
+    - fix(gemini): preserve multipart thought summaries by @remote-controlled-man in https://github.com/looplj/axonhub/pull/2831
+    - chore(deps): bump github.com/jackc/pgx/v5 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2818
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2/config in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2816
+    - chore(deps): bump github.com/openai/openai-go/v3 in /integration_test/openai by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2815
+    - chore(deps): bump github.com/redis/go-redis/v9 in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2820
+    - fix(gql): preserve dashboard helpers during generation by @remote-controlled-man in https://github.com/looplj/axonhub/pull/2830
+    - fix(anthropic): apply repaired tool input in stream aggregation by @pujitha24 in https://github.com/looplj/axonhub/pull/2827
+    - fix(gemini): map blocked finish reasons to content_filter by @pcbeingused333 in https://github.com/looplj/axonhub/pull/2826
+    - feat(overrides): delete fields across request body arrays by @remote-controlled-man in https://github.com/looplj/axonhub/pull/2824
+    - chore(deps): bump github.com/aws/aws-sdk-go-v2/credentials in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2817
+    - fix(gemini): accept GenerateContent field aliases by @wozhenbang2004 in https://github.com/looplj/axonhub/pull/2798
+    - chore(deps): bump github.com/kaptinlin/jsonrepair in / by @dependabot[bot] in https://github.com/looplj/axonhub/pull/2819
+    New Contributors
+    - @pandada8 made their first contribution in https://github.com/looplj/axonhub/pull/2679
+    - @Sriram-PR made their first contribution in https://github.com/looplj/axonhub/pull/2686
+    - @pcbeingused333 made their first contribution in https://github.com/looplj/axonhub/pull/2707
+    - @holtwood made their first contribution in https://github.com/looplj/axonhub/pull/2706
+    - @bestnite made their first contribution in https://github.com/looplj/axonhub/pull/2719
+    - @happyaron made their first contribution in https://github.com/looplj/axonhub/pull/2722
+    - @QriDoki made their first contribution in https://github.com/looplj/axonhub/pull/2775
+    - @xlb3055 made their first contribution in https://github.com/looplj/axonhub/pull/2713
+    - @x-adam made their first contribution in https://github.com/looplj/axonhub/pull/2628
+    - @pujitha24 made their first contribution in https://github.com/looplj/axonhub/pull/2827
+    - @wozhenbang2004 made their first contribution in https://github.com/looplj/axonhub/pull/2798
+    Full Changelog: https://github.com/looplj/axonhub/compare/v1.0.0-beta11...v1.0.0-beta12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/looplj/axonhub/releases/tag/v1.0.0-beta12
+ReleaseTime: 2026-11-02T14:18:33.0000000Z

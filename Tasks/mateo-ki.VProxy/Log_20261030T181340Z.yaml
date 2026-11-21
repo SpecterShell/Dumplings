@@ -1,0 +1,26 @@
+Version: 1.15.10
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.10/vpn-parser-1.15.10-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.10 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.10！本版支持分流出站模式（规则 / 全局 / 直连）运行中免停热切、打通 Mihomo / VP-Core / Meow 外部控制器 PATCH 动态热调机制、彻底移除停止代理阻断限制：
+    ⚡ 运行中出站模式免停秒级热切
+    - 规则 / 全局 / 直连动态免停切换：
+      - 在仪表盘“出站模式”胶囊卡片或规则配置子页点击切换模式时，直接通过内核外部控制器 PATCH /configs {"mode": "..."} 动态热调；
+      - 彻底移除以往“请先停止代理后再切换分流模式”的阻断拦截，切换耗时仅 5~15ms；
+      - 既有网络连接无感不中断：已建立的 TCP / UDP 流不受影响，后续发起的新连接立即遵循新出站模式。
+    - Mihomo / VP-Core / Meow 全面支持：
+      - Mihomo：原生完全支持 Clash REST PATCH 控制器；
+      - VP-Core：内核底层打通 clone_with_mode 路由器原子热换与 PATCH /configs 接口，且提供配置更新重载兜底；
+      - Meow：同样基于 Clash 控制器规范实现极速热切。
+    - 启动配置与运行时一致性：
+      - 修复历史编译器中硬编码 "mode": "rule" 的问题，启动生成的配置文件初始 mode 精确反映用户选定的分流模式。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.10
+ReleaseTime: 2026-10-30T18:06:35.0000000Z

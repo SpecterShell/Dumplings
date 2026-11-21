@@ -1,0 +1,81 @@
+Version: 15.5.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.5.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added approval support to AgentTool declarations with the new ToolTier and ToolApproval APIs, allowing tools to declare capability tiers (read, write, or exec) and optional override/reason metadata for approval gating
+    - Added formatApprovalDetails on AgentTool to append custom detail text or lines to approval prompts
+    - Added exported ToolTier and ToolApproval type aliases for tool approval declarations
+    Fixed
+    - Fixed chat-request telemetry storing the raw scoped serviceTier value ("openai-only"/"claude-only") in OpenAIAttr.RequestServiceTier instead of the resolved wire value ("priority"). Dashboards and alerts filtering on the concrete tier name (service_tier == "priority") were broken by the scoped placeholder; buildChatRequestAttributes now runs the tier through resolveServiceTier(serviceTier, provider) before recording, keeping the shouldSendServiceTier gate intact so non-OpenAI providers continue to omit the attribute entirely.
+    @oh-my-pi/pi-ai
+    Added
+    - Added zhipu-coding-plan provider for Zhipu (智谱) BigModel's domestic coding-plan SKU at https://open.bigmodel.cn/api/coding/paas/v4, with dynamic model discovery (ZHIPU_API_KEY), zai-format thinking, reasoning_content field, and OAuth login flow (#1340).
+    Removed
+    - Removed the pi-ai CLI binary (packages/ai/src/cli.ts) and its bin entry. Use the in-process equivalent in the omp coding-agent CLI: omp auth-broker login [provider], omp auth-broker logout [provider], and omp auth-broker list. The library API (AuthStorage.login(), getOAuthProviders(), etc.) is unchanged.
+    Fixed
+    - Fixed delayed toolResult emissions so real tool results are emitted in the correct assistant toolCall window after handoff/compaction, preventing out-of-order or orphaned tool results
+    - Fixed delayed toolResult handling for aborted calls so a late real result is emitted instead of a synthetic aborted result for the same toolCallId
+    - Fixed usage polling to disable credentials when OAuth refresh fails definitively (for example invalid_grant) and clear cached last-good usage data so stale reports no longer remain visible
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added per-tool approval declarations so each built-in, custom, or extension tool can declare its capability tier and approval prompt details.
+    - Added OMP_MCP_TIMEOUT_MS environment variable to override MCP client request timeout for every server (in milliseconds); set to 0 to disable client-side timeouts. Invalid (negative or non-numeric) values are ignored with a warning and fall back to the per-server timeout or default 30s (#1415).
+    - Added omp auth-broker list (with --json for machine-readable output) to enumerate supported OAuth providers, replacing bunx @oh-my-pi/pi-ai list.
+    - Added interactive provider selection to omp auth-broker login and omp auth-broker logout when invoked without a provider argument (replacing the equivalent bunx @oh-my-pi/pi-ai login/logout flows). The logout picker is sourced from stored credentials so it only lists providers the user is actually signed in to.
+    - Added directory matches to the find tool: glob searches now return directories alongside files, with directory hits emitted with a trailing / marker. find for **/tests no longer requires a follow-up read to surface a directory hit; tool prompt and output docs were updated to reflect that paths may be either kind.
+    - Added the RFC 8414 §3.1 path-ful issuer form (/.well-known/oauth-authorization-server<issuer-path>) as a third candidate in MCP OAuth discovery, after origin-root and path-prefixed well-known URLs, so deployments that publish authorization-server metadata at the path-ful location resolve correctly. Single-segment authorization URLs (e.g. https://gateway/my-service) are now treated as the gateway prefix instead of being dropped back to the origin root.
+    Changed
+    - Changed tool-approval prompts to use an explicit Approve/Deny selector and surface the denial reason as contextual help text instead of a bare confirm/cancel toggle.
+    - Changed approval safety overrides to prompt even in yolo / --auto-approve sessions, so critical tool-declared patterns no longer run unattended.
+    - Changed omp auth-broker login to drive the per-provider OAuth/API-key flow in-process via AuthStorage.login() instead of spawning the pi-ai CLI subprocess. The pi-ai bin is being removed; the same login surface now lives entirely inside omp.
+    - Changed the default per-line truncation cap for search/grep output (DEFAULT_MAX_COLUMN) from 1024 to 512 characters to keep wide minified single-line bundles from blowing out the model's context.
+    - Changed edit.hashlineAutoDropPureInsertDuplicates to also fire on A-B:payload replacement ops when a single non-structural boundary payload line duplicates the line immediately above the deleted range (prefix) or immediately below it (suffix). Catches the common mistake of A-B:foo where the user meant A-B! but typed a payload that happens to match adjacent context. The existing 2+-line block absorb and balance-validated structural single-line absorb already covered the multi-line and structural-delimiter cases; this closes the single-line non-structural gap.
+    Fixed
+    - Fixed the agent loop and bash executor busy-spinning when scheduler waits returned early. napi uv_async_send callbacks can wake the event loop after only ~1–2 ms even when the caller asked for a longer sleep, so yieldIfDue() now compensates by retrying Bun.sleep() until the requested wall-clock duration has elapsed, and the bash executor wraps its runPromise/timeout/abort race in an ExponentialYield (20 ms → 10 s) so long-running commands stop hot-looping on the race. Yields are additionally throttled by a module-level 50 ms gate, and losing timers in the race are aborted via AbortSignal so they don't keep firing after a winner is selected (#1396 by @hezhiyang2000, closes #1384).
+    - Fixed streaming edit previews going blank for inline-payload ops. LINE↓payload / A-B:payload are valid single-line writes, but the natural-order preview was skipping the entire op token until a newline arrived — so the first character the model typed after the sigil only appeared after the next line ended, and the renderer would fall back to rendering the raw A-B: bla bla bla input. Inline-body content on op-insert and op-replace tokens is now emitted as a +payload line on the same op tick.
+    - Fixed /usage and the status-line reset countdown rendering stale negative deltas after a Codex window had elapsed: Codex keeps reporting the prior window's reset_at until a new request opens a fresh window, which turned the resets in … suffix into a meaningless negative duration. formatDuration now clamps non-positive, NaN, and infinite inputs to 0ms, and both renderers suppress the resets in … suffix entirely once resetsAt <= now.
+    - Fixed auto-handoff race at the context threshold: when compaction.strategy = handoff fired at agent_end with an active checkpoint or incomplete todos, the deferred handoff post-prompt task and the rewind/todo-completion path both scheduled work concurrently, so a fresh agent.continue() streamed a new assistant turn alongside the handoff LLM call (visible as the "Auto-handoff" loader plus an assistant message still streaming, with the chat container then rebuilt mid-stream). #checkCompaction now reports whether it deferred a handoff and the agent_end handler short-circuits the rewind/todo passes; #scheduleAgentContinue also skips when isCompacting || isGeneratingHandoff. The pre-prompt #checkCompaction call now forces inline execution (allowDefer = false) so the new turn cannot begin until the maintenance settles.
+    - Fixed /exit and Ctrl+C-double-tap hanging when a deferred handoff was mid-flight: AgentSession.dispose() now aborts retry/compaction (auto-compaction + handoff) and the agent stream before draining #cancelPostPromptTasks, so the post-prompt task awaiting generateHandoff rejects and Promise.allSettled can resolve. Tool work (bash/eval/python) is intentionally still left for the existing dispose paths so shared kernels continue to survive across session dispose.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed bash heredocs (<<) and here-strings (<<<) deadlocking the shell on Windows past ~4 KiB and on macOS past 16-64 KiB. brush_core::interp::setup_open_file_with_contents wrote the entire body into an anonymous pipe synchronously before handing the reader to the next command; once the body exceeded the OS pipe buffer the writer blocked forever and the bash tool timed out at the hard 305 s ceiling without ever launching the consumer. The Linux fast path still uses F_SETPIPE_SZ to grow the pipe in-place; every other OS-threaded platform (and Linux bodies above pipe-max-size) now decouples the write onto a fire-and-forget thread that terminates naturally on drain or BrokenPipe; no-thread targets keep the upstream synchronous path so heredocs do not fail at thread spawn.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed @ file mention autocomplete stalling for seconds when the query references something outside the project root (e.g. @../, @~/, @/abs/). CombinedAutocompleteProvider now short-circuits to plain immediate-directory prefix listing in those cases instead of dispatching a recursive fuzzyFind walk over a sibling directory full of unrelated projects. Inside-cwd queries keep the existing fuzzy-then-prefix behavior. (#1395)
+    - Gated the Hangul Compatibility Jamo width correction (U+3131..U+318E → 1 cell, originally landed in 15.0.1 for the IME / hardware-cursor displacement bug) behind process.platform === "darwin" in the TS path and cfg!(target_os = "macos") in the pi-natives Rust path. macOS terminals (Ghostty / Terminal.app / iTerm2) render jamo as 1 cell despite UAX#11 classifying them as Wide, but WezTerm and most Linux terminals honor UAX#11 and render them as 2 cells. The unconditional correction therefore desynced the TUI's column bookkeeping from the terminal's actual rendering off-darwin, producing corrupted layout and broken Korean input on Linux. On non-darwin the helpers now defer entirely to Bun.stringWidth / UnicodeWidthStr (also a small perf win on the multi-char-grapheme path). (#1410)
+    What's Changed
+    - fix(providers): discover Google Vertex project models by @roboomp in https://github.com/can1357/oh-my-pi/pull/1413
+    - feat(coding-agent): support OAuth discovery for path-prefixed auth servers behind gateways by @faizhasim in https://github.com/can1357/oh-my-pi/pull/1407
+    - fix(pi-shell): unblock bash heredocs >4 KiB on Windows and >64 KiB on macOS by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1325
+    - fix(ai): strip multipleOf from Cloud Code Assist tool schemas by @hanbinnoh in https://github.com/can1357/oh-my-pi/pull/1405
+    - fix(coding-agent/lsp): accept $-prefixed identifiers; apply documentChanges in declared order by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1389
+    - feat(coding-agent): surface resolved subagent model badge in task widget by @justadudewithtime in https://github.com/can1357/oh-my-pi/pull/1398
+    - fix(coding-agent): browser/patch/mcp/find/DAP review fixes by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1388
+    - Allow disabling MCP client timeouts by @omsrisrieternalradhakrsna in https://github.com/can1357/oh-my-pi/pull/1415
+    - fix(tui): apply Hangul jamo width correction only on macOS by @hanbinnoh in https://github.com/can1357/oh-my-pi/pull/1410
+    - fix(tui): progressive enhancement keyboard negotiation for Zellij by @nikzasel in https://github.com/can1357/oh-my-pi/pull/1406
+    - fix: prevent busy-wait in agent loop and bash executor by @hezhiyang2000 in https://github.com/can1357/oh-my-pi/pull/1396
+    - follow-up to 5e444d9f5: firepass help/breadcrumb + AI/telemetry fixes by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1387
+    - Fix /review custom instructions submission by @superhedge22 in https://github.com/can1357/oh-my-pi/pull/1374
+    - feat(ai): add zhipu-coding-plan provider for domestic Zhipu BigModel API by @sparkzky in https://github.com/can1357/oh-my-pi/pull/1390
+    - feat(coding-agent): restore per-tool approval policies by @oldschoola in https://github.com/can1357/oh-my-pi/pull/1378
+    New Contributors
+    - @faizhasim made their first contribution in https://github.com/can1357/oh-my-pi/pull/1407
+    - @justadudewithtime made their first contribution in https://github.com/can1357/oh-my-pi/pull/1398
+    - @omsrisrieternalradhakrsna made their first contribution in https://github.com/can1357/oh-my-pi/pull/1415
+    - @nikzasel made their first contribution in https://github.com/can1357/oh-my-pi/pull/1406
+    - @hezhiyang2000 made their first contribution in https://github.com/can1357/oh-my-pi/pull/1396
+    - @superhedge22 made their first contribution in https://github.com/can1357/oh-my-pi/pull/1374
+    - @sparkzky made their first contribution in https://github.com/can1357/oh-my-pi/pull/1390
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.4.3...v15.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.5.0
+ReleaseTime: 2026-05-26T21:27:50.0000000Z

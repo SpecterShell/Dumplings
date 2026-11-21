@@ -1,0 +1,40 @@
+Version: 0.1.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.6/cc-sessions-viewer_0.1.6_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.6/cc-sessions-viewer_0.1.6_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Shiki syntax highlighting — fenced code blocks in chat messages now use Shiki for accurate, language-aware syntax highlighting. Supports 30+ languages (JS/TS/Python/Rust/Go/Java/C/C++/HTML/CSS/Vue/Svelte/SQL/Dart/Swift/Kotlin/Zig/etc.) with three themes (github-light, github-dark, dracula) that auto-switch with the app theme. Line numbers are rendered via CSS counters. Falls back to plain <pre> for unrecognized languages.
+    - Markdown link rendering — [label](url) links in chat text now render as clickable <a> tags. External URLs open in a new tab; local file paths render with a data-local-file-link attribute for future file-open integration.
+    - Markdown bullet list rendering — consecutive - item / * item lines in chat text now render as proper <ul> lists with styled markers, instead of raw text with dashes.
+    - Codex apply_patch visualization — Codex's apply_patch tool calls now render as a structured diff view with per-file sections, operation badges (Update / Add / Delete / Move), and syntax-highlighted + / - / context lines with add/delete counts — instead of raw patch text.
+    - Codex live session watcher — opening a Codex session now tails the JSONL file in real-time (debounced filesystem events + polling fallback), streaming new messages into the chat view as the agent works. Same mechanism already existed for Claude; now covers Codex too.
+    - Terminal tab "New session" button — a + button pinned to the right end of the terminal strip. Always visible regardless of how many tabs are open (tabs scroll independently). Triggers the same new-session flow as Cmd+N.
+    - Terminal tab right-click context menu — right-click a terminal tab to rename, close, close others, or close all project terminals. Uses native Tauri Menu on macOS/Windows with an HTML fallback. (PR #12 by @KodeChicken)
+    - Add Folder shortcut (Cmd+O) — quickly add a bookmark folder from the keyboard.
+    Changed
+    - Chat layout responsive width — .chat-inner max-width changed from fixed 860px to min(86%, 1800px), scaling better on wide screens.
+    - Sidebar drag-resize improvements — smoother resize handle UX. (PR #10 by @KodeChicken)
+    - Sidebar project path display — cleaner truncation of long paths. (PR #9 by @KodeChicken)
+    Fixed
+    - AppImage crash on Intel Arc + Wayland — stripped bundled libwayland-client.so from the AppImage, which conflicted with the system library on Intel Arc GPUs causing a segfault at launch. The AppImage now uses the host's Wayland library. (fix #11)
+    - Embedded terminal cursor flicker — disabled cursor blink, added quiet-cursor mode during busy output, and deduplicated resize events to reduce visual noise in the embedded xterm.js terminal.
+    - Terminal copy/paste shortcut conflict — Ctrl+C / Ctrl+V in the embedded terminal no longer conflicts with the app's keyboard shortcuts. (PR #9 by @KodeChicken)
+    - Sidebar not refreshing after adding bookmark — addBookmarkByPath now calls loadProjects() before the duplicate check, so the sidebar updates immediately.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v016
+ReleaseTime: 2026-06-08T08:54:20.0000000Z

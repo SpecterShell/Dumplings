@@ -1,0 +1,39 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.0/Sessions.Viewer_0.3.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.0/Sessions.Viewer_0.3.0_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.3.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Codex GPT-5.6 models — add GPT-5.6-Sol, GPT-5.6-Terra, and GPT-5.6-Luna to the Codex model menu. Default remains GPT-5.5; new models appear at the top of the list.
+    - Model-specific effort levels — Luna adds a max effort tier; Terra and Sol add max + ultra, matching the Codex CLI's per-model reasoning levels.
+    - Codex system commands — add /goal, /plan, /compact, /review, and /archive to the Codex chat slash menu. /goal, /plan, /compact are also available for Claude.
+    - /archive client action — typing /archive in Codex chat calls codex archive <id> to archive the session, closes the chat tab, and refreshes the session list.
+    - Archived session guard — clicking chat/resume on an archived Codex session shows a confirmation dialog with the codex unarchive <id> command, copies it to the clipboard, and opens a terminal tab for pasting.
+    - Font size slider — replace the 3-option segmented control (Small / Normal / Large) with a continuous 12–18 px slider and a live preview line. Zoom is deferred to settings modal close to prevent UI jitter during drag.
+    - Font family setting — new text input in Settings → General for customizing the app's CSS font-family. Includes a live preview line (same pattern as font size). Applied on settings modal close; persisted to localStorage. Empty value uses the default system font stack.
+    - Lazy terminal tab restore — terminal tabs are now lazily restored on startup, avoiding blocking the main thread when many saved tabs exist.
+    Bug Fixes
+    - Terminal theme switching — switching themes while a Codex embedded terminal was open left hardcoded inline background-color from the old theme on xterm DOM spans. Now the xterm-scrollable-element container background is updated manually, and a DOM walk strips inappropriate background/foreground colors based on luminance. New output from a light-started CLI in dark mode is normalized via normalizeDarkSgr (inverse of the existing light-mode ANSI normalizer).
+    - Tab restore race condition — the currentLayout deep watcher could fire persistViewTabs with an empty tab list before loadSavedViewTabs ran, overwriting saved tabs on reload. A _viewTabsRestoreComplete guard now blocks premature writes.
+    - Codex subtitle "---" — last_user_text was picking up <skill> / <context> / <environment_context> injection messages instead of the real user prompt, producing a --- subtitle from the YAML frontmatter. These injections are now skipped.
+    - More Models submenu clipping — the submenu could extend below the viewport when the trigger button was near the bottom of the screen. Added vertical flip detection (bottom: 0 when space is insufficient).
+    - Path detection false positives — parse_line_as_path treated any /-prefixed token (e.g. /fork, /model) as an absolute file path. Now requires a directory separator, file extension, or disk existence before promoting to a file block.
+    - Slash command prefix — Codex system commands (/model, /export, /rename, /clear) now always insert with / prefix; only skills use the $ prefix. Previously all items used $ for Codex.
+    - Slash command trailing text — /model, /export, /rename now intercept even when followed by trailing text, preventing accidental message sends.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v030
+ReleaseTime: 2026-07-13T03:09:24.0000000Z

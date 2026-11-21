@@ -1,0 +1,20 @@
+Version: 0.2.49
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.49/Strata.Manager_0.2.49_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Allow safe same-port switching during concurrency comparison (#232): fixed STARTUP_PORT_IN_USE errors when switching between managed configurations that share the same listening port. Preflight now validates replacement bind compatibility and held-process ownership before draining, unloading, and stopping the previous service, waiting for retired managed listeners to exit before starting the candidate with rollback protection, while still blocking foreign listeners.
+    - Support and autocomplete --draft arguments in full parameter configuration (#229): registered --draft, --draft-model, and --draft-conf as 1-operand engine flags, merged engine --help flags into argument-name autocomplete in the full engine argument list, and offered dflash2 operand suggestions on existing --draft rows.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 并发对比允许安全切换同端口受管配置（#232）：修复同端口配置切换时，先检查目标端口绑定而直接触发 STARTUP_PORT_IN_USE 的问题。现在会先确认替换绑定兼容并校验当前进程树归属，安全排空、卸载并停止旧服务后再等待原受管监听退出并启动新配置（失败时自动回滚恢复原模型），仍会严格拦截外部监听进程。
+    - 完整参数配置支持 --draft 等参数及自动补全（#229）：在完整引擎参数列表注册 --draft、--draft-model 和 --draft-conf（1 个参数值），合并引擎 --help 标志参与参数名称自动补全，并在已有 --draft 参数行中提供 dflash2 候选值补全。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.49
+ReleaseTime: 2026-11-16T15:12:07.0000000Z

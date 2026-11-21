@@ -1,0 +1,27 @@
+Version: 1.8.0
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/iwvw/wslcc/releases/download/v1.8.0/WSLCC-Setup-framework.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v1.8.0
+    发行版拆分为合并版与分离版两种模式。
+    新增
+    - 合并版与分离版两种发布形态：
+      - 合并版（自包含）：内置 .NET 运行时，开箱即用，体积较大。
+      - 分离版（框架依赖）：不含运行时，体积小，需系统已安装 .NET 10 桌面运行时与 Windows App Runtime 2.4。
+    - 分离版安装器在安装前检测上述运行时，缺失时提示并打开下载页。
+    改进
+    - 应用内自更新按当前安装模式下载对应安装包：合并版取 WSLCC-Setup.exe，分离版取 WSLCC-Setup-framework.exe。
+    - publish.ps1 新增 -Framework 开关，可单独构建分离版。
+    安装
+    - 合并版（自包含）：WSLCC-Setup.exe / WSLCC-win-x64.zip
+    - 分离版（框架依赖）：WSLCC-Setup-framework.exe / WSLCC-win-x64-framework.zip
+    完整改动
+    - https://github.com/iwvw/wslcc/compare/v1.7.2...v1.8.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iwvw/wslcc/releases/tag/v1.8.0
+ReleaseTime: 2026-10-01T18:23:27.0000000Z

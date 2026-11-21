@@ -1,0 +1,36 @@
+Version: 0.8.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.8.2/Agentero_0.8.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.8.2/Agentero_0.8.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release focuses on the usability of paper import and the sidebar workflow: configurable NOTES.md initialization for new papers, hiding Plaza sources and editing paper metadata directly from the file tree, new delete/reveal/add-to-chat actions on library rows, and a fix for the remote MinerU token probe misreporting valid tokens.
+    Features
+    - Configurable note initialization: Added a paperNoteMode setting (standard / title-only / blank / custom) controlling the NOTES.md shell written for newly imported papers across all import paths (wand, local PDF, Zotero migrate, Connector, remote, coolpapers). Custom mode renders .agentero/templates/NOTES.md with injected metadata variables, and every mode keeps the aliases frontmatter so wikilinks keep working. A settings command seeds a starter template without overwriting existing notes. (#386 by @qychen2001)
+    - Hide Plaza sources & edit metadata: Added a plazaHiddenSources setting so you can right-click a Plaza source to hide it from the sidebar and Plaza home, and right-click the Plaza root to batch toggle visibility. The catalog metadata editor is now wired into the file-tree paper row context menu, matching the library row action. (#388 by @qychen2001)
+    - Library row context menu: The library table row context menu reuses file-tree actions, letting you trash a paper, reveal it in the file manager, or attach it to the agent chat directly from the library. (commit by @qychen2001)
+    Fixes
+    - MinerU token probe: mineru.net now answers the empty-file-list probe with -10002 (instead of -500) and reports auth failures via msgCode on HTTP 401, which the old allowlist misreported as failed tokens. The probe now reads both code and msgCode, treating any non-auth business response as proof the token authenticated. (commit by @qychen2001)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布聚焦论文入库与侧栏工作流的可用性：可配置新论文 NOTES.md 初始化模板、支持在文件树中隐藏广场源并直接编辑论文元数据、论文库行新增删除/定位/加入对话操作，并修复了远端 MinerU 令牌探测的误判。
+    新功能
+    - 笔记初始化模式：新增 paperNoteMode 设置（标准 / 仅标题 / 空白 / 自定义），控制各入库路径（魔棒、本地 PDF、Zotero 迁移、Connector、远端、coolpapers）新建论文的 NOTES.md 模板；自定义模式渲染 .agentero/templates/NOTES.md 并注入元数据变量，所有模式均保留 aliases 双链。设置页提供一键生成起始模板命令，且永不覆写已有笔记。（#386 by @qychen2001）
+    - 隐藏广场源与编辑元数据：新增 plazaHiddenSources 设置，可右键单个广场源将其在侧栏与广场首页隐藏，右键广场根节点批量显隐；同时把论文库元数据编辑器接入文件树论文行右键菜单，与论文库行操作保持一致。（#388 by @qychen2001）
+    - 论文库行右键菜单：论文库表格行右键菜单复用文件树操作，支持直接将论文移入回收站、在文件管理器中定位，以及作为上下文附加到 Agent 对话。（commit by @qychen2001）
+    修复
+    - MinerU 令牌探测：mineru.net 现在以 -10002（而非 -500）应答空文件列表探测，并通过 msgCode 在 HTTP 401 下报告鉴权失败；旧校验白名单会误报有效令牌为失败。现同时读取 code 与 msgCode，只要是非鉴权业务响应即视为令牌有效。（commit by @qychen2001）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.8.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.8.2
+ReleaseTime: 2026-08-26T05:44:02.0000000Z

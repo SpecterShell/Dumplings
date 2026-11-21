@@ -1,0 +1,205 @@
+Version: 1.4.249
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.249/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Easier setup, more control over chats & tidier workspaces ✨
+    - 🎛️ Choose Chat or Terminal from the start: Onboarding now lets you pick Chat UI or Terminal, then choose an agent and install the skills for that setup.
+    - 💬 Keep control of conversations: Preserve chat inputs through uncertain delivery and Stop, choose whether sending moves the scroll position, and decide when idle chat agents stop—or keep them running.
+    - 🗂️ Keep projects tidy: Adding a project keeps discovered worktrees hidden, while create and clone handle symlinked parent folders consistently.
+    - 📝 Make reading and editing your own: Set the default Markdown view, optionally insert a final newline on save, and adjust chat width from pane headers.
+    - 📱 A clearer phone Home: The updated phone app separates Feed, Usage, Automations and Settings, shows more agent usage, and names recent conversations.
+    - 🧩 Small fixes across daily work: Keep terminal scroll position on input, open file links in their workspace, render Mermaid in PR comments, and close floating browser splits from their own toolbar.
+    Highlights
+    - Setup & skills: Pick Chat or Terminal during onboarding, use the updated agent picker and theme step, and install Chat skills for the selected provider on this computer. Empty newly added projects can open the chosen Chat agent when that route is supported.
+    - Chat behavior: Inputs and queued follow-ups are retained through uncertain delivery and Stop. New settings control scroll position when sending and when idle chat agents stop. Loaded chat images stay visible across scrolling and workspace switches, and Pi compaction holds sends until it finishes.
+    - Agent choices: Managed Claude accounts keep later /model and effort choices when the defaults have not changed. Claude fallback is shown without changing saved model choices; OpenCode effort follows the selected model, and Claude chat adds Ultracode effort.
+    - Projects & navigation: Adding a project keeps discovered worktrees hidden. Project creation and cloning resolve symlinked parents consistently; manual workspace order and type-to-search in the new-workspace agent picker receive fixes.
+    - Editor & browser: Choose the default Markdown view, enable Insert Final Newline on save, preserve chat HTML appearance in file previews, and close a floating browser split without closing the terminal beside it.
+    - Phone: The updated app adds Home tabs, usage for more agents and conversation names in Jump back in. It also improves terminal input, effort controls, HTML previews and Android theme/navigation behavior.
+    - Automation & notifications: Automations use the shared agent picker, accept Pi model/thinking arguments and refresh when projects change. Interrupted terminal automation runs are recorded as failed, acknowledged desktop alerts clear, and OpenCode completion notifications handle OSC 7501.
+    Compatibility & upgrade notes
+    - Existing setup choices: The new onboarding choices use existing surface and agent preferences. This release does not reset everyone's default agent or switch every existing workspace to Chat. A workspace with existing tabs keeps them; the new-project Chat path depends on a supported runtime and agent.
+    - Chat settings: Scroll-on-send and idle-agent stopping are configurable. Choose Never if you want idle chat agents to remain running; stopping an idle agent is separate from deleting the conversation.
+    - Managed Claude accounts: Unchanged defaults stop overwriting later account choices after settings synchronization. This does not recover choices overwritten by an older build, and changed default keys still apply.
+    - Paired servers: Improvements to paired-server file links use the new capability when available; older servers retain their existing path. There is no new minimum server version for the setup changes. GitHub issue limitations with older servers remain below.
+    - Phone changes: Native phone UI and Android fixes require an updated Orca Mobile app as well as a compatible desktop or server. The mobile changes are included in Orca Mobile 0.0.64; updating desktop alone does not install a native phone release.
+    - Orchestration panel: The experimental panel and its setting are temporarily disabled again. Orchestration messaging changes are separate from availability of that panel.
+    Known issues
+    Chat setup with no default agent: With Chat UI enabled and the default agent cleared in Settings, Setup Guide's Install skills button can remain disabled without an explanation. Choose a default agent, such as Claude, before installing.
+    Shell history after a cold restart: Some Mac shell panes can reopen without showing their previous output after a full app and terminal restart. This class of failure was also observed on v1.4.248; the cause remains unresolved. This release does not claim to fix it.
+    GitHub issues on older paired servers: Opening an issue through a repository or URL can leave title, label and assignee editing unavailable. Phone issue Close/Reopen can also refuse an older server or intermediary. Open on GitHub remains available.
+    Saved chat storage & performance: Live-history compaction remains paused, so storage can grow as conversations continue. This release does not claim to remove every source of chat stalls. Hook changes reduce subprocess work, but whole-app latency, CPU and heap improvements were not measured.
+    Long update delays: With a 14- or 30-day delay, a release can leave the update feed before it becomes eligible. None and Skip Delay Once remain available.
+    Plugin command replacements: A plugin replacing a built-in command can still finish after Orca has used the normal command instead, causing the action to happen twice.
+
+    Product experience
+    Native chat
+    Keep inputs available through interrupted delivery, adjust chat behavior, and make conversations easier to read.
+    - Add chat width settings to pane headers by @AmethystLiang in https://github.com/stablyai/orca/pull/37753
+    - Dismiss native chat link previews when opening links by @brennanb2025 in https://github.com/stablyai/orca/pull/37911
+    - Keep question answers visible until delivery completes by @brennanb2025 in https://github.com/stablyai/orca/pull/37883
+    - Fix OpenCode effort selection for the selected model by @brennanb2025 in https://github.com/stablyai/orca/pull/37950
+    - Make links in chat questions clickable by @brennanb2025 in https://github.com/stablyai/orca/pull/37992
+    - Add Ultracode to Claude chat effort by @brennanb2025 in https://github.com/stablyai/orca/pull/38010
+    - Preserve chat inputs through uncertain delivery and Stop by @brennanb2025 in https://github.com/stablyai/orca/pull/32267
+    - fix(native-chat): keep loaded chat images on screen across scroll and workspace switches by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38176
+    - fix(pi): show compaction in chat and hold sends until it ends by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38191
+    - feat(native-chat): add a setting to keep the scroll position when sending by @manuelmeurer in https://github.com/stablyai/orca/pull/38162
+    - feat(native-chat): let users pick when idle chat agents stop, or never by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38202
+    - Remove the New divider from Chat UI by @AmethystLiang in https://github.com/stablyai/orca/pull/38044
+    Agents & orchestration
+    Choose Chat or Terminal during setup, keep provider choices intact, and improve agent messages and status.
+    - fix(skills): rename computer use to orca-computer-use by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37659
+    - Show orchestration message content without the agent envelope by @brennanb2025 in https://github.com/stablyai/orca/pull/37891
+    - update chat ui intro by @AmethystLiang in https://github.com/stablyai/orca/pull/37924
+    - fix(agent-hooks): preserve Antigravity ownership across nested hooks by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37955
+    - fix(claude): reflect fallback without changing saved models by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37958
+    - Keep orchestration notices in one-line expandable cards by @brennanb2025 in https://github.com/stablyai/orca/pull/37968
+    - Increase Orchestration panel and tab contrast by @brennanb2025 in https://github.com/stablyai/orca/pull/37994
+    - Clarify account switching and session restart prompts by @AmethystLiang in https://github.com/stablyai/orca/pull/38056
+    - fix(orchestration): a worktree a paired client starts on a remote server is that client's by @Jinwoo-H in https://github.com/stablyai/orca/pull/38034
+    - Deliver orchestration mail during active turns by @brennanb2025 in https://github.com/stablyai/orca/pull/38041
+    - Remove redundant Show less buttons from agent cards by @brennanb2025 in https://github.com/stablyai/orca/pull/38074
+    - Shrink orchestration message status backgrounds by @brennanb2025 in https://github.com/stablyai/orca/pull/38079
+    - fix(ai-vault): show closed Antigravity chats in Agent Session History by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38203
+    - fix(claude-accounts): keep /model and effort choices on managed Claude accounts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38219
+    - perf(agent-hooks): start 7 processes per Claude hook event instead of 17 by @rikbrown in https://github.com/stablyai/orca/pull/38180
+    - fix(notifications): notify when an OpenCode turn finishes over OSC 7501 by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38222
+    - Add Chat UI choice to onboarding by @AmethystLiang in https://github.com/stablyai/orca/pull/36204
+    - feat(onboarding): theme step with color mode + optional theme carousel by @nwparker in https://github.com/stablyai/orca/pull/38021
+    - fix(claude): keep "Allow for this session" rules out of settings files by @King-Dylan in https://github.com/stablyai/orca/pull/37895
+    Phone
+    Improve Home navigation, usage visibility, chat controls and terminal input in the updated phone app.
+    - fix(mobile): reopen workspace options at full width by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37919
+    - fix(mobile): check the upstream status reply before Sync decides whether to push by @Jinwoo-H in https://github.com/stablyai/orca/pull/37912
+    - Show failure Details in phone native chat by @brennanb2025 in https://github.com/stablyai/orca/pull/37643
+    - Keep phone fork pull requests on their selected repository by @brennanb2025 in https://github.com/stablyai/orca/pull/36762
+    - fix(mobile): type desktop replies from shared contracts and keep phone list facts beside the desktop row by @Jinwoo-H in https://github.com/stablyai/orca/pull/37917
+    - fix(mobile): keep the Android nav bar in step with Orca's theme by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37989
+    - Render HTML files in mobile previews by @AmethystLiang in https://github.com/stablyai/orca/pull/38042
+    - feat(mobile): improve mobile terminal input by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37900
+    - fix(mobile): make the app icon full-bleed so iOS masks it cleanly by @tianlrz in https://github.com/stablyai/orca/pull/37074
+    - feat(mobile): show usage for every agent desktop tracks on the Accounts screen by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38187
+    - feat(mobile): title Jump back in rows with the conversation name by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38194
+    - fix(mobile): keep the effort control in one place for every model by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38200
+    - feat(mobile): split Home into Feed, Usage, Automations and Settings tabs by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38206
+    - fix(mobile): keep a new project's section collapsed on the phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38225
+    - fix(mobile): address android auto quit by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38226
+    - chore(mobile): bump to 0.0.64 and Android versionCode 28 by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38230
+    Source control, tasks & integrations
+    Keep GitHub task sources consistent and make checks and diagrams clearer.
+    - Keep GitHub Tasks source changes consistent by @brennanb2025 in https://github.com/stablyai/orca/pull/37387
+    - Distinguish cancelled PR checks from failures by @brennanb2025 in https://github.com/stablyai/orca/pull/37789
+    - fix(checks): render Mermaid diagrams in PR comments by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38215
+    Workspaces, sidebar & tabs
+    Keep project admission, workspace ordering and picker navigation consistent.
+    - fix(sidebar): stop the resize handle from covering the workspace list scrollbar by @OrcaWin in https://github.com/stablyai/orca/pull/37948
+    - fix: respect manual workspace order around primary checkouts by @davefano in https://github.com/stablyai/orca/pull/37557
+    - Keep folder workspace creation from flashing by @brennanb2025 in https://github.com/stablyai/orca/pull/38039
+    - Restore type-to-search on the new-workspace agent picker and skip the emoji button on Tab by @nwparker in https://github.com/stablyai/orca/pull/38073
+    - Keep the Split tip until the user splits or closes it by @brennanb2025 in https://github.com/stablyai/orca/pull/38097
+    - fix(projects): refuse removing a project while one of its workspaces is being created by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38196
+    - fix(sidebar): keep discovered worktrees hidden when adding a project by @brennanb2025 in https://github.com/stablyai/orca/pull/38208
+    Editor, files & browser
+    Add save and Markdown preferences, preserve HTML previews, and improve browser split behavior.
+    - feat(editor): add Insert Final Newline on save by @nwparker in https://github.com/stablyai/orca/pull/37786
+    - fix(browser): an agent-set viewport wider than the pane scrolls instead of being cut off by @Jinwoo-H in https://github.com/stablyai/orca/pull/38005
+    - fix(browser): a split tab create joins a browser pane already beside the caller by @Jinwoo-H in https://github.com/stablyai/orca/pull/38006
+    - Preserve chat HTML appearance in file previews by @brennanb2025 in https://github.com/stablyai/orca/pull/37890
+    - feat(editor): default Markdown view setting + right-click on the view switcher by @nwparker in https://github.com/stablyai/orca/pull/38106
+    - fix(browser): keep local browser tabs when a mutually paired desktop echoes them back by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38186
+    - fix(floating-terminal): close a browser split from its own toolbar by @younghwan91 in https://github.com/stablyai/orca/pull/38175
+    Updates, terminals & remote work
+    Preserve terminal position and file-link context, and clarify notifications and update cards.
+    - Keep update cards above the status bar by @AmethystLiang in https://github.com/stablyai/orca/pull/37884
+    - Keep terminal scroll position on input by @mvanhorn in https://github.com/stablyai/orca/pull/30889
+    - fix(terminal): rename link popover row "Open in this group" to "Open in new tab" by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37920
+    - fix(terminal): a local file link opens in the workspace it was clicked in by @nwparker in https://github.com/stablyai/orca/pull/37953
+    - fix(terminal): a paired-server file link opens in the workspace it was clicked in by @nwparker in https://github.com/stablyai/orca/pull/38072
+    - fix(notifications): clear acknowledged desktop alerts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/37974
+    - Use neutral styling for terminal resource limits by @AmethystLiang in https://github.com/stablyai/orca/pull/37999
+    Automations & plugins
+    Refresh automation lists, accept Pi arguments and report interrupted runs accurately.
+    - Record interrupted terminal automation runs as failed by @Jinwoo-H in https://github.com/stablyai/orca/pull/37962
+    - Refresh automation lists when projects change by @Jinwoo-H in https://github.com/stablyai/orca/pull/37964
+    - fix(automations): accept Pi model and thinking extra arguments by @Jinwoo-H in https://github.com/stablyai/orca/pull/38020
+    - Use the shared agent picker for Automations by @brennanb2025 in https://github.com/stablyai/orca/pull/37941
+    Reverted
+    Temporarily remove the experimental Orchestration panel.
+    - Temporarily disable the orchestration panel and remove its setting by @brennanb2025 in https://github.com/stablyai/orca/pull/38045
+    Tests, CI & maintenance
+    Update dependencies and translations, organize internal owners, and maintain targeted checks and tests.
+    - Fix AI token translations by @AmethystLiang in https://github.com/stablyai/orca/pull/37876
+    - test: remove 151 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37870
+    - test: remove 96 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37882
+    - test: remove 37 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37885
+    - test: remove 74 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37887
+    - test: remove 63 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37888
+    - refactor(browser): group routing and client-host owners by @nwparker in https://github.com/stablyai/orca/pull/37872
+    - improve app loading efficiency by @AmethystLiang in https://github.com/stablyai/orca/pull/37877
+    - refactor: group browser lifecycle and extension owners by @nwparker in https://github.com/stablyai/orca/pull/37910
+    - fix(deps): update Electron to 43.8.6 and resolve open security advisories by @nwparker in https://github.com/stablyai/orca/pull/37916
+    - test: remove 11 low-value declarations and batch historical checkout fetches by @OrcaWin in https://github.com/stablyai/orca/pull/37894
+    - test: remove 31 low-value declarations and three suites by @OrcaWin in https://github.com/stablyai/orca/pull/37947
+    - refactor: group agent launch contracts and startup owners by @nwparker in https://github.com/stablyai/orca/pull/37915
+    - Remove 35 low-value tests across build, mobile, and preload by @OrcaWin in https://github.com/stablyai/orca/pull/37956
+    - Remove 30 low-value tests and an unused replay fixture by @OrcaWin in https://github.com/stablyai/orca/pull/37963
+    - test: fix historical compatibility setup reliability by @brennanb2025 in https://github.com/stablyai/orca/pull/37905
+    - Remove 44 low-value tests, including ten whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/37969
+    - test: remove 28 low-value tests and five suites by @OrcaWin in https://github.com/stablyai/orca/pull/37972
+    - fix(i18n): translate recent desktop and mobile copy by @AmethystLiang in https://github.com/stablyai/orca/pull/37976
+    - refactor: organize agent status and lifecycle owners by @nwparker in https://github.com/stablyai/orca/pull/37961
+    - fix(i18n): correct Portuguese and Turkish copy by @AmethystLiang in https://github.com/stablyai/orca/pull/37988
+    - test: remove 145 low-value tests and nine suites by @OrcaWin in https://github.com/stablyai/orca/pull/37982
+    - test: remove 63 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37991
+    - fix(deps): backport minimatch, glob, and deepmerge security fixes by @nwparker in https://github.com/stablyai/orca/pull/37981
+    - test: remove 78 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/37997
+    - test: remove 72 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38002
+    - test: remove 228 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38004
+    - docs(agents): default to no new tests and tighten the anti-pattern list by @nwparker in https://github.com/stablyai/orca/pull/37993
+    - refactor: organize source-control contract owners by @nwparker in https://github.com/stablyai/orca/pull/37990
+    - test: remove 454 low-value tests and copied benchmarks by @OrcaWin in https://github.com/stablyai/orca/pull/38014
+    - refactor: organize terminal and runtime contract owners by @nwparker in https://github.com/stablyai/orca/pull/38011
+    - fix(ci): place PR LoC table after ELI5 so link unfurls stay readable by @nwparker in https://github.com/stablyai/orca/pull/38025
+    - refactor: organize workspace and remote runtime contract owners by @nwparker in https://github.com/stablyai/orca/pull/38018
+    - refactor: organize Codex transport, trust and history owners by @nwparker in https://github.com/stablyai/orca/pull/38023
+    - refactor: organize notebook, diff and check detail owners by @nwparker in https://github.com/stablyai/orca/pull/38033
+    - test: remove 2,816 low-value test declarations and 395 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38030
+    - refactor: organize markdown, editor model and save owners by @nwparker in https://github.com/stablyai/orca/pull/38037
+    - Delete the legacy orchestration takeover guide by @Jinwoo-H in https://github.com/stablyai/orca/pull/38013
+    - refactor: place terminal and workspace contracts with concrete owners by @nwparker in https://github.com/stablyai/orca/pull/38061
+    - refactor: group sidebar admission and workspace creation owners by @nwparker in https://github.com/stablyai/orca/pull/38068
+    - test: remove 997 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38058
+    - test: remove 1,460 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38082
+    - refactor(sidebar): organize workspace cards and actions by owner by @nwparker in https://github.com/stablyai/orca/pull/38081
+    - refactor(sidebar): organize workspace lists boards and catalog by owner by @nwparker in https://github.com/stablyai/orca/pull/38092
+    - refactor(plugins): group panel and frame ownership by @nwparker in https://github.com/stablyai/orca/pull/38095
+    - test: remove 1,015 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38087
+    - test: remove 2,191 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38113
+    - refactor(renderer): organize right sidebar modules by feature ownership by @nwparker in https://github.com/stablyai/orca/pull/38101
+    - test: remove 675 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38129
+    - test: remove 336 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38137
+    - test: remove 482 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38145
+    - test: remove 137 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38147
+    - test: remove 280 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38157
+    - test: remove 208 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38160
+    - test: remove 189 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38169
+    - test: remove 158 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38177
+    - test: remove 152 low-value test declarations by @OrcaWin in https://github.com/stablyai/orca/pull/38182
+    - Remove 249 low-value test cases and 10 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38198
+    - Remove 390 low-value test cases and 18 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38209
+    - Remove 230 low-value test cases and 19 whole suites by @OrcaWin in https://github.com/stablyai/orca/pull/38223
+    New Contributors
+    - @davefano made their first contribution in https://github.com/stablyai/orca/pull/37557
+    - @manuelmeurer made their first contribution in https://github.com/stablyai/orca/pull/38162
+    - @King-Dylan made their first contribution in https://github.com/stablyai/orca/pull/37895
+    - @rikbrown made their first contribution in https://github.com/stablyai/orca/pull/38180
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.248...v1.4.249
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.249
+ReleaseTime: 2026-11-04T23:53:56.0000000Z

@@ -1,0 +1,31 @@
+Version: 1.0.48
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/wm94i/Work-Review/releases/download/v1.0.48/Work_Review_1.0.48_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 企业微信（WeCom）群机器人集成：支持通过 Webhook 推送日报、工作提醒，配置入口在接入管理页
+    - 钉钉（DingTalk）群机器人集成：支持自定义关键词和签名密钥，接入管理页可独立启停
+    - Telegram Bot 绑定码机制：用户可在 Bot 中输入绑定码关联设备，替代直接 chat_id 配置
+    - MCP Server 路径一键复制：接入管理页新增数据库路径和配置路径的复制按钮
+    - 存储上限可配置：设置 > 存储页可直接调整存储上限（256 MB - 100 GB）
+    - Localhost API 新增截图 URL 字段：时间线和统计接口返回截图的完整访问路径
+    安全
+    - MCP Server 脱敏强化：tool 返回值递归清理 screenshot_path、ocr_text，window_title 截断至 40 字符
+    - MCP Server 启用开关：配置中 mcp_server_enabled 为 false 时 binary 直接退出，确保开关为真开关
+    - MCP Server 权限门控：所有 tool 调用统一经过 PolicyEnforcer 权限检查
+    优化
+    - 提取 bot_common 公共模块：Telegram、飞书、钉钉、企业微信 Bot 共享签名验证、密钥安全读写等基础能力
+    - 放宽 localhost API loopback 限制：允许非 loopback 地址访问（适配局域网场景）
+    - 清理 Rust 编译警告，lib/ 目录加入 gitignore
+    macOS 安装说明
+    首次打开可能提示「已损坏，无法打开」，请执行：
+    sudo xattr -rd com.apple.quarantine '/Applications/Work Review.app'
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/wm94i/Work-Review/releases/tag/v1.0.48
+ReleaseTime: 2026-05-26T05:16:52.0000000Z

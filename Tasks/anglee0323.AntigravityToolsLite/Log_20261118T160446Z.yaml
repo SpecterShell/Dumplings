@@ -1,0 +1,16 @@
+Version: 4.10.18
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.18/agy-switch-4.10.18-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复账号备注（自定义标签）保存的并发问题。备注写入此前绕过全局账号文件锁，且使用非原子的整文件重写：与后台自动配额刷新、账号切换或导入并发时，后完成的一方会覆盖先完成一方的写入（可能丢失刚刷新的配额或刚保存的备注）；进程在写入中途崩溃还可能损坏账号文件。现在备注写入与配额、切换、导入共用同一把文件锁，并走统一的原子保存路径。
+    - 批量刷新选中账号的配额后，账号列表改为整批完成时同步一次。此前每个账号刷新完成都会重新加载一次全量账号列表，选中较多账号时造成无谓的重复读取。
+    - 清理 OAuth 登录对话框中四处遗留的日语回退文案。正常情况下不显示（中英文键均完整），仅当语言包加载失败时才会出现；现已移除。
+    - 删除两个因文件复制误提交的重复文件：一个从未参与编译的 Rust 源文件，和一个从未被 CI 或文档引用、且测试对象并不存在的脚本。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.18
+ReleaseTime: 2026-11-18T15:10:57.0000000Z

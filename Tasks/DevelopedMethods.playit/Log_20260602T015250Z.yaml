@@ -1,0 +1,26 @@
+Version: 1.0.6
+Installer:
+- InstallerType: wix
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.0.6/playit-windows-x86-signed.msi
+- InstallerType: wix
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.0.6/playit-windows-x86_64-signed.msi
+- InstallerType: portable
+  Architecture: x86
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.0.6/playit-windows-x86-signed.exe
+- InstallerType: portable
+  Architecture: x64
+  InstallerUrl: https://github.com/playit-cloud/playit-agent/releases/download/v1.0.6/playit-windows-x86_64-signed.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Ignore UDP Connection Reset errors and protect against excess UDP error logging
+    Notes
+    - on ConnectionReset we would tear down the UDP connection and let it be cleaned up
+    - can happen when the origin is no longer online or firewall is blocking
+    - better to treat as dropped packet so when origin is back we can immediately return to processing data
+- Key: ReleaseNotesUrl
+  Value: https://github.com/playit-cloud/playit-agent/releases/tag/v1.0.6
+ReleaseTime: 2026-06-01T23:50:45.0000000Z

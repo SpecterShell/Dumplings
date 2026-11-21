@@ -1,0 +1,26 @@
+Version: 0.16.3.20261016.0811
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/yicheng47/runner/releases/download/v0.16.3/Runner-Setup-0.16.3.20261016.0811-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.3 is a bug-fix release for macOS and Windows on top of 0.16.2.
+    Bug fixes
+    - Runner reopens after a Windows update. After Install and restart, the updated Runner closed again before showing a window, so the update looked as if it had not restarted the app. Runner now waits for the previous background service to exit before replacing it, and moves aside a runner command that is still running. The same fix applies when the installer's Launch Runner opens a new version while the old background service is still running. (#908, #913, #922)
+    - Runner says why it cannot start. If Runner cannot start its background service, it records the reason in runner.log and, on Windows, shows it in a Runner could not start dialog instead of closing without a message. (#908, #922)
+    - The agent update dot clears after you update an agent outside Runner. Opening Usage or Settings → Agents now checks the installed agent CLI versions again, so the dot on the Usage popover's Agent settings gear goes away once every enabled agent is up to date. Its tooltip now reads Agent CLI update available, to set it apart from Runner's own updates. (#914, #919)
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Runner 0.16.3 是 macOS 和 Windows 上基于 0.16.2 的修复版本。
+    问题修复
+    - Windows 更新后 Runner 会重新打开。 此前选择 Install and restart 后，更新后的 Runner 会在显示窗口之前再次关闭，看起来就像更新后应用没有重启。现在 Runner 会等待旧的后台服务退出后再替换它，并将仍在运行的 runner 命令移到一旁。当旧的后台服务仍在运行时，通过安装程序的 Launch Runner 打开新版本也适用同一修复。 (#908, #913, #922)
+    - Runner 无法启动时会说明原因。 如果 Runner 无法启动其后台服务，会将原因记录到 runner.log；在 Windows 上还会通过 Runner could not start 对话框显示原因，而不是不留任何提示地关闭。 (#908, #922)
+    - 在 Runner 之外更新智能体后，更新提示点会消失。 现在打开 Usage 或 Settings → Agents 时会重新检查已安装的智能体 CLI 版本，因此当所有已启用的智能体都已是最新版本时，Usage 弹窗中 Agent settings 齿轮上的提示点会消失。其提示文字改为 Agent CLI update available，以区别于 Runner 自身的更新。 (#914, #919)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yicheng47/runner/releases/tag/v0.16.3
+ReleaseTime: 2026-10-16T08:48:53.0000000Z

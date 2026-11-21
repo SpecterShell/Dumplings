@@ -1,0 +1,20 @@
+Version: 0.107.36
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.36/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.36/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    改进
+    - kn：执行中输入的消息在当前工具调用结束后插入本轮（#212, #213）。以前要等整轮结束，才作为新的一轮发送。
+      - 消息先进入队列，发出前仍可编辑、移动、删除。
+      - 当前这批工具调用一结束，就插入本轮，在对话里显示为 (steered)，模型在工具结果之后马上就能读到。
+      - 斜杠命令仍等本轮结束；模型直接回答结束、没有再调用工具时，队列照旧作为下一轮发送。
+      - 这一轮在读取消息前结束（例如被中断）时，消息退回队列，不会丢。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.36
+ReleaseTime: 2026-11-17T12:08:25.0000000Z

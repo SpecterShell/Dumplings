@@ -1,0 +1,27 @@
+Version: 1.16.13
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.16.13/vproxy-1.16.13-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.16.13 发布说明 / Release Notes
+    🎉 VProxy v1.16.13 正式发布！本版本重点打磨订阅源页与流量统计页的交互细节（操作列、状态列、命中修复），配合 VP-Core 1.7.8 内核三修复（per-连接流量计数 / UDP 记账 / 中断丢账），并落地提交门禁与 release 体积优化：
+    📊 流量统计页清爽化
+    - 节点 / 域名 / 软件三个流量排行移除行内「运行中」「SS/VMESS」状态胶囊（与订阅源页同质重复）；
+    - 数据源由 VP-Core 1.7.8 内核修复兜底：per-连接计数实时可见 + UDP（QUIC/HTTP3）流量首次进统计 + 中断连接不丢账。
+    🛡️ 内核更新体验
+    - 内核运行中允许更新：更新内核不再要求先停代理——下载落盘后自动重启代理生效（Windows 运行中 exe 可改名特性 + 提权交接同一套 3 秒轮询）。
+    🔍 解析修正
+    - insecure 开关全协议如实解析（ss/vmess/vless/trojan/hysteria2/tuic 等别名写法归一）；
+    - vless / trojan 导出补标准 tls 段与 ws-opts（此前导出的链接在第三方客户端缺 TLS 配置）。
+    ⚙️ 工程化
+    - 提交门禁：AGENTS.md（实测纪律历史教训）+ pre-commit 钩子（fmt / clippy -D warnings / 无头编译门 / 全量测试，本地完整复现 CI）；
+    - 237 条 clippy 债务清零（-D warnings 从此常绿）+ 全仓 fmt 漂移修复；
+    - release 构建优化：lto = "fat" + codegen-units = 1（对齐 VP-Core 内核配置），安装体积 48.5 → 41.0 MB（−15.5%）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.16.13
+ReleaseTime: 2026-11-15T17:29:51.0000000Z

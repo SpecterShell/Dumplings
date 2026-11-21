@@ -1,0 +1,49 @@
+Version: 0.19.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.19.0/codeg_0.19.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.19.0/codeg_0.19.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - perf(streaming): Streaming replies do far less work per token. Only the turn being written is recomputed, so long, fast responses stay smooth.
+    - perf(streaming): The conversation view no longer re-renders on every streamed token. It updates only from the fields it displays.
+    - perf(sessions): A session streaming in the background no longer slows the one you're watching. State moved to fine-grained stores that update only the affected panels.
+    - perf(agents): The installed-agent list is fetched once and shared instead of rescanned per component on every window focus.
+    - perf(git): The Git panel opens instantly on huge change sets. Very large change lists cap at 500 rows with a one-click reveal.
+    - perf(diff): Enormous diffs open without locking the UI. Previews render the first 500 lines with a "show the rest" button.
+    - perf(history): Conversation and folder lists load faster as history grows. Per-file summaries are cached instead of re-parsed on every listing.
+    - perf(startup): Text-only sessions load lighter and faster. The highlighting, math, and diagram engines (~10 MB) load only when actually used.
+    - perf(acp): Lower overhead while events stream. Event sizes are estimated structurally instead of serialized under the session lock.
+    - feat(editor): Long lines can now wrap in the editors. Toggle word wrap (off by default) from the right-click menu, Alt+Z, or Fonts settings.
+    - feat(composer): Paste as plain text with Ctrl/Cmd+Shift+V, skipping the usual Markdown/rich-text conversion.
+    - feat(appearance): Hide the mode cards on the new-conversation screen with a new Appearance setting (on by default).
+    - fix(chat): The per-reply files card stays compact — created and changed files now share one bounded, scrollable area.
+    - chore(experts): Bundled expert skills refreshed to Superpowers 6.1.1.
+    - chore(acp): Bundled agents updated — CodeBuddy 2.117.0 and Kimi Code 0.22.3.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 性能(流式)：流式回复在每个 token 上的计算量大幅减少。 只重算当前正在生成的回合，长回复依然流畅。
+    - 性能(流式)：会话视图不再在每个流式 token 上重新渲染。 只根据其展示的字段更新。
+    - 性能(会话)：后台流式输出的会话不再拖慢你正在查看的会话。 状态改由细粒度存储管理，只更新受影响的面板。
+    - 性能(智能体)：已安装的智能体列表只获取一次并共享，不再由每个组件在窗口获得焦点时重复扫描。
+    - 性能(Git)：面对大批量改动，Git 面板也能瞬间打开。 超大改动列表最多先渲染 500 行，其余一键展开。
+    - 性能(Diff)：超大 Diff 打开时不再卡死界面。 预览先渲染前 500 行并提供「显示其余内容」。
+    - 性能(历史)：历史越多，会话和文件夹列表加载越快。 每个文件的摘要现在会缓存，不再每次列举都重新解析。
+    - 性能(启动)：纯文本会话加载更轻更快。 高亮、公式和图表引擎（约 10 MB）只在实际用到时才加载。
+    - 性能(ACP)：流式过程中的开销更低。 事件大小以结构化方式估算，不再在会话锁内序列化。
+    - 功能(编辑器)：编辑器现在支持长行自动换行。 可通过右键菜单、Alt+Z 或字体设置切换（默认关闭）。
+    - 功能(输入框)：用 Ctrl/Cmd+Shift+V 粘贴为纯文本，跳过通常的 Markdown/富文本转换。
+    - 功能(外观)：可隐藏新会话页面上的模式选择卡片，新增外观设置（默认开启）。
+    - 修复(聊天)：每条回复的产物卡片保持紧凑——新建和修改的文件共用一个有界、可滚动的区域。
+    - 更新(专家技能)：内置专家技能已更新至 Superpowers 6.1.1。
+    - 更新(ACP)：内置智能体升级——CodeBuddy 2.117.0、Kimi Code 0.22.3。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.19.0
+ReleaseTime: 2026-07-05T17:09:21.0000000Z

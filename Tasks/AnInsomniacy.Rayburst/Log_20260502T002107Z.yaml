@@ -1,0 +1,32 @@
+Version: 3.8.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.6/MotrixNext_3.8.6_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    Motrix Next 3.8.6 is a reliability-focused release for browser integration, deep links, filename handling, and download safety. It improves how downloads are received from extensions and external protocols, resolves more real-world server filename formats, and hardens the path from user input to aria2.
+    ✨ New Features
+    - Deep link service — Added a native deep-link service for safer startup handling, queued external inputs, and browser-extension handoff.
+    - Improved filename resolution — Added support for referer/cookie-aware filename probing, RFC 2047 encoded filenames, non-UTF-8 Content-Disposition headers, and extensionless media URLs.
+    - Filesystem-safe aria2 output names — Added sanitization for aria2 out filenames to reduce invalid filename and path-safety issues.
+    🛠 Improvements
+    - Adopted mature parsing utilities for filename and torrent metadata handling.
+    - Enhanced filename fallback logic for extensionless URLs with trustworthy basenames.
+    - Added validation for weak or unsafe URL basenames before using them as filenames.
+    - Sanitized HTTP headers before passing them to aria2.
+    - Updated RPC and extension API security handling.
+    - Corrected TypeScript path mappings for more reliable module resolution.
+    🐛 Bug Fixes
+    - Fixed Cyrillic and other encoded filenames resolving to question marks, unreadable text, or generic placeholders.
+    - Fixed downloads whose filename is only exposed on the actual GET request instead of HEAD.
+    - Fixed extensionless image URLs resolving to unresolved-filename.jpg when a usable URL basename is available.
+    - Fixed unsafe or malformed out values reaching aria2.
+    - Removed redundant debug logging from the HTTP API ping endpoint.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.6
+ReleaseTime: 2026-05-01T23:32:36.0000000Z

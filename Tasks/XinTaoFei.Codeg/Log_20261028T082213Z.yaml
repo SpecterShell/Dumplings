@@ -1,0 +1,101 @@
+Version: 0.41.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.41.1/codeg_0.41.1_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.41.1/codeg_0.41.1_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release brings folder-specific tabs and split layouts, HTML previews in replies, native MiniMax Code support and OpenCode 2 integration, alongside easier model selection, more flexible task delivery and improved usage reporting.
+    New
+    - Tabs can follow the selected folder: enable “Tabs follow folder” in the sidebar’s View options to switch conversations, files and split layouts together while preserving drafts, unsaved edits and running conversations. (#1039, @fengpanhe)
+    - HTML/CSS cards and charts can appear directly in replies: enable “Chat HTML rendering” in Settings → Appearance to preview static HTML alongside Markdown, including during streaming, and switch back to the source when needed. (#1041, @ana52070)
+    - MiniMax Code joins the built-in agents, connecting to your installed mcode with its existing login and provider settings, with support for MCP tools and multi-agent delegation. (#1028, @xy3xy3)
+    - Model fields can fetch and list your provider’s models directly, with search, refresh and retry controls for Claude Code, Gemini CLI, OpenCode and other supported agents.
+    - Codex model management is gathered into one section, where you can choose the built-in or provider list, select models and refresh automatically while retaining the last working list if a refresh fails.
+    - Tasks ready for review can open pull requests on GitHub, GitLab and Gitea/Forgejo, including tasks created without an issue, with the option to keep the task open and push later changes to the same request.
+    - ZCode supports unified Skills management, including browsing, editing, importing and installing skills through codeg’s settings. (#1021, @jackie-cqz)
+    Improved
+    - OpenCode moves to 2.2.0, with updated provider connections, permissions, MCP and plugin management that preserve comments in JSONC configuration files.
+    - OpenCode conversations show form questions, scripts and background sub-agent progress, and saved conversations include the newer database’s compaction records, command exit codes and media attachments.
+    - Claude Code moves to claude-agent-acp 0.98.0, with dedicated monitor steps showing the watched command or address, plus progress and trigger details for work started by background tasks or scheduled wakeups.
+    - Claude Code’s sandbox network permission cards name the destination host, making it easier to decide whether to allow a connection.
+    - Codex moves to codex-acp 2.3.0, reducing the wait to reopen a fork’s parent conversation to about a minute and improving saved tool output and error messages.
+    - Cline, CodeBuddy, Kimi Code, Grok, Cursor, Antigravity, ZCode and Command Code are updated, with compatibility adjustments for their current tools and configuration.
+    - Bundled Superpowers skills move to v7.0.1, adding session diagnostics for repeated work, plan drift and unusual costs, alongside improved planning, execution, review and standalone skill compatibility.
+    - Hermes conversations offer model selection grouped by provider and a mode selector, restoring your choices when you reopen the conversation.
+    - Creating a task from a message opens the editor over the current conversation, with the message and project filled in so you can save without leaving what you were reading.
+    - The activity timeline uses clearer grey backgrounds, text hierarchy and icon spacing, with a collapse action at the bottom of expanded steps that brings their header back into view.
+    - Command rows explain outcomes such as no matches, false conditions, differing files and timeouts, while command output stays folded by default.
+    - TRAE CLI usage comes from its native records and includes sub-agent consumption, giving conversations and usage reports more complete token totals. (#1019, @fengpanhe)
+    Fixed
+    - Antigravity’s native questions appear as interactive cards, with selected answers preserved after reopening and historical multi-select, written-in and skipped answers displayed correctly. (#1043, @ana52070)
+    - OpenCode 2 delegations display as sub-agent tasks with the correct conversation links, including after reopening and when several delegations run in parallel. (#1020, @Liang-HZ)
+    - Files with Chinese or other non-ASCII names, and renamed files, show correct change counts and diff previews in the Changes panel and task details. (#1022, @MaxFreedomPollard)
+    - Usage and Manage Conversations filters include custom agents and show their current names, making their conversations and consumption easier to find. (#1029, @Adam-Dalloul)
+    - Conversations using the official Claude adapter retain reported per-prompt usage and costs after reopening, including custom agents, whose linked native sessions are also skipped during new imports to avoid duplicate usage counts. (#1048, @Adam-Dalloul)
+    - Conversations retain their recorded duration even without token data, and reported turn usage is preserved when a Remote Control message ends the reply.
+    - A Codex reply that continues after automatic context compaction stays together in history, instead of splitting into separate replies with duplicate activity headers and footers.
+    - Claude advisor results remain visible after reopening, in both the main conversation and sub-agent conversations.
+    - A Kimi Code conversation that is busy in another client reports that it is in use, instead of switching the conversation to a new empty session.
+    - Dragging agents to reorder them in Settings keeps the list in place, while selecting another agent still scrolls it into view. (#1033, @xyalter)
+    - Agents that depend on installation scripts, including Hermes Agent, install correctly with npm 12.
+    - Fixed a Windows issue where ending an agent session could leave Git Bash with a missing temporary directory, causing later commands to fail.
+    - The macOS desktop app avoids the system’s low-swap suspension, which could leave every conversation unresponsive while the agents kept running.
+    - Multi-agent tool calls stop waiting when codeg remains unresponsive, preventing them from hanging indefinitely.
+    Note
+    - OpenCode now requires version 2.0 or later, so upgrade any 1.x installation before opening conversations and use plugins compatible with OpenCode 2.
+    - OpenCode 2 does not support SSE MCP servers, so use streamable HTTP when the server offers it, or leave OpenCode out of that server’s assignments.
+    - The macOS standalone server now retains Full Disk Access and other privacy permissions across future updates, but moving from an older build to this release requires granting those permissions once more.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版加入了按文件夹切换标签页和分屏布局、对话内 HTML 预览、MiniMax Code 原生支持和 OpenCode 2 适配，同时改进模型选择、任务交付和用量统计。
+    新增
+    - 标签页可以跟随当前文件夹切换——在侧栏「视图选项」中开启「标签页跟随文件夹」，即可一起切换各文件夹的会话、文件和分屏布局，并保留草稿、未保存的修改和正在运行的对话。（#1039，@fengpanhe）
+    - AI 回复中的 HTML/CSS 卡片和图表可以直接预览——在「设置 → 外观」开启「聊天 HTML 渲染」，即可在流式回复中查看与 Markdown 混排的静态 HTML，并随时切回源码。（#1041，@ana52070）
+    - 新增内置智能体 MiniMax Code，可连接已安装的 mcode，沿用已有登录和供应商配置，并支持 MCP 工具与多智能体委派。（#1028，@xy3xy3）
+    - 模型输入框可以直接获取并列出供应商提供的模型，支持搜索、刷新和失败重试，适用于 Claude Code、Gemini CLI、OpenCode 等智能体。
+    - Codex 的模型集中在同一处管理，可切换内置或供应商列表、勾选模型并自动刷新，刷新失败时保留上次可用的列表。
+    - 待验收的任务可以直接创建 GitHub、GitLab 和 Gitea/Forgejo 的拉取请求，无需先关联 Issue，也可以在交付后保留任务，继续处理并更新同一个 PR。
+    - ZCode 接入统一的技能管理，可以在 codeg 设置中查看、编辑、导入和安装技能。（#1021，@jackie-cqz）
+    改进
+    - OpenCode 升级到 2.2.0，供应商连接、权限、MCP 和插件管理均适配新版，并保留 JSONC 配置文件中的注释。
+    - OpenCode 会话支持展示表单提问、脚本执行和后台子智能体进度，历史会话也能读取新版数据库中的压缩记录、命令退出码和媒体附件。
+    - Claude Code 升级到 claude-agent-acp 0.98.0，监控任务会单独展示正在监听的命令或地址，后台任务和定时唤醒触发的工作也能查看进度与触发原因。
+    - Claude Code 的沙箱联网授权会明确显示目标主机，方便确认当前请求要连接哪里。
+    - Codex 升级到 codex-acp 2.3.0，分叉后重新打开父会话的等待时间缩短至约一分钟，历史工具输出和错误提示也更易读。
+    - 同步更新 Cline、CodeBuddy、Kimi Code、Grok、Cursor、Antigravity、ZCode 和 Command Code，并适配新版工具记录和配置行为。
+    - 内置 Superpowers 技能更新到 v7.0.1，新增会话诊断来分析重复工作、计划偏离和异常开销，同时改进计划编写、执行、审核及技能单独安装的兼容性。
+    - Hermes 会话支持按供应商分组选择模型和切换运行模式，重新打开会话后会恢复之前的选择。
+    - 从消息创建任务时，编辑窗口直接在当前对话上打开，自动带入消息内容和所属项目，保存任务无需离开正在阅读的会话。
+    - 执行过程采用更清晰的灰色背景、文字层次和图标间距，展开的步骤列表底部可一键收起，并自动回到对应标题。
+    - 命令结果会直接说明「无匹配」「条件不成立」「有差异」「超时」等含义，命令输出默认保持收起，按需展开查看。
+    - TRAE CLI 用量统计改为读取原生记录，并计入子智能体消耗，会话和用量报表中的 token 总量更加完整。（#1019，@fengpanhe）
+    修复
+    - Antigravity 的原生提问会显示为可直接回答的交互卡片，重新打开后仍能看到已选答案，历史中的多选、自填和跳过记录也能正确展示。（#1043，@ana52070）
+    - OpenCode 2 的委派会正确显示为子智能体任务并关联对应会话，重新打开或同时委派多个任务时也能正确查看。（#1020，@Liang-HZ）
+    - 中文等非 ASCII 文件名和重命名文件能正确显示增删行数与差异预览，覆盖「变更」面板和任务详情。（#1022，@MaxFreedomPollard）
+    - 用量统计和「管理会话」的筛选包含自定义智能体，并显示当前名称，查找对应会话和消耗更方便。（#1029，@Adam-Dalloul）
+    - 使用官方 Claude 适配器的会话会保留每轮返回的用量与费用，自定义智能体也适用，新导入时还会跳过已关联的原生会话，避免重复统计。（#1048，@Adam-Dalloul）
+    - 没有 token 数据的会话仍会保留已记录的执行耗时，远程控制消息结束当前回复时，也不会丢失本轮已报告的用量。
+    - Codex 在自动压缩上下文后继续生成的回复，回看时会保持完整，不会再拆成两条并重复显示执行过程和统计。
+    - Claude 顾问模型的回答会保留在历史中，重新打开主会话或子智能体会话后都能查看。
+    - Kimi Code 会话被其他客户端占用时会正确提示，不会再误建空会话并切换过去。
+    - 在设置中拖动智能体排序时，列表不会再突然跳回当前选中项，切换智能体时仍会自动滚动到对应位置。（#1033，@xyalter）
+    - 使用 npm 12 也能正确安装 Hermes Agent 等依赖安装脚本的智能体。
+    - 修复 Windows 上结束智能体会话后，Git Bash 临时目录失效的问题，避免后续命令因找不到临时目录而失败。
+    - 修复 macOS 因交换空间耗尽而挂起 codeg 的问题，避免智能体仍在运行、所有会话却一起失去响应。
+    - 多智能体工具调用在 codeg 长时间失去响应时会结束等待，避免一直卡住。
+    注意
+    - OpenCode 现在要求 2.0 及以上版本，请先升级已有的 1.x 安装再打开会话，并换用兼容 OpenCode 2 的插件。
+    - OpenCode 2 不支持 SSE 类型的 MCP 服务器，如果服务器提供 streamable HTTP，请改用该方式，否则不要为该服务器选择 OpenCode。
+    - macOS 独立服务器版在后续更新中可以保留「完全磁盘访问」等隐私权限，但从旧版首次升级到本版时，需要重新授予一次权限。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.41.1
+ReleaseTime: 2026-10-28T07:33:14.0000000Z

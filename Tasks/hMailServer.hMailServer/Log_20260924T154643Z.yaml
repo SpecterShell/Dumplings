@@ -1,0 +1,30 @@
+Version: 5.7.0-b3013
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/hmailserver/hmailserver/releases/download/hMailServer-5.7.0-b3013/hMailServer-5.7.0-B3013-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Added DMARC support: incoming messages can now be checked against the sender domain's DMARC policy.
+    - Passwords are now stored using Argon2id or PBKDF2, selectable by the administrator.
+    - Delivery status notifications (bounces) now include In-Reply-To and References headers, so mail clients thread them together with the original message.
+    - The IMAP OnClientLogon event is now fired for clients logging on with AUTHENTICATE PLAIN, not just LOGIN.
+    Bug fixes
+    - Backup and restore now compress and decompress using half of the available processor cores instead of all available.
+    - The bundled 7-Zip used for backup and restore was upgraded to 26.03.
+    - Fixed: several issues with concurrent access to the same IMAP mailbox from multiple clients.
+    - Fixed: an external POP3 fetch account could stay locked after a failed fetch, silently stopping mail collection for that account until the server was restarted.
+    - Fixed: a failed DNS lookup was treated as "no records found", which could cause a message to be scored as spam when the HELO host could not be looked up
+    - Fixed: the data directory synchronizer could have deleted live message files in public folders when run in delete mode.
+    - Fixed: a client could bypass the required HELO/EHLO greeting by sending RSET, or by sending MAIL FROM directly after a STARTTLS handshake
+    Installation
+    - New installations now run the hMailServer service as Network Service, with data and logs stored in C:\ProgramData\hMailServer
+    - Fixed: the installer overwrote the ValidLanguages setting, discarding any changes the administrator had made to it.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hmailserver/hmailserver/releases/tag/hMailServer-5.7.0-b3013
+ReleaseTime: 2026-09-13T08:34:52.0000000Z
+RealVersion: 5.7.0.3013

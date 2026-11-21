@@ -1,0 +1,75 @@
+Version: 0.9.45
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.45/Varin-0.9.45-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Youzini-afk/Varin/releases/download/v0.9.45/Varin-0.9.45-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.45 introduces shared conversation categories, brings parent and child tasks back into a collapsible tree, and gives Bots tools to find and organize conversations. It also improves projects backed by another Host and fixes several streaming-response and recovery issues.
+    Organize conversations around your work
+    - Use Recent and Categories in the Workbench and IDE conversation picker. Projects and custom groups can nest inside each other; groups have selectable icons and colors that adapt to the theme.
+    - Recent lists start with parent conversations. Child tasks stay underneath, collapsed by default, and remember your expand/collapse choices. Each task family follows its most recent activity; children load in separate pages when opened.
+    - Search keeps matching tasks with their ancestry. Moving a task to another category preserves its dispatch relationship in Recent. Visible tasks remain available when their parent is outside the current view.
+    - Move conversations through a searchable destination picker, undo moves, and inspect the results of batch actions. Fix older project conversations disappearing after an upgrade and invalid drag operations reporting an ancestor cycle.
+    Bot conversations and delegated work
+    - Bots can find, read and organize conversations on the current Host, including Bot conversations. Their conversation tools support groups, placement, new conversations, renaming, pinning, archiving, restoring and deletion.
+    - The Workbench and IDE show ordinary conversations and delegated tasks from every source. Direct chats with assistants stay in Varin mode. Delegated work carries the originating Bot's avatar so its source is easier to recognize.
+    - Keep category changes visible to both people and Bots. Creating or moving a conversation preserves its original execution and file-source identity.
+    - Simplify the Varin new-conversation button and remove the unused project selector beneath direct assistant chats.
+    A quieter, more adaptable sidebar
+    - Let toolbar buttons contract as the sidebar narrows, then wrap when they no longer fit.
+    - Move one continuous selection highlight between conversations, using the settings navigation's spring. Rapid selection changes keep the highlight moving from its current position.
+    - Replace the raised more-actions block with an inline ··· button aligned to the title. The timestamp fades out before the button appears, without shifting the title; direct hover and open menus use a subtle local background in both themes.
+    Projects across devices
+    - Bind projects to a configured resource Host and workspace. File browsing, editor saves, Git operations and terminals use the selected source rather than interpreting its paths on the frontend device.
+    - Preserve the chosen source through project management, conversation creation, terminal input and cleanup. Improve source handling for screen capture, Office reads, file receipts and external integrations.
+    - Improve Windows workspace teardown by draining the original cache and mount handles before detaching.
+    Streaming and execution fixes
+    - Fix empty opening text fragments reserving a position before thinking. Mixed Chat Completions chunks now present public reasoning before their answer text while retaining the original replay fields.
+    - Accept empty usage trailers and repeated matching finish metadata after a reply. New content or a changed finish reason still produces an explicit protocol error. Preserve protocol error codes instead of reducing them to a generic execution failure.
+    - Clarify HTTP 409 conversation-state conflict messages and record which interface reported the conflict.
+    - Queue interjections and Send now messages for the next model-input boundary, allowing the current generation and tools to finish their work. Repeated delivery requests keep the original result.
+    - Improve streamed web-search reply completion and failure handling, and improve recovery after cancellation while retaining the actual state of external execution.
+    Desktop release targets cover Windows x64/ARM64, Linux x64/ARM64 and macOS Apple Silicon. The signed Android APK connects to an existing Varin Host. Standard and toolbelt Docker images use the container release workflow; optional local embedding components remain separate downloads.
+    Source deployments: rebuild the application and Rust kernel together, then restart the Host. Supported conversation stores upgrade automatically on opening; keep a backup before upgrading.
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.45 带来共享的会话分类，让主任务与子任务重新以可折叠的树状结构呈现，并让 Bot 能够查找和整理会话。同时完善跨设备项目，修复流式回复顺序、结束处理与执行恢复中的多处问题。
+    按照工作内容整理会话
+    - 工作台和 IDE 的会话导航支持 最近 与 分类。项目和自定义分组可以相互嵌套；分组可选择图标与颜色，并适配浅色、深色主题。
+    - 最近列表以主会话为入口，子任务收在主会话下面，默认折叠，并记住你的展开选择。子任务有新活动时，所属任务树会随之更新排序；展开后再分页加载子任务。
+    - 搜索保留匹配任务与上级会话的关系。调整分类不会拆散最近列表中的派发关系；上级不在当前视图时，可见的任务仍有入口。
+    - 移动会话时可以搜索目标分类、撤销移动，并查看批量操作的结果。修复升级后旧项目会话不显示，以及无效拖放触发层级循环冲突的问题。
+    Bot 会话与派发任务
+    - Bot 可以查找、读取和整理当前 Host 上的会话，也包括 Bot 会话。会话工具支持创建分组、调整归类、新建会话，以及重命名、置顶、归档、恢复和删除。
+    - 工作台和 IDE 展示普通会话与各来源派发的任务，和助手的直接聊天保留在 Varin 模式。Bot 派发的任务带有来源 Bot 的小头像，方便辨认。
+    - 用户和 Bot 共享分类结果。创建、移动会话时，保留其原有的执行环境与文件来源。
+    - 将 Varin 侧栏的新建入口简化为“新建会话”，移除直接聊天输入框下面的项目选择提示。
+    更自然的侧栏交互
+    - 侧栏变窄时，工具栏按钮先适度收紧间距和宽度，放不下后自动换行。
+    - 会话之间共用一个连续滑动的选中背景，沿用设置导航的弹簧动画。快速切换时，从当前运动位置继续过渡。
+    - 更多操作改为与标题对齐的行内 ··· 按钮，与时间共用右侧位置：时间淡出后再显示按钮，标题保持稳定。浅色和深色下，悬停或打开菜单时使用轻微的局部底色。
+    跨设备项目
+    - 项目可以绑定已配置的资源 Host 与工作区。文件浏览、编辑器保存、Git 操作和终端都在所选来源上执行，前端设备不再自行解释远端路径。
+    - 项目管理、新建会话、终端输入与清理都保留所选来源；同时完善屏幕截图、Office 读取、文件操作结果和外部集成中的来源传递。
+    - 改进 Windows 工作区卸载：解除挂载前，先排空对应的缓存与挂载句柄。
+    流式回复与执行修复
+    - 修复开头的空文本片段提前占位，导致正文显示在思考之前的问题。同一个 Chat Completions 数据片段中，公开思考先于正文呈现，并保留原始回放字段。
+    - 回复结束后，允许接收空的用量尾包和一致的重复结束信息；结束后又出现新内容，或结束原因发生变化，仍会明确报告协议错误。保留具体错误码，避免一律显示为笼统的执行失败。
+    - 明确 HTTP 409 的会话状态冲突提示，并记录产生冲突的接口，便于定位。
+    - 插话与“立即发送”的消息排队等待下一次模型接收输入的时机，让当前生成和工具调用完成工作；重复投递请求沿用原有结果。
+    - 改进联网搜索流式回复的结束与失败处理，以及取消后的执行恢复，保留外部执行的真实状态。
+    桌面版发布目标覆盖 Windows x64/ARM64、Linux x64/ARM64 与 macOS Apple Silicon。签名 Android APK 用于连接已有的 Varin Host。标准版与 toolbelt Docker 镜像通过容器发布流程构建；可选的本地嵌入组件继续单独下载。
+    源码部署： 请一起重新构建应用与 Rust 内核，然后重启 Host。受支持的会话存储会在打开时自动升级，升级前建议保留备份。
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Youzini-afk/Varin/releases/tag/v0.9.45
+ReleaseTime: 2026-11-12T12:29:53.0000000Z

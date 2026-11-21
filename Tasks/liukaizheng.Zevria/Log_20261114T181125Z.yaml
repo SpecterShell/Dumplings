@@ -1,0 +1,59 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/liukaizheng/zevria/releases/download/v0.3.0/zevria-v0.3.0-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Zevria v0.3.0
+    Zevria 0.3.0 adds model-driven local image inspection, more accurate media-aware context accounting, and more reliable command-job completion. It also reduces repeated session/provider processing and adds Final outputs reading mode, turn navigation, and response prompt-cache telemetry to the source-built macOS desktop frontend.
+    Breaking Changes
+    - Transcript readers must support batch envelopes. Multi-record writes can now occupy one JSONL line as a version-1 zevria_batch envelope. Use the current batch-aware loader, or flatten supported envelopes while preserving record order and physical source-line attribution. Supported older individual records remain readable, but v0.2.1 cannot read newly written batch envelopes. Back up histories before upgrading; no downgrade converter is provided. Restore a pre-upgrade backup rather than opening newly written histories with an older version.
+    - Unix commands reuse a captured login environment by default. Zevria captures login-shell exports once per process, then executes commands in non-login shells. Restart Zevria to pick up later profile changes. To retain the previous per-command login-shell startup behavior, set shell_environment = "login" under [command] in config.toml. Capture failure warns and falls back to the previous behavior; Windows shell selection is unchanged.
+    - Responses completions explicitly request native tool batching. Requests now send parallel_tool_calls: true by default. For gateways requiring single-call responses, set providers.<name>.compatibility.parallel_tool_calls = false in models.jsonc; this sends explicit false rather than omitting the property. additional_params can override the setting. Native batching does not make ordinary local tool execution concurrent.
+    - Incomplete context estimates no longer pretend to be totals. ContextTokenSnapshot.projected_input_tokens is now optional, and context estimates separate known tokens from unresolved media. Rust integrations must handle incomplete estimates and the new token-count/source variants. ACP clients must clear or suspend their projected gauge when an AgentThoughtChunk carries _meta.zevria.contextTotalAvailable: false; no numeric UsageUpdate is emitted for that state.
+    - Session/provider Rust integrations require updates. ModelRequest construction requires input_identity; use None unless maintaining verified input lineage. Custom providers return completed usage in ModelResponse rather than publishing completed UsageUpdated events themselves. TurnCommand::StartFromPlan.handoff is boxed, Responses event parsing returns serde_json::Result, and model/profile configuration structs add image-accounting policy fields. Update exhaustive matches and struct literals accordingly.
+    - Transcript mutation and restoration APIs are narrower. Conversation::commit_anchored returns Result<()>; borrow the installed replay through replay(). Legacy direct-mutation helpers are restricted to tests/test-support; production integrations should use validated anchored commits and completed-work admission. Access TranscriptLoadOutcome through its methods and carry validated reports through append_loaded and from_loaded/builder_from_loaded instead of reconstructing them. Use restored active_skills instead of replaying historical skill pins a second time.
+    - Desktop navigation shortcuts changed. On macOS, ⌥⌘↓ now selects the next turn. Jump to latest is ⌥⇧⌘↓; update any memorized or external shortcut mappings.
+    Features
+    - Local image inspection with read_image. Ordinary root Build and Plan turns can inspect screenshots and diagrams as real image content using a file_path. PNG, JPEG, WebP, and GIF are content-sniffed and validated without automatic conversion or resizing. Each image is limited to 5 MiB encoded bytes, 16,384 pixels per side, and a 40-million decoded-pixel/work budget; one model response can admit at most 8 images / 20 MiB across its tool results. Children and ensemble workers do not expose this tool.
+    - Model-aware image accounting. Versioned local image policies distinguish text/envelope costs, measured or resolved media, and unmeasured content. Automatic policy selection requires an exact supported model on its official HTTPS endpoint. Per-model image_accounting settings can select explicit uncertainty or a verified preset without changing transmitted images.
+    - Responses connection controls. Open idle WebSockets receive keepalive pings every 30 seconds by default; set providers.<name>.network.websocket_keepalive_seconds = 0 to disable them. Optional network.prewarm = true can establish a connection while idle and is off by default; enabling it can resolve credentials and contact the provider before a completion.
+    - Desktop reading and navigation. The source-built macOS frontend adds Final outputs mode (⇧⌘R) with independent expandable step summaries, previous/next-turn navigation (⌥⌘↑/↓), jump to beginning (⌥⇧⌘↑), and jump to latest (⌥⇧⌘↓). Expanded status shows cached input tokens and their percentage for the visible role's latest completed response, including intermediate tool-loop responses—not a session-wide cache-hit rate.
+    Bug Fixes
+    - Commands no longer wait indefinitely when detached descendants keep stdout/stderr pipes open. Capture drains for a two-second grace after supervision ends, then completes with a detached-output note while preserving the leader's result. Status-only job listings no longer consume unread background output or lose pending completion delivery.
+    - Image-bearing requests no longer count recognized encoded image payloads as prose or apply a universal flat image allowance. Compatible completed-response usage remains a baseline across ordinary same-mode text/tool appends, avoiding redundant estimates for image history already covered by that usage.
+    - A confirmed pre-execution token-window rejection can spend the pending round's remaining single compaction/retry allowance without rerunning completed local tools. Ambiguous upstream work and upload-size failures do not authorize replay, and rejection evidence remains display-only.
+    - Completed responses are admitted before completed usage is published, so frontend backpressure cannot block response persistence behind usage delivery.
+    - Windows transcript handles now permit torn-tail truncation and failed-append rollback while preserving genuinely read-only inspection handles.
+    Improvements
+    - TUI /jobs inspection opens at the newest output, pauses following when scrolled away, and resumes with End or a return to the bottom. It adds mode, duration, and stream-byte labels and sanitizes ANSI/progress output for display without changing raw model or persisted output. Frontend inspection does not consume the model's unread cursor.
+    - Context displays distinguish the next prepared request from the latest response and identify estimate provenance. Unmeasured media shows a known subtotal and unresolved-item counts instead of a fabricated total or percentage gauge.
+    - Desktop command badges now distinguish foreground commands from actual background execution.
+    Performance
+    - Ordinary multi-record transcript commits use one append/sync batch instead of rewriting the durable prefix. Recognized torn-tail repair truncates only the damaged suffix; edits and degraded-persistence repair retain staged rewrites.
+    - Session construction/resume reuses validated transcript loads, replay state, and shared request plans. Responses uses incremental suffix preparation when lineage is valid; Anthropic routing, completion, and counting reuse validated history.
+    - Streaming coalesces display snapshots at a 30 ms cadence, parses Responses frames once, and appends preview text in place while retaining the latest ingested attempt on cancellation. These are targeted reductions in repeated work, not a claimed uniform end-to-end speedup.
+    Documentation
+    - Expanded architecture and lifecycle-performance guidance explains persistence, dispatch, streaming, resume, diagnostic boundaries, measurement methodology, and remaining live-provider acceptance work.
+    - Updated image-input/privacy, provider networking and compatibility, ACP context telemetry, desktop shortcuts, and TUI job-inspection guidance describes the new behavior and its limitations.
+    Build and Dependencies
+    - All 22 workspace packages are aligned to 0.3.0 without dependency-version upgrades. The Responses crate gains a preflight benchmark using the existing Criterion dependency.
+    - Native ensemble test helpers are located correctly in both ordinary and deeper Cargo artifact layouts, including custom profiles.
+    - Distribution remains three unsigned, unnotarized CLI archives for Windows x64 MSVC, Linux x64 GNU, and Apple Silicon macOS, plus SHA256SUMS. The desktop frontend remains a separate macOS source build; no desktop app bundle or package-manager publication is added. Production packages do not enable cache-diagnostics.
+    Known Issues
+    - read_image can follow symlinks and read any accessible regular file, including outside the workspace. Image bytes persist as plaintext base64 in history and enter subsequent provider requests; ACP's display placeholder does not prevent that transmission. Review sensitive paths and protect session directories.
+    - There is no per-model vision-capability gate. Text-only models and gateways that reject image-bearing tool outputs can fail, and retained image history can keep later requests failing until compaction or a new session removes it from active context. Animated WebP/APNG and unsupported raster/document formats require explicit conversion.
+    - With unresolved media costs and unavailable provider counting, bounded best-effort completion can exceed the configured local input-token budget. Unknown costs remain visible rather than being silently treated as zero.
+    - Stopping command capture does not guarantee termination of descendants that escaped process ownership; later writes can receive SIGPIPE. Intentionally detached processes should redirect their output to files.
+    - Native CI and mocked probes are not proof of real Windows/WSL interactive acceptance, clipboard behavior, live-provider cache effectiveness, or desktop visual/accessibility acceptance. Those checks require separate platform evidence before publication.
+    Release baseline: v0.2.1 (3f4d92acde97a89584349129c2e66544ddc17e62).
+    Full Changelog: https://github.com/liukaizheng/zevria/compare/v0.2.1...v0.3.0
+    Source commit: fdf3754e4587ecc34688cafcf4b504b6bd6ad668
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/liukaizheng/zevria/releases/tag/v0.3.0
+ReleaseTime: 2026-11-14T17:16:28.0000000Z

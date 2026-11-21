@@ -1,0 +1,30 @@
+Version: 0.86.1
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/earendil-works/pi/releases/download/v0.86.1/pi-windows-x64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/earendil-works/pi/releases/download/v0.86.1/pi-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New Features
+    - Meta Muse provider — Sign in with Meta using /login meta or use META_API_KEY to access Muse Spark models. See Meta (Muse subscription).
+    Added
+    - Added Meta (Muse subscription) login via /login meta with automatic Model API key refresh, plus META_API_KEY support (#9096 by @xl0).
+    Changed
+    - Enabled Node's persistent compile cache before loading the bundled CLI runtime, reducing repeat launch time.
+    Fixed
+    - Fixed /bug descriptions dropping line breaks from pasted diagnostics.
+    - Fixed /bug hints appearing for user cancellations and retryable provider failures such as service unavailability.
+    - Fixed clipboard copy failing in containers and WSL without WSLg by restoring the OSC 52 fallback when no display is available, and added a verified Windows clipboard backend for WSL (#9688).
+    - Fixed inherited z.ai Prompt too long errors not being recognized as context overflow (#9805).
+    - Fixed inherited Cerebras models advertising unsupported strict tool schemas, which caused HTTP 400 errors when strict and non-strict tools were mixed (#9804 by @EdenGottlieb).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/earendil-works/pi/releases/tag/v0.86.1
+ReleaseTime: 2026-09-20T11:19:20.0000000Z

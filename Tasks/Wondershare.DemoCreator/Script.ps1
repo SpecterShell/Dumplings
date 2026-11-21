@@ -1,13 +1,25 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['7743']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['7743']
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+$this.CurrentState.Installer[0].AppsAndFeaturesEntries = @(
+  [ordered]@{
+    DisplayName = "Wondershare DemoCreator(Build $($this.CurrentState.Version))"
+    ProductCode = 'Wondershare DemoCreator_is1'
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  [ordered]@{
+    DisplayName = "Wondershare DemoCreator Spark(Build $($this.CurrentState.Version))"
+    ProductCode = 'Wondershare DemoCreator Spark_is1'
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+)
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
   }
 }

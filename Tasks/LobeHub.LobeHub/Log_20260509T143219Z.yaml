@@ -1,0 +1,156 @@
+Version: 2.1.57
+Installer:
+- InstallerUrl: https://github.com/lobehub/lobehub/releases/download/v2.1.57/LobeHub-2.1.57-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release was automatically published from PR #14563.
+    Changes
+    See PR description: https://github.com/lobehub/lobehub/pull/14563
+    Commit Message
+    🚀 LobeHub Release (20260509)
+    Release Date: May 9, 2026
+    Since v2.1.56: 236 merged PRs · 19 contributors
+    Agent Task System reaches general availability, the Agent Signal pipeline runs nightly self-review with skill-aware policies, the heterogeneous-agent runtime crosses replica boundaries, inline documents become a first-class context source, and bot platforms expand across Messager, Line, and Telegram.
+
+    ✨ Highlights
+    - Agent Task System (GA) — End-to-end task execution platform: templates, tracking, comment tools, parent reassignment, scheduled cron, and dependency-ordered batch runs. (#14540, #14515, #14517, #14272, #14246, #14418, #14403, #14488)
+    - Agent Signal nightly self-review — Wired self-review loop with prompt + DB support, exponential-backoff retry on receipt listing, skill-aware policy, and improved skill-intent detection. (#14543, #14542, #14281, #14409, #14526, #14437)
+    - Inline documents in KB tool — BM25 search and docs_* read for inline document grounding; agent documents usable as VFS. (#14494, #14222)
+    - Inline agent cards in chat — lobeAgents markdown tag renders agent profile cards inline; clickable card after createAgent. (#14495, #14493)
+    - Heterogeneous agent runtime — Cloud hetero exec pipeline steps 3+4 land, persistence recovers across Vercel replicas, server-side ingest/finish handler, and lh hetero exec CLI. (#14486, #14539, #14444, #14431)
+    - Bot platforms expand — Messager, Line, DM pair policy, and messenger DB tables; Telegram API path restored. (#14442, #14207, #14211, #14496, #14519)
+    - Visual analysis tool — New visual understanding tool, with trigger tracking and flattened schema. (#14378, #14399, #14550)
+    - DeepSeek V4 Pro as OSS default — OSS deployments ship with DeepSeek V4 Pro by default; DeepSeek Anthropic runtime supported. (#14555, #14312)
+
+    🏗️ Core Agent & Architecture
+    Agent Task System
+    - Task System GA — End-to-end execution platform now available. (#14540)
+    - Templates, comments, reparenting — Template tracking, comment tools, and parent reassignment. (#14515, #14517, #14488)
+    - Cron + dependency-ordered runs — Scheduled status with cron editor and dependency-ordered subtask batches. (#14246, #14418, #14272)
+    - Inspector + chip UI + batch tasks — Task Inspector/Render registry, batch createTasks/runTasks, and chip-based agent-documents inspector. (#14403, #14404)
+    - Recommend templates regardless of brief count — Recommendations no longer suppressed when briefs are sparse. (#14508)
+    - Scheduling resilience — Manual run no longer eats next scheduled tick; recurring tasks survive brief resolution. (#14304, #14348)
+    - Brief synthesis — Auto-synthesize topic briefs; brief actions revamp; mute resolved-brief icon on home. (#14324, #14228, #14452)
+    - Task list & detail polish — Topic operation ID exposed; task drawer Gateway reconnect. (#14282)
+    Agent Signal pipeline
+    - Nightly self-review wired — Prompt + DB support for the self-review loop. (#14543)
+    - Self-review activities push to briefs — Activities during nightly self-reflection now create briefs. (#14437)
+    - Skill management policy — New policy for Skill management running inside Agent Signal. (#14281)
+    - Skill intent detection & routing — Improved detection plus direct intent handling when hintIsSkill. (#14409, #14526)
+    - Document tool outcome rendering — Decision view restores missing document tool outcomes. (#14534)
+    - Exponential backoff retry — Listing signal receipts retries with jittered backoff. (#14542)
+    - Easier-to-use signals — Structural simplification + recent-activities surface for receipts. (#14290, #14326, #14407)
+    Heterogeneous agent runtime
+    - Cloud hetero exec pipeline (steps 3 + 4) — Refactor lands the next two stages of the cloud hetero agent execution pipeline. (#14486)
+    - Persistence recovery on Vercel — Hetero state recovered across replica boundaries. (#14539)
+    - Server-side ingest/finish + persistence — aiAgent.heteroIngest / heteroFinish handlers. (#14444)
+    - lh hetero exec CLI — Standalone heterogeneous agent runs from CLI. (#14431)
+    - Gateway round-trip loading — execAgentTask keeps the input box in loading state through the full round-trip. (#14503)
+    - Provider SDK type routing — Provider routing now respects SDK type. (#14520)
+    - DeepSeek reasoning preserved — reasoning_content preserved in OpenAI-compatible runtime for DeepSeek models. (#14546)
+    Knowledge & inline docs
+    - KB tool BM25 + docs read — BM25 search and docs_* read integrated for inline documents. (#14494)
+    - Agent documents as VFS — FS-compatible output for agent documents. (#14222)
+    - lobeAgents markdown tag — Inline agent cards rendered from a markdown tag. (#14495)
+    - Clickable agent card after createAgent — Mentions and recommendations become clickable. (#14493)
+    - ExplorerTree — Generic tree component built on @pierre/trees for reusable explorer surfaces. (#14094)
+    - Local file mention snapshots — Mentions can now snapshot local files. (#14278)
+    Architecture
+    - Agent Hono routes — New agent routes added on Hono. (#14535)
+    - /api/agent migrated to Hono — Remaining /api/agent routes finish their migration. (#14478)
+    - Agent marketplace merged into web-onboarding — Reduces package fragmentation. (#14514)
+    - Producer pipeline extracted — Shared package for the producer pipeline. (#14425)
+    - agentDispatcher.selectRuntimeType — New runtime selection abstraction. (#14428)
+    - pnpm v11 migration — Workspace consolidated. (#14316)
+    - Browser-compatible frontmatter parser — Replaces gray-matter. (#14435)
+
+    📱 Platforms & Integrations
+    - Messager support — New messager package wired into the chat surface. (#14442)
+    - Messenger DB tables — IM bot integration gains its persistence layer. (#14496)
+    - Line bot — Initial Line support and downstream optimization. (#14207, #14448)
+    - DM pair policy — Group/DM pair-based delivery. (#14211)
+    - Telegram API restored — Missing Telegram API path reconnected. (#14519)
+    - xAI Responses tools stabilized — Plus unsupported parameter handling. (#14462, #14445)
+    - Volcengine websearch via ResponseAPI — Built-in websearch for Volcengine. (#14216)
+
+    🤖 Models & Providers
+    - DeepSeek V4 Pro default for OSS — OSS distribution defaults to DeepSeek V4 Pro. (#14555)
+    - DeepSeek Anthropic runtime — Anthropic-shape runtime support for DeepSeek. (#14312)
+    - GPT-5.5 / GPT-5.5 Pro — New OpenAI tier. (#14142)
+    - Grok 4.20 / Grok 4.3 / LobeHub-hosted Grok 4.3 — (#14253, #14382, #14446)
+    - Gemma 4 + provider settings normalization — (#13313)
+    - gpt-image-2 + step-image-edit-2 — (#14253, #14329)
+    - Model bank refresh + original-pricing display — Batch model updates and pricing surfaces. (#14070, #14391)
+    - Hunyuan migrated to TokenHub for Hy3 Preview — (#14108)
+    - Reject lobehub model ids no longer in the bank — (#14261)
+    - Hide runtime-only aliases — Runtime-only model aliases no longer leak into the model picker. (#14552)
+
+    🖥️ User Experience
+    Onboarding
+    - Shared prefix steps — Language and privacy extracted as shared prefix steps. (#14538)
+    - Identity intervention card simplified — Plus tool result renders cleanup. (#14505, #14506)
+    - Welcome polish + web-onboarding tool UI — (#14475)
+    - Templates fetched from market API — (#14286)
+    - Virtual model id for default onboarding model — (#14311)
+    - Skip / mode-switch footer behind feature flag — Footer guarded for desktop and web initialization. (#14560)
+    Home & navigation
+    - Home recents performance — Recents refresh periodically and inline task status; brief and task-template fetch overhead trimmed. (#14518, #14516)
+    - Home refactor + skill-connect recommendations — Restructured home with skill-connect recommendation system. (#14266, #14214)
+    - Tasks in agent sidebar — Tasks moved from welcome card into the sidebar list. (#14500)
+    - Sidebar collapse persists — Home sidebar collapse state stored. (#14473)
+    - Agent-specific topic grouping — Plus improved empty state and agent identity in topic search. (#14225)
+    - MentionMenu scroll fix — Mention menu no longer clips inside chat input. (#14533)
+    Conversation & chat
+    - Follow-up chips fill input — Clicking a follow-up chip now fills the input instead of sending immediately. (#14536)
+    - Quick-reply chips below assistant messages — (#14350)
+    - Inline single-tool assistant group + leading sentence promotion — (#14244)
+    - Assistant-group rendering — Per-segment content overrides flow into MessageContent. (#14504)
+    - Tool call timer fix — Timer no longer resets when tool calls collapse or expand. (#14513)
+    - Streaming re-render reduction — Reference stabilization and self-subscribing components. (#14470)
+    - Topic chat drawer feedback input — (#14392)
+    Skills, agents, devtools
+    - Managed skill folders — Agent view displays managed skill folders and aligns delete confirmations. (#14553)
+    - Review tab + bulk git diffs — New Review tab with bulk diffs; gating uses effective working directory. (#14334, #14512)
+    - Devtools gallery rebuild — Plus Review polish, queue-tray images. (#14423)
+    - Agent mock devtools — Playback & fixture viewer. (#14436)
+    Desktop & CLI
+    - App tray visibility setting — (#14463)
+    - Notification settings in desktop — (#14491)
+    - Multimodal input across CLI / shared spawn / desktop — (#14433)
+    - CLI bot + userId guide — (#14258)
+
+    🔧 Tooling
+    - Visual analysis tool — New visual understanding tool with flattened schema. (#14378, #14550)
+    - GitHub marketplace tool UI — (#14420)
+    - Drop "Local" prefix and ____builtin suffix from tool names — (#14364, #14289)
+    - Sanitize provider tool names — Avoids invalid characters from external providers. (#14510)
+    - Generation moderation context — Moderation context passed through the generation pipeline. (#14541)
+    - Visual analysis trigger tracking — (#14399)
+    - Claude thinking signature sanitization — History signatures sanitized when replaying Claude conversations. (#14499)
+    - Responses input media sanitization — Assistant media sanitized in Responses input. (#14497)
+
+    🔒 Security & Reliability
+    - Security: Removed the /webapi/proxy route and dead URL-manifest plugin code to shrink the SSRF surface. (#14549)
+    - Security: Sessions revoked after password reset. (#14424)
+    - Reliability: Added prompt_cache_key to OpenAI chat requests for stable cache hits. (#14349)
+    - Reliability: onFinish now fires even when the browser tab is backgrounded mid-SSE stream. (#14461)
+    - Reliability: Better-auth session refetch preserves user fields rather than overwriting them. (#14531)
+    - Reliability: User-memory queries sanitize backticks; user-memory errors now explicitly injected so failures stay visible. (#14524, #14525)
+    - Reliability: Auth captcha retries handled; input loading unsticks on auth_failed and recoverable auth_expired. (#14346, #14419)
+    - Reliability: Trace snapshot finalized on error path. (#14440)
+    - Reliability: Drop switchTopic race under rapid sidebar clicks. (#14115)
+    - Reliability: PDF chunking logic fixed to prevent vectorization failure. (#14327)
+    - Performance: Marketplace fork uses a batched API for parallel installs. (#14537)
+    - Performance: Review tab open latency cut ~9× on large dirty trees. (#14338)
+
+    👥 Contributors
+    Huge thanks to 18 contributors who shipped 236 merged PRs this cycle.
+    @hezhijie0327 · @sxjeru · @yueyinqiu · @octo-patch · @hardy-one · @Coooolfan · @CanYuanA · @BillionClaw · @arvinxx · @tjx666 · @Innei · @Neko · @AmAzing129 · @Rdmclin2 · @LiJian · @sudongyuer · @rivertwilight · @cy948
+    Plus @lobehubbot for i18n and translation maintenance.
+
+    Full Changelog: https://github.com/lobehub/lobe-chat/compare/v2.1.56...release/weekly-20260509
+- Key: ReleaseNotesUrl
+  Value: https://github.com/lobehub/lobehub/releases/tag/v2.1.57
+ReleaseTime: 2026-05-09T13:37:00.0000000Z

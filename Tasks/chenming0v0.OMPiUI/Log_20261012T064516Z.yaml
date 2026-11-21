@@ -1,0 +1,22 @@
+Version: 0.6.19
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.19/OMPiUI_0.6.19_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复 Windows npm 入口保存模型角色返回 500，完善后端与中转终端管理界面。
+    - feat: 重做后端管理 TUI，增加全屏布局、命令面板、网络配置表单、凭证遮蔽和脱敏日志；支持接入现有管理器，保留进程所有权边界。
+    - feat: 新增自建中转管理 TUI，支持服务启停、在线隧道与转发连接查看、路由编辑、密钥轮换、断开与删除；配置保存后显式重启生效。
+    - test: 增加终端布局、键盘确认、实际后端进程和中转密钥回归验证，以及隔离的 PTY 截图验收脚本。
+    - docs: README 改为项目展示和使用指南，加入四张真实 TUI 演示截图；实现细节与开发流程移入独立文档，并更新中转的构建与容器部署说明。
+    - fix: 对齐新版 OMP 的 Windows 短路径展开规则，修复官方会话列表发现及旧会话迁移目录匹配；浏览继续只读。
+    - fix: 模型角色配置遵循显式 OMPI_OMP_BIN，直接通过 Bun/Node 调用 Windows npm shim 指向的 CLI，修复完整 JSON 保存返回 500；配置读写与会话运行使用一致的 Agent 目录。
+    - test: 增加模型角色 JSON 原样传递回归，以及真实 OMP npm、原生二进制和编译后 Bun 后端的隔离保存、读回、修改与清空验收，并纳入必需 CI。
+    - chore: 根包、全部 workspace、Tauri 与锁文件统一为 0.6.19。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.19
+ReleaseTime: 2026-10-12T03:11:38.0000000Z

@@ -1,0 +1,38 @@
+Version: 0.2.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.8/Sessions.Viewer_0.2.8_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.2.8/Sessions.Viewer_0.2.8_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.2.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Opencode agent support — new first-class agent for opencode sessions via ~/.local/share/opencode/opencode.db (SQLite). Sessions are discovered from the database grouped by project (worktree), paginated, searchable, readable, renameable, resumable (opencode --session <id>), forkable, and soft-deletable through the shared trash. Sub-agent sessions (parent_id non-null) are excluded from the main session list but are counted in usage stats. Live tail watches the database's WAL file for real-time message streaming. Full support across all app surfaces: sidebar agent switcher, Settings visibility toggle / launch args (--auto), CLI environment check with upgrade/upgrade-all integration, tray quick stats, and token/cost statistics.
+    - Opencode pricing data — pricing table includes opencode-specific models (DeepSeek V4, Qwen3.7, GLM-5, Minimax M2/M3, Kimi K2, Grok Build, etc.) sourced from models.dev, with direct-provider pricing preferred over opencode gateway pricing. Free-tier model pricing resolved by stripping the -free suffix. Non-chat models (text-embedding, tts, whisper, dall-e, video, imagine) are now filtered from the pricing table.
+    - Markdown rendering enhancements — inline math ($...$) and display math ($$...$$) now render via KaTeX (lazy-loaded, new mathRender.ts module). Added support for opencode's ~~~inline code~~~ syntax, strikethrough (~~text~~), highlight (==text==), superscript (^text^), subscript (~text~), footnote references ([^n]), and italic emphasis (*text*).
+    - Mermaid diagram export as PNG — each mermaid diagram now has a download button; clicking it opens a save dialog and exports the SVG at 2x scale as a PNG via Tauri's native save dialog and writeBinaryFile.
+    - Split pane buttons in terminal strip — horizontal and vertical split buttons added to the terminal tab strip for quick access without needing the right-click menu.
+    - Agent switcher collapses to icons-only — when 3 or more agents are enabled, the sidebar agent switcher collapses to icon-only buttons with tooltips for each agent name, keeping the topbar compact.
+    - Bun package manager detection — CLI environment check now detects and labels installations managed by Bun, with bun add -g as the upgrade strategy.
+    - Pricing table noise filtering — expanded model name filtering to exclude video, imagine, text-embedding, tts, whisper, and dall-e entries. Added o3/o4 model family classification.
+    Bug Fixes
+    - Mermaid gantt chart width — gantt and other wide diagrams now use the SVG viewBox intrinsic width as min-width with horizontal scroll instead of being squeezed to the container width.
+    - Session ID validation — allowed underscores in session IDs (e.g. opencode's ses_UUID_UUID format) across resume, PTY spawn, GUI chat start, and fork operations.
+    - Windows updates — switched to NSIS installer for Windows updates.
+    Internal
+    - SessionSource trait extensions — added source_mtime, contains_text, watch_target, and validate_session_path methods to the trait, allowing non-file-based agents (like opencode's SQLite backend) to provide their own implementations instead of relying on filesystem assumptions.
+    - Binary file write — new writeBinaryFile Tauri command and frontend API for base64-encoded binary writes, used by mermaid PNG export.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v028
+ReleaseTime: 2026-07-06T14:21:39.0000000Z

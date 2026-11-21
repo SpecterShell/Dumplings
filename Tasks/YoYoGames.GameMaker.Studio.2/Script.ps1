@@ -1,31 +1,37 @@
-$Object = Invoke-RestMethod -Uri 'https://gms.yoyogames.com/update-win.rss'
+$Object1 = Invoke-RestMethod -Uri 'https://gms.yoyogames.com/update-win.rss'
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object[-1].title, 'Version ([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($Object1[-1].title, '([\d\.]+)').Groups[1].Value -replace '(?<=^|\.)0+(?=\d)'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object[-1].enclosure.url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1[-1].enclosure.url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object[-1].pubDate | Get-Date -AsUTC
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1[-1].pubDate | Get-Date -AsUTC
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object[-1].description | ConvertFrom-Html | Get-TextContent | Format-Text
-}
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1[-1].description | ConvertFrom-Html | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

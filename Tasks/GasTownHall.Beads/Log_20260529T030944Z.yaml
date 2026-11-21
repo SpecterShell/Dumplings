@@ -1,0 +1,289 @@
+Version: 1.0.5
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.5/beads_1.0.5_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/gastownhall/beads/releases/download/v1.0.5/beads_1.0.5_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - 12bb76b5ea16cfab44466f5df9edfbcc5b3de428 feat(config): add dolt.mode config key with ambiguous-config warning
+    - d476fbacacc9af9767c65e64556c8b6217c282b5 feat(config): validate dolt.mode accepts server or embedded
+    - 82020c42f1ed1db42d949e213ea2e194ee709fe1 feat(init): auto-configure contributor routing on fork detect (be-7daa14) (#4028)
+    - e49bc91857ad01543596be4cde0aab2a2f820407 feat(list): be-a5z add --skip-labels hydration toggle (AD-02)
+    - 7da4f7817d110ff1fa05456f0d018dc9fbb4ac96 feat(schema): schema-skew guard — hard fail on forward DB drift (be-wwbsv)
+    - 287d8a84c88625e1538c97ffc688ae0302c1271b feat(setup): Gemini/Claude hook JSON compliance, --hook-json flag, legacy migration
+    - cfcc957995428c711bfda8ccc27405a0b38d5682 feat(show): count-only JSON details with opt-in streamed payloads
+    - 05c7835e9ddf95ba6c4219225356e2789b244f23 feat(storage): honor .beads/config.yaml types.custom in server-side validation (#4024) (#4026)
+    - 25703f8635d331932ab2b34c071f7fd4a0b49483 feat: add Copilot CLI setup recipe (#3839)
+    Bug Fixes
+    - 78cacb92ac6a103c9386e66a604cd23fdc092194 Revert "fix(ci): create flake lock PRs from fork"
+    - 3c8c8be7f27e074b32ce6357dd4dae8f35a4a1e0 fix(audit): widen newID entropy to 16 bytes + bump test to 8000 IDs (be-5uxe)
+    - 3b841e1d803e9cffd0ff90ecce306fa27a3b6913 fix(audit): widen newID entropy to 8 bytes (be-yc9h)
+    - 26a7a96ca591522517a869192a6b2d3845094425 fix(ci): create flake lock PRs from fork
+    - 598a4d2da83b52bb8c21f68fa67b69f73b2cde32 fix(ci): use app token for flake lock PRs
+    - a180c63066e3c00bc0d5e6719579160e2df1d987 fix(close): support per-id reasons (#4194)
+    - 1f2ec3c298af63a47f0c90bb0e98067338534d4f fix(close): treat re-close of already-closed issue as idempotent success (GH#4025)
+    - 0afd3d5b9416d465c67e5039e39b69d86e7d3f34 fix(codex): ship hook release safely
+    - f8b9400165c542febb4e6eb404a59ee96a9d3f40 fix(create): commit labels during initial issue creation (#4149)
+    - cbef9fb93c0480859f8f1bc5910d57545be13166 fix(create): set status=deferred when --defer date is in the future (GH#4071)
+    - 480ffe4d42bf11e3931b4688bd45e3bb74d0abb4 fix(create): warn on unknown fields and honor --dry-run with --graph (#3762)
+    - 660250e75427ad4dc4cd7b611d1556cf33b641e2 fix(dep): keep relates-to out of dependency tree
+    - 4ad5b53c15134065527a1846048d92274670ee5d fix(doctor): stop emitting fresh-clone false positive in Dolt server mode (#3755)
+    - d7d3dad58021336986e9d50da22c8aa151b6f487 fix(dolt): adopt git origin on first push (#3940)
+    - 2a5a9802bcac545f8e5662c083a141cf78f5ba1c fix(dolt): bd dolt status probes SQL when local server is externally-managed
+    - 32586cbf61b7e203dec2bff28233d7e150f71bc4 fix(dolt): detect managed handoff port conflicts (#4217)
+    - 52cc8bed3db12f5b4a5dc15c86c44d812d7515fa fix(export): fail on auto-export git add errors
+    - 663bc010a1a5e04b048ebb2fb99cdba2909cbc7b fix(export): guard auto-export against richer JSONL overwrite
+    - 9e956dba4eb1f2e7de6db484d5141b3a66070ca2 fix(export): guard empty auto-export over populated JSONL
+    - 36f7e8a702c6d53d269faea7357e6b5012f6eb14 fix(hooks): address review timeout edge cases
+    - 85549f41156eb30e3969c67e7df28e0a3473c71b fix(hooks): bound prime and hook waits
+    - 5629e1867ad6c4f9840854943c9b4a5a5059800c fix(import): preserve JSONL comment IDs (#4103)
+    - be0aa7072298808efa4cbe4c9e2c3dba19a2f95b fix(init): apply config server mode before validation
+    - f6f1c008dde19b8efe8be1d5f0107840f388602b fix(init): hard-fail when dolt.host/dolt.port set without server mode
+    - 278b24ab4bb0ef84a5c95776f00b79e4fd978e7a fix(init): honor dolt local-only remote wiring (#4227)
+    - 3988db7e0da1d5488e5ff972349f736466bec1c8 fix(init): make JSONL auto-export opt-in (#4063)
+    - f4c3adf768c1a179f289069611a77c68ac90d32a fix(init): mark server-mode Dolt dirs compatible
+    - 1837fff3c3c99c603a3092500c939d3ee3c0d12c fix(init): narrow hard-fail to remote host, not port-only
+    - 6467c4fb47234dbe19db925372880cca57bcc567 fix(init): platform-accurate config path in warning and add init test coverage
+    - 8ba0b468dfe7c12655376d47c6f6bda54550176b fix(init): surface marker write failures
+    - 220e552a46cd473d8dd00c08395a6b070bc9a309 fix(init): tighten Dolt marker handling (#4083)
+    - 0c47b3c5ac774d7e73e410d220d5124b7f67216f fix(init): use git origin as default Dolt remote (#3909)
+    - 602593b47da04265b90764bdecc3f43d116752ca fix(install): use declared module path for go fallback (#4215)
+    - c17f3fd1622d4e0bc955bc34fff4af5ee043982b fix(list): honor skip-labels in JSON output
+    - 7f8baead3d8d826e114ba403d5cfccb27f4d7a15 fix(list): keep relates-to out of bd list tree mode (#3936)
+    - 8a8a2ecadcb1222bd0f90f0e60554667e0f70866 fix(mcp): route validate and detect-pollution to bd doctor (GH#4037)
+    - 4cba4ef988323e7d39dda589d9fae7f722e165d8 fix(migration): run schema migrations on a connection with no read timeout
+    - e4a0b2c3b1d289d842583534a4061473135fafd9 fix(mol): bd mol wisp materializes full child DAG by default (#3872) (#3911)
+    - ed2b5aea528b3902d756c597c046d82e3c9332d5 fix(ready): apply filters to wisp ready work (#4008)
+    - 6a5c9e3be718cf091d648ca4723aa9eaf8d29337 fix(schema): migrate TEXT → LONGTEXT for large-content columns (be-knye)
+    - bbd91cbb668184683accf1594e035722a75f5ed8 fix(schema): panic on duplicate migration version numbers
+    - 6a5fb839e3859ffe3288287cf1ee994d64a51ee0 fix(schema): preserve wisps DEFAULT '' and renumber LONGTEXT migration → 0046 (be-knye)
+    - 028690b3c2e5f30e2e3f6d6998dd91f05e665c93 fix(schema): qualify go install guidance with gms_pure_go
+    - 34936e2608f452996b10e17f5a7cafbaf386ad1d fix(schema): renumber duplicate release migrations
+    - 1f073c5141ef1631d9b8a84f4946f908671d6a7c fix(schema): reorder 0041 FK before generated column for Dolt 2.0.6 (#4120)
+    - 376a24ad17d82907a4e0c5d4059d77cfd12f9290 fix(schema): serialize Dolt schema migrations (#4005)
+    - 35b9bbb6a0c10182abc112052d1b2f72dc3e56f2 fix(schema): unify migration advisory lock path (#4031)
+    - 4a24bc3e20d88456a5f4bfca6f32ba08cfa589e6 fix(schema): update renumbered migration comment (#4235)
+    - 6143a19495d2eb0b52809c3295811eb19799c0c3 fix(schema): widen events/wisp_events value columns to LONGTEXT (be-kkp)
+    - 4db8d74f4de987eb6c55e24add84f1684ac32ccc fix(setup): clarify symlinked agents skip
+    - f52c78b2a18857f15dc154dab1704a682eb2d633 fix(setup): finish hook JSON migration
+    - 86545f64f3e84389ecc2eb93269e88bf4d0c6e43 fix(setup): harden symlink follow-up handling
+    - 09a38908771ab62fa7420df28b818e66b0e7dccc fix(storage): preserve mixed issue and wisp reads (#3991)
+    - 99653e0597c6e84ab79efd51a6d9000af1f1d5dc fix(trackers): route secret keys through config.yaml in all tracker getConfig methods
+    - 88aa88d95c60b9944de51bca5ea125c8496fc9c1 fix(update): clear external_ref to SQL NULL when --external-ref "" (#3912)
+    - c0bdf4972b328a3460852fa38be88a1791cae322 fix: guard JSONL auto import/export edge cases
+    - e569c7488be34cbbf8c448b9ecdf8420f16837fa fix: materialize local table schemas for branch tests (#4014)
+    - 7f7708e1b1002b80eb9f0913fe2fdf54ee94b646 fix: preserve Windows drive remotes for dolt sync
+    - 8ae4c3c67b3d035b4b9d9efd90dbfeee14460107 fix: repair PR4107 blocked-state corruption (#4139)
+    - 3068bc4280f3873f5d9764fd8b4788262845e7b0 fix: skip auto-backup file:// register on external Dolt server (#3523)
+    Others
+    - 24a1a93b0a8591e536914cf337d6ad66d635c337 /.github/workflows/ci.yml: run tests in CI
+    - 2985630444ee4e621b7019e867ea34ff0e858214 /cmd/bd/init.go: disable again
+    - bd02b5ea6dee5649beeefc61180b8a0178bea133 /cmd/bd/init.go: experimental
+    - bcad82554f3369914fd703f4b421b0a3b37c0418 /cmd/bd/init.go: remove comment
+    - a65d9d16832b2c04f904003ff0e56a2eb9e43482 /cmd/bd/init.go: some more fixes
+    - 23e11ff13274d775ead996a2f7cfbd0d5896872a /cmd/bd/store_factory_nocgo.go: fix build
+    - 9c8810723ed99e56212c920c406ab0e6ff5884de /cmd/bd: cleaning up
+    - cb04e03fdb4e392b0d46bc3a7778e9762365d000 /cmd/bd: get compiling again
+    - 55b302a3e048ada17c8a1d4b57c23ae1f9e1c539 /cmd/bd: some cleanup
+    - 9a5cd782eef48bc0825f0bec950f707ab716443b /cmd/bd: wip need tests
+    - 04a922c65d1c8dcd277821d03ae1c9817741b33a /internal/storage/db/proxy/server.go: lint
+    - bd1a0ddea489d2744104410ab4fb5388b13b67e9 /internal/storage/dbproxy/server: fix test
+    - 7ce1330a5bfbb28ec75167b2de963c6a12624f0e /internal/storage/dbproxy/server: wip, external dolt server
+    - 41a51075fb5dde631f9ee0d8c89a4df85fae3b9f /internal/storage/dolt: fix after rebase
+    - 64ed6c0962e324ac873eef066959e82191f1d9c9 /internal/storage/doltserver/store.go: fix panic
+    - 1075ec310358bd9fd2fe41697374e46d41428bb1 /internal/storage/doltserver/store.go: fixes
+    - e346490a2ddded061f8ce556f7ec0ed9dcb10ddc /internal/storage/domain/db: comments
+    - d56ca3893a3b91254607727807d727f00d44010e /internal/storage/domain/db: dependency
+    - a873d5e82a85799b393c384e7ef06c2fe1869f15 /internal/storage/domain/db: handle wisps too
+    - 5a1d5b4334281b5196bd74de08dcd127f28062d6 /internal/storage/domain/db: issue
+    - 93b63c7a65970d3623786c4ed2a9290af154bf6f /internal/storage/domain: add event
+    - 80194d106db8d2723c898b3dcff2c8afb56e9fd8 /internal/storage/domain: address feedback
+    - 54b83a389fbbff02d99726c9d9fa667c2cc7c91b /internal/storage/domain: consolidate
+    - 7320f268f056a37129a381e8de1e53878d9d361d /internal/storage/domain: more impls
+    - b01ddb6ffdbd63e00561bdd95575a8e6726df5fb /internal/storage/domain: wip
+    - 30158fc56e778653dde553aaf257cec0ca9556e2 /internal/storage/embeddeddolt/create_issue_test.go: fix test
+    - ba2873249b167644a8db123e8a4bd983eff8b34a /internal/storage/embeddeddolt/open.go: change max conns
+    - d9383ff95c0d33a5f279c46e1c3474383f7ac2e0 /internal/storage/embeddeddolt/version_control.go: fix one call site
+    - 91061487055d0a172972f97dad31c0bc19f602bd /internal/storage/issueops/dependencies.go: fix formatting
+    - 3b1d3b3df9f0bed22573d438f06d38e4116cd51c /internal/storage/issueops/dependencies.go: remove comment
+    - 44d3288107afea2c8731164becf5940086bfc59d /internal/storage/issueops/ready_work.go: fix ready work query
+    - cc0f80c8d4d3433dc1a0be6d48cc1f55ca090ac4 /internal/storage/issueops/ready_work_test.go: fix tests
+    - 1946389bf744f049e36855823b9a34b72d89d792 /internal/storage/issueops: wip, cleaning up
+    - 693bd328105ff46521a6989eb325476306000060 /internal/storage/schema/branch_migrate.go: fix branch migrate
+    - fdb4f25ed68f80705221c985f35cc29233602b4a /internal/storage/schema/helpers.go : remove table exists
+    - 689fdf264d569ed35d7f174c48316bb77d768480 /internal/storage/schema/migrations/0035: remove comments
+    - 5a98cb7c781f3d860b3ec86a8a54823f240669c1 /internal/storage/schema/migrations: fix index creation if not exists
+    - 00393ff5179766c4f8386a8690d2a088d3a32677 /internal/storage/schema/migrations: fix migration
+    - db2ca20b1c152bbb4b890bfe77bcf7ae89f8885b /internal/storage/schema/migrations: fix migrations
+    - b22ef92086d5f9614c8a5e488a92e2a275aafa5b /internal/storage/schema/migrations: migrate ignored tables to non local ones
+    - bfb6a6a5605a00f4097440f09cbc4b66a713a339 /internal/storage/schema/migrations: move non local after fk registration
+    - c190250c297701bdee825d39440b956d719f1877 /internal/storage/schema/migrations: remove add and commit calls in schema
+    - 79cf211bd89197b311c2ef991d237b25dc4b1eee /internal/storage/schema/migrations: restore foreign key statements
+    - 7d8f66dc5a23857b9e8459af9463848b87cf10cf /internal/storage/schema/migrations: wip, fixing migrations
+    - c90a2daed8a921cc5df38bcb70399e013084b7ce /internal/storage/schema/schema.go: advisory lock for concurrent inits
+    - 0d27f4161b96270678cc5b93a2ad94d2ec957aea /internal/storage/schema/schema.go: fix panic
+    - beb2969ae7fd5418b01f13ce59bbaca8d1a92b7a /internal/storage/schema/schema.go: panic on failure to unlock
+    - 4c0338ee5aef613db1bad6bed670ac19acd08bee /internal/storage/schema/schema.go: use query context
+    - e94ba12cadf1ba7737f5947d74b399b9f04dd8d6 /internal/storage/schema: add foreign keys to normal tables
+    - 8b43328c39a15752c8b0c3e5070340f07e8e5822 /internal/storage/schema: another fix
+    - ff342b2322d10678b41d54007701b693ab257765 /internal/storage/schema: fix ignored table schema
+    - f412c88bc6b50cee837f324cefe6602910c17554 /internal/storage/schema: fix schema migrations
+    - b0a7ae4d2a13c49bc274f9b2b992b23e36d700d7 /internal/storage/schema: more fixes
+    - 2f9eebf889c72b178b4c9142f5716b3e4e29620f /internal/storage/schema: remove views
+    - 48fe1d6a474a3e667b8058e6b36b7abf6eae4653 /internal/storage/uow/doltserver_provider.go: fix provider
+    - aa968e8c01ab6979f3e92592257748277c0fbfed /internal/storage/{dbproxy,uow}: external uow provider
+    - fee553f6128e04e1a6044f2bd50733277cf48f74 /internal/storage/{dolt,issueops,schema}: remove comments
+    - eee26a732907732ab2c5c2b61cde34f1e6ddd923 /internal/storage/{dolt,issueops}: more fixes
+    - b1e4652edfc34eb3229c32607b3af69836b691ee /internal/storage/{domain,uow}: dependency
+    - 242ecfd9fd833f7ba3007922c447820e6343d9c5 /internal/storage/{embeddeddolt,schema}: add wisp_child_counters
+    - 24b97a2a1526db258d0ba018c1b174815a2f78f5 /internal/storage/{embeddeddolt,schema}: fix test
+    - 2d8b5f21a5dd77d35e94fbbf37614f7c58d40bdc /internal/storage/{embeddeddolt,schema}: more cleanup
+    - e8fb231ac640a0a013bf497180ed9963941541bf /internal/storage/{uow,domain}: wip stubs
+    - 479445c9d603545e49f0c1ed070aca9745b7a89c /internal/storage: cleanup
+    - 2585b218b90f29fb40f1f7673a638af3973dae3d /internal/storage: get schema working, wip, deleting wisps from dependencies
+    - 49c6008e7bcfc18f27e41a868d590a0a08fec9e2 /internal/storage: keep it same branch
+    - e42503745ce092d5d581cce7df92a56e107f1a6b /internal/storage: more comment cleanup
+    - 173288d61d6a37c7b23d37a94ce187430a370c16 /internal/storage: remove backward compat stuff
+    - 3c563f7722afe80d367de1a7099494c24e628f87 /internal/storage: remove dual tx
+    - 34ad562689013cf6b550806d8b4a8856f21d53cd /internal/storage: remove some comments
+    - 8cba9737c44b483e476ef7081cbca346c2164344 /internal/storage: split tx
+    - d3145a3152f53de27291ac70c42624747186f9a7 /internal/storage: use branch migrate
+    - a729b41a7f2b5ac6abbb4c16f164f7d425c66fb5 /internal/storage: wip, fixing schema
+    - 247e719112ab11bf34e9005214decd8be46d7af6 /internal/storage: wip, removing backfill stuff
+    - e84de4c90461916e8d77e380bc3124fea40ad657 /internal/storage: wip, start on default branch
+    - b8609882745aa7defd456c73af47c01655361c02 /internal/{dolt,issueops,schema}: foreign key stuff
+    - 18a93ec5689f02f709dc1ab6b2f84139aef4f838 /internal: delete some comments and old store code
+    - 6c59d533b53f572f67ba33e111e8599f127b85dd /: comment out ci, disable proxied-server mode
+    - 364a1b7d2697353f3510baf350ef7bbfec7acbbb /: remove parrallelism for ps tests
+    - 40506eeaba0f6fa9310d104f9da0d1d738b06527 /: disable proxy server mode
+    - 316cfc697b53303904e2191adba8753ecd12f895 /{cmd,docs,internal,website}: remove pass
+    - a106722705d86bdd561944ce33074f0fcc8ab955 /{cmd,docs,internal,website}: wire up
+    - 3080839f11c438d714a216a8eee977c550e95bb5 /{cmd,docs,website}: gen docs
+    - e898babbe63cdd2cafeeb84b4d703e3ee21ab010 /{cmd,docs,website}: gen docs again
+    - 6bb7dbafef574f0e4d8bc4c9e80e509f03e85d82 /{cmd,internal}: add migrate schema command
+    - e9ece3a1272e7b9518908a50ba44d813fa553f3f /{cmd,internal}: cleanup
+    - 42ad1b7ba8b0e17e47ecf4f1ccd785400db12fcd /{cmd,internal}: cleanup
+    - 7a6b1647e158b2083a0bbae28fbf93a57f2eb32b /{cmd,internal}: create tests
+    - 1fecac9a288fc610e4f1ee7b5f8a59a1a36ec744 /{cmd,internal}: external server
+    - 5a7cc3e1a32b4beec3f5dbe7e466dba3875136ea /{cmd,internal}: fix proxied server path
+    - 4d3228517f0d2ca813c9552548712f64eb7e866f /{cmd,internal}: get debug mode working
+    - 4bf03b31e6d81ebd14a4bf6d2fd03336cdef29d7 /{cmd,internal}: initial proxy server backend pass
+    - ba36b678c3167782370709fb4d3a40ad2fccf0b8 /{cmd,internal}: more cleanup
+    - 56ce24f237ca4685905998e55201b0ca40ac52cf /{cmd,internal}: more fixes
+    - ff8a2e8cdcf8fd33679d91e102e048bd3a8bc008 /{cmd,internal}: read optimizations
+    - 98be00c92e4979e43e7156d051d9395a4eb93876 /{cmd,internal}: refactoring
+    - f0300068ce8d81be801a699716574cccaf541655 /{cmd,internal}: remove bad test
+    - d13c2ee56bebc8b6b6a51f4cac80138b229e96f7 /{cmd,internal}: remove comments
+    - 536e114102fa9e2bb841e219681c568e51b2f31f /{cmd,internal}: remove dead code
+    - d15c7572f4e99991c5ecbce4ad9c7f20ec1c5396 /{cmd,internal}: remove depends_on_id
+    - 78eb7f5d526d3e664ae37d6daee5ae1d911165f5 /{cmd,internal}: remove more code
+    - 04f4e06d42bb0d0b81cee97edf69428dcdb77f60 /{cmd,internal}: root piece
+    - 4ff5308f9a00d04179ab2287b3a811d15fb2613e /{cmd,internal}: server config
+    - b456ec58fcfde90c7941f98bb5c25e37a6debbe5 /{cmd,internal}: some cleanup
+    - 48b244a9a9cce43c39254ead03f4dea4f89edabe /{cmd,internal}: some cleanup
+    - c2cbfd3fbb9e7e2683e14a32d147a201bdea913a /{cmd,internal}: some fixes
+    - c2b998e41d810cd9aa342ef8cda3ed247ae079d0 /{cmd,internal}: some refactors
+    - f2954dd9f9053e6fd2862e5b7d0ff26ebfdc0637 /{cmd,internal}: support logpath
+    - 6caed1938ab07a53e6165efab9b23ce468f8b203 /{cmd,internal}: surface mismatches
+    - c7aa60dcb43c2d62b3706f8f176549a16befb07c /{cmd,internal}: tweaks before merge
+    - ac52b567d4a2c592c81788f85c1771d83c9693be /{cmd,internal}: wip create
+    - 4fcbd588255f24919008b3c3cdc1b4999d33fb4b /{cmd,internal}: wip, implementing init with proxied-server
+    - 84d8796ae515fcaafbdbc299f228db12a3a90930 /{cmd,internal}: wip, removing ignored table code
+    - b4a88e029e57b7e56e5b2f66998978683915bbd0 /{docs,.github,internal,scripts}: dolt 1.88.1
+    - e4f0f9b19605f47a84cdea8914e81196a7b1b8d6 /{docs,website}: gen docs
+    - 885eacb3dfcd94eed4512d3379471052dbc76fb7 /{docs,website}: gen docs
+    - e4b4d846c4970bfa2cd76eab873d9f968d1fd39b /{docs,website}: gen docs for new flags
+    - 4b5936df91a349784aa866bf8857ebacc56ac3ca /{docs,website}: generate docs
+    - 3d7173c3c1ffe3c1d2a093d7fb43e49498994b12 /{internal,cmd,.gitignore}: wip, proxy server fixes and uow impl
+    - 507b2a1fb54fd464c1ab52da473629269f29a20d Add configurable JSONL import path
+    - e69c53d893d36d29d47b1bdb5e91d8a037c30d38 Add proper hook integration
+    - fcd3cc029f236739a5b3671ba86a20281549b654 Consider entire PR thread, clarifying info are often in comments (#4105)
+    - ec116c46f5d12426793e16dae8784adbcb9977e1 Consolidate docs evidence review inventory
+    - b1c968e91fc269afc5f426ea1ed4cee03b5a381b Document import path portability
+    - 7044802d653cb35ff344d5fcd0f531e87991903c Document project scope boundaries (mybd-1fn) (#3842)
+    - 3a7a2e852a739f43e3c6c58ee36693dea8bac693 Fix ephemeral graph apply readiness and dependency cost (#3943)
+    - 3c34d6273d5e510797d78462dcff600da17c1cd0 Guard auto-export against JSONL-only records (#4090)
+    - 368eca7620d935cd135a17b68e924120602cd8d0 Make auto-export git add lock-aware (#4089)
+    - 99565c0d25a3432bc88108348795be31c704fd5e Merge remote-tracking branch 'upstream/main' into AI/import-path-config-upstream
+    - eea1cce5abd8648abe1a526dc78f193ed30003b2 Merge remote-tracking branch 'upstream/main' into AI/import-path-config-upstream
+    - 95930c4449222ec09657e98b51e21f7401fd3adb Regenerate CLI reference docs
+    - 87963b4ce9b6943a0761422441d3d84a15270270 Revert "Add external server CLI dir override (bd-fn9) (#3498)" (#3890)
+    - 0fdaa27ed08a7ed0ce374ee00fd6d2ffa4e0543d Revert "Revert "Revert external server CLI dir override" (#3891)"
+    - e7fb5793a423034b4fd2e82fc02140824c6d0495 Revert "Revert external server CLI dir override" (#3888)
+    - 410cff40b9c979de4ff80e86a238c88f3b786a07 Revert "Revert external server CLI dir override" (#3891)
+    - 9b0cf9e600b03408dc105ab2ef94d9c657d1876f Revert external server CLI dir override
+    - 42be8e871f3512a017af19e93b35efe5ee5cb627 Stamp auto-import attempts for unchanged JSONL
+    - 4990c8309126eb8d9edc917833a2efaac383d317 auto-import: gate server mode at call site (#4170)
+    - 47adc629459a4a17530d60eb691e43398c547fd8 build(deps): bump github.com/anthropics/anthropic-sdk-go from 1.37.0 to 1.45.0 (#3959)
+    - 9c45638f52320de085b1ae0f6fa497db1b8ed19d build(deps): bump golang.org/x/sys from 0.43.0 to 0.45.0 (#3958)
+    - 1404130fdfc4bee393901a7421f870bea88ee562 build(deps): bump goreleaser/goreleaser-action from 7.2.1 to 7.2.2 (#4109)
+    - f18daeaf09fb7ae3d1cd116d3061ff150ce53f84 chore(deps): bump actions/create-github-app-token from 3.1.1 to 3.2.0 (#3956)
+    - e1c8b8b978f1443263dc3edb85e5e0711ce18ca1 chore(deps): bump fastmcp from 3.2.4 to 3.3.1 in /integrations/beads-mcp (#3957)
+    - 9cdb62868e09a66283702952d19cc052d0bd2b4f chore(deps): bump github.com/dolthub/driver from 1.86.4 to 1.88.1 (#3830)
+    - 9ca6b51b47889d05053cb4dfc205853b739bc120 ci(nix): auto-update default.nix vendorHash on dependabot Go bumps (#3804)
+    - 4c22bf0e17cbf07005262bcfca3dec80bfb2a9e2 ci: gate regression tests on risky PR paths (#4123)
+    - 23829521e444740ab0f3e0bac6eebed6c2793da6 cleanup: remove unused private helpers (#4205)
+    - 027b17d0e074c86fc5ba10580d2c10bffe2d130d debug config discovery and issue prefix failures (#4191)
+    - e279a1c0611a2894940dfbc491f1b2f3a733fd61 debug missing dolt database metadata (#4202)
+    - c4c3a83e65ab07a90726ed3fea139b2443880b4e deps: update MCP Python dependencies (#3856)
+    - 2b4339dacb292dcaae1f726c9cebf59ba9d003dd deps: update vulnerable Go modules (#3855)
+    - dec53a2750ee29b820ac7673857f5db2a0cdbfd1 deps: update website npm dependencies (#3857)
+    - ced5c50f00ac35b68c0202a37d7b6f405d299f3d docs(changelog): credit Kevin Glynn for JSONL cleanup origin
+    - fcbb82318d88b6c5f131d16b788dc336dfad7d5e docs(cli): regenerate CLI reference for --ignore-schema-skew
+    - 9bdf7856538d0e8e00e7db57816db4da8c51ebb7 docs(import): enumerate all fields the importer handles in --help
+    - c4c5b5f43dc7d6ef7c801483f0db88b6d7e01294 docs(import): remove false 'type' alias claim from help
+    - 70c82c03635c201139af6e9234fd6552ef1902c6 docs(list): regenerate CLI reference for --skip-labels (be-rqm7yb)
+    - 337903d58c122e28c6da99f00715c2e79a9548e3 examples: add GitHub issue-to-PR and PR triage formulas (#3866)
+    - 182bf2e13bb86115034038dfb013dfcfb5ac068b fix setup injection for symlinked agent files
+    - 1f82e00fb02333993b1d53abe863c641f1c28af7 fix(auto-import): make upgrade-recovery fallback non-destructive (#3955) (#3960)
+    - 158a136a2ca84dd2a24a8ba398a00631d327f2a2 fix(auto-import): pass serverMode=false in rebased stamp tests
+    - 1cf83373404566971660d7fdc1c14a0df11144c7 fix(auto-import): restore empty-DB guard regressed by #3630, plus a test repair (#3691)
+    - c2c37605deedf64e2726801e78d6e9f5a598bba1 fix(github) bd github sync (GitHub issues integration) (#3929)
+    - 7111e241e801eae1509ff9ff181e4b91f2fe2cbb flake.lock: Update
+    - dec564e26047a4e8c8466fdb7ea804e56a045a36 flake.lock: Update (#4143)
+    - 647b2b0d1c5424ab1355ad210d1ae0070b47687e gc: recheck closed deletion candidates (#4171)
+    - 02aa69c5f2001b1146f644c7f66c779f67c4ee8f import: skip beads-jsonl metadata/header line on JSONL import
+    - 7229fb1d11262f34a0e31f91109618949b55f319 import: skip stale JSONL issue snapshots (#4204)
+    - 5d33b4c8916158596433c85dad4b2d2123e0cd69 init: run Codex project setup by default
+    - 70f507683a8fd3ad46369180221e28ec80a52595 internal/storage/schema/migrations: fix nonlocal migrations;
+    - bd13f473c57bd9f605ea6b06acb86d9427aa50e6 perf(count): Q1 — SQL COUNT(*) aggregate replaces SearchIssues+len in bd count (bd-xoi0x)
+    - ad046c96c7a05b9b65261bfb3346e7fa5a2e3cf5 perf(deps): narrow recursive cycle checks (#3966)
+    - a4ebe8ffec096d32efda2473ff1cdd62fe465673 perf(deps): scan one cycle table for same-storage edges (#4004)
+    - ad7674d117ac70814ce83f3146e039e139378508 perf(get): query primary issues before wisp fallback (#4003)
+    - 0bf33da634347f2c9332c34894f08e99e63811ac perf(ready): narrow deferred-parent child filtering (#4001)
+    - ffd5e32aa0706ea931a43d1cf3751fe2be7a4fcf perf(ready): page blocked checks for limited ready work (#3968)
+    - 83f49c027c4ff300e3e7a51ac1293003e7a4fb34 perf(ready): restrict blocked dependency scans to active IDs (#4002)
+    - 9a29a158fd403397e40bb3b6a641316ba2ef69d2 perf(search): Q2+Q3+Q5 — skip-wisps merge, id-shrunk Pattern B, wisp count cache (bd-qi4qr, bd-co6m6)
+    - 6ec5244e0fe32a94a1e014f5147b0273ca023065 perf(search): tighten label and partial-id queries (#3967)
+    - 42a2772fe44d738ae783440d6045e2f3181bb1e5 refactor(ui): extract markdown rendering to internal/uimd package (#4009)
+    - 174dd91d3417474a51879891dda562d2ffd34bee test(auto-import): model concurrent writer guard (#4218)
+    - 9fea6d3baec45e2c6cbdd0cbfef9201091c3e2e5 test(cmd/bd): be-0x25q flag-to-env-var propagation gate for --ignore-schema-skew
+    - 458cf899c2e723ba651516b86cc607078c1b7ccb test(cmd/bd): route sync.Once test temp dirs through TestMain cleanup (#4108)
+    - c62f012d8aa9be3c865137b3afa965746f853b81 test(cmd/bd): use t.Chdir in drift tests to fix chdir race (#3747)
+    - 882403f441525a563dfc9682fa952fd5056d107d test(config): dolt.mode validation rejects invalid values
+    - 57b0cab4323e3268705f68bc43677aa6f0d80673 test(create): guard external-ref prelinking (#4216)
+    - 61ae73e65e3d8941cf4b11df7468f4ae9e8a7d45 test(embedded): grep combined stdout+stderr for bd status text
+    - 88e13542e6d4bd2bd807ab0b09786958e751e5cc test(embedded): split stdout/stderr in all JSON-parsing helpers (be-0ya2oe)
+    - 4dc8dbd2c2ea6656f74fefc946978d5241663cfb test(export): assert byte-stable JSONL across all record types (#4086)
+    - 4189cdb7d191e7bfae39fbc1aa574cb1855cd112 test(init): host-only fatal guard + remove DRAFT_PR.md
+    - 4561c05cc32c80345703b9d9faefcb5c55718b6b test(init): port-only config should not fatal
+    - 6913833ec54e7c3e33f6f18a3ff34c5ef5395f70 test(mcp): cover bd doctor routing for validate/detect_pollution
+    - a499c2bfe4edeabf5b1b0f978d3d9ff648d66c95 test(regression): make workspace cleanup robust (#3854)
+    - 439afcf9e5513f1e6a454801483a3e902adf2273 test(regression): prevent baseline daemon timeout (#3809)
+    - 4eaced409288cd858b5d8484eb2ebc21144b79da test(setup): use filepath.Join in TestGeminiSettingsPaths assertions (#3555)
+    - c1091b804c4390d4269cf115dd6602844f07f9ce test(spike): joinIter panic repro test for current go-mysql-server (bd-wsgws)
+    - 52a5ecf9e5b19d89f98196fc18b7ef4e3330cffb test(upgrade-smoke): exercise dependency blocker paths on migrated DB (#4238)
+    - 6e7d0b09bcd2696703bb35187800fe4ce17e494d test(where): isolate initialized db path state (#4193)
+    - d80daa9ff13e404714e516150fe2dda2ba926a7b {CHANGELOG.md,internal}: cleanup and release notes
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gastownhall/beads/releases/tag/v1.0.5
+ReleaseTime: 2026-05-29T02:27:33.0000000Z

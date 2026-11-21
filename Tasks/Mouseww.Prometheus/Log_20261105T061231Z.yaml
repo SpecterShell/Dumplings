@@ -1,0 +1,24 @@
+Version: 0.28.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.28.3/Prometheus_0.28.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.28.3/Prometheus_0.28.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 发送新消息时，已经收起的历史步骤会全部自动展开：点发送后，新一轮还没进 transcript，上一轮助手回复仍是列表最后一条，却被当成「正在生成」切回展开模式。工具步骤和思考过程突然铺开，会话高度猛涨，滚动条跟着乱跳
+      - 现在只有真正属于当前这一轮的回复才会展开；上一轮保持收起
+      - 新问题还只是输入框旁的占位气泡时，历史轮次一律不按 live 处理
+    - 会话中途换模型后，自动压缩阈值仍按旧窗口算：阈值是「填到窗口的百分之几再压缩」，窗口随模型变了却没重算，可能过早或过晚压缩
+      - 换模型后按新窗口立即重算
+    说明
+    - 若你用的是桌面安装版，需要更新到本版本才生效；源码运行的话重新构建前端与服务端即可
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.28.3
+ReleaseTime: 2026-11-05T05:22:42.0000000Z

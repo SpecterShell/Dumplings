@@ -1,0 +1,27 @@
+Version: desktop-v0.1.1-rc.2-0.2
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/deepseek-harness-desktop/releases/download/desktop-v0.1.1-rc.2-0.2/deepseek-harness-0.1.1-rc.2-0.2-windows-x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness Desktop is a Tauri/WebView shell for the existing dsh web interface.
+    The installer contains a trimmed Harness source tree without node_modules. On first launch, the app scans the host for Node / pnpm and an existing ~/.dsh home, downloads only what is missing, starts the local Harness web host, and opens it in the desktop WebView.
+    What's new
+    - Fixes the pwsh tool on current PowerShell releases (7.6.x): pwsh's line editor now asks for the terminal cursor position during startup, and a hosted terminal has no emulator to answer, so sessions never came up and every command timed out. The terminal layer now answers the cursor query, pwsh startup waits for the marker-gated rendered prompt, and commands execute normally on every host.
+    - Windows sessions additionally run PSReadLine-free, which stops conpty repaint residue from polluting command output, and the persistent tools tolerate residual padding when reading command completion.
+    - Bundled Harness source stays on upstream dsh@0.1.1-rc.2 with this terminal fix applied on top.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DeepSeek Harness Desktop 是现有 dsh web 界面的 Tauri/WebView 外壳。
+    安装包包含裁剪后的 Harness 源码树，不含 node_modules。首次启动会扫描本机 Node / pnpm 和已有 ~/.dsh 主目录，只下载缺失部分，然后启动本地 Harness Web Host，并在桌面 WebView 中打开。
+    更新内容
+    - 修复当前 PowerShell 版本（7.6.x）上的 pwsh 工具：pwsh 的行编辑器现在会在启动时查询终端光标位置，而托管终端背后没有模拟器应答，导致会话永远起不来、每条命令都超时。终端层现在会应答光标查询，pwsh 启动等待以标记门控的渲染提示符为准，命令在所有主机上恢复正常执行。
+    - Windows 会话额外运行在无 PSReadLine 状态，避免 conpty 重绘残渣污染命令输出；持久工具在读取命令完成状态时也能容忍残余填充。
+    - 内置 Harness 源码保持在上游 dsh@0.1.1-rc.2，叠加本次终端修复。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/deepseek-harness-desktop/releases/tag/desktop-v0.1.1-rc.2-0.2
+ReleaseTime: 2026-08-30T05:54:01.0000000Z

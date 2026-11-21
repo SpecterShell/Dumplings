@@ -1,0 +1,23 @@
+Version: 0.2.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ningbainb/Dcode/releases/download/v0.2.6/Dcode-Setup-0.2.6-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Dcode 0.2.6 · Windows x64 测试版
+    本版将桌面端内置的 DeepSeek Harness（DSH）固定到 0.1.7-alpha.2，把更多 ZCode 设置能力接到同一条 DSH 执行链路，并修复 Windows 默认沙箱下工作区权限不足时的操作路径。
+    本版重点
+    - 模型供应商设置改用 ZCode 风格的供应商列表、模板搜索和模型编辑，保存到 DSH Profile；移除 ZCode 账号、订阅和套餐入口。高级模型设置只显示当前 DSH 支持的字段。
+    - MCP 设置可从现有 ZCode 用户配置导入兼容的服务器。导入项默认停用；带内联密钥等不能安全迁移的项目会跳过，原配置保持不变。
+    - Windows 默认 workspace-write 沙箱遇到特定目录 ACL 错误时，聊天中显示一次性修复入口。用户点击后仅给当前项目目录的当前用户补充所需权限，再由 DSH 正常执行工具；Dcode 不自动降低权限模式。DSH 临时授权使用独立的私有临时目录。
+    - 延续 GitHub 云备份、ZCode 技能与 Markdown 命令接入、会话恢复和应用内 GitHub 更新。DSH 物理 runtime 随安装包一起提供。
+    验证范围
+    本地校验通过安装包与 latest.yml 的版本、大小和 SHA-512 一致性，确认 GitHub 更新配置指向 ningbainb/Dcode，随包 Node 为 v24.14.0，物理 DSH runtime 为 0.1.7-alpha.2。独立解包应用烟测通过：打开工作区、模型供应商设置、兼容 MCP 导入、DSH 会话和工具输出、默认沙箱的 ACL 修复后重试、会话恢复与运行时重启、停止、Git 审查及终端。
+    测试使用本地合成模型夹具；第三方在线模型账号尚未逐一实测。自动更新的本地元数据与入口已验证，0.2.5 到 0.2.6 的真实在线下载及安装重启仍需发布后测试。macOS 和 Linux 尚未作为发行版验收；后续工作见跨平台适配计划。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ningbainb/Dcode/releases/tag/v0.2.6
+ReleaseTime: 2026-09-23T13:41:09.0000000Z

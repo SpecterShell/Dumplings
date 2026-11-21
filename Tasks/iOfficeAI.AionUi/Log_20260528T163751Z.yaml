@@ -1,0 +1,34 @@
+Version: 2.1.6
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v2.1.6/AionUi-2.1.6-win-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/iOfficeAI/AionUi/releases/download/v2.1.6/AionUi-2.1.6-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    Faster Conversations
+    - Re-opening a conversation no longer pays for refetching every long tool output up front — full tool content is loaded on demand when you expand a truncated tool call, so big histories open noticeably faster.
+    - Removed redundant warmup and MCP sync work on the message-send path so the first reply in a conversation arrives sooner, especially on aionrs and ACP backends.
+    Model Selector Reliability
+    - Switching the model inside a conversation now sticks: leaving and returning to the conversation keeps your chosen model, and the home page dropdown remembers the last choice across ACP, aionrs, and team views.
+    Bug Fixes
+    - Packaged installs that ship without bundled AionCore now show a clear recovery screen with a download link and diagnostic report action instead of failing silently; release builds also verify the bundled runtime during packaging so this can't ship broken again.
+    - Provider health checks in Settings now use a dedicated probe and surface the backend's real error message — no more stale "error" text or temporary conversation rows polluting your sidebar.
+    - Cross-architecture builds (e.g. Mac x64 from an arm runner) now bundle the matching AionCore binary instead of the runner's architecture.
+    What's Changed
+    - fix(backend): handle incomplete bundled aioncore installs by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3078
+    - fix(settings): use health check error message by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3080
+    - Avoid redundant warmup and MCP sync during message startup by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3082
+    - fix(model-selector): trust backend current model and persist user preferences by @TCP404 in https://github.com/iOfficeAI/AionUi/pull/3084
+    - Lazy-load full tool message content by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3086
+    - fix(settings): use provider health check probe by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3090
+    - fix(build): align bundled aioncore target arch by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3092
+    - chore: bump version to 2.1.6 by @piorpua in https://github.com/iOfficeAI/AionUi/pull/3094
+    Full Changelog: https://github.com/iOfficeAI/AionUi/compare/v2.1.5...v2.1.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/iOfficeAI/AionUi/releases/tag/v2.1.6
+ReleaseTime: 2026-05-28T14:46:33.0000000Z

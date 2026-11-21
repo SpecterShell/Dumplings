@@ -1,0 +1,22 @@
+Version: 0.2.5
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ningbainb/Dcode/releases/download/v0.2.5/Dcode-Setup-0.2.5-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Dcode 0.2.5 · Windows 测试版
+    本版将 ZCode 设置页里的 Markdown 自定义命令接入 DSH 会话。安装包继续通过 GitHub Releases 提供自动更新，仍未签名，Windows 可能提示“未知发布者”。
+    本版重点
+    - 在 DSH 聊天框输入已保存的 /命令名 参数，会按当前项目的命令目录和设置开关读取模板，再交给 DSH 会话执行。
+    - 支持 $ARGUMENTS、$1 等参数替换；没有占位符时把参数附在模板末尾。项目命令优先于用户命令。禁用的命令或插件命令不会作为模板发送，失败时保留草稿。
+    - 使用动态 shell 展开的旧命令会明确报错。Dcode 不在界面进程执行这类片段，避免绕开 DSH 工具审批。ZCode 的命令钩子尚未桥接。
+    - 保留 0.2.4 的 ZCode 技能接入、DSH 模型供应商设置和 GitHub 云备份。
+    验证边界
+    本地合成模型夹具用于验证从 ZCode 命令文件、启用设置、Dcode 输入框到 DSH 模型请求的链路，也验证了禁用后的拦截。解包版通过启动、会话恢复、运行时重启、停止继续、工具输出、Git/终端和“检查更新”菜单烟测。发布后以隔离数据目录启动 0.2.4 解包应用，已从 GitHub 发现 0.2.5、下载完整安装包并进入“重启以更新”状态；缓存安装包的 SHA-256 与发布资产一致。测试没有执行覆盖安装或重启后的版本验证。第三方在线模型账号、所有插件命令和动态 shell 命令也未逐一验收。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ningbainb/Dcode/releases/tag/v0.2.5
+ReleaseTime: 2026-09-23T05:27:34.0000000Z

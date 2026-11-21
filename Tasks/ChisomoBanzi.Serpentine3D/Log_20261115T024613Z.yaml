@@ -1,0 +1,29 @@
+Version: 0.12.5
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/chisomobanzi/Serpentine3D/releases/download/v0.12.5/Serpentine3D-Setup-x86_64.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    Serpentine3D 0.12.5 stops a Gumball face move from closing the app, lets Ctrl+Z take back a polyline point, and makes arrays and scenes full of small objects much faster to work with.
+    Fixed
+    - Moving a held face with the Gumball no longer closes Serpentine3D (#160). A floor whose hole runs up through a curved roof now moves as a push or pull. A face that closes to a point, such as an EdgeSrf triangle, is refused instead of crashing. An offset that would scatter a shape into pieces is refused, and a holed solid stays a solid instead of coming back as a shell.
+    - Ctrl+Z while drawing a polyline takes back the last point. It used to end the polyline and undo the object drawn before it. Each press now takes back one more point; with none left it says so and the polyline keeps going. Typing u at the prompt does the same, and a Rhino-style !_Undo shortcut works like plain Ctrl+Z.
+    - Positioning an array keeps up with the mouse. Dragging the spacing of a 5 x 5 array of a filleted plate took ten seconds for every mouse move in the four-pane layout, and takes about five milliseconds now. Copies past half a million triangles, such as a scan arrayed a few times over, are ghosted as the box each one fills.
+    - Thousands of small objects draw about five times faster. Neighbouring objects that look the same now share a draw call. Picked objects, hatches, dashed lines, objects with a material, and translucent, clipped or rendered views draw as they did.
+    Contributed by felixhudson in #158, #155 and #154, with integration fixes and regression coverage.
+    No native file-format change.
+    Full changelog
+    Validation
+    - Linux full suite: 5,422 passed, 26 skipped; headless geometry/export smoke passed.
+    - Windows full suite: 5,405 passed, 43 skipped.
+    - Mac mini full suite (Apple Silicon, macOS 26.2): 5,403 passed, 35 skipped. The 8 failures and 2 errors are the known macOS ones (account connection, SpaceMouse, text/font and Make2D checks) that also fail on 0.12.4.
+    - Draw-call batching checked on a real NVIDIA GPU: 4,900 objects zoomed out went from about 268 ms a frame to 52 ms, with clipped views identical pixel for pixel.
+    - AppImage: version 0.12.5, all 147 packaged files match the release source, packaged self-test passed, and 17 live checks passed: the #160 report's three files (the holed solid moves, both shells are refused, the app stays up), polyline Ctrl+Z, the array, forty alike boxes, Shell, Offset, OffsetSrf, STEP export, saves with an unchanged native format version, and a Tabloid sheet printed to PDF.
+    - Windows installer and macOS disk image builds passed their packaged self-tests.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chisomobanzi/Serpentine3D/releases/tag/v0.12.5
+ReleaseTime: 2026-11-14T18:31:37.0000000Z

@@ -1,0 +1,59 @@
+Version: 1.84.0
+Installer:
+- InstallerType: burn
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-full-1.84.0.exe
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.84.0-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.84.0-amd64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://pkgs.tailscale.com/stable/tailscale-setup-1.84.0-arm64.msi
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://tailscale.com/changelog
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    All platforms
+    - New: The --reason flag is added to the tailscale down command.
+    - New: ReconnectAfter policy setting, which configures the maximum period of time between a user disconnecting Tailscale and the client automatically reconnecting.
+    - Changed: Tailscale CLI commands throw an error if multiple of the same flag are detected.
+    - Fixed: Network connectivity issues when creating a new profile or switching profiles while using an exit node.
+    Linux
+    - Fixed: DNS-over-TCP fallback works correctly with upstream servers reachable only via the tailnet.
+    Windows
+    - New: AlwaysOn.Enabled and AlwaysOn.OverrideWithReason policy settings, which enable and configure a Tailscale client mode where the client stays connected at all times, unless an exception applies.
+    - New: When Always On mode is enabled, Tailscale connects as soon as a user signs in to the device and stays connected, regardless of whether the GUI is running. This enables access to tailnet resources, such as network-mapped drives, earlier in the sign-in process, and can also be used on headless Windows environments.
+    - New: EnableDNSRegistration policy setting, which configures whether Tailscale IP addresses should be registered with Active Directory DNS.
+    - New: The Tailscale GUI starts for all signed-in users when the client is installed.
+    - Fixed: DNS-over-TCP fallback works correctly with upstream servers reachable only via the tailnet.
+    - Fixed: Issue where the Tailscale GUI would not start if the client was installed via Group Policy or mobile device management (MDM) while a user was already signed in.
+    - Fixed: Issue where the Tailscale GUI did not auto-start after a client update.
+    macOS
+    - New: AlwaysOn.Enabled and AlwaysOn.OverrideWithReason policy settings, which enable and configure a Tailscale client mode where the client stays connected at all times, unless an exception applies.
+    - Changed: ForceEnabled policy setting is deprecated in favor of the AlwaysOn policy setting.
+    - Fixed: DNS-over-TCP fallback works correctly with upstream servers reachable only via the tailnet.
+    - Fixed: Tailscale automatically recreates and/or reactivates its VPN configuration on start.
+    - Fixed: Occasional crash in client during engine updates.
+    - Fixed: Taildrop share sheet displays the correct error page when the tunnel is not connected.
+    - Fixed: Hostname detection is improved in macOS clients running on macOS v15.x.
+    - Fixed: Client (GUI) logs are properly captured and recorded in bug reports.
+    iOS
+    - New: AlwaysOn.Enabled and AlwaysOn.OverrideWithReason policy settings, which enable and configure a Tailscale client mode where the client stays connected at all times, unless an exception applies.
+    - Changed: ForceEnabled policy setting is deprecated in favor of the AlwaysOn policy setting.
+    - Fixed: Taildrop share sheet displays the correct error page when the tunnel is not connected.
+    - Fixed: Tailscale automatically recreates and/or reactivates its VPN configuration on start.
+    - Fixed: Client (GUI) logs are properly captured and recorded in bug reports.
+    - Fixed: Occasional crash in client during engine updates.
+    tvOS
+    - Fixed: Tailscale automatically recreates and/or reactivates its VPN configuration on start.
+    - Fixed: Client (GUI) logs are properly captured and recorded in bug reports.
+    - Fixed: Occasional crash in client during engine updates.
+    Android
+    - Fixed: Issue where Tailscale was disconnecting after excluding apps via split tunneling.
+- Key: ReleaseNotesUrl
+  Value: https://tailscale.com/changelog/#2025-05-21-client
+ReleaseTime: 2025-05-21T00:00:00.0000000Z

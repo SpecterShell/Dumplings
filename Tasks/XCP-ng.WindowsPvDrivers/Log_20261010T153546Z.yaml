@@ -1,0 +1,45 @@
+Version: 9.2.385.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: wix
+  NestedInstallerFiles:
+  - RelativeFilePath: xcpng-winpv-9.2.385.0-Release-x64/package/XenTools-x64.msi
+  InstallerUrl: https://github.com/xcp-ng/win-pv-drivers/releases/download/v9.2.385/xcpng-winpv-9.2.385.0-Release-x64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release brings important bug fixes to the Windows drivers, installer and XenClean.
+    Important note for users upgrading from 9.2.350: You must first install the included XenTools-fix-9.2.351.msp hotfix to upgrade to 9.2.351 before installing 9.2.385. Otherwise, upgrades from 9.2.350 will be blocked. Reboot is not required after installing the hotfix.
+    To download XenClean, click here. The installer downloads also includes a copy of XenClean and XenBootFix. It is not necessary to run XenClean when upgrading from previous versions of the XCP-ng Windows guest tools, unless prompted by the installer. Remember to carefully read XenClean docs before use.
+    Note: Always download the latest XenClean/XenBootFix from https://github.com/xcp-ng/win-pv-drivers/releases
+    Before installing
+    Thank you for using our Windows PV tools. Please carefully read the instructions below.
+    - It is not necessary to run XenClean when upgrading from previous versions of the XCP-ng Windows guest tools, unless prompted by the installer.
+    - Not compatible with the "Manage Citrix PV drivers via Windows Update" option. You must disable this option before installing.
+    Changes since 9.2.350
+    - Improved: Update XenClean to .NET 10. XenClean is now a native binary that no longer requires .NET Framework.
+    - Fixed: Fix data corruption issue during in-memory snapshots and backups.
+    - Fixed: Fix DLL sideloading issue in XenClean.
+    - Fixed: Fix driver migration during upgrades.
+    - Fixed: Fix display of IPv6 addresses in Xen Orchestra in some situations.
+    - Fixed: Reliability and stability fixes for the drivers and guest agent.
+    Help / Community support
+    If you encounter installation/uninstallation errors, please try again with one of the following commands:
+    For installing:
+    msiexec.exe /i XenTools-x64.msi /l*vx install.log
+
+    For uninstalling:
+    msiexec.exe /x XenTools-x64.msi /l*vx uninstall.log
+    Please include this log along with the file C:\Windows\INF\setupapi.dev.log in your bug report. These files will help us troubleshoot any installation issues.
+    Additionally, please report any errors or BSOD you encounter during testing of this release. Your feedback is very appreciated.
+    - Discussion: https://xcp-ng.org/forum (preferred)
+    - Issue Tracker: https://github.com/xcp-ng/xcp/issues
+    - IRC: #xcp-ng and #xcp-ng-dev on irc.freenode.net
+    Full Changelog: https://github.com/xcp-ng/win-pv-drivers/compare/v9.2.350...v9.2.385
+    Original build: https://github.com/xcp-ng/win-pv-drivers/actions/runs/34501045055
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xcp-ng/win-pv-drivers/releases/tag/v9.2.385
+ReleaseTime: 2026-09-14T10:35:48.0000000Z

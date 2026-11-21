@@ -1,0 +1,20 @@
+Version: 3.8.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.8.4/MotrixNext_3.8.4_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves high system resource consumption during large file downloads on Windows (#255) and introduces improved metadata task handling for magnet links.
+    🛠 Improvements
+    - Eliminate file pre-allocation overhead — Changed the default file-allocation strategy from trunc to none across all platforms, removing the synchronous ftruncate() I/O burst that caused system-wide lag on Windows NTFS during large file downloads (#255)
+    - Suppress network library log noise — Added log-level filters for hyper_util and reqwest crates (raised to Warn), eliminating 98% of diagnostic log volume when debug logging is enabled
+    ✨ New Features
+    - Metadata task handling — Improved cleanup operations for BitTorrent metadata tasks (magnet link resolution)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.8.4
+ReleaseTime: 2026-04-26T01:19:44.0000000Z

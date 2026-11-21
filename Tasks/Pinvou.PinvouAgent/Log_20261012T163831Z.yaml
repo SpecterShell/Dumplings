@@ -1,0 +1,51 @@
+Version: 0.10.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.8/pinvou-agent_0.10.8-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.8 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    问题修复
+    1. Windows 上普通工具调用不再被缓慢的 advisory hook 拒绝：advisory hook 此前在每次 ToolCallBefore 事件上都启动一次 PowerShell，并套以严格的 5 秒超时，而真实机器上连 exit 0 都可能超时——无关的工具调用因此还没执行就被拒绝。连接器内省修正现在只作用于确有意义的 list_mcp_resources / list_mcp_resource_templates 调用，预算放宽到 30 秒，解释器失败与超时降级为警告并继续；显式的 exit-2 JSON 拒绝决定仍然照常拒绝（#678）。
+    2. 多代理深度守卫 hook 获得同样的 30 秒启动预算（#678 评审跟进项）：pinvou3-multiagent-depth-guard 此前以 timeout_secs: 5 且 continue_on_error: false 启动 powershell.exe 处理 agent / workflow 调用，同样的缓慢 PowerShell 启动会拒绝合法的多代理调用；预算对齐后守卫仍然刻意保持严格（#679）。
+    3. zap 撤回窗口内丢失的 steer 消息可恢复：runQueuedZap 会为 withdraw_steer 等待至多 25 秒，落进该窗口的 chat:steer_dropped 事件此前会静默吞掉已被撤回的登记——不入队、不恢复、无提示、消息丢失（plain main 可复现）；现在两条路径都在撤回等待之前先登记对账认领，撤回窗口中途落下的丢弃也能找回文本（#675）。
+    4. 侧边栏拖拽调宽手柄恢复可命中：#346 的 <div> → <hr> 转换把手柄塌缩成 6×0 px（Tailwind preflight 将所有 <hr> 钉为 height: 0），指针命中测试永远到不了它，所有用户的拖拽调宽自此失效；全高手柄条已恢复，并带指针路径回归测试（#637）。
+    5. 项目重绑评审跟进台账关闭：#464 第 9 轮批准评审留下的 14 项非阻塞清单（含后续轮次发现）已对照 main 最终的重绑架构（plan/apply 拆分、作用域化校验、延迟基线重采池、strand 修复、逐会话 rebase 几何）全部收口（#567）。
+    内部改进
+    1. 测试瘦身：移除 21 个死亡或被吸收的 Rust 测试函数、一个前端用例，以及只被这些测试供养的生产代码、孤儿辅助函数与失效导入（19 个文件，+8/−595）；每条删除都经过对抗性复核，当前开放 PR 依赖的删除被显式排除（#676）。
+    注意事项
+    - 本次发布窗口不含新功能：六个 PR 均为问题修复与测试内部清理。
+    - Advisory hook（#678）与深度守卫（#679）的预算调整只放宽「解释器启动缓慢」这一失败模式：advisory 修正失败降级为警告继续，显式 exit-2 JSON 拒绝决定与其余严格 hook 仍照常拒绝；深度守卫仍是真实的资源门。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 安装包与发布产物由版本 PR 合入 main 后触发的发布工作流构建，未在本地构建。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ 6a838096b / Actions #38153888270（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    修复
+    - Windows 上缓慢的 PowerShell 启动不再让 advisory hook 拒绝普通工具调用；显式拒绝决定仍然生效，多代理深度守卫获得同样的 30 秒预算并保持严格。
+    - zap 撤回窗口内被丢弃的 steer 消息可恢复，不再静默丢失。
+    - 侧边栏拖拽调宽手柄恢复可命中。
+    - 项目重绑评审跟进台账全部收口。
+    内部改进
+    - 移除死亡与被吸收的测试，以及只被它们供养的生产代码。
+    en-US
+    Fixes
+    - Slow Windows PowerShell startups no longer make advisory hooks deny ordinary tool calls; explicit deny decisions still enforce, and the multi-agent depth guard gets the same 30-second budget while staying strict.
+    - Steer messages dropped inside the zap withdraw window are recovered instead of silently lost.
+    - The sidebar drag-to-resize handle is hit-testable again.
+    - The project-rebind review follow-up ledger is fully closed.
+    Internal improvements
+    - Dead and subsumed tests removed together with the production code only they kept alive.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.8
+ReleaseTime: 2026-10-12T08:40:58.0000000Z

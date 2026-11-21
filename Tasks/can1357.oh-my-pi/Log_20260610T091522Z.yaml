@@ -1,0 +1,123 @@
+Version: 15.10.12
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v15.10.12/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added AgentLoopConfig.getDisableReasoning so callers can override disableReasoning per LLM call, mirroring getReasoning.
+    - Added transformProviderContext to AgentOptions/AgentLoopConfig: an optional hook applied to the assembled provider context after conversion, normalization, and append-only handling, but before telemetry capture and provider send.
+    Fixed
+    - Fixed Agent runs so explicit reasoning disablement is forwarded to provider stream options and re-resolved per continuation, keeping mid-run thinking-off changes in sync with the next provider request.
+    @oh-my-pi/pi-ai
+    Added
+    - Added antigravityRankingStrategy and registered it for google-antigravity in DEFAULT_RANKING_STRATEGIES, so new sessions are routed to OAuth credentials with quota headroom for the requested model backend (lowest relevant remainingFraction counter as the sole ranked window, 24h windowDefaults matching daily-cloudcode-pa.googleapis.com resets). Without it, the existing antigravityUsageProvider data never reached credential selection. (#2198)
+    Changed
+    - Updated MiniMax and MiniMax Token Plan defaults to MiniMax-M3 and refreshed Token Plan login copy/links (#1725).
+    Fixed
+    - Fixed OpenAI Responses and Azure OpenAI Responses streams silently surfacing incomplete output as successful when a custom/proxy provider drops the connection without sending a terminal response.completed/response.incomplete event. Both providers now detect premature stream closure and throw with stopReason: "error" (#2184)
+    - Fixed isUsageLimitError missing Antigravity / Cloud Code Assist's Individual quota reached 429 phrasing. The USAGE_LIMIT_PATTERN only knew quota.?exceeded / limit_reached, so auth-retry and AuthStorage.markUsageLimitReached treated the response as a terminal provider error and pinned sessions to the exhausted OAuth account instead of rotating to a sibling credential. The pattern now also matches quota.?reached. (#2198)
+    - Scoped Antigravity usage blocking and ranking by model family (gemini-*/gemma-* → Google, claude-* → Anthropic, gpt-*/openai/* → OpenAI), so an exhausted Gemini counter no longer makes a healthy Claude/OpenAI Antigravity credential unavailable until reset. (#2198)
+    - Fixed no-model Antigravity credential lookups (e.g. image-provider discovery) inheriting provider-wide exhaustion: scopeLimits now returns no limits without a concrete backend counter, and blockScope always returns a counter scope so missing model context can never fall through to AuthStorage's provider-wide block bucket. (#2198)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added grok-composer-2.5-fast (Cursor "Composer 2.5 Fast") to the xAI Grok OAuth (SuperGrok) catalog: non-reasoning, text-only, 200K context.
+    Changed
+    - Set every xAI Grok OAuth (SuperGrok) curated model's max output tokens to mirror its context window (grok-build, grok-4.3, grok-4.20-0309-{reasoning,non-reasoning}, grok-4.20-multi-agent-0309, grok-composer-2.5-fast), replacing the 8888 UNK_MAX_TOKENS placeholder (and a stale 30000 on three grok-4.x entries). xAI's OAuth /v1/models reports no per-request output limit, so the curated catalog now owns maxTokens like contextWindow, deterministic on both the static-seed and online-overlay paths; the openai-responses wire still clamps the actual request to OPENAI_MAX_OUTPUT_TOKENS (64k).
+    Fixed
+    - Excluded zero-cost xai-oauth subscription entries from the model reference indexes (buildModelReferenceIndex, createReferenceResolver), so their zero pricing and context-window-sized maxTokens cannot outrank paid/public Grok references when resolving custom-provider model identities.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added RPC subagent subscription frames, snapshots, and transcript catch-up APIs for desktop clients embedding omp --mode rpc.
+    - Added opt-in shellMinimizer.sourceOutlineLevel and shellMinimizer.legacyFilters settings so shell minimization can tune source outlining and selectively fall back to conservative legacy routing.
+    - Added repeatable --config <path> CLI overlays for temporary config.yml-style settings without editing the persistent global config (#1733).
+    - Added python.interpreter to pin eval's Python backend to an explicit interpreter and skip automatic runtime discovery (#1802).
+    - Added !command resolution for models.yml provider apiKey values and provider/model headers (#1888).
+    - Documented the oMLX setup path through existing OpenAI-compatible local discovery (#1957).
+    - Added TITLE_SYSTEM.md discovery so users can override the automatic session-title generation prompt for online and local tiny title models without patching installed prompt files. The override is re-discovered when the session working directory changes via /cwd.
+    - Added a structured memory runtime surface for extensions and UI integrations to query backend status, search memories, and save explicit memories across the configured memory backend.
+    - Added support for Git repositories using the reftable storage format by detecting extensions.refStorage = reftable in the repository configuration and falling back to shelling out to Git commands (git symbolic-ref, git rev-parse) for reference and HEAD resolution.
+    - Added /setup providers (also available as /setup or /providers) to reopen the interactive provider setup scene from an active TUI session, letting users sign in and choose a web search provider without rerunning the full onboarding flow.
+    Changed
+    - Bash execution now preserves minimized shell output inline while saving the untouched capture as an artifact://… footer when shell minimization rewrites a command's output.
+    - Task tool live progress now renders finished subagents first and keeps unfinished (pending/running) ones pinned at the bottom of the list.
+    - OutputSink artifact files (~/.omp/agent/artifacts/<id>.<tool>.log) are unbounded by default again, so artifact://<id> references preserve the complete raw stream. The head + rolling-tail capping machinery from #2081 (with its [ARTIFACT TRUNCATED: …] close notice) remains available as an opt-in via artifactMaxBytes, and the head window now closes permanently on first overflow so later small chunks cannot be written out of order before the tail replay.
+    Fixed
+    - Fixed Ollama chat turns using the :off thinking selector so requests explicitly send reasoning disablement instead of falling back to the provider default (#2239).
+    - Fixed long-running sessions becoming sluggish because the status line recomputed context usage by walking the full message history on every refresh. Message-token totals are now cached incrementally, and status lines that do not render context segments skip context accounting entirely. (#2089)
+    - Fixed extension-registered slash commands being allowed to shadow builtin command names in the ACP/RPC command list: both the TUI and getSessionSlashCommands() now filter against the shared builtin reserved-name registry.
+    - Fixed ACP turns for extension slash commands finishing before nested pi.sendUserMessage() prompts ran: the turn now drains scheduled extension prompts and prompt-event handlers before reporting end_turn, and prompts queued on a closed or disposed session fail fast with an ACP_SESSION_CLOSED error instead of running against a dead session.
+    - Fixed hide-secrets placeholders leaking into ephemeral side-channel turns (IRC replies, summary prompts): streamed text deltas are now deobfuscated before emission (withheld while a partial placeholder is still streaming) and the final assistant message is deobfuscated before reuse. Provider-context obfuscation moved into the agent loop's transformProviderContext hook so request telemetry also captures the redacted context (#2146).
+    - Fixed a failed Settings.init() permanently poisoning subsequent initialization: the cached init promise is now cleared on error so a retry can succeed.
+    - Fixed exiting plan mode without confirmation only when neither the default plan file nor slug-named local plan files contain draft content (#2024).
+    - Fixed enabledModels being ignored by the ACP model picker (Zed and other ACP clients) — AgentSession.getAvailableModels() now applies the configured allow-list, so only the models listed in enabledModels appear in the UI. Also applies consistently to the RPC get_available_models endpoint and the /model slash command. Glob selectors (anthropic/*), provider-scoped fuzzy patterns, and substring selectors now resolve in this synchronous path too, using the same scope semantics as startup resolution instead of being skipped with a warning.
+    - ACP sessions now skip the client permission gate for bash/edit/delete/move when the user explicitly opts into yolo approval mode (--yolo/--auto-approve or a configured tools.approvalMode: yolo) and the effective per-tool policy is "allow"; default-config sessions keep the gate (#2097 by @Mokto)
+    - Fixed hidden thinking blocks leaving placeholder Thinking... lines in the transcript (#2068).
+    - Fixed Hindsight per-project-tagged scoping siloing retains/recalls per linked git worktree: projectLabel() now resolves the primary checkout root (or shared bare-repo common dir) via the new sync git.repo.primaryRootSync helper, so every worktree of one repo shares the same project:<name> tag and per-project bank id (#2232).
+    - Fixed MCP OAuth flows accepting pasted redirect URLs or authorization codes through /login in headless environments (#2122).
+    - Forwarded model ids through ModelRegistry API-key resolvers and Antigravity usage-limit rotation so pi-ai can apply model-family-scoped OAuth quota backoff instead of treating all google-antigravity counters as credential-wide. (#2198)
+    - Fixed bare omp extensions being treated as a chat prompt instead of returning an actionable plugin-command error (#2089).
+    - Fixed hide-secrets redaction so configured secrets are scrubbed from provider-facing system prompts, tool definitions, developer/system-reminder messages, and assistant tool-call arguments before model requests (#2146).
+    - Fixed subagents looping indefinitely on byte-identical no-op edit calls. The hashline executor previously surfaced a soft "your body row(s) are byte-identical to the file" hint that some models ignored; one captured session emitted 182 such repeats in 205 calls over 16 minutes before the user aborted. A new per-ToolSession noopLoopGuard now tracks consecutive identical no-op payloads per canonical path and escalates to a thrown ToolError after NOOP_HARD_LIMIT (3) repeats, so the agent loop sees a tool failure and breaks the cycle (#2081).
+    - Fixed the bash result renderer recomputing styled output (split / replaceTabs / truncateToVisualLines) on every TUI repaint, which scaled with both transcript length and per-row output size. With a long captured session every keystroke walked hundreds of bash rows; the reporter on issue #2081 observed Ctrl+X/Ctrl+C feeling unresponsive because the main thread was pinned re-styling scrollback. The result renderer now caches its produced lines keyed by (width, previewLines, expanded, rawOutput, isPartial), mirroring the existing eval-renderer cache; invalidate() clears the cache as before. Hot-path repaints with unchanged inputs are now O(1) (#2081).
+    - Fixed ACP available_commands_update to include extension-registered slash commands so clients like Zed surface them in the slash-command palette.
+    - Fixed ACP cancel button leaving the session in a stuck state — a new prompt sent while a turn is still in-flight (e.g. immediately after pressing Stop in Zed before session/cancel is processed) now implicitly cancels the running turn and queues the new message, instead of throwing an error that blocks further interaction.
+    - Fixed interactive !/!! shell shortcuts to run non-bash commands through the configured user shell, including interactive startup for zsh/fish aliases and functions (#1816).
+    @oh-my-pi/pi-mnemopi
+    Changed
+    - Reworked the in-memory fallback vector search to build a normalized exact vector index per query, matching the shape needed for future quantized or TurboVec-style backends without adding a new dependency yet.
+    @oh-my-pi/pi-natives
+    Added
+    - Added deterministic shell-output minimization to the native shell pipeline, including opt-in per-command rewrite telemetry surfaced through executeShell().minimized for callers that want compact inline output plus a separately persisted original capture.
+    Fixed
+    - Fixed native crash-log directory resolution diverging from the JS logger when PI_CONFIG_DIR is absolute: the config root now mirrors path.join(homedir, PI_CONFIG_DIR) semantics (absolute values re-rooted under $HOME, ./.. components normalized), and an empty PI_CODING_AGENT_DIR no longer disables XDG state-dir resolution.
+    - Fixed shell-output minimization condensing pyright/basedpyright --outputjson runs into a diagnostics summary; machine-readable JSON output now passes through untouched.
+    - Fixed pi-natives aborting Bun on Windows with memory allocation of N bytes failed and no backtrace whenever the native cdylib hit a Rust panic or out-of-memory condition. The release profile uses panic = "abort", so neither default handler emitted any context — Bun received only the bare message and tore down the TUI session before flushing. Module load now installs std::panic::set_hook and std::alloc::set_alloc_error_hook via #[napi::module_init]; both hooks capture Backtrace::force_capture() (so it works without RUST_BACKTRACE=1) and write a structured report — pid, thread, size/alignment for OOM, source location and message for panics, full backtrace — to the same logs directory the JS logger uses ($XDG_STATE_HOME/omp/logs/ on Linux/macOS when the user has migrated to XDG and PI_CODING_AGENT_DIR isn't customized, otherwise ~/.omp/logs/) and to stderr before the host process exits. The OOM hook prints the canonical allocation-failure line before any allocation-prone diagnostics and aborts immediately on re-entry, so real process-wide OOM still surfaces the fallback message instead of recursing in the report path (#2211).
+    What's Changed
+    - fix(coding-agent): prefer daemonizing CLI clipboards over arboard on Linux by @roboomp in https://github.com/can1357/oh-my-pi/pull/2076
+    - fix(coding-agent): cache status line context usage by @cexll in https://github.com/can1357/oh-my-pi/pull/2094
+    - feat(memory): add runtime API and exact vector index by @DarkPhilosophy in https://github.com/can1357/oh-my-pi/pull/2108
+    - fix(coding-agent): hide secrets in provider requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/2147
+    - fix(mcp): accept manual OAuth redirect input by @danzaio in https://github.com/can1357/oh-my-pi/pull/2160
+    - fix(cli): reject ambiguous extensions command by @danzaio in https://github.com/can1357/oh-my-pi/pull/2161
+    - docs(models): document oMLX OpenAI-compatible setup by @danzaio in https://github.com/can1357/oh-my-pi/pull/2162
+    - fix(tui): omit hidden thinking placeholder by @danzaio in https://github.com/can1357/oh-my-pi/pull/2163
+    - fix(plan): skip confirm for empty plan exit by @danzaio in https://github.com/can1357/oh-my-pi/pull/2164
+    - feat(ai): add grok-composer-2.5-fast to the SuperGrok catalog by @metaphorics in https://github.com/can1357/oh-my-pi/pull/2173
+    - feat(minimizer): deterministic shell-output minimizer by @GratefulDave in https://github.com/can1357/oh-my-pi/pull/2176
+    - fix: prevent silent stream termination and spurious stall for custom response-compatible providers by @lanshi17 in https://github.com/can1357/oh-my-pi/pull/2184
+    - fix(acp): auto-cancel in-flight turn when new prompt arrives mid-flight by @Mokto in https://github.com/can1357/oh-my-pi/pull/2186
+    - fix(ai): rotate antigravity credentials on Individual quota reached 429s by @roboomp in https://github.com/can1357/oh-my-pi/pull/2200
+    - feat: add title system prompt override by @zdearo in https://github.com/can1357/oh-my-pi/pull/2201
+    - feat(config): add runtime config overlays by @danzaio in https://github.com/can1357/oh-my-pi/pull/2202
+    - fix(ai): default MiniMax providers to M3 by @danzaio in https://github.com/can1357/oh-my-pi/pull/2203
+    - feat(eval): add python interpreter setting by @danzaio in https://github.com/can1357/oh-my-pi/pull/2204
+    - feat(models): resolve secrets from commands by @danzaio in https://github.com/can1357/oh-my-pi/pull/2205
+    - fix(natives): captured panic and OOM diagnostics from cdylib by @roboomp in https://github.com/can1357/oh-my-pi/pull/2212
+    - feat: add RPC subagent subscriptions by @korri123 in https://github.com/can1357/oh-my-pi/pull/2214
+    - fix(hindsight): share project tag across git worktrees by @roboomp in https://github.com/can1357/oh-my-pi/pull/2233
+    - feat(coding-agent): add support for git reftables by @AngerM in https://github.com/can1357/oh-my-pi/pull/2018
+    - feat(coding-agent): add provider setup command by @handlecusion in https://github.com/can1357/oh-my-pi/pull/2019
+    - fix: apply enabledModels filter to ACP model list (Zed model picker) by @Mokto in https://github.com/can1357/oh-my-pi/pull/2044
+    - fix(acp): emit extension-registered commands in available_commands_update by @Mokto in https://github.com/can1357/oh-my-pi/pull/2052
+    - fix(coding-agent): broke runaway edit loops and capped bash artifact spew by @roboomp in https://github.com/can1357/oh-my-pi/pull/2083
+    - fix(acp): skip permission gate in yolo mode when effective policy is allow by @Mokto in https://github.com/can1357/oh-my-pi/pull/2097
+    - fix(providers): disable Ollama thinking for off turns by @roboomp in https://github.com/can1357/oh-my-pi/pull/2240
+    - fix(coding-agent): respect user shell for ! shortcuts by @handlecusion in https://github.com/can1357/oh-my-pi/pull/1896
+    New Contributors
+    - @cexll made their first contribution in https://github.com/can1357/oh-my-pi/pull/2094
+    - @lanshi17 made their first contribution in https://github.com/can1357/oh-my-pi/pull/2184
+    - @Mokto made their first contribution in https://github.com/can1357/oh-my-pi/pull/2186
+    - @zdearo made their first contribution in https://github.com/can1357/oh-my-pi/pull/2201
+    - @korri123 made their first contribution in https://github.com/can1357/oh-my-pi/pull/2214
+    - @AngerM made their first contribution in https://github.com/can1357/oh-my-pi/pull/2018
+    - @handlecusion made their first contribution in https://github.com/can1357/oh-my-pi/pull/2019
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v15.10.11...v15.10.12
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v15.10.12
+ReleaseTime: 2026-06-10T08:09:53.0000000Z

@@ -1,0 +1,38 @@
+Version: 2.7.0
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.7.0/nextcowork-2.7.0-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    设备模式：桌面连接执行设备上的独立 Agent 服务
+    - 新增独立设备服务 ncw-agent(零 Electron,要求 Node 24+):业务库、会话与 Agent 运行、工作区文件、Git、终端、MCP 等都在执行设备一侧运行，关掉桌面不再停止任务；同一数据根用独占锁保证只有一个写入者，新版桌面连接已有服务而不是再起第二个。device-identity.json 损坏时拒绝启动，不静默换一个新 deviceId
+    - 新增控制端连接栈与跨语言协议(src/shared/device、src/controller-client、src/transport/node):握手协商协议版本与能力，请求/响应/事件按帧编码并带游标重连，写操作走幂等命令；直连优先(设备根证书钉死、双向证书认证),直连全部失败且配置了自部署中转时才走「中转承载 + 端到端握手」,中转只看得到密文，冒充不了任何一端
+    - 桌面主进程接入设备注册表、Agent/终端事件桥与密钥托管：控制端私钥只进系统凭据库，设备清单(端点、证书、信任根指纹)写入 devices.json(0600、原子写),清单损坏时拒绝使用而不静默重建
+    - 新增设备设置页与侧边栏设备切换器。配对分两步：先「检查邀请」(不联网，只读出设备指纹),用户逐位核对后主进程再校验指纹与邀请一致才配对；邀请 5 分钟内有效、只能用一次。「移除连接」只删这台电脑上保存的凭据，文案里直说不会在设备上撤销配对
+    - 首版转发范围写在设备页上：设置、工作区列表/改名/关闭、文件浏览与读写、会话列表/创建/翻页、技能/命令/子代理/模式/钩子/MCP 列表、Git 查看与暂存/提交/分支，以及纯文本任务的发起、事件、停止、审批与终端；附件、子代理等其余需要设备的操作会被明确拒绝，不会回退到本机执行，设备离线时同样如此，重启后回到「这台电脑」
+    - 共享资源(终端/浏览器/文档)用输入租约：观看不需要租约，输入必须带单调递增的 fencing token,交接或过期之后旧持有者迟到的按键与点击会被拒绝而不是插进新持有者的输入里；租约只在内存里，服务重启后全部失效，必须重新获取
+    设备服务的运维命令与可独立部署的发行包
+    - ncw-agent diagnose [--json]:真开一个内存库验证 node:sqlite、真用 node-pty 拉起一个 shell、真跑 git --version、真写一次数据目录；required 检查失败退出码为 1,浏览器与 Office 组件尚未随服务提供，如实报告 absent 而不是假装已安装
+    - ncw-agent service plan|apply|uninstall-plan:生成 Linux systemd(带 User=)、macOS LaunchDaemon(带 UserName)、Windows WinSW 的安装文件与之后要执行的命令。服务以普通用户运行，拒绝 root / SYSTEM / Administrator;plan 只打印要写什么、之后要跑什么，从不自己 sudo、启动或启用服务(Windows 路径尚未实测)
+    - ncw-agent takeover begin|commit|rollback|status:把桌面数据根原地交给服务，不复制、不上传。begin 先查旧进程(仍在运行就拒绝),再用 VACUUM INTO 做一致性备份并逐表核对行数，journal 逐步落盘所以崩溃后可从记录的阶段继续；commit 取得同根锁、创建服务身份并追加 ownership 标记；rollback 在提交前恢复备份什么都没丢，提交后必须显式 --acknowledge-data-loss,并先把接管之后写入的库另存一份
+    - 新增 npm run build:agent / build:relay / package:agent:产物自检(不得引用 electron、必须保留 node:sqlite),打包只列出产物真正 import 的运行时依赖，产出 nextcowork-device-service-<版本>.tgz,在目标机上 npm install --omit=dev 即可运行，不需要桌面或仓库源码；该包与各平台安装包发布在同一个 Release 里，手动下载安装，没有自动更新通道
+    Grep 工具优先使用本机原生搜索程序
+    - Grep 按 rg > git grep > grep > JS 的优先级选择后端：大仓库不再靠内核自己遍历、逐文件读入再丢进 worker 匹配；原生程序跑在独立进程里，灾难性回溯卡住的是它自己，超时按整棵进程树杀掉，主线程不碰模型给的正则
+    - 「没装 / 不认这个参数 / 方言不认这个正则 / 跑挂了」一律顺延到下一个后端，绝不把一次失败当成「仓库里没有」;rg 明确报出的正则编译错误会转述给模型
+    - 按宿主各探测一次并缓存：本机与每个 SSH 工作区装的东西不一样，不共用一份答案；命令经用户实际的 shell 引号化，cmd 下引不了的必需参数让该后端整体顺延、可选参数丢掉靠后过滤兜底；rg 与 git grep 另外遵守 .gitignore,结果按路径排序，被截断时拿到的是一个可复现的前缀
+    改动
+    业务能力从主进程 IPC 下沉到设备侧服务
+    - Agent 运行的那一半(泵与合批、启动、子 run 派发、回收与 shutdown 收尾)从 ipc/agent.ts 抽成 main/services/agent.ts,窗口那一半(授权、订阅、推给哪个 webContents)留在 IPC 层，以「安装投递端口」的方式接回去 —— 没有装端口时 run、转录与权威持久化照常，只是没有事件订阅者
+    - 工作区读写/上传/范围读取、附件、会话元数据、客户端鉴权、目录浏览同样下沉为 src/main/services;桌面入口显式注入窗口后端、系统浏览器与登录令牌，服务进程没有这些能力时明确失败而不是假装成功
+    - 新增 IPC 路由边界分类表(controller-local / device / composed):每条频道单独显式声明，并用类型做双向校验 —— 契约增删而这张表没跟上就 typecheck 报错，刻意不提供前缀兜底；选中设备时 device 类频道只能走设备，不在路由表里的明确拒绝，而不是悄悄在本机执行(那会把本机库当成「所选设备」写入)
+    - 无头宿主自带 Node 侧凭据加密(程序自管的 AES-GCM,主密钥在数据根):库里若还留着桌面 safeStorage 的密文，读取时明确报错要求先在桌面迁移，不静默当成空
+    - 新增设备相关数据表(控制器状态、命令、事件、交互、通知订阅、设备信任、服务 ownership 标记)与已提交输入的消费回执：回执只属于它自己的会话，且不随消息删除或转录压缩消失，保证一句用户输入只被执行一次
+    - 会话输入(草稿与队列)落盘失败不再无声：首屏恢复带 persistenceWarning 时提示一次，运行期的 session:inputPersistence 事件用固定 key 推送，磁盘满时不会堆满互相覆盖的同一条通知
+    测试
+    - 新增设备协议向量、Gateway 握手与限流、RPC 方法、租约与 fencing、终端、配对证书、中转、迁移接管、无头宿主、原生 grep 后端等测试；src/agent、src/transport、src/relay、src/controller-client、src/shared/device、src/main/migration、src/main/db 另在三个系统上单独跑一遍(Windows 目前是信息性检查)
+    - npm test 524 个文件 7939 项中 7899 项通过(40 项因本机缺少原生环境跳过),npm run typecheck(node + web + plugins + controller-client)、npm run lint、npm run test:agent-build(15 项)、npm run test:release(5 项)通过
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.7.0
+ReleaseTime: 2026-10-12T03:57:05.0000000Z

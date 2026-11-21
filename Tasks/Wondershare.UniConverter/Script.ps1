@@ -1,16 +1,34 @@
-$Task.CurrentState = $Temp.WondershareUpgradeInfo['9629']
+$this.CurrentState = $Global:DumplingsStorage.WondershareUpgradeInfo['14204']
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # PackageName
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'PackageName'
+        Value = "Wondershare UniConverter $($this.CurrentState.Version.Split('.')[0])"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    if ($this.CurrentState.Version.Split('.')[0] -ne $this.Config.WinGetIdentifier.Split('.')[-1]) {
+      $this.Log('Major version update. The WinGet package needs to be updated', 'Error')
+    } else {
+      $this.Submit()
+    }
   }
 }

@@ -1,0 +1,26 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.2/Sessions.Viewer_0.3.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.3.2/Sessions.Viewer_0.3.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.3.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    - Windows embedded terminal couldn't find nvm-installed CLIs on MSI installs — with an MSI (WiX) install the in-app terminals reported npm / node / codex as "not a command", while EXE/NSIS installs worked and native (non-nvm) Node was fine everywhere. An MSI advertised-shortcut launches the app in a context that cannot traverse directory symlinks during command lookup, so nvm-for-windows' node directory (NVM_SYMLINK, a symlink to the versioned install) sat on PATH yet nothing inside it resolved. The PowerShell PATH refresh now expands %VAR% registry entries and, for every PATH directory that is a reparse point, appends its resolved real target — command lookup then hits the non-symlink path. Native (real-directory) installs are untouched. Applies to the embedded terminal, session resume, and CLI version detection.
+    - Codex TUI Shift+Enter didn't insert a newline on Windows — Codex reads keys via the Windows console API and, there, only accepts Alt+Enter (ESC+CR) as a newline; a raw \n / Ctrl+J or a kitty [13;2u sequence is ignored (see codex#4401). Shift+Enter is now intercepted directly in the terminal key handler (the onData + shiftHeld path is unreliable under WebView2) and mapped to the Alt+Enter byte sequence on Windows, while macOS / Linux keep sending \n.
+    - Codex composer background broke across blank lines — a blank line inside a multi-line Codex prompt split the grey user-message background, leaving a white gap on the blank line and everything after it. The background repair now spans interior blank lines (continuing while more composer content follows) and stops at the footer (model · path), keeping the background continuous without bleeding onto the footer.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v032
+ReleaseTime: 2026-07-15T09:10:26.0000000Z

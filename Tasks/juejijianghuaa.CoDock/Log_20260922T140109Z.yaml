@@ -1,0 +1,21 @@
+Version: 0.4.6
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.6/CoDock-Setup-0.4.6-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.6 (2026-09-22)
+    这一版修了三处一直别扭、但说不清在哪的地方：Windows 上目录名带连字符的项目不再被拆成别名，重启后 Tab 栏不再换顺序，Codex 会话能显示它在 codex 里的名字。
+    优化与修复
+    - 修复 Windows 上带连字符的目录名被拆开：Claude / Qoder / CodeBuddy 把工作目录编码成项目目录名时，路径分隔符、_ 和 . 一律写成 -，而这个编码不可逆——claude-code-gui 与 claude/code/gui、claude_code_gui 编码后是同一个名字。以前读不到记录里的真实 cwd 时只能按字符串反解，于是这类项目显示成 …/IdeaProjects/claude/code/gui：历史列表的项目名、悬停与复制的路径、用量页「按项目」、新建任务弹窗的「最近项目」标签一起错。现在兜底先看反解出来的路径是否真实存在，不存在就请文件系统按编码逐层把名字还原回来。附带修掉同一处引发的功能问题：这条路径同时是启动 Agent 用的 cwd，所以从历史恢复这类会话会退到用户主目录启动、从历史项目「新建任务」会报目录无效，现在都回到真实目录。
+    - 修复重启后 Tab 顺序每次都变：启动恢复是并发拉起会话的，会话内部编号按「谁先起来」分配，而 Tab 栏的先后完全跟着它们到齐的顺序走，于是一次一个样。现在把排列按本机偏好记住，重启后照上次的摆法还原；写回要等恢复阶段结束（那段窗口里的顺序只是半成品，写回去会把上次的排列冲掉，错误会自我延续），拖动排序和「新开会话排最前」都照旧。第一次跑这一版、本机还没记住任何排列时顺序仍是随机的，那之后就会沿用。
+    - Codex 会话标题改取 codex 自己记的名：codex 也给自己起名——TUI 里重命名、以及导入会话带来的标题，都追加写在 ~/.codex/session_index.jsonl，rollout 文件里一个字节都没有。此前只认第一条用户消息，于是 codex 里叫「Respond to greeting」的会话在侧栏显示成「hello」。现在按「CoDock 改名 > codex 会话名 > 首条用户消息」取；空名字不算一条名字，不会把已经取到的名擦掉，老会话显示不变。
+    官网
+    - hero 上的版本徽章更新为 v0.4.6。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.6
+ReleaseTime: 2026-09-22T09:30:35.0000000Z

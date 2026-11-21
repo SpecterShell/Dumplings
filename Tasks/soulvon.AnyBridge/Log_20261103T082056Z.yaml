@@ -1,0 +1,25 @@
+Version: 1.0.14
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v1.0.14/AnyBridge_1.0.14_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v1.0.14/AnyBridge_1.0.14_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    非常感谢反馈这件事的朋友：AnyBridge 的配置目录被占到了近 40GB，实在抱歉给你添了麻烦。问题已经修好。
+    原因是运行日志一直在追加、从不整理，用得越久占得越多。现在的处理：
+    - 日志会自动控制大小，超过上限就换新文件，只保留最近一段记录，不会再无限增长
+    - 升级后第一次启动会自动清理已经堆积的历史日志，不需要你手动删文件
+    - 平时不再记录详细诊断信息（需要排查时可以临时打开），从源头减少日志量
+    另外这次给老版本留下的"垃圾"也做了自动打扫（每次启动检查一次）：
+    - 会自动删掉历次升级留下的旧版程序备份，有机器上能清出两百多 MB
+    - 配置文件如果不小心改坏了，启动时会自动从最近的可用备份恢复，原始损坏文件也会保留一份备查
+    升级完如果占用空间没有明显下降，欢迎到 issue 里告诉我们，我们继续跟。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v1.0.14
+ReleaseTime: 2026-11-03T08:09:23.0000000Z

@@ -1,0 +1,41 @@
+Version: 4.1.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.2/Rayburst_4.1.2_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.2/Rayburst_4.1.2_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release collects the 4.1.2 betas. Rayburst uses far less CPU and memory, both while downloading and while it sits in the tray. The proxy can follow the system, links copied in other apps can open the add window, and the app's own downloads go through the engine. It bundles Aria2 Next 3.1.0 and fixes the app freezing when quitting from the tray.
+    ✨ New Features
+    - Follow the system proxy — the new "System" proxy source uses the proxy the OS names when each download starts, and for the app's own requests. When the browser keeps a download because the engine could not reach it, a notification says why (#784)
+    - Background clipboard watching — optional and off by default: links copied in other apps open the add window right away (#793, #797)
+    - Close action — the close dialog has a "Remember my choice" option, and General settings sets what the close button does: ask, minimize to the tray or quit (#778)
+    - Drag files out — finished task cards drag their files to other apps and folders (#785)
+    - Remove missing records — a batch action removes only the records whose files no longer exist (#786)
+    - Quit from the floating window — its context menu has Quit (#794)
+    🛠 Improvements
+    - Lower CPU while downloading — progress bars animate on the compositor instead of re-laying out the window every frame, a visible task list updates only the cards that changed, and download history is built once per record instead of on every engine snapshot (#799, #791)
+    - Downloads through the engine — update packages and metadata, remote .torrent files, tracker lists, the BT blocklist and ED2K bootstrap lists are downloaded by the engine with multiple connections and the configured proxy; update packages are verified with the updater signature before install (#775)
+    - Retry from a new link — a failed task's Options page shows its source URL again, so it can retry from a replacement link and keep the data already received (#548, #769, #800)
+    - Subfolders in aria2 input — out=dir/name saves under that folder; absolute paths, .. and invalid names are refused with the offending value shown (#780)
+    - Proxy import — bypass rules the engine cannot use are skipped with an explanatory notice instead of a warning (#782)
+    - Linux GPU warning — the GPU acceleration switch warns on the NVIDIA proprietary driver, which freezes WebKitGTK, and diagnostics include the driver (#795)
+    - macOS requirement — the app declares macOS 11 as its minimum, so older systems get a clear message instead of a window that never appears (#805)
+    - Aria2 Next 3.1.0 — a task that failed before you quit comes back as failed instead of retrying at every launch (#802); a redirected download without a server-supplied name is saved under the final file name (#801); tracker tiers stay in order and unsupported trackers are skipped; servers that rotate entity tags keep multiple connections; the Windows engine supports long paths where the system enables them
+    🐛 Bug Fixes
+    - Fixed CPU and memory rising while the main window was hidden, with Web Content climbing towards a full core and 2 GB. Hidden and minimized windows no longer receive task snapshots and catch up when they return; the macOS Dock badge and progress bar redraw only when they change (#799, #791)
+    - Fixed the app freezing when quitting from the tray or Dock (#774)
+    - Fixed a browser handoff that failed on the original link not trying the URL the browser landed on, for example after a 403 (#790)
+    - Fixed switching task list tabs briefly showing the previous tab's cards (#781)
+    - Fixed the add window growing abruptly when opened with a torrent file, and the form emptying while the window closes
+    - Fixed Linux link handlers: portable builds no longer hide the installed app's menu entry, and package installs started by a browser running as an AppImage no longer take that browser for Rayburst (rayburst-connect#106)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/rayburst/releases/tag/v4.1.2
+ReleaseTime: 2026-11-10T10:41:20.0000000Z

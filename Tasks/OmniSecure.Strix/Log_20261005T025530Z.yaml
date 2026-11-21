@@ -1,0 +1,74 @@
+Version: 1.7.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-windows-x86_64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: strix-1.7.0-windows-x86_64.exe
+    PortableCommandAlias: strix
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - fix(models): frontier model check matches the model name only, never the provider route by @0xallam in https://github.com/usestrix/strix/pull/1280
+    - feat(reporting): link HTTP exchange evidence by @bearsyankees in https://github.com/usestrix/strix/pull/1281
+    - feat(prompts): require http_exchange_ids for proxy-validated findings by @0xallam in https://github.com/usestrix/strix/pull/1292
+    - docs: add Vercel AI Gateway provider guide by @erulkey in https://github.com/usestrix/strix/pull/1254
+    - fix(web_search): send only the agent's query to Exa search by @0xallam in https://github.com/usestrix/strix/pull/1306
+    - chore(deps): require litellm>=1.101.0 so gpt-6-astra accepts max_tokens by @0xallam in https://github.com/usestrix/strix/pull/1318
+    - feat(config): STRIX_API_TYPE forces responses vs chat completions by @bearsyankees in https://github.com/usestrix/strix/pull/1324
+    - fix(build): keep the TUI sidecar hook importable on hatchling 1.32.1 by @bearsyankees in https://github.com/usestrix/strix/pull/1325
+    - fix(runtime): place extra files as agent-writable sandbox files on every backend by @0xallam in https://github.com/usestrix/strix/pull/1330
+    - Prompt agents to include local Git blame in technical details by @bearsyankees in https://github.com/usestrix/strix/pull/1329
+    - fix(reporting): reduce git blame guidance to a trailing hint on the reporting tool by @0xallam in https://github.com/usestrix/strix/pull/1336
+    - runtime: read_only local sources become :ro bind mounts by @0xallam in https://github.com/usestrix/strix/pull/1342
+    - feat(mcp): initialize connections lazily by @yoni-at-strix in https://github.com/usestrix/strix/pull/1347
+    - feat(llm): structured per-attempt provider request log with provider request ids by @0xallam in https://github.com/usestrix/strix/pull/1353
+    - Let agents delete a vulnerability report they filed by @bearsyankees in https://github.com/usestrix/strix/pull/1354
+    - Fill in blank tool-call ids so strict providers accept the history by @0xallam in https://github.com/usestrix/strix/pull/1355
+    - fix(dev): make check-all non-mutating by @Czech-Knight in https://github.com/usestrix/strix/pull/1360
+    - fix(tui): suspend on ctrl+z by @ian-at-strix in https://github.com/usestrix/strix/pull/1371
+    - docs(skills): refresh framework behavior and security testing guidance by @bearsyankees in https://github.com/usestrix/strix/pull/1372
+    - perf(prompt): put per-run scope at the end of the system prompt by @ian-at-strix in https://github.com/usestrix/strix/pull/1375
+    - perf(llm): give Claude a cache point before the per-run scope by @ian-at-strix in https://github.com/usestrix/strix/pull/1376
+    - perf(prompt): load requested skills after a cache point by @ian-at-strix in https://github.com/usestrix/strix/pull/1382
+    - feat(tui): animate the wait_for_agents indicator by @ian-at-strix in https://github.com/usestrix/strix/pull/1383
+    - feat(budget): budget_policy=pause — park every agent at the cost limit until the operator resumes by @0xallam in https://github.com/usestrix/strix/pull/1387
+    - perf(llm): pin OpenRouter agents to one provider with session IDs by @ian-at-strix in https://github.com/usestrix/strix/pull/1386
+    - chore(models): remove the model quality warning and its allowlists by @0xallam in https://github.com/usestrix/strix/pull/1388
+    - fix(reporting): restore create_vulnerability_report parameter descrip… by @bearsyankees in https://github.com/usestrix/strix/pull/1391
+    - fix(config): choose Responses vs chat completions from the model, not the base URL by @0xallam in https://github.com/usestrix/strix/pull/1407
+    - fix(config): use the Responses API whenever the model supports it by @0xallam in https://github.com/usestrix/strix/pull/1408
+    - fix(finish_scan): stop asking for a section heading in every report field by @0xallam in https://github.com/usestrix/strix/pull/1411
+    - fix(tui): link every wrapped line of the viewer URL to the full URL by @0xallam in https://github.com/usestrix/strix/pull/1412
+    - feat(cli): Add --fail-on to gate headless exit code on severity by @siundu254 in https://github.com/usestrix/strix/pull/1399
+    - fix(cli): force UTF-8 stdout/stderr on Windows so Rich output never raises by @0xallam in https://github.com/usestrix/strix/pull/1414
+    - fix(preflight): name a non-ASCII character in the API key instead of raising UnicodeEncodeError by @0xallam in https://github.com/usestrix/strix/pull/1415
+    - fix(tui): render report section bodies as markdown by @0xallam in https://github.com/usestrix/strix/pull/1416
+    - fix(tui): collapsible, zoomable sidebar panels and a sidebar toggle by @0xallam in https://github.com/usestrix/strix/pull/1417
+    - fix(cli): verify the model before the TUI opens on a direct launch by @0xallam in https://github.com/usestrix/strix/pull/1418
+    - fix(telemetry): keep "Exception ignored" finalizer tracebacks off the terminal by @0xallam in https://github.com/usestrix/strix/pull/1419
+    - feat(cli): pick a prior run interactively when --resume has no name by @0xallam in https://github.com/usestrix/strix/pull/1421
+    - test(pricing): accept any identically priced provider for bare grok-4.5 by @0xallam in https://github.com/usestrix/strix/pull/1423
+    - fix(resume-picker): treat ctrl+c as cancel instead of leaking a KeyboardInterrupt traceback by @0xallam in https://github.com/usestrix/strix/pull/1424
+    - ci: run ruff, mypy, bandit, pytest, Go TUI and viewer checks on every pull request by @0xallam in https://github.com/usestrix/strix/pull/1422
+    - fix(deps): ship google-auth with every install so Vertex AI works in release binaries by @0xallam in https://github.com/usestrix/strix/pull/1437
+    - fix(preflight): give the startup model check its own 30s timeout instead of LLM_TIMEOUT by @0xallam in https://github.com/usestrix/strix/pull/1438
+    - fix(cli): run headless when no terminal is attached instead of crashing the TUI by @0xallam in https://github.com/usestrix/strix/pull/1440
+    - fix(docker): connect like the docker CLI and explain why the daemon is unreachable by @0xallam in https://github.com/usestrix/strix/pull/1441
+    - refactor(agents): replace respond_to_user with a text-free wait_for_user by @0xallam in https://github.com/usestrix/strix/pull/1442
+    - prompts: let the verified user define and change scope in chat by @0xallam in https://github.com/usestrix/strix/pull/1443
+    - readme: remove the Ask DeepWiki badge by @0xallam in https://github.com/usestrix/strix/pull/1444
+    - chore: release v1.7.0 by @0xallam in https://github.com/usestrix/strix/pull/1445
+    New Contributors
+    - @erulkey made their first contribution in https://github.com/usestrix/strix/pull/1254
+    - @Czech-Knight made their first contribution in https://github.com/usestrix/strix/pull/1360
+    - @ian-at-strix made their first contribution in https://github.com/usestrix/strix/pull/1371
+    - @siundu254 made their first contribution in https://github.com/usestrix/strix/pull/1399
+    Full Changelog: https://github.com/usestrix/strix/compare/v1.6.2...v1.7.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/usestrix/strix/releases/tag/v1.7.0
+ReleaseTime: 2026-10-05T02:39:14.0000000Z

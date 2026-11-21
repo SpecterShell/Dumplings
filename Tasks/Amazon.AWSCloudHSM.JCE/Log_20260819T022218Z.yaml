@@ -1,0 +1,26 @@
+Version: 5.18.0
+Installer:
+- InstallerUrl: https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/Windows/AWSCloudHSMJCE-5.18.0-1.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Client SDK 5.18.0 introduces new features and improvements across multiple components, including post-quantum ML-DSA signatures and EdDSA support.
+    Platform support
+    - Added Ubuntu 26.04 LTS support.
+    New Features
+    - Added support for ML-DSA (Module-Lattice-Based Digital Signature Algorithm, FIPS 204) post-quantum key generation, signing, and verification.
+    - Added support for EdDSA (Edwards-curve Digital Signature Algorithm) signing and verification.
+    CloudHSM CLI
+    - Added support for generating ML-DSA key pairs (ML-DSA-44, ML-DSA-65, and ML-DSA-87), signing, and verification. For more information, see Generate an asymmetric ML-DSA key pair with CloudHSM CLI, Generate a signature with the ML-DSA mechanism in CloudHSM CLI, and Verify a signature signed with the ML-DSA mechanism in CloudHSM CLI.
+    - Added PureEdDSA (Ed25519) signing and verification, extending EdDSA support in the CloudHSM CLI. For more information, see Generate a signature with the PureEdDSA mechanism in CloudHSM CLI and Verify a signature signed with the PureEdDSA mechanism in CloudHSM CLI.
+    PKCS #11 library
+    - Added support for ML-DSA key generation, signing, and verification, and for EdDSA (Ed25519 and Ed25519ph) signing and verification. For more information, see Supported mechanisms for the PKCS #11 library for AWS CloudHSM Client SDK 5.
+    JCE provider
+    - Added support for ML-DSA key generation, signing, and verification, and for EdDSA (Ed25519 and Ed25519ph). For more information, see Supported mechanisms for JCE provider for AWS CloudHSM Client SDK 5.
+    OpenSSL Provider
+    - Added support for PureEdDSA (Ed25519) and ML-DSA (ML-DSA-44, ML-DSA-65, and ML-DSA-87) key types for TLS offload on non-FIPS clusters. For more information, see Supported key types for OpenSSL Provider for AWS CloudHSM Client SDK 5 and OpenSSL Provider Supported Mechanisms.
+    - The OpenSSL Provider now supports OpenSSL CLI operations, including certificate signing request (CSR) creation and certificate signing, for all supported key types.
+    Bug fixes/Improvements
+    - Resolved a known issue where the key-reference filter could not select session (ephemeral) keys in the CloudHSM CLI and JCE provider.
+    - Improved throttling handling and automatic retry behavior across the Client SDKs, along with additional bug fixes and stability improvements.

@@ -1,0 +1,39 @@
+Version: 1.16.333
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/sdcxb/codem/releases/download/v1.16.333/Codem_1.16.333_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/sdcxb/codem/releases/download/v1.16.333/Codem_1.16.333_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Codem v1.16.333
+    发布日期：2026-10-30
+    类型：维护版（Windows x64）
+    下载：Codem_1.16.333_x64-setup.exe（NSIS 安装包）· Codem_1.16.333_x64_en-US.msi（MSI）
+    本版要点
+    1. 子智能体失败不再被当成成功文本：refusal / aborted / error / max-tokens 结束时，父智能体收到的工具结果会标记为错误。
+    2. 同步测试与文档基线；移除未发布的实验性汇报插件，普通用户无感。
+    3. 安装包与自动更新清单重新生成。
+    变更
+    修复
+    - 子智能体失败结果被误当成功：前台子智能体以 refusal / aborted / error / max-tokens 结束时，工具结果此前仍返回成功标记，父智能体可能继续把“未完成”当普通内容处理。现在统一标记为错误，并保留 stopReason 供排查。
+    维护
+    - 移除未发布的实验性汇报插件与内部清理。
+    - 同步文档与测试基线。
+    升级说明
+    - 可直接覆盖安装；设置、会话、技能、插件都在用户目录，升级不会清空。
+    - 本次是维护版，不升级不影响 1.16.332 的既有功能。
+    已知问题
+    - 无新增已知问题；既有 deepseek-v4-pro 相关说明不变。
+    校验
+    - NSIS / MSI 安装包与 .sig 由发布密钥签名。
+    - latest.json 提供 windows-x86_64-nsis 与 windows-x86_64 两个平台键。
+    - 发布后复核资产 SHA-256 与远程清单一致。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sdcxb/codem/releases/tag/v1.16.333
+ReleaseTime: 2026-10-30T00:34:10.0000000Z

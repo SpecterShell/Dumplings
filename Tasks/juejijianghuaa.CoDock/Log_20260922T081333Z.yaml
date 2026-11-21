@@ -1,0 +1,27 @@
+Version: 0.4.5
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.5/CoDock-Setup-0.4.5-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.5 (2026-09-22)
+    这一版把 Moonshot 的 Kimi Code CLI 接了进来，CoDock 能托管的 Coding Agent 又多一个；另外把会话标题的取法对齐到 Claude Code 自己的口径（/model 这类本地命令不再顶替标题，取不到标题也不会让会话从历史里消失），设置页的手动更新命令补齐了。
+    新功能
+    - 接入 Kimi Code (kimi)：
+      - 接入 Moonshot 的 Kimi Code CLI，支持启动、恢复、历史会话与用量统计；二进制自动探测 ~/.kimi-code/bin/kimi（安装脚本只改 shell PATH，GUI 启动的 CoDock 读不到，所以这条候选路径是单独认的），并跟随 KIMI_CODE_HOME 覆盖；
+      - 由 CoDock 托管 --auto（Never Ask）启动。--auto 与 --yolo/-y 在 CLI 里互斥，两族连同隐藏别名（--yes、--auto-approve）一律不允许通过「附加参数」传进启动命令；--plan 与 --skills-dir 不影响托管边界，仍可自行选用；
+      - 恢复走 --session <id>。历史与用量读取 ~/.kimi-code/sessions/<workDirKey>/<sessionId>/（state.json + agents/main/wire.jsonl）：用量只认 usage.record（每个 LLM 请求一条，step.end 的投影不再重复相加），并连子 Agent 一起统计；上下文占用取 token_counting.* 的测量值，上下文窗口优先读 config.toml 的 max_context_size；
+      - 成本固定报 unknown（订阅制，本地没有单价），只报 token 不编金额；
+      - kimi 没有 session delete 子命令，永久删除按会话目录整目录删除；分叉是子命令且交互性未实机验证，首版不提供分叉入口。
+    优化与修复
+    - 会话标题改按 Claude Code 官方口径取：此前靠「以 < 开头就跳过」加标签配对来挡本地命令，/model、/mcp 这类不带参数的本地命令会把命令名顶成标题——它们后面才是你真正问的第一句。现在跳过 isMeta 记录、把 <tag>…</tag> 整块剥掉再看剩下什么，和 claude 自己 resume 列表的取法一致；带参数的命令（技能、自定义命令）仍返回「命令名 + 参数」。取不到标题时回落会话 id 前 8 位，会话不再因为取不到标题而从历史列表里消失。
+    - 设置页补齐手动更新命令：Gemini / Qoder / Dsh 的卡片此前不常显更新命令，现在补上了。agy / grok / qoder 给的是官方安装脚本（跨平台），没装过可以直接拿它首装，已装的重跑一遍即完成更新；grok 原先只在 macOS arm64 上给 npm 命令、其他平台退化成 grok update，也一并统一。
+    官网
+    - Dock 换上 Kimi Code 的 K 字徽章（与 App 内是同一枚 SVG）。顺手修了 hover 时瓦片顶出外框的问题：抬 10px + 放大 13% 的外扩超过内边距，瓦片顶边会超出去 2.6px、首尾两枚的角整块露在圆角外面，现在改成抬 5px 并把内边距提到 14px；721–860px 这一档瓦片顶出容器再被裁掉，也按压扁的路子补上了。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.5
+ReleaseTime: 2026-09-22T02:39:24.0000000Z

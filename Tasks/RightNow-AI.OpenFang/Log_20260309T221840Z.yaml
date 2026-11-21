@@ -1,0 +1,31 @@
+Version: 0.3.37
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.37/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.37/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Tool name mapping (#349): LLM-hallucinated aliases (fs-write, fsRead, writeFile, etc.) normalize to canonical names before both capability check and dispatch
+    - Provider keys not loading (#465, #458, #355): Fresh drivers created on every request reading current env vars. Dashboard key saves take effect immediately without restart
+    - Moonshot/kimi (#428): Fixed model catalog IDs (kimi-k2, kimi-k2.5) and provider inference from model name
+    - Telegram reactions (#435): Fire-and-forget lifecycle emoji (⏳→🤔→⚙️→✅/❌)
+    - Telegram proxy (#477): Configurable api_url for custom API mirrors/proxies
+    - Discord ignore_bots (#403): Config option to allow bot-to-bot interactions, self-loop prevention
+    - Linux init crash (#389): 7-browser fallback cascade, always prints URL for manual open
+    - Text tool call parsing (#354, #332): Fallback parser for models without native function calling — [TOOL_CALL], <tool_call>, bare JSON patterns with 25 tests
+    Also closed
+    - #358, #388, #420, #319, #261 — stale/already-fixed issues
+    Stats
+    14 files changed, 1180 insertions, 94 deletions, 1948 tests pass, 0 clippy warnings
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.37
+ReleaseTime: 2026-03-09T21:43:10.0000000Z

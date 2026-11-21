@@ -1,0 +1,40 @@
+Version: 0.24.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.24.0/Belfry_0.24.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v0.24.0/Belfry_0.24.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v0.24.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - Antigravity CLI、OpenCode、Kimi Code：与 Codex、Claude Code、Pi 一起提供六种 Agent。接入安装与更新、项目会话、恢复与后台接驳、分屏、工作区备份、Quick Open 和快捷指令。
+    - 原生历史与用量：新增三种 Agent 支持历史列表、全文搜索、会话详情、工具与文件修改展示、删除与清空、单会话统计、全局用量分析和价格规则。
+    - Provider 与插件：新增 Agent 支持全局及项目 Provider、模型配置、Hook、任务队列、原生权限交互、MCP、Skills、插件会话上下文及模型调用。
+    - 六种 Agent 参与房间协作：支持成员选择、任务与消息回执、Git Diff 反馈；OpenCode 使用独立进程，隔离不同会话的 Provider 和插件连接身份。
+    改进
+    - Provider 与历史筛选适配六种 Agent，窄窗口自动换行，并保留切换动效。
+    - 原生配置保留无关条目与注释，切回官方登录时恢复原选择。历史统计使用 CLI 实际记录，缺失模型、缓存或辅助请求归属时明确保留未知值。
+    修复
+    - 修复旧终端后台丢失房间命令或回执字段的问题：先检查能力，再使用兼容通道；写入后的异常不会触发重复派发。
+    - 房间流程图按会话实际处理状态显示动效；等待确认时停止流动。成员正在处理但任务板为空时，提示检查统筹终端。
+    - 修复本地网页预览因无关目录或文件通知自动重载、打断目录上传的问题；页面和已加载样式修改后仍自动刷新。
+    升级提示
+    - 新增 CLI 的最低集成版本为 Antigravity CLI 1.5.3、OpenCode 2.2.6、Kimi Code 2.5.2。可在「设置 → 关于」安装或更新，首次登录在各自 CLI 中完成；启用 Hook 后重开会话。
+    - Antigravity 自定义 Provider 使用 Gemini API；OpenCode、Kimi Code 使用 OpenAI Chat Completions。三者都需要填写模型 ID。
+    - 新增 Agent 需要新版终端后台。如果升级后仍复用旧后台，请先保存并结束正在运行的任务，再重启后台服务（也可重启电脑）后创建新 Agent 会话。
+    - macOS 安装包为 ad-hoc 签名、未经 Apple 公证；Windows 未签名。Windows 的真实账号登录与终端交互仍需实机验证。
+    - 完整功能范围与原生 CLI 限制见 接入说明。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#0240---2026-11-08
+ReleaseTime: 2026-11-08T13:04:21.0000000Z

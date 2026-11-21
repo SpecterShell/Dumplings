@@ -1,0 +1,124 @@
+Version: 19.0.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v19.0.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed GIF images failing Liquid AI judgments with HTTP 422; they are now sent as PNG (#19757 by @alphastorm)
+    - Anthropic strict-tool fallback now treats a Vertex org-policy rejection of structured_outputs (allowedPartnerModelFeatures / "disallowed feature structured_outputs") as a strict-tools rejection, retries once without strict, and pins strictToolsDisabled (#19576) (#19655 by @koeria)
+    - Kiro requests rejected with Input is too long. or CONTENT_LENGTH_EXCEEDS_THRESHOLD can now recover through conversation compaction (#19723 by @emotionbug)
+    - Kiro thinking off now turns reasoning off instead of running the model's default effort; models that cannot disable reasoning use their lowest effort (#19722 by @emotionbug)
+    - Kiro /usage shows purchased add-on credits, and an account whose plan credits are spent keeps serving while add-on credits remain (#19724 by @emotionbug)
+    - Kiro Identity Center logins in AWS GovCloud (US) now list profiles in us-gov-west-1 and us-gov-east-1 instead of the commercial regions, which reject GovCloud tokens (#19726 by @TechDufus)
+    - Statusless gateway errors reading stream interrupted now retry like stream was interrupted instead of ending the turn (#19709).
+    @oh-my-pi/browser-relay
+    Fixed
+    - The browser relay extension survives a browser whose loaded permission set predates the downloads permission: the service worker keeps working without download pairing instead of crashing before it ever connects (#19659 by @pavel-kalmykov)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Liquid AI's d1.2 and d1.2-ultra judge models; liquid now defaults to d1.2 (#19753 by @alphastorm)
+    - Added gemini-4-neon to the bundled Antigravity CLI roster, with the low/medium/high/xhigh thought levels agy offers for it (#19787 by @ataberkus).
+    - Model.snapcompactShape ({ variant, frameSize? }) gives a model its own snapcompact frame shape (#19591 by @ryanskidmore)
+    Fixed
+    - Discovered Kiro models that cannot turn reasoning off now use their lowest supported effort when thinking is set to off (#19722 by @emotionbug)
+    - Kiro accepts AWS GovCloud (US) profile ARNs (arn:aws-us-gov:codewhisperer:…), which were previously skipped during profile listing (#19726 by @TechDufus)
+    - Google Antigravity no longer lists Gemini 4 Hydrogen's sonar monitor slot or its tiered High/XHigh SKUs as separate models; the tiered SKUs fold into the one Gemini 4 Hydrogen model (#19795 by @eggpeat)
+    - Gemini 4 Neon on Google Antigravity now shows as one model whose thinking level (low, medium, high, xhigh) selects the matching SKU, instead of four separate models, and is priced at $3/$15 per million tokens ($0.15 cached) instead of $0 (#19789 by @eggpeat)
+    - Gemini 4 Neon now collapses into one model on Gemini CLI too, and on the Gemini API and Vertex AI offers the xhigh thinking level and long outputs up to 262,144 tokens, with its $3/$15 Gemini API price
+    @oh-my-pi/pi-coding-agent
+    Added
+    - /session shows the path of the session's local:// directory, and /copy local copies it, creating the directory first so it can be entered before anything was written there (#19778 by @farnoy)
+    - snapcompactShape on models.yml models, modelOverrides and extension registerProvider models sets that model's snapcompact frame shape (#19591 by @ryanskidmore)
+    Fixed
+    - Fixed PTY command transcripts sometimes gaining a blank line where a \r\n line ending was split across two terminal reads.
+    - Fixed the shell's dirname builtin on Windows ignoring \ separators and drive prefixes (dirname 'C:\a\b' printed .), which broke scripts like VS Code's code launcher (./Code.exe: No such file or directory)
+    - Fixed bash output minimizing being skipped on Windows when a command is named by a \ path or with .exe ("C:\Program Files\Git\cmd\git.exe" status, git.exe log)
+    - Fixed the bundled omp://tools docs still describing the removed ida tool; tools/dsm.md now documents eval's dsm namespace and disassembler.* settings, and tools/read.md documents metadata-only executable reads (#19608)
+    - Fixed native terminal hosts such as Tern placing extension aboveEditor widgets and a blank row between the status row and the tray; the widgets now sit above the status row (#19767)
+    - Fixed ^model mentions in queued messages (->/=> while the agent is busy, later items of a numbered list, RPC steer/follow_up, ACP steering) reaching the model as literal ^provider/model text instead of registering their m<N> agent (#19683 by @a-glapinski)
+    - Fixed ^model mentions in extension messages sent with sendUserMessage({ deliverAs: "steer" | "followUp" | "aside" }) while the agent is busy reaching the model as literal text (#19799 by @H4vC)
+    - Fixed every message queued behind an undelivered ^model mention repeating the "m<N> now available" notice to the model (#19799 by @H4vC)
+    - A plugin manifest with a non-string extensions entry (e.g. an object) no longer crashes extension loading with ERR_INVALID_ARG_TYPE; the entry is reported as not found and valid entries still load (#19674 by @koeria)
+    - Fixed embedded bash script.sh resolving BASH_SOURCE[0] to bash instead of the script path, which broke scripts loading files beside themselves (#19792)
+    - Fixed proxy model discovery ignoring a gateway's advertised input modalities and output-token cap (#19754 by @zhyc9de).
+    - Fixed a provider routed through an auth gateway (transport: pi-native in models.yml) still listing models from the provider's own endpoint, sending the gateway key there; such providers now skip the provider's model discovery and keep their bundled and cached models (#19646 by @ray8828)
+    - Fixed a spurious "cache miss" marker on the first turn after a compaction: compaction rewrites the prompt prefix, so that miss is expected and no longer flagged (#19679 by @Petyok)
+    - Fixed omp --resume <id> under --mode rpc, --mode rpc-ui and --mode acp failing at start when the session's directory no longer exists; the session now opens where it is stored, with the launch directory as its working directory, without asking whether to move it (#19651 by @sjawhar)
+    - Fixed the browser relay extension dying silently in a browser whose loaded permission set predates the downloads permission: it now keeps working without download pairing, and the relay reports a download tracking gap instead of a generic not-found (#19659 by @pavel-kalmykov)
+    - Sharing a session whose subagents report progress faster than the uplink drains no longer ends with "collab send backlog exceeded its limit" while a guest joins
+    - Fixed /loop iterations and /goal continuations firing ~800ms after a turn yields to wait on background subagents or jobs; they now wait until the run finishes (#19781)
+    - Fixed Codex and OpenAI API web search ignoring the web role's thinking level (openai-codex/gpt-6-luna:xhigh); the level now reaches the request as reasoning.effort (#19793)
+    - Fixed plan review measuring "Approve and keep context" against the pre-plan model instead of the tier chosen in the "continue with" slider, so switching to a larger-context tier now enables it (#19660)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed omp freezing for seconds to minutes on WSL2 while saving sessions: Linux FileLock now locks a sidecar file instead of binding a socket, which takes about 10 ms per call there. Older omp versions still running do not see these locks, so restart them after updating (#19704 by @turgaybulut)
+    @oh-my-pi/snapcompact
+    Added
+    - resolveShape() uses a model's configured snapcompactShape in place of its model-line default; an explicit variant still wins and billing still follows the model (#19591 by @ryanskidmore)
+    @oh-my-pi/omp-stats
+    Added
+    - Added 2d and 3d range presets with hourly buckets to the stats dashboard time selector (#19766, #19774 by @thekitaev).
+    @oh-my-pi/pi-tui
+    Added
+    - The native session sheet shows a Local report line (the session's local:// directory) as a copyable field beside the ID and file (#19778 by @farnoy)
+    Fixed
+    - Fixed images from a previous session reappearing at the top-left of the screen after /new in herdr-app (#19749 by @jaredlyon)
+    - Loop-stall diagnostics (ui.loop-blocked) no longer sample the JS thread while no TUI runs, such as in an external editor or after the session ends (#19703 by @will-bogusz)
+    - Fixed the usage dashboard rendering exhausted or pressured usage rows without a quota bar (prepaid balances, spent quotas) as dim informational text; they now take the error or warning color their reported status calls for, and a spent quota with no measurable amount reads "exhausted" instead of "no data" (#19764)
+    What's Changed
+    - fix(ai): retry statusless stream interrupted errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/19711
+    - fix(coding-agent): kept aboveEditor widgets off tern's tray header by @roboomp in https://github.com/can1357/oh-my-pi/pull/19768
+    - fix(coding-agent): expanded ^model mentions in queued messages by @a-glapinski in https://github.com/can1357/oh-my-pi/pull/19683
+    - fix(coding-agent): announced queued ^model agents once and expanded extension queued mentions by @H4vC in https://github.com/can1357/oh-my-pi/pull/19799
+    - fix(coding-agent): skip provider model discovery for pi-native gateway overrides by @ray8828 in https://github.com/can1357/oh-my-pi/pull/19646
+    - fix(coding-agent): open a missing-directory session in place under protocol modes by @sjawhar in https://github.com/can1357/oh-my-pi/pull/19651
+    - fix(ai): recognize Vertex structured_outputs org-policy as a strict-tools rejection by @koeria in https://github.com/can1357/oh-my-pi/pull/19655
+    - Browser relay extension keeps working when the downloads API is missing by @pavel-kalmykov in https://github.com/can1357/oh-my-pi/pull/19659
+    - fix(coding-agent): re-measure plan keep-context against selected tier by @roboomp in https://github.com/can1357/oh-my-pi/pull/19665
+    - fix(coding-agent): skip non-string plugin manifest entries instead of crashing extension loading by @koeria in https://github.com/can1357/oh-my-pi/pull/19674
+    - fix(coding-agent): don't flag the post-compaction cache miss by @Petyok in https://github.com/can1357/oh-my-pi/pull/19679
+    - fix(tui): stopped the loop profiler when the last TUI watchdog stops by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19703
+    - fix(natives): lock a sidecar file on Linux instead of binding an abstract socket by @turgaybulut in https://github.com/can1357/oh-my-pi/pull/19704
+    - docs(extensions): clarify agent_end message scope by @justinsmorganHHC in https://github.com/can1357/oh-my-pi/pull/19705
+    - fix(collab): coalesce queued subagent progress so a busy host keeps a joining guest by @ca-io-systems in https://github.com/can1357/oh-my-pi/pull/19710
+    - test(natives): restore passing macOS native typing tests by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19715
+    - fix(kiro): reported input-too-long rejections as context overflow by @emotionbug in https://github.com/can1357/oh-my-pi/pull/19723
+    - fix(kiro): counted purchased add-on credits in usage and ranking by @emotionbug in https://github.com/can1357/oh-my-pi/pull/19724
+    - fix(kiro): list Identity Center profiles in AWS GovCloud regions by @TechDufus in https://github.com/can1357/oh-my-pi/pull/19726
+    - fix(tui): delete Kitty placements after the reset's erases by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/19749
+    - feat(catalog): add Liquid AI d1.2 and d1.2-ultra judge models by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19753
+    - fix(coding-agent): honor /v1/models input modalities and output cap in proxy discovery by @zhyc9de in https://github.com/can1357/oh-my-pi/pull/19754
+    - fix(ai): re-encode GIFs for Liquid judges, which reject them by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19757
+    - test: gate test helpers and imports that only unix tests use by @sjawhar in https://github.com/can1357/oh-my-pi/pull/19761
+    - fix(scripts): ran Rust tasks on the pinned toolchain whatever RUSTUP_TOOLCHAIN says by @sjawhar in https://github.com/can1357/oh-my-pi/pull/19762
+    - fix(tui): toned bar-less usage dashboard rows by reported status by @roboomp in https://github.com/can1357/oh-my-pi/pull/19765
+    - feat(stats): add 2d and 3d range presets with hourly buckets by @thekitaev in https://github.com/can1357/oh-my-pi/pull/19774
+    - feat(coding-agent,tui): showed the local:// directory in /session and copied it with /copy local by @farnoy in https://github.com/can1357/oh-my-pi/pull/19778
+    - fix(coding-agent): held loop and goal auto-submit until paused runs end by @roboomp in https://github.com/can1357/oh-my-pi/pull/19782
+    - feat(catalog): added Gemini 4 Neon to the Antigravity CLI roster by @ataberkus in https://github.com/can1357/oh-my-pi/pull/19787
+    - fix(catalog): collapse and price Gemini 4 Neon on Google Antigravity by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19789
+    - fix(catalog): hide Gemini 4 Hydrogen's monitor and tiered SKUs on Antigravity by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19795
+    - fix(web): sent the web role's thinking level as codex search effort by @roboomp in https://github.com/can1357/oh-my-pi/pull/19797
+    - fix(shell): corrected nested bash source path by @roboomp in https://github.com/can1357/oh-my-pi/pull/19800
+    - test: made fork-dedup and the approval folder listing pass in any directory order by @sjawhar in https://github.com/can1357/oh-my-pi/pull/19803
+    - test(coding-agent): gave the zsh PTY prompt test a startup file by @sjawhar in https://github.com/can1357/oh-my-pi/pull/19804
+    - fix(kiro): sent thinking off instead of the schema default effort by @emotionbug in https://github.com/can1357/oh-my-pi/pull/19722
+    - feat(catalog,snapcompact,coding-agent): per-model snapcompact frame shape by @ryanskidmore in https://github.com/can1357/oh-my-pi/pull/19591
+    New Contributors
+    - @ray8828 made their first contribution in https://github.com/can1357/oh-my-pi/pull/19646
+    - @koeria made their first contribution in https://github.com/can1357/oh-my-pi/pull/19655
+    - @Petyok made their first contribution in https://github.com/can1357/oh-my-pi/pull/19679
+    - @turgaybulut made their first contribution in https://github.com/can1357/oh-my-pi/pull/19704
+    - @justinsmorganHHC made their first contribution in https://github.com/can1357/oh-my-pi/pull/19705
+    - @emotionbug made their first contribution in https://github.com/can1357/oh-my-pi/pull/19723
+    - @zhyc9de made their first contribution in https://github.com/can1357/oh-my-pi/pull/19754
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v19.0.0...v19.0.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v19.0.1
+ReleaseTime: 2026-11-19T22:54:41.0000000Z

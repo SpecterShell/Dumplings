@@ -1,0 +1,43 @@
+Version: 0.3.2
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.3.2/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.3.2
+    版本重点
+    本版集中改进主界面的视觉一致性和搜索键盘操作：支持深色、浅色与跟随系统主题，修复搜索结果较少时方向键无响应的问题，并把搜索视图按职责拆分，降低后续维护和回归风险。
+    新功能
+    - 设置页支持深色、浅色和跟随系统三种主题模式，主启动器和设置页即时使用同一套主题令牌。
+    - 搜索输入框、结果列表、插件面板、快捷键提示、Toast 和右键菜单的界面职责分别归档到独立模块。
+    - 搜索结果进入键盘导航后，底部操作提示会同步显示当前可用的返回和选择动作。
+    修复
+    - 修复文本输入框捕获左右方向键后，启动器无法继续处理结果导航的问题。
+    - 修复搜索结果只有单列时左右键停留在原项的问题；单列结果现在按列表顺序移动，双列结果继续按二维布局移动。
+    - 修复搜索结果导航时选中态和输入框焦点状态不同步的问题；Esc 可返回输入框，Enter 继续启动当前选中项。
+    - 增加网格、双列和单列结果导航回归测试。
+    升级影响
+    - 设置、历史记录、固定项、别名、快捷键和安装目录无需迁移。
+    - 新增主题设置项；已有用户默认使用深色主题，可在设置页切换。
+    - 本版不改变搜索索引格式、插件协议或已验证的启动目标规则。
+    已知限制
+    - 安装包仍无 Authenticode 数字签名。
+    - 真实应用启动、窗口切换和系统主题检测仍依赖当前 Windows 环境；状态机和回归测试已覆盖核心路径。
+    构建与验证
+    - 发布 tag：v0.3.2
+    - tag 提交：8eebcc09c5de9fde5905262a963c6611a6fd748d
+    - 上一个发布：v0.3.1
+    - 提交数量：3
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #16
+    本次提交范围
+    - docs(ui): archive grid dashboard specification (8eebcc0)
+    - feat(ui): refine launcher navigation and theme (d25ff1c)
+    - update gitinore (64c6e4e)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.3.2
+ReleaseTime: 2026-09-18T21:23:25.0000000Z

@@ -1,0 +1,20 @@
+Version: 0.5.8
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/kay-ou/SimTradeDesk/releases/download/v0.5.8/SimTradeDesk-Setup-0.5.8.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Bug Fixes
+    - macOS unsigned distribution stability: removed post-package ad-hoc re-sign of nested Electron components to prevent signature corruption that caused launch-time crashes on macOS 15.6.1
+    - macOS signature chain validation: added strict post-sign verification that rejects mixed signature chains (main app and embedded frameworks must be consistently ad-hoc or same Team ID), preventing dyld load failures
+    Build
+    - release workflow robustness: removed duplicate gh release create call in release workflow to avoid release-step conflicts
+    Release Notes
+    - This release continues to support unsigned macOS distribution (no Apple Developer certificate required)
+    - Users should install SimTradeDesk.app into /Applications and run mac-fix-gatekeeper.command once before first launch
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kay-ou/SimTradeDesk/releases/tag/v0.5.8
+ReleaseTime: 2026-04-21T18:08:14.0000000Z

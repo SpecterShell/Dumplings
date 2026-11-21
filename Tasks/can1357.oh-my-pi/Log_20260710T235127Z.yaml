@@ -1,0 +1,40 @@
+Version: 16.4.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.4.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed serialization of BigInt tool arguments to prevent data loss during remote compaction.
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed compatibility with xAI by automatically downgrading OpenAI-specific tool calls and image detail settings during message history replays.
+    - Fixed a race condition in shared SQLite OAuth token refreshes by implementing durable credential ownership and compare-and-set persistence to prevent stale refresh failures.
+    - Fixed OpenAI Codex requests to include the required version header for newly gated models.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed OpenAI Codex model discovery to include the Codex version header alongside the client_version query parameter.
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Fixed an issue where BigInt values in tool arguments failed to serialize during session compaction.
+    - Resolved an issue where GPT-5.6 over-delegated tasks by refining task fan-out and concurrency policies in the system prompt.
+    - Fixed a race condition in concurrent MCP OAuth token refreshes across processes, ensuring rotating refresh tokens are only refreshed once and preventing stale token errors from clearing valid credentials.
+    @oh-my-pi/omp-stats
+    Fixed
+    - Fixed a crash during stats synchronization on legacy session entries that lack a cost breakdown by falling back to catalog pricing when available.
+    @oh-my-pi/pi-utils
+    Added
+    - Added stringifyJson utility with support for BigInt serialization.
+    What's Changed
+    - fix(codex): send version header with Codex requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/5108
+    - fix(auth): serialize MCP OAuth refreshes by @roboomp in https://github.com/can1357/oh-my-pi/pull/5116
+    - fix(ai): adapted xai responses replay shapes by @any-victor in https://github.com/can1357/oh-my-pi/pull/5109
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.4.1...v16.4.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.4.2
+ReleaseTime: 2026-07-10T22:56:39.0000000Z

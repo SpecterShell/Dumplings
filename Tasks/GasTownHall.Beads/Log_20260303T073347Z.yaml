@@ -1,0 +1,721 @@
+Version: 0.58.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.58.0/beads_0.58.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.58.0/beads_0.58.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - 94b699c41132f2c74cac3ccb4c9fcffa4dd47273 Merge PR #1995: feat: allow per-worktree .beads/redirect to override main repo
+    - f6b04f741b1d44582ad29bd60efcbf37f8a0dc2f Merge PR #1996: feat(query): add has_metadata_key to bd query DSL
+    - 24e12a316aafa8392f8a81dd6ddcfcba9c246406 Merge PR #2088: feat: Add the option to use the Jira V2 api
+    - 21ca8454f9650f91c7d0c3f0e3f702721f78f7a6 Merge PR #2143: feat: add dolt-data-dir config for custom dolt data directory
+    - a9ca7b78a2c73384d7d4d908a68f14e205b39d4a Merge PR #2178: feat(dolt): SSH push/pull fallback + dual-surface remote management
+    - feb8a007f9646adcd1884441d3dd4f10bc8a2eca Merge PR #2221: feat: phase 1 hook census and migration planning (#2217)
+    - 2ec8c10098f9e82cb566c575398ac77bf021e9ff Merge PR: feat: add --backend flag to bd init with SQLite deprecation notice (bd-7xj5)
+    - e688ea767d76f9098bbe40a6b6dd65eb27ec71ea feat(backup): add 'bd backup restore' command to bootstrap from JSONL backup
+    - d82110945a327b7304bc38f8875dea1aa78597a7 feat(backup): add JSONL backup command and auto-backup support
+    - 051a43dd832cdbaa4c283d3bc0048cb7fd412f9d feat(backup): auto-enable JSONL backup when git remote exists
+    - 84c954031a9556ee0508a243a5e23442abe462ae feat(cli): add --comment alias for bd close, --yes/-y alias for bd mol burn
+    - a3dd6531d3e98f15c71b6b120c45a9b94d15b102 feat(cli): show titles in command feedback (GH#1384)
+    - 587eabb5aae0ac16601bbd49e2ba5b6903490ad2 feat(doctor): bridge pending hook migrations into --fix
+    - 573bdd1b4c37fdb33d4df4f3234eaa1d258ac03d feat(dolt): add 'bd dolt remote' subcommands (add/list/remove)
+    - f710909589a95fc2bfe3cbc5f34a5d3265ea6c29 feat(dolt): auto-push to Dolt remote with 5-minute debounce
+    - 20516a49079786502560316ec86efaa22d11f561 feat(dolt): dual-surface remote management (SQL + CLI)
+    - a30e02a5ee906ee57e18630ad7a1f1fcaef14728 feat(init): add --database flag to configure existing server database (#2102)
+    - 8cc0874f05af503400566bc567f1e8a82f7f72e8 feat(init): wire sync.git-remote config into bd init for auto-bootstrap
+    - 9a2eea88a9bab8ad4674c38a78fb82b50cd39016 feat(labels): inherit parent labels on child creation
+    - e17d73ae9d1a5fea3d9bab373f9657c619512184 feat(linear): add Project sync support
+    - 3a86e9fdde86e3f4a52e701d9a20d7f65a5403ae feat(mcp): add dedicated claim tool for atomic start-work (#2071)
+    - 5f0b3befa7f38d4bca5aadc6f9f550e4b7db043c feat(protocol): lane 6 — 10 new protocol invariant tests
+    - 74ffe2303b4cb4ffad948c073434d356a833d095 feat(ready): add metadata filtering to bd ready (GH#1406)
+    - 5fd7fe352f08fde44973ff7fd4cef0006da7af27 feat(regression): replace bd export with snapshot harness (list+show)
+    - 52d7447698b925072e27fb59d8a44464447a9bf4 feat(show): add --current flag to show active issue (GH#2184)
+    - 0467fb0728bc7f353220d3d62afdf9ef9ac0f1d8 feat(test): parallelize dolt storage tests for 3.5x speedup (bd-5ua)
+    - 801965ae2d40f19d819b147db4e70f3e9dcf18e1 feat(test): parallelize protocol tests for 3x speedup (bd-dgp)
+    - 11f5f432edd22c3668d1a98ebaac2372d9a63ed8 feat(testutil): branch-per-test isolation for dolt, tracker, molecules (L2)
+    - 982164a4818b282504a5ef9494f95da8c8513cbb feat(testutil): reuse existing Dolt server via BEADS_DOLT_PORT (L1)
+    - 82a5f89c9819b4cd001462886ea0839e9b184b77 feat(testutil): server crash detection + doctor branch-per-test (L2)
+    - dcf5c224a0212460faf8c288b856e40026b97294 feat(update): add --set-metadata and --unset-metadata flags (GH#1406)
+    - ef4c99654272ab0dedb3dcfa16c0f791a21434bc feat(wisp): add --root-only flag to bd mol wisp create
+    - 89569b914e89b147381a366ef62bc8db56f0c582 feat: add --backend flag to bd init with SQLite deprecation notice (bd-7xj5)
+    - 157135f550774138240e3fbaad8273408e97df98 feat: add --long flag to bd show for full-detail output (bd-unav)
+    - 1c6f37360c22a0d3fd2702b6782a54c5013695ad feat: add --metadata flag to bd create (GH#1406)
+    - fb236236a604d2585063148170a199c1a56cbbb2 feat: add --state as hidden alias for --status in bd list (bd-9h3w)
+    - f1a299d15d6816b1de3922be029f1f3f7240d9cd feat: add --stdin flag as alias for --body-file - on bd create/update (bd-gz2o)
+    - 0ed2e1a4c3aaef6315fe3c5e115d390b971bc507 feat: add .dolt/ and *.db to project .gitignore on bd init (GH#2034)
+    - b769a0017040490a3829cfb43dbde2b514843556 feat: add Dolt-native conflict detection to bd doctor validate (GH-2249)
+    - 02e177b1d094d0d08afcc95d4af839c64c01826c feat: add JSONL-to-Dolt migration script (GH#2276)
+    - 6abc586ba285ac76bdbed5476f4f6b535cc509e1 feat: add PreToolUse hook to block interactive cp/mv/rm prompts (bd-tm2p)
+    - bd3fb06cb13d63d10478cf8ee4ca14b68dff91e3 feat: add ResetTestBranch and migrate tests to shared server + branch-per-test (bd-tk8y)
+    - fecf282722b76f8231e328b6ed4ca1e549cad50a feat: add bd backup init/sync for Dolt-native backups (bd-zafu)
+    - 8d5e3ef70b94b5294d92b93dab80d7bab949b958 feat: add bd doctor --agent mode for AI agent diagnostics (bd-6ud)
+    - 61579204ff39a735feb2547fd2809da79ed31014 feat: add bd dolt start/stop commands for server lifecycle management (bd-rbzi)
+    - 97ae54d759c45ae95876dfe44e6a0c1d3ed16e71 feat: add bd export command for JSONL backup (bd-xav)
+    - 5e0e83ab84dd930c28c47fdb9eee2c625bf3b282 feat: add bd gc, bd compact, bd flatten for standalone Beads lifecycle (bd-kzn)
+    - 0ec5d2ef6e91a0fb7283633a83b6b3ba654490d9 feat: add bd mol last-activity command for molecule progress tracking (GH-1456)
+    - a7325f7f6ee57717863a3757dafc32e642458900 feat: add bd purge command to delete closed ephemeral beads (GH-1692)
+    - ed8dc56743ea203adf4fceda23357e9908b2bb00 feat: add bd remember/memories/forget/recall for persistent agent memory
+    - 0cb7936f1e346859892bbea0d3dcb6d4075d1b0d feat: add circuit breaker for Dolt server connections (bd-05an)
+    - 722899121412b107756ba90e3fd94971a190e06d feat: add dolt-data-dir config for custom dolt data directory
+    - 20f2d190df419af3f4cd31c84a63e8c4d4af917f feat: add gofmt + golangci-lint pre-commit hook (GH#2179)
+    - 9457158f2d3ba0006d89da477e7dd059f2e5dd5a feat: add has_metadata_key to bd query DSL
+    - eafff366b40906d52411cee8a1eed6d908d060f0 feat: add hk (hk.jdx.dev) as supported git hook manager
+    - dfd9b568129b9728cec1eb42c4de71416acc85f3 feat: add hook migration census + doctor signal (bd-w4x.1, #2217)
+    - e926d52b0ecf3c3205739d7c61bb274cf2e60b9a feat: add memory instructions to bd prime output and changelog
+    - 02197ee693feb2aa5468cd239cffeef03f958adf feat: add stale database detection to bd doctor and bd dolt clean-databases
+    - c40271178a0c5b7f83b0757876941792679de49e feat: add staleness check for read-only commands against JSONL (bd-2q6d)
+    - 464c952cf80621b647145c5fe7b276f49a556712 feat: add type index on wisp_dependencies for blocker queries
+    - 7dca9e7e0667036ba36e913ecfc85b51283edcc1 feat: align bd preflight --check with CI checks (GH#2230)
+    - 1dcaa50dbc298758ab9dddaa743215d9c1ecf23a feat: allow per-worktree .beads/redirect to override main repo .beads
+    - dab2a2006b661ee8cf86cb29283141e85daaa135 feat: apply error wrapping to remaining bare returns in dolt storage (bd-bwk2)
+    - 24ed5a38eeaa54cc095554c5b65e58e30de7e415 feat: auto-migrate SQLite to Dolt on first bd command (bd-3dx)
+    - 13a8daa36929694727d17208c0d44aa6c864b6c3 feat: auto-migration shim: SQLite to Dolt via sqlite3 CLI (bd--3y8)
+    - 4fd1f6ec029ad86ebbca8d409bfebbb4c31a091d feat: auto-push to git remote after Dolt commits
+    - 7dafce074340092f2fe33ca377adc134d081f2e0 feat: auto-update stale hooks during bd init (GH#1466) (#2008)
+    - 06eff8af49212e8fa5f2716affe0a2a64457b343 feat: centralize error handling in dolt storage layer (bd-bwk2)
+    - 580e7db3db97e1e6a4b9a4a906a4e7b8e97fa77a feat: complete branch-per-test migration with dolt reset --hard (bd-tk8y)
+    - 00aa5dcf7449091cde780ef302fcdc59d7435887 feat: config-driven metadata schema enforcement (GH#1416 Phase 2) (#2027)
+    - 8e22d27519a83a794222931d64d4febe41420325 feat: make IsInfraType config-driven via types.infra (bd-39c)
+    - 1fda04cb7d7ff2d7eaa64293872c8f5929243db4 feat: port collision fallback, idle monitor, and crash watchdog for Dolt server (test-hqvv5t, test-n99ihy)
+    - 9d64fc18dd363e927765f0fce7f9f574835cfdb1 feat: route infra beads (agent/rig/role/message) to dolt-ignored wisps table
+    - 893f6fcdb45125ca5fb308b668f1f4a220574f04 feat: self-managing Dolt server for standalone users (GH#2049, GH#2050)
+    - 87f32865cf919fa42c9609a6171d14b6bcd66a48 feat: support issue_id_mode=counter for sequential IDs (#2013)
+    - 1b56f58b318bab73c2f2a6cc37a548c06accacdc feat: use section markers for git hooks (GH#1380)
+    Bug Fixes
+    - 807091e1d684c009f3da4fe7e39649f1c9a4b883 Merge PR #1893: fix: resolve pre-existing CI failures (fmt-check, tests, lint)
+    - b3d25356686d702210a3a2a6a51a16df19d8023c Merge PR #2005: fix(deps): update opentelemetry-go monorepo to v1.40.0
+    - 21e52ef6c340411a4ffbdc27c4b380bc68128f87 Merge PR #2044: fix: add missing columns to SQLite-to-Dolt migration INSERT
+    - e0417d49e9d99cbc55a4916bf5330f2ebc564a7e Merge PR #2067: fix: follow-up to GH#2002 counter-mode review
+    - 0ff64431de41336f9e9992e926a5d30108c222c7 Merge PR #2105: fix: unify hook outdated detection
+    - d6f2266ab0fb2bfd77e929ef3feb18e5b903ccf9 Merge PR #2106: fix(routing): check local store before prefix routing
+    - 4044dc17b1cf66ee8b53921da7770013fb24537c Merge PR #2107: fix(test): clean orphaned temp dirs for all test server prefixes
+    - f70dce8a6a733a7b65ed1a01a9b5ded5af0698f7 Merge PR #2108: fix(storage): batch SQL IN-clause queries to prevent query explosion
+    - 373149d1b014cd01a3465b72c299667e998397b1 Merge PR #2114: fix: use doltserver.DefaultConfig for port resolution
+    - 088d9bff39c3890ffe74d786b62ee876792d4b1c Merge PR #2116: fix: suppress git upstream warning for repos with no remotes
+    - b8d9e0ac56f2ef59d12d4137cef8a422a3fed641 Merge PR #2119: fix(migrate): skip auto-migration when backend is already Dolt
+    - 2bb4cc68d6613d14cbca4eab4497e6ea90d88d29 Merge PR #2120: fix(doctor): auto-import JSONL issues on fresh clone migration
+    - f165654dab4f720a130bb19320f10dad9c415f98 Merge PR #2124: fix(doctor): create dolt marker directory after store creation
+    - a138db43552bd9dd8f2db7e2dc9ff6bfc4bc5cc6 Merge PR #2135: fix(dolt): reset AUTO_INCREMENT after DOLT_PULL
+    - 4dd4b9b79dda404a2cbf83403e65adbd4bba7331 Merge PR #2144: fix(linear): include stateId in push updates to sync status changes
+    - 0b0586fa99ee1e11d2f3021e0733a28d7b406d57 Merge PR #2147: fix: sanitize hyphens to underscores in dolt_database name
+    - 6af5f5a2fb25f44c06503c39d2cc10b5005e42ff Merge PR #2148: fix: doctor checks now use hash-derived port instead of hardcoded 3307
+    - e5647f7e4f00a6583bb1e9241c5d1f7528190285 Merge PR #2150: fix: escape # in SQLite URI paths to prevent truncation
+    - f2e02840aa8d719a896e0e6cf178fbf33ff6f419 Merge PR #2151: fix(dep): traverse blocks-type edges in dep tree and graph
+    - 4ab9d5528deaab77ad43d12da26238247039700c Merge PR #2152: fix(init): stealth mode no longer creates Claude-specific settings
+    - d0c3e9894ed6900b6d3c06f1bccafab6877d9675 Merge PR #2153: fix: honor BEADS_DOLT_SERVER_PORT and BEADS_DOLT_SERVER_HOST in store
+    - 4b816c7cc2f20f450ebcc44977917b1d3891dbef Merge PR #2171: fix: handle Windows connectex syscall in verifyServerTarget ECONNREFUSED check
+    - 72b78474e6f153db3a4d8d23aa27c54e912f5c4d Merge PR #2173: fix(testutil): eliminate port allocation race with flock-based coordination
+    - cc18b0fd5b397a200c172a21c362d0b9f549288e Merge PR #2180: fix: use derived port in migrate_shim and init instead of hardcoded 3307
+    - a115892ab057bd6c5a4bbc53f44977015ce0b4ec Merge PR #2194: fix(doctor): clean cruft in redirect-expected dirs even without redirect file
+    - 7807c2c038e220e72266b5de8508063601b862ea Merge PR #2278: fix(deps): update opentelemetry-go monorepo to v1.41.0
+    - 9e093c188a4f6a27e18447074a07af95209de917 Merge PR #2285: fix(dep): add prefix-based routing to dep add/rm/blocks/tree
+    - c4ca6761b9c0a5aa0783243f6fdc7b4262ee70d1 Merge PR #2287: fix(dep): skip target existence check for cross-prefix deps
+    - b9587688194bf20709267581d1e4ecd672ce2f5c Merge PR #2288: fix: recreate wisps tables on schema fast-path (GH#2271)
+    - d5f67271a396e7536d8fea73f46a7a2f2bc009b2 Merge PR #2289: fix: strip absolute dolt_data_dir from metadata.json on save (GH#2251)
+    - 56994723d73563e31093a5b1eafcc6e4538ba0c9 fix(ci): remove stale hook-template checks and add hook install coverage
+    - be4c5ae71770759cf23081daf4142c8a96ced045 fix(ci): resolve baseline windows, lint, and fmt failures
+    - 16ff6fc24a432e122c6a9996d6593259029e3ca2 fix(ci): resolve baseline windows, lint, and fmt failures (#2069)
+    - 322a084956a16ef8086e3a203363eedbab86b8ca fix(create): commit post-create metadata (deps, labels) to Dolt (GH#2009) (#2055)
+    - f430b970594cf86c192f0d89edde65a0407f10ee fix(create): read contributor routing config from DB fallback
+    - 56689329c540829ff5811e9594df8ebddbdd2f3a fix(dep): add prefix-based routing to dep add/rm/blocks/tree
+    - e3fbffc74bf12f172f710d016ba79782865261fa fix(dep): skip target existence check for cross-prefix dependencies
+    - facc13ab0a6d0755487203c6ca09474a4ca5f007 fix(dep): traverse blocks-type edges in dep tree and graph commands
+    - 7913c05a4d4a90f6299305ca6dd7c834fd0be981 fix(dep): use errors.Is for sql.ErrNoRows check, update metadata on re-add
+    - ebf78ebfb4c5237949f0dc5e329957901f9b4a42 fix(deps): update opentelemetry-go monorepo to v1.40.0
+    - 72ae98091fa397c47aadf2b21698fd6f70d6e377 fix(deps): update opentelemetry-go monorepo to v1.41.0
+    - 2e8d77e7d0d935cae5d19ef45e1ad5c87d9c6753 fix(deps): update react monorepo to v19
+    - d9a5a72089784c20e7677f0e29a20e6cc65c4904 fix(doctor): auto-import JSONL issues on fresh clone migration
+    - 08fc8ec0372ad23046afc6865f41c3c9516fa27c fix(doctor): clean cruft in redirect-expected dirs even without redirect file
+    - 7e29605d2eee29185ebbe013b5e069748ae7406e fix(doctor): eliminate false warnings after clean-room bd init
+    - c62a8910b30fa4da6c57d65037c5d67c9dc41766 fix(doctor): escalate broken hook migration severity
+    - 76b0cc7c65aa8850b389ebcfeeb74dcf5b2afca1 fix(doctor): exclude wisp tables from Dolt Status/Locks warnings (GH#2079)
+    - 5eccd6b3cf30356bac773505e7e7946a3cb01249 fix(doctor): follow redirect when fixing outdated .beads/.gitignore (#2078)
+    - 1172880e64f59908b3ec0c4d8597fd41853955e3 fix(doctor): gracefully handle non-git-repo in fingerprint and role checks
+    - fdb45f52dd01262deb980b5bdc5a0115b6ee9531 fix(doctor): gracefully handle non-git-repo in fingerprint and role checks
+    - 5a6a3cc627ac431396045270e22668ba4cf10012 fix(doctor): migrate maintenance checks to Dolt for #2101
+    - 42ae19380ffed26bf4c45bd55f3116ccf0ee3f90 fix(doctor): re-run diagnostics after --fix to show fresh verification results
+    - b96483fcf406d3c2f835bfe619bb29a54a3d20a7 fix(doctor): recognize marker-managed hooks, fix stale advice (#2244, #2242)
+    - 1fddfbd11514eca9806179385bee373140abeb9c fix(doctor): remove 3307 fallback in test port helpers
+    - 8db0cd1f009733e020088a9d13d840759dae0477 fix(doctor): remove unused cfg param, warn when SQL unreachable
+    - 9be692e56a5d50022e07adad03285f34b7447657 fix(doctor): respect dolt_data_dir config in all doctor checks
+    - 5aa2ae6b3c5029cdf1e1da86086ce70103fc418d fix(doctor): skip upstream warning when no git remotes exist
+    - 362d82b04befe9096c75d7e3232b8c55a159bf16 fix(doctor): suppress expected .beads/ deletions in redirect worktrees (#2080)
+    - 3d62376a360c73b09dc50924b9d4ae0d5388a9f3 fix(doctor): use configured server port in federation checks
+    - 9e8567ac710a24eb9bbc940090e166185179cb0d fix(doctor): use configured server port in federation checks
+    - ee03bcf891f68238b6699b6a6d82f844b1f96ab5 fix(doctor): use correct beadsDir path in fix/remotes.go
+    - 2f665cc45d7b5304545bd7173a9692a5a160c2d7 fix(doctor): use doltserver.DefaultConfig for port resolution in openDoltDB
+    - b30229637c8caf079e891b806066c83ad1782a3d fix(dolt): BEADS_DOLT_PORT always overrides config port (env > config)
+    - a10e9d1a91512584e15d0d7dc052e1bb91423847 fix(dolt): add connection timeouts to prevent agent hangs
+    - a045d083ef867625089d076d7bed6fc38915a460 fix(dolt): commit SQL transaction when DOLT_COMMIT finds nothing to commit
+    - 7c5d984d91efdf544f6f66fa820868788189c2bb fix(dolt): commit SQL tx before DOLT_COMMIT to persist wisp data (hq-3paz0m)
+    - 03322a525327a7e4297c0da47dab8dfc36c62b7a fix(dolt): filter dolt_ignore'd tables from CommitPending and batch message
+    - a9c68066522b3d724d48a70f1d9c4f47d4e75328 fix(dolt): narrow test database prefix "beads_t" to "beads_test" to avoid false positives (#2297)
+    - b57975155b1cf31e4e6cd416562230ae0f273414 fix(dolt): per-issue ephemeral routing in batch creation
+    - a22da6f46fda440ae13fa6564a1716ce662cd4c1 fix(dolt): remove auto-push from create and repo sync
+    - b199a53ad94ccc3ed8598ec60975b8ad43173dd9 fix(dolt): reset AUTO_INCREMENT counters after DOLT_PULL
+    - ef57293e752bbfe99d30119114fe42c89473d3f0 fix(dolt): stop wisp ID double-prefixing and add wisp fallback to ResolvePartialID
+    - 2b354ffd5ecd018f318219cd97d7544125075d0d fix(dolt): use CLI fallback for push/pull on SSH remotes (#2118)
+    - 762acfafd1395810bae25e209307f57ec22806d3 fix(doltserver): add filesystem heuristic fallback for Gas Town detection (#2076)
+    - 9e46fa440069d078feb017e3874a3d3f0a84265f fix(doltserver): remove global process count guard from Start()
+    - de7cb335b81fb197e1318b22165241ceb4fa4752 fix(graph): lift children to parent's layer in graph layout (GH#1748)
+    - 1bb7c4fcea7e08fff9c138279355cff0a9bb7695 fix(init): sanitize auto-detected prefix for MySQL database names
+    - b21a38e2b88d213ccebe26a87d78586ab81b8afc fix(init): set beads.role=contributor in contributor setup
+    - 24836dd25b70e9352c405c9de282871340ab0b6d fix(init): skip AGENTS.md generation in bare repositories
+    - 04a28487c304a94e1417077340a83dcd9eff36f5 fix(init): skip git/worktree guards when BEADS_DIR is explicitly set
+    - 51ef157744e89f9c6a7e38656a69df8efc25e8b6 fix(init): stealth mode no longer creates Claude-specific settings
+    - 6a2175741955810856819bad2340f9bfd8beae63 fix(init): use prefix directly as database name instead of beads_ prefix
+    - 5907658015f57b6e276327cc0b2e66169bfc8c8e fix(jira): log when no matching workflow transition is available
+    - 0b95c75d68855baac9a7aec1cf7e5cc0e53de1f8 fix(linear): correct Project sync issues from PR #2022
+    - 622c8522940815145cc77d9d354842780759b504 fix(linear): include stateId in push updates to sync status changes
+    - 0dc6bdb47fb5a67eecec51294d3eb6f678f8e72d fix(lint): check AcceptanceCriteria field in LintIssue
+    - 8c0c007f85306393bcbba3eb0ffa436aaed6d946 fix(lint): check AcceptanceCriteria field in LintIssue
+    - f79111c82b7ac4ffffd3944e9d8be3e499e02dab fix(list): reparented child no longer appears under old parent
+    - ff178e20b5cbd85db22e7c2757a1eb51ed63e7cc fix(migrate): deterministic SQLite->Dolt fidelity + dependency/comment preservation (#2125)
+    - e37d0d8b8732aa4bbde4ba62689d7bf9528adf8f fix(migrate): skip auto-migration when backend is already Dolt
+    - 9fe48569caae3355aad3303a92fb7046be00f17d fix(queries): also fall through on empty wisps results for ephemeral filter
+    - fc03c6be0b99b2dbc7ea8f30d0c629d1208dcd4c fix(read): apply contributor routing to list and ready
+    - e10dbb957e508d19985f0b3ce9efda30bc93d5bd fix(readiness): evaluate conditional-blocks deps in computeBlockedIDs()
+    - 7909150c16fa6d270ef43f47ca8cfd6386ce23de fix(ready): molecule steps appear in bd ready, remove stale filtering (GH#1359)
+    - a08f8bae87d7c643ed735865bcdd35c49a5987c9 fix(regression): improve test isolation and snapshot reliability
+    - a5fa36c6c301a8a239356aae35f7d8a4bcf21834 fix(regression): normalization for snapshot-based parity
+    - 7e2858192afd0fe6eb6a6fa9689e00d0ee9f7c4d fix(regression): set BEADS_DOLT_SERVER_PORT in test harness env
+    - f14c29f07bddb55c41c3ff1665ee579ad78fc9a4 fix(release): auto-publish Homebrew tap on release
+    - 7bc8fe188401ef07f6b18e0f8ab0db44fef99c19 fix(release): use brews instead of homebrew_casks for formula publishing
+    - 6b479961009a671998687aefd745e1cef51e41b6 fix(reopen): clear defer_until when reopening an issue (#2000)
+    - 081212332fde1b30f3ac16dcb770946a3984a912 fix(routing): check local store before prefix routing to prevent write divergence
+    - 68f35bf360e50d6fbd6c14edef691d5e99998a23 fix(storage): batch SQL IN-clause queries to prevent query explosion
+    - f561e9f48a1be7ec0d32a894d0514588abc61310 fix(storage): exclude reparented children from dotted-ID prefix matches
+    - ffb09e6fdb04220d64be00eea2d7e59e75046cb5 fix(storage): find ephemeral beads with explicit IDs in single-bead lookups (GH#2053)
+    - e9f63a3558aa627a42bcd20d776b33e4b8165b5c fix(storage): prevent silent dependency type overwrites on dep add
+    - 852bfe6504f3bea052e75f4c7e7e63f2be5b1e6c fix(test): TestShimExtract_FullMigration — remove explicit sqlite backend from test config
+    - ef4c85cf9e01a1e1d543a1762daba2cc6341faff fix(test): add skipIfNoDolt guard to all init tests that need Dolt
+    - 3499e3cc4d6d2d55ac42771e2bf2c92fce2379e7 fix(test): clean orphaned temp dirs for all test server prefixes
+    - 51bb65644b97ea144be6bceb89fd01be959a152f fix(test): comprehensive Dolt skip guards across all test files
+    - f236701f26d522afa3f1bf6ef09b81d04d21eae3 fix(test): isolate regression tests from production Dolt server
+    - c3fd341905475322952f8fa9d219481f9123fac0 fix(test): reduce unreachable_host dial timeout to prevent CI suite timeout
+    - 191eed82adc03b07da9cbb2a661c6cfb1cd94251 fix(test): skip Dolt-dependent tests when server not available
+    - 69400752cfda59ce76eac43c2aea8a39b361063b fix(test): skip TestInitCommand when dolt not installed
+    - da3b21edfd95e72ec617654cb8ded3910dbb0e23 fix(tests): wrap raw SQL inserts in transactions and isolate env overrides
+    - 0f7d7d21b83fee0b2dc8fcd767dc153947405858 fix(testutil): eliminate port allocation race with flock-based coordination
+    - a180ade10b2579ba5b2281a1075f61f8ebb893ed fix(testutil): move testServer var above function doc comment
+    - 9fe38d3d8c80975f0fa8a7606fc0c8c4bf5d54f2 fix(upgrade): graceful recovery for pre-0.56 dolt databases (#2137)
+    - a227207bad01eb377e270fc4418712979488f20b fix: BEADS_TEST_MODE blocks production port even when BEADS_DOLT_PORT set
+    - 68be32ac656035104018fe2e7c0a758ef4c0065d fix: CI formatting, lint, and test failures blocking release
+    - 880b60b8e8ae54bc5fb7b208920f4e06bce8d93f fix: CleanStaleTestServers now removes orphaned temp dirs and legacy PID files
+    - 27853581bc4c6479f5ae1e44f718a9ee3abf8940 fix: IsRunning() checks daemon PID file under Gas Town
+    - 32504ad38ac09321e17cfc71e09792895013870b fix: Makefile build and install fail on Windows when Make uses cmd.exe
+    - 63f452371ed48ab4214e9f6b1771531b6b92c012 fix: StartTestDoltServer ignores production port when BEADS_TEST_MODE=1
+    - f2426cb6f07a52e85d1f105d2338d9e805f4af8b fix: UpdateIssueID now handles wisps (wisp_* tables)
+    - 34a9c3977f02686dd3108dbae5f4cd4ca0ed3c7c fix: Windows compatibility for doltserver package
+    - b6ad8e7660f04242ea646889916774a8e2b7158a fix: add .dolt/ to project .gitignore (#2081)
+    - fff02dff95668e6b48759caff75de5a0385a7c95 fix: add 5-minute timeout to doltCLIPush/doltCLIPull to prevent indefinite hangs (bd-x9oj)
+    - 1efc9f890b74f246bd3d67b5dcd723492883e049 fix: add DOLT_COMMIT after tx.Commit in AddDependency/RemoveDependency (bd-2avi)
+    - 3700441f3ef3095685fb9581dea25d53d44ff52e fix: add Gas Town daemon guardrails to dolt server operations
+    - 7122679c73162716a844d8b5344ee7c77b71d94a fix: add Gas Town guardrails to beads Dolt server management
+    - 57e88d0f726835013d1282a98007fd2d5b1c8945 fix: add SSH fallback for federation PushTo/PullFrom/Fetch (bd-zoi2)
+    - 8f7480a5d229b5df138f38c71285f15216d1dd64 fix: add backpressure to clean-databases to prevent server exhaustion
+    - f489463ba8e786aa87d401327eaf43621013c48a fix: add default values to wisps table NOT NULL TEXT columns (bd-5nn)
+    - d1859a0d0c0394272d89809319e40587ead4e08d fix: add doctor subsystem test coverage and fix 3 bugs (bd-0jkc)
+    - 442bf2759866be0cad0fd978f1bf13e05fd99018 fix: add dolt.auto-start config check and BEADS_DOLT_AUTO_START=1 test
+    - 1e33b312d50722df9d80bdf4ff5906bd863fc6ef fix: add field validation parity to createWisp (#2032)
+    - 022f917d6f3d58623bcc638261935024c43f6f93 fix: add input validation for --status, --sort, --type flags in list.go (bd-ttno)
+    - dbd706becafebff50791ac94a92b96b9a65196e4 fix: add label inheritance and post-create Dolt commit to create-form --parent
+    - 3f960eff875b6fe6278274c66e981cbd2631a3e4 fix: add missing dolt runtime files to gitignore template (GH#2256)
+    - 8643ae0e52fe2bdc7f72830b91863dc2c1d12a81 fix: add missing spec_id, wisp_type, metadata columns to migration INSERT
+    - c61d8fa033ad57dd5a44549182d7249992536fd4 fix: add optimistic concurrency control to AdvanceToNextStep TOCTOU race (bd-e1ev)
+    - fe385f93fba66e9300cb73c0f3e945bdab960c25 fix: add timeout to StartIsolatedDoltContainer context (bd-ilcx)
+    - 93f3425b0fd646f5ce909d6f65bcf0525d6fc7b0 fix: add unique DB naming and cleanup to doctor test helpers (bd-cv9)
+    - 716b12dd3e2d0598d845c2b5620d1f0ed4a686d6 fix: address 4 doctor bugs — panics, masked errors, missing rows.Err()
+    - f7fd46ad361de288883fc3cb14d28c7137ae4ab5 fix: address Copilot review — context timeout, nolint comment, version refs
+    - f77aa17146625968541e84581934e485ff42d372 fix: address Copilot round 3 — LIKE escaping, comment, symlink safety
+    - ae182e4171dc7853a8c08c544a539d35697102b4 fix: address review feedback on SSH push/pull fallback
+    - fef392c5af2f1a7e7843e94eee890c48caebf3a5 fix: align IsBlocked blocker reporting with blocked-cache semantics (GH-1524)
+    - 88015ad05eb8b09ffd5ac8ab7dade86bdde2606b fix: align TestDoltStoreSearch with title-only search optimization (bd-2lfo)
+    - fddc2dc3d08e2be7dc5877e59cb2155eebc40a93 fix: align transaction SearchIssues filter support with store-level (bd-v6v8)
+    - da508e84ed94f2189d0614842899b32831c38371 fix: allow bd dolt push/pull/commit to initialize store (GH#2042)
+    - 195d169fb18cba20d1d422a8a91b3b6ddbf3e226 fix: atomic counter increment + gitignore overhaul (GH#2067)
+    - 75c5a36038c3170b30353a1b5e549147ffb5cb53 fix: atomic counter increment, gofmt, lint, and Windows build
+    - 76e01b270dfd6fce56771af90aaba60bd101fa64 fix: auto-clean stale Dolt noms LOCK files on bd startup (#2059)
+    - 194093c59aeb81157d84559b47065c2a66904e49 fix: auto-close molecule root when all steps complete (#2200)
+    - 1d3c9a78f27b7e091cc95e715adf717e18e06f31 fix: auto-migrate database version on CLI upgrade for all commands
+    - b378c1a983e77b5c4ea35eebdeb0a1262d6f3c13 fix: avoid Dolt joinIter hangs in GetReadyWork blocker computation
+    - 5f35dc747bbe2b73afd13c43334749faebdd21bc fix: avoid SELECT * UNION that crashes Dolt on column count mismatch
+    - 643e4e2eac8bc2056fe6a99eb48771db1a3acdd5 fix: avoid config migration side effect in ResolveDoltDir
+    - 0e459ab837e7cd7c2ccd2b68f0e3c73797a35e40 fix: avoid redundant worktree gitignore entries
+    - 43970138318a628ea6604239ea8ff7c73d0d7c03 fix: batch IN-clause queries in computeBlockedIDs to prevent Dolt CPU spikes
+    - 4c8c374e3119dbc87dcf9ad7271a44dda652792c fix: batch IN-clause queries in dependencies.go to prevent Dolt CPU spikes (#2294)
+    - 2460e0cf414da37ce14def0cda672ad8ee670586 fix: batch findParentMolecule to eliminate N+1 query pattern (bd-hn4q)
+    - 1cf0ad45b3e0146601b000a0f7efccc081b07ab7 fix: batch wisp deletes in DeleteIssues to reduce Dolt commit pressure (bd-2ehd)
+    - f417eedad1a6b4c6e53671e3b71feaf2e49698ce fix: bd init --stealth sets no-git-ops: true in config (GH#2159)
+    - 6d7eb25a0937e3eefcd83a987d85e31bf0df9ea7 fix: cascade-delete blocked step children during wisp GC (bd-7hjy)
+    - 4394fdc46c32bbd269fa01a6077f42df1bd17b2e fix: centralize hardcoded "beads" database defaults to configfile.DefaultDoltDatabase (bd-tcn)
+    - c2e213c745fa1107cfecf6682cf4fad77d7a9c2e fix: check SSH remote before remoteUser in Push/ForcePush/Pull (bd-msdq)
+    - 716d013dde545b8db3c59775c318dee30611c5bf fix: checkDoltLocks returns error instead of masking connection failures (bd-gzu5)
+    - a59b3681330f1114c2e67ea4919fc03583a7662c fix: clean up pre-existing phantom DBs in tests expecting StatusOK (bd-8we)
+    - fe30a71ca9daf16cd71f2afbe78fc39e63ac623c fix: clean up stale jsonl_export references in test files (bd-9ni.3)
+    - a444bc2fc3f4903a374efb36854bcef7d89d9117 fix: close 3 easy-win GHIs — stealth outside git, dead docs link, holder field
+    - d510a7fcccd76ae2f5e360406f8f6f5ca0cfb7ad fix: complete explicit-ID ephemeral routing across all storage layers (GH#2053)
+    - 301952a1d1fbd9a029b7ffaa34c6631dd897c409 fix: connect directly to Dolt server in clean-databases command
+    - e6734290507b6ddbb5da928de92cd1bc530c7fd8 fix: consult config.yaml for dolt.port in DefaultConfig (GH#2073)
+    - f473b756ab13437dabf18f1fa74c29aab61385cc fix: counter mode parity for transaction path, remove dead code (#2013 follow-up)
+    - a87b41084380770ee42593ae2d0d7a81637574a2 fix: create dolt marker directory after store creation in doctor --fix
+    - a1933f76f097ba0da9c741d15f2018ab476682e4 fix: deduplicate worktree redirect logic from PR #1995 followup
+    - c459812ef4556c2a946736c6c1daa736727baf87 fix: default bd mol wisp create to root-only unless formula sets pour=true
+    - 5b280bcebece256e8f3a2bfe478d7909e450721c fix: defer FOREIGN_KEY_CHECKS restore to handle tx rollback (bd-zzji)
+    - 3c41ee0e4a55fe87195dcaabc8b77aed3b2cde48 fix: defer PID file cleanup in dolt idle-monitor (bd-m7ry)
+    - 1df14a57770a1bd8ed21462aeace49ce5e70d27f fix: defer RUnlock in getWisp to prevent deadlock on panic (bd-klgl)
+    - 60ded4ca2560f5d29aae37b98934fbe2607a9a0b fix: delegate bd migrate --to-dolt to shim path in nocgo builds (bd-rmll)
+    - f8515d60028bf0d2f578a6c31e5b941603df914f fix: dep.go external ref removal, dead --type flag, and type validation (bd-jmzc)
+    - 89b97da5eabf03ff963fbaea10c2bca4eb375173 fix: detect Go version mismatch in pre-commit hook before golangci-lint panics (bd-66nc)
+    - 35732f62eade2d27cf64d8635b931632e6e62da2 fix: detect and repair missing dolt_database in metadata.json (GH#2160)
+    - 746564e361018caf44d74047fe8e4b29c7e97b3c fix: detect fork workflow as contributor when role unset
+    - 4b86cf3f3f36e36fbcb3b0583e823b5d932ba6e8 fix: disable backup git push in stealth mode (GH-2290)
+    - 651bb13baf0d49b46c7a91bca05f9d61daf98fe7 fix: doctor and fix tests now use isolated dolt server
+    - 2c206f192bd918fe86dac8b07ac54fdedca0d076 fix: doctor checks use hash-derived port instead of hardcoded 3307
+    - 56f4c98c9c076fe359cbe35e105c5256f0182a1a fix: doctor phantom detection and INFORMATION_SCHEMA crash (#2091) (#2093)
+    - fd6f9bdf940dc79f8f85b6a4a0664c11b1e4bb7f fix: doctor validate checks use server config for Dolt connections (bd--9w6)
+    - 6df4a28258a1aecc3e1a5db26f665923959b9541 fix: enable Dolt auto-start in NewFromConfigWithOptions
+    - ff1a409a51cf03a278680ef0f52d5afc3db258ac fix: enforce same-type blocking validation for dependencies (GH#1495)
+    - 15e2a262e5195c9d6c9c816b79716301857f9215 fix: escape '#' in SQLite URI paths to prevent truncation
+    - 2acbbb2d0d3ead6989e363414faf57c1120a28a2 fix: escape backticks in database names to prevent SQL injection in dolt clean-databases (bd-yzlh)
+    - a1484df4a043599ba741118279c72136f10194e6 fix: exclude ephemeral wisps from bd backup export (bd-qwa3)
+    - 097a28012ceaeeb8592ab1f460caa9be915095ce fix: exclude pinned beads from bd list by default (bd-uhcg)
+    - b21ec9e26dd7e12441cc27e6904390a2742318fe fix: exclude zombie/defunct processes from isDoltProcess checks
+    - d22095501ea4e720a54edc229e18cf1fe66bf537 fix: exit non-zero when all close/update attempts fail (GH#2014)
+    - 228dc21aebd4fe1161befa9cdc550dc21422d320 fix: expand stale database prefixes and fix per-op timeout in clean-databases
+    - 57619f99a2971d938d9f43e5d2c740c4f99a6296 fix: expand validateRef pattern to allow dots and slashes in branch names (bd-8ifp)
+    - 6dce8990d11af711390a24697907f0a33ac4f7fa fix: export events.jsonl with full re-export instead of incremental append (bd-qnd)
+    - ef7cf9f9b75600c68e39f065756b1ffb0c4ffd9b fix: extend cycle detection to span wisp_dependencies table (bd-xe27)
+    - b9a46eaac6f379508ad12700b76313eedfee90c2 fix: fall back to DerivePort when default port occupied by another project
+    - 299dd0d2ae29e780772a128d08f6ff077dcbc5dd fix: fall through to issues table when wisps table missing
+    - 6dd42f6e31b558ce99ea86134f40245d4ea2b84d fix: federation checks use wrong PID path and hardcoded port (bd-uz1x)
+    - 408333ffdb5eab2b68a27a1d21d8a308e6a338a4 fix: firewall test databases from production Dolt server (Clown Shows #12-#18)
+    - 7fd9595c90d71e8ae1a7ba8271868ad6e3baaa02 fix: fix comment wording and honor caller precedence over config.yaml
+    - 9a6a860aabe25e745914018723e7fc202d598973 fix: fix server adoption in dolt anti-proliferation guardrails
+    - b68d5559fb89f3d1232fedf5f44f33be1160a847 fix: flush Dolt working set before server stop to prevent data loss
+    - 599e7d65847aa66f2994c505ae2468a993df529e fix: gate DatabaseConfig fix behind SQLite backend check (bd-0xqi)
+    - c8c4ab62b290d9c2d76a8e58648a2ddad5e6c9e7 fix: gofmt alignment in bd doctor agent mode
+    - c7336c0bc59743cc471dc7167a8a83b7df10a10b fix: gofmt formatting and remove dead TestCheckDoltLocks_NotDoltBackend
+    - fd2047d0ecc938fd77cdc194ab5a4a5b04d02ab9 fix: gofmt formatting and remove stale hook template version checks
+    - 9888cc9985a99ce05c4cf83eec8824dd14d16862 fix: gracefully handle missing wisps table in epic/blocked queries (GH#2271)
+    - 63418ae549e06a271509c0d2b8558240dac7b9b2 fix: guard CREATE DATABASE to prevent shadow databases on wrong server
+    - 9bfc22a703e5b8bb9b46c23ffe2832d7ccfb935e fix: guard dolt remote subcommands against store init bypass (GH#2224)
+    - 8362ddf936e72d5c73ef9f4a00e9fd91f1677ffe fix: handle NULL created_by in issue scan to prevent bd duplicates crash
+    - 52eaa35a57975db3a58a27506049cc5168b4e09a fix: handle Windows connectex syscall in verifyServerTarget ECONNREFUSED check
+    - 49aed46c858eba6c87954ab265abb0aae9dbaab1 fix: harden SQLite→Dolt migration safety, old-schema compat, and doctor recovery (#2156)
+    - 5022da9ce021c076db3227794caabeda4a4193fa fix: harden migration safety — verify DB target, deduplicate, spot-check data
+    - 70c2b0b4fad7b566effeb64af2c893b4db11a562 fix: harden test dolt server startup with retry loop and longer timeout
+    - 729001a38a086b23baa38986a2d9ebe63edc126e fix: hold federationEnvMutex for all withPeerCredentials calls (bd-wn3n)
+    - 9c903d06c544b98c29e8f0c830c0a72cccfbda11 fix: honor BEADS_DOLT_SERVER_PORT and BEADS_DOLT_SERVER_HOST in store connection
+    - ea8e9c892896da76d62ecadb159e62fb886ad166 fix: honor caller AutoStart value and add test coverage
+    - 327335f967fc1db156b3df25043a72ee3f25fa6a fix: hooks subcommands no longer trigger Dolt store init (SIGSEGV)
+    - 659508703106dececac9ce60779a510a29a5e5f5 fix: hooks subcommands skip store init to prevent SIGSEGV (#2245)
+    - 21601cfcea53a202823ca0647883b45bff72ea55 fix: ignore unhandled conn.Close() error in migrate_safety
+    - 6fa31b71f6bd992322759b9f0a9d1e2b3fb46824 fix: implement showConfigYAMLOverrides to warn about config precedence (bd-rq2w)
+    - d8f4979edfcad790123fd963db9881270f860177 fix: include children of blocked parents in bd blocked (GH#1495)
+    - d81badd96799b0ebeb7938b21b792bdc4458801f fix: include labels, deps, and parent in bd ready --json output (bd-xgso)
+    - 67042744b1cfcc1eefcca0b2c02e3a32705ce59c fix: include waits-for deps in bd blocked output (GH#2043)
+    - fbe10e5a8a88ace962f71e8340f61b7a466a954a fix: increase TestRun_Async polling timeout to 10s (bd-ldi)
+    - 17a8cc365ea39932ff171410806f793d6c636732 fix: invalidate blocked-IDs cache on issue deletion
+    - 893d7fb1d23bc6007ae9bf291db6f7deb826b69a fix: isolate federation credentials to subprocess env, eliminating race window (bd-9k0c)
+    - e447ab2085fb7afe5bbce3788f475e8aa33a076a fix: isolate id_parser_test.go from shared Dolt server (bd-19i)
+    - 3a0e582735e3f25bd40f7801be4f9c2b98786382 fix: isolate protocol tests with unique per-test Dolt databases
+    - 6039798be93c3e9d8c7d386ffcb9f25ac478d6fb fix: log errors from event/comment copy in PromoteFromEphemeral (bd-n01d)
+    - 2e1df31ed9c951f63b9656556d9584e3d8044029 fix: make Commit() tolerate 'nothing to commit' like other Dolt operations
+    - ed5c02c375f8fe13fb317029a487ffa80a620a3d fix: make install works on tag checkouts
+    - 4891d870f8e5b4cbdc84bb636591fd78edfcf9b3 fix: make migration 007 resilient to schema evolution differences
+    - 045b627502a2b9f9199fb7bdc38726403671a842 fix: migration port mismatch and UX improvements for Windows migration path
+    - 8140c1a49eb85347fb95660cfd8861cff3a04ae2 fix: move Landing the Plane inside beads integration markers (#2265)
+    - e95a07fadd5ef31d0b88c938cae07b0475fd7fd9 fix: move syncCommandContext() before staleness check so --allow-stale works (bd-f49)
+    - ee6a3c16be3fbc34caf5b20f79c63b057548496c fix: nocgo stubs return StatusWarning instead of StatusOK for skipped checks (bd-lars)
+    - 37e428d0a53e9bddf968f7cf17d599eab44582a1 fix: normalize issue_prefix in transaction and import paths to prevent double-hyphen IDs
+    - d99ad718a1148314388680c3db44213c435f9927 fix: normalize issue_prefix to prevent double-hyphen bead IDs
+    - eb84f6f5c03b420ca2c103df34a37ffc943a13f2 fix: one dolt server per town, not per worktree
+    - 63e14d9bd1ab0e0994fff5849039086966b3ab39 fix: optimize JSONL import memory usage and emptiness check
+    - 92e57a0de83213b64f35e4d1bab29a1743b46d64 fix: optimize bd search to avoid LIKE %% full-table scans (hq-319)
+    - 8f260f0619ec6c76abd51a708c00b343e2aa7e33 fix: panic if BEADS_TEST_MODE=1 without BEADS_DOLT_PORT (bd-zt7)
+    - 017022b92e71e645849acf5bee6d4e136bc0febe fix: pass configured credentials to verifyServerTarget instead of hardcoded root (bd-7lgi)
+    - a388c3e95f24e1a6fb929ffec77043c5a0e1706f fix: prevent OSC escape leaks in git hooks, detect stale hooks in doctor (GH#1303, GH#1466)
+    - 28d51acc0878872fb215a6cf4fa6eea5501c712c fix: prevent OSC escape leaks when third-party hook runners call bd hooks run (GH#1303)
+    - 1c3bacc1e30d3a50cec2f5a13610238b21545568 fix: prevent child counter overwrite after JSONL import (GH#2166)
+    - 97462205e955818af2940b33c46eece922eeb44e fix: prevent closed-store panics and consolidate test suites (bd-1rh)
+    - 59898e888aa6f1f912e67265df56afb4a9bce5a5 fix: prevent storage/dolt tests from hitting production Dolt server
+    - 376122ba461c60dd4061494e46ca691022e84269 fix: prevent test suite from leaking databases onto production Dolt server (#2089)
+    - efdd6f73dc9c759c07e6354e86c7ff54c6ab30fb fix: prevent tests from connecting to prod Dolt server
+    - 2b1d84d33f3549fc01e2fb4ec490dbb763b5c884 fix: propagate notes field from formula steps to issues (#2155)
+    - 83a02d8c89c315e483d0c2ee15593160c985a144 fix: protocol tests now use isolated Dolt server instead of prod
+    - 2b83768f66dc6d5cc642719f3eb45ca143a53bd8 fix: read dolt.auto-start from beadsDir for library consumers; harden tests
+    - 6aec75f15698a32b210cbb3398da48d9cafbc2e4 fix: record events in addWispLabel/removeWispLabel (bd-0jph)
+    - 39a0e01a26acfd71417c39a2348c87d31122ac2b fix: recreate dolt_ignore'd wisps tables on schema fast-path (GH#2271)
+    - 8e2b74907ee634b7c4f745e0ef0fb09b3e453c40 fix: refresh last_import_time after write commands to prevent false staleness (#2255)
+    - fae207e11734621ac5d30194bd39f14dbb98fa9f fix: reject empty and whitespace-only comment text
+    - d3e581bc0bcbc61247b02d666ec93382df909f51 fix: reject empty and whitespace-only comment text
+    - 13190efbcc1d6d18d879263acfa27d7c3a9963d7 fix: reject empty title and empty label on update/label add (GH#1994)
+    - 83b3991d4c80a071f4dc9559503ef5de15b16df5 fix: reject flag-like positional args in bd create (bd-2c0)
+    - c9fabf2ba9433849853d8e9d64b6ab0b8a893f66 fix: reject non-positive --days flag on bd stale
+    - 9b995e322e5599b47de308ff726b09575f1e5120 fix: reject non-positive --days flag on bd stale
+    - 6ebd79796c81fd8003dbf8fd450591574c571016 fix: remove "notify polecat" instructions from refinery template
+    - cf1e93d3f618c10bdbb6c9d35d15e67ccc152fc7 fix: remove 'mode' from valid keys in dolt set error message (bd-99ny)
+    - 87493ce917c79d2425601bae7f79e5304c8fef28 fix: remove Beads Classic SQLite backend and migration infrastructure
+    - 9dfac4f4057905588e69f6697152a93fc740f8e1 fix: remove JSONL gitignore rules, merge driver, and issues tracking check (bd-9ni.6)
+    - b69ae5b208c249565209a313ac3cff3e853dfdac fix: remove JSONL references from core Go files (bd-9ni.2)
+    - c980b96baf956b19024f247f5fb6f6788af517da fix: remove JSONL storage functions and config field (bd-9ni.2)
+    - 85694713e9f7ca458537b1c14cbf677eb2698ce9 fix: remove dead JSONL converter examples (bd-9ni.5)
+    - 2666369fab8069fd24163f7d124826bd4ef2d26b fix: remove dead SQLite duplicate-error check in fixtures importFromJSONL (bd-tn12)
+    - 877b47ed5607a36d3526b5fb749f66a0154410f7 fix: remove dead code in doctor subsystem (bd-6yqf)
+    - e79f9a1ee31a2a36d18f4ec0870ec09a08dc4c57 fix: remove dead probeStale code, deduplicate noms LOCK cleanup (#2059 follow-up)
+    - 5e834bff6a8cd8657a1cb794c2fea62a84552f00 fix: remove deprecated commands, dead SQLite code, and legacy scripts
+    - caf101bf76b7d5d107f8ca57bd53648cc4b5bcc7 fix: remove duplicate help groups GroupMaintenance/GroupIntegrations (bd-54jr)
+    - e2375da9c7e3a7511a1e9dec0a3a4a8edc291532 fix: remove extra arg from formatHookMigrationPlan test calls (bd-ddn)
+    - 6d3de589447aacd3065d388f5f8a1bee444f8210 fix: remove go-sqlite3 dependency, use Dolt testcontainers for tests
+    - 2b263d11cd78083bcdb5f9d43fa83a6c3a5f5a96 fix: remove hardcoded limits from findGateReadyMolecules queries (bd-kzp3)
+    - 954497481a7dff08e258fa4114a7d5f489404056 fix: remove incorrect Dolt backend skip in StaleClosedIssues (bd-bbr6)
+    - 765f58369e456bb72c0573f9948e90fdf7f1197e fix: remove local --json flag in mol_stale.go that shadowed persistent root flag (bd-pr9v)
+    - adb8e763f8549987d8921c3023861e44c88fa066 fix: remove operational constants from defaultConfig in schema.go (bd-1lc)
+    - f625c959466df84ee2786918e74194a98d83ca2a fix: remove redundant tx.Commit() after DOLT_COMMIT in transactions
+    - befc254aba82d1aa21469fe776ff2258dc97d62f fix: remove stale bd export/sync references from prime output (GH#2007)
+    - 5d9788a3e74230848e7361bd6f3ef6d31bb97290 fix: remove stale stderr assertion in TestInitDoltMetadataNoGit
+    - e1e4cb7306154595e707a2a6c498b3d8b577d73f fix: remove unused embedded hook templates and dead installHooks wrapper (bd-gp5b)
+    - eb451c36c0e26132cd137d7321eb2e1bd84f1edd fix: remove unused hasRedirect param from scanCruftBeadsDir
+    - 5002b084d6256e042d03867f94f571515f8cd36e fix: remove unused hasRedirect parameter from scanCruftBeadsDir
+    - 1f8cb03c4eb404b6db4b595d9fb4bc143cca88a2 fix: remove unused hasRedirect parameter from scanCruftBeadsDir
+    - 0f2a62659a96fe75fc9f630874a8c68856270813 fix: repair CI failures - test fix and gofumpt formatting
+    - 27680fa3e83818f14f594dcd8926646cd7e6b93f fix: repair migrations_test.go for modern dolt versions
+    - 10a271501bcb57319b210c5dad3f44583b53a55e fix: repair two pre-existing test failures on main
+    - e4a3f5c84f64ebb18bbe03ff5c9cdca0fe88136d fix: replace N+1 query patterns with batch queries in deep.go and migration_validation.go (bd-7zej)
+    - ea329d199e8e854dfe81c8576aac9cf649531ba3 fix: replace SHOW DATABASES LIKE with exact-match iteration
+    - 1afd815f109fe5598408fb73cf39eca533cd3022 fix: replace deprecated GetDoltServerPort() with doltserver.DefaultConfig()
+    - 092897d6b9f310f838654a3618068456fc045785 fix: replace fsnotify watcher with polling in watchIssues (bd-87xv)
+    - 32a32b6b41390f1219703a82765a35fde3309753 fix: replace hand-rolled YAML parser with yaml.Unmarshal in multirepo.go (bd-7fsv)
+    - 59b4597d6d2f04a6d2826f5cdc37421a4045930d fix: replace hardcoded status strings with StatusOK/StatusWarning constants in legacy.go (bd-wif2)
+    - 162ab270b65e1c91a69e20e8954adab85aeeb6a7 fix: replace information_schema queries with SHOW COLUMNS/TABLES to avoid stale catalog crashes (bd-ggnx)
+    - 22415816a4a8d711d17e04ca82290866ed4a0265 fix: replace meaningless Fix field with actionable instructions in remotes check (bd-hwxg)
+    - aadef18e250fbfee528276b289b04edefe17219b fix: replace port-fallback with kill-before-start to prevent server proliferation
+    - 2874b8160a7b85d8c9d4d72b13c86dcaa0af401c fix: replace stale beads.db check with metadata.json in ensureBeadsDirForPath (bd-rev6)
+    - 7b6d5ae6eab95a4b8e59261a8c7acd0bc4589b26 fix: report accurate surface suffix in dolt remote add/remove messages (bd-e6o2)
+    - 2276c5fa1313c2e2638f6554b529fd5c43be8806 fix: report correct status when reopen/undefer is a no-op (GH#2037)
+    - 154e32e67047b4b169d3f89442c460b46c62d485 fix: reset core.hooksPath on uninstall, remove misleading hook text (bd-31bo)
+    - 041b74b54a06e0607d47c4ddb278300f80a5f4c0 fix: resolve CI failures on main (6 tests, formatting)
+    - 18e70e13b9e231b0dceaca5c136b38fe0e1e1e40 fix: resolve beadsDir correctly when dolt-data-dir is set
+    - f44d58090aff631a83dc76cced881e6806fa9fdc fix: resolve gofmt alignment and errcheck lint warnings
+    - 5a07c92db4b6754a11ea8d31037d542165751ad2 fix: resolve gofmt alignment and gosec lint issues blocking CI
+    - fb8ca5fc9050c6c76e50c06a436188e413d56b03 fix: resolve gofmt and golangci-lint CI failures
+    - 42cd5db8b68340ba59e76dd6243c1f5b8887a963 fix: resolve gofmt struct field alignment in git_test.go
+    - 523ac14604703cbbebb019f3f91ddd3975d160cd fix: resolve lint errors (unparam, errcheck)
+    - c879f338b781b09280241ec2b0c047e8b4d9fc14 fix: resolve lint errors blocking all CI (gosec G304, unused param)
+    - 7ad29a0a51b3724a35a4e48e888b37cdde9ee705 fix: resolve lint issues in hook migration planner
+    - b115c5e8f18822514bc6c186316c73b58c4898a0 fix: resolve lint issues — errcheck and gosec nolint annotations
+    - 162707ec775ca2bdc5a113f718c42748ac605156 fix: resolve pre-existing CI failures (gt-ngoe)
+    - 292f518828c837c740a547e77f30c063479ebee0 fix: respect stealth mode (no-git-ops) in backup git push (GH#2290)
+    - b3848aaf2010c1dd4eea93485d2a48c45201f005 fix: restore SQLite backup on getBdBinary() failure in recovery (bd-ppnp)
+    - fd21fa46592a831f908ec6a5e078a2f356049933 fix: restore bd init --from-jsonl for server mode (bd-phzy)
+    - c3d011a95734c6c426453c99afd8cf4627d4c6b0 fix: restore sandbox guard in maybeAutoPush (#2192)
+    - d24890369d0be96482970ae474ff5d723f499b00 fix: retry GitLab API requests on 5xx server errors
+    - c60bcfe123d3104b63390f5b2e96fa21b29e22b6 fix: retry stale DB connection and preserve temp file in bd edit (GH-2267)
+    - b65ec9415fe20cf9794418325657f428f8cc1cd1 fix: return consistent 6-check shape from RunDoltHealthChecksWithLock on connection failure (bd-6gs3)
+    - a35d11f5fa598c11bcafd868ecdd82d1fdd6fefc fix: return error from waiters JSON marshal instead of discarding (bd-57ab)
+    - 98dc4c0a4704d130c4d7e07a4b5af7f722a34313 fix: return errors from RunPerformanceDiagnostics instead of calling os.Exit() (bd-hwmb)
+    - dfcca9b333a1f829309be5b301b316ee7d88d8c8 fix: revert FindBeadsDir in PersistentPreRun to fix test guard
+    - 65858d6c24936df15db7686d7aa6c7900ccc0102 fix: revert scanIssueFrom wrapping to preserve sql.ErrNoRows chain (bd-bwk2)
+    - d741172285eef48d79466c5bf3d103e982f714b1 fix: rewrite GetNewlyUnblockedByClose to avoid nested JOIN subquery (bd-o23)
+    - 2345c82125d972223585eef2a9ac114e3dbaf305 fix: rewrite protocol tests to use bd show --json instead of deleted bd export
+    - 3f147b62eaf1ebeeeb26db2edbd5783c518cb2f8 fix: root package tests now use isolated dolt server
+    - b76276fe80b4ef4335c45fbdf6a5b2b1aa4aa662 fix: route auto-backup queries through retry-wrapped DoltStore methods
+    - 07e98f1e8ae02737e3310f3c998524d146608406 fix: route promoted wisps to issues table in partitionByWispStatus (bd-ftc)
+    - 838b79ba7ce0ddc6168124a3e00e5af1cf743083 fix: route wisp lookups through wisps table in storage functions (bd-w2w)
+    - 70424e461773c58c25e1b9caf8f99c6c1c7786c7 fix: sanitize hyphens to underscores in dolt_database name (GH#2142)
+    - 781f1c932215e48b6e55266bbdf4061b9c67238d fix: sanitize prefix hyphens to underscores for SQL database name (bd-qy0)
+    - 0800914fede359115548b286e54840229874ff0d fix: scan wisp_dependencies in getChildrenOfIssues and getChildrenWithParents (bd-8qc5)
+    - 87fba0ca4cd0c03acaa122125b73612440a63184 fix: set BEADS_TEST_MODE=1 in all test server setups for DB isolation
+    - 72fc86cf1ef326a807fbd3649d4c142ed5838aa6 fix: shell-quote interpolated args in dolt remote fallback messages (bd-6dvy)
+    - 40a8410ec45be29d4dc1ca29261be639085b8538 fix: show helpful hint when dolt push/pull fails with remote not found (GH#2118)
+    - c2888b12466f83092df978742a5234c28fa3c0ec fix: skip Docker tests when image not cached locally (GH#2277)
+    - e68e6682df786de23c455e127761a7d8f9748f35 fix: skip Viper defaults in getRoutingConfigValue to unblock DB fallback (bd-2qef)
+    - 987c227227ee0e48b834bdf52d519e5325d6ed93 fix: skip gt dolt start fallback in test mode (bd-kyu)
+    - 7a75f1f467ef6f30f3d51791ae3dbaeb1b44c0c1 fix: skip local-first check in routing when prefix maps to different database (bd-7vk)
+    - 7cb0e0f41a2053c2e0badb787881029adebbd8f4 fix: skip maybeAutoPush on read-only commands (GH#2191)
+    - 2d369a6725f577570a1f9cbbd55b293ea0b8041f fix: skip remotesapi check when no federation peers configured (bd-5c7)
+    - 30a3be9b76b73184e034245f585a9edc2f4bffcc fix: skip remotesapi port check when no federation peers configured (GH#2273)
+    - a96412434d810d5c2eadae6202b03a0a6048aa66 fix: split TestCheckTestPollution_NoTestIssues by platform (GH#2262)
+    - 9ffb6aabaa777c124cb1c7632db76b21479c7b7f fix: split TestCheckTestPollution_NoTestIssues by platform (GH#2262)
+    - 49a607c82f1e50042283e59d7cbd01675095d8e5 fix: split TestCheckTestPollution_NoTestIssues by platform (GH#2262)
+    - e75491ebb195d31a72b1917a9d9cf3b5d190ec8a fix: strip absolute dolt_data_dir from metadata.json on save (GH#2251)
+    - 612b3705abee26b30e0c0127a52c244a6be35a30 fix: suppress git upstream warning for repos with no remotes
+    - 1be84758ac4ffa7a56d839580c2dd724f5c09c5a fix: surface errors from FindOrphanedIssues and add git command timeouts (bd-mppa)
+    - 4b627d2f94eb74c671a9a9083e8633640a047ddf fix: surface errors from ScanForArtifacts and checkDatabaseConfigValues (bd-4hn4)
+    - 9dc33be88978c6c3f4f037933956f69fec75b3e1 fix: surface real errors from SearchIssues ephemeral fallthrough (bd-w59l)
+    - 68e224f799999106ef5f1ac3841abd521205d704 fix: unexport DefaultInfraTypes to prevent mutation inconsistency (#2193)
+    - 59ff8d90f46b5cc2a32cec13469cfc60ea594381 fix: unify hook outdated detection between CheckGitHooks and hooksNeedUpdate
+    - b2370e4eaa2babaf8fdb36cd5d616c74f544dff2 fix: unify openDoltDB with openFixDB for timeout and password support (bd-s20p)
+    - 9bf46a4ba683f70582e6dd344233d6ed5cb8ed29 fix: update stale JSONL and SQLite references to Dolt semantics (bd-cg90)
+    - 88707d52fb54c38a643775682219cc4141c0cf88 fix: update stale JSONL/SQLite references across doctor subsystem (bd-zw81)
+    - c48f544262a6955985abafc7123b29e178a2c320 fix: update stale SQLite comments in doctor package (bd-516)
+    - d19a3a1830d179be60905554ac5f980988750213 fix: update stale SQLite error messages in perf_dolt.go (bd-gv7)
+    - dd245377ae2a758bc92fbbd4ae7548f032ec4402 fix: update stale SQLite reference in config.go help text (bd-zkfn)
+    - 5cf4f71fd1b268a3dc8978080a51455b6aa5aebe fix: update test expectation for StatusWarning on query failure
+    - 07e60f12f4b79ffd3acb4dbbd9ce58dc1a0c5150 fix: update test fixture to use backend instead of sqlite_version (bd-veh)
+    - 18fe2cfcdf7f77eccf63ee3e661d4b7925f6d826 fix: update test to match AddDependency type-change rejection (bd-7z5)
+    - 54d3a2821df18cf960ad65d994cd684e8239f108 fix: update tests for nocgo StatusWarning change and repoPath params
+    - ba08e97a395dc7ad265b7262554de7e81c5d7d8d fix: update version scripts for section markers, suppress unused param lint
+    - 4b1e5bb08813250aef370ebaa053d69f4eee318a fix: update wisp table references in UpdateIssueID (bd-od40)
+    - bb6b71216835802ae9f392cfde896b815a7e5803 fix: use CLI fallback for all git-protocol remotes, not just SSH (GH#2268)
+    - d78d0f1e3daf6b6b8b5ec44ab669fe7cf32e4e30 fix: use NOT IN exclusion for active status checks so custom statuses are visible (bd-1x0)
+    - 1f1e63e1d7cf8ac419b6934de2ec3d621e459a00 fix: use centralized IsDaemonManaged() in migrate_dolt.go (bd-3hfp)
+    - b0c32dcc5e84b6c69741efc9c9d7a245859d1fa7 fix: use configfile.DefaultDoltServerPort (3307) instead of DerivePort
+    - 939bfed192643a1b3468a9542b21b5d4546cc4a7 fix: use configured credentials and context timeout in perf_dolt.go (bd-c1g8)
+    - 48438a7ee2c7379722809bdf6b9910aa0b32c64f fix: use created_at ordering in UNION ALL queries to avoid auto-increment ID collisions (bd-hl48)
+    - 7ea3b7df23ff53005effedaca0c60372bce2d800 fix: use derived port in migrate_shim and init instead of hardcoded 3307
+    - 046fa0333985a2ba6468ca4db69b9b6e7e08ed2c fix: use doltserver.DefaultConfig for port resolution across codebase (#2112)
+    - 4bf94cda24ee0c82726b0454a7dcc80caa79401c fix: use explicit path params in doctor checks instead of relative paths
+    - 2752d608696bf61fc39278c5ce33c1683aa42c5d fix: use marker-managed install path for jj hooks (#2232)
+    - 62e9485e2767ebf158d1a51f452dbbb399471678 fix: use net.JoinHostPort for IPv6-safe address formatting (bd-0tn)
+    - ae8f3fd4137d95b22afaa0ce5eb0df17dafc5622 fix: use net.SplitHostPort for IPv6-safe HTTP URL parsing (bd-7dqc)
+    - f3f50d3ed0975f178872c26e759541657a29210d fix: use random encryption key for federation credentials (bd-rv8g)
+    - 2ff387b39c5f94a007d2e0f4635d7ba884a6224d fix: use repo-relative paths in backup git operations, add findGitRoot tests
+    - 44fd6108110e26669e1eada599a20bf1547d600d fix: use types.StatusClosed constant and config-driven thresholds in compact.go (bd-17p)
+    - 62548032169d9ecf52ef674d985820b62a904a94 fix: use upsert logic for issue insert to prevent duplicate primary key errors (GH#2061)
+    - aebbc5a453c35c1f37c27d0c404680489659b20f fix: validate JSON metadata on create path to match update path
+    - 2a89def512268f854d0c5611126a4f1c3768409e fix: validate JSON metadata on issue creation path
+    - 85979caf80454c63b21ee86dcf127bd47a647e40 fix: validate marker count and order in detectHookMarkerState (bd-d96s)
+    - 3ef50b867d1dc966e00da63961d5678051458ecb fix: validate status on update against built-in + custom statuses (#2021)
+    - 53a8edba4bc6f3656ba096d9f03546c64c5cea37 fix: validateIssueIDPrefix now checks allowed_prefixes config (GH#1179)
+    - f4a858c3dfb888556df6852533e343946d887cef fix: warn when bd defer --until date is in the past
+    - df47a96d38756f56fd759525a533a755f4e1e705 fix: warn when bd defer --until date is in the past
+    - 4891ec3de9a9f9c817748e09bf66ce8c555f738e fix: wire up auto-fix for git merge driver %L/%R placeholders (bd-7yg)
+    - acf01b62f18e3e29eacb9b00d6289587d6af47d7 fix: work around Dolt max1Row optimization in dolt_history_issues query (bd-d3j)
+    - 9c6ee17443db8e76d8291d07baac4a186d7ef7ac fix: worktree separate-DB discovery skips own .beads/ (GH#2190)
+    - 47735266a5b6c3e1c7622970fb7d676599639a98 fix: wrap burnWisps in transaction for atomic deletion (bd-6py7)
+    - b837a23b2306f4f8a081bd553bb2ea11a14f4bda fix: wrap doctor fix DELETEs in explicit transactions for autocommit-OFF safety
+    Others
+    - e5179c719af5c8ae52a29511ea58c61ac8712d65 #1380 Phase 2: hook migration apply mode (#2235)
+    - f5af65bc0632857b0a337380e46e6e1a5fd1361c Adds the option to use the Jira V2 api
+    - d8bcd8dedaa440f75a748a1f40fde16dafbd819c Makes API calls to transition the jira status when the local beads status also changes
+    - 0b4fffe00a52b01de5375888c539611d144d2b25 Merge PR #2001: test for reparented child dotted-ID precedence
+    - 6fa125b5db88fb9c5afb6837ac3a34525a4bad17 Merge PR #2068: docs(setup): use --claim in generated templates
+    - 1c60cf61fe3203be53d402d6979c338084fb8e0a Merge PR #2104: docs(claim): fix resume semantics and finalize review nits
+    - e54b89a83c43c6b682e735511c102bc38bfeb4b2 Merge PR #2109: docs: use make install instead of go build
+    - 3e04a923b5c6e8af2a7febfc40659af43036b73c Merge PR #2131: fix "no store available" issue with "bd dolt pull"
+    - 1c45a3c89cff44d016019d9b70e2e8fbcb10ef22 Merge PR #2138: Remove dolt embedded mode docs
+    - f0a38c46f2461bd486c2aa6b7fc663b70583e71f Merge PR #2149: Update nix so beads builds (with latest go)
+    - 146203f513db2d57b683f32fa58a792dad065801 Merge PR #2275: fix nix package build
+    - 9b95302d3e85b50707f9b9855adcbf4b01a25341 Merge main: resolve gosec comment style conflicts
+    - 56c423b4f026c4cdc12057873b05ea8ec493e4a6 Merge polecat/jasper/bd-d3j: work around Dolt max1Row optimization in history query
+    - 73b6446951b45edf7616588bbba37ee799a81df9 Merge polecat/obsidian/bd-ddn: fix extra arg in formatHookMigrationPlan test calls
+    - cec066facdb730868bc0c05a47c71be88fe19d9d Merge polecat/obsidian/bd-qnd@mm703jdp: fix stale events.jsonl export (bd-qnd)
+    - 17160e4c44da0f78a0ed3eb1bb6dd3aa7292c24a Merge polecat/onyx/bd-5nn: add default values to wisps table NOT NULL TEXT columns
+    - 76f1c0af41c44bd025bbf635c7a5e801ebac1815 Merge polecat/onyx/bd-6bq: speed up doctor tests via branch-per-test isolation
+    - b39303041d54652db83aadcac544ab00f9c1b755 Merge polecat/opal/bd-ldi: increase TestRun_Async polling timeout
+    - 9a9f92d7080c40ae4379f5938891bcac1492d782 Merge polecat/opal/bd-xmf: speed up cmd/bd tests with shared DB + branch-per-test isolation
+    - 1c4c9a5ac944908406391038d15d5d89009095fc Merge polecat/quartz/bd-8we: clean up pre-existing phantom DBs in tests
+    - bbcb2c6abb9ab4c19221283d0e582abac9381901 Merge remote-tracking branch 'origin/main' into fix/doltserver-windows-compat
+    - 61a1722fa0abd70684cc426cbf45ffb2961145e5 Merge remote-tracking branch 'origin/main' into fix/doltserver-windows-compat
+    - 989b48528c95b39bdd95693d47391b1a4cf365e8 Merge remote-tracking branch 'origin/main' into fix/doltserver-windows-compat
+    - ecddbcf0516fcebdbecc0ec7f86166c9f6d5e5a3 Merge remote-tracking branch 'origin/polecat/garnet/bd-0tn@mm5kyq8s'
+    - 3f439d5e60668b13e11bcc785ed6724e297dd463 Merge remote-tracking branch 'origin/polecat/jasper/bd-f3oo@mm17cnwi'
+    - 6e2c93be42cf1b62665510c89478cefe96261c7f Merge remote-tracking branch 'origin/polecat/jasper/bd-hwxg@mm8lme64'
+    - 582b1902c313cc03f3b7c622139f645dc80e98b5 Merge remote-tracking branch 'origin/polecat/jasper/beads-69o@mm0568gv'
+    - bdc99152af4a9d6b44783094e6a93a6cb2a66454 Merge remote-tracking branch 'origin/polecat/obsidian/bd-mppa@mm8el4g8'
+    - c204e9a54056fd09d9f2e023f268883e7c412d0b Merge remote-tracking branch 'origin/polecat/obsidian/bd-ppnp@mm8llzok'
+    - 517ae192f611972092c6b196fce6b3bc7fe0b078 Merge remote-tracking branch 'origin/polecat/obsidian/beads-2zj@mm055izh'
+    - 9cc9ce98bb5bf752debd21b50ca46ceeddcbe85d Merge remote-tracking branch 'origin/polecat/onyx/bd-7fsv@mm8lmm76'
+    - dad2e2d72cfebd1ab8619a6c109f81a57c7d7424 Merge remote-tracking branch 'origin/polecat/onyx/bd-7zej@mm8m5n1j'
+    - 45ddb5e3a9fee6b0780250e98352ddb63dd03155 Merge remote-tracking branch 'origin/polecat/onyx/bd-s20p@mm8en9js'
+    - 1326993cdcf78f45b06748c0b243df05f56dcee3 Merge remote-tracking branch 'origin/polecat/opal/bd-6yqf@mm8eipnt'
+    - b444e27ecf0ea5d7a1e350b70531a9c8107dd312 Merge remote-tracking branch 'origin/polecat/quartz/bd-d96s@mm8elcl5'
+    - d0a90b9254688e3bbeafe666a1880ec7bbbb53d4 Merge remote-tracking branch 'origin/polecat/quartz/bd-uz1x@mm8lm7hx'
+    - 3d9739695b44955ab78c6d07216a8a59bb5c754e Merge remote-tracking branch 'origin/polecat/ruby/bd-tk8y@mm5l1669'
+    - 7bca40385b10f0b170bdb410dfba811c706acd58 Merge remote-tracking branch 'origin/polecat/topaz/bd-qy0@mm5kyivk'
+    - 7d3c9b3f9612f2e658eb1c3b7522040c957600df Re-add support for custom jira statuses and field maps
+    - 6c9054536aaa937b021edd05854de920807a93f0 Remove dolt embedded mode docs
+    - aef75025431f3448f3cd7833b0be5122306f23b8 Stabilize hook-related tests by forcing repo-local hooksPath (#2233)
+    - f81b9b767c281f18e828049b29de0f6e12ca9ac3 Test isolation follow-up: consolidate and guard hooksPath leakage (#2234) (#2237)
+    - 4673b0042b30cbd944f6158e3ba84677ccffb1c8 Update nix so beads builds (with latest go)
+    - f12b7c63534107dbf19e547b6f4845538b9bd1ae add "federation." to matched prefixes so that we can run "bd config set federation.remote gs://test-beads-data/prj-a"
+    - 6fde394ef7fc4be2f3aa1d5d2c2bbde06103d3bf bd: backup 2026-02-28 05:17
+    - 6ad290ec2b9426fa42c334dd25f7592cff720b91 bd: backup 2026-02-28 05:32
+    - 26073672ab2d6126f37e8508632f824d722d9b7b bd: backup 2026-02-28 05:47
+    - 75375978ccc97bc401ba17f7a32502c1c8f0b015 bd: backup 2026-02-28 06:02
+    - ab005f51ae3aa8ad756130984b79991632b2ef70 bd: backup 2026-02-28 06:17
+    - bfc4628294a00a3758bc4bcb6c1fe5178b89a22d bd: backup 2026-02-28 06:32
+    - ab992cc2cee9d7f7b67f205e0dc2cc3bc6c4a2fe bd: backup 2026-02-28 07:05
+    - a12e08406401f8a027d7a99fda64e7a0717b4da6 bd: backup 2026-02-28 07:37
+    - d16e975f7024374ede747e36d1ecd881a582d980 bd: backup 2026-02-28 07:52
+    - b0189b25de22b94d70017587b86e3b3360314320 bd: backup 2026-02-28 08:07
+    - 85710c90400f1b78b81d084133125022255f55ac bd: backup 2026-02-28 08:22
+    - 9a113d248a5d455e93184dbe62a72b826a3eb7dc bd: backup 2026-02-28 08:45
+    - 6840dff2c885891835c7e1f49d50b27c7a4f8d71 bd: backup 2026-02-28 09:35
+    - 10b63258f6f408c10982f71f2d5070c69b1dfebc bd: backup 2026-02-28 09:51
+    - 6625f4a887c437556f5239ccaf9f1acf7078c038 bd: backup 2026-02-28 12:32
+    - 1bcb03c04c87019b0cb598b9de76dde2e6bf93b9 bd: backup 2026-02-28 13:41
+    - 835a86e1d788c359554887e4cbc5bcf729944421 bd: backup 2026-02-28 13:56
+    - 87d4b10f0a3582efa776dc9044c7759773d38c33 bd: backup 2026-02-28 14:14
+    - 7e120224fcc64bd26ff930593be50ff378ad766e bd: backup 2026-02-28 14:56
+    - 46ac2d012d79e3af1039357a74797936338405b2 bd: backup 2026-02-28 15:14
+    - 051bb34091441a6d925dc9b16c74f083603f2248 bd: backup 2026-02-28 15:29
+    - ef356a0d8c133dcd4e1b81253333123e655681fe bd: backup 2026-02-28 15:46
+    - 85a4a05565324425a6376c3a02cb9c0673708e95 bd: backup 2026-02-28 16:42
+    - cd998dd46f6e15f903526df7f160603877cdaba6 bd: backup 2026-02-28 16:57
+    - 10cdabc042c81d173d4ef73759459f9255ab4990 bd: backup 2026-02-28 17:12
+    - 4ca5623ca842a3f865fa8c30df0f37e154936a0c bd: backup 2026-02-28 17:27
+    - 60df1c39a17df979321613db92fff1e56bfbe97a bd: backup 2026-02-28 17:42
+    - bae915dcfbff7ad217924a552d06811b0c9facca bd: backup 2026-02-28 18:06
+    - ff5e3b545127a3f143a89cbd34f5295a73cdaf16 bd: backup 2026-02-28 18:23
+    - 7a76f40ec03acb2c4c52f1d088aae06f94e9f275 bd: backup 2026-02-28 18:38
+    - 99a6f9f1ab782b40255f1aa82407fcb2a6b0c254 bd: backup 2026-02-28 18:53
+    - 140742318f4035523f0bcef3006399077411475c bd: backup 2026-02-28 19:08
+    - fe8f4242a7aa27d09d5766d523abbe9837820b7c bd: backup 2026-02-28 19:29
+    - 4c57fbc477b8f19d5e22e2e52b27b3e0a28bad6b bd: backup 2026-02-28 19:44
+    - 03fc99462258a1ab54a8ac1ede6c0e8b90d53057 bd: backup 2026-02-28 20:04
+    - 294f0f67c195157c1e7ab8c37308ad0914c33cff bd: backup 2026-02-28 20:19
+    - 1798509fd5715733858332d815a004f649a2446a bd: backup 2026-02-28 20:34
+    - 3576b2670d577a5e7416dd645f7ae302762403a7 bd: backup 2026-02-28 20:49
+    - 574213f6dc1b19cbdb55942833ee27e8a4367362 bd: backup 2026-02-28 21:04
+    - 99fb9fa1225c8832abea63717a53d43f85094bfa bd: backup 2026-02-28 21:19
+    - 29abd2a6f14a5399bb2ec80ee14e3471a36aaf89 bd: backup 2026-02-28 21:34
+    - c13a9c5bd8475e1916656000acb9738e46bf2b4f bd: backup 2026-02-28 21:49
+    - 9819a0c3ca82d904bfe9951c9a09b55b4b757ea3 bd: backup 2026-02-28 22:06
+    - 4aff5cf4981f938001dd7e7652beea9ac11699e5 bd: backup 2026-02-28 22:21
+    - ec81dd8c722043e9ce017f6527bcf92255e65ecc bd: backup 2026-02-28 22:42
+    - 099245f19a6b5563e7a6182b7c103a24fe9e0d5a bd: backup 2026-02-28 22:57
+    - a06640ae9b38eb41ecd8401f56958f5a5cfc21bc bd: backup 2026-02-28 23:12
+    - 7426a75c7b7a691ebe94308e3d974e571eb6c8a1 bd: backup 2026-02-28 23:27
+    - 0c4df4425ae8b95d2855bfe7fe32e59db31ded6b bd: backup 2026-02-28 23:42
+    - ce0923f0676f4a3b4b4aaf8901222d76b80a5fc2 bd: backup 2026-02-28 23:57
+    - 2769a083b2f2507aba7344e153a470578dc4d823 bd: backup 2026-03-01 00:12
+    - 2c9e46c015d04c004684043d67978067aea386e7 bd: backup 2026-03-01 00:33
+    - 746fed730209ab7a0821e2815cd8bf881db49d58 bd: backup 2026-03-01 00:49
+    - daef91cbe18323ec23254952efb2469850edf237 bd: backup 2026-03-01 02:21
+    - 0cad7f4c1db9b22a729faa4723663011a6bb2d7e bd: backup 2026-03-01 02:36
+    - 1203d2b81810588ea5adcc95ab13337fc246cf85 bd: backup 2026-03-01 02:51
+    - 9c50056671fc77c3ced2b845e3728a3d0eb58deb bd: backup 2026-03-01 03:06
+    - a25e60c2144c6bcc853fac4dc6eaa3f1f9591faf bd: backup 2026-03-01 03:21
+    - a7b025ab66b56690651c55eba33d2ec92fdf617c bd: backup 2026-03-01 03:36
+    - 1e2c60527dce5304543252cc21aaa16247d40cc9 bd: backup 2026-03-01 03:51
+    - de34851ffd81b24c321d80c41354e2f381170919 bd: backup 2026-03-01 04:06
+    - d5d60de6b78a4fd4e24bdb6279e3c6aaaa192cb0 bd: backup 2026-03-01 04:21
+    - b392a7d6f9e682ec05de64f2132a6804f0320672 bd: backup 2026-03-01 04:36
+    - 63d8944f78e7e0f02577990e2e5d7379d576aa10 bd: backup 2026-03-01 04:51
+    - 3aef63c2a18ebb8b0b1a54102c32b709bd5254b1 bd: backup 2026-03-01 05:07
+    - 422e687db9a89bece9c10c8ce929118a97c08d66 bd: backup 2026-03-01 05:22
+    - 7d2dc1fc09eae696c66550b5e55bd900f664e1ea bd: backup 2026-03-01 05:45
+    - fb09b0125e5cd37daf7d951fca74c498534a1bc9 bd: backup 2026-03-01 06:00
+    - 8b7f9c202be5507645a755539b7f62eb12a08299 bd: backup 2026-03-01 07:09
+    - 8ccd3fd4b81bd83907e2d216e1d7d3d7b62a8c3a bd: backup 2026-03-01 08:01
+    - f797c2d4880132d4c36ce970036ef5cfd61e7710 bd: backup 2026-03-01 08:16
+    - 6b0a4a088b5e378789a20d1b755c4fb9862130f6 bd: backup 2026-03-01 08:31
+    - 1f0b27fda06f8af2356b9f06f080e98bec20bc5d bd: backup 2026-03-01 09:26
+    - ee75522cc0983e08ed0bf1520ef66e88bbdd7a6f bd: backup 2026-03-01 09:43
+    - c33dda7fab259f818078b2dc378686d388392f5f bd: backup 2026-03-01 10:00
+    - ae0e7f1e0cf28d655c3776d5574db1988f132336 bd: backup 2026-03-01 10:19
+    - 64de3ab178e603b036e0e9497ab288fb819b45f1 bd: backup 2026-03-01 15:51
+    - fe1673633d2aed87c44b88a987ae7cb846eba5ca bd: backup 2026-03-01 16:37
+    - 34c0c8be62fd7c40ab0b37d773fbc8cb7b60c268 bd: backup 2026-03-01 17:02
+    - 7422088b76804b3f0d2074f5de5e464ddd4d380b bd: backup 2026-03-01 17:31
+    - e3a555881ec990580b6803d1428516bcfebd96fc bd: backup 2026-03-01 17:46
+    - a88993b802375bc73222105643394e0d9a2781bc bd: backup 2026-03-02 03:59
+    - 6c499582c54cdc78555b40f3e24b3d4aa4b7ebe6 bd: backup 2026-03-02 04:14
+    - 2b296e164ee117f893bf53e855b59f721c379342 bd: backup 2026-03-02 04:29
+    - b7db265c6c6ca680989d3a335adb4a3032ff584a bd: backup 2026-03-02 06:30
+    - f7c0ad8d3f00cfc9056a946c380c180a7bfc1e99 bd: backup 2026-03-02 18:44
+    - 683d3ba051815a9bffca8fc5ef843f0bb280c4e8 bd: backup 2026-03-02 19:05
+    - a0a87cc2e137ef7bddccda0f1c270970aa7daf37 bd: backup 2026-03-02 20:10
+    - 7fca0545af9a9132e34b1ec37e357888f7fd515a bd: backup 2026-03-02 20:25
+    - 3e57403389876759075a08ea5d86d15717897a74 bd: backup 2026-03-02 20:40
+    - d03cd0e207ab5a51fd20942279c8d11413326f88 bd: backup 2026-03-02 21:03
+    - 725099090aa5c7236e0d26ea3a32df245fcb9b9c bd: backup 2026-03-02 21:26
+    - 385c0c0311b0f7370a83bd930edb9157693b46eb bd: clean JSONL export from Dolt (post-reap, post-pollution cleanup)
+    - b92ce05a21a740bfbf3ffcb60810f7f223a33096 chore(deps): update actions/cache action to v5
+    - a6f73dd8a1c26e1d04291f22f92db142ac4b7e11 chore(deps): update actions/cache action to v5
+    - f5c2da1d2ff3b5a602afae5379e3dcbacb6bf3bf docs(claim): address review nits and unblock resume semantics
+    - f9b306f152fdea614e470cdf1ae07fadd2a2ffa2 docs(claim): standardize start-work semantics to --claim (#2070)
+    - fbc90a3e75422da89d2764c925bfcf2780526506 docs(claim): use --claim for start-work flows across docs, examples, and templates
+    - b59486cc593fa66cacd9517f1c71014470837712 docs(deps): add DEPENDENCIES.md covering dependency system and gates
+    - 4f4cc4118e7bcc39fa2e12471812df5782d8dd9f docs(faq): clarify atomic self-pick claim wording
+    - 06cc556a3344096399f9ad30f382846f0d6aced7 docs(faq): note optional assignee with claim
+    - 999d158cc32f464426343846c6dc8024151da0f2 docs(faq): reorder assigned-vs-claim note
+    - 95c86e1160b99a3849b221b4e2346e8571ccfb3f docs(faq): require assignee in claim example
+    - 05727efe2dd8ba7c5d91d29e84a1ebcf50465122 docs(faq): restore assigned-work flow and clarify claim semantics
+    - 8c6375ff13e0d706ab6e52d5fc7d091c704992cc docs(otel): add OTel architecture and data model design docs
+    - f41397b6056ec2d056a7ae879e153dd7ba63f2e3 docs(otel): correct data model doc against source code audit
+    - 56a5ae6af2c1cff662dc7034e94d2e45dffaf114 docs(otel): re-verify data model appendix line numbers against main@371df32b
+    - cef38b2dd5ee5ed51d2750215596fae1d3b02a7f docs(otel): remove absent metrics section from data model appendix
+    - 5e0602a6c416b0456d965fef29a4ab12974f96ee docs(regression): Phase 3 triage — 95+ pass, 15 fail (all known bugs)
+    - b966c10def8ea4b97cd30b02190d208c3e804414 docs(regression): add GH issue numbers for BUG-7, BUG-8, BUG-13
+    - 98707aa1dbde323c595ff66fbe3ddf0bc79981a9 docs(regression): fix DISCOVERY.md to reference DECISION PRs not issues
+    - 4a3966c60027e9e2b06ff7f308aa59b2764fd60a docs(regression): session 6 discovery — stale, sort, reparent cycle, overdue
+    - f89af048c5415eb88591498baa59f7203f9bade4 docs(regression): session 6b — reversed ranges, negative limit, duplicate
+    - 3a937ba69d3e0afda5aa94f2932fce972794b2b4 docs(regression): session 6c — whitespace title, config ambiguity, dep rm
+    - bf03c238953286ef898a7c1722e77e72b36f79b7 docs(regression): session 7 — deferred state, comma status, filter conflicts
+    - 9bac57acfe9113e127d45870b0369adc39f537ef docs(regression): session 7b — protocol tests for status, all, type, show
+    - a683708b105fcc1a457ace070cfebb492bf3b155 docs(regression): session 7c — empty comments, past due date, ID filter
+    - 1b2b43048f9c2ec5920559f6cc68e1628e9d052e docs(regression): session 8 — lifecycle validation, ready filters, duplicate cycles
+    - 8e0a57ca9feca677118d3711065a77935442b006 docs(regression): session 8b — stale edge, search comma-status, type filter
+    - 4e15ee44890d55b90e4e40a18a45d3995c95f6bf docs(regression): session 8c — blocked parent, label idempotency, dep tree
+    - 547bed2990b3e42338f770f18610eb71beaf6e13 docs(regression): update DISCOVERY.md with PR status and bug triage
+    - 6a70a3ecf8e576785e80cf5e63ca9b49e4a6504e docs(setup): use --claim in generated agent templates
+    - edc0aeb8dc961653014f3eee4430f1bf492539ea feat(create-form): add --parent flag for creating sub-issues
+    - fba1d3b1feddeab76caa9a30b893ab0eb672e036 fix "no store available" issue with "bd dolt pull".
+    - 74c968ce581e58205c7f9ea8ed18d4f233709656 fix tests: stop version tracking from polluting repo metadata
+    - 1f6ab004918a54417a3b894f4146cdcbc8fe75f3 fix(doctor,git): isClaudePresent gate + JJ/git boundary detection
+    - d61445e7c44492ac80aabe45d716592ee9014662 format with go
+    - f78df9b7d7842b287146796946576ba2beee0ea0 merge: sync docs/claim-start-work-followup with upstream main
+    - a266db942dd808645c08cddb5b479ef7d096801e perf(doctor): speed up tests from 44s to ~12s via branch-per-test isolation
+    - 4237ebb419a2055d1bbb329c52a79d26aaefa4b0 perf(test): consolidate messaging and dep test suites (bd-1rh)
+    - 793f3f2abb30cecc7e08d1a2d9c173de2db08dab perf: speed up cmd/bd tests with shared DB + branch-per-test isolation (bd-xmf)
+    - 5675a3cc3edbb1d4d3feb51be47d795709c69d66 perf: stream backup exports to disk, reduce allocations
+    - 5476b9cff0836e510d2c1812bc7c29b68eaa617e preflight: require lint unless explicitly skipped (#2227)
+    - 332b4f457bdc1bd9335cace70b5eb5331608bf8e refactor(output): simplify title-length semantics and default to 255
+    - 765ac3c481c888f5ed6389417029a9fc22f21a66 refactor(protocol): split protocol_test.go monolith into thematic files
+    - d0af696d6fe936dca98a447a584f33597de21094 refactor: address review — use constants, fix stale comments, hermetic tests
+    - 66574d8fc1d2795e390ed67c9dfac07559cfbf54 refactor: consolidate SSH detection and CLI remote helpers into doltutil
+    - 5a5cde04e21b26ce52f7fb0903588a468ed1289c refactor: consolidate duplicate findBeadsDir to use beads.FindBeadsDir (bd-74w1)
+    - 97fc30d562896a7e318ab77b5650b6499f988a4d refactor: convert doctor test fixtures from SQLite to Dolt (GH#bd-o0u.1)
+    - bcb22df28e66fafb19754976fbc71cba68b7f283 refactor: extract ToRemoteNameMap() helper for DRY
+    - ed02bf4c8d126854c8bb10b5dfbfd00800cb845d refactor: extract shared DoltDockerImage, FindFreePort, WaitForServer into testdoltcommon.go (bd-4q6f)
+    - 080a6b9788d197919fdb61d08a768f79d3f5b981 refactor: extract shared filter-building into buildIssueFilterClauses (bd-is9q)
+    - 8ee993aa7db5bcb813acc67ed74ffd71dc60f281 refactor: remove JSONL references from core Go files (bd-9ni.2)
+    - 5e243b1097dbe2f6a94b6c160ebb81ba59d9965a refactor: remove JSONL storage layer from core Go files (bd-9ni.2)
+    - 7d7da19357e260c350677cafc09c412da014ee16 refactor: remove SQLite from doctor/database.go and doctor/deep.go (bd-o0u.2)
+    - 70d7c6252480b1ff4d2c7f57c78022f3bb2f63d7 refactor: remove SQLite from doctor/integrity.go and config_values.go (bd-o0u.3)
+    - ce0ed23fe7c274c1aae870b752fb2ab9a916e0ed refactor: remove SQLite from doctor/migration*.go and fix/validation.go (bd-o0u.5)
+    - 7d4a18eca1eb74fe484bbd6b78fc6da15f33d495 refactor: remove SQLite from doctor/perf.go, multirepo.go, installation.go (bd-o0u.4)
+    - 5f023a101d134ba6034963186a77bc42a3afc43a refactor: remove dead SQLite helpers, connstring.go, and --to-sqlite flag (bd-o0u.6)
+    - 0a54d5ca6f72631dd8e8a29798ccc4940fb3d504 refactor: remove dead functions printNoop, migratePrintSuccess, migratePrintWarning (bd-c7v1)
+    - 809a8808933ac5b06c6b2960398f8b797e0bf44b refactor: remove dead wisp table routing functions
+    - 6f9fcc16dc8d06e4d868848bf374fc66107b8109 refactor: remove duplicate DB() method from DoltStore (bd-ar6)
+    - a4b60714a8b9e3049d283695245eb485febd47b5 refactor: remove unused xLargeFromJSONL function (bd-aonx)
+    - cc55e34efc3cd4c53324d31bd803759b6e95bfb8 refactor: surgical JSONL removal from core Go files (bd-9ni.2)
+    - c1d436ee01d1f076d6ef0de462d88fa58cb185f3 revert: remove auto-push to git remote (broken)
+    - c6a900dc00f5e4137ce576bff2716eee8f942ea7 style(dolt): unexport remoteCredentials fields
+    - 4654c42d9c6fff8d906b4e1f7a4514d42450452e style: fix comment alignment in resolveAutoStart priority list
+    - f9af17149c1556bab3048b7411416a25381cdb86 style: fix comment indentation in TestResolveAutoStart
+    - ef43ebea3795b75ac2d5265748216a811828e78c style: fix gofmt alignment in messaging_test.go
+    - 02e37c79c57fc5c15dcbf7585505852c8b1ff9f1 style: fix gofmt errors
+    - 41cd0953feb7dce7024ac92d08a6434aa72a1d60 style: fix gofmt formatting in discovery_test.go
+    - 55e44c905018cd5a3380c49e0bc4681dfe299300 style: fix gofmt formatting in show_current_test.go and wisps.go
+    - 0bdfd40c87dfd7b359be8bcc77b63117297e4953 style: fix pre-existing gofmt issues on main
+    - fbc3be500c838121f223a7729d0c5514d164908a style: fix pre-existing gofmt issues on main
+    - c80dfa9236965091425d7d22176e86bf1bf3ca73 style: normalize indentation in TestGetStringFromDir
+    - fc6a9212e26d29606f7e85cc5b28c7f3cd7f4ff3 test(discovery): add tests for external blocker and conditional-blocks gaps
+    - 2bc8dd201f5c980dfa284e4fde06bce8007bc434 test(discovery): session 3 — five new candidate-only seams
+    - d6ebf85c9f6ff53162c601d3ff85480d069b8448 test(discovery): session 4 — close guard bypass, cycles, supersede, defer
+    - 372e7246ebe45d0a193b3c0e11d0ae80016105c7 test(discovery): session 4 — close guard bypass, supersede reopen, defer past date
+    - e4cfbee51a2d62bc2523e9e7b79466fae3cbeb49 test(discovery): session 5 — dead label filter, flag conflicts, filter bypass
+    - bc6733b9877d6bb2b69a4c41b02958887f9a7ab0 test(doctor): skip maintenance cgo tests when dolt test server is unavailable
+    - b5c5e49126a9de92b9abace3b4ae5d14479ae528 test(dolt): verify AUTO_INCREMENT reset after pull
+    - e2ded3a38eca06e512c3137d31299233e5728342 test(protocol): split blocked-status test into separate file
+    - 4e938f78cc9ccdcdb563e08d9766958e7844519c test(wisp): add regression tests for ephemeral auto-ID generation (GH#2087)
+    - 1c285fd576d1f352a31edbb00e34891aad69dad6 testutil: migrate test Dolt server from binary-spawning to testcontainers
+    - 0702ea010d9dda05d4df899bc95367d819818835 update nix package so it build again
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/steveyegge/beads/releases/tag/v0.58.0
+ReleaseTime: 2026-03-03T06:33:46.0000000Z

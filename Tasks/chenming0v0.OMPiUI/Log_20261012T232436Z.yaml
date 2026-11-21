@@ -1,0 +1,22 @@
+Version: 0.6.22
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.22/OMPiUI_0.6.22_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    降低弱网重连、主消息流、文件浏览与转录恢复的重复流量，逐项处理 #84 至 #140。
+    - feat: 新增后端持久化的子代理预览思考开关，默认关闭实时及磁盘回填思考；聊天设置可远程修改，完整子会话界面与原文件思考数据不受影响。
+    - fix: 主文字、思考、工具字符串参数与子代理进度使用增量传输；订阅差异重放、退避轮询、共享探测、刷新 single-flight、显式 live 恢复和完整快照标记避免重复整页重拉。
+    - fix: RPC、IPC、事件历史、终端与桌面桥设置字节预算；终端使用块窗口与短窗口合并，relay 配额等待、实际帧计量、升级前缓冲及上游 drain 背压保护慢连接。
+    - fix: 原生 JSONL 使用异步增量扫描、摘要索引与有界缓存；历史阅读窗口最多 400 条或 8 MiB，可继续读取更早历史及返回最新；大图按需分片，树导航采用轻量平铺传输并保留原拓扑。
+    - fix: 附件及文件写入上传前验证容量，队列单条删除不重传剩余图片；文件/Git 事件合并，搜索与诊断报告有界，静态资源支持 gzip、304 与 Range。
+    - docs: 57 项全部逐条评论关闭，4 项按不成立的故障前提说明复核依据；修复范围与验证说明见 docs/network-release-audit.md 和逐项记录。
+    - verification: 类型检查、相关 Node 与前端回归、前端生产构建及 Rust 编译通过；隔离官方 OMP 验证确认终端与 UI 双向续写及浏览只读。安装包实机升级、设备长期锁屏与线上负载不以源码验证或发布构建冒充验收。
+    - chore: 根包、全部 workspace、互依赖、npm 锁文件及 Tauri/Cargo 统一为 0.6.22。本批升级到协议 2（ompiui.events.v2），前端、服务端与 worker 必须配套升级；官方会话目录和文件格式不变。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.22
+ReleaseTime: 2026-10-12T21:40:41.0000000Z

@@ -2,9 +2,12 @@ $Params = @{
   Method               = 'Post'
   Body                 = @{
     client = @{
-      app = @{
+      app    = @{
         id      = '100823621'
-        version = $Task.LastState.Version ?? '11.2.0.303'
+        version = $this.LastState.Version ?? '11.2.0.303'
+      }
+      device = @{
+        osVersion = '10.0.22000.0'
       }
     }
   } | ConvertTo-Json -Compress
@@ -26,70 +29,67 @@ $Object2 = (Invoke-RestMethod -Uri 'https://conf-drcn.cloud.dbankcloud.cn/config
 # $Object3 = (Invoke-RestMethod -Uri 'https://conf-drru.cloud.dbankcloud.ru/configserver/v1/hicloud/configs/HiCloudPCUpgradeConfig' @Params).config.content | ConvertFrom-Json
 
 # Version
-$Task.CurrentState.Version = $Object2.configurations.version
+$this.CurrentState.Version = $Object2.configurations.version
 
 # Installer
-# $Task.CurrentState.Installer += [ordered]@{
-#   Architecture = 'x86'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 1 }).url
-# }
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   Architecture = 'x64'
-#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+#   InstallerUrl = $Object1.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-Hans-CN'
-  Architecture    = 'x86'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 1 }).url
+  Architecture = 'x64'
+  InstallerUrl = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 }
-$Task.CurrentState.Installer += [ordered]@{
-  # InstallerLocale = 'zh-Hans-CN'
-  Architecture    = 'x64'
-  InstallerUrl    = $Object2.configurations.fileInfo.Where({ $_.type -eq 2 }).url
-}
-# $Task.CurrentState.Installer += [ordered]@{
-#   InstallerLocale = 'ru'
-#   Architecture    = 'x86'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 1 }).url
-# }
-# $Task.CurrentState.Installer += [ordered]@{
+# $this.CurrentState.Installer += [ordered]@{
 #   InstallerLocale = 'ru'
 #   Architecture    = 'x64'
-#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }).url
+#   InstallerUrl    = $Object3.configurations.fileInfo.Where({ $_.type -eq 2 }, 'First')[0].url
 # }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
-
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object2.configurations.publishTime | ConvertFrom-UnixTimeMilliseconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
     try {
+      $Object4 = Invoke-WebRequest -Uri $Object2.configurations.language.url | Read-ResponseContent | ConvertFrom-Xml
+
       # ReleaseNotes (en-US)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'en-US'.text.value | Format-Text
       }
-
-      # ReleaseNotes (zh-CN)
-      $Task.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
+      # ReleaseNotes (zh-Hans)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-Hans'
+        Key    = 'ReleaseNotes'
+        Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
+      }
+      # ReleaseNotes (zh-Hans-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-Hans-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object4.resource.'zh-CN'.text.value | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,156 @@
+Version: 18.18.9
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.18.9/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Tool calls get ctx.toolCall.earlierEffectsSettled, which settles once the earlier calls of their message that run beside them and may write files (their approval, asked with their arguments, is not read) have finished; speculative results wait for those effects before validation, and cancellation while waiting prevents their commit (#16274 by @will-bogusz)
+    @oh-my-pi/pi-ai
+    Added
+    - Added SOFYA_API_KEY as the env key for the sofya provider (#18185 by @yusufgurdogan)
+    Fixed
+    - Devin requests no longer send temperature: 0: the catalog's temperature-floor raises it to 0.0001, so session titles and Mnemopi memory extraction work on Devin instead of failing with Cascade's opaque invalid_argument and silently falling back to another model (#18423)
+    - Auth-gateway /v1/messages now answers 400 invalid_request_error for output_config.format (and the pre-GA output_format) instead of returning 200 with output the schema never constrained, so structured-output clients fall back to prompt-side schemas (#18842)
+    - Auth-gateway requests denied only the requested model (Codex ChatGPT account, Cursor plan) now switch to another account and keep the denied one usable for other models, instead of marking a working credential suspect; gateway rotation now follows the same rules as local sessions, including waiting out a sibling's short usage block
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the web/sofya search model (#18185 by @yusufgurdogan)
+    - Added the temperature-floor compat axis, assigned 0.0001 on Devin so a request that pins temperature: 0 reaches Cascade as a value it accepts (#18423)
+    - Added the keyless web/hackernews search engine model for Hacker News stories and comments
+    Fixed
+    - Devin requests now identify as Devin CLI 3000.12.43, the current stable release, instead of 3000.11.205 (#18766 by @will-bogusz)
+    - Fixed Gemini 4 Argon and Carbon on Command Code showing no reasoning levels; both now offer low, medium, and high
+    - Fixed OpenCode Zen Gemini 4 Carbon requests going to the chat-completions endpoint instead of the native Gemini endpoint Zen serves it on
+    Removed
+    - Removed Devin's retired SWE-1.6 Fast from the models omp lists before Devin's live model list loads (first start, or when Devin is unreachable) (#18795 by @will-bogusz)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added Sofya as a web search engine (web/sofya), using SOFYA_API_KEY or a stored sofya credential (#18185 by @yusufgurdogan)
+    - Documented autoresearch mode in docs/autoresearch.md: activation and its git gates, the three stop conditions, the per-segment iteration cap that defaults to none, the harness METRIC/ASI contract, and the on-disk store that OMP_AUTORESEARCH_DB_DIR relocates (#18655 by @sjawhar)
+    - Extensions can import the form theme, the native span helpers (styledSpans, compactText, rowsText and the rest of the ANSI/span conversions), the xd:// URL helpers (parseXdUrl and friends) and the cfgExtensionTranscriptPresenters setting handle from @oh-my-pi/pi-coding-agent instead of internal module paths, which stop the extension from loading when a file moves (#18849 by @materemias)
+    - /context shows loaded instruction files and skills in their own categories; System Prompt marks where each one sits without counting it twice, and notes when an extension or SDK callback changed the prompt after it was built (#17971 by @c-w-z)
+    - Added Hacker News search (web/hackernews): web_search queries scoped to site:news.ycombinator.com now search HN stories and comments through the keyless HN Search API before the configured engines
+    Changed
+    - A role edit in another omp instance no longer rewrites the task and eval tool descriptions of every running session, which was invalidating the Anthropic prompt cache from the tool definitions onward and dropping signed thinking blocks on prefix-bound models; the per-call model advertisement is now frozen into the base prompt surface and changes only when that surface rebuilds (#18716, #18732 by @yuzu-octopus)
+    - Agent-to-agent messages now always reach the recipient as user turns: one that ends a wait arrives right after it instead of inside the wait tool result, and none is sent with developer or system authority
+    - Launch services now persist for non‑interactive sessions
+    - The shell's built-in jq now behaves like jq 1.8.2 instead of jaq: the same output (number formatting, colors, -S, --indent, --seq, --stream), error messages and exit statuses, jq's full option set (--version reports jq-1.8.2), and its grammar and builtins (?//, $__loc__, modules, getpath/setpath creating missing paths, |= deletions, Oniguruma regexes, dates); it passes jq 1.8.2's own test suite
+    Fixed
+    - Nix builds with withAppleFm = false no longer compile the Apple Foundation Models bridge with the host's Xcode (#18911)
+    - Apple Silicon Nix builds include Apple Foundation Models support instead of silently building without it (#16584 by @honsunrise)
+    - On Windows, the bash tool runs external commands when omp itself runs in an AppContainer sandbox, instead of failing every one with Permission denied (exit 126) (#18800 by @devjay4561)
+    - Explicit Bash prompt rules remain enforced in yolo mode when a command also matches a critical pattern (#18788 by @jasonharrison).
+    - Fixed job widgets and captions failing outright when the widget model errors: they now try the role's next model (retry.fallbackChains.widget, else the built-in smol defaults) and fail only once every candidate has (#18793)
+    - Failed job-widget, job-caption, cache-warm, composer-prediction, and subagent completion-probe calls now keep the provider's error message in their session usage records (#18792)
+    - /changelog, /changelog full, and /changelog last N now list releases newest-first, matching CHANGELOG.md and the startup release notes (#18809)
+    - Fixed a read placed after a bash call in the same message returning the file as it was before that command changed, created or deleted it, in primary and advisor turns (#16274 by @will-bogusz)
+    - RPC/ACP /session delete now switches the live session before deleting its file, so later turns save to a new, resumable session (#18665).
+    - Browser tab.click, tab.dblclick, tab.check, tab.uncheck, tab.uploadFile and frame.click on Chromium tabs now look their selector up again when the page replaces the element before the click goes out, including during and after delivery watcher setup, instead of waiting out the action timeout on the replaced element; a click through an element handle or an aria-ref whose element was replaced fails at once (#18676 by @will-bogusz)
+    - A browser tab.run whose code uses document, window, location or another page-only global now says the code runs in omp's runtime, not the page, and to use tab.evaluate, instead of only "document is not defined" (#18840 by @will-bogusz)
+    - JavaScript eval cells and tab.run/computer.run strings ending in assignments, blocks, loops, or declarations now return nothing; trailing expressions and explicit returns still produce values (#18865 by @will-bogusz)
+    - A page calling window.print() no longer hangs the browser omp launches: print() returns at once and tab.pdf() still makes PDFs (#18838 by @will-bogusz)
+    - tab.select() and element-handle select() return the options selected after the page's input and change handlers ran, instead of the choice the page then reset (Chromium tabs) or an option the page's handler had just replaced (cmux and Tern tabs) (#18829 by @will-bogusz)
+    - tab.waitForDownload() fails, naming the path it looked for, when no file is there on omp's machine, as with a browser reached through app.cdp_url on another machine, instead of returning a path that does not exist; such a download is left out of tab.downloads() (#18830 by @will-bogusz)
+    - When Chrome detaches omp from a relay tab omp opened and omp cannot reattach, the error now says omp tried to close that tab and to open a new one, instead of telling the agent to navigate it in Chrome; a failed close may be deferred until the relay reconnects (#18832 by @will-bogusz)
+    - A relay app.target that matches no tab now recommends omitting app.target to open omp's own tab (#18833 by @will-bogusz)
+    - Judgments skip a judge candidate for five minutes after it answers 404 for its model, as they already do after a 401/402/403, instead of re-sending the failing request on every judgment of a find call (#18854)
+    - Fixed Tern and other OSC 7501 terminals showing a session as working, with no needs-you alert, while a dialog waits on you, such as a ctx.ui.confirm an extension's tool_call handler opens to gate a command: every dialog the TUI shows (extension and hook dialogs, tool approvals, ask, cfg:// changes, the coding-plan reserve confirm, plan review) now reports blocked with what it asks until you answer, and a tool approval reports working again as soon as you answer it (#15107, #18868 by @wolfiesch)
+    - The shell's built-in jq no longer slows down quadratically on repeated updates such as reduce range(n) as $i ([]; . + [$i])
+    - /tan completion notices now quote the user's request and mark the result as the user's tangent, so the main agent no longer mistakes it for its own work
+    - omp zsh with zsh-autosuggestions' completion strategy no longer echoes each typed key onto new lines: vared inside a zpty command now edits on the pty instead of the shell's terminal
+    - An instruction file that leaves a code fence open has it closed at its end, so the rest of the system prompt is formatted as usual (#17971 by @c-w-z)
+    - Read-only activity stays visible after snap-compaction or another mid-turn transcript rebuild instead of leaving the UI stuck on “Working…” (#18876 by @JustasMasiulis).
+    - With the Spotlight experiment on, a session now warns when Spotlight finds no Stencil credential, once each time the credential goes missing, and says how to sign in again; the spotlight:shape journal entry records failed Spotlight calls by cause (failureCauses) (#18850 by @wolfiesch)
+    Removed
+    - Removed /mcp smithery-search, /mcp smithery-login and /mcp smithery-logout; Smithery shut down its API on October 31, 2026 (#18822 by @samettemizer)
+    @oh-my-pi/pi-natives
+    Added
+    - OMP_APPLEFM_DISABLE=1 builds without the Apple Foundation Models bridge and never probes Xcode or the Command Line Tools; it cannot be combined with OMP_APPLEFM_SWIFTC (#18911)
+    Changed
+    - The macOS addon's install name is @rpath/libpi_natives.dylib instead of the directory it was built in (#18911)
+    - A set OMP_APPLEFM_SWIFTC must name a usable Swift 6.4+ compiler with a macOS 27+ SDK: the build now fails instead of falling back to Xcode, the Command Line Tools, or a build without Apple Foundation Models (#16584 by @honsunrise)
+    Fixed
+    - Fixed macOS window screenshots drawing the window smaller than it appears, so clicks aimed from them missed by tens of points; windows spanning displays or partly off screen are captured whole at their on-screen size, except while a sheet larger than the window is open (#17757 by @will-bogusz)
+    - Fixed Linux computer reads crashing the app being read (Qt 5 and Qt 6 before 6.9.2 apps anywhere; GTK 3 and Firefox apps on distributions with at-spi2-core before 2.45, such as Ubuntu 22.04), and reading no text from the text fields of newer Qt apps (#18823 by @will-bogusz)
+    - Fixed macOS background left clicks crashing the page in Electron apps, and in Chrome when the click changes the URL in place (history.pushState, as single-page apps do) (#18824 by @will-bogusz)
+    @oh-my-pi/omp-stats
+    Added
+    - The Spotlight dashboard's Overhead card breaks failed results down by cause (not signed in, timeout, rate limited, HTTP status, …) and, when results failed for lack of a Stencil sign-in, says how to sign in (#18850 by @wolfiesch)
+    @oh-my-pi/pi-tui
+    Added
+    - Added the Sofya label for sofya web search results (#18185 by @yusufgurdogan)
+    - The context breakdown counts instruction files and skills from the system prompt as built, matching /context, and lists Instruction files as its own category (#17971 by @c-w-z)
+    - Context Viewer adds an Instruction Files category and opens Skills like any other category; ContextViewEntry.sourceMarkers colors viewer-only source markers by category in previews and full content, and ContextViewData.notices lists snapshot caveats under the Overview legend (#17971 by @c-w-z)
+    Fixed
+    - In Tern, an ask question outside a <fieldset> gets its own tab instead of sharing the tab of the question before it (#18660 by @DocksDocks)
+    - The /resume picker shows dates of sessions older than a week in the locale from LC_ALL, LC_TIME or LANG instead of always using MM/DD/YYYY (#18863 by @raoulkent)
+    - Fixed an ask HTML form in Tern not taking typing after a click on its Other row or a text well while a composer draft held the keyboard: the click now hands the keys to the form, as ↑/↓ does, instead of every key still editing the draft
+    - Agent Hub status scopes (All, Running, Done, Parked) show icons in Tern instead of empty squares (#18880 by @a-glapinski)
+    - Fixed streaming tables that overflow the screen staying squeezed to their header's column widths after the rows arrive (#18909 by @JustasMasiulis)
+    Removed
+    - Removed estimateSkillsTokens() and the skillful context-usage option; Skills tokens come from the built prompt's sources (#17971 by @c-w-z)
+    @oh-my-pi/pi-utils
+    Added
+    - Added prompt.renderTracked: renders a template like prompt.render and reports where each {{#each}} iteration over a tracked item lands in the output (#17971 by @c-w-z)
+    - Added prompt.closeCodeFence: closes a code fence a text leaves open, by the same rule prompt.format uses (#17971 by @c-w-z)
+    What's Changed
+    - feat(coding-agent): export extension helpers from the package root by @materemias in https://github.com/can1357/oh-my-pi/pull/18849
+    - fix(tui): send icons with the Agent Hub status scopes by @a-glapinski in https://github.com/can1357/oh-my-pi/pull/18880
+    - fix(tui): keep read-only activity visible after compaction by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18876
+    - feat(spotlight): warn on a missing Stencil credential and break failures down by cause by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/18850
+    - fix(agent,coding-agent): re-read a file an earlier bash call changed in the same message by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16274
+    - fix(natives): match macOS window screenshots to the window on screen by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17757
+    - fix(ai): stop Devin requests from sending temperature 0 by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18461
+    - fix(tui): give ask questions outside a fieldset their own Tern tab by @DocksDocks in https://github.com/can1357/oh-my-pi/pull/18660
+    - fix(session): detached active rpc session before deletion by @roboomp in https://github.com/can1357/oh-my-pi/pull/18666
+    - fix(coding-agent): look a click's selector up again when the page replaces its element by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18676
+    - fix(coding-agent): freeze the per-call model advertisement in the prompt surface by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/18732
+    - fix(catalog): identify Devin requests as CLI 3000.12.43 by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18766
+    - fix(bash): preserve explicit prompts over critical patterns by @jasonharrison in https://github.com/can1357/oh-my-pi/pull/18788
+    - fix(catalog): drop Devin's retired SWE-1.6 Fast seed row by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18795
+    - fix(coding-agent): kept errorMessage in side-call usage records by @roboomp in https://github.com/can1357/oh-my-pi/pull/18796
+    - fix(pi-shell): create Windows pipes under \.\pipe\LOCAL\ inside an AppContainer by @devjay4561 in https://github.com/can1357/oh-my-pi/pull/18800
+    - fix(coding-agent): listed /changelog releases newest-first by @roboomp in https://github.com/can1357/oh-my-pi/pull/18810
+    - refactor(coding-agent): remove /mcp smithery-* commands by @samettemizer in https://github.com/can1357/oh-my-pi/pull/18822
+    - fix(natives): stop Linux computer reads from crashing Qt, GTK 3 and Firefox apps by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18823
+    - fix(natives): stop macOS background left clicks from crashing Electron and Chrome pages by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18824
+    - fix(coding-agent): return the options a page leaves selected after its change handlers by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18829
+    - fix(coding-agent): fail a download wait when the saved file is not on this machine by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18830
+    - fix(browser): give owned relay tabs truthful detach recovery guidance by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18832
+    - fix(browser): name the relay's own-tab open when a target matches no tab by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18833
+    - fix(coding-agent): stop a page calling window.print() from hanging the browser omp launches by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18838
+    - fix(browser): say where tab.run code runs when it reaches for a page global by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18840
+    - fix(ai): rejected structured output on gateway /v1/messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/18843
+    - fix(tui): let a pointer pick take an ask form's keys from a pending draft by @iacore in https://github.com/can1357/oh-my-pi/pull/18845
+    - fix(tui): format old session dates in /resume with the system locale by @raoulkent in https://github.com/can1357/oh-my-pi/pull/18863
+    - fix(coding-agent): skipped judge candidates that answer 404 for a cooldown by @roboomp in https://github.com/can1357/oh-my-pi/pull/18864
+    - fix(coding-agent): print nothing for a JavaScript eval cell that ends in an assignment by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18865
+    - fix(ai): compute Claude Code cch over the filtered request body by @apoc in https://github.com/can1357/oh-my-pi/pull/14366
+    - docs: document the autoresearch contract by @sjawhar in https://github.com/can1357/oh-my-pi/pull/18655
+    - fix(coding-agent): walked the widget role chain when a model errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/18797
+    - fix(coding-agent): report blocked while extension dialogs wait on the user by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/18868
+    - fix(nix): build Apple Foundation Models bridge on Darwin by @honsunrise in https://github.com/can1357/oh-my-pi/pull/16584
+    - fix(ai): rotate Anthropic OAuth accounts on model-specific 404 by @alphastorm in https://github.com/can1357/oh-my-pi/pull/18807
+    - fix(tui): lock streaming table widths only after a body row ends by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/18909
+    - feat(context-viewer): show instruction files and skills in their own categories by @c-w-z in https://github.com/can1357/oh-my-pi/pull/17971
+    - fix(nix): harden Darwin native build (store references, opt-out, install name) by @H4vC in https://github.com/can1357/oh-my-pi/pull/18911
+    - feat(web): add Sofya search provider by @yusufgurdogan in https://github.com/can1357/oh-my-pi/pull/18185
+    - fix(ci): restore main to green by @H4vC in https://github.com/can1357/oh-my-pi/pull/18918
+    - fix(pi-shell): backtick AppContainer in sys::fs docs for strict clippy by @H4vC in https://github.com/can1357/oh-my-pi/pull/18931
+    - fix(pi-shell): backtick AppContainer in Windows-only docs for clippy by @H4vC in https://github.com/can1357/oh-my-pi/pull/18933
+    New Contributors
+    - @DocksDocks made their first contribution in https://github.com/can1357/oh-my-pi/pull/18660
+    - @devjay4561 made their first contribution in https://github.com/can1357/oh-my-pi/pull/18800
+    - @samettemizer made their first contribution in https://github.com/can1357/oh-my-pi/pull/18822
+    - @raoulkent made their first contribution in https://github.com/can1357/oh-my-pi/pull/18863
+    - @yusufgurdogan made their first contribution in https://github.com/can1357/oh-my-pi/pull/18185
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.18.8...v18.18.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.18.9
+ReleaseTime: 2026-11-11T19:06:16.0000000Z

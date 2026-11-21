@@ -1,0 +1,167 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/019aa96b6ed9/Windows64EditorInstaller/UnitySetup64-6000.0.3f1.exe
+  ProductCode: Unity 6000.0.3f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/019aa96b6ed9/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.3f1.exe
+  ProductCode: Unity 6000.0.3f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/6000.0.3
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.3f1
+    - 3D Physics: 3D Physics Layer Collision Matrix elements are misaligned when new Layers are added (UUM-61750)
+    - DOTS: Job scheduling with batching is slow with dependencies and worker threads have poor utilization (UUM-72097)
+    - Kernel: Profiler does not profile after building the Project with Autoconnect Profiler Option enabled (UUM-71750)
+    - Kernel: VirtualFileSystem crash because of data races. (UUM-72557)
+    - Lighting: [HDRP] Light doesn't bounce off terrains (UUM-71171)
+    - PhysX Integration: A 1000 times heavier GameObject will stutter when colliding with a lighter GameObject (UUM-65366)
+    - UI Toolkit Controls: MultiColumnListView causes a memory leak when repeatedly shown and hidden (UUM-72241)
+    - UI Toolkit Framework: The "StackOverflowException" error is thrown in the console and the Editor freezes when Spacebar is pressed after selecting the last element of a list (UUM-69616)
+    - Universal RP: Errors are thrown and the Scene view is not rendered when Rendering Path is set to Deferred (UUM-63928)
+    - Vulkan: Editor crash when changing Vulkan Number of Swapchain Buffers (UUM-60016)
+    6000.0.3f1 Release Notes
+    Features
+    - Editor: Implementing the dragging and dropping feature for files and assets from Unity to an external application on Linux.
+    Improvements
+    - Editor: Update visionOS platform icons.
+    - Scripting: Added IEquatable support to Color32.
+    - SRP Core: Render Graph Viewer is called before Render Graph execution and its resource deallocation.
+    API Changes
+    - Editor: Added: Exposed constructor of PooledObject. (UUM-64168)
+    - Editor: Deprecated: PlayerSettings.aotOptions is deprecated; this player setting is ignored for quite some time now.
+    - iOS: Added: Device.runsOnSimulator on iOS/tvOS.
+    - URP: Added: RenderPipelineManager callbacks are raised from UniversalRenderPipeline.SingleCameraRequest. (UUM-69268)
+    Changes
+    - Editor: Platform settings for Dedicated Server in plugin importers were removed as those settings are shared with Standalone platform. To strip a plugin from Dedicated Server builds use the !UNITY_SERVER define constraint. (UUM-56535)
+    Fixes
+    - 2D: Fixed case where secondary textures are potentially broken when using multi-page atlas. (UUM-70624)
+    - 2D: Fixed editor hang when generating outline in SpriteEditorWindow. (UUM-70944)
+    - 2D: Fixed Sprite Renderer stops reacting to changes when "Draw Mode" is changed and Size properties are set to 0. (UUM-67706)
+    - 2D: Fixed updating of Tile Palette Clipboard overlay to be the same as in Tile Palette window. (UUM-71458)
+    - 2D: Fixed warning "Cannot compress to ETC1. The split alpha channel and compression to ETC1 requires a packing tag." (UUM-64714)
+    - Android: Fixed crash when an AndroidJavaProxy method throws an exception and is called from multiple threads. (UUM-60297)
+    - Android: Fixed warnings about missing classes when building an exported Android project with minifying enabled. (UUM-69916)
+    - Android: Updated GetNetworkSettings() API so that non-existent classes are not queried when adding Internet access to AndroidManifest.xml (UUM-68111)
+    - Animation: Transition duplicates are no longer added in the AnimatorController file when copy pasting an AnimatorState. (UUM-68642)
+    - Audio: Fixed an issue that would sometimes cause the main thread to stall when accessing properties on an audio source. (UUM-71256)
+    - Audio: Fixed invalid state of editor window for AudioRandomContainer asset after maximizing and minimizing the window, followed by deleting the displayed asset. (UUM-56977)
+    - Documentation: Updated the documentation for AudioSource.PlayOneShot(). (UUM-63508)
+    - DX12: ComputeBuffer CopyCount returns correct value following multiple compute dispatches. (UUM-66900)
+    - Editor: 2D: Updated 2D Feature documentation link. (UUM-70575)
+    - Editor: Add more robustness to MatchSearchGroups to avoid exception when searching for empty string in settingsWindow. (UUM-70674)
+    - Editor: Add new logic to ensure 64bit arm build targets are offered correctly through the APIs. Ensure the Build Profile window hides unsupported platforms. (UUM-62576)
+    - Editor: Add rosbutness to splitter ControlId so it works with DataMode ui (used in entity). (UUM-67862)
+    - Editor: All indexes are created with Temp and External as exclude. (UUM-70905)
+    - Editor: Build Profile Player Settings - Fix for build profile's player settings script defines and additional compiler arguments not updating when the player settings gets removed. (UUM-70176)
+    - Editor: Cross pipeline settings was moved from Built-in tab to common section. (UUM-71394)
+    - Editor: DX12 backend proactively evicts resources to lessen the chance of rendertargets and similarly important resources ending up in GPU visible RAM improving performance in situations with high memory pressure. (UUM-71017)
+    - Editor: Ensure that when alternating between Search Queries Source (User vs Project) we correectly reset the selection state of items to ensure we won't go into renaming mode. (UUM-70557)
+    - Editor: Fix incorrect standalone subtarget could be used when building standalone/server using build profile build API (UUM-71220)
+    - Editor: Fixed an issue where the frame rate was higher than expected in Play Mode when target frame rate was set with Application.targetFrameRate. (UUM-61892)
+    - Editor: Fixed an issue where zooming SceneView using scroll wheel would always zoom the last focused view. (UUM-68279)
+    - Editor: Fixed build profile window header hidden when clicking away from scene list. (UUM-71287)
+    - Editor: Fixed console error when reload and build profile window is open in background. (UUM-71078)
+    - Editor: Fixed editor crash when attaching RenderDoc. (UUM-64372)
+    - Editor: Fixed issue with disabled prefab color in the scene view. (UUM-70750)
+    - Editor: Fixed issue with simultaneously launched Editor instances (ie. jobs).
+    - Editor: Fixed leak reduction mode in complex cases. (UUM-71949)
+    - Editor: Fixed memory Leak when using OnGUI in an MonoBehaviour class by destroying the class Object instance using InstanceID. (UUM-56327)
+    - Editor: Fixed menu items and their parent menus being hidden when they had a position of -1. (UUM-67155)
+    - Editor: Fixed menu items becoming duplicated oon Windows when there were a large number of menu items in the project (Over 7344). (UUM-70358)
+    - Editor: Fixed Project Advanced Search filtering if the user picked the Type selector. (UUM-71128)
+    - Editor: Fixed selection SkinnedMeshRenderer inspector bug that would sometimes cause mesh reference selection to break after selecting a mesh with blend shapes and no bones. (UUM-70627)
+    - Editor: Fixed thumbnail generation for assets who can be casted to texture. (UUM-70573)
+    - Editor: Fixed Windows Editor ContextMenus opening on the wrong monitor when using a 3rd display with different DPI but doesn't address the issue with custom Unity DropDown menus/windows. (UUM-70231)
+    - Editor: If multiple CustomEditor are registered for the same type only a single one gets instantiated (still the case). But the order of which CustomEditor gets instantiated is stable even if scripts are added or removed from the project. (UUM-67599)
+    - Editor: Open and scroll with property path correctly works with fields in a common area. (UUM-71441)
+    - Editor: Reduced overhead of the macOS Editor task progress bar. This improves performance when many tasks are running in succession that require their own progress bar. (UUM-52922)
+    - Editor: Resolved a crash issue arising from the use of a Skinned Mesh Renderer with the DX12 rendering API. (UUM-70289)
+    - Editor: Resolved issue with the dock icon missing when launching the Standalone Profiler. (UUM-71407)
+    - Editor: SerializeReference with Interfaces now correctly works with an inheritance. (UUM-71468)
+    - Graphics: Fixed IUnityGraphicsMetal.CurrentCommandEncoder returning nil when there were no draw calls issued yet with current RenderTarget. (UUM-71813)
+    - Graphics: Set up correct transformation matrices before rendering Gizmo and restore them once done. (UUM-62201)
+    - HDRP: Fixed an issue where the default terrain shader for HDRP was outputting incorrect albedo values to the lightmapper. (UUM-71171)
+    - HDRP: Fixed eye dropper not showing on the PBR sky inspector. (UUM-70143)
+    - HDRP: Fixed format error in public documentation.
+    - HDRP: Fixed issue when directional light dimmer is set to 0. (UUM-71290)
+    - HDRP: Fixed missing API to sync clouds over network. (UUM-65396)
+    - HDRP: XRMultipass - RenderPipelineManager.beginCameraRendering and RenderPipelineManager.endCameraRendering was called 1 time for each pass instead of 1 time for each camera. (UUM-71463)
+    - iOS: Fixed Application.absoluteURL being empty in first scene. (UUM-70860)
+    - Kernel: Fixed potential crash in job system when working with many jobs. (UUM-66128)
+    - Kernel: Optimized batched job scheduling by avoiding unnecessary thread waking. (UUM-72097)
+    - Linux: Fixed first touch is ignored when touching on 2D/3D elements in Linux Platform (UUM-61866)
+    - macOS: Fixed xcprivacy files being added to the Copy Plugins list in the Xcode project. (UUM-70487)
+    - Mobile: Development Builds now will also have developer console, like on other platforms. (UUM-70766)
+    - Package Manager: Fixed Import Error Code: (4) warnings when a local package.json file is modified in the Editor. (UUM-40830)
+    - Physics 2D: Ensure that the Physics2D.contactThreshold isn't applied to contacts involving chain-shape primitives. (UUM-71986)
+    - Player: Added some checks on the data for the ShaderRuntimeInfoEvent and replaced stdmap with corehash_map. (UUM-56296)
+    - Player: Fixed R11_EAC texture compression causing terrain holes to render incorrectly on the Quest 2. (UUM-61913)
+    - Scene/Game View: Fixed overlays insert indicator having incorrect width after hovering an overlay over a toolbar. (UUM-71214)
+    - Shaders: Shader errors are logged in the Player log file when Strict shader variant matching is enabled and dynamic_branch is used in ShadowCaster pass. (UUM-70003)
+    - SRP Core: Added missing user-facing text when inspecting volume profile when render pipeline has not been properly initialized yet. (UUM-71890)
+    - SRP Core: Fixed memory usage regression causing up to 150MB higher memory usage in URP player builds. (UUM-60476)
+    - Text: Fixed Emoji characters potentially not being displayed in their appropriate Text or Presentation forms.
+      Added support to control the presentation form of Emojis using their Variant Selector u+FE0E and u+FE0F (PLAT-8905)
+    - UI Toolkit: Added error message for UxmlAttributes that are using nullable annotation, this is not supported. (UUM-71751)
+    - UI Toolkit: Fixed not being able to set null to an ObjectField with a missing reference. (UUM-70135)
+    - UI Toolkit: Fixed rendering of UI Toolkit panels in linear projects by adding a way to force gamma rendering into a render texture. (UUM-69664)
+    - UI Toolkit: Fixed UI Builder not detecting changes to a UxmlAttribute data type if it implemented IList. (UUM-71335)
+    - Universal RP: Disable fallback behavior on FSR EASU shader to prevent build errors on machines with old GPUs. (UUM-60575)
+    - Universal RP: Fixed an issue where Shadow maps sometimes leaked when switching between quality levels. (UUM-70142)
+    - Universal RP: Fixed broken "Map Overlay" modes in RenderGraph and aspect ratios in RenderGraph and non-RG paths.
+      Added missing "Map Overlay" modes for Motion Vectors and Light Cookie Atlas. (UUM-68008)
+    - Universal RP: Fixed errors when inspecting Universal Renderer assets with URP not as the active pipeline. (UUM-71897)
+    - Universal RP: Fixed visual issues caused by edge cases in alpha clipping logic when MSAA is enabled. (UUM-38064)
+    - Universal RP: Reduced banding on FSR upscaled render target by changing render target formats. (UUM-52901)
+    - URP: Disabled faulty NRP for Editor-only FinalCopyDepth pass in URP 3D. (UUM-57147)
+    - URP: Fixed an incorrect motion vectors with URP Deferred due to missing camera depth binding. (UUM-61051)
+    - URP: Render Pipeline Converter - Built in materials where not found properly the first time the Initialize Converter was called. (UUM-30915)
+    - VFX Graph: Force culling when VFX rendering is disabled. (UUM-71482)
+    - VFX Graph: Update the starter template Description and some default VFX resources. (UUM-62462)
+    - WebGL: [WebGPU] Enable the use of the BGRA format for compute shader storage textures.
+    - WebGL: [WebGPU] Fixed video textures on MacOS for WebGPU.
+    - WebGL: [WebGPU] Fixed WebCam textures for WebGPU.
+    Package changes in 6000.0.3f1
+    Packages updated
+    - com.unity.2d.aseprite: 1.1.3 to 1.1.4
+    - com.unity.addressables: 2.0.8 to 2.1.0
+    - com.unity.scriptablebuildpipeline: 2.1.2 to 2.1.3
+    - com.unity.xr.interaction.toolkit: 3.0.1 to 3.0.3
+    - com.unity.xr.openxr: 1.10.0 to 1.11.0
+Version: 6000.0.3f1
+Modules:
+  visualstudio: https://go.microsoft.com/fwlink/?linkid=2189815
+  visualstudioprofessionalunityworkload: https://aka.ms/vs/17/release/vs_Professional.exe
+  visualstudioenterpriseunityworkload: https://aka.ms/vs/17/release/vs_Enterprise.exe
+  android: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.3f1.exe
+  ios: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-iOS-Support-for-Editor-6000.0.3f1.exe
+  appletv: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-AppleTV-Support-for-Editor-6000.0.3f1.exe
+  visionos: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-VisionOS-Support-for-Editor-6000.0.3f1.exe
+  linux-il2cpp: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Linux-IL2CPP-Support-for-Editor-6000.0.3f1.exe
+  linux-mono: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Linux-Mono-Support-for-Editor-6000.0.3f1.exe
+  linux-server: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Linux-Server-Support-for-Editor-6000.0.3f1.exe
+  mac-mono: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Mac-Mono-Support-for-Editor-6000.0.3f1.exe
+  mac-server: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Mac-Server-Support-for-Editor-6000.0.3f1.exe
+  universal-windows-platform: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Universal-Windows-Platform-Support-for-Editor-6000.0.3f1.exe
+  webgl: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-WebGL-Support-for-Editor-6000.0.3f1.exe
+  windows-il2cpp: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-6000.0.3f1.exe
+  windows-server: https://download.unity3d.com/download_unity/019aa96b6ed9/TargetSupportInstaller/UnitySetup-Windows-Server-Support-for-Editor-6000.0.3f1.exe
+  language-ja: https://new-translate.unity3d.jp/v1/live/54/6000.0/ja
+  language-ko: https://new-translate.unity3d.jp/v1/live/54/6000.0/ko
+  language-zh-hant: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hant
+  language-zh-hans: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hans
+  documentation: https://cloudmedia-docs.unity3d.com/docscloudstorage/6000.0/UnityDocumentation.zip
+ReleaseTime: 2024-05-21T16:15:54.9330000Z

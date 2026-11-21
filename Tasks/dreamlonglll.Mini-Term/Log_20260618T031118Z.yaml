@@ -1,0 +1,25 @@
+Version: 0.6.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.2/Mini-Term_0.6.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.6.2/Mini-Term_0.6.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🐛 Bug 修复
+    终端 emoji 字符显示宽度不对，导致表格列错位
+    现象 AI / CLI 工具在终端里输出带 ✅ ❌ ⚠️ 等 emoji 的 box-drawing 表格时，竖线 │ 逐行错位、字形互相挤偏，整张表对不齐。
+    根因 xterm.js 默认用 Unicode 6 的字符宽度表，把这些 emoji 判为窄字符（占 1 格）；而生成表格的程序按现代约定（emoji = 2 格，和 Windows Terminal / iTerm2 一致）计算对齐填充。两端口径不一致 —— xterm 只给 emoji 预留 1 格、字形却画成约 2 格宽，于是后面的字符被覆盖、整行往左塌。其中 ⚠️（U+26A0 + 变体选择符 U+FE0F）更隐蔽：官方 unicode11 宽度表里既没收录 U+26A0，也不对 U+FE0F 做 emoji 形态的宽度提升，单靠官方 addon 仍把它当 1 格。
+    修复
+    - 接入官方 @xterm/addon-unicode11，切到 Unicode 11 宽度表，修正 ✅(U+2705) / ❌(U+274C) 这类标准 emoji 为 2 格；
+    - 在其之上新增 '11-emoji' 宽度 provider：当变体选择符 U+FE0F 紧跟一个有宽度的基字符时，把整体提升为 2 格，修正 ⚠️ 等 addon 自身仍漏判的序列；取不到内部宽度表时优雅回退标准 v11，至少保住 ✅/❌；
+    - 修正范围精确收窄：只有「U+FE0F 紧跟基字符」会被提为 2 格，组合符、行首孤立变体选择符、文本形态选择符 U+FE0E 均不误伤；东亚歧义宽度字符（①② → ● 等）维持终端默认的 1 格不动。
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.6.1...v0.6.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.6.2
+ReleaseTime: 2026-06-18T01:56:09.0000000Z

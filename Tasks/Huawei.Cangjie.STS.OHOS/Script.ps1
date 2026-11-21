@@ -1,0 +1,58 @@
+$Filename = $Global:DumplingsStorage.CangjieSTSPage.SelectSingleNode("//div[contains(@class, 'ivu-col') and contains(text(), 'cangjie-sdk-windows-x64-ohos-') and contains(text(), '.exe')]").InnerText.Trim()
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Global:DumplingsStorage.CangjieSTSPrefix ([regex]::Match($Global:DumplingsStorage.CangjieVersionJS, "url:`"([^`"]+$([regex]::Escape($Filename))[^`"]+?)`"").Groups[1].Value)
+}
+
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match($Global:DumplingsStorage.CangjieSTSPage.SelectSingleNode('//div[@class="subpage-content-time"]').InnerText, '(20\d{2}/\d{1,2}/\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    try {
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $null
+      }
+
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrl = Join-Uri $Global:DumplingsStorage.CangjieSTSPrefix $Global:DumplingsStorage.CangjieSTSPage.SelectSingleNode('//a[contains(., "版本说明")]').Attributes['href'].Value
+      }
+
+      $Object4 = Invoke-WebRequest -Uri ('https://docs.cangjie-lang.cn/docs' + [System.Web.HttpUtility]::ParseQueryString(([uri]$ReleaseNotesUrl).Query)['url']) | ConvertFrom-Html
+
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object4.SelectSingleNode('//main') | Get-TextContent | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

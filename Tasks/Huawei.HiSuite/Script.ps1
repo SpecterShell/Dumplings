@@ -1,47 +1,87 @@
-# International
+# Global
 $Object1 = Invoke-WebRequest -Uri 'https://consumer.huawei.com/en/support/hisuite/' | ConvertFrom-Html
 $Version1 = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div[6]/div/div/div/div[1]/div[1]/div/div[1]/p/text()[1]').InnerText,
+  $Object1.SelectSingleNode('//div[@class="link-box"]/div[@class="link-item"][1]/p[@class="disc"]').InnerText,
   'V([\d\.]+)'
 ).Groups[1].Value
-# Chinese
+
+# China
 $Object2 = Invoke-WebRequest -Uri 'https://consumer.huawei.com/cn/support/hisuite/' | ConvertFrom-Html
 $Version2 = [regex]::Match(
-  $Object2.SelectSingleNode('/html/body/div[5]/div/div/div/div[1]/div[1]/div/div[1]/p/text()[1]').InnerText,
+  $Object2.SelectSingleNode('//div[@class="tab-des-con"]/div[@class="item-con"][2]/ul/li[1]/p[@class="txt"]').InnerText,
   'V([\d\.]+)'
 ).Groups[1].Value
 
 if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+  $this.Log("Global version: ${Version1}")
+  $this.Log("China version: ${Version2}")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Version1
+$this.CurrentState.Version = $Version1
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('/html/body/div[6]/div/div/div/div[1]/div[1]/div/div[1]/a').Attributes['href'].Value
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.SelectSingleNode('//div[@class="link-box"]/div[@class="link-item"][1]/a').Attributes['href'].Value
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object2.SelectSingleNode('/html/body/div[5]/div/div/div/div[1]/div[1]/div/div[1]/a').Attributes['href'].Value
+  InstallerUrl    = $Object2.SelectSingleNode('//div[@class="tab-des-con"]/div[@class="item-con"][2]/ul/li[1]/a').Attributes['href'].Value
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match(
-  $Object1.SelectSingleNode('/html/body/div[6]/div/div/div/div[1]/div[1]/div/div[1]/p/text()[1]').InnerText,
-  '(\d{4}\.\d{1,2}\.\d{1,2})'
-).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [regex]::Match(
+        $Object1.SelectSingleNode('//div[@class="link-box"]/div[@class="link-item"][1]/p[@class="disc"]').InnerText,
+        '(\d{4}\.\d{1,2}\.\d{1,2})'
+      ).Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+      if ($Global:DumplingsStorage.Contains('HiSuite') -and $Global:DumplingsStorage.HiSuite.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuite[$this.CurrentState.Version].ReleaseNotes
+        }
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuite[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } elseif ($Global:DumplingsStorage.Contains('HiSuiteCN') -and $Global:DumplingsStorage.HiSuiteCN.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuiteCN[$this.CurrentState.Version].ReleaseNotes
+        }
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.HiSuiteCN[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and $Version1 -eq $Version2 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

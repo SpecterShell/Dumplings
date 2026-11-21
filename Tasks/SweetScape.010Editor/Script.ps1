@@ -1,27 +1,33 @@
-$Object1 = (Invoke-RestMethod -Uri 'https://www.sweetscape.com/cgibin/010editor_check_news_5k.php').Replace('010EditorNews', 'news') | ConvertFrom-Xml
-
-# Version
-$Task.CurrentState.Version = $Object1.news.newversion
-
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += $InstallerX86 = [ordered]@{
   Architecture = 'x86'
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sweetscape.com/download/010EditorWin32Installer.exe'
 }
-$Task.CurrentState.Installer += [ordered]@{
+$VersionX86 = [regex]::Match($InstallerX86.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+$this.CurrentState.Installer += $InstallerX64 = [ordered]@{
   Architecture = 'x64'
   InstallerUrl = Get-RedirectedUrl -Uri 'https://www.sweetscape.com/download/010EditorWin64Installer.exe'
 }
+$VersionX64 = [regex]::Match($InstallerX64.InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.sweetscape.com/010editor/release_notes.html' | ConvertFrom-Html
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: $VersionX64", 'Error')
+  return
+}
 
+# Version
+$this.CurrentState.Version = $VersionX64
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='contentdiv'][1]/h2[contains(text(), '$($Task.CurrentState.Version)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://www.sweetscape.com/010editor/release_notes.html' | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[@class='contentdiv'][1]/h2[contains(text(), '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
           $ReleaseNotesTitleNode.InnerText.Split('-')[-1].Trim(),
           [string[]]@(
             "MMMM d'st', yyyy",
@@ -34,28 +40,27 @@ switch ($Task.Check()) {
         ).ToString('yyyy-MM-dd')
 
         # ReleaseNotes (en-US)
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'table'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
-        }
-        $Task.CurrentState.Locale += [ordered]@{
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'table'; $Node = $Node.NextSibling) { $Node }
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

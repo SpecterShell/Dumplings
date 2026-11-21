@@ -1,0 +1,101 @@
+Version: 18.10.4
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.10.4/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - AgentTool.formatApprovalDetails receives ApprovalDetailsOptions; compact: true asks for untruncated bodies so a compact approval prompt can count their lines (#15550 by @H4vC)
+    Changed
+    - Before-model-call hooks now receive the loop context as a second argument, and buildProviderContext receives the summarizer model (#15436 by @will-bogusz)
+    Fixed
+    - Fixed a Claude compaction or branch summarizer receiving assistant reasoning from a snapcompact archive rendered under another model, which Claude refuses (reasoning_extraction) (#15436 by @will-bogusz)
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Codex cybersecurity policy errors incorrectly retrying without Daybreak and disabling it for subsequent requests, while preserving retries without Daybreak when access is rejected (#15472 by @taibenvenuti)
+    Removed
+    - Removed the toolNamespacesInfo stream option; Codex requests no longer send tool_namespaces_info turn metadata, and code_mode_tool_names/tool_namespaces_info are no longer reserved client metadata keys.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Muse Code's subscription-only Muse Wonder Full and Wonder contributor tiers with the max effort, recording API-equivalent cost instead of $0: Wonder Full at Muse Wonder's $4 input / $0.20 cached / $20 output per 1M tokens, contributor tiers at the measured $1.60 / $0.08 / $8 (#15522 by @eggpeat)
+    - Added the classifier-cot-extraction rule axis, set for Claude, marking models whose classifier refuses earlier reasoning quoted back into their input (#15436 by @will-bogusz)
+    - Added Gemini 4 Argon pricing on Cursor ($2 input / $0.10 cached / $10 output per 1M tokens) and Google Antigravity, which now uses Google's first-party rate instead of showing $0 (#15620 by @eggpeat)
+    - Added scheduled list-price changes to cost-patch, as cost-fallback already allowed: a dated effective-rates card sets the price from its date, and each request is priced at the card in force when it was made, even on models loaded before the change, on rebuilt models, and on Cursor lanes priced from a sibling's card. A malformed dated card now fails the model build instead of silently keeping the old price. getEffectiveTokenCost returns that card for price displays, and hasRecurringTariff tells these dated-only schedules apart from peak/off-peak tariffs, which alone show a status-line arrow (#15620 by @eggpeat)
+    Changed
+    - Devin models with a long-context price tier (GPT-5.4 through 5.6 standard lanes, GPT-6 through 6.1, Gemini Pro, and Grok 4.5 through 4.7) now default to a 272K or 200K context window, where that pricing starts; run /extended-context on to use the full window at long-context rates (#14891 by @eggpeat).
+    - Devin SWE-2, SWE-1.7, and GLM-5.2 fallback pricing no longer charges cache writes at the input rate, since Devin publishes no cache-write rate for them (#14891 by @eggpeat).
+    - Google Antigravity now lists Gemini 4 Argon once, with selectable low, medium, and high thinking levels, instead of a separate entry per thinking tier (#15620 by @eggpeat)
+    - Gemini 4 Argon on Google, Vertex, Google Antigravity, and Cursor moves to Google's $4 input / $0.20 cached / $20 output list price on 2026-12-01 (midnight US Pacific), including requests on models loaded before then, without a catalog update (#15620 by @eggpeat)
+    - Devin SWE-2's promotional fallback price now ends on 2027-01-01 for requests on models loaded before then too (#15620 by @eggpeat)
+    Fixed
+    - Fixed Devin Claude and GPT-5.6 through GPT-6 models pricing prompt-cache writes at $0; they now use Devin's published rate of 1.25x input, and Adaptive uses its input rate (#14891 by @eggpeat).
+    - Fixed Devin GPT-5.4 through GPT-6.1, Gemini Pro, and Grok 4.5 through 4.7 models missing the long-context price tiers Devin publishes above 272K and 200K prompt tokens (#14891 by @eggpeat).
+    - Fixed Devin Fusion pairings ignoring their lead model's rules, including its cache-write rate and long-context tier (#14891 by @eggpeat).
+    - Fixed Kilo and NanoGPT models showing stale or missing prices (for example Gemini 4 Argon at $4/$20 instead of $2/$10, and many models at $0); prices now come from each gateway's live model list (#15623 by @eggpeat)
+    - Fixed NanoGPT models showing their raw id as the name and no context window (disabling auto-compaction) when the bundled catalog lacked them; names, context windows and output limits now come from NanoGPT's live model list (#15623 by @eggpeat)
+    Removed
+    - Removed the Codex toolMode model field (code_mode_only); Codex discovery no longer maps tool_mode
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Extensions can observe and answer the interactive plan review, including refinement feedback and save-and-quit (#14250 by @rlfleming93)
+    - Added opt-in omp gc --compress (or gc.compress), which stores sessions idle for gc.compressAfterDays (default 7) with filesystem transparent compression (APFS, NTFS); they stay resumable and searchable (#15600 by @wolfiesch)
+    - Extensions can reopen a dismissed plan review while the session is idle (ctx.openPlanReview()) and pick the execution tier on ctx.resolvePlanReview (input.role); plan_review_requested now reports the slider's tiers (#15552 by @Shadorain)
+    Changed
+    - Tool approval prompts now replace the composer like ask, show one row per detail, and approve with Ctrl+Enter (or Ctrl+Q) instead of Enter (#15548 by @H4vC)
+    Fixed
+    - Fixed late completion probes rewinding resumed conversations and stale history scans lowering parked subagent costs (#15594 by @anatoli-tsinovoy).
+    - Fixed read.renderMarkdown having no effect on plain-file reads: inline read previews now render Markdown files as formatted Markdown instead of numbered source (#15007).
+    - Fixed Claude refusing every turn (reasoning_extraction) in a session snapcompacted under Codex, Grok or another reasoning model, after a switch or resume; Claude turns, /btw, /handoff and compaction now read a reasoning-free copy of the archive (#15436 by @will-bogusz)
+    - Fixed the project-shared browser (headless or headed) reopening every page its previous run left open whenever it relaunched (after a crash, an out-of-memory kill, a normal stop, or a restart from omp ps); no session owned those pages, so they were never closed and piled up across restarts. Detaching it through proc://<name>/mode, which relaunched it the same way, is now refused (#15561 by @eggpeat)
+    - Fixed omp models --json reporting a scheduled model's superseded price in cost; it reports the price in force, such as DeepSeek V4 Pro's $0.30 / $1.20 card since 2026-09-14 (#15620 by @eggpeat)
+    Removed
+    - Removed Codex Code Mode and its providers.openai-codex.codeMode / providers.openai-codex.codeModeDirectTools settings; Codex models always use the full direct tool surface.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed pwsh code blocks rendering without PowerShell syntax colors (#15008).
+    @oh-my-pi/snapcompact
+    Added
+    - Added viewWithoutThinking(), textWithoutThinking(), readerIncludesThinking() and an optional Archive.withoutThinking variant, so an archive rendered with reasoning can be read by a model that must not see it; without a stored variant the view keeps only reasoning-free text and no frames (#15436 by @will-bogusz)
+    Fixed
+    - Fixed re-rendering an archive without reasoning keeping every paragraph after the first of a multi-paragraph ¶think: section (#15436 by @will-bogusz)
+    @oh-my-pi/omp-stats
+    Fixed
+    - Usage recorded at $0 for a model whose catalog price changes on a date (Gemini 4 Argon, Devin SWE-2) is now priced at the rate in force on the request's date, instead of staying $0 like peak/off-peak tariff usage (#15620 by @eggpeat)
+    @oh-my-pi/pi-tui
+    Added
+    - Added ApprovalDialogComponent and the app.approval.approve keybinding (default Ctrl+Enter, Ctrl+Q) (#15548 by @H4vC)
+    - Plan review overlay can take a remote answer: it shows the remotely chosen execution tier and locks further input like a terminal approval (#15552 by @Shadorain)
+    Fixed
+    - The model browser shows the price a model is billed at now, not the one current when its row was loaded: DeepSeek V4 Pro shows its $0.30 / $1.20 card in effect since 2026-09-14 instead of $1.32 / $3.96, and Gemini 4 Argon switches to $4 / $20 on 2026-12-01 (#15620 by @eggpeat)
+    - Clicking Copy answer in the /btw history (and Copy raw in the raw SSE viewer) on native terminals copies the answer instead of the button's label (#15547 by @H4vC)
+    - Fixed image previews inside tmux showing as SIXEL IMAGE (WxH) placeholder text when the outer terminal lacks SIXEL; SIXEL is now enabled from tmux's DA1 reply only when tmux's terminal description for the attached client has Sxl (#15513)
+    Removed
+    - Removed tools/eval-format/code-mode-declarations (generateCodeModeDeclarations), which only served Codex Code Mode.
+    What's Changed
+    - fix(tui): rendered markdown previews in grouped read cards by @roboomp in https://github.com/can1357/oh-my-pi/pull/15009
+    - fix(natives): highlighted pwsh code fences by @roboomp in https://github.com/can1357/oh-my-pi/pull/15010
+    - fix(tui): ignored tmux's own DA1 sixel attribute without client support by @roboomp in https://github.com/can1357/oh-my-pi/pull/15517
+    - fix(ai): preserve Codex Daybreak access on cyber policy errors by @taibenvenuti in https://github.com/can1357/oh-my-pi/pull/15472
+    - feat(extensions): let extensions answer the interactive plan review by @rlfleming93 in https://github.com/can1357/oh-my-pi/pull/14250
+    - fix(tui): route btw copy-button clicks to omp instead of the terminal-local copy by @H4vC in https://github.com/can1357/oh-my-pi/pull/15547
+    - fix(snapcompact,coding-agent,agent): stop Claude refusing a session snapcompacted under another model by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15436
+    - feat(tui): dock tool approvals in the composer, approve with Ctrl+Enter by @H4vC in https://github.com/can1357/oh-my-pi/pull/15548
+    - fix(approval): honor approve timeouts and count untruncated lines by @H4vC in https://github.com/can1357/oh-my-pi/pull/15550
+    - fix(coding-agent): preserve late probe context and parked cost snapshots by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/15594
+    - feat(catalog): priced Muse Code's subscription-only Muse Wonder tiers by @eggpeat in https://github.com/can1357/oh-my-pi/pull/15522
+    - fix(catalog): price Devin cache writes and long-context tiers by @eggpeat in https://github.com/can1357/oh-my-pi/pull/14891
+    - fix(browser): discard shared browser session-restore state before relaunch by @eggpeat in https://github.com/can1357/oh-my-pi/pull/15561
+    - feat(extensions): let extensions reopen the plan review and pick the execution tier by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15552
+    - feat(coding-agent): compress idle sessions in place with omp gc --compress by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/15600
+    - fix(gc): address post-merge Codex findings on omp gc --compress by @H4vC in https://github.com/can1357/oh-my-pi/pull/15616
+    - feat(catalog): collapse Antigravity Gemini 4 Argon thinking tiers and add pricing by @eggpeat in https://github.com/can1357/oh-my-pi/pull/15620
+    - fix(catalog): price Kilo and NanoGPT models from their live model lists by @eggpeat in https://github.com/can1357/oh-my-pi/pull/15623
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.10.3...v18.10.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.10.4
+ReleaseTime: 2026-10-13T19:38:04.0000000Z

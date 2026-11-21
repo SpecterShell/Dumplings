@@ -1,0 +1,27 @@
+Version: 0.16.18
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tashfeenahmed/freellmapi/releases/download/v0.16.18/FreeLLMAPI-Setup-0.16.18.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    NovAI image generation
+    - Add the tested free cogview-3-flash image route to the existing NovAI provider. Use your NovAI API key with /v1/images/generations for one 1024×1024 image.
+    - Validate downloaded image data and return PNG base64, including when the upstream labels JPEG bytes as PNG. Output downloads never receive the API key and are restricted to approved HTTPS hosts.
+    - Package the native image decoder in desktop builds; unsupported installations fail only this image route and retain existing media failover.
+    Catalog update
+    The separately published catalog adds six tested routes and disables five retired routes: net +1 enabled entry. It also corrects Router9 allowance descriptions and Cohere embedding input limits.
+    Premium receives the live catalog immediately. Free retains the existing 30-day release delay. No release-gating code or existing model ages were changed. Catalog data is published to Oracle, not embedded in this release.
+    Validation
+    - 79 targeted NovAI tests and a successful live image-generation test.
+    - Full workspace tests: 5,470 passed; seven existing skips.
+    - Desktop tests: 79 passed; one existing skip.
+    - Workspace builds, lint, migrations and desktop bundles passed locally.
+    - Signed catalog dry-runs verify Premium/Free routing and the day-0/day-29/day-30 boundary.
+    PR: https://github.com/tashfeenahmed/freellmapi/pull/1814
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.18
+ReleaseTime: 2026-11-03T23:52:18.0000000Z

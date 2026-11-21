@@ -1,0 +1,79 @@
+Version: 12.0.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://dl.pstmn.io/download/version/12.0.1/windows_64
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Postman v12 introduces a new platform designed for the agentic era, with features that help teams move APIs from development to production for internal, external, and agentic use. It integrates with Git-based workflows and offers new capabilities: Git-connected Workspaces, an API Catalog that manages APIs and services organization-wide, an updated Private API Network for internal API distribution, and much more.
+    Read on for more about what's new in this version of Postman.
+    What’s New
+    Native Git
+    The new Postman app is Git-native from the ground up. This means you can work in Postman on the same branch you’re writing code on, alongside your IDE, and the Git-native architecture enables Postman to work in offline conditions too.
+    You can now open the local instance of your remote Git repository where your API is implemented. The collections, specifications, and environments you work on in Postman are saved as a folder inside the source code folder. Work on your iterations locally until the API reaches a stable, deployable state, then commit your local changes to Postman Cloud.
+    A new file editor enables you to edit and create files directly in the Git folder connected to your workspace. Git workflows are native throughout: there's a code editor, a terminal, and a new modifications UI for pushing and pulling changes without leaving Postman.
+    To learn more, see About Native Git.
+    Introducing the Collection 3.0 format
+    The new Collection 3.0 format enables teams to organize HTTP, GraphQL, gRPC, MCP, MQTT, WebSockets, and AI requests in the same collection. Instead of JSON blobs, collections are broken into constituent YAML files that are easy to diff, easy for humans to review, and easy for AI agents to read and write.
+    You can now use Collection Runner with gRPC and GraphQL to build a single, consistent testing and automation workflow locally, in the CLI, or in a pipeline.
+    Multi-protocol collections - including GraphQL, gRPC, WebSocket, MQTT, MCP, and SOAP - can now segment authentication by route for per-protocol or per-route authentication. Enterprise teams can now run scripts at a collection level per protocol.
+    To learn more, see Test your API using Collection Runner.
+    Introducing local mock servers
+    You can now create a mock server that simulates a real API server in your local Git repository, where you're making API changes. This enables you to quickly set up your service locally by mocking the APIs it depends on.
+    You can create a local mock server from a template to define logic yourself or use Agent Mode to quickly get started. You can also use the Postman CLI to validate your collection’s tests against a mock server or start a mock server in your CI/CD pipeline. Once your local mock server is running, you can send requests to it just like a real API.
+    To learn more, see Simulate your API locally using a Git-backed mock server.
+    Introducing monitoring internal APIs with runners
+    Available on Enterprise plans
+    With Private API Monitoring, you can now monitor your organization’s internal APIs behind a firewall or deployed in a restricted network, like a virtual private cloud (VPC). This means you can monitor internal APIs without exposing your endpoints to the public internet.
+    Use the Postman CLI to start the runner in your own network where it polls Postman for monitor runs, runs the collection and its tests in your network, and sends the results back to the Postman cloud. Any of your teammates can choose the runner when they create a monitor, making it easy for anyone on your team to test internal APIs.
+    As an Admin, you can create and manage your team’s runners from Runner settings, which is located in your Organization or Team settings. Here you can view more details about runners, like their health status, last ping date, and more. You can also view each active instance of a runner to help you scale your team’s runners.
+    To learn more, see Monitor internal APIs with runners.
+    Introducing API Catalog
+    Available on Enterprise plans
+    The API Catalog is a central place to see all your APIs and services. It is a live operational layer for API portfolio management that functions as a system of record that stays current because it is directly connected to where your APIs are built, tested, and run. You can connect your source code to the API Catalog, and it will automatically show you all your APIs in one place. You can also use the API Catalog to set rules for your APIs and check how well they're following those rules. The API Catalog works with Agent Mode, so you can ask questions about your APIs and get help with fixes when something is broken.
+    To learn more, see About Postman API Catalog.
+    A new, more organized UI
+    Built for developers and AI agents, the new Postman UI delivers a clean, information-dense, efficient workbench with every major capability - including collections, environments, specs, and flows - one click away.
+    The centerpiece of the new UI is a unified workbench. Collections, environments, specs, flows, and mock servers can now live together and be organized however makes sense for the work at hand. Developers can work across everything relevant to their development process at once instead of switching between separate contexts. Agent Mode ties this together by operating across multiple elements simultaneously.
+    Introducing the new Private API Network
+    Available on Enterprise plans
+    Your new Private API Network is a curated subset of your organization's internal workspaces, organized by team. It's a place where you can discover the internal APIs most relevant to your work.
+    Search and Postman Agent Mode are optimized for your new Private API Network. And a new badge helps you identify trusted sources from your organization, no matter where you are in Postman.
+    To learn more, see Discover your organization's internal APIs with your Private API Network.
+    Introducing SDK Generation
+    Available on Enterprise plans
+    The SDK Generation Service enables Postman users to automatically generate client SDKs from their Postman Collections or OpenAPI specifications. The service transforms API definitions into production-ready SDK code in multiple programming languages (TypeScript, Python, Java, and more), which users can download and integrate into their applications.
+    To learn more, see About Postman SDK Generator.
+    Introducing Native Git for Flows
+    Build and manage Postman Flows directly on your local filesystem with Git-native workflows. Create, edit, and delete flows locally while automatically switching between Cloud View and Local View.
+    To learn more, see Manage flows with Native Git.
+    Introducing support for MCP Servers in Postman Flows
+    The AI Agent block v2 can now connect to external MCP servers via a URL with bearer token authentication in Postman Flows. Build AI agents by connecting to MCP Servers and using their available tools.
+    To learn more, see AI Agent block.
+    Introducing support for environment variables and vault secrets in Postman Flows
+    You can now reference environment variables and vault secrets in Configurations, Scenarios, and Deploy settings. Values are automatically pulled from your selected environment or vault for both manual and cloud execution.
+    To learn more, see Configure values for flows.
+    Improvements
+    Agent Mode
+    Agent Mode acts as both a coach and hands-on collaborator in your workflow. You can interact conversationally, run end-to-end tasks, and directly modify code to fix errors or generate server stubs and client code. It works across Postman and connected repositories to create and update collections, tests, and mocks according to organizational standards—all without switching tools. Built-in capabilities like AI Test Generation automatically add contract, load, unit, integration, and end-to-end tests to improve coverage and prevent regressions. AI Debugging identifies root causes of failed runs in Collection Runner, Monitors, and Performance tests and suggests fixes directly in the results, significantly reducing troubleshooting time.
+    Postman is also introducing Agent Mode Enterprise features, designed to meet the security, governance, and access control requirements of large organizations. New capabilities for Enterprise plans include fine-grained user access control that lets administrators grant Agent Mode access to all users, specific individuals, or selected groups and teams, enabling pilot programs, role-based access, and phased rollouts. Enhanced security guardrails automatically protect sensitive data with secret redaction (using Postman Secret Scanner to prevent API keys and credentials from reaching LLMs) and PII redaction (using AWS PII Guardrails to mask personally identifiable information).
+    Additionally, MCP governance controls help manage Model Context Protocol server integrations with enterprise-grade oversight, allowing administrators to allowlist specific MCP servers or block all MCP servers to maintain security and compliance.
+    To learn more, see Postman Agent Mode Enterprise features.
+    Support for generating OpenAPI 2.0 specifications from collections
+    From a Postman Collection, you can now generate OpenAPI 2.0 specifications in Spec Hub. You can now also sync changes between collections and OpenAPI 2.0 specifications.
+    To learn more, see Generate an API specification from your collection.
+    Deprecated Features
+    Postman API Builder
+    The Postman API Builder is no longer supported. API specification management moves to Spec Hub.
+    Learn how to migrate your API specifications from the API Builder to Spec Hub.
+    Deprecated integrations
+    Git and CI/CD integrations are no longer supported.
+    Git and CI/CD workflows move to Native Git and the Postman CLI. API Gateway integrations move to the API Catalog.
+    Export performance tests in PDF or HTML format
+    Exporting a performance test report in PDF or HTML format is deprecated. Postman recommends exporting performance test reports in JSON format.
+    To learn more, see View metrics for performance tests.
+    Postbot
+    Postbot is no longer available in Postman v12. You can use Agent Mode instead. Agent Mode brings an AI-native experience to Postman, enabling automation across a wide range of API use-cases.
+    To learn more, see Agent Mode.
+ReleaseTime: 2026-03-01T05:25:13.0000000Z

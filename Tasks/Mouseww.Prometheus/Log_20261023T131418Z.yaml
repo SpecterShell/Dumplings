@@ -1,0 +1,24 @@
+Version: 0.9.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.9.0/Prometheus_0.9.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.9.0/Prometheus_0.9.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Prometheus v0.9.0
+    自带子代理运行时，并由「模式」统一决定可用工具。
+    变化
+    - 子代理改为应用自带运行时，不再依赖 pi-subagents：支持单个、并行（tasks）与后台（background）运行，后台任务完成后自动通知主代理，同时运行的数量有上限，超出的排队。
+    - 每个子代理可选执行方式：PI（应用内）、Claude Code 命令行或 Codex 命令行，命令行类可设置是否允许修改工作区文件。新增内置子代理 scout、researcher、reviewer、oracle、worker、claude-code(-writer)、codex(-writer)。
+    - 工具开放方式调整：模式勾选了工具就只开放所选工具；没有勾选（或不使用模式）则开放全部工具，包括 PI 默认关闭的 powershell、grep、find、ls。标题栏右上角的工具列表已移除，模式页的工具列表补上了 powershell。
+    - 修复：模式插件每一轮都把工具集重设成会话开始时的旧清单，会把对话中途启用的工具悄悄关掉。
+    - 修复：打包后的子代理在独立进程里因依赖版本不一致启动失败、一直显示排队中的问题（随新运行时一并消除）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.9.0
+ReleaseTime: 2026-10-23T12:21:34.0000000Z

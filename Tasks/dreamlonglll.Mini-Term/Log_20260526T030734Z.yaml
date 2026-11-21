@@ -1,0 +1,31 @@
+Version: 0.4.14
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.14/Mini-Term_0.4.14_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.4.14/Mini-Term_0.4.14_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - 项目级环境变量 — 项目右键菜单新增「环境变量…」入口，按项目独立维护一组 key / value / enabled 环境变量，启动该项目终端时注入 PTY 子进程。Modal 行级 [启用 checkbox] [key] [value] [✕] 布局，「+ 新增一行」自动 focus；严格 POSIX 校验（key 匹配 ^[A-Za-z_][A-Za-z0-9_]*$、不可使用 MINITERM_ 前缀、项目内不重复，value 禁 \n/\r/\0），违规行红框提示且保存按钮 disabled。WSL 项目跳过注入并在 modal 顶部黄色警告条提示。
+    安全性
+    - 内部 hook 协议环境变量（MINITERM_* 前缀）前后端双重过滤：即便用户手改 config.json 绕过前端校验，后端在注入 PTY 前也会拦截 MINITERM_ 前缀的 key，hook 协议不会被破坏。
+    体验
+    - Modal 保存失败时自动回滚 store 到磁盘旧值并弹 Alert 提示，避免 store 与 config.json 不一致导致下次启动丢用户改动(同套约定已落地到 SshAssocModal)。
+    - 旧 config.json 无 envVars 字段时自动反序列化为空 Vec,空 Vec 写盘时跳过序列化保持文件干净，旧版本配置升级无感知。
+    下载
+    - Windows — Mini-Term_0.4.14_x64-setup.exe(NSIS,推荐)或 Mini-Term_0.4.14_x64_en-US.msi
+    - macOS (Apple Silicon) — Mini-Term_0.4.14_aarch64.dmg(首次启动需在终端运行 xattr -cr /Applications/Mini-Term.app 解除 Gatekeeper quarantine)
+    - Linux — Mini-Term_0.4.14_amd64.AppImage / Mini-Term_0.4.14_amd64.deb / Mini-Term-0.4.14-1.x86_64.rpm
+    平台支持：Windows 为主要支持平台，日常开发与测试均在 Windows 上进行；macOS / Linux 代码层面已支持，但未经充分打磨，可用性欠佳，欢迎提 Issue 反馈。
+
+    完整 commits: https://github.com/dreamlonglll/mini-term/compare/v0.4.13...v0.4.14
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.4.14
+ReleaseTime: 2026-05-26T02:38:51.0000000Z

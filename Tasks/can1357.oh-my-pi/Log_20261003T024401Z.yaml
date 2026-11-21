@@ -1,0 +1,94 @@
+Version: 18.5.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.5.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed AWS credential_process on Windows stripping backslashes from unquoted paths such as C:\Users\me\helper.exe; commands are now split with Windows command-line rules there, matching the AWS CLI.
+    @oh-my-pi/pi-catalog
+    Added
+    - Added closeModelCache() (@oh-my-pi/pi-catalog/model-cache) to release the shared default models.db handle so an agent directory can be deleted on Windows; the next cache access reopens it
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - task.completionProbeMs is replaced by the on/off setting task.completionProbe; an existing task.completionProbeMs migrates automatically (0 → off, any period → on).
+    - SessionStorage.claimSessionFile(sessionPath) is replaced by claimSession(sessionId, sessionPath) (which also refuses when the path now holds a different session), and sessionOwnerLeasePath() by tryAcquireSessionLease(sessionId): custom storage backends that implemented claimSessionFile must implement claimSession to keep cross-process ownership (#14095 by @andrebrait)
+    Added
+    - /dump all writes a zip to the temp directory with the main transcript, the LLM request JSON, and one file per subagent transcript (nested subagents included, killed ones marked aborted); the TUI copies the archive path to the clipboard. Plain /dump is unchanged (#13908 by @H4vC)
+    - Added /effort [level] to set the thinking level without switching models: bare /effort opens a picker, and completions offer only the current model's levels within the session effort ceiling. Its description includes thinking and intelligence so either term finds it; Shift+Tab still cycles levels (#12222 by @Xytronix, #14113 by @andrebrait).
+    - Added a per-call model selector to task items, eval agent(), and workpool(): a provider/model[:level] pattern or role alias, or an ordered array of them, that takes precedence over task.agentModelOverrides and the agent definition. Selection is an ordered preference — requested candidates are tried before configured fallbacks — and the spawn fails at preflight instead of silently routing elsewhere when the selector is the ambiguous literal default/inherit with or without a :level suffix (use @default), is blank or comma-only, carries an invalid thinking suffix, matches no available model, or sits on the batch container instead of a tasks[] item. A requested model without working credentials fails the spawn instead of running on the parent's model, and the error tells the caller to report the unavailable model rather than substitute another. A pool applies its selector to each worker's first turn and reuses that worker's session afterwards (#12229 by @Xytronix, #13669 by @andrebrait).
+    Changed
+    - Subagent completion estimates are asked after 2, 5, 10 and 30 more minutes, then hourly, instead of at a fixed interval, and only for subagents the main agent spawns in an interactive session; print (-p), RPC, ACP and SDK runs and nested subagents never request them.
+    - /changelog, /context, /tools, /hotkeys, /advisor status, /memory view|queue|stats|diagnostics, and the mental-model views no longer add their report to the transcript. In text mode a report that fits shows above the editor like /btw and Esc dismisses it; a taller one (such as /changelog full) opens as a full-screen page on the alternate screen, scrolled with the arrow/page/Home/End keys and the wheel, and Esc returns to the screen exactly as it was. In the native terminal it opens as a sheet like /usage whose long reports scroll, closed with Esc or Close (#14136 by @H4vC).
+    - /jobs, /mcp help|list|resources|prompts|notifications and /ssh help|list no longer add their report to the transcript either: they show the same way, and natively /jobs opens the live background-jobs sheet the jobs pill opens (/jobs full keeps the full command lines in a report sheet) (#14138 by @H4vC).
+    - The welcome banner (in the terminal and as Tern's native card) is now the omp logo and wordmark with the version and a tip. It no longer shows the "Welcome back!" greeting, the model (the status line does), LSP servers or recent sessions (/resume), and the # / ! $ prompt prefixes moved into the rotating tips.
+    Fixed
+    - Auto-retry now retries the same model once after a mid-stream socket drop that had already streamed reasoning or tool calls, instead of switching to the fallback chain on the first attempt; the fallback chain is consulted only if that retry also fails. This applies to every provider, since a dropped socket says nothing about the model (#13747 by @abilliontokens)
+    - Fixed native git patch apply, checkout, stash, cherry-pick, and worktree removal on Windows ignoring core.autocrlf: LF patches failed to apply to CRLF checkouts and clean CRLF files were treated as modified
+    - Fixed the command image-URL uploader stripping backslashes from Windows paths in its command template (C:\tools\upload.exe {file} ran C:toolsupload.exe)
+    - Fixed reading a SQLite database (local or by URL) and closing prompt history leaving the database file locked on Windows
+    - Fixed RPC mode on Windows freezing when the client stopped reading stdout: the worker blocked on the full stdout pipe and stopped reading stdin, so a client writing a batch of commands before reading replies deadlocked. Output now goes through a non-blocking stdout stream that spools to disk under backpressure, as on Linux and macOS
+    - Fixed HTML export hanging when a session's subagent directory held a transcript named ..jsonl; discovery now only descends into real child directories (#13908 by @H4vC)
+    - Fixed resuming a session through a symlink or hard link to a file another omp process is writing: the resumed session no longer mixes its turns into that file and continues in a new file next to it (#14095 by @andrebrait)
+    - Fixed moving a session to another directory replacing a session file there that another omp process is writing, or moving a session another process is writing; the move now stops with an error and leaves both files untouched (#14095 by @andrebrait)
+    - Preserve the parent’s upstream route and live reasoning effort for inherited task/eval/workpool selectors and restored workers; caller effort, a requested @default:<level>, and the agent definition's own thinking-level still take precedence over the inherited effort (#12229 by @Xytronix, #13669 by @andrebrait).
+    - Fixed the browser tool's Tern backend being refused by any Tern newer than the protocol omp was built against; it now speaks Tern's protobuf session protocol (level 12), which Tern serves across builds, and a Tern from before it reports as unavailable (update Tern) so the Chromium fallback takes over.
+    - Fixed reloading a legacy Pi extension on Windows serving the previously loaded source instead of the edited files
+    - Fixed Redis-, SQL-, and in-memory session storage listing no sessions on Windows: directory listing now matches \-separated session paths, so /resume and the session picker find them
+    - Fixed an MCP stdio server whose configured command path does not exist failing on Windows with "MCP subprocess closed stdout before responding" instead of a not-found error naming the path
+    - Fixed omp commit never closing its credential store, leaving agent.db open (and a broker-backed store's sync loop running) after the commit finished
+    - Fixed every new session (including subagents) staying in memory for 5 seconds after creation, held by an uncancelled workspace-scan deadline timer; a parked or disposed subagent's session and settings are now released immediately
+    - Fixed autoresearch run_experiment on Windows running autoresearch.sh through the WSL bash.exe launcher found on PATH (a separate Linux environment that fails when WSL is unavailable); it now uses Git Bash or the configured shellPath
+    - Fixed sessions started in a temp-directory cwd on Windows landing under a home-relative -AppData-Local-Temp-… session directory instead of the -tmp-… one; existing directories under the old name are migrated forward
+    - Fixed the write tool claiming "Made executable via chmod +x" for shebang files on Windows, where chmod keeps no execute bits
+    - Fixed readlink in the bash tool printing a provider-backed path (e.g. local://file) with a \\?\ prefix on Windows
+    - Fixed the daemon broker on Windows dying with the omp process that started it, which stopped the shared browser relay (and every other broker daemon) while other omp sessions were still using it
+    - Fixed the browser tool's Tern backend being refused by any Tern newer than the protocol omp was built against; it now speaks Tern's JSON script protocol, which no Tern build ties it to, and a Tern from before it reports as unavailable (update Tern) so the Chromium fallback takes over.
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed Ctrl+V on Windows sometimes pasting text with a few characters replaced by unrelated glyphs (for example https:// turning into ՞ttp 缀難//); clipboard reads and writes no longer run at the same time (#14144 by @H4vC)
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - WelcomeComponent no longer takes a model or provider: its constructor is (version), and setModel(), setRecentSessions(), setLspServers(), handleNativeEvent(), RecentSession, LspServerInfo, WELCOME_SESSION_SLOTS and WELCOME_LSP_SLOTS are gone; ComposerWelcomeUpdate drops modelName/providerName/recentSessions/lspServers, and ComposerCache drops writeWelcome(), writeRecentSessions(), writeLspServers(), ComposerWelcomeCache and the welcome/recentSessions/lspServers fields of ComposerStartupCache.
+    - renderWelcomeTip() returns its lines without an indent, Tip: and the body wrapped together, for the caller to place.
+    Added
+    - Added ReportPanel, a read-only command report: a /btw-style titled box with an Esc hint in text mode (above the editor, or as a full-screen page whose body scrolls on the arrow/page/Home/End keys and the wheel), and natively a /usage-style sheet whose body the terminal scrolls once it is long, with a Close button (#14136 by @H4vC).
+    - Added contextUsageHead(), the /context title naming the model and its window (#14136 by @H4vC).
+    - Added Composer.rowsBelow(), the rows the chrome under a below-transcript root took in the last frame (#14136 by @H4vC).
+    - Added Composer.pinInputToBottom(), which keeps the input on the bottom row after chrome above the editor closes when rows it displaced went to scrollback (#14136 by @H4vC).
+    - Added a repeatable native reveal ({ at, n }): a described node scrolls into view again whenever its n changes, without being re-added.
+    Changed
+    - ContextUsageView is now a bare report body without its own title, rules or card; setBreakdown() was removed (#14136 by @H4vC).
+    - The terminal welcome banner is the gradient logo beside the omp wordmark with the version under it and the tip, centered in the terminal; the logo stands alone when the lockup does not fit, and the tip drops below 50 columns. It no longer greets with "Welcome back!", natively either.
+    Fixed
+    - Fixed tool previews on Windows showing a working directory on another drive as a raw absolute path instead of its home-shortened ~/… form.
+    - Fixed pasted drive-less file:///… URLs (forwarded from a macOS pasteboard or remote session) staying undecoded on Windows instead of loading as image paths.
+    - Fixed an output artifact whose file cannot be opened (e.g. a directory in the way) being reported on Windows as a write failure and retried later, instead of a terminal open failure.
+    - Fixed plan review's Contents in Tern: clicking an entry, or moving through them with the arrow keys, now scrolls the plan to that section.
+    Removed
+    - Removed JobsPanel, the /jobs transcript block; /jobs now opens JobsSheet natively (#14138 by @H4vC).
+    @oh-my-pi/pi-utils
+    Added
+    - Added the public getSessionOwnersDir() utility, which returns the profile-independent ~/.omp/run/session-owners directory that names session ownership leases (#14095 by @andrebrait)
+    Fixed
+    - Fixed SQLite error messages doubling every backslash in Windows database paths
+    - Fixed corrupt-database recovery failing with EBUSY on Windows when several in-process openers of the same store failed at once
+    What's Changed
+    - feat(coding-agent): /dump all writes a zip with each subagent transcript by @H4vC in https://github.com/can1357/oh-my-pi/pull/13908
+    - fix(session): retry the same model once after a mid-stream socket drop by @abilliontokens in https://github.com/can1357/oh-my-pi/pull/13747
+    - feat(coding-agent): show command reports outside the transcript by @H4vC in https://github.com/can1357/oh-my-pi/pull/14136
+    - fix(session): key the ownership lease by session id by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14095
+    - feat(coding-agent): show /jobs, /mcp and /ssh reports outside the transcript by @H4vC in https://github.com/can1357/oh-my-pi/pull/14138
+    - test(coding-agent): fix fallback-window regression after same-model socket retry by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14140
+    - feat(coding-agent): add /effort command with a level picker (builds on #12222) by @andrebrait in https://github.com/can1357/oh-my-pi/pull/14113
+    - fix(task): reject suffixed default/inherit selectors and stop model substitution by @andrebrait in https://github.com/can1357/oh-my-pi/pull/13669
+    - fix(natives): serialized clipboard access so Ctrl+V stops corrupting text on Windows by @H4vC in https://github.com/can1357/oh-my-pi/pull/14144
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.4.12...v18.5.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.5.0
+ReleaseTime: 2026-10-03T01:26:08.0000000Z

@@ -1,71 +1,88 @@
-$Object1 = Invoke-RestMethod -Uri 'https://www.catsxp.com/api/service/Update?cup2key=:' -Method Post -Body @'
+$Object1 = Invoke-RestMethod -Uri 'https://www.catsxp.com/api/service/Update?cup2key=:' -Method Post -Body @"
 <?xml version="1.0" encoding="UTF-8"?>
 <request>
-  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="" ap="x86-release" />
-  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="" ap="x64-release" />
+  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="$($this.CurrentState.Contains('Version') ? $this.CurrentState.Version : '132.4.12.1')" ap="x86-release" />
+  <app appid="{485AC8F6-31A4-3283-B765-92E31A816C51}" version="$($this.CurrentState.Contains('Version') ? $this.CurrentState.Version : '132.4.12.1')" ap="x64-release" />
 </request>
-'@
+"@
+
+if ($Object1.response.app.updatecheck.status -contains 'noupdate') {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
 
 # Version
-$Task.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
+$this.CurrentState.Version = $Object1.response.app[1].updatecheck.manifest.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
-  InstallerUrl = $Object1.response.app[0].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
+  InstallerUrl = "https://b2.catsxp.com/catsxp_update/win_x86/catsxp_installer_$($this.CurrentState.Version.Replace('.', '_')).exe"
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $Object1.response.app[1].updatecheck.urls.url.codebase | Select-String -Pattern 'catsxp.oss-cn-hongkong.aliyuncs.com' -Raw -SimpleMatch
+  InstallerUrl = "https://b2.catsxp.com/catsxp_update/win_x64/catsxp_installer_$($this.CurrentState.Version.Replace('.', '_')).exe"
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history' | ConvertFrom-Html
-    $Object3 = Invoke-WebRequest -Uri 'https://www.catsxp.com/zh-hans/history' | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode1 = $Object2.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($Task.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      $Object2 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=en' | ConvertFrom-Html
 
-      if ($ReleaseNotesNode1) {
+      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='accordion-item' and contains(./*[@id='heading0'], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      if ($ReleaseNotesNode) {
         # ReleaseTime
-        $Task.CurrentState.ReleaseTime = [regex]::Match(
-          $ReleaseNotesNode1.SelectSingleNode('./a/h4/i').InnerText,
+        $this.CurrentState.ReleaseTime = [regex]::Match(
+          $ReleaseNotesNode.SelectSingleNode('./*[@id="heading0"]').InnerText,
           '(\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2})'
         ).Groups[1].Value | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
 
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode1.SelectSingleNode('./div/div') | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNode.SelectNodes('./*[@id="heading0"][1]/following-sibling::node()') | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseTime and ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
-
-      $ReleaseNotesNode2 = $Object3.SelectSingleNode("//*[@id='accordion']/div[contains(./a/h4/text()[2], '$([regex]::Match($Task.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
-      if ($ReleaseNotesNode2) {
-        # ReleaseNotes (zh-CN)
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode2.SelectSingleNode('./div/div') | Get-TextContent | Format-Text
-        }
-      } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
-      }
-
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    try {
+      $Object3 = Invoke-WebRequest -Uri 'https://www.catsxp.com/history?lang=zh-CN' | ConvertFrom-Html
+
+      $ReleaseNotesCNNode = $Object3.SelectSingleNode("//*[@class='accordion-item' and contains(./*[@id='heading0'], '$([regex]::Match($this.CurrentState.Version, '\d+\.(\d+\.\d+\.\d+)').Groups[1].Value)')]")
+      if ($ReleaseNotesCNNode) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime ??= [regex]::Match(
+          $ReleaseNotesNode.SelectSingleNode('./*[@id="heading0"]').InnerText,
+          '(\d{4}-\d{1,2}-\d{1,2} \d{2}:\d{2}:\d{2})'
+        ).Groups[1].Value | Get-Date | ConvertTo-UtcDateTime -Id 'China Standard Time'
+
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesCNNode.SelectNodes('./*[@id="heading0"][1]/following-sibling::node()') | Get-TextContent | Format-Text
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

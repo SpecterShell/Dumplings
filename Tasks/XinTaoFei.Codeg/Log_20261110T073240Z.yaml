@@ -1,0 +1,45 @@
+Version: 0.42.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.2/codeg_0.42.2_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.42.2/codeg_0.42.2_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds support for Claude Fable 5.2, updates Codex and several other agents, and fixes Qoder failing to start on Windows and MiniMax questions not showing as cards.
+    Improved
+    - Claude Code is updated to 2.1.321 with adapter 0.102.0, so the Fable model is now Fable 5.2, and a saved Fable 5.1 selection through an API gateway switches to Fable 5.2 automatically instead of falling back to the default model.
+    - Codex is updated to adapter 2.6.0 (Codex 0.166.0), and its async questions now display as answer cards that stay in sync during the conversation and in history.
+    - Grok background sub-agents show live progress after the turn that launched them ends. (#1109)
+    - Updated OpenCode to 2.2.6, CodeBuddy to 2.182.0, Qoder to 1.1.86, the ZCode bridge to 0.82.3 and Command Code to 1.88.5.
+    Fixed
+    - Qoder starts normally again on Windows, and its diagnostics show the actual program being launched or the reason it could not be found. (#1101 by @leehom0123)
+    - MiniMax questions to the user appear as interactive question cards instead of raw JSON, including each option's description. (#1111 by @xy3xy3)
+    - When a Codex conversation's model provider no longer matches, codeg shows a clear notice instead of silently starting an empty session that loses the history.
+    - Reopened Claude Code context compaction summaries no longer include internal prompt text meant for the model.
+    - OpenCode 2.2.6 conversation history displays its complete content.
+    Thanks to @leehom0123 (#1101) and @xy3xy3 (#1111) for their contributions, and to @momomomo820 (#1109) for the report.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版支持 Claude Fable 5.2，更新 Codex 及多个智能体，并修复 Qoder 在 Windows 上无法启动、MiniMax 提问不弹出卡片等问题。
+    改进
+    - Claude Code 更新至 2.1.321，适配器更新至 0.102.0，Fable 模型升级为 Fable 5.2，通过 API 网关使用时，已保存的 Fable 5.1 选择会自动切换到 Fable 5.2，不再回落到默认模型。
+    - Codex 适配器更新至 2.6.0（Codex 0.166.0），异步提问会显示为答题卡片，会话中和历史记录里都能正确展示。
+    - Grok 后台子智能体在启动它的回合结束后，仍会实时显示运行进度。（#1109）
+    - OpenCode 更新至 2.2.6，CodeBuddy 更新至 2.182.0，Qoder 更新至 1.1.86，ZCode 桥接更新至 0.82.3，Command Code 更新至 1.88.5。
+    修复
+    - Qoder 在 Windows 上恢复正常启动，诊断信息也会显示实际启动的程序或无法找到的原因。（#1101 by @leehom0123）
+    - MiniMax 向用户提问时会弹出可交互的提问卡片，不再只显示 JSON 参数，并展示每个选项的说明。（#1111 by @xy3xy3）
+    - Codex 会话的模型供应商不再匹配时，会显示明确提示，不再悄悄新开一个空会话导致历史丢失。
+    - 重新打开 Claude Code 的上下文压缩摘要时，不再显示写给模型的内部提示文本。
+    - OpenCode 2.2.6 的历史会话能完整显示内容。
+    感谢 @leehom0123（#1101）和 @xy3xy3（#1111）的贡献，以及 @momomomo820（#1109）的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.42.2
+ReleaseTime: 2026-11-10T05:03:51.0000000Z

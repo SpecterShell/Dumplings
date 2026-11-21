@@ -1,0 +1,36 @@
+Version: 1.0.0-rc.40
+Installer:
+- InstallerUrl: https://github.com/QuantumNous/new-api/releases/download/v1.0.0-rc.40/new-api-v1.0.0-rc.40.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Important
+    Task Plugins / 任务插件
+    任务插件源码上限提高到 8 MiB，更大的插件可以正常上传和保存。
+    上游提交返回 201 / 202 等成功状态时，任务会正常继续，不再被当成失败。
+    定价配置在任务插件收窄可选项后，仍可编辑剩下的档位和价格，不会整表打不开。
+    Claude / Responses 里工具结果中的图片会按图片送给上游，不再当成文本。
+    Task Plugin source uploads now allow up to 8 MiB, so larger plugins can be saved.
+    A 2xx upstream submit status such as 201 / 202 is accepted, so the task continues instead of failing.
+    Pricing Configuration stays editable after a Task Plugin narrows its options; remaining tiers keep their prices.
+    Images in Claude / Responses tool results are sent upstream as images, not as text.
+    New Features
+    - Raised the Task Plugin source upload limit to 8 MiB. After upload, Activate now is available.
+    - Accept any 2xx upstream status on task submission, including 201 Created and 202 Accepted (#7478).
+    Fixes and Improvements
+    - Keep Pricing Configuration editable after a Task Plugin drops enum values. Unreachable branches are skipped; remaining prices are preserved.
+    - Send Claude tool_result images and Responses tool-output media upstream as images, not as text (#7512, #7510).
+    - Keep upstream metadata in Alibaba OpenAI Images render (#7507).
+    - Resolve safe constants in plugin metadata previews. Isolate theme preferences in local storage. Include provider icons in Windows builds.
+
+    What's Changed
+    - test(billing): fix websocket rejection refund test after pre-consume dropped output estimation by @feitianbubu in https://github.com/QuantumNous/new-api/pull/7491
+    - fix(plugins/alibaba): keep upstream metadata in openai_image render by @feitianbubu in https://github.com/QuantumNous/new-api/pull/7507
+    - fix(relayconvert): Responses→Chat 工具输出图片改为提升到后续 user 消息 by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/7510
+    - fix(relayconvert): Claude tool_result 图片提升到 user 消息；Chat→Responses 流补齐 reasoning part 事件并按段切分 item by @Calcium-Ion in https://github.com/QuantumNous/new-api/pull/7512
+    Full Changelog: https://github.com/QuantumNous/new-api/compare/v1.0.0-rc.39...v1.0.0-rc.40
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QuantumNous/new-api/releases/tag/v1.0.0-rc.40
+ReleaseTime: 2026-09-21T15:15:58.0000000Z

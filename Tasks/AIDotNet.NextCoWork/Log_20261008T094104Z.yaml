@@ -1,0 +1,64 @@
+Version: 2.5.4
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.5.4/nextcowork-2.5.4-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    视频生成：15 家预置供应商，对话里一句话发起，后台排队、轮询、下载、播放
+    - 设置 → 模型新增「视频模型」页(VideoModelPage):按 video-provider-presets.ts 的 15 个预置填地址 / region / 输出桶，从 video-profiles.ts 的 26 条「供应商 × 型号 × API 版型」里选型绑定；接通 12 条上游线路 —— Google Veo、xAI Grok Imagine、火山方舟 Seedance、阿里百炼 Wan、MiniMax 海螺、智谱 CogVideoX/Vidu、Runway、Luma 新旧双线、fal.ai 队列、Replicate、AWS Nova Reel(Bedrock + S3)。可灵、硅基流动、腾讯混元三个预置可见但动作表还是空的，不可选 —— 不让你配出一个必然失败的模型；托管供应商拒收传入的视频路由，绑定失效时自动清空选中
+    - 对话里只有一条入口：generate_video 工具(动作 generate / image / frames / edit / extend,加 status / cancel 查询),提交立即回执，生成在后台走完 —— 轮询间隔从 5 秒起，每运行 1 分钟加 5 秒，封顶 30 秒
+    - 腾讯 TC3-HMAC-SHA256 与 AWS SigV4 用 node:crypto 手写，不引 SDK,官方测试向量锁进单测(upstream/video/sign.ts);validate.ts 在发请求之前同步拦截：动作不在该型号的动作表、时长 / 比例 / 分辨率 / seed 不在合法集合、frames 缺帧、edit / extend 引用非公网 URL,一律不发 —— 防的是上游「静默忽略参数」「自动升档计费」「异步才报 400」这三种最难受的失败
+    - 任务先落库再发付费请求(video_generation_jobs 表，会话外键级联删除);双轨状态机：cloud(submitting / unknown / queued / running / succeeded / failed / canceled)× retrieval(waiting / downloading / ready / retryable_error / expired / paused)。提交应答丢失标 unknown,绝不自动重发；查询失败标 retryable 续轮；凭据指纹变了标 paused;应用重启后 resume 只查询不提交
+    - 下载流式落盘 + SHA-256 + 容器魔数校验(ftyp / EBML):HTML 错误页不会被存成 .mp4;.part 临时文件加原子 rename,单视频上限 512 MiB(独立于附件 32 MiB);重定向跨源丢弃鉴权头。产物登记为会话附件，消息里是 ncw:// 地址
+    - 每个 job 冻结下单时的 provider / profile / 模型 / 连接与凭据指纹快照(fal 的 endpoint route 段一并落库):之后换绑定不影响旧任务的查询与取回；「重试取回」只下载不重新生成
+    - 渲染层：任务卡片(VideoGenDetail)在消息流里播放、取消、重试取回；「另存为」走系统保存对话框由主进程复制，失败清理残留文件。save_video 工具把视频流式写进工作区，已存在默认不覆盖；读回校验本会话归属加 realpath 围栏，别的会话拿不走
+    - IPC:video:listBySession / video:get / video:cancel / video:retryRetrieval / video:saveFile,状态变化 video:jobChanged 广播到全窗口，均按会话过滤
+    历史消息分页：长会话只读最近一页，上翻按整轮补齐
+    - 新 sessions:getPage({sessionId, limit, beforeMessageId?},配套 getSummary / lastAssistant,都不读整段转录):打开会话只取最近 200 条，顶栏「加载更早的消息」按钮加滚到顶自动前翻，以当页首条 id 作锚点；取页时再向前补到最近一轮的开头(上限 500 条)—— 页首必须是可见提问，否则配对的 tool_result 找不到它的 tool_call
+    - 长历史渲染隔离：历史行与分组只依赖 messages,流式 token 只重算 live 尾行与末轮分组 —— 200 回合的会话里每个 token 的历史构造与分组调用数为 0,不再逐 token 重算全部历史、越长越卡
+    - 「⋯」菜单从只能删整轮改为可删单条助手回复(sessions:deleteReply),提问保留
+    消息编辑与重新生成：改文字不碰附件，重新生成按当前档位另起
+    - 编辑提问只替换可见文字、保留附件，并清空该轮的 token / 上下文占用读数；「重新生成」删除该提问及之后全部，按用户当前模型档位另起新 run;留下的消息重建工具卡片，不退回「生成中」
+    - 编辑规则收在 shared/agent/history-edit.ts,主进程(改完整历史)与渲染层(只改本页显示)共用同一条：按「跨度」删，吃掉配对的 tool_result,不产生 Anthropic 拒收的孤儿调用 —— 渲染层手里只有一页，整段 replaceHistory 会误删页外消息
+    - 旧转录里的 base64 内联图(单张可达 10MB+ 字符)在读页时按需转存为会话附件(每次 ≤12 张 / 32MB,会话忙时跳过),模型看到的字节不变(inline-images.ts)
+    Grep 正则隔离执行池：模型的正则不再在主进程里编译
+    - grep-regex.ts:模型给的正则只在 eval worker 里编译匹配，redos 静态筛查先快拒一道；真实墙钟 5 秒到期直接 terminate 整池，已得结果带超时说明返回。限额：单文件 5MB、每池 2 worker、进程级 4 池、排队 16、worker 堆 256MB —— 灾难性回溯最多烧掉一个 worker,不再是整个应用的卡死
+    附件缩略图与视频拖进度条
+    - ncw://…?preview=thumb 返回长边 768px 缩略档，缓存在数据根 thumbnail-cache/(不进附件表、不进备份),256MB 预算按 mtime 淘汰，生成失败回原图 —— 几十张原尺寸截图逐张全尺寸解码拖慢对话渲染的问题到此为止
+    - 附件协议自实现单区间 Range(206 / 416、闭合 Content-Range、后缀区间、HEAD 无 body):原先 net.fetch(file://) 不转发 Range 头，每次都全量 200 —— 视频能播，但拖不动进度条
+    改动
+    会话运行时移入主进程：窗口不在看，续跑、汇报、排队照常
+    - 新 session-runtime.ts 成为「这条会话下一轮何时开跑」的唯一决定者：草稿与队列落盘(同一键防复活)、run 正常结束后续跑排队消息、插话信箱、后台子代理结果汇报、目标空闲检查投递。之前这些全靠渲染层收到 run_end 后再发 send —— 窗口切走、最小化或重载中，一件都不会发生；渲染层也不再被迫常驻每个会话的全部转录
+    - 队列改为主进程镜像：发消息时对方忙则入队(session:queue)而非报错；新通道 agent:unwatch、session:reportBackground;agent:run 返回 {started} 或 {started:false, queue},支持 launchDetachedRun 不订阅窗口
+    - 会话互斥(sessionOperations + SessionBusyError):同一会话的 run 与上下文压缩互斥，续跑入口移到 driver finally 释放互斥之后，不再赌 run_end 的时序；删除会话前检查递归子树里是否还有在跑的 run
+    - 后台事件有闸：窗口隐藏时 rAF 不派发，事件泵按 256 条 / 100 万字符 / 50ms 兜底定时器三道预算放行，超限走平常 drain 不丢信封 —— 后台 run 事件无限积压撑爆渲染进程、恢复可见时卡死的问题
+    - 离屏会话放得掉：视图引用计数，最后一个视图离开 20 秒宽限后丢弃 store(只摘正文订阅，run 照跑);shell-port.ts 消除 tabs ⇄ window 两个 store 的直接互引，document-saves.ts 登记在途文档保存；activeRuns 广播带上 pendingInteractions(含子代理审批)驱动全局「等你处理」;run 日志加 16MiB 预算，已结束 run 按 TTL 2 分钟 / 总量 64MiB 回收(挂起交互钉住不回收)
+    上下文压缩：压缩前占住会话，完成后校验冲突
+    - 压缩前占住会话，期间新 run 与二次压缩均被拒；摘要完成后校验配置作用域、工作区与整段历史 revision,任一变化即报「摘要期间会话内容已变化」,不落过期的压缩边界
+    插件 RPC:调用钉进工作区作用域，取消是真取消
+    - resolveCallScope 把每次插件调用钉到产生它的那次工具调用的工作区，workspace.* / process.exec / scm.* / storage.workspace 按此作用域判权；插件 API 加可选 callId 参数，版本仍为 0.3.3,旧插件不受影响
+    - 插件被禁用、卸载或 shutdown 时，在途的 net.fetch 与 execStream 被真正 abort;deadline 到点与用户取消用不同的 abort 原因区分；越过副作用点之后的取消回报 result_unknown,插件不会误以为可以安全重试
+    - net.fetch 改 redirect:'manual' 逐跳重过 URL 门(≤5 跳，跨 host / 内网跳转拒绝),正文按字节截断，响应头条数与单条大小设限；审批(等人)回来后复核调用仍然存活，迟到的批准不会再 spawn 进程
+    - 工具审批策略抽成 kernel/approval.ts 工厂：联网开关 → 本地 deny → ask → 档位 → allow → AI「为我批准」审核器 → 弹窗，审核失败回退人工
+    SSH 内置客户端：主机密钥指纹验证，不再来者不拒
+    - 原 hostVerifier 恒为 true,任何服务器都被信任；现按「连接 + host:port」把 SHA256 指纹 pin 进 secrets,指纹不匹配 fail closed 且不发送密码；supports() 收紧，identityFile / proxyJump 不再静默降级成密码认证；askpass 按连接尝试整批撤销问答；sftp 增加 32KiB 分块 writeStream
+    备份与统计移出主进程
+    - 备份移入 worker 线程：先 SQLite backup() 在线快照，再流式打成 ZIP(临时文件加原子 rename),清单计数 / 散列 / settings 全部读自快照本身，主进程不再把整库读进内存；归档格式不变，旧备份照常恢复。自动备份只保留最近一份，手动备份永不清理；storage:getStats 改有界扫描(20 万条目预算);恢复 / 清理增加「会话操作占用」拦截
+    - 数据库事务所有权重构(AsyncLocalStorage + DatabaseBusyError),同步 / 异步事务互斥排队；导入改单事务加凭证回滚；FTS 可搜索正文统一由 message-text.ts 产出，迁移 v29 全量重建索引，v28 新增视频任务表
+    浏览器截图改存会话附件
+    - 截图落为会话附件(ncw://),不再把整张 PNG base64 塞进转录，保存失败才回退内联；生图侧：腾讯 TC3 / AWS SigV4 签名凭证配在生图模型上时给出明确「生图不支持」,不再报难解的 401
+    修复
+    定时任务间隔超约 24.8 天立即误触发
+    - setTimeout 超 2³¹−1ms 会被 Node 归零成 1ms,「每周」的调度变成立刻连发；改为封顶分段唤醒；执行时钉住会话，防止执行中途被可见性回收提前释放
+    删除 / 改名文件不再与在途文档保存竞态
+    - 文件管理器删除、改名、移动前等待该路径的在途文档保存落定 —— 之前可能删除之后旧内容又被写回；远端工作区「在文件管理器中显示」改落到本机文件树定位
+    依赖环显式锁死
+    - scheduled/refresh.ts 断开 bridge → scheduler → runtime 的依赖环，imports/managed-paths.ts 与 skill-port.ts(Skill 触发遥测端口)同为断环继电器；新增 architecture.test.ts 用 AST 锁 import 边：shared 不反依赖 main / renderer,renderer 不依赖 Electron / Node,runtime 零 Electron / IPC 直接依赖，kernel 不依赖 db / store,并钉住本次解掉的 5 条环
+    测试
+    - 新增 22 个测试文件：视频生成的上游 adapter / 签名向量 / 请求校验与任务管理器、任务卡片与模型设置页；会话运行时(无窗口时续跑、插话、子代理汇报)、RPC 作用域与迟到审批与 deadline 取消、Grep 正则池超时；历史取页与渲染层前翻、事件泵预算、离屏会话释放、长历史渲染隔离；Range 协议、缩略图缓存、内联图片转存、SSH 主机密钥与 askpass 撤销、定时器超长间隔、上下文压缩冲突、文件操作等在途保存；以及锁 import 边的架构测试
+    - 全量套件 7129 项通过(29 skipped),零失败；typecheck(node + web + plugins)与 test:release(5 项)通过
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.5.4
+ReleaseTime: 2026-10-08T06:41:09.0000000Z

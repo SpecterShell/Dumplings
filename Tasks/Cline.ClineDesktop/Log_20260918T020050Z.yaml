@@ -1,0 +1,15 @@
+Version: 0.0.32
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cline/cline/releases/download/desktop-v0.0.32/Cline_0.0.32_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Cline starts again after updating. In 0.0.31 the app could fail at launch with "desktop backend exited before publishing its endpoint" and never reach the workspace picker. Cline runs its own copy of the Cline Hub in the background, and the two halves had been built from different copies of the same code — so the Hub announced one build identity while the app expected another, the app shut down the very Hub it had just started, and startup timed out reporting "No compatible hub runtime is available". Both halves now load the same copy of that code, and the real compiled backend is now booted end-to-end in CI on every change so the two cannot drift apart again
+    Full Changelog: https://github.com/cline/cline/compare/desktop-v0.0.31...desktop-v0.0.32
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cline/cline/releases/tag/desktop-v0.0.32
+ReleaseTime: 2026-09-18T01:42:35.0000000Z

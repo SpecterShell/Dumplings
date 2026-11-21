@@ -1,0 +1,24 @@
+Version: 0.43.8
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.8/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.8/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.43.8/bicep-setup-win-x64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: 0.43.8.12551
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features and Bug Fixes
+    - Reverted the retryOn decorator to an experimental feature flag (#19604)
+      - The retryOn experimental flag was removed in the previous release, but the feature is not yet enabled in template language version 2.0. This could cause validation errors during deployment for users relying on retryOn. This release restores the feature flag as a temporary workaround while backend support for template language version 2.0 is being rolled out.
+    - Added build_bicep and build_bicepparam tools to the MCP server (#19602)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.43.8
+ReleaseTime: 2026-05-07T00:31:01.0000000Z

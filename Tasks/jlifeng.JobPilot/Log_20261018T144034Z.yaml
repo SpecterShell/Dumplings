@@ -1,0 +1,31 @@
+Version: 1.8.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jlifeng/JobPilot/releases/download/v1.8.4/JobPilot_1.8.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jlifeng/JobPilot/releases/download/v1.8.4/JobPilot_1.8.4_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    JobPilot v1.8.4
+    Release date: 2026-10-18 / 发布日期：2026-10-18
+    Compared with v1.8.3. / 对比 v1.8.3。
+    新增
+    - 预览页分页渲染 — 编辑简历时可以同时看到分页情况，不必导出后才发现页数不对（Issue #17）
+      - 实时预览新增预估页数、分页参考线与当前页指示，滚动时同步高亮所在页
+      - 新增「打印预览」：直接展示导出 PDF 的真实页面，支持总页数、当前页、上一页/下一页与页码跳转
+      - 打印预览与导出共用同一条 PDF 生成链路，可选普通 PDF 或智能一页两种模式
+      - 编辑后打印预览会标记为「已过期」并保留旧页面，可手动刷新；生成、过期、失败均有明确状态提示
+      - 内容未变化时导出会复用已预览的 PDF，保存下来的文件与检查过的页面始终一致
+    修复
+    - 切换预览视图后预估页数变成 1 页 — 修复从打印预览切回实时预览时，预估页数被重置为 1 的问题
+      - 原因是实时预览卸载时，尺寸观察者会为已移除的节点补发一次回调，其测量值为 0，被当成了「一页内容」
+      - 现在测量不到内容时保留上一次的真实预估，并补上字体加载完成后的重新测量
+    - 预估页数随缩放比例虚高 — 修复缩放越小预估页数越不准的问题，缩放现在只影响显示大小
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jlifeng/JobPilot/releases/tag/v1.8.4
+ReleaseTime: 2026-10-18T14:28:36.0000000Z

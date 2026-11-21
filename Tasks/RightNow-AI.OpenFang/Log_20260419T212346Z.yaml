@@ -1,0 +1,59 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.0/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.6.0/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Three Hermes-inspired capabilities ported to OpenFang's Rust architecture. Each wired end-to-end: backend + API + dashboard + (where applicable) TUI. 51 new tests, zero clippy warnings, zero regressions across 2460+ workspace tests.
+    Features
+    Multi-destination cron delivery
+    Cron jobs fan out results to multiple targets in one declaration:
+    - Channel — any of the 40 existing channel adapters (Telegram, Slack, Discord, WhatsApp, Matrix, Teams, …)
+    - Webhook — POST JSON {job, output, timestamp} with optional Authorization header
+    - LocalFile — path + append/overwrite flag
+    - Email — with subject template support
+    Per-target failures log but never abort the job. Edit targets through the Scheduler dashboard page or the new PUT /api/schedules/{id} endpoint.
+    Skill config injection
+    Skills are now templates. Declare config vars in SKILL.md frontmatter:
+    config:
+      github_token:
+        description: GitHub personal access token
+        env: GITHUB_TOKEN
+        required: true
+      default_branch:
+        description: Default branch name
+        default: main
+        required: false
+    Resolver order per var: user config.toml → env var → default → error if required missing. Secrets auto-redacted in the rendered skill prompt (*_token, *_key, *_secret, password). Manage through the new Skills page Configure modal, or [skills.<name>] in config.toml.
+    Unified slash command registry
+    All 32 slash commands live in one source of truth with categories, aliases, and per-surface filtering (CLI / Channel / Web). Auto-generated help, autocomplete, and the new GET /api/commands endpoint for dashboard consumption. Prevents command drift across CLI, web chat, Telegram, Slack, Discord, and 37 other channels.
+    API additions
+    - GET /api/commands?surface=web|cli|channel|all
+    - GET/POST/PUT /api/schedules now round-trip delivery_targets
+    - GET /api/schedules/{id}/delivery-log
+    - GET /api/skills/{id}/config
+    - PUT /api/skills/{id}/config
+    - DELETE /api/skills/{id}/config/{var_name}
+    Improvements
+    - Atomic config.toml writer (tempfile + rename) prevents corruption on crash
+    - Kernel skill_config_overrides enables live config updates without restart
+    - Fixed 4 pre-existing clippy warnings (manual_contains)
+    - Tauri desktop config bumped so .dmg / .msi filenames now match the release version (no more OpenFang_0.5.9_… on a 0.6.0 release)
+    Testing
+    - 51 new tests (cron_delivery 16, commands 18, config_injection 10, API integration 7)
+    - All 2460+ workspace tests pass
+    - cargo clippy --workspace --all-targets -- -D warnings — zero warnings
+    - Live daemon integration verified for each feature
+    Full diff: v0.5.10...v0.6.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.6.0
+ReleaseTime: 2026-04-19T19:58:49.0000000Z

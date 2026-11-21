@@ -1,0 +1,37 @@
+Version: 1.21.2
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/1.21.2/consul_1.21.2_windows_386.zip
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/1.21.2/consul_1.21.2_windows_amd64.zip
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SECURITY:
+    - security: Upgrade UBI base image version to address CVE
+      CVE-2025-4802
+      CVE-2024-40896
+      CVE-2024-12243
+      CVE-2025-24528
+      CVE-2025-3277
+      CVE-2024-12133
+      CVE-2024-57970
+      CVE-2025-31115 [GH-22409]
+    - cli: update tls ca and cert create to reduce excessive file perms for generated public files [GH-22286]
+    - connect: Added non default namespace and partition checks to ConnectCA CSR requests. [GH-22376]
+    - security: Upgrade Go to 1.23.10. [GH-22412]
+    IMPROVEMENTS:
+    - config: Warn about invalid characters in datacenter resulting in non-generation of X.509 certificates when using external CA for agent TLS communication. [GH-22382]
+    - connect: Use net.JoinHostPort for host:port formatting to handle IPv6. [GH-22359]
+    BUG FIXES:
+    - http: return a clear error when both Service.Service and Service.ID are missing during catalog registration [GH-22381]
+    - license: (Enterprise only) Fixed issue where usage metrics are not written to the snapshot to export the license data. [GH-10668]
+    - wan-federation: Fixed an issue where advertised IPv6 addresses were causing WAN federation to fail. [GH-22226]
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases/tag/v1.21.2
+ReleaseTime: 2025-06-24T03:41:06.0000000Z

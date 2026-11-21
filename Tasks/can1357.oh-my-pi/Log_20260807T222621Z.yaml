@@ -1,0 +1,143 @@
+Version: 17.2.11
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.2.11/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Breaking Changes
+    - Fixed handling of GitHub Copilot's model_not_available_for_integrator error to prevent unnecessary retries, preserving the actionable available models list.
+    Added
+    - Added support for reporting Cursor personal monthly USD quotas and remaining balances, labeled by verified profile email accounts.
+    Fixed
+    - Fixed an issue where ANTHROPIC_BASE_URL was ignored for Anthropic chat requests, ensuring requests are routed to the configured host and forwarding ANTHROPIC_CUSTOM_HEADERS to non-official gateways.
+    - Fixed an issue where a legacy pre-organization login credential could persist and cause a permanent error row in omp usage even after a successful organization-scoped re-login.
+    - Fixed an issue where lazy provider streams (including Amazon Bedrock, Google, Cursor, Devin, and Ollama) ignored model-specific idle timeouts, which previously caused healthy but slow reasoning turns to prematurely time out.
+    - Improved error classification for Simplified Chinese quota-exhaustion and rate-limit messages, ensuring affected credentials are correctly rotated or backed off instead of being treated as unknown errors.
+    - Classified subscription and plan-cap 429 responses as rotatable usage limits rather than transient rate-limit throttles, enabling smoother credential rotation.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Increased the default stream idle-timeout floor on Amazon Bedrock to 900 seconds for reasoning and adaptive-thinking models (such as Claude) to prevent premature watchdog timeouts during long reasoning stretches.
+    - Fixed Devin model families (including SWE-1.7, Claude 5, Gemini 3.6 Flash, Kimi K3, Grok 4.5, and Inkling) to correctly group as logical models with reasoning-effort routing instead of separate wire variants.
+    - Added missing context-window and output-token limits for dynamically discovered Alibaba Token Plan models.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added support for the Agent Plugins 1.0.0 standard, enabling automatic discovery, validation, and secure execution of compliant plugin packages.
+    - Added the omp share <session> command to share saved sessions by ID prefix or file path without launching the agent.
+    - Added the AGENT=1 environment variable to child processes spawned by coding-agent to allow downstream tools to detect agent-driven execution.
+    Changed
+    - Consolidated Exa web-search configuration under exa.enabled, automatically migrating legacy exa.enableSearch values and removing obsolete Researcher and Websets settings.
+    - Removed stale computer.backend values during configuration migration.
+    - Updated documentation and error messages for the JavaScript/TypeScript debug adapter (js-debug-adapter) to clarify supported installation paths (Mason, standalone tarball, or JS_DEBUG_DAP_SERVER).
+    Fixed
+    - Fixed an issue where /reload-plugins and the Agent Control Center failed to propagate updated agent definitions to existing tools without a restart.
+    - Fixed legacy Pi extensions failing to load when calling pi.unregisterProvider(), ensuring provider replacements take effect immediately.
+    - Fixed zero-width daemon readiness and wait regex matches being rejected by the hub wire decoder.
+    - Fixed proxy model discovery preferring bundled catalog names over proxy-reported names, allowing omp models refresh to correctly update display names.
+    - Fixed Windows compiled binary builds failing due to backslash-separated paths in Bun.Glob.scan producing invalid JavaScript in virtual modules.
+    - Fixed the Ctrl+O (app.tools.expand) shortcut not expanding truncated tool output when a tool-approval prompt or selection dialog had keyboard focus.
+    - Improved omp commit error reporting when pre-commit or commit-msg hooks fail, displaying the hook's own message and exiting non-zero cleanly instead of printing bundled source code.
+    - Fixed omp commit --push exiting with code 0 without pushing when the working tree is already clean; it now correctly pushes existing commits.
+    - Fixed omp commit exiting with code 0 when the commit agent failed and fell back to a mechanical commit; it now exits non-zero to indicate the fallback was used.
+    - Fixed strict output schemas being rejected when native JSON Schema definition maps contain ref or applicator branches use properties without type.
+    - Fixed shell syntax extraction in cd <path> && ... commands to prevent redirects, extra arguments, or shell expansions from being incorrectly absorbed into the structured working directory path.
+    - Applied reason-specific backoff to transient rate-limit retries and consolidated exhausted retry errors.
+    - Fixed session-tree rows rendering as empty bullets for bookkeeping entries (such as title changes, credential pins, and mode changes); these are now hidden by default and properly labeled in all mode.
+    - Fixed extension and custom tools inheriting same-named built-in TUI renderers, which could overwrite successful results with incorrect status text.
+    - Fixed prewalk lifecycle handling to prevent plan injection on rejected same-model/same-effort arms, ensure consumed plan nudges do not return after context rebuilds, and prevent settings-enabled prewalk from implicitly re-arming restored sessions.
+    - Fixed the todo completion reminder interrupting pauses when waiting for non-English questions (such as Chinese, Japanese, Korean, or Spanish prompts ending in ？ or ?).
+    - Normalized resolved file paths in read summaries, PDF image handles, and notebook errors to prevent agents from learning malformed paths.
+    - Fixed a bug where a per-turn before_agent_start system prompt override was silently dropped during base-prompt rebuilds.
+    - Fixed ACP session/load and session/resume failing with ACP session not found for sessions created under the legacy hashed project-directory scheme by falling back to a global ID scan.
+    - Fixed vault://<name>?op=... commands targeting the active vault instead of the named vault in Obsidian CLI queries.
+    - Fixed the status-line session_name segment to honor the statusLine.sessionAccent setting, falling back to the theme's accent color when disabled.
+    - Fixed automatic agent.continue() paths failing to run context-fit maintenance when reverting to a smaller-context model after a cooldown expiry.
+    - Fixed /handoff reporting "Handoff cancelled" for actual generation or stream timeout errors, ensuring the real error is surfaced.
+    @oh-my-pi/hashline
+    Changed
+    - Pasting an empty named register (PUT … @name with no matching capture) now surfaces a warning listing available registers and removes the span target instead of throwing an error.
+    Fixed
+    - Fixed an issue where pipe-numbered read/search rows copied into top-level and bare-body patch payloads were not properly recovered (#7905).
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed an issue where an interrupted local embedding model download could permanently corrupt the cache and silently disable semantic recall. The system now automatically detects incomplete model files, clears the corrupted cache, and retries the download.
+    @oh-my-pi/pi-natives
+    Added
+    - Added support for Windows hosts in bun run build, enabling local N-API builds against VS Build Tools without requiring a pre-configured vcvars prompt.
+    Changed
+    - Replaced the miniaudio (maudio) dependency with in-house platform audio backends for AudioCapture/AudioPlayback: CoreAudio AudioQueue on macOS, shared-mode WASAPI on Windows, and PulseAudio (ALSA fallback) loaded via dlopen on Linux. Removes the bindgen/libclang requirement and the Windows rustc-ICE workaround from the native build.
+    Fixed
+    - Fixed CPU feature detection (AVX2) on Windows hosts, resolving an issue where the native addon loader and local builds incorrectly fell back to the baseline variant, while improving startup performance by ~270ms.
+    - Fixed bun run build:bindings failing on Windows due to incorrect resolution of the @napi-rs/cli entry point.
+    - Fixed a compiler crash (rustc ICE) when building the maudio package for Windows.
+    - Fixed synthesized macOS keyboard and pointer events suppressing physical user input.
+    - Fixed several Wayland input and capture issues, including preventing read-only calls from acquiring persistent input control, fixing GNOME Wayland pointer input initialization, and resolving conflicts between libei input and PipeWire screen capture.
+    - Fixed compilation of the wayland-pipewire Cargo feature.
+    - Improved security on Wayland by cleaning up orphaned world-readable RemoteDesktop restore tokens on startup.
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed an issue where Herdr panes lost native terminal scrollback during TUI transcript replacements or resize redraws.
+    - Fixed an issue inside tmux where explicit display resets retained stale light/dark palettes and leaked terminal capability bytes into the editor.
+    @oh-my-pi/pi-utils
+    Added
+    - Added repair and rawKeys options to parseFrontmatter to support spec-conformant loading (disabling lenient recovery and preserving keys verbatim), and exported normalizeFrontmatterKeys for manual key normalization.
+    Fixed
+    - Fixed the in-house marked list tokenizer incorrectly consuming trailing blank lines at the end of input, ensuring correct list tightness and token generation matching standard marked behavior.
+    What's Changed
+    - fix(tui): preserve scrollback in Herdr panes by @chessl in https://github.com/can1357/oh-my-pi/pull/7810
+    - fix(coding-agent): clean up legacy Exa and computer settings by @chessl in https://github.com/can1357/oh-my-pi/pull/7814
+    - fix(coding-agent/tools): preserve native JSON Schema containers by @kimprap in https://github.com/can1357/oh-my-pi/pull/7816
+    - fix(ai): classify Simplified Chinese quota exhaustion as credential-rotatable by @IceCodeNew in https://github.com/can1357/oh-my-pi/pull/7828
+    - fix(coding-agent): prefer proxy-reported model name over bundled catalog name by @vinhnguyen1211 in https://github.com/can1357/oh-my-pi/pull/7832
+    - fix(commit): report hook refusals cleanly and honor --push on a clean tree by @roboomp in https://github.com/can1357/oh-my-pi/pull/7836
+    - fix(tui): make Ctrl+O expand tool output regardless of focus by @roboomp in https://github.com/can1357/oh-my-pi/pull/7840
+    - fix(coding-agent): signalled fallback commits with a non-zero exit code by @zhang17-24 in https://github.com/can1357/oh-my-pi/pull/7844
+    - fix(catalog): enrich Alibaba Token Plan discovered model limits by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/7849
+    - fix(extensions): roll back providers after load failure by @Mustaqeem66 in https://github.com/can1357/oh-my-pi/pull/7853
+    - feat(coding-agent): mark child processes as agent-driven by @roboomp in https://github.com/can1357/oh-my-pi/pull/7854
+    - fix(catalog): update Devin reasoning family routing by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/7865
+    - fix(status-line): honor sessionAccent toggle for session_name segment by @CaelumSea in https://github.com/can1357/oh-my-pi/pull/7867
+    - fix(natives): prevent macos input suppression by @roboomp in https://github.com/can1357/oh-my-pi/pull/7873
+    - fix(anthropic): honor ANTHROPIC_BASE_URL for chat requests by @roboomp in https://github.com/can1357/oh-my-pi/pull/7875
+    - fix(auth): purge pre-org OAuth tombstone on org-scoped re-login by @roboomp in https://github.com/can1357/oh-my-pi/pull/7878
+    - docs(agent-hub): document subagent observability by @roboomp in https://github.com/can1357/oh-my-pi/pull/7881
+    - fix(natives): port wayland capture to pipewire 0.9 Rc handle API by @roboomp in https://github.com/can1357/oh-my-pi/pull/7887
+    - fix(bash): constrain leading cd extraction to a single path token by @roboomp in https://github.com/can1357/oh-my-pi/pull/7888
+    - fix(ai,catalog): widen Bedrock stream-stall watchdog via model compat by @voonfoo in https://github.com/can1357/oh-my-pi/pull/7892
+    - fix(natives): make Windows-host builds and addon loading work end to end by @zerx-lab in https://github.com/can1357/oh-my-pi/pull/7896
+    - feat(ai): add Cursor personal usage reporting by @chessl in https://github.com/can1357/oh-my-pi/pull/7613
+    - perf(extensions): import extension modules concurrently by @metaphorics in https://github.com/can1357/oh-my-pi/pull/7709
+    - fix(coding-agent): preserve before_agent_start prompt override across base rebuilds by @roboomp in https://github.com/can1357/oh-my-pi/pull/7756
+    - docs(coding-agent): clarify js-debug-adapter install is not an npm package by @fcastillo18 in https://github.com/can1357/oh-my-pi/pull/7759
+    - fix(session): handle subscription-cap retry exhaustion by @roboomp in https://github.com/can1357/oh-my-pi/pull/7772
+    - fix(vault): pass vault= as top-level obsidian cli option by @roboomp in https://github.com/can1357/oh-my-pi/pull/7773
+    - fix(tui): gate built-in renderers by tool provenance by @roboomp in https://github.com/can1357/oh-my-pi/pull/7774
+    - fix(tree): stop rendering bookkeeping entries as empty rows by @ParadaCarleton in https://github.com/can1357/oh-my-pi/pull/7782
+    - fix(acp): resolve session/load across legacy session directories by @roboomp in https://github.com/can1357/oh-my-pi/pull/7783
+    - fix(coding-agent): make prewalk lifecycle one-shot by @eggpeat in https://github.com/can1357/oh-my-pi/pull/7785
+    - fix(read): normalize recovery paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/7790
+    - fix(tui): avoid leaking DA1 through tmux appearance refresh by @anatoli-tsinovoy in https://github.com/can1357/oh-my-pi/pull/7801
+    - fix(coding-agent): detect non-English questions in todo reminder guard by @roboomp in https://github.com/can1357/oh-my-pi/pull/7806
+    - fix(ai): preserve Copilot integrator entitlement errors by @roboomp in https://github.com/can1357/oh-my-pi/pull/7821
+    - fix(natives): share one runtime across wayland portal paths by @roboomp in https://github.com/can1357/oh-my-pi/pull/7889
+    - fix(computer): lazily request wayland input permission by @roboomp in https://github.com/can1357/oh-my-pi/pull/7890
+    - fix(session): surface real handoff errors instead of false cancel by @roboomp in https://github.com/can1357/oh-my-pi/pull/7904
+    - fix(hashline): recover pipe-numbered read rows by @roboomp in https://github.com/can1357/oh-my-pi/pull/7906
+    New Contributors
+    - @chessl made their first contribution in https://github.com/can1357/oh-my-pi/pull/7810
+    - @kimprap made their first contribution in https://github.com/can1357/oh-my-pi/pull/7816
+    - @IceCodeNew made their first contribution in https://github.com/can1357/oh-my-pi/pull/7828
+    - @vinhnguyen1211 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7832
+    - @CaelumSea made their first contribution in https://github.com/can1357/oh-my-pi/pull/7867
+    - @voonfoo made their first contribution in https://github.com/can1357/oh-my-pi/pull/7892
+    - @zerx-lab made their first contribution in https://github.com/can1357/oh-my-pi/pull/7896
+    - @fcastillo18 made their first contribution in https://github.com/can1357/oh-my-pi/pull/7759
+    - @ParadaCarleton made their first contribution in https://github.com/can1357/oh-my-pi/pull/7782
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.2.10...v17.2.11
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.2.11
+ReleaseTime: 2026-08-07T22:19:29.0000000Z

@@ -1,0 +1,35 @@
+Version: 0.15.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.15.0/codeg_0.15.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.15.0/codeg_0.15.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(sync): Desktop-hosted web clients now stay in real time with the desktop app. When you open a running conversation from another client, Codeg joins the existing agent stream instead of starting a separate one, and sidebars update as conversations are created, renamed, deleted, or enter review/running states.
+    - feat(chat-channel): Message Channel events can now be delivered to Webhook URLs as structured JSON, with per-URL enable switches, a management dialog, and safer failure logging.
+    - feat(chat-channel): Channels can notify you when an agent is waiting for permission. User-message notifications are also available as an opt-in event with bounded prompt previews, and remain disabled by default.
+    - feat(file-tree): The file tree context menu can now copy paths for the workspace root, folders, and files.
+    - fix(sync): Shared conversations now queue overlapping sends instead of dropping them, preserve send order across desktop and browser clients, and avoid duplicate user prompts when joining an in-progress turn.
+    - fix(chat-channel): Event delivery now fails closed when event-filter settings cannot be trusted, Lark cards render untrusted fields as plain text, and failed settings loads no longer overwrite existing filters or webhooks.
+    - fix(clipboard): Copy actions now work in non-secure web contexts, including components that call navigator.clipboard.writeText directly.
+    - chore(format): Added Prettier ignore coverage and normalized formatting.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 功能(同步)：桌面托管的 Web 客户端现在会与桌面应用实时同步。通过其他客户端打开正在运行的会话时，Codeg 会加入已有的代理流，而不是重新启动一个代理；侧边栏也会实时反映会话创建、重命名、删除、运行中和等待审批等状态。
+    - 功能(消息频道)：消息频道事件现在可以发送到 Webhook URL，以结构化 JSON 推送，并支持每个 URL 单独启停、管理对话框和更安全的失败日志。
+    - 功能(消息频道)：当代理等待权限确认时，已配置频道可以收到提醒。用户发送消息事件也可选择开启，只推送受限预览，并且默认保持关闭。
+    - 功能(文件树)：文件树右键菜单支持复制工作区根目录、文件夹和文件路径。
+    - 修复(同步)：多个客户端共同控制同一会话时，并发发送会被排队而不是丢失，并按顺序继续发送；中途加入正在流式输出的会话时也不会再看到重复的用户消息。
+    - 修复(消息频道)：事件过滤配置不可用或过期时默认停止推送，Lark 卡片中的外部内容按纯文本显示，配置加载失败时不会覆盖已有筛选项或 Webhook。
+    - 修复(剪贴板)：复制操作现在可在非安全 Web 上下文中工作，直接调用 navigator.clipboard.writeText 的组件也能使用兼容回退。
+    - 更新(格式)：补充 .prettierignore 并整理代码格式。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.15.0
+ReleaseTime: 2026-06-05T16:38:26.0000000Z

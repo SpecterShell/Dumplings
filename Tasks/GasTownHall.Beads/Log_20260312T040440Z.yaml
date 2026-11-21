@@ -1,0 +1,151 @@
+Version: 0.60.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.60.0/beads_0.60.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/steveyegge/beads/releases/download/v0.60.0/beads_0.60.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - 43bca275bf79d01a464a4b25cb02c5790dfb1640 feat: JSON-aware error output + JSONL schema validation + contract tests (GH#2499)
+    - 71d7ae593b54d9e0c820e29e49b2b998dcf360ad feat: add --design-file flag for reading design from files
+    - 12dc4e075003308fe1e511df350e844f16478ecd feat: add --destroy-token for safe non-interactive re-init (GH#2497)
+    - 9dc875a98efd8c76dbf8e711ed47160ddc928ce5 feat: add --list and --doc flags to bd help for CLI doc generation (GH#2527)
+    - 0cf8666fff4ec75b47ad831c372de447835211eb feat: add GitHub Issues integration (tracker plugin) (GH#2373)
+    - ac9ac70911d399051fde1ab53cda730c96baa111 feat: add bd context command and safe-first error guidance (fix-merge PR #2496)
+    - 0bb3bf20a042778572bb71116e5b80598411a5ff feat: add workspace identity preflight and bd bootstrap command (GH#2438, GH#2372)
+    - efd7568de5a08083c0fe292636d354cfcb178875 feat: bd bootstrap executes recovery actions instead of printing advice
+    - 2df714ffcf02d378d56ad06314bc13c7c3f4a16a feat: bd done treats last arg as reason
+    - 21e23bc57148ecc0398e37eacf5bc66a476cb016 feat: epic close guards, merge re-parenting, and progress display
+    - b7cc484441e7ce5f0cc57f9e4816b446c9542dc2 feat: replace hash-derived dolt ports with OS-assigned ephemeral ports (GH#2415)
+    - 5e1d4b9d94c9722f800f0925d79c1df591cca716 feat: search external_ref in bd search (GH#2494)
+    - 3a2d351ea87c558f2d612ee72b9aa10b32771427 feat: support global ~/.config/beads/PRIME.md fallback (GH#2330)
+    Bug Fixes
+    - 0c12f463a1c695ed84725843a455858f49197302 Merge PR #2390: fix(deps): update github.com/dolthub/driver digest to bbe1450
+    - dbbe212663f9eac49a7f3a6b72253a02ebb796af Merge PR #2408: fix(worktree): skip .gitignore append when parent directory pattern covers
+    - c3e70573befbdb63b82f6656a318c0e12acefb6e Merge PR #2413: fix(deps): update opentelemetry-go monorepo to v1.42.0
+    - 93841bd8af0c7203516511b927a696e53eccec2a Merge PR #2417: fix: bd mol wisp reports wrong count when RootOnly=true
+    - 3502cb48867ce97a4addec286f2565fe72a375a5 Merge PR #2432: fix: use Root().PersistentFlags() to check --json in PersistentPreRun
+    - 1d255044bf397b9773581693067b4d3356a10e49 Merge PR #2440: fix: replace stale 'bd sync' references in CLI help, setup generators, and docs
+    - 1ffbd0f44b6f446b34d8ecfa4395560f8abd72ac Merge PR #2443: fix(list): --json flag ignored when --tree defaults to true
+    - f1e60736d4378883b4f88387fa7188d8d303aa7b Merge PR #2529: fix(deps): update github.com/dolthub/driver digest to 669bd7f
+    - 81307568f50cd403bbeff84917e80a7b8b667542 fix(deps): migrate glamour to v2 (charm.land/glamour/v2)
+    - 4c43d96b244555940608cadd126400184a937835 fix(deps): update github.com/dolthub/driver digest to 669bd7f
+    - dc0b180eff223208744f1e1a22c82daae48a6064 fix(deps): update github.com/dolthub/driver digest to bbe1450
+    - 555abde0dad82fcd68af33aa7c6e33b51f2ef55c fix(deps): update github.com/dolthub/driver digest to ecee5fd
+    - 7f03975dab431ca2942418775d1e104440808ade fix(deps): update module golang.org/x/sync to v0.20.0
+    - 1a328cb6885ca0fca9bb2ae38888046f10794a96 fix(deps): update module golang.org/x/sys to v0.42.0
+    - db967a07c5a4e83d01e04183fd249b3837134fe7 fix(deps): update module golang.org/x/term to v0.41.0
+    - 8962de51c431be4683787da70fb9d02a1bfd786a fix(deps): update opentelemetry-go monorepo to v1.42.0
+    - 257c052498a67e20fa116b16fccbaff8f2323c45 fix(deps): update testcontainers-go monorepo to v0.41.0
+    - a333dcaa75de77a08ece61b590a46416720f6db7 fix(docs): purge stale bd sync/import/--branch refs + add CI doc validation (GH#2522)
+    - f7061f97823e192845fc2fb12a67928b4273e794 fix(docs): remove stale --branch flag and SQLite refs from QUICKSTART (GH#2522) (#2525)
+    - 1fb6b95246880ac697cc45dba7b6d83cd0c84479 fix(dolt): auto-commit pending changes before pull to prevent merge errors (GH#2474)
+    - c195a5e52061954f91c27c215c8e61027ff42266 fix(list): --json flag ignored when --tree defaults to true
+    - 15a9d16898b13e92ef8cf75aa3e8c11561d32452 fix(list): --json flag ignored when --tree defaults to true
+    - 44118a86b562ef945fc0d778f5bd5ed02b826f78 fix(list): --json flag ignored when --tree defaults to true (bd-03r)
+    - 45fcd51a68ff750212659c11b34640e3f942f8d3 fix(nix): use go mod edit instead of sed for version patching
+    - 656a3e52417d0cc678437c0a19638af5abb9d3cf fix(worktree): skip gitignore append when parent dir pattern already covers entry
+    - f88c2981d9a5d6c031c12fe37c2f656b6382459f fix: Dolt test suite stability — eliminate container crashes and cascading failures (hq-33riy)
+    - c9998fc291f96bcaaab059d83203109a92e4e59c fix: TestDoltStoreDependencies uses same-type issues for blocks dep (GH#1495)
+    - cf9f78d964a46108ab5b3a39f21b59be55252b13 fix: TestProtocol_FieldsRoundTrip timezone-aware date assertions
+    - 838638043782dc0700f347490fe5b1e9b0f8e636 fix: YAML config prefix takes precedence over DB in shared-server mode (GH#2469)
+    - 7d06e6c2df5cbf5391120b8b5898f742b5cea6a0 fix: add BEADS_DOLT_PORT fallback in GetDoltServerPort() (GH#2486)
+    - 396c944a5eed95ad8d96b84cdd258d2ba222d49d fix: add shared Dolt server mode for multi-repo/agent setups (GH#2416)
+    - 69573b88101ef67a0b8f61f03743de1815a43045 fix: add test coverage for quoted label values with colons (bd-wnr1)
+    - 1d7bf35219ed36355a3d4dcd9dc5a7fe9896b8c8 fix: add timeout and graceful DB-missing handling to git hook shims
+    - d00c310bd51cb7a14b83a81b63de4a6e62834e8c fix: auto-clear stale pinned flag on status transition
+    - 0ba22ae1b6a1b62345e429a5b51889c836248ece fix: auto-resolve metadata merge conflicts on bd dolt pull (GH#2466)
+    - 401da9df718fd05d29a88925f6950cd99e06d1ec fix: backfill project_id into pre-GH#2372 Dolt stores via bd doctor --fix (GH#2490)
+    - 9b04d6cc5feef562a601e7d7fdf96a7f35a23ad1 fix: bd children includes closed children by default (GH#2481)
+    - 12cfd5c5904a7b38ed2b30d29d3f4a2770e1b825 fix: bd doctor --fix regenerates missing metadata.json (GH#2482)
+    - 766fe2fb7aacca8763a52a5e36e329e4f65de546 fix: bd doctor detects stale .legacy hook sidecars calling removed bd hook (GH#2398)
+    - 61ddbe305c04bf7a01a4d04c2d562edd44998865 fix: bd dolt remote add/list/remove operate on wrong directory (GH#2306, GH#2311)
+    - d1549d996a22b3c015b1ffafde8ef8edc034a2e7 fix: bd export crash on zero-time timestamps + stale bd sync refs (GH#2488, GH#2493)
+    - 3dbf3c7cfd94e0ff861c5357da4d33bba3f32095 fix: bd lint accepts non-empty acceptance_criteria field without heading (GH#2468)
+    - c12cceaf95653cd5996fbf5565c4d34c4c0872ec fix: bd mol wisp reports wrong count when RootOnly=true
+    - a84f7c325ae39672b2f06e486467904e3cbe9f31 fix: block bd doctor --fix at Gas Town town root (GH#2450)
+    - 2c24ce690488d2bfd98521e054d7af040e943431 fix: block data-dir in server mode + fix doctor --clean --json (GH#2438)
+    - a5a751fb6d420fb4f6e1673a0bed7f8a461fd05b fix: clean formatting drift
+    - 36a3ecd188a6490f60951fdb6914a7b9160c6bf6 fix: create .beads/ dir in server mode with external BEADS_DOLT_* env vars (GH#2519)
+    - fbbaa5ecc096081598af549618b91b21c07b60a6 fix: detect WSL and MINGW/MSYS/CYGWIN in install.sh
+    - eae64cabcc04edd4dfdb22a410d42986efcd9b01 fix: detect backup files on database-not-found and after bd init (GH#2327)
+    - 4537e07f4810d848eb4b4c3454a22c1eab3daa03 fix: exclude reparented children from molecule auto-close (GH#2480)
+    - e6019d9912d1769befa11292dcd1f481b41cf586 fix: hide --allow-stale no-op flag from help output
+    - e56fc506bd053c3950e88aec39229e708a98dbf3 fix: idle-monitor preserves port across restart cycles (bd-xvg)
+    - 9604d30b7c746f9f04f6dea5f82996f71bb66073 fix: init guard allows fresh clones with committed metadata.json (GH#2433, GH#2441)
+    - 9d65ac85060a8feeb25dbcea3a77eafff7a58d9d fix: merge --metadata with existing metadata instead of replacing (GH#2423)
+    - 141119adefd77d6596a453b2edb49475a39c6e84 fix: move KillStaleServers inside flock to prevent journal corruption (GH#2430)
+    - 4591600643c4f0783da2ff24f7624a82c109778d fix: move auto-push state to local file, preventing metadata merge conflicts (GH#2466)
+    - 5227eabfa1f9b8bcfba0f5c76eb8f5db6b7f432a fix: preserve dependency metadata in JSONL backups (GH#2487)
+    - a7755e5b13b68d8a16231774052cec4d503ea31d fix: prevent bd init from creating DB on another project's Dolt server (GH#2336)
+    - 4df17ca344f6ff551ffae1277073d123e5f3d857 fix: remove idle monitor and activity signal daemon infrastructure (GH#2452)
+    - 100962fe26984d9c43568c4649a239f862ae02c7 fix: remove stale 'sync' from noDbCommands breaking sync subcommands (GH#2419)
+    - 3e20e7ee40a44495aafdea735fde995b834c674b fix: replace dangerous --force suggestion in init guard error message
+    - 31bae5a2e4d52d2cbbe5b5977292e9357555d3e9 fix: replace hash-derived dolt ports with OS-assigned ephemeral ports (GH#2415)
+    - b7bd6d6fae937599a7a24aaa1df9a288fdebad22 fix: replace stale 'bd sync' references with bd dolt push/commit (GH#2435)
+    - cd2f5003f7780fbb24dc064a65788b7e813e4c86 fix: replace stale bd migrate --to-dolt with bd init --from-jsonl (GH#2333)
+    - bdbbb4b9b047c5ab28fcc95809327f964f5a7d39 fix: restore --allow-stale as no-op flag for gt compatibility
+    - de483f4f48f796117ea4c985050e886594c8d843 fix: restore denormalized JSONL from bd export without data loss (GH#2479)
+    - b515661f7d451441e9b7b408a2cd8fc8568f0c78 fix: skip sleep in CI/non-interactive environments
+    - 5a454aeb1d27bee36611709c136f58b65eee4da9 fix: suppress pre-existing gosec false positives with nolint directives
+    - 2d3ce0807e580eb89cd74ce4b2345106eb8f9bdd fix: sync CLI remotes into SQL server on store open (GH#2315)
+    - 56cd587bc137b6ac5fabbbb1dcda85d93d5add27 fix: typo in --design-file error message ("stin" → "stdin")
+    - 491242c61ad0bd05d99dd25e7af4229ff7c59574 fix: update cliDir() → CLIDir() after linter rename
+    - 491c276df51f7921774165dc7e6d6184b8fc2e86 fix: use CLIDir for dolt remote operations instead of root Path (GH#2306, GH#2311)
+    - 0c96d89b045f54b78170b0c33f40ae94e3eee2c4 fix: use Root().PersistentFlags() for all persistent flag checks in PersistentPreRun (GH#2514)
+    - fc8ea14c3e48748d73d48e9c9da0e6f4a3ac6562 fix: use Root().PersistentFlags() to check --json flag in PersistentPreRun
+    - c4b897d8fe9bb0b7134288b695f1da4c1ee4070c fix: use absolute path for core.hooksPath so worktree hooks work (GH#2414)
+    - 67d6786d51d3675fecbed018221e036a647e6260 fix: use explicit DOLT_ADD to prevent config corruption from stale working set (GH#2455)
+    - f0078a055afcf7813ce94ae54e8ee32a561263f4 fix: warn on Dolt endpoint drift during auto-start (GH#2399)
+    - 6615c7192b27032deb364c4c8e2aff5c950ea9b6 fix: wrap DOLT_PULL in explicit transaction for autocommit compat (GH#2501)
+    Others
+    - 59fe98d4ed882d39209c686c0f95883cb06910b6 /cmd/bd: use interface instead of struct
+    - ef8c4646961cc6b74f3e4ef36c06ae44168574ca /internal/storage/embeddeddolt/schema.go: wip, need test
+    - 48cb33241a88edd90da480c7cf33e45e9721b1d6 /internal/storage/embeddeddolt/store.go: change witConn a bit
+    - eeb97ae53a5bd811a68c65cf15348d8dd08f6c0e /internal/storage/embeddeddolt: add schema test
+    - 185eac19dda2109ee03b51d76b77dd9998899318 /internal/storage/embeddeddolt: cleanup
+    - 8b24dcf2f5128d3a35f1e0cc7db79ec888f7ef40 /internal/storage/embeddeddolt: remove dolt commit stuff in migrations
+    - 44a386884648e4e41b96332711ac42210a0901d6 /internal/storage/embeddeddolt: wip, schema migrations
+    - d5b754b572e90c4aab125595d5dd13837f0670bd /internal/storage/storage.go: fix store name
+    - 6500eaedabce0dc0d9a3fbad097b8c2f7c26be71 /internal/storage: add interfaces for methods not covered by Storage
+    - 57b1f0ed4f3521919d351dad37965787315b0173 Add 'bd done' as alias for 'bd close'
+    - 725002a8f77cc2f3c42b910fcfe2e2d09d91bb26 Fix config package shadow in compact command
+    - 14df21b6296c0d7501376e79716d944d0d8995c9 Fix repo-local Dolt ports across doctor paths (#2403)
+    - 1ea190e279cb8623a589836a4ca3c8adda5c5e5f Follow redirect target when cleaning stale lock files
+    - 7ba3a05bf99d2e890660191cc45bf594923d964f Merge PR #2401: Follow redirect target when cleaning stale lock files
+    - e823b5243947527813ab17ac1b7ece49150488f9 Merge PR #2437: Fix config package shadow in compact command
+    - 96a2f6f303a680b834e6476d72cadb3992264e6c Prefer stable branch worktrees for BEADS_DIR
+    - 9d5eaee83c8de2b8be777ffc34fe7c5eeedfa446 Stabilize BEADS_DIR paths from detached commit worktrees
+    - 33ce6bf091efb75bd657d9d2116aae7c41389b22 Support ai.api_key config as fallback for ANTHROPIC_API_KEY env var
+    - 61bf8e579d4e53a4143692c5652288a412fdadfb Update internal/storage/annotation_queries.go
+    - 9437d4f2bca67b2bce4eda96300818b5fe768cc8 Update internal/storage/embeddeddolt/store.go
+    - 1fd4f6ca91dfaa6d1970ad641c3469db74c4fec2 bd: backup 2026-03-05 22:39
+    - 2fe05275b3bfffbcb3ce5f69e6b08cf408d06573 bd: backup 2026-03-05 22:54
+    - 7d7f6e7387e2e3ac335cb3aea55716b3b1d014b1 bd: backup 2026-03-05 23:09
+    - 5ab8038ff8f4493bb1b5733ce30e246e3399272e bd: backup 2026-03-05 23:24
+    - dff98e49f730680721724af03f7076a4437d9853 bd: backup 2026-03-05 23:39
+    - 598cc85c320507a9fcc98fff837167ccc843c11d bd: backup 2026-03-05 23:54
+    - d799ccf5b85c112d092e56debcc7e676053cd914 bd: backup 2026-03-06 00:09
+    - f18fa46d00126a5fd4b83d6dcda79105cff912c5 bd: backup 2026-03-06 00:42
+    - 68f524fbb3f9fec217ef21edde36eb718d22d204 bd: backup 2026-03-06 00:57
+    - b2ebf9af9533a6b335fee6407f199eddb0486d8f bd: backup 2026-03-06 01:12
+    - 2961eaa83df0d83e07e19b604bcb0f4c0d09bf72 chore(deps): bump glamour v0.10.0 to v1.0.0
+    - f0bb3abc72b7abf4aa3221140067f2ff0338db63 chore(deps): migrate huh v0.8 to charm.land/huh/v2 (GH#2471)
+    - 6d6f208bc83b8a4ce647fc2ee908ef6d6161c7b5 cleanup: add timeout and comment to worktree normalization helpers
+    - 986334fec15f728aacd42986640d725c748e8eb2 cleanup: remove 3-way merge engine remnants (GH#2391)
+    - 84494b7e1ab7b32c3d76a3e2d04cf76743a9ead1 cleanup: remove daemon infrastructure remnants (GH#2431)
+    - a5a1071ad59e23031e48af4bd284b0848e3f880c cleanup: remove remaining daemon references missed by GH#2431
+    - db5bae64b4252f9ce5d5c0529f4e1430e52c1462 perf: speed up close-time template subgraph loading (GH#2458)
+    - ba03db09f2b9cc2b74d69fb54921fd30530173a1 refactor: remove --allow-stale no-op flag and stale docs (w-bd-002)
+    - 97e0ee9a30343d32d09bce219ec3de536b96cc81 refactor: remove dead sync mode scaffolding (GH#2485)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/steveyegge/beads/releases/tag/v0.60.0
+ReleaseTime: 2026-03-12T04:02:07.0000000Z

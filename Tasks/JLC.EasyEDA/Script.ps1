@@ -1,59 +1,62 @@
 $Object1 = Invoke-WebRequest -Uri 'https://easyeda.com/page/download' | ConvertFrom-Html
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = $InstallerUrl1 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[2]/a').Attributes['href'].Value
-}
-$Version1 = [regex]::Match($InstallerUrl1, '(\d+\.\d+\.\d+)\.exe').Groups[1].Value
-
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = $InstallerUrl2 = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
-}
-$Task.CurrentState.Version = $Version2 = [regex]::Match($InstallerUrl2, '(\d+\.\d+\.\d+)\.exe').Groups[1].Value
-
-if ($Version1 -ne $Version2) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
-} else {
-  $Identical = $True
+  InstallerUrl = $Object1.SelectSingleNode('//*[@class="client-wrap"]/table/tr[2]/td[3]/div/span[1]/a').Attributes['href'].Value
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://easyeda.com/page/update-record' | ConvertFrom-Html
+# Version
+$this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '-(\d+\.\d+\.\d+)[-.]').Groups[1].Value
 
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//*[contains(@class, 'doc-body-left')]/p[contains(./strong/text(), '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesTitleNode) {
-        # ReleaseTime
-        $ReleaseNotesTimeNode = $ReleaseNotesTitleNode.SelectSingleNode('./following-sibling::p[1]')
-        $Task.CurrentState.ReleaseTime = ($ReleaseNotesTimeNode.InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
+      $Object2 = Invoke-WebRequest -Uri 'https://easyeda.com/page/update-record' | ConvertFrom-Html
+      $Object3 = [System.IO.StringReader]::new(($Object2.SelectSingleNode('//*[contains(@class, "doc-body-left")]') | Get-TextContent))
 
-        # ReleaseNotes (zh-CN)
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTimeNode.NextSibling; -not $Node.SelectSingleNode('./strong'); $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
+      while ($Object3.Peek() -ne -1) {
+        $String = $Object3.ReadLine()
+        if ($String -match "^v?$([regex]::Escape($this.CurrentState.Version))") {
+          break
         }
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
+      }
+      if ($Object3.Peek() -ne -1) {
+        $ReleaseNotesObjects = [System.Collections.Generic.List[string]]::new()
+        while ($Object3.Peek() -ne -1) {
+          $String = $Object3.ReadLine()
+          if ($String -match '^(20\d{2}\.\d{1,2}\.\d{1,2})') {
+            # ReleaseTime
+            $this.CurrentState.ReleaseTime = $Matches[1] | Get-Date -Format 'yyyy-MM-dd'
+          } elseif ($String -notmatch '^v?(\d+(?:\.\d+)+)') {
+            $ReleaseNotesObjects.Add($String)
+          } else {
+            break
+          }
+        }
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
           Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesObjects | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseTime and ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
+
+      $Object3.Close()
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and $Identical }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

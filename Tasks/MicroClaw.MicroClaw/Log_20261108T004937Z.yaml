@@ -1,0 +1,63 @@
+Version: 0.27.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/microclaw/microclaw/releases/download/v0.27.0/microclaw-0.27.0-x86_64-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    MicroClaw Code becomes a first-class agent in Zed (mccode acp), and the
+    website and docs now recommend Zed as the main way to use it, with the
+    terminal interface as the alternative.
+    Added
+    - MicroClaw Code in Zed (mccode acp) now speaks ACP protocol v1 with schema
+      1.15: mode and model selectors (session config options), slash commands
+      (/review, /compact, /undo, /cost, /context, /help and custom
+      commands), the context and cost indicator, real file diffs with old and new
+      text, absolute paths so Zed can follow the agent, project checks as their
+      own tool cards, thread titles and history (session/list, resume, close),
+      notices and compaction updates, and a sign-in prompt that runs
+      mccode setup in a terminal when no model is configured.
+    - scripts/acp_registry_entry.py writes the ACP Registry entry for a release
+      (packaging/acp-registry/).
+    Fixed
+    - mccode acp and mccode mcp-server use model profiles from
+      settings.yaml; before, they required a configuration file and stopped at
+      startup without one. They also apply permissions.default_mode,
+      disabled_modes and the project's compaction settings.
+    - mccode config show and config get no longer print API keys; they show
+      sk-…abcd.
+    - mccode acp lists every project's sessions when session/list has no
+      cwd, so Zed's "Import Threads" finds them; before, it returned none.
+    - Edit diffs in Zed no longer come out empty when the edit had already been
+      written by the time its start event was handled: the text before the edit
+      is now rebuilt from the edit's own diff.
+    - A prompt that is only an attached file (Zed's "+" menu) names the thread
+      after the file instead of its absolute path.
+    - /config and /config get in the terminal UI mask API keys like
+      mccode config show does; before, they printed them in full.
+    - Docs: mccode export takes --session before the subcommand, --trust
+      saves the trust decision, the sandbox also hides ~/.mccode,
+      MCCODE_LOCAL_SANDBOX accepts landlock or none, "always allow this
+      command" rules live in ~/.mccode/allow-rules.json, chat notifications
+      need their event in notify.events, and admonitions on the website render
+      again (Docusaurus v4 syntax).
+    Changed
+    - Engine setup for every Code front end lives in
+      microclaw_code_core::launch.
+    - docs/schema/code-settings.v1.json is written with sorted keys, so it is
+      the same whichever crates share the build.
+    - The website, docs and READMEs recommend Zed as the main way to use
+      MicroClaw Code (Agent Panel through mccode acp), with the terminal
+      interface as the alternative; the editors page is now "Use with Zed" and
+      comes first in the Code docs.
+    - The Code docs, READMEs and the website's Code card now help you get Zed
+      first: a download link, the Homebrew, install-script and winget commands
+      with system requirements, the "Add Custom Agent" route in Zed's agent
+      settings, and a note that the Zed integration needs mccode 0.27.0 or later.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/microclaw/microclaw/releases/tag/v0.27.0
+ReleaseTime: 2026-11-08T00:06:33.0000000Z

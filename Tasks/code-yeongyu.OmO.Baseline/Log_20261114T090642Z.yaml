@@ -1,0 +1,429 @@
+Version: 5.1.70
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.70/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Plain omo login signs a computer in from the terminal while OmO accounts are closed. A computer with no OmO desktop app — a server over SSH, a fresh Linux box — runs omo login, gets a device code to approve on another device, and stores the credential in the OS credential store; the attach-before-mint refusal (#13096) answers a computer that already has its device before anything is asked of the service. The success line names the signed-in account (Signed in to OmO as <email>.), and omo whoami names it too; a failed account read still says how to see it. omo logout and omo whoami run while closed, so no message names a command that refuses. login --help describes the route (the command stays hidden from omo --help), every other closed login form refuses with a message that names the route, the closed hints name both routes, and the compiled entry classifies bare login, logout and whoami as one-shot launches with the same shared parse the command uses (login -- included). The damaged-item message names the terminal route too instead of a desktop-app-only dead end. Tests run the flow through the npm launcher (against a service-auth bundle built from this source into a temp copy of the launcher tree), the compiled entry and the toolkit CLI, with an isolated HOME and runtime dir, no inherited session bus, an injected store, and a refusal-text assertion on every zero-mint case. (#13281) (#13328)
+    The computer-use conformance preflight tests pass on Windows. The missing-driver message now prints its repo-relative path with forward slashes on every OS, so a run reads the same on every host, and the stdio-probe test builds its stand-in engine as a real executable for the host instead of a POSIX shell script. QA tooling only; no runtime behaviour changes. (#13295, part of #13221)
+    Computer use gets a declared-outcome conformance catalog for its QA. script/qa/computer/conformance/ adds a typed catalog in which every action, toolkit and mode cell on each OS declares that it delivers or refuses with an exact engine code, a report that fails a missing, duplicate, skipped or mis-coded cell or one that disturbed the person's session, an environment preflight that ends a broken host's run as ENVIRONMENT_ERROR, and twelve model-free reference tasks. QA tooling only; no runtime behaviour changes. (#13241, part of #13221)
+    The desktop session's actionability wait test no longer fails on a busy host. The battery's wait now runs on an injectable clock: the host's monotonic time in a session, as before, and the fake backend's own clock in the test. So the_battery_waits_for_an_element_that_appears_enabled_after_500_ms checks the 500 ms wait in fake time instead of wall-clock bounds that host load could break. Runtime behaviour does not change. (#13180, fixes #13178)
+    A fuzzy handoff no longer fails on an account with many ended sessions, and never goes to a different session than an exact name would. A fuzzy handoff first tries the thread's exact id, alias or name across every session, ended ones on other devices included, so a name that exactly matches one session always reaches that session. Otherwise local, live and ended sessions are compared together and the clearly best match wins wherever it lives; two equally good matches ask you to pick. Ended sessions that cannot match no longer count against the 500-candidate fuzzy cap, so a large history no longer blocks a unique match. (#13141, follows #13066)
+    A thread whose alias claim asks for a sign-in after it was created is still named by the alias. When the account token expires between thread_create checking an alias and claiming it, the thread it already created is now named by the alias on its device and the call answers ok with alias_scope: "local", instead of an error. thread_rename does the same when the account is gone by the claim. An alias used as a local name is now trimmed on every path. (#13179, follows #13112) (#13141)
+    omo login no longer registers a second device for a computer that already has one. Before any code, browser tab or new key, it checks the stored sign-in and the device the computer's OmO device service holds (parked included). A held, uncertain, locked or unreadable state refuses a new device and keeps the existing one, instead of adding an "omo CLI on " row beside the desktop's. When the service advertises machine identity, both sign-in flows send a hashed hardware id (SHA256("omo-machine-v1" + id); the raw id never leaves the computer), and a machine_exists refusal ends the sign-in without removing or taking over any device. (#13096) (#13141)
+    A thread alias no longer blocks thread creation when no account is signed in. thread_create with an alias now creates the thread when the alias registry cannot get an account token. A desktop launch is always in that state. The alias becomes the thread's local name unless a name is given, and the result says the alias is local only (alias_scope: "local"). thread_rename with an alias does the same. Every other alias error is unchanged. (#13112, fixes #13104)
+    Fixed: file reads through the bundled bunshin SDK over the relay work again (readText, readBytes and read no longer reject with "truncated must be a boolean for byte results"), an op sent with a minted capability token is no longer refused as malformed, and an unsupported clientName now fails at once with invalid_client_name naming the supported role. (#13108)
+    The machine-binding module no longer exports an unused helper. deviceProfileOf from #13095 is now module-private, so the knip dead-code check on dev is green again. No behavior change. (#13097)
+    One computer is one OmO device: omo login binds to the machine's device service instead of registering its own. A sign-in now advertises machine binding. When the service asks for the machine hash, omo asks this machine's device service (device.machine_binding) for it, and computes the same hash itself when no device service runs. The sign-in presents the device keys this machine already holds, so the service keeps the machine's existing device instead of adding a row. If the device service holds a device whose keys omo does not have (the desktop app's sign-in), omo refuses and points to the desktop app instead of minting a second device. The raw OS machine id never leaves the computer. A computer with no readable machine id signs in exactly as before. (#13095)
+    The programming skill opens with code ownership. Its first paragraph tells the model it owns the code: fit new behavior into the existing structure, leave no duplicate or dead code, and fix a defect in the code being changed at its root cause instead of excusing it as pre-existing or someone else's. It replaces the "lazy senior engineer" persona line. (#13091)
+    A monitor no longer loses a batch that arrives while the previous one is being sent. flushMonitor deleted the monitor's pending entry after awaiting a dispatch, so a batch queued during that await vanished without counting as dropped. The flush now deletes the entry only when it is still the one it drained. (#13089)
+    A foreground task waits for its child instead of failing at once. Every task with run_in_background: false ended with Session error about a second in and aborted the child, because opencode reports a running assistant turn with error: null and the poller treated the key itself as a failure. Only an error that is set ends the child now. (#13076)
+    The beta channel no longer falls behind the stable release. Every stable release now also moves omo-ai@beta on npm and the beta installer channel on get.omo.dev to that release, unless beta already holds a newer prerelease, so bun add -g omo-ai@beta and install.sh beta never install something older than latest. The beta move and its beta >= latest guard now also run when a release is re-run after it was already published, and after the move beta is re-read: a beta someone moved further forward is left alone, while a beta still older than latest or the newest prerelease fails the run with the exact npm dist-tag add omo-ai@<version> beta repair command. (#12987, #13148, #13149, #12990)
+    - Computer use: the omo computer tool now runs through the desktop SDK; omo sessions open with an explicit report mode (sandbox default unchanged). (#12840)
+    Fixed
+    - The hashline test project's lockfile now resolves zod 4.6.7, matching the ^4.6.6 its manifest asks for since #13151, so that project no longer installs the zod 4.6.5 affected by GHSA-mrhx-c7xc-m3w5. (#13282, follows #13151) (#13328)
+    - omo remote bootstrap can install the device service on macOS again. The release check required a macOS signing identity that was still an empty placeholder, so every download was refused as "failed verification"; it now requires the published identity of the notarized release binaries. (#13237, fixes #13229) (#13328)
+    - The browser skill now uses omowright 0.3.1, which brings the fixes merged since 0.3.0: page navigation owns its readiness and keeps committed state, live regions survive snapshots, cleanup failures are reported instead of swallowed, aria-hidden is matched case-insensitively, and BrowserSkill's "more than one browser is online" error lists every browser and the browser option to pass. (#13113) (#13328)
+    - omo remote send in wait mode stayed silent for as long as its message waited behind a running turn. A queued send now reports its fate at once on stderr (Queued on <device>/<session> at position N.) while stdout keeps only the streamed answer. (#13273)
+    - Computer use v3: the write-scope guard now counts packages/omo-computer-protocol/src/engine-schema.generated.ts, the file the protocol generator actually writes, as a generated output. A row that changes the engine schema and regenerates the protocol module is no longer reported as writing outside its scope. Repository tooling only; nothing user-visible changes. (#13249)
+    - thread_create with no cwd now opens the new thread in the calling session's folder instead of the folder the engine process runs in. A thread created from a desktop thread with no project used to land in the home folder, where its link could not be opened and a follow-up thread_send needed all_scope. An explicit cwd still wins, and a thread created on another device keeps that device's own default. (#13125) (#13141)
+    - From senpi 2026.11.10-3: the footer names the account actually serving the session when the pinned account is blocked, pinned Ultrafast variants no longer warn that Ultrafast is undocumented, provider error text is value-redacted in the model configuration error event, the assistant message and the transcript, every fallback-log field goes through redaction, and after a mid-session model switch the context usage no longer shows the previous model's token count against the new model's window. (#13109) (#13141)
+    - From senpi 2026.11.11 and 2026.11.12: startup no longer fails when the agent's extensions directory is read-only (a sandboxed review child), Claude connection tests keep the redacted provider error and HTTP status and bind each result to the credential they tested, show_html_page called from an eval cell is refused instead of silently reaching no reader, and task hosts started from the compiled binary no longer exit with EBADF seconds after spawn. (#13109) (#13141)
+    - computer-v3-guards --residue now reports a dangling symlink left at a class A or class B removal path. It used to count the broken link as absent and exit 0. (#13099, fixes #13065)
+    - Standalone omo update now installs the release instead of printing a curl command (#13084). It downloads the matching platform asset from get.omo.dev with GitHub fallback, verifies published SHA256SUMS and the existing macOS signature, stages beside the installed executable, and keeps a rollback copy until the installed --version succeeds. Failures report a typed error; an unwritable directory is refused without partial files. Windows rollback files still held by a running process are cleaned on a later launch. --dry-run and --print remain print-only. (#13087)
+    - Interrupted standalone updates recover dead or expired install locks without removing a successor's lock. Cleanup failures still release the lease, and symlink launchers update their targets while preserving the links. (#13087)
+    - Count prompt-cache writes when deciding whether to compact and when reporting used and remaining context, so cold-cache turns do not leave tool-output truncation with an inflated context budget. Context-used reporting continues to include generated output tokens. (#13083)
+    - Thread names on other devices now resolve when their sessions are resumable, and fuzzy handoff searches the account's remote candidates as well as local candidates. (#13066)
+    - Failed lookups through a configured relay return their typed error (host_unavailable with the device-service state: offline, connecting, keychain locked, authorization stale, degraded or update required); a relay that is not set up (not configured, disabled, signed out, sign-in required) preserves local address resolution. Renaming a remote thread checks names on its own device before changing its name or alias. (#13066)
+    - ast-grep skill: the smoke tests (tests/smoke.sh, tests/smoke.ps1) pass the search path before --lang, the order the skill's own recipes require, and the recipes now say which Python versions reject the other order (3.9 and 3.12 reject it; 3.13+ accept both) instead of naming only 3.9. (#12714, thanks @cynkai)
+    Changed
+    - omo login --new-device is gone. The OmO service keeps one device per computer, so registering another device over an unreadable stored sign-in either failed after approval or left two live devices. When the stored sign-in cannot be read, omo login gives one recovery: remove this computer's device on the Devices page if it is still listed, then run omo account forget (which also has the device service forget the device), then sign in again. When the device service holds the device, it also names that device and says these steps sign out the device service, and the OmO desktop app if it is installed, on this computer. (#13276) (#13328)
+    - When the credential store is locked, omo login says to unlock it and try again. (#13276) (#13328)
+    - When the device service is installed but does not answer, omo login names the service's leftover endpoint file and says that opening the OmO desktop app starts the service. (#13276) (#13328)
+    - omo login's refusals no longer suggest omo logout, which does not work while OmO accounts are closed. A sign-in with an unknown refresh outcome first points to sharing the sign-in from the OmO desktop app when a device service holds this computer's device, and gives the start-over steps only as the fallback, with what they also end. When no device service holds the device, it gives the start-over steps directly. (#13276) (#13328)
+    - The standalone omo binary stages every package its eval extension needs that the engine does not provide, so the eval tool loads in the binary on senpi 2026.11.13 and later (#13358). (#13358) (#13328)
+    - The EQ.omo linux-x64 goldens are re-recorded at senpi 2026.11.13 (follow-up to #13328) (#13341). (#13341) (#13328)
+    - One protocol doc and one web test fixture describe the private desktop app instead of naming its repository. No behaviour changes. (#13326)
+    - Contributors: knip's configuration now lives with the code it describes. The root knip.ts composes knip.base.jsonc (global settings) with one knip.workspace.jsonc per directory (a workspace's config, the root entries under that directory and its pre-existing export rows), so two PRs for two packages no longer conflict on one shared knip.jsonc. The composed configuration is identical to the old file, and knip reports the same results. Add or change knip config in your own directory's knip.workspace.jsonc. (#13204, fixes #13200)
+    - OmO now runs on senpi 2026.11.13 (from 2026.11.10-2). Senpi's own zod pin moves to 4.6.7, which fixes GHSA-mrhx-c7xc-m3w5 for that copy. The Security entry of this release names the one zod copy below 4.6.6 that still ships. (#13109) (#13141)
+    - From senpi 2026.11.10-3 (#6342, with a follow-up in 2026.11.11): a session follows the permission setting of the machine it runs on whatever the origin of the work. Work sent from another device of the same account, which the relay states as such, no longer asks for approval, and one remote command no longer makes every later automatic turn on that session ask. Devices of another account still ask. (#13109) (#13141)
+    - From senpi 2026.11.11 and 2026.11.12: a goal that is waiting out a usage limit no longer spends its continuation budget, a status-only 429 counts as a limit wait, and a goal whose subscription accounts are all limited keeps waiting for the reset, re-checks a limit that named no reset, and resumes on its own after its session restarts or a config reload. An account blocked for a usage limit serves again once its named reset has passed, without a re-login. (#13109) (#13141)
+    - From senpi 2026.11.11: a rate-limited Opus 5.5 turn falls back to Fable 5.2 first, then Opus 5. (#13109) (#13141)
+    - JS/TS source is formatted with bun fmt (print width 120, no semicolons), and bun run lint fails on unformatted code. The reformat commit and the dev merges that reformat incoming files are listed in .git-blame-ignore-revs. (#12227, fixes #12225)
+    Added
+    - A Windows live tier for computer use measures, on the hosted Windows runner, whether it can carry five live legs (an elevated target, a locked and a disconnected session, a mixed-DPI second monitor, the elevation prompt's secure desktop) and records the answers in crates/omo-computer-backend-win32/probes/hosted-windows-live.tsv. The elevated and mixed-DPI legs run there; the other three are recorded for an owned Windows guest. (#13233, part of #13221)
+    - The senpi contextFiles.globalPath setting loads the global context file from an explicit file or directory (for example ~/.agents/AGENTS.md). It is read from global settings only, and an unset value keeps the current behavior. (#13109) (#13141)
+    - Computer use v3: the engine's result and error contract lands in omo-computer-core: Disposition with exactly the seven valid (delivery, retry) pairs, ActionReport with receipts decided by verb (a value verb is confirmed only on a read-back equal to what it requested, a pointer or key verb only on an OS-level consumption receipt), wire validation that refuses an overclaiming report, and the one COMPUTER_* table keyed by (engineCode, data.reason), total over the closed engine codes and every reason the design emits, checked against a cited inventory of the design. Backend refusals and exec replies now resolve through it. Nothing user-visible changes yet; the existing desktop engine is untouched. (#13117)
+    - Computer use v3: the engine's contract root lands in omo-computer-core (the method table with host-only methods split by peer kind, engine.hello with generation, limits and machineId, the computer.* settings table, the enumerated environment seams, the untrusted-text listing records and the refusing Backend / AxBackend traits), with the generated engine schema and protocol doc and the generated @oh-my-opencode/omo-computer-protocol types and call-chain classifier. Nothing user-visible changes yet; the existing desktop engine is untouched. (#13107)
+    - Interactive standalone release launches now check and install updates asynchronously through the same verified updater, at most once per UTC day. Background diagnostics go to the canonical agent directory's auto-update.log without disturbing the terminal. Offline mode and OMO_SKIP_VERSION_CHECK (including legacy Senpi/Pi equivalents) disable this startup check. Maintainer builds, headless commands and directly invoked provisioned runtime copies never auto-update. (#13087)
+    - Computer use v3: the new engine workspace is registered as empty building units (10 omo-computer-* crates, 7 @oh-my-opencode/omo-computer-* packages), with a bun run test:computer script and the computer native contract CI matrix on macOS, Linux and Windows. Nothing user-visible changes yet; the existing desktop engine is untouched. (#13028)
+    Security
+    - Desktop memory sync no longer risks running out of memory on an oversized reply from the sync service. zod moves to 4.6.7 (GHSA-mrhx-c7xc-m3w5: validating a huge array collected one issue per bad element), and every array the sync channel reads is now capped at 100,000 items, so an oversized reply is rejected up front. This release pins senpi 2026.11.13. The only zod below 4.6.6 that still ships is the copy the Claude agent SDK embeds in its prebuilt code, which is used only to parse the local Claude Code subprocess output. (#13151) (#13141)
+    zod note (scan of the published 5.1.70 artifacts). The npm packages omo-ai, oh-my-opencode, oh-my-openagent and lazycodex-ai carry zod 4.6.7 only. The zod below 4.6.6 that an npm install receives arrives through the dependency @code-yeongyu/senpi 2026.11.13: two prebuilt files of @anthropic-ai/claude-agent-sdk 0.3.321, both zod 4.6.2, used only to parse the local Claude Code subprocess output:
+
+    | file (in the @code-yeongyu/senpi 2026.11.13 npm tarball) | sha256                                                           |
+    | -------------------------------------------------------- | ---------------------------------------------------------------- |
+    | dist/bundle/chunks/sdk-W3PQXNYH.js                       | 73e0b0ed76ece0cb685728a494abccdf6bc56c0b2f99d99463552416c53e82ea |
+    | dist/bundle/chunks/session-worker.js                     | b92d518a31ece7c6be3a7b9bf9752eb675c803d9d37959f70e81106af5ff6454 |
+
+    Each compiled omo-* binary attached to this release carries one re-minified zod 4.6.2 copy beside 4.6.7 (version banner found in every binary; not byte-identical to the two files above):
+
+    | binary                       | sha256                                                           |
+    | ---------------------------- | ---------------------------------------------------------------- |
+    | omo-darwin-arm64             | 05ddc681f4cf46ce3f9b5d67252efd0ef385adb0c2e327d7cf46425874271536 |
+    | omo-darwin-x64               | 1b7d63518be16023dd1a5d80e2a84624dd422130ed8edce25ab8f050821dae72 |
+    | omo-darwin-x64-baseline      | fd7c7103a497fa05395799dfb24e8df45694848f2e707b9b4665945200df1ace |
+    | omo-linux-arm64              | 7c4929f1e856e4a1380de56d77295626dfde4ab113c4b26a52924909b5eb3d53 |
+    | omo-linux-arm64-musl         | 801fb9d227df881027e971ae37c02a196a28aff9d643764b109353998e0f6239 |
+    | omo-linux-x64                | 6dcb7f34f6dc6c8fd72cbf6f0a04ec82387b1358151c5b160c830808bca48d2a |
+    | omo-linux-x64-baseline       | a9f31b41631a0ced2c5f3ac5e5be2075ce70a8a02d83ad02da6ca6f843c5c740 |
+    | omo-linux-x64-musl           | 6cb20f5f0f8859a2d0345dd5076d5af042ec207b2157e418505da277174acc56 |
+    | omo-linux-x64-musl-baseline  | ee6150e26b8322290f15c4156e1fb13586d925ce743b1118fd64df1e0bc9912c |
+    | omo-windows-arm64.exe        | c841acb06e32ab883989cdf4d203716bd3a8781402bfee746356e4495fe33e22 |
+    | omo-windows-x64-baseline.exe | 7007759404005705cdd6f197410282f0000bca0ec07375a11e506c6deb99446a |
+    | omo-windows-x64.exe          | c84f194d2c4ca2b1198f17afb96703872301576c13a7d8221fbaccadebe133d8 |
+
+    - 7965c481f5 Merge pull request #13328 from code-yeongyu/train/omo-5c
+    - 000fe207c4 release train omo-5c: fold #13358 and #13341
+    - b6083bde76 train(omo-5c): merge #13341
+    - 7300b4322d train(omo-5c): merge #13358
+    - efeb9a6a8a fix(omo-native): read the served set from the table the loader passes to its importer (#13356)
+    - e847cb62bf docs(changes): fragment for the binary codemode sidecar fix (#13358)
+    - 835acaaabb fix(omo-native): stage codemode dependencies the engine does not serve (#13356)
+    - bf956c4830 docs(changes): fragment for the EQ.omo goldens re-record (#13341)
+    - 933ef72a90 train(omo-5c): merge dev 4a26ea1181
+    - 4a26ea1181 Merge pull request #13204 from code-yeongyu/fix/13200-knip-per-package-config
+    - eafa1c812f Merge pull request #13273 from code-yeongyu/fix/13268-queued-send-fate
+    - 2353fa52bd Merge pull request #13326 from code-yeongyu/chore/scrub-private-names-followup
+    - 117c3c713f fix(knip): keep the skill templates' knip fragment out of payloads and the omowright guard (#13200)
+    - c33126573d docs(changes): name the fragment for its PR (#13326)
+    - 10f73c06a9 fix(remote): format the wait-notice test, name approval waits, and test the stderr wiring (review of #13273)
+    - 6ad2ec69fe Merge remote-tracking branch 'origin/dev' into fix/13268-queued-send-fate
+    - 55ce9ed4b1 train(omo-5c): merge #13282
+    - 5158483b50 train(omo-5c): merge #13281
+    - 2db6786143 train(omo-5c): merge #13276
+    - 3df6c8c2f4 train(omo-5c): merge #13237
+    - 6c1c0b18f0 train(omo-5c): merge #13113
+    - 6b1359528c Merge dev into fix/13200-knip-per-package-config (knip.jsonc rows dev gained re-split into fragments)
+    - dbe4960070 Merge pull request #13233 from code-yeongyu/ci/cu-is-row6-windows-full
+    - 3a2c05cacb Merge commit '21541999d72a77ca45fa7075552b4ff030ae3df7' into ci/cu-is-row6-windows-full
+    - 21541999d7 Merge pull request #13295 from code-yeongyu/test/cu-is-row4d-preflight-windows
+    - 8d15bff5b0 style(conformance): format preflight.test.ts
+    - d7edb8f419 docs(changes): fragment for #13295
+    - 44b6513d9d fix(conformance): print the missing-driver path repo-relative with forward slashes on every OS
+    - a9a1fc189d test(conformance): preflight paths print with forward slashes; stdio probe uses a compiled engine every OS runs (RED)
+    - d017eaddec Merge commit '793cb219586ff517762221aba0671bcf2d63ab86' into ci/cu-is-row6-windows-full
+    - 793cb21958 Merge pull request #13241 from code-yeongyu/test/cu-is-row4-conformance-catalog
+    - b87b15bd3b Merge pull request #13247 from code-yeongyu/ci/cu-is-row07b-teardown-followup
+    - 7b0684a85a Merge pull request #13250 from code-yeongyu/ci/cu-is-row07c-engine-paths
+    - 768ff8ce1c changes: add the #13282 fragment
+    - cd474dab63 Merge commit '5685f30c23f08f2c37716d2415ff8b057ec10165' into local/r04-takedev
+    - 8227ae3b27 Merge dev into 7b for the press queue
+    - 2cc7c03d00 Merge dev into 7c for the press queue
+    - d5156eb8ba fix(desktop-sync): state the sync reply cap honestly; regenerate tests/hashline lock for zod 4.6.7 (#13150 review nits)
+    - 75524eb965 Merge remote-tracking branch 'origin/dev' into fix/6503-cli-review-lows
+    - 5685f30c23 Merge pull request #13141 from code-yeongyu/fix/13066-fuzzy-cap-remote-rows
+    - beecc5407f test(service-auth): the unknown-refresh test title and comment describe the current recovery (#13265 design gate leftover)
+    - 42587331a4 fix(service-auth): an unknown-refresh sign-in with a held device leads with the desktop share and falls back to the start-over steps; drop two unsupported claims (#13265 design gate)
+    - aa1c2b5a6d fix(service-auth): plain omo login signs in from the terminal while accounts are closed (#13265)
+    - 6fe1eae340 fix(service-auth): refusals say sign in again instead of naming omo login while accounts are closed; the unknown-refresh recovery is asserted whole (#13276 review LOWs)
+    - 49d4c5d7e4 fix(service-auth): an unknown-refresh sign-in reads the device service first; a held device never gets forget (#13265 design gate LOW)
+    - 5d3e7e0de9 fix(service-auth): login refusals stop naming omo logout while accounts are closed
+    - 6550283f58 fix(service-auth): the held-device cost names the device service, and the desktop app only if installed (#13265 design gate LOW)
+    - 2b5d31731c fix(service-auth): the unreadable-sign-in refusal states its own reason and one recovery; held names the device and the cost (#13265 design gate A2 corrected, D1)
+    - 04eaeff5fe fix(service-auth): the unreadable-sign-in refusal follows the device service state and says what forget ends (#13265 design gate A1, A2)
+    - 2e1941af95 docs(changes): fragment for #13276
+    - 3fbeb51d1d test(knip): a nested fragment's entry is composed there, not claimed by script/ (#13204 review LOW)
+    - a1499f0c75 fix(service-auth): remove omo login --new-device; the unreadable-sign-in refusal names the path the service accepts (#13265 design gate)
+    - d8c3da79e5 docs(changes): name the fragment for its PR
+    - 89ff52ccc8 fix(remote): report a queued send's position while it waits (#13268)
+    - 4db512fcc9 build(knip): compose the config from per-directory fragments (#13200)
+    - 3862967d72 changes: fold the train members' fragments into the top's fragment (one fragment per PR)
+    - d86c3270de chore(changes): note the Windows live tier part 1
+    - 37f33e05d0 ci(computer): shape the Windows live tier part 1 for review, with its measured ledger
+    - 027225e04c Merge branch 'dev' into ci/cu-is-row6-windows-full
+    - f073af4ba4 ci(computer): let the runas stand-in label the output directories its child must write
+    - 46c2dfb6e0 Merge remote-tracking branch 'origin/dev' into test/cu-is-row4-conformance-catalog
+    - 10d8b1bc91 Merge pull request #13230 from code-yeongyu/ci/cu-is-row07-linux-live
+    - 468178c408 test(computer): run.ts judges each replayed task through a tested taskFailure
+    - a1e16f4434 Merge pull request #13249 from code-yeongyu/fix/cu-v3-name-map-generated-path
+    - 40d99ce65e ci(computer): run the Windows spike's probe once with a Medium helper and a second monitor
+    - f01803baf0 fix(computer): stop the elevated leg's report path from shadowing the facts file
+    - 116335ac1a docs(changes): unreleased note for #13249
+    - e7c37de8b6 ci(computer): stop the native-contract matrix from running for QA-harness-only changes
+    - d68f8b1045 fix(computer): count the protocol generator's engine-schema.generated.ts as a generated file in the v3 name map
+    - 40512ed1e5 test(computer): RED - the protocol generator's output path must count as a generated file for --scope
+    - 10ee7c7497 fix(computer): load the probe's native library from bytes
+    - 5803493a20 ci(computer): exact teardown receipts and the ADP-5 proof tag for the xorg-uinput probe
+    - 097a085094 fix(computer): give the probe's Medium children a precompiled native library
+    - d513ecd3a3 test(computer): tag the catalog and preflight tests with their adoption entries
+    - 31f35dfb12 Merge remote-tracking branch 'origin/dev' into test/cu-is-row4-conformance-catalog
+    - e99e2c1f96 Merge branch 'dev' into ci/cu-is-row6-windows-full
+    - e01de5de98 Merge pull request #13226 from code-yeongyu/chore/cu-is-row1-gate-checker
+    - 590184fa9f fix(computer): satisfy the workflow guards and let Medium children and the second monitor report
+    - 208d6c0018 test(computer): run.ts loads its driver from drivers/.ts
+    - 8bb1cdc4e3 fix(computer): the conformance report judges the fixture value itself
+    - d979bfe130 ci(computer): job summary, knip entry and full teardown for the xorg-uinput probe
+    - f92fd89435 fix(computer): run the probe's children from the entry script and keep facts through native exit codes
+    - 7ceddf0eb8 test(computer): q5 reads ConsentPromptBehaviorAdmin=0 as no elevation prompt (RED)
+    - 05d0e45489 test(computer): a delivered refusal cell and an errored cell fail the conformance report
+    - 85011f93c5 chore(bundles): drop the regenerated bundles under the bundle hold; the release train regenerates them (#13229)
+    - a5d44e6285 docs(changelog): name the fragment after its pull request
+    - 8bdbadba84 docs(changelog): fragment for the conformance catalog
+    - 5b45a1b158 docs(changes): fragment for #13237
+    - 0fe3c340d2 test(computer): declared-outcome conformance catalog and model-free task set (part 1)
+    - bc0a091591 ci(computer): keep only the hosted measurement jobs in part 1 of the Windows live tier
+    - da0a3ad25b chore(bundles): restamp under the pinned Node 24 toolchain (#13229)
+    - a9a9b84a5b ci(computer): keep only the hosted-runner xorg-uinput probe in part 1
+    - 8207176188 test(computer): conformance report must reject missing, duplicate, skipped, mis-coded and disturbing cells
+    - fa48edb037 style(computer): format the windows-full pool scripts
+    - 72954bcdfa ci(computer): full Windows live tier on the hosted runner, its probe ledger and the guest rung
+    - cbfbccb3b7 chore(bundles): regenerate the bundles that carry device-service-core (#13229)
+    - e4025b55e8 Merge pull request #13201 from code-yeongyu/fix/g3-wire-claims-dispose-windows
+    - 6f816463dc fix(device-service): require the published macOS signing identity, so bootstrap can install on macOS (#13229)
+    - 436fb5bb77 fix(computer): empty ledgers, rows and gates fail; ledger rows must be program rows 1-51
+    - 4201500c09 test(computer): cover ledger and gate config rules the review found untested (RED)
+    - 2d594a6bcc test(computer): windows-full verdict, ledger and tier-plan cases (RED)
+    - 4ee9c68248 ci(computer): per-PR Linux live tier on Xorg, GNOME, KDE and sway
+    - 86d855e648 chore(computer): gate checker and adoption ledger for the ideal-state program
+    - 01b2d8427b test(computer): gate checker and adoption ledger cases (RED)
+    - 8835529ca8 train/omo-5: regenerate bundles at the top after #13109
+    - 41e30070fd train/omo-5: merge #13109 (4e23985e49)
+    - 4e23985e49 test(eq): re-record E21 with the in-repo desktop engine path
+    - 6322dae2b1 test(memory): assert the win32 claim was acquired before proving its root is removable
+    - 105d7a49ca chore(bundles): keep dev's service-auth.generated.js (regenerated at the train top)
+    - 3af8d2ff8e test(memory-sync): verify the sync RPC claims roots are removed (Fixes #13199)
+    - aaf1af31b1 train/omo-5: regenerate bundles once at the top
+    - 0a1216602b train/omo-5: merge #13141 (bf5b38a96e)
+    - a15a44cdb2 train/omo-5: merge #13096 (98dbb68195)
+    - 6b13379bbe train/omo-5: merge #13151 (4c7a4b7505)
+    - 77afb52cac train/omo-5: merge #13179 (3aedaef05f)
+    - 1f2d1b1d6c train/omo-5: merge #13125 (42345b6d75)
+    - 98dbb68195 Merge origin/dev into fix/6503-cli-uses-relayd-device (generated bundles from dev; regenerated once at the train top)
+    - e3b6b5e69a fix(thread): a fuzzy handoff resolves exact first and ranks ended remote rows with every candidate (#13141 review)
+    - 6f59de4654 test(thread): pin fuzzy handoff to the exact path's session across live and ended remote rows (#13141 review)
+    - 99958eeb2f style: bun run fmt
+    - bb2383b59f docs(changes): name the fragment after PR #13180
+    - 3aedaef05f docs(changes): changelog fragment for #13179
+    - 3d74c9196b docs(changes): add fragment for the actionability fake-clock test fix
+    - ced8375fb8 style(thread): bun fmt
+    - 1ee4048d99 docs(changes): name the fragment for #13141 and describe the final contract
+    - 94787c1de1 fix(thread): ended remote sessions rank below local and live candidates in a fuzzy handoff (#13141 review)
+    - bc1096e1cf Merge origin/dev (87ab029c12) into fix/13066-fuzzy-cap-remote-rows
+    - 745f28ffe7 test(thread): cover an alias-only rename of a thread on another device with no alias registry
+    - d33d97861c fix(thread): trim an alias used as a thread's local name, as thread_rename does
+    - aa62ea3f71 fix(thread): name a created thread by its alias when the claim asks for a sign-in
+    - f63f25c628 Merge remote-tracking branch 'origin/dev' into ttu-13125-rehead
+    - 87ab029c12 Merge pull request #13112 from code-yeongyu/fix/13104-thread-create-local-alias
+    - d03af105fd Merge pull request #12990 from code-yeongyu/fix/12987-beta-follows-latest
+    - 21a96996a5 Merge remote-tracking branch 'origin/dev' into ttu-13112-rehead
+    - a7d4f5516f Merge pull request #13066 from code-yeongyu/fix/13012-route-parity
+    - 4c7a4b7505 changes: add 13151 security fragment
+    - 868043bb19 chore(13066): regenerate bundles on dev after dev 6dca74badd (generated-only)
+    - 2fb07e7968 docs(publish): fix the newestFloor doc comment
+    - a5b32af50b style: bun run fmt after merging dev cabdb895e6 (#12227 repo-wide fmt)
+    - dfa2fc305c Merge origin/dev (cabdb895e6) into fix/13012-route-parity - generated files regenerated next
+    - a19ddf90fa fix(publish): hold beta at the newest prerelease floor even when it is ahead of our write
+    - 4a72c9a36a build: regenerate bundles for the sync reply caps
+    - 9df7eb2d0d fix(desktop-sync): cap the remaining sync reply arrays (devices, pending, pull entries, snapshot chunks)
+    - e5b6740ef4 fix(publish): type the beta-follows-latest verify tests
+    - fbc59655ec fix(publish): verify beta after the dist-tag move and keep the beta repair running on re-runs (#13148, #13149)
+    - 831f907a1b fix(publish): move omo-ai beta and guard it even when the release was already published (#13148)
+    - 44ce3f5f88 build: regenerate bundles for zod 4.6.7
+    - 5a28bf8b43 fix(desktop-sync): cap sync reply arrays at SYNC_REPLY_MAX_ITEMS
+    - 4b00195fbb deps: bump zod to 4.6.7 (GHSA-mrhx-c7xc-m3w5)
+    - 2a8743f1c9 chore(service-auth): regenerate service-auth.generated.js for --new-device
+    - bf6b7d4784 fix(service-auth): an unreadable credential store blocks a new device; --new-device is the explicit path (#6503)
+    - cabdb895e6 Merge pull request #12695 from code-yeongyu/ci/pin-setup-bun-sha
+    - fb34a19e40 Merge pull request #13089 from Nowaker/fix/monitor-batch-during-dispatch
+    - f4267e893a fix(thread): ended remote sessions leave the fuzzy candidate set; local and live remote candidates are still compared together (#13141 review)
+    - ff15108394 fix(thread): a unique local fuzzy match resolves before the account listing (#13066 review LOW)
+    - f702e2bcdd Merge origin/dev into fix/thread-create-inherit-caller-cwd
+    - 30a1a10052 Merge origin/dev into chore/omowright-0.3.1
+    - 29847d45c6 Merge pull request #13132 from code-yeongyu/test/13041-rebuild-wait-device
+    - 89f6ea222d Merge remote-tracking branch 'origin/dev' into ci/pin-setup-bun-sha
+    - f740fd3e08 test(thread): a lost-ACK retry rebuilds waiting_on and its device from the row (#13041)
+    - 9fa6213c73 fix(service-auth): refuse a silent second device when the service is down
+    - ddee508cc9 Merge remote-tracking branch 'origin/dev' into fix/13104-thread-create-local-alias
+    - dc23a335e5 Merge remote-tracking branch 'origin/dev' into gf13089-ny2
+    - 369753182a Merge origin/dev into fix/6503-cli-uses-relayd-device
+    - 04e22c0b6b Merge pull request #12227 from code-yeongyu/chore/omo-bun-fmt
+    - 446f36800c docs(thread): record the local alias fallback on thread_rename
+    - 2619084c00 Merge remote-tracking branch 'origin/dev' into fix/13104-thread-create-local-alias
+    - dfe0ac297c Merge remote-tracking branch 'origin/dev' into fix/6503-cli-uses-relayd-device Co-authored-by: YeonGyu-Kim public.kim.yeon.gyu@gmail.com
+    - 0349c13bf9 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 55a3dbb53d Merge origin/dev into chore/omo-bun-fmt
+    - 1fd20f33f5 Merge pull request #13108 from code-yeongyu/chore/13078-revendor-bunshin-ts-relay
+    - b3d4d2f655 chore(changes): changelog fragment for #13125
+    - a8def4c39d fix(thread): a created thread with no cwd starts in its creator's folder
+    - 9872229f02 Merge pull request #13117 from code-yeongyu/feat/cu-v3-row13-core-contract
+    - 5fc72a218c Merge remote-tracking branch 'origin/dev' into chore/13078-revendor-bunshin-ts-relay
+    - 8b2916e152 Merge pull request #13099 from cynkai/fix/13065-residue-dangling-symlink
+    - b271c48265 Merge remote-tracking branch 'origin/dev' into gf13089-ny2
+    - 860cd18197 fix(computer): the COMPUTER_* table's next-call slot is mandatory
+    - b3654f890b fix(computer): every COMPUTER_* row names its next call
+    - 0eab1e0bc0 chore(changes): changelog fragment for #13117
+    - ef89cbec4f Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row13-core-contract
+    - d54324bd18 Merge branch 'feat/cu-v3-row12-core-protocol' into feat/cu-v3-row13-core-contract
+    - ade9aa69f3 Merge pull request #13107 from code-yeongyu/feat/cu-v3-row12-core-protocol
+    - ed7e621459 Merge remote-tracking branch 'origin/dev' into gf13099-ny2
+    - 484dc83f4f chore(fmt): blame-ignore the latest dev merge (#12225)
+    - f562a3fcf6 Merge origin/dev into chore/omo-bun-fmt
+    - 5f89439b11 Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row12-core-protocol
+    - c170fb0b71 chore(deps): use omowright 0.3.1
+    - c70f66f84a Merge pull request #13111 from code-yeongyu/ci/cu-v3-row5-macos26
+    - f1cc5dada0 fix(computer): a bare backend refusal resolves to its code's bare row
+    - a05d4cafb5 Merge branch 'feat/cu-v3-row12-core-protocol' into feat/cu-v3-row13-core-contract
+    - ace5b33356 docs(changes): add changelog fragment for #13112
+    - fe0e3e7952 ci(computer): write a job summary from the native contract job
+    - d1886c116c ci(computer): run the native contract on macos-26 (macos-14 image retired) and widen its path filters
+    - 3e8caa5ccb Merge remote-tracking branch 'origin/dev' into gf13099-ny2
+    - 47556073ac Merge remote-tracking branch 'origin/dev' into gf13089-ny2
+    - a1ebd80f8e fix(computer): fold the row 12 review nits
+    - c5f6e039ae docs(changes): name the fragment for its PR
+    - 307d11c013 fix(thread): keep an alias local when no account can hold it (#13104)
+    - 0a1a9cff3b docs(changes): unreleased note for #13108
+    - 8b5bbce116 docs(changes): add the row 12 fragment
+    - 6e7a5d7ee2 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 81dd63e5ab Merge remote-tracking branch 'origin/dev' into feat/cu-v3-row12-core-protocol
+    - 33447d34df Merge origin/dev into chore/omo-bun-fmt
+    - 93c40771a5 feat(computer): backend refusals and exec replies through the row-13 contract
+    - cc4edf951f fix(computer): knip entry for the protocol generator, no unused protocol exports
+    - e98a85703d chore(fmt): blame-ignore the latest dev merge (#12225)
+    - f596d9a050 Merge pull request #13028 from code-yeongyu/build/cu-v3-row5-workspace
+    - eec802d91e Merge branch 'feat/cu-v3-row12-core-protocol' into feat/cu-v3-row13-core-contract
+    - 04d8435002 test(computer): owe the C2 stale-reply leg to row 17
+    - 477d7639d7 Merge branch 'build/cu-v3-row5-workspace' into feat/cu-v3-row12-core-protocol
+    - 309507c42f Merge origin/dev into chore/omo-bun-fmt
+    - 65501fe254 Merge remote-tracking branch 'origin/dev' into build/cu-v3-row5-workspace
+    - 89deb5358e Merge pull request #13027 from code-yeongyu/test/cu-v3-row4-parity
+    - 7d3ac1f5f7 Merge pull request #13106 from code-yeongyu/chore/regen-bundles-dev-ff3097f
+    - a7e2b1969f build(computer): export-check the v3 package entries in knip
+    - 4b5c3433bb Merge remote-tracking branch 'origin/dev' into build/cu-v3-row5-workspace
+    - a6dd57a1d5 test(computer): tighten the row-13 proof checks
+    - 78f9f05cb9 fix(computer): clipboard refusal rows and checked design citations for the COMPUTER_* table
+    - 66466e1356 test(computer): check inline nested destructures at their call site
+    - 7c1917db0c Merge remote-tracking branch 'origin/dev' into test/cu-v3-row4-parity
+    - 3182c853e1 fix(computer): COMPUTER_* table total over the design's reason inventory
+    - 5ed9854f11 chore(13066): regenerate bundles on dev after dev 6dca74badd (generated-only)
+    - 501284d478 fix(computer): read every params member at a reader call site
+    - a405a2c18c test(computer): RED - derive the reader test from reader call sites
+    - f23d226d7d Merge origin/dev (#13097) into fix/6503-cli-uses-relayd-device; keep machine-binding.ts removed
+    - ff3097f21d Merge pull request #13097 from code-yeongyu/fix/13095-knip-deviceprofileof
+    - e57a06315c Merge origin/dev (6dca74badd) into fix/13012-route-parity - generated files regenerated next
+    - e368b2533a chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 04a89c4e79 feat(computer): v3 result contract - dispositions, action reports, receipts, error table
+    - 2553d03417 test(computer): RED - v3 result contract tests (signature stubs only)
+    - 6f2497ccda Merge origin/dev into chore/omo-bun-fmt
+    - 330e635c24 test(computer): owe the C1 trace leg to row 20
+    - 405b6ef424 docs(changes): fragment for #13099
+    - 4bf9bc74b9 fix(computer-v3-guards): --residue counts a dangling symlink at a removal path as present
+    - 6bc3e20111 Merge remote-tracking branch 'origin/dev' into test/cu-v3-row4-parity
+    - 1204f8ac1c feat(computer): v3 contract root - method table, schema, settings table, protocol package
+    - e6029cc2ce test(computer): RED - v3 contract root tests (signature stubs only)
+    - 46ed8ac0c7 fix(service-auth): keep the capability constant module-private (knip)
+    - 6dca74badd Merge pull request #13087 from code-yeongyu/fix/standalone-self-update-13084
+    - 6a83768384 docs(changes): fragment for #13096
+    - d80ee085f9 fix(service-auth): an uncertain refresh refuses a new device with a recovery message (#6503)
+    - b40b95a3c9 feat(service-auth): attach before mint, hardware digest in both sign-in flows, typed machine_exists (#6503 final contract)
+    - 79a6335b08 fix(service-auth): omo login reuses the machine's device instead of registering another (#6503)
+    - edf0be560d revert(service-auth): drop #13095's salt/device.machine_binding binding path, superseded by the #6503 FINAL contract (LEAD ruling)
+    - ebae3dfd67 fix(service-auth): drop the unused deviceProfileOf export (knip, #13095)
+    - c1b6943bd0 test(omo-native): fix CI guards for standalone self-update
+    - 3334951849 Merge remote-tracking branch 'origin/dev' into gf13089-ny2
+    - c40c98690d Merge pull request #13095 from code-yeongyu/feat/1016-cli-machine-device
+    - 039a8af30b feat(service-auth): bind omo login to the machine's one device (omo-service#1016)
+    - 17f633cb43 Merge pull request #12840 from code-yeongyu/cu-v2/task-36-on-e
+    - 0b9f1c656d Merge remote-tracking branch 'origin/dev' into build/cu-v3-row5-workspace
+    - 80a9eefea2 test(computer): key parity manifest rust ids by the compiler's module path
+    - 6a0673fa19 row 36: merge dev a68fc1b0dd
+    - 4e1ef4832f test(omo-native): assert rollback fixture before cleanup failure probe
+    - a68fc1b0dd Merge pull request #13083 from mradwankhalil/fix/compaction-cache-write-20261111
+    - b66b8d79a4 Merge pull request #13091 from code-yeongyu/feat/programming-skill-ownership
+    - cf5d1132c0 fix(omo-native): finish crashed reclaim guard recovery in one invocation
+    - 47bb15ccbc Merge pull request #12714 from cynkai/fix/12621-ast-grep-smoke-path-order
+    - 10a0684b2c Merge remote-tracking branch 'origin/dev' into test/cu-v3-row4-parity
+    - f4cc078ea2 Merge pull request #13025 from code-yeongyu/test/cu-v3-row3-oracle
+    - 148b8405d8 docs(changes): add fragment for #13091
+    - 8980afccf6 feat(shared-skills): open the programming skill with code ownership
+    - 2b32e0ba5a fix(omo-native): recover interrupted binary updates safely
+    - 85b87aed02 Merge remote-tracking branch 'origin/dev' into gf13089-wt
+    - 5c2965222e changes: fragment for #13089
+    - 3e7446bd14 docs(changes): add the changelog fragment for #12714
+    - 057ee542b6 fix(omo-native): normalize prerelease versions during binary verification
+    - ece560753d docs(changelog): record verified standalone updates (#13087)
+    - 84426305a1 chore(13066): regenerate bundles on dev after the 5.1.69 release state (generated-only)
+    - ce105e1890 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - b87a66aa48 fix(omo-native): retire released Windows rollback executables on launch
+    - 5876bc3c82 row 36: merge dev f177a773b1
+    - 768b8ae435 Merge origin/dev into chore/omo-bun-fmt
+    - 6abac00e04 fix(monitor): keep a batch that arrives while the previous one is being sent
+    - 6fb725df66 Merge remote-tracking branch 'origin/dev' into test/cu-v3-row3-oracle
+    - 6e997697fa docs(omo-native): explain verified binary updates and startup opt-outs
+    - a6745977af Merge origin/dev (f177a773b1, 5.1.69 release state) into fix/13012-route-parity - generated files regenerated next
+    - f177a773b1 Merge pull request #13080 from code-yeongyu/release/v5.1.69-source-state
+    - d9ce457667 feat(omo-native): enable automatic updates for interactive release launches
+    - 16992c6635 feat(omo-native): run standalone startup updates in a detached worker
+    - d89791747a fix(omo-native): install verified standalone releases with rollback (#13084)
+    - e79c7cb3d8 Merge remote-tracking branch 'origin/dev' into gf12714-wt
+    - ddff5842df fix(context-usage): include cache writes in truncation budgets
+    - e0fc0ff4f3 Merge pull request #13076 from Nowaker/fix/sync-poll-null-error
+    - 58e4244b0d fix(preemptive-compaction): count cache writes toward context usage
+    - cd3257cdb4 row 36: merge dev def0749b63
+    - 98ffa0c736 chore(13066): regenerate bundles on dev after the one-route train (generated-only)
+    - ad1a97e293 Merge remote-tracking branch 'origin/dev' into gf13076-wt
+    - 47b39d2532 Merge origin/dev (def0749b63, one-route train) into fix/13012-route-parity - generated files regenerated next
+    - e9fff7249d changes: fragment for #13076
+    - f65703b0b8 fix(thread): a configured relay in any failing device-service state answers typed host_unavailable (review MEDIUM at fc4980dadc)
+    - fc4980dadc fix(thread): preserve local misses without remote setup
+    - 33edcb7618 chore(changelog): name route parity fragment for #13066
+    - e689c4acc3 fix(thread): share remote name and fuzzy resolution rules
+    - 34e4dd7543 docs(changes): add the row 5 fragment
+    - 1467dff7fd build(computer): register the empty v3 crates, packages and CI legs
+    - 4520c85d5e test(computer): freeze the old test inventory as a parity manifest
+    - 41b5083e91 test(computer): import the frozen v1 oracle fixtures with provenance
+    - 4f711eb5c1 row 36: merge dev a96a51d8fc
+    - 5a0a16a71d chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 1a38011e71 Merge origin/dev into chore/omo-bun-fmt
+    - 18e2d66072 fix(delegate-task): stop treating error: null as a failed foreground child
+    - 9bfc1f4386 fix(publish): fold #12990 round-2 review - wait for the beta read-back and retry the guard's beta check
+    - 2e14d207bc fix(publish): fold #12990 review - beta move tells a lookup failure from a missing tag, runs in post-publish-verify
+    - d99887a5d7 docs(changes): add the #12990 changelog fragment
+    - acec7e92d3 fix(publish): beta channel follows latest on every stable release
+    - c84c4f03b5 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - bdbb29d87b Merge origin/dev into chore/omo-bun-fmt
+    - 43534969f7 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 6b02f4dc2b Merge origin/dev into chore/omo-bun-fmt
+    - b1b7477d1c chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 2c40dd83ad Merge origin/dev into chore/omo-bun-fmt
+    - 9a0e48fe79 chore(fmt): blame-ignore the latest dev merge (#12225)
+    - 4d6140b38b Merge origin/dev into chore/omo-bun-fmt
+    - 13f89955dc chore(fmt): blame-ignore the bun fmt reformat (#12225)
+    - d3b07955bf chore(fmt): adopt bun fmt for JS/TS (Fixes #12225)
+    - fd733b0d16 row 36: merge train E 7461ea5f23 (GNOME extension move, placement fix, fixture placeholders)
+    - 20aa5c8378 docs(desktop-tool): describe the reply-recording order under the run facade (row 36)
+    - 1b96027257 test(eq): re-record the linux-x64 E21-E24 goldens for the SDK-backed computer tool (row 36)
+    - dd54e15aa9 docs(changes): name the fragment for #12840
+    - 31520b20fc docs(changes): add the row 36 fragment (new-PR placeholder)
+    - a5b2e91e9d row 36: take train E rename cbd44b9736
+    - fa706ddba7 feat(desktop-tool): execute through the sdk; reportMode object for omo sessions; sandbox default per eval result
+    - 561ae363cd Merge remote-tracking branch 'origin/dev' into ci/pin-setup-bun-sha
+    - 083b63eef7 fix(ast-grep skill): pass the smoke path before --lang, and drop the 3.9-only wording (#12621)
+    Thank you to 1 community contributor:
+    - @cursoragent:
+      - Merge remote-tracking branch 'origin/dev' into fix/6503-cli-uses-relayd-device
+      - Merge remote-tracking branch 'origin/dev' into fix/13104-thread-create-local-alias
+      - docs(thread): record the local alias fallback on thread_rename
+      - Merge origin/dev into fix/6503-cli-uses-relayd-device
+      - Merge remote-tracking branch 'origin/dev' into fix/13104-thread-create-local-alias
+      - fix(service-auth): refuse a silent second device when the service is down
+      - Merge origin/dev into chore/omowright-0.3.1
+      - Merge origin/dev into fix/thread-create-inherit-caller-cwd
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.70
+ReleaseTime: 2026-11-14T07:15:14.0000000Z

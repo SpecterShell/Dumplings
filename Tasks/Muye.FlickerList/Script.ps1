@@ -1,57 +1,36 @@
-$Prefix = 'https://static.vifird.com/flicker/download/release/win32_x32/'
+$Object1 = Invoke-WebRequest -Uri 'https://nartick.com/'
+$AppScriptUrl = 'https:' + [regex]::Match($Object1.Content, '//static\.flicker\.cool/flicker-home/static/js/app\.[0-9a-f]+\.js').Value
+$Object2 = Invoke-WebRequest -Uri $AppScriptUrl
+$Match = [regex]::Match($Object2.Content, '="(\d+(?:\.\d+)+)",\w+="([^"]*)",\w+="nartick://"')
 
-$Task.CurrentState = Invoke-RestMethod -Uri "${Prefix}latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | ConvertFrom-Yaml | ConvertFrom-ElectronUpdater -Prefix $Prefix -Locale 'zh-CN'
+$Prefix = "https://static.flicker.cool/flicker/download/stable/$($Match.Groups[1].Value)$($Match.Groups[2].Value)/win32/"
+$Object3 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object1 = Invoke-WebRequest -Uri 'https://flicker.cool/en/versions' | ConvertFrom-Html
+# Version
+$this.CurrentState.Version = $Object3.version
 
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = "${Prefix}$($Object3.files[0].url)"
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $Task.CurrentState.ReleaseTime ??= $Object1.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-
-      # ReleaseNotes (en-US)
-      $ReleaseNotesNode = $Object1.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="el-card__body"]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $Task.Logging("No ReleaseNotes (en-US) for version $($Task.CurrentState.Version)", 'Warning')
-      }
+      $this.CurrentState.ReleaseTime = $Object3.releaseDate | Get-Date -AsUTC
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Object2 = Invoke-WebRequest -Uri 'https://flicker.cool/versions' | ConvertFrom-Html
-
-    try {
-      # ReleaseTime
-      $Task.CurrentState.ReleaseTime ??= $Object2.SelectSingleNode('.//*[@class="time"]').InnerText.Trim() | Get-Date -Format 'yyyy-MM-dd'
-
-      # ReleaseNotes (zh-CN)
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@class='el-timeline-item' and contains(.//*[@class='version'], '$($Task.CurrentState.Version)')]")
-      if ($ReleaseNotesNode) {
-        $Task.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-          Key    = 'ReleaseNotes'
-          Value  = $ReleaseNotesNode.SelectSingleNode('.//*[@class="el-card__body"]') | Get-TextContent | Format-Text
-        }
-      } else {
-        $Task.Logging("No ReleaseNotes (zh-CN) for version $($Task.CurrentState.Version)", 'Warning')
-      }
-    } catch {
-      $Task.Logging($_, 'Warning')
-    }
-
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

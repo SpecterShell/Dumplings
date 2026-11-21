@@ -1,28 +1,34 @@
-$Object = Invoke-RestMethod -Uri 'https://update-windows.grammarly.com/update' -Method Post -Body (
+$Object1 = Invoke-RestMethod -Uri 'https://update-windows.grammarly.com/update' -Method Post -Body (
   @{
-    currentVersion = $Task.LastState.Version ?? '1.0.16.275'
+    currentVersion = $this.LastState.Version ?? '1.0.16.275'
   } | ConvertTo-Json -Compress
 )
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.download
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.download
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.releaseDate.ToUniversalTime()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.releaseDate.ToUniversalTime()
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

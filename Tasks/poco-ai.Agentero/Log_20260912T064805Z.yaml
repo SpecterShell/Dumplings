@@ -1,0 +1,81 @@
+Version: 0.10.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.10.1/Agentero_0.10.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.10.1/Agentero_0.10.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release tightens reading and onboarding: PDF zoom moves to a bottom-bar slider, comment cards draw hover connectors, and highlight colors fan out as circular swatches. Selection auto-copies with restored Add to chat / Quick chat, and the feature tour starts after onboarding. The CLI drops usage / config / completion / trash / feed (wiki check lives under doctor wiki), and the unsupported Antigravity ACP backend is removed. External paper-reader runs now mark papers read on completion.
+    Breaking Changes
+    - Antigravity ACP backend removed: Google does not officially support ACP for Antigravity, so the community agy-acp template and its install, version check, terminal sign-in, and auth-required handling are gone. Legacy antigravity/gemini rows are stripped when loading agents.json so they cannot fail the whole registry parse. (e546373f by @qychen2001)
+    - CLI command trim: Removes agentero usage, config, completion, trash, and feed; former wiki check is now agentero doctor wiki. Vault resolution still uses --vault / AGENTERO_VAULT / walk-up, plus the default path from vault use. (206f6a66, 83284d9f, 3e9af822, 136cc48c by @Phil-Fan)
+    Features
+    - PDF bottom zoom slider: Replaces top +/- percentage zoom and bottom fit-width/fit-page controls with a 50%–300% range slider. Idle stays muted gray; hover/focus/drag use the brand accent. The right toolbar stays pinned. (9736b036 by @Phil-Fan)
+    - Comment hover connectors: Hovering a rail comment draws a readable leader to the nearest highlight segment, with ink tuned to paper tone so multi-line notes connect to the closest paragraph instead of the envelope midpoint. (c500314f, 3fbc31a0, fa9836c3 by @Phil-Fan)
+    - Highlight color fan-out: Selection highlight colors become circular dots that fan left on hover with darker overlap edges; the toolbar stays right-edge anchored while expanded. (22775a0e, 019fac74, 428fb5a8 by @Phil-Fan)
+    - Selection auto-copy and chat actions: Selecting text copies it and shows a “Copied” label at the pointer. The floating toolbar restores Add to chat / Quick chat with swapped shortcuts for the common path, and live selections are no longer auto-attached to chat. (8004a9f6, 3cb840b7, 961b6faa, 24bc4aa3, 270b6b27 by @Phil-Fan)
+    - Inline selection tokens in the composer: Explicitly added selections appear as inline quote chips in the Agent input so send intent is clearer. (aa235d3d, 93d77429 by @Phil-Fan)
+    - Feature tour after onboarding: Closing onboarding auto-starts a feature tour covering the library, Cool Papers, full-text translate, reading a paper, and notes. Recommended options and the default translator are emphasized, and the local layout model notes its performance cost. (d996541a, 72a1d2a0, 9e5f1bcf, #452 by @Phil-Fan)
+    - Library single-click open: Paper rows open on single click and copy the title/id on double click. (f2d7baf2 by @Phil-Fan)
+    - Windows F11 borderless fullscreen: Press F11 on Windows to toggle borderless fullscreen for immersive reading. (ffc4b27a by @Phil-Fan)
+    - Split-pane shortcut on Open Notes: Open Notes menus show the split-pane shortcut for side-by-side reading. (4d022568 by @Phil-Fan)
+    - Mark read after paper-reader: The paper-reader and agentero-cli skills require agentero paper set-read after writing notes so external Agent/CLI deep-reads flip Catalog is_read. (#495 by @bet4it)
+    Improvements
+    - Leaner release logs: Per-file size drops to 2 MB with KeepSome(5) rotation; release builds cap at Info so Debug/Trace no longer inflate disk use. (052cad4a, #511 by @Phil-Fan)
+    - Quieter idle vault watching: Block on filesystem events when idle instead of polling; buffer vault:file-changed while the shell is hidden/unfocused and stretch tree/wiki/library debounce in the background. (7be641f4 by @Phil-Fan)
+    - Paper titles in background tasks: Job Center rows prefer Catalog titles over folder ids. (039ea801 by @Phil-Fan)
+    - Cool Papers note cleanup: Fetched notes drop the trailing Kimi web CTA, and FAQ answers nest under ## Q headings. (ee24b436, 307d4ab3 by @Phil-Fan)
+    - White paper tone by default in dark mode: PDF paper tone defaults to white under a dark UI chrome. (ae1ac1d8 by @Phil-Fan)
+    - Format Markdown menu removed: The context-menu Format Markdown action is gone to avoid accidental rewrites. (cd86a91e by @Phil-Fan)
+    Fixes
+    - Preserve titles after external moves: External rename/move of paper folders rewrites Catalog paths and rescans on structural changes; open tabs remap even without link repair, and unverified external renames no longer toast. (00d7ef1a, 9f35b6c2, 3c04259d, f0e37c4a by @Phil-Fan)
+    - Live-reload Markdown in doc popouts: Docs moved to a new window watch Vault changes so Agent/external edits no longer stay stale. (1175fa50 by @Phil-Fan)
+    - Preserve extra blank lines: Markdown deserialize keeps extra blank lines so note spacing stays stable. (9dcc4607 by @Phil-Fan)
+    - Open NOTES without catalog metadata: NOTES.md still opens when Catalog metadata for the paper is missing. (88e34988 by @Phil-Fan)
+    - Stuck file-tree drop overlay: Clearing the dockview drop overlay when a file-tree drag leaves or ends. (d0997228 by @Phil-Fan)
+    - Skip no-op same-folder moves: Vault move is skipped when the destination equals the current folder. (ad450681 by @Phil-Fan)
+    Full Changelog: https://github.com/poco-ai/Agentero/compare/v0.10.0...v0.10.1
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布聚焦阅读与上手体验：PDF 缩放改为底栏滑条、批注悬停连线与高亮色卡扇出；划词自动复制并恢复「加入对话 / 快速提问」；新手引导在完成后自动进入功能导览。同时精简 CLI（移除 usage / config / completion / trash / feed，wiki 并入 doctor wiki），并移除未获官方 ACP 支持的 Antigravity 后端。外部 Agent 完成 paper-reader 精读后会按技能闭环标记已读。
+    破坏性变更
+    - 移除 Antigravity ACP 后端：Google 未官方支持 Antigravity 的 ACP，已删除社区 agy-acp 模板及其安装、版本检查、终端登录与 auth-required 引导；加载 agents.json 时会剥离遗留的 antigravity/gemini 行，避免整表解析失败。（e546373f by @qychen2001）
+    - CLI 命令精简：移除 agentero usage、config、completion、trash、feed；原 wiki check 并入 agentero doctor wiki。Vault 解析仍支持 --vault / AGENTERO_VAULT / 向上查找，以及 vault use 写入的默认路径。（206f6a66、83284d9f、3e9af822、136cc48c by @Phil-Fan）
+    新功能
+    - PDF 底栏缩放滑条：顶栏 +/- 百分比与底栏适应宽/页按钮改为底栏 50%–300% 范围滑条；空闲为低调灰色，悬停/聚焦/拖动使用品牌强调色，右侧工具栏保持固定。（9736b036 by @Phil-Fan）
+    - 批注悬停连线：悬停右侧批注卡片时，向最近高亮片段绘制可读引线，并随纸张色调调整墨色与描边，多行批注连到最近段落而非整框中点。（c500314f、3fbc31a0、fa9836c3 by @Phil-Fan）
+    - 高亮色卡扇出：划词工具栏高亮色改为圆形色点，悬停时向左扇出叠放，叠边加深以便区分；展开时工具栏按右缘锚定，避免挤出视口。（22775a0e、019fac74、428fb5a8 by @Phil-Fan）
+    - 划词自动复制与对话入口：选中文本即复制到剪贴板，并在指针旁显示「已复制」反馈；悬浮工具栏恢复「加入对话 / 快速提问」，快捷键对调后更符合常用路径，且不再把实时选区自动塞进聊天。（8004a9f6、3cb840b7、961b6faa、24bc4aa3、270b6b27 by @Phil-Fan）
+    - 输入框内联选区令牌：显式加入对话的选区以行内引用芯片出现在 Agent 输入框中，图标改为 Quote，发送意图更清晰。（aa235d3d、93d77429 by @Phil-Fan）
+    - 新手功能导览：完成引导后自动启动功能导览，覆盖论文库、Cool Papers、全文翻译、阅读论文与笔记等步骤；推荐项与默认翻译器更醒目，布局模型会提示本地性能成本。（d996541a、72a1d2a0、9e5f1bcf、#452 by @Phil-Fan）
+    - 论文库单击打开：论文行改为单击打开、双击复制标题/标识，减少误触与多余步骤。（f2d7baf2 by @Phil-Fan）
+    - Windows F11 无边框全屏：Windows 上可用 F11 切换无边框全屏，便于沉浸阅读。（ffc4b27a by @Phil-Fan）
+    - 打开笔记菜单显示分屏快捷键：「打开笔记」相关菜单展示分屏快捷键提示，便于左右对照阅读。（4d022568 by @Phil-Fan）
+    - 精读完成后标记已读：paper-reader 与 agentero-cli 技能在写完笔记后要求执行 agentero paper set-read，外部 Agent / CLI 精读闭环后 Catalog is_read 会正确更新。（#495 by @bet4it）
+    改进
+    - 发布日志更精简：单文件上限降至 2 MB，轮转为保留约 5 个文件；发布构建日志级别上限为 Info，避免 Debug/Trace 膨胀磁盘。（052cad4a、#511 by @Phil-Fan）
+    - 空闲 Vault 监听更省电：空闲时阻塞等待文件系统事件而非轮询；窗口隐藏/失焦时缓冲 vault:file-changed，并拉长后台树/wiki/论文库刷新防抖。（7be641f4 by @Phil-Fan）
+    - 后台任务显示论文标题：任务中心行优先展示 Catalog 标题，而不是文件夹 id。（039ea801 by @Phil-Fan）
+    - Cool Papers 笔记清洗：拉取笔记去掉文末 Kimi Web CTA；FAQ 答案嵌在 ## Q 标题下，结构更清晰。（ee24b436、307d4ab3 by @Phil-Fan）
+    - 暗色模式默认白纸：PDF 纸张色调在暗色界面下默认白色，避免一打开就是深色纸。（ae1ac1d8 by @Phil-Fan）
+    - 移除「格式化 Markdown」菜单：右键不再提供 Format Markdown，减少误触改写正文。（cd86a91e by @Phil-Fan）
+    修复
+    - 外部移动后保留论文标题：外部重命名/移动论文文件夹时重写 Catalog 路径并在结构变化时重扫，打开标签也会 remap；不再对未验证的外部重命名弹 Toast。（00d7ef1a、9f35b6c2、3c04259d、f0e37c4a by @Phil-Fan）
+    - 独立文档窗口热更新：「移到新窗口」的 Markdown 会监听 Vault 变更并刷新，Agent/外部编辑不再停留在旧内容。（1175fa50 by @Phil-Fan）
+    - 保留多余空行：Markdown 反序列化不再折叠额外空行，笔记版式更稳定。（9dcc4607 by @Phil-Fan）
+    - 缺 Catalog 元数据仍可开笔记：即使 Catalog 缺少该论文元数据，仍可打开对应 NOTES.md。（88e34988 by @Phil-Fan）
+    - 文件树拖拽残留遮罩：拖出或结束文件树拖拽时清除卡住的 dockview 放置遮罩。（d0997228 by @Phil-Fan）
+    - 同目录移动不再空操作：目标文件夹与当前位置相同时跳过 vault move，避免无意义刷新。（ad450681 by @Phil-Fan）
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.10.1
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.10.1
+ReleaseTime: 2026-09-12T05:12:02.0000000Z

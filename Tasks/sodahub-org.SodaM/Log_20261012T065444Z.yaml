@@ -1,0 +1,24 @@
+Version: 0.2.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/sodahub-org/sodam/releases/download/v0.2.2/sodam-0.2.2-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    SodaM v0.2.2：两个修复
+    系统「正在播放」
+    - 修掉封面闪烁与进度跳回 0：之前把进度秒数也算进了发布变化键，于是每秒重建一次
+      内容项；现在元数据只在「曲目或封面变化」时发布，播放状态只在「切曲、播放/暂停
+      切换、进度跳转超过 2.5 秒（拖动）」时发布，其余交给系统按播放速率自行插值
+    内存
+    - 封面图片缓存加上界（64MB，LRU）：gpui 的 sprite atlas 不会自动回收图片，之前
+      每张见过的封面都会永远留在显存（约 1.7MB/张），用久了到几百 MB；现在超出预算
+      的封面会把纹理交还给 gpui
+    实测（修好之后）：连切 45 首（远超预算），IOAccelerator 常驻显存 14.9M → 12.3M，
+    Physical footprint 173.8M → 168.1M；修复前 6 首就会 +10.3MB。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sodahub-org/sodam/releases/tag/v0.2.2
+ReleaseTime: 2026-10-12T06:31:58.0000000Z

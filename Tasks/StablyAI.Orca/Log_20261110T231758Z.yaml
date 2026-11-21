@@ -1,0 +1,277 @@
+Version: 1.4.256
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.256/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Easier dictation, saved phone drafts & clearer workspace controls ✨
+    This update makes dictation easier to set up and use and makes agents and cloud workspaces easier to manage. Phone-specific improvements below require the matching phone app update.
+    - 🎙️ Dictate with less setup: Voice settings suggests an on-device model for your language and offers one setup button. Add personal or repository vocabulary, remove filler words, and use Auto mode to hold the shortcut or tap to toggle. On-device dictation inserts phrases as you pause, and you can dictate into fields in Orca's browser.
+    - 📱 Pick up where you left off: Chats show their saved recent messages after a phone relaunch while reconnecting. Commit messages, PR descriptions, comments, review notes, tasks and new-workspace drafts survive closing the app.
+    - ⌨️ More control from your phone: The terminal key row gains Shift, Ctrl and Alt latches and an optional Smart rail with agent actions. A floating dictation pill lets you keep speaking while moving to another screen in the app.
+    - 🤖 Get agents ready from chat: Supported missing agents offer installation and sign-in guidance where you start a chat. OpenCode subagents appear in their own cards and keep their chat active while they work; Codex replies can be forked after a rewind.
+    - 🧭 Find the controls you need: The browser groups its tools into an Annotate button and one menu. Settings is easier to scan, and recipe-backed VM workspaces show their lifecycle with Suspend and Resume actions.
+    Highlights
+    - Voice & dictation: Speech-model updates are offered in the dictation pill when you start dictating, with download progress, cancellation and retry. Language-based setup suggestions, model quality information, a Use GPU switch, personal and repository vocabulary, and support for OpenAI-compatible transcription services. The dictation pill shows committed and pending words; failed recordings can be retried. Pressing Send or Enter while dictating waits for the words before sending.
+    - Phone & recovery: Saved chat messages and draft text return after a relaunch. Home opens with last-known workspaces, visited terminals stay mounted for quicker switching, and page assets load on demand. Folder workspaces have Source Control on the phone, and large-file diffs retain unchanged lines.
+    - Chat & agents: Copy and other reply actions stay visible on the latest response, while older replies reveal them on hover or keyboard focus. Account usage shows Used, Left and time until reset. Claude chat names use the CLI's titles, questions can show option previews, Codex failures give actionable advice, and a New divider is available in Settings. Usage-limited chats that are due can continue in one pass, with automatic retries stopping after five consecutive failures.
+    - Workspaces & remote hosts: Setup-script import understands more existing repository configurations. VM workspaces show creation progress and failures, and suspended VMs can be resumed from their workspace controls. Paired-server connection failures are detected when the host stops answering.
+    - Browser, editor & everyday fixes: Browser annotation, drawing and element capture share one control, with zoom and viewport state in the address field. Inline or side-by-side diff choice is saved. Linear search and issue lists include the project, and agent speed menus offer the speeds supported by the selected model.
+    Dictation upgrade note: Existing local speech-model downloads may need an update before dictation works again. Complete the download from the dictation pill or Voice settings before relying on dictation offline.
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.255...v1.4.256
+
+    What's Changed
+    - Show folder workspace Source Control on the phone by @brennanb2025 in https://github.com/stablyai/orca/pull/39999
+    - test: remove 34 low-value suites and redundant cases by @OrcaWin in https://github.com/stablyai/orca/pull/40115
+    - fix(new-workspace): default to a visible host when a per-workspace VM workspace is active by @tylerhuntington in https://github.com/stablyai/orca/pull/38782
+    - Fix shared-worker test environment and import isolation by @AmethystLiang in https://github.com/stablyai/orca/pull/40121
+    - refactor: organize rate-limit providers and remove forwarding modules by @nwparker in https://github.com/stablyai/orca/pull/40116
+    - Remove 40 low-value test suites and redundant cases by @OrcaWin in https://github.com/stablyai/orca/pull/40126
+    - fix(remote-runtime): keep node zlib out of browser bundles so dev web and fixtures load by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40124
+    - fix(vm-recipes): stop dialing a sleeping workspace VM, and resume one whose host is gone by @nwparker in https://github.com/stablyai/orca/pull/40105
+    - feat(dictation): remove filler words like “um” and “uh” from dictated text by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40137
+    - fix(native-chat): clear /compact and /clear from the composer once sent by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40145
+    - fix(runtime): a phone viewing a headless terminal no longer resizes it for every client by @nwparker in https://github.com/stablyai/orca/pull/40101
+    - feat(setup): import setup scripts from .conductor/settings.toml, dev containers, Cursor, Copilot and Capy configs by @nwparker in https://github.com/stablyai/orca/pull/40125
+    - refactor: bind browser and remote runtime consumers to concrete owners by @nwparker in https://github.com/stablyai/orca/pull/40135
+    - perf(sqlite): refresh the legacy profile copy hourly and cap the profile WAL file by @nwparker in https://github.com/stablyai/orca/pull/40136
+    - test: remove 13 low-value suites and redundant cases by @OrcaWin in https://github.com/stablyai/orca/pull/40138
+    - Reduce excessive tooltips and clarify action details by @AmethystLiang in https://github.com/stablyai/orca/pull/39960
+    - feat(dictation): Auto shortcut mode, hold to record until release or tap to toggle by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40150
+    - test(profile-state): fix the cross-runtime test on macOS Bun by @nwparker in https://github.com/stablyai/orca/pull/40168
+    - Attribute Windows child-close diagnostics to the correct agent by @brennanb2025 in https://github.com/stablyai/orca/pull/40036
+    - fix(dictation): drop both commas around a filler removed mid-sentence by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40177
+    - fix(speech): move OpenAI cloud dictation to GPT Transcribe before the GPT-4o models shut down by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40159
+    - test: remove 67 low-value mobile and composer tests by @OrcaWin in https://github.com/stablyai/orca/pull/40174
+    - fix(test): pass the reaper site in the supervised-stop integration test by @OrcaWin in https://github.com/stablyai/orca/pull/40186
+    - test(e2e): hold split toolbar focus before the grab chord by @OrcaWin in https://github.com/stablyai/orca/pull/40182
+    - feat(mobile): remove filler words from text the phone recognizes itself by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40157
+    - feat(dictation): fixed-size dictation pill with cancel, timer and finish by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40155
+    - test: remove 83 low-value mobile, renderer and native tests by @OrcaWin in https://github.com/stablyai/orca/pull/40176
+    - feat(setup): slim the setup-script import card and fit long scripts in review by @nwparker in https://github.com/stablyai/orca/pull/40180
+    - fix(remote-runtime): detect a paired host that stays connected but stops answering by @nwparker in https://github.com/stablyai/orca/pull/40104
+    - refactor: give browser, RPC and process contracts concrete owners by @nwparker in https://github.com/stablyai/orca/pull/40167
+    - feat(dictation): error pill that keeps the recording and retries it by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40189
+    - Keep port refreshes efficient with many workspaces by @brennanb2025 in https://github.com/stablyai/orca/pull/40149
+    - fix(orchestration): record orchestration as the origin of nested workers on connected servers by @Jinwoo-H in https://github.com/stablyai/orca/pull/40091
+    - fix(claude): name Orca as the client of its Claude chats by @brennanb2025 in https://github.com/stablyai/orca/pull/40057
+    - fix(orchestration): refuse a paired-server worker start onto a busy terminal before any wait by @Jinwoo-H in https://github.com/stablyai/orca/pull/40102
+    - Show usage reset dates in account switcher by @AmethystLiang in https://github.com/stablyai/orca/pull/40210
+    - feat(cli): add orca vm env doctor to check that an environment can run agents by @nwparker in https://github.com/stablyai/orca/pull/40120
+    - fix(orchestration): keep a paired server's worker list when one Dispatch is from an earlier pairing by @Jinwoo-H in https://github.com/stablyai/orca/pull/40170
+    - fix(ci): reuse installed pinned Bun in test workflows by @AmethystLiang in https://github.com/stablyai/orca/pull/40234
+    - fix(vm): resume a paired-server VM whose host went away on its own by @nwparker in https://github.com/stablyai/orca/pull/40199
+    - fix(browser): restrict paired-host browser tunnel destinations by @nwparker in https://github.com/stablyai/orca/pull/40203
+    - feat(mobile): cancel dictation in place and show which device is transcribing by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40185
+    - fix: avoid process reports for non-Linux ABI detection by @OrcaWin in https://github.com/stablyai/orca/pull/40233
+    - feat(vm-recipes): add "Set up with an agent" to Cloud VMs settings by @nwparker in https://github.com/stablyai/orca/pull/40131
+    - fix(worktrees): offer nested-worktree delete on remote runtime hosts by @OrcaWin in https://github.com/stablyai/orca/pull/40235
+    - fix(speech): send cloud dictation through the proxy set in Settings by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40236
+    - refactor: move browser contracts and publication to defining owners by @nwparker in https://github.com/stablyai/orca/pull/40209
+    - Plugins: add workspace.rename and project names in workspace.list (#40197) in https://github.com/stablyai/orca/pull/40197
+    - feat(dictation): dictate into the focused field of a page in the browser pane by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40191
+    - feat(dictation): Enter or Send while dictating sends once the words land by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40226
+    - feat(vm-recipes): build checklist, environment checks and failure card for VM creates by @nwparker in https://github.com/stablyai/orca/pull/40152
+    - Polish agent picker search and rows by @AmethystLiang in https://github.com/stablyai/orca/pull/40242
+    - test: remove 109 low-value tests and a Windows renderer script by @OrcaWin in https://github.com/stablyai/orca/pull/40154
+    - test: remove 86 low-value tests across runtime and source control by @OrcaWin in https://github.com/stablyai/orca/pull/40172
+    - Fix Simplified Chinese floating button translation by @AmethystLiang in https://github.com/stablyai/orca/pull/40252
+    - fix(vm-recipes): destroy a recipe VM when a phone deletes its workspace by @nwparker in https://github.com/stablyai/orca/pull/40205
+    - fix(dictation): stop phone and browser cloud dictation at the 10-minute limit with a notice by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40240
+    - ci(release): mirror published downloads to Cloudflare R2 by @nwparker in https://github.com/stablyai/orca/pull/40254
+    - Keep hosted reviews, conversations, and optional GitLab jobs accurate by @brennanb2025 in https://github.com/stablyai/orca/pull/40080
+    - Continue every usage-limited chat at once, and stop after five automatic refails by @brennanb2025 in https://github.com/stablyai/orca/pull/40055
+    - fix(dictation): save Auto mode so older builds keep a working shortcut, and show it on the phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40231
+    - test: remove 76 low-value renderer and runtime tests by @OrcaWin in https://github.com/stablyai/orca/pull/40237
+    - fix(native-chat): pad the sender name chip in orchestration worker cards by @Jinwoo-H in https://github.com/stablyai/orca/pull/40258
+    - test: remove 34 low-value renderer and runtime tests by @OrcaWin in https://github.com/stablyai/orca/pull/40222
+    - docs: put Chat or Terminal first in README features by @nwparker in https://github.com/stablyai/orca/pull/40262
+    - fix(dictation): a paired phone or browser waits as long as the computer for long cloud dictations by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40238
+    - fix(orchestration): explain the --terminal and --agent refusal; name chat addresses in terminal commands by @Jinwoo-H in https://github.com/stablyai/orca/pull/40092
+    - docs(dictation): say why Hold can't see a key release inside a browser page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40269
+    - test: remove low-value mobile renderer and rate-limit suites by @OrcaWin in https://github.com/stablyai/orca/pull/40188
+    - fix(terminal): end a dead preserved terminal host's PTYs as host loss by @nwparker in https://github.com/stablyai/orca/pull/40095
+    - feat(i18n): translate the dictation pill, error pill and queued-send copy by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40266
+    - Remove low-value inventories, copy checks and redundant test cases by @OrcaWin in https://github.com/stablyai/orca/pull/40279
+    - Remove low-value metadata, dependency and work-count tests by @OrcaWin in https://github.com/stablyai/orca/pull/40282
+    - feat(release): publish a server-only Linux tarball for orca serve by @nwparker in https://github.com/stablyai/orca/pull/40280
+    - refactor: group renderer workspace ownership and navigation by @nwparker in https://github.com/stablyai/orca/pull/40230
+    - test: remove low-value wrapper, inventory, and timing checks by @OrcaWin in https://github.com/stablyai/orca/pull/40284
+    - test(vm): pin file saves in a recipe-created workspace, across server restart (#11762) by @nwparker in https://github.com/stablyai/orca/pull/40275
+    - fix(tabs): preserve lastFocusedAt on native chat tabs across host snapshots by @nwparker in https://github.com/stablyai/orca/pull/40288
+    - Remove low-value renderer, usage-chain, and native tests by @OrcaWin in https://github.com/stablyai/orca/pull/40287
+    - Remove work-count tests and the offline daemon selftest by @OrcaWin in https://github.com/stablyai/orca/pull/40294
+    - fix(ports): keep sticky External Ports header opaque on hover by @jp-liu in https://github.com/stablyai/orca/pull/40073
+    - fix(tour): allow chat split for agent sessions without a TUI agent tag by @dsingal0 in https://github.com/stablyai/orca/pull/39976
+    - fix(native-chat): move the cursor to the composer after Add to chat by @manuelmeurer in https://github.com/stablyai/orca/pull/39845
+    - test(pty): await spawn directly in Claude agent-view readiness test to fix flake by @wuhaoyujerry in https://github.com/stablyai/orca/pull/40082
+    - fix(terminal): don't restart every dead saved tab when a worktree opens; log how the daemon exited by @nwparker in https://github.com/stablyai/orca/pull/40289
+    - fix(diff): persist inline / side-by-side diff view via the Default Diff View setting by @innocarpe in https://github.com/stablyai/orca/pull/40256
+    - feat(dashboard): show last messages in agent dialog when no live terminal by @FranzFelberer in https://github.com/stablyai/orca/pull/40147
+    - fix(claude): verify model switches when terminal echoes omit vendor prefix by @zzz163519 in https://github.com/stablyai/orca/pull/40064
+    - fix(markdown): lower link underlines below descenders by @Manho in https://github.com/stablyai/orca/pull/40218
+    - Remove copy assertions and the manual agent-status benchmark by @OrcaWin in https://github.com/stablyai/orca/pull/40305
+    - fix(native-chat): group deferred context rows separately in the usage popover by @Pr1p in https://github.com/stablyai/orca/pull/39917
+    - refactor: group editor browser document and simulator owners by @nwparker in https://github.com/stablyai/orca/pull/40273
+    - fix(codex): close TOML multiline strings on runs of four or five quotes by @innocarpe in https://github.com/stablyai/orca/pull/40089
+    - fix(linear): include project in Linear issue list and search results by @febyeji in https://github.com/stablyai/orca/pull/40194
+    - fix(build): bundle browser-extension-preload as a standalone sandboxed script by @Pr1p in https://github.com/stablyai/orca/pull/39884
+    - Remove obsolete manual diagnostics and duplicate launch coverage by @OrcaWin in https://github.com/stablyai/orca/pull/40317
+    - fix(terminal): ignore the inverse caret glyph in an empty Claude composer by @innocarpe in https://github.com/stablyai/orca/pull/40225
+    - test(e2e): give the provisioned-root VM a reachable git remote by @nwparker in https://github.com/stablyai/orca/pull/40318
+    - refactor(environment-providers): add EnvironmentProviderDriver, contract test kit and ShellRecipeDriver by @nwparker in https://github.com/stablyai/orca/pull/40315
+    - refactor: group agent launch, status, and messaging owners by @nwparker in https://github.com/stablyai/orca/pull/40313
+    - Update README downloads badge by @app/buf0-bot in https://github.com/stablyai/orca/pull/40336
+    - refactor(environment-providers): run shell recipes through ShellRecipeDriver by @nwparker in https://github.com/stablyai/orca/pull/40332
+    - test: remove low-value hook and mirror tests and search benchmarks by @OrcaWin in https://github.com/stablyai/orca/pull/40335
+    - fix(native-chat): show approved Codex automatic reviews as neutral notices by @Sean876-alt in https://github.com/stablyai/orca/pull/40161
+    - test: remove low-value composer, activation, provider and layout tests by @OrcaWin in https://github.com/stablyai/orca/pull/40342
+    - test: remove low-value draft lifecycle and editor save tests by @OrcaWin in https://github.com/stablyai/orca/pull/40350
+    - test: remove low-value bridge speech and lineage checks by @OrcaWin in https://github.com/stablyai/orca/pull/40356
+    - fix(vm-recipes): keep a VM's checkout out of the sidebar until its create finishes by @nwparker in https://github.com/stablyai/orca/pull/40355
+    - test: remove low-value messaging simulator and editor suites by @OrcaWin in https://github.com/stablyai/orca/pull/40363
+    - feat(runtime): tell phones when relay hosts change by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40122
+    - perf(github): use the desktop's PR fallback rule on the phone and forward refreshes by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40128
+    - feat(mobile): keep Tasks and new-workspace drafts across kills by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40127
+    - fix(mobile): floor event-driven reads after failures and catch up reads that span a stream reopen by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40142
+    - perf(mobile): stop rebooting the Home spare page on every hop and after iOS memory warnings by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40270
+    - feat(vm-recipes): show VM lifecycle states in the sidebar, with Suspend/Resume VM by @nwparker in https://github.com/stablyai/orca/pull/40046
+    - perf(mobile): keep three visited terminals mounted by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40111
+    - feat(mobile): open chats on their last messages after a relaunch by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40166
+    - feat(mobile): keep commit, PR and review drafts across app kills by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40114
+    - test: remove low-value VM creation assertions by @OrcaWin in https://github.com/stablyai/orca/pull/40367
+    - perf(mobile): open Home with last-known workspaces and counts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40129
+    - test: remove browser startup and CLI prerequisite mock suites by @OrcaWin in https://github.com/stablyai/orca/pull/40371
+    - test: remove low-value VM, mobile, work-item and terminal suites by @OrcaWin in https://github.com/stablyai/orca/pull/40376
+    - test: remove sidebar VM-wake and template hover suites by @OrcaWin in https://github.com/stablyai/orca/pull/40379
+    - fix(vm-recipes): hide an in-progress VM checkout in every window, the phone and the jump palette by @nwparker in https://github.com/stablyai/orca/pull/40373
+    - test: remove thin agent-hook and mobile migration suites by @OrcaWin in https://github.com/stablyai/orca/pull/40382
+    - fix(vm-recipes): tell paired phones to re-read workspaces when a VM create's pending checkout changes by @nwparker in https://github.com/stablyai/orca/pull/40384
+    - test: remove agent-hook projections and URL inventories by @OrcaWin in https://github.com/stablyai/orca/pull/40388
+    - test: remove low-value agent-hook and row-projection coverage by @OrcaWin in https://github.com/stablyai/orca/pull/40395
+    - fix(mobile): stop Review's branch compare re-reading back to back during git bursts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40278
+    - test: remove low-value browser, store and adapter suites by @OrcaWin in https://github.com/stablyai/orca/pull/40399
+    - test: prune low-value worktree, SSH and activation coverage by @OrcaWin in https://github.com/stablyai/orca/pull/40406
+    - test: prune low-value terminal and workspace coverage by @OrcaWin in https://github.com/stablyai/orca/pull/40413
+    - feat(speech): run GGUF models on transcribe-cpp with a CPU fallback by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39326
+    - test: prune low-value browser WSL and telemetry coverage by @OrcaWin in https://github.com/stablyai/orca/pull/40418
+    - feat(mobile): keep a failed dictation's recording and offer Retry by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40276
+    - feat(speech): dictate through any OpenAI-compatible service such as Groq, Mistral or a local server by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40160
+    - test: remove low-value browser, hook and SSH cases by @OrcaWin in https://github.com/stablyai/orca/pull/40423
+    - feat(dictation): show the words so far in the dictation pill as each phrase lands by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40428
+    - test: remove redundant browser matrices and SSH inventories by @OrcaWin in https://github.com/stablyai/orca/pull/40429
+    - feat(settings): add a Use GPU switch for on-device dictation by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39466
+    - test: remove low-value terminal, browser-session and SSH cases by @OrcaWin in https://github.com/stablyai/orca/pull/40433
+    - perf(mobile): show accounts from the last snapshot by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40425
+    - feat(mobile): save the chat when the app leaves the foreground by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40417
+    - test: remove low-value locale, automation and settings cases by @OrcaWin in https://github.com/stablyai/orca/pull/40437
+    - feat(mobile): keep dictating after leaving the session, with a floating pill by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40421
+    - feat(speech): move the speech models to transcribe-cpp and offer an update for old downloads by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39468
+    - Update README downloads badge by @app/buf0-bot in https://github.com/stablyai/orca/pull/40440
+    - perf(github): answer phone PR lookups from the desktop's last result by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40430
+    - test: remove low-value CLI, settings and shortcut suites by @OrcaWin in https://github.com/stablyai/orca/pull/40441
+    - refactor(speech): remove sherpa-onnx now that transcribe-cpp runs every model by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39473
+    - test: remove low-value CLI and renderer inventories by @OrcaWin in https://github.com/stablyai/orca/pull/40445
+    - feat(runtime): tell phones when the desktop refreshes a PR by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40438
+    - feat(speech): spell dictated code terms with a personal and per-repo dictionary by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40450
+    - test: remove low-value suites and redundant examples by @OrcaWin in https://github.com/stablyai/orca/pull/40457
+    - fix(speech): keep words spoken while the model loads by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40454
+    - fix(dictation): match the pill's Chinese and Japanese phrases to the inserted text, and space Korean ones by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40455
+    - Improve project group ordering across hosts by @AmethystLiang in https://github.com/stablyai/orca/pull/39816
+    - test: remove 20 low-value browser, CLI and budget checks by @OrcaWin in https://github.com/stablyai/orca/pull/40459
+    - fix(i18n): preserve web runtime error details by @AmethystLiang in https://github.com/stablyai/orca/pull/40267
+    - feat(speech): show dictated text after each pause on transcribe-cpp models by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39378
+    - test: remove 36 low-value CLI, browser and E2E checks by @OrcaWin in https://github.com/stablyai/orca/pull/40466
+    - Show the setup-script choice instead of greying out Create by @brennanb2025 in https://github.com/stablyai/orca/pull/40341
+    - Save a pasted workspace directory as the path it names by @brennanb2025 in https://github.com/stablyai/orca/pull/40347
+    - fix(i18n): translate browser password prompts by @AmethystLiang in https://github.com/stablyai/orca/pull/40446
+    - OpenCode subagents show in Chat UI and keep a chat open while they run by @brennanb2025 in https://github.com/stablyai/orca/pull/40141
+    - fix(native-chat): honor Windows environment overrides consistently by @brennanb2025 in https://github.com/stablyai/orca/pull/40301
+    - Source Control's Codex model menu lists your account's models even when Codex's catalog is large by @brennanb2025 in https://github.com/stablyai/orca/pull/40117
+    - feat(speech): record each speech model's languages, licence and measured accuracy by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40431
+    - fix(speech): let a slow on-device finish run while the engine still answers by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40460
+    - fix(mobile): close the details card when you touch the terminal by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38823
+    - feat(dictation): pulse three dots in the pill while spoken words are still on their way by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40443
+    - perf(native-chat): addressed tab-map transitions for chat membership by @brennanb2025 in https://github.com/stablyai/orca/pull/40098
+    - fix(i18n): correct Spanish review label agreement by @AmethystLiang in https://github.com/stablyai/orca/pull/40442
+    - test: remove 13 low-value tests and a duplicate native check by @OrcaWin in https://github.com/stablyai/orca/pull/40470
+    - feat(tab-group): make the split pane landing rows outline buttons by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40469
+    - Show AskUserQuestion option previews on desktop and phone by @brennanb2025 in https://github.com/stablyai/orca/pull/40109
+    - Keep Claude background tasks attached to their subagent after restart by @brennanb2025 in https://github.com/stablyai/orca/pull/39958
+    - Show friendly advice for Codex turn failures by @brennanb2025 in https://github.com/stablyai/orca/pull/39959
+    - Use Claude CLI titles for default native chat naming by @brennanb2025 in https://github.com/stablyai/orca/pull/40069
+    - test: remove low-value mobile and attachment cases by @OrcaWin in https://github.com/stablyai/orca/pull/40475
+    - fix(chat): always show Copy and Fork under a finished agent turn by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40474
+    - fix(agent-status): show Codex's mid-turn async question as waiting for the user by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39087
+    - feat(settings): redesign Voice settings around a setup card and a rated model list by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40452
+    - fix(speech): keep a slow GPU model load on the GPU while it still makes progress by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40472
+    - Fork Codex replies after rewinding a chat by @brennanb2025 in https://github.com/stablyai/orca/pull/40140
+    - refactor(claude): bring the structured session adapter back under the line cap by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40481
+    - fix(speech): reload the warm recognizer once the VAD download lands by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40477
+    - feat(settings): manage dictation vocabulary in Voice settings, per user and per repo by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40471
+    - feat(mobile): add Shift, Ctrl and Alt latches and opt-in agent keys to the terminal key row by @AmoabaKelvin in https://github.com/stablyai/orca/pull/38776
+    - test: remove 21 low-value tests and two suites by @OrcaWin in https://github.com/stablyai/orca/pull/40479
+    - test: remove 16 low-value chat tests by @OrcaWin in https://github.com/stablyai/orca/pull/40488
+    - test: remove 12 low-value paste and split tests by @OrcaWin in https://github.com/stablyai/orca/pull/40491
+    - fix(agent-picker): apply a model or effort picked in a form's setup panel by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40494
+    - perf(agents): release completed helper payloads and avoid history scans by @brennanb2025 in https://github.com/stablyai/orca/pull/40171
+    - perf(native-chat): keep streaming chats from re-projecting their whole transcript by @brennanb2025 in https://github.com/stablyai/orca/pull/40251
+    - feat(orchestration): mail an agent on a paired server with send --on; its reply comes back by itself by @Jinwoo-H in https://github.com/stablyai/orca/pull/40106
+    - feat(native-chat): mark new messages when returning to a chat, with a setting to turn it off by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40490
+    - fix(acp): reset reply digest when a subagent restarts by @OrcaWin in https://github.com/stablyai/orca/pull/40496
+    - test: remove 19 low-value chat tests and four suites by @OrcaWin in https://github.com/stablyai/orca/pull/40495
+    - fix(speech): skip a canceled dictation's queued decodes, also during Finish by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40483
+    - test: remove 54 low-value chat and terminal tests by @OrcaWin in https://github.com/stablyai/orca/pull/40500
+    - test: remove 36 low-value terminal lifecycle cases by @OrcaWin in https://github.com/stablyai/orca/pull/40503
+    - fix(automations): reopen a reused automation chat tab in the background by @innocarpe in https://github.com/stablyai/orca/pull/40271
+    - feat(mobile): read dictation progress to VoiceOver and TalkBack by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40504
+    - fix(mobile): keep the selected GitHub project when switching projects by @AmoabaKelvin in https://github.com/stablyai/orca/pull/39964
+    - fix(mobile): show only the changed lines in diffs of files over ~450 lines by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40511
+    - feat(browser): simplify the toolbar to one Annotate button and one menu by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40501
+    - fix(claude): isolate new launches from parent sessions by @brennanb2025 in https://github.com/stablyai/orca/pull/40281
+    - docs: slim CONTRIBUTING.md to the essentials by @AmethystLiang in https://github.com/stablyai/orca/pull/40272
+    - Offer only the speeds the model lists by @brennanb2025 in https://github.com/stablyai/orca/pull/40257
+    - fix(mobile): keep a finished agent tab's icon when its name mentions another agent by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40513
+    - test: remove 56 low-value terminal and startup tests by @OrcaWin in https://github.com/stablyai/orca/pull/40512
+    - fix(i18n): translate sparse preset validation failures by @AmethystLiang in https://github.com/stablyai/orca/pull/40277
+    - test: remove 40 low-value restore and reattach tests by @OrcaWin in https://github.com/stablyai/orca/pull/40522
+    - test(browser): reset proxy policy in WebAuthn profile fixture by @AmethystLiang in https://github.com/stablyai/orca/pull/40468
+    - fix(skills): load Orca browser guidance for ordinary web tasks by @gentslava in https://github.com/stablyai/orca/pull/39916
+    - fix(usage): price Claude Fable 5.2 and Mythos 5.2 by @brennanb2025 in https://github.com/stablyai/orca/pull/40506
+    - fix(agent-hooks): unwrap outer sh -c wrapper when capturing Antigravity hook process by @briannguyen9489032-beep in https://github.com/stablyai/orca/pull/40153
+    - Guide agent installation and sign-in from chat by @AmethystLiang in https://github.com/stablyai/orca/pull/40208
+    - fix(mobile): keep page builds where the OS doesn't purge them by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40524
+    - feat(settings): set up dictation in one click with a model suggested for your language by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40462
+    - fix(mobile): read a generic kept dictation failure once by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40529
+    - refactor: break runtime import cycles; check import/no-cycle at full depth by @nwparker in https://github.com/stablyai/orca/pull/39732
+    - test: remove 34 low-value spawn and startup tests by @OrcaWin in https://github.com/stablyai/orca/pull/40531
+    - perf(mobile): load the terminal engine and the session dock only when needed by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40515
+    - fix(daemon): reclaim an empty daemon pid file instead of failing every start by @nwparker in https://github.com/stablyai/orca/pull/39825
+    - Authorize the trusted floating workspace cwd for file access on orca serve and desktop by @nwparker in https://github.com/stablyai/orca/pull/39817
+    - perf(mobile): brotli-compress the page build by @AmoabaKelvin in https://github.com/stablyai/orca/pull/40532
+    - fix(agent-launch): restarted agents keep the launch they ran with by @Jinwoo-H in https://github.com/stablyai/orca/pull/38998
+    - Make Settings easier to scan and organize General by @brennanb2025 in https://github.com/stablyai/orca/pull/40249
+    - README: update star history chart by @Jinwoo-H in https://github.com/stablyai/orca/pull/40549
+    - chore(ratchet): baseline cached home realpathSync from #39817 (unbreaks main) by @nwparker in https://github.com/stablyai/orca/pull/40544
+    Cherry-picked fixes
+    - build: fail the React Compiler ratchet on stale uncompiled-list paths by @brennanb2025 in https://github.com/stablyai/orca/pull/40198
+    - Fix account usage reset display by @AmethystLiang in https://github.com/stablyai/orca/pull/40613
+    - fix(chat): reveal actions on latest reply by @AmethystLiang in https://github.com/stablyai/orca/pull/40668
+    - feat(dictation): offer the speech model update in the dictation pill by @AmethystLiang in https://github.com/stablyai/orca/pull/40686
+    - Keep Claude chat identity native-only and enforce its launch boundary by @brennanb2025 in https://github.com/stablyai/orca/pull/40548
+    New Contributors
+    - @tylerhuntington made their first contribution in https://github.com/stablyai/orca/pull/38782
+    - @jp-liu made their first contribution in https://github.com/stablyai/orca/pull/40073
+    - @dsingal0 made their first contribution in https://github.com/stablyai/orca/pull/39976
+    - @wuhaoyujerry made their first contribution in https://github.com/stablyai/orca/pull/40082
+    - @FranzFelberer made their first contribution in https://github.com/stablyai/orca/pull/40147
+    - @zzz163519 made their first contribution in https://github.com/stablyai/orca/pull/40064
+    - @Sean876-alt made their first contribution in https://github.com/stablyai/orca/pull/40161
+    - @briannguyen9489032-beep made their first contribution in https://github.com/stablyai/orca/pull/40153
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.255...v1.4.256
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.256
+ReleaseTime: 2026-11-10T21:31:53.0000000Z

@@ -1,0 +1,30 @@
+Version: 0.3.42
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.42/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.42/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fix Gemini tool schema rejection (#483) + temperature fix + OpenRouter free models + Claude Code CLI fix
+    Gemini schema fix (#483):
+    Gemini rejects JSON Schema fields like $defs, $ref, additionalProperties, default, title, $id, $comment, examples. The schema normalizer now strips all of these and resolves $ref references by inlining definitions from $defs. This fixes "400 INVALID_ARGUMENT" errors on Gemini agent turns with tools/MCP enabled. 3 new tests.
+    Temperature fix (v0.3.41):
+    Reasoning models (gpt-5-mini, o1, o3, o4) reject custom temperature. Driver now omits it for these models with runtime fallback retry. 11 new tests.
+    OpenRouter free models (v0.3.41):
+    Added 6 free model variants to the catalog: gemma-2-9b-it:free, llama-3.1-8b-instruct:free, qwen-2.5-7b-instruct:free, mistral-7b-instruct:free, zephyr-7b-beta:free, deepseek-r1:free.
+    Claude Code CLI fix (v0.3.40):
+    Replaced env_clear() with targeted env_remove() so Node.js runtime works. Removed --dangerously-skip-permissions. Actionable error messages.
+    Tool schema fix (#481, v0.3.39):
+    String/null/non-object input_schema values now parsed or defaulted to valid empty schemas.
+    All live tested with real Groq LLM calls.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.42
+ReleaseTime: 2026-03-10T01:10:04.0000000Z

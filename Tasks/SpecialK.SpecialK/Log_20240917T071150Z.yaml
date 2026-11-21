@@ -1,0 +1,36 @@
+Installer:
+- InstallerUrl: https://sk-data.special-k.info/repository/SpecialK_24.9.17.2.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Below are the highlights between v 24.9.16 - v 24.9.17.2:
+
+     + Hotfix for VBlank counting thread running while a game has destroyed and is re-creating a SwapChain.
+     + Added RAM warning if used system RAM reaches >= 98% while a game is running
+     + Added command console variable to control DXGI Budget Scale (see 24.9.10)
+
+               DXGI.VRAMBudgetScale     (Range: 0.1 - 5.0)
+
+            [ Press Ctrl+Shift+Tab to Open/Close the Command Console ]
+
+          * Some games will respond in real-time to changes to this.
+          * Changes made from the command console are saved to SK's per-game INI.
+
+         This allows tweaking over- or under-reporting of available VRAM to get a game to load in higher detail
+           assets or evict memory to reduce stutter.
+
+     + Disable tearing if using a VRR screen w/ DLSS3 Frame Gen, so FG can use G-Sync instead of randomly tear :)
+     + Improved precision of real-time VRR refresh rate calculation
+     + Restored the gray bars of 'animation error' (as PresentMon calls it) to users with drivers that support
+         HW GPU Scheduling + HW Flip Queue
+
+     + Added CPU affinity INI option
+
+         [Scheduler.System]
+         ProcessorAffinityMask=[1,0xFFFFFFFFFFFFFFFF] Default=0xFFFFFFFFFFFFFFFF
+
+        This is a bitmask, so map out the processor numbers you want in binary and then convert to decimal.
+
+          (i.e. ProcessorAffinityMask=1365  ->  10101010101  (6 physical cores))
+Version: 24.9.17.2

@@ -1,0 +1,31 @@
+Version: 1.15.7
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vpn-parser/releases/download/v1.15.7/vpn-parser-1.15.7-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VPN Parser v1.15.7 发布说明 / Release Notes
+    🎉 欢迎使用 VPN Parser v1.15.7！本版聚焦测速链路的正确性、安全与速度：节点指纹全面升级、API Token 收紧、测速并发重构（修复死锁）与预筛提速，并修复了 OpenWrt .apk 打包：
+    🔒 正确性与安全
+    - 节点指纹升级 v2：
+      - 指纹从「协议|服务器|端口|凭据片段」升级为对全量规范化连接配置的 SHA-256——SNI、WebSocket path、gRPC service、Reality 公钥/ShortID、flow、ALPN 等传输参数全部参与；
+      - 同服务器同凭据但传输参数不同的节点不再被误判重复而丢失；展示名 / 备注不参与指纹；「字段为空串」与「字段缺省」视为等价；
+      - 指纹运行时现算、不落库，升级无需迁移。
+    - API Query Token 收紧：?token= 仅允许只读导出接口（/api/export/*，订阅链接进浏览器/客户端的合理场景）；其余全部 GET 一律要求 Authorization: Bearer 头——防止 token 经浏览器历史 / 访问日志 / Referer 泄露后被拖走全量节点凭据。
+    - 日志脱敏：
+      - API 访问日志只记 method + path，不再记录完整 URI（导出链接的 ?token= 永不落盘）；
+      - 拉取订阅的日志与失败状态抹除 URL query 后才落盘（订阅 URL 常内嵌付费 token）。
+    🚀 测速稳定性与速度
+    - 测速重构为固定 Worker 池：TCP 预筛改为有界任务队列 + 固定 worker，在途探测恒 ≤ 并发数——万级节点不再一次性创建全量等待任务及其携带的节点副本；附带 2000 节点多线程回归测试（修复了重构中间版本引入的生产者-消费者死锁）；
+    - TCP 预筛超时独立封顶（Standard 1.5s / Deep 2.5s）：预筛只是一次 SYN，不再沿用内核测速超时（用户可设 5s）——死节点密集的大库第一阶段耗时直接减半以上；内核真实握手阶段超时不受影响；
+    - DNS 预解析阶段进度可见：域名多的池子在预筛真正开始前就能看到计数变化，不再长时间纹丝不动。
+    📦 OpenWrt .apk 打包修复
+    - 修复 pipefail 下 grep -q 探测遇 SIGPIPE 必挂、导致历届 CI 发版全部静默跳过 .apk 的问题；apk-tools 构建同步启用 help 并补齐 lua5.3 依赖；
+    - 本版本起 GitHub Release 资产将包含 OpenWrt 25.x .apk 包（x86_64 / aarch64_generic + LuCI 面板）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vpn-parser/releases/tag/v1.15.7
+ReleaseTime: 2026-10-30T00:54:29.0000000Z

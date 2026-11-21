@@ -1,0 +1,49 @@
+Version: 1.0.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chelal233/dsh-nexus/releases/download/v1.0.7/dsh-nexus_1.0.7_windows_x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chelal233/dsh-nexus/releases/download/v1.0.7/dsh-nexus_1.0.7_windows_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Update diagnosis and adaptation against pinned Harness dsh-v0.2.1-alpha.1 (5badb15009ae1756c3afe0ae0cef1faafc290ccc). Distinguish host-skipped/incompatible bundles, actual client import failures and pending services; bind readiness to the current run and owned process instead of stale records.
+    - Move full external-source verification off asynchronous request threads. Profile listing can wait for verification while ordinary reads retain their eight-second default timeout. Fix startup observation blocking UI requests.
+    - Separate bounded read-only configuration previews from complete backup recovery. Disable editing/saving above the 32 KiB preview limit, verify current-file identity, back up current contents and require confirmation. Cancellation does not write, stale fingerprints cannot overwrite changes, and successful recovery does not certify a subsequent startup.
+    - Export bounded 16/64 KiB Host/browser startup records with structured redaction and rejection of non-regular files or redirected parent directories. Preserve actual import_failed/blocked reasons without promoting forensic snapshots into readiness evidence.
+    Downloads and provenance
+    Windows x64/ARM64: EXE and portable ZIP. macOS Intel x64/Apple Silicon ARM64: DMG and portable ZIP. Linux x86_64/ARM64: AppImage, DEB and RPM. Per-platform build metadata and SHA256 manifests accompany the downloads, with an aggregate GitHub Actions identity-bound Sigstore signature/certificate. Provenance is separate from production OS signing. The separate Linux x64 RPM QA artifact is not an additional public release attachment.
+    Verification scope
+    Publication requires successful frozen dependencies, frontend/Rust regressions, resource verification and actual installed-package startup on CI runners for all six targets at this exact commit. Real isolated Windows x86_64 acceptance used Node 24.20.0, the original pinned CLI/Cordis/Web, authenticated Agent/RustBridge and actual Electron ClientAudit. It covers skipped incompatible bundles, missing dependencies/services, upstream normalization, stale-fingerprint rejection, complete backup recovery, run/PID ownership and the native Nexus confirmation UI. R7 diagnostics additionally passed genuine CLI/export identity and credential-redaction checks; ten diagnostic regressions passed without failures or ignored tests.
+    Dot independently checked 25 complete source files, the complete diagnostic semantic window and evidence consistency. Subsequent whole-core hash consistency verification was also supplied; it is not a complete semantic review of the entire core. Dot did not repeat Windows execution. Unchanged functional evidence was reused from the accepted candidate, not all rerun on the final installer.
+    Real upstream Linux build/runtime in Dot's environment remains blocked by tsx IPC restrictions even after normal platform approval; it is not counted as passing. Mac devices, official upstream Desktop Node 24.21.0 launch, real-session/full offline migration, full in-browser sessions, every third-party plugin, Gatekeeper first-open and production notarization remain unaccepted. Earlier Mac package subsets do not establish full acceptance for this version. No model/provider calls were made.
+    Bundled Harness remains 0.1.6-alpha.2 and user installations are not automatically upgraded. That lock has no official Linux Desktop resource; Linux retains Web mode. Explicit runtimes take precedence, and bundled Git excludes GCM. macOS packages are ad-hoc signed and not notarized; Windows/Linux are unsigned. CI success is not full-platform device-upgrade acceptance. This release does not replace D-drive installations or user data.
+    构建 / Build: Desktop build 37440109750, commit 28ee57fd41664811e67ec641cb4f468c62c629a0. 发布与实际下载字节验证 / Publication and payload-byte verification: Publish release 37461585056.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 按固定上游 Harness dsh-v0.2.1-alpha.1（5badb15009ae1756c3afe0ae0cef1faafc290ccc）更新诊断文档与适配。区分宿主跳过、不兼容插件、真实客户端导入失败和等待服务；就绪判断绑定当前运行和实际所有者进程，避免沿用陈旧记录。
+    - 将完整外部源码检查移出异步请求线程，配置档列表可等待验证完成，普通读取保持 8 秒默认超时。修复启动观察器同步检查阻塞界面请求的问题。
+    - 大配置保留只读预览和完整恢复路径。超过 32 KiB 预览限制时禁用编辑与保存；恢复前检查文件指纹、备份当前内容并要求界面确认。取消不写入，过期指纹拒绝覆盖。恢复成功不代表恢复后启动已验证。
+    - 诊断导出加入 16／64 KiB 上限的 Host／浏览器记录，拒绝非普通文件及父目录重定向，保留真实 import_failed/blocked 原因并结构化脱敏。诊断快照不代替当前运行的就绪检查。
+    下载与来源
+
+    | 系统    | 架构                           | 安装包             |
+    | ------- | ------------------------------ | ------------------ |
+    | Windows | x64、ARM64                     | EXE、portable ZIP  |
+    | macOS   | Intel x64、Apple Silicon ARM64 | DMG、portable ZIP  |
+    | Linux   | x86_64、ARM64                  | AppImage、DEB、RPM |
+
+    每个平台的 _build.json 记录提交、构建身份和检查范围；下载字节使用 _SHA256SUMS.txt 或总清单核对。总清单附 GitHub Actions 身份绑定的 Sigstore 签名与证书，这是来源证明，不是操作系统生产代码签名。公开附件包含六平台包和 Git 源码伴随材料，单独的 Linux x64 RPM QA artifact 不作为额外发行附件。
+    验收范围
+    发布前要求本提交六平台冻结依赖、前端／Rust 回归、资源核验及 CI runner 上的实际安装包启动全部成功。Windows x86_64 使用 Node 24.20.0、原始固定上游 CLI／Cordis／Web、真实认证 Agent／RustBridge 和实际 Electron ClientAudit，验证不兼容插件跳过、缺依赖／缺服务阻断、配置归一化、指纹冲突拒绝、完整备份恢复、新旧运行身份及原生 Nexus 恢复确认界面。R7 诊断另经真实 CLI 导出核验，Host／browser 对应同一运行、导出字节一致，实际凭据和 Harness token 未泄漏；10 项诊断回归通过，零失败、零忽略。
+    Dot 独立复核 25 个完整源码文件、完整诊断修改语义窗口及证据一致性，后续补齐整个 core 文件的哈希一致性复核；该哈希复核不等于整个 core 的完整语义复核。Dot 没有重复执行 Windows 实测。未变功能证据按原候选复用，不能称所有实测均在最终包上重跑。
+    Dot 所在 Linux 环境的真实上游构建／运行受 tsx IPC 权限限制，正常审批后仍不可执行；这项未计为通过。Mac 实机、本上游官方 Desktop Node 24.21.0 启动、真实会话／完整离线迁移、完整浏览器内会话、全部第三方插件、Gatekeeper 首次打开及生产公证未验收。此前 Mac 原包子集记录不能替代本版完整验收。未调用模型或外部 provider。
+    内置 Harness 锁仍为 0.1.6-alpha.2，不自动升级用户 Harness；该锁无官方 Linux Desktop 资源，Linux 保留 Web 模式。显式运行时优先，否则使用内置工具，捆绑 Git 不含 GCM。macOS 包临时签名且未公证，Windows／Linux 为 unsigned；CI 不等于全平台真机升级。本次发布不替换 D 盘或用户数据。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chelal233/dsh-nexus/releases/tag/v1.0.7
+ReleaseTime: 2026-10-06T12:15:59.0000000Z

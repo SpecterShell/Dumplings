@@ -1,0 +1,151 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/c36be92430b9/Windows64EditorInstaller/UnitySetup64-6000.0.2f1.exe
+  ProductCode: Unity 6000.0.2f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/c36be92430b9/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.2f1.exe
+  ProductCode: Unity 6000.0.2f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity3d.com/unity/whats-new/6000.0.2
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.2f1
+    - 3D Physics: 3D Physics Layer Collision Matrix elements are misaligned when new Layers are added (UUM-61750)
+    - Asset - Database: Crash in CollectManagedImportDependencyGetters inside OpenScene in batch mode (UUM-57742)
+    - Asset - Database: Editor freezes when PrefabUtility.LoadPrefabContents is called in AssetPostprocessor.OnPostprocessAllAssets for a moved prefab (UUM-54362)
+    - IL2CPP: [Android] Crash on Android when AndroidJavaProxy is calling from multiple threads (UUM-49357)
+    - Lighting: The Editor becomes unresponsive and memory allocation errors are spammed in the Console when Generating Lightning (UUM-58017)
+    - Platform Audio: Crash on FMODCodecMPEGsetPositionInternal when a mobile platform is selected and a specific audio clip is played (UUM-62086)
+    - Platform Audio: [Linux] No audio output when playing audio (UUM-53143)
+    - Profiling: Profiler does not profile after building the Project with Autoconnect Profiler Option enabled (UUM-71750)
+    - Shaders: Unlit/Texture material shader is not rendered if added as a skybox in lightning settings
+    - UI Toolkit Framework: The "StackOverflowException" error is thrown in the console and the Editor freezes when Spacebar is pressed after selecting the last element of a list (UUM-69616)
+    - WebRequest: UnityWebRequest crashes if invoked when player is quitting (UUM-63150)
+    - Windows: Two variants of a Windows editor only plugin, one targeting x86 and one targeting x64, prevents the player build (UUM-69382)
+    6000.0.2f1 Release Notes
+    Improvements
+    - Package Manager: Improved samples tab layout.
+    - Package Manager: Improved warning window to show .unitypackage dependencies that are about to be installed
+    - SRP Core: Improved Render Graph warning message in URP when missing RecordRenderGraph implementation.
+    - SRP Core: Render Graph Viewer: Display subpass & attachment index. (UUM-69886)
+    - SRP Core: Render Graph Viewer: New icon & tooltip if there are multiple usage details for a resource block. (UUM-69886)
+    API Changes
+    - Scripting: Added: The virtual method Initialize on HierarchyNodeTypeHandlerBase is no longer internal, and can now be used when multiple instances depends on each other. (UUM-70045)
+    - Scripting: Added: TouchScreenKeyboard.inputFieldAppearance, which can be used to determine on-screenkeyboard input field traits.
+    - Scripting: Changed: The class HierarchyNodeTypeHandlerBase constructor no longer has any parameters, the default constructor will be used now, and is guaranteed to be called. (UUM-70045)
+    - Scripting: Changed: The class HierarchyNodeTypeHandlerBase no longer implements the IDisposable interface, so that Dispose cannot be called manually on instances. There is still the Dispose method with a disposing parameter available to override if needed. (UUM-70045)
+    Changes
+    - Android: Prefer to use android.view.WindowMetrics.getBounds instead of DisplayMetrics.getMetrics/getRealMetrics when device API level is 30 or higher.
+    - Build System: include bee_backend.pdb next to bee_backend.exe on windows installs.
+    Fixes
+    - Android: UTK input field cursor will be always visible now when TouchScreenKeyboard opens, independent of hideInput value, when running on GameActivity. The reason is TouchScreenKeyboard.hideInput doesn't do anything on GameActivity, input field is always hidden. (UUM-67229)
+    - Asset Pipeline: Ensure the mappings are updated when a const guid changes. (UUM-60011)
+    - Audio: Fixed an issue that would cause the audio random container window to retain a false reference to an audio random container asset after it has been deleted. (UUM-55916)
+    - Audio: Fixed an issue that would make it appear as shuffle mode in the audio random container is broken. (UUM-50344)
+    - Audio: Fixed an issue where there was missing tooltips for the audio random container in the list view. (UUM-63304)
+    - Build Pipeline: Fixed Build and Run for UWP on D3D Generated Projects builds. (UUM-70305)
+    - Build Pipeline: Fixed plugin filtering for UWP, which will include only compatible plugins. (UUM-67013)
+    - Editor: * A new editor settings, "Exactly Match Referenced Clip Names", is set to true by default for new projects that are created starting with Unity 6.0 (UUM-69772)
+    - Editor: Changed multiplayer play mode dialog pop up to an event. (MTT-8495)
+    - Editor: Checking material layout only for the active subshader. (UUM-62522)
+    - Editor: Fixed a race condition crash in texture delete and dx12. (UUM-70136)
+    - Editor: Fixed an issue that would cause the audio random container window to show the wrong asset. (UUM-54710)
+    - Editor: Fixed an issue where crashes could occur while quitting when Cloud Diagnostics is enabled. (UUM-59177)
+    - Editor: Fixed an issue where renderer SortingLayerID cannot be set at runtime. (UUM-70789)
+    - Editor: Fixed exception thrown when switching between previews in inspector. (UUM-70746)
+    - Editor: Fixed focus selected shortcut regression on hierarchy. (UUM-54444)
+    - Editor: Fixed issue with Kerning (UUM-68282)
+    - Editor: Fixed issue with the editor turning black when a TextEditor constructor was called too early. (UUM-69525)
+    - Editor: Fixed tabbing to an invisible element when tabbing to Foldout elements. (UUM-69152)
+    - Editor: Fixed toggling Allow Instancing for multiple game objects and prefabs not applying the changes. (UUM-51109)
+    - Editor: Setup keywords for Graphics Settings to fix a compatibility with searches. (UUM-67557)
+    - Editor: Treating RenderSettings.m_IndirectSpecularColor as volatile data. (UUM-46853)
+    - Graphics: Prevent crash when an asynchronous texture load fails. (UUM-68118)
+    - HDRP: Fixed a potentially deadlocking StageRasterBin kernel in Hair system. (UUM-58614)
+    - HDRP: Fixed Alpha missing from HQ line rendering. (UUM-58687)
+    - HDRP: Fixed an icons used by the HDRP wizard issue. (UUM-69942)
+    - HDRP: Fixed reflection probe baking exception when fog multiple scattering is enabled in certain conditions. (UUM-71012)
+    - HDRP: Fixed shader warnings from TAA shader on Metal. (UUM-70287)
+    - IL2CPP: Cache libUnity and il2cpp image info for Android stacktrace optimizations. (UUM-61899)
+    - IL2CPP: Fixed a crash when calling Marshal.OffsetOf on a generic type. (UUM-68499)
+    - iOS: Fixed reported kind for Back Triple Camera: was with depth support when it doesn't support depth. (UUM-70571)
+    - iOS: Fixed wrong latest version selection in build settings. (UUM-61045)
+    - Mono: Added more descriptive error message when the process exceeds maximum number of open file descriptors. (UUM-67247)
+    - Package Manager: The package visibility button toolbar icon doesn't change when toggling from one state to another. (UUM-70786)
+    - Physics: Fixed a memory corruption inside the PhysicsScene implementation, which in turn caused crashes during the runtime depending on scene setup. (UUM-71387)
+    - Scene/Game View: Fixed an issue where docked resizable overlays would not update their size when owner window resized. (UUM-69951)
+    - Scripting: Fixed Application.exitCancellationToken not being raised after exiting playmode. (UUM-68595)
+    - Scripting: Fixed unexpected recompilations due to issue with AssemblyUpdater. (UUM-33752)
+    - Scripting: Fixed WaitForEndOfFrame calls multiple times a frame when multiple Game View Windows are visible. (UUM-66275)
+    - SRP Core: Removed "depth only surface" warning message appearing when using Game View Gizmos in URP RG. (UUM-66760)
+    - SRP Core: Render Graph Viewer: Fixed long resource name clipping issues in side panel. (UUM-71439)
+    - SRP Core: Render Graph Viewer: Fixed missing min height when resizing side panel vertical splitter. (UUM-69642)
+    - SRP Core: Render Graph Viewer: Fixed possible NullReferenceException when opening the project. (UUM-69805)
+    - SRP Core: Render Graph Viewer: Fixed side panel splitter state after returning from empty pass/resource filter. (UUM-71364)
+    - SRP Core: Render Graph Viewer: Fixed tooltip size bug and restructure tooltip messages. (UUM-69886)
+    - SRP Core: Rendering Debugger - Keep the correct selected panel when entering and exiting from playmode. (UUM-70377)
+    - uGUI: Fixed control interaction using the new input system on multi-display setups with different resolutions. (UUM-63551)
+    - UI Toolkit: Disabling focusable on a Foldout will now also disable its child Toggle focusable attribute. (UUM-69153)
+    - UI Toolkit: Fixed an issue where Editor.RequiresConstantRepaint did not work if there were more than 10 components. (UUM-69832)
+    - UI Toolkit: Fixed an issue where using ListView.bindingSourceSelectionMode would only set the dataSource inside the makeItem callback. (UUM-71217)
+    - UI Toolkit: Fixed navigation of foldout elements using keyboard or gamepad direction keys. (UUM-69189)
+    - Undo System: Fixed local position calculation when undoing Add VerticalLayoutGroup. (UUM-1180)
+    - URP: Fixed obsolete API usages in URP samples. (UUM-71491)
+    - URP: Hide unused Native Render Pass checkbox in UniversalRenderer when using Render Graph. (UUM-71269)
+    - VFX Graph: Fixed a rare crash when destroying a VFX instance during rendering. (UUM-71244)
+    - VFX Graph: Fixed exception when a category color is reset in the node search. (UUM-71376)
+    - VFX Graph: Fixed exposed properties reset when editing multiple VFX at the same time on inspector. (UUM-70594)
+    - VFX Graph: Fixed incorrect source spawnCount. (UUM-70512)
+    - VFX Graph: Fixed NullReferenceException when enabling Decal Layers in HDRP. (UUM-70861)
+    - Video: Fixed WebcamTexture clamps when wrap mode was set to "Repeat". (UUM-66777)
+    - WebGL: Fixed an issue where the WebCam texture was taking over the texture bound to a material. (UUM-71299)
+    - WebGL: [WebGPU] Fixed error when texture binding is missing.
+    - WebGL: [WebGPU] Fixed error with SRP Batcher constant buffer dynamicOffsets.
+    - WebGL: [WebGPU] Fixed error with write-only compute shader storage textures.
+    - WebGL: [WebGPU] Fixed memory error on graphics device shutdown.
+    - WebGL: [WebGPU] Fixed WGSL shader compilation error with some shaders that use intBitsToFloat.
+    Package changes in 6000.0.2f1
+    Packages updated
+    - com.unity.remote-config: 4.0.0 to 4.1.0
+    - com.unity.remote-config-runtime: 4.0.1 to 4.0.2
+    - com.unity.services.economy: 3.3.0 to 3.4.0
+    - com.unity.xr.meta-openxr: 1.0.1 to 2.0.0
+    - com.unity.services.ugc: 3.0.0 to 3.0.1
+    Packages added
+    - com.unity.services.tooling@1.0.0
+Version: 6000.0.2f1
+Modules:
+  visualstudio: https://go.microsoft.com/fwlink/?linkid=2189815
+  visualstudioprofessionalunityworkload: https://aka.ms/vs/17/release/vs_Professional.exe
+  visualstudioenterpriseunityworkload: https://aka.ms/vs/17/release/vs_Enterprise.exe
+  android: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Android-Support-for-Editor-6000.0.2f1.exe
+  ios: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-iOS-Support-for-Editor-6000.0.2f1.exe
+  appletv: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-AppleTV-Support-for-Editor-6000.0.2f1.exe
+  visionos: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-VisionOS-Support-for-Editor-6000.0.2f1.exe
+  linux-il2cpp: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Linux-IL2CPP-Support-for-Editor-6000.0.2f1.exe
+  linux-mono: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Linux-Mono-Support-for-Editor-6000.0.2f1.exe
+  linux-server: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Linux-Server-Support-for-Editor-6000.0.2f1.exe
+  mac-mono: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Mac-Mono-Support-for-Editor-6000.0.2f1.exe
+  mac-server: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Mac-Server-Support-for-Editor-6000.0.2f1.exe
+  universal-windows-platform: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Universal-Windows-Platform-Support-for-Editor-6000.0.2f1.exe
+  webgl: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-WebGL-Support-for-Editor-6000.0.2f1.exe
+  windows-il2cpp: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Windows-IL2CPP-Support-for-Editor-6000.0.2f1.exe
+  windows-server: https://download.unity3d.com/download_unity/c36be92430b9/TargetSupportInstaller/UnitySetup-Windows-Server-Support-for-Editor-6000.0.2f1.exe
+  language-ja: https://new-translate.unity3d.jp/v1/live/54/6000.0/ja
+  language-ko: https://new-translate.unity3d.jp/v1/live/54/6000.0/ko
+  language-zh-hant: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hant
+  language-zh-hans: https://new-translate.unity3d.jp/v1/live/54/6000.0/zh-hans
+  documentation: https://cloudmedia-docs.unity3d.com/docscloudstorage/6000.0/UnityDocumentation.zip
+ReleaseTime: 2024-05-14T19:54:04.4270000Z

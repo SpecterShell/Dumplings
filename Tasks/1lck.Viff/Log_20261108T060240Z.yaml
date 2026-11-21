@@ -1,0 +1,72 @@
+Version: v0.4.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/1lck/viff/releases/download/v0.4.2/viff-v0.4.2-windows-amd64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.2 adds in-app editing for working-tree text files, and fixes commit-time time zones, invalid encoding, and clock format.
+    Highlights
+    This release turns the read-only file viewer into an optional editor, shows commit times in the local time zone, and lets you choose a 24- or 12-hour clock.
+    ✨ New features
+    - Edit UTF-8 text files in the working tree from the file viewer: press Edit (⌘E), save with ⌘S, revert with Revert, and return with Done while keeping line numbers, horizontal scrolling, and syntax colours.
+    - A save re-reads the file and refuses to overwrite an external change; line endings, a UTF-8 BOM, and file permissions stay intact.
+    ⚡ Improvements
+    - Commit times now follow the local time zone, and settings can switch between a 24- and 12-hour clock.
+    - Welcome-screen search now also matches repositories in the workspace, and the recent-project limit rises from 20 to 50.
+    🛠 Fixes
+    - Invalid UTF-8 bytes in a commit message are replaced instead of making the whole log view fail.
+    - Cross-time-zone comparisons no longer show today's commit as yesterday.
+    Upgrade instructions
+    - Upgrading from v0.4.1: the settings file format is unchanged, so existing settings keep working.
+    - macOS: choose the Apple Silicon or Intel DMG, quit the old version, open the DMG, and replace Viff.app in Applications.
+    - Windows: quit the old version and run the x64 installer.
+    - Windows portable: extract the archive, enter its directory, and run viff.exe without installing.
+    - Debian/Ubuntu: run sudo apt install ./viff-v0.4.2-linux-amd64.deb.
+    - Linux portable: extract the archive, enter its directory, and run ./viff after installing the required system libraries.
+    - Install Git separately on PATH, and check the release guide for Linux dependencies.
+    Compatibility and known issues
+    - macOS requires version 13 or later; Linux needs a working graphical session, rendering backend, and the system libraries listed in the release guide.
+    - The macOS app is ad-hoc signed without Developer ID signing or notarization; the Windows installer is not Authenticode signed, so the system may show a security prompt.
+    - In-app editing supports only UTF-8 text files in the working tree, up to 1 MiB for both the original file and the saved text; historical revisions, diffs, and conflicts stay read-only, and there is no completion, multi-cursor editing, or autosave.
+    - Real Windows/Linux input-method testing, saving in WSL repositories, and full desktop acceptance remain outstanding; headless CI is not a complete desktop compatibility claim.
+    - On Windows and Linux, external working-tree file changes may take up to about 30 seconds to refresh; WSL repositories use a separate polling interval.
+    - Subversion property editing and locking are not implemented; the integrated terminal and content search for WSL repositories still run on Windows.
+    Install only files from the project release page after checking their checksums; verify the source if the operating system blocks them.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Viff 0.4.2 增加工作树文本文件的应用内编辑，并修正提交时间的时区、编码容错与格式选择。
+    重点更新
+    这一版把只读文件查看器变成可选的编辑器，同时让提交时间按本机时区显示，并允许在 24 小时制与 12 小时制之间选择。
+    ✨ 新功能
+    - 文件查看器可直接编辑工作树中的 UTF-8 文本文件：Edit（⌘E）进入，⌘S 保存，Revert 还原，Done 返回只读，并保留行号、水平滚动与语法着色。
+    - 保存前会重新读取文件，外部改动会拒绝覆盖；行尾、UTF-8 BOM 和文件权限保留不变。
+    ⚡ 改进
+    - 提交时间按本机时区显示，设置中可在 24 小时制与 12 小时制之间切换。
+    - 欢迎页搜索同时匹配工作区里已添加的仓库，最近项目上限从 20 提高到 50。
+    🛠 修复
+    - 提交信息含非法 UTF-8 字节时只替换坏字符，不再让整个日志视图报错。
+    - 跨时区比较不再把今天的提交误判成昨天。
+    升级说明
+    - 从 v0.4.1 升级：设置文件格式未变，原有设置在升级后继续生效。
+    - macOS：按机型选择 Apple Silicon 或 Intel 的 DMG，退出旧版后打开 DMG，将 Viff.app 拖入“应用程序”并替换旧版。
+    - Windows：退出旧版后运行 x64 安装器。
+    - Windows 便携包：解压后进入新目录执行 viff.exe，不写入安装信息。
+    - Debian/Ubuntu：执行 sudo apt install ./viff-v0.4.2-linux-amd64.deb。
+    - Linux 便携包：解压后进入新目录执行 ./viff，并自行安装所需系统库。
+    - Git 需单独安装并加入 PATH，Linux 系统库要求见发布指南。
+    兼容性与已知问题
+    - macOS 要求 13 或更高版本；Linux 需要可用的图形会话、渲染后端和发布指南中列出的系统库。
+    - macOS 应用使用 ad-hoc 签名，未经 Developer ID 签名或公证；Windows 安装器未经 Authenticode 签名，系统可能显示安全提示。
+    - 应用内编辑只支持工作树中的 UTF-8 文本文件，原始文件和保存后的内容都不超过 1 MiB；历史版本、diff 与冲突仍只读，也不提供补全、多光标或自动保存。
+    - 应用内编辑的 Windows/Linux 实机输入法、WSL 仓库保存与三平台桌面验收仍待补充；无头 CI 不代表完整桌面兼容。
+    - Windows 和 Linux 上外部工作区文件变化可能需要最多约 30 秒才会刷新；WSL 仓库使用独立的轮询间隔。
+    - Subversion 属性编辑和锁操作尚未实现；WSL 仓库的内置终端与内容搜索仍在 Windows 侧运行。
+    仅安装来自项目发布页且已核对校验值的文件；如遇系统拦截，请先确认来源。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/1lck/viff/releases/tag/v0.4.2
+ReleaseTime: 2026-11-08T05:11:55.0000000Z

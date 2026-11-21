@@ -1,0 +1,26 @@
+Version: 0.0.88
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.88/cursor-byok-0.0.88-windows-x32-installer.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.88/cursor-byok-0.0.88-windows-x64-installer.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.88/cursor-byok-0.0.88-windows-arm64-installer.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.0.88
+    本版本聚焦两个稳定性修复：native 子代理瞬时上游故障自动重试，以及历史会话 legacy Shell 工具调用解析崩溃。
+    修复
+    - native 子代理瞬时上游故障自动重试：上游中转站出现瞬时 request_timeout / 503 Connection refused 时，父 agent 靠模型重试能扛住，而 Cursor 原生子代理一次 provider 调用失败即被判死。现在子代理因可判定的瞬时上游错误失败时，会自动重新派发同一次 Task（最多 2 次重试、共 3 次尝试），上游恢复后即可成功；仅重试耗尽或非瞬时错误（如 context_too_large、工具逻辑失败）才按原样失败。
+    - 历史会话 legacy Shell 工具调用解析崩溃修复：旧版本写入的 Shell 工具调用把 outputNotification 存成 message 对象，而当前格式是 base64 bytes，导致带旧历史的会话在启动或失败收尾发布 checkpoint 时解析崩溃（报 invalid value for bytes field outputNotification），表现为「An unexpected error occurred」且反复重试。现在所有历史解析路径都会把 legacy 对象格式自动升级，旧会话恢复正常。
+    说明
+    - 本版本同时包含 v0.0.87 的全部修复（gpt-5.6 并行工具调用回退串行、上下文 preflight 超限自动压缩、长时子代理不再被看门狗误杀）与 v0.0.85 的全部更新（会话级调度与隔离、全局上下文投影、委派与子代理增强、设置与历史界面优化等）。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/cursor-byok/releases/tag/v0.0.88
+ReleaseTime: 2026-08-10T07:57:45.0000000Z

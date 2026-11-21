@@ -1,0 +1,34 @@
+Version: 0.2.18
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/MayDay-wpf/snow-app/releases/download/v0.2.18/Snow-App-Setup-0.2.18.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Improvements
+    - Streaming Rendering CPU: Significantly reduced main-process and renderer CPU usage during streaming rendering — markdown streaming renders are throttled to ~10fps (3fps for very long text over 100KB), stream metrics (token count / elapsed time) are batched every 250ms instead of per chunk, user-message-rail scroll computation is coalesced with requestAnimationFrame, and large-surface backdrop blur is removed (kept only on small elements).
+    - Background Throttling Restored: The global disable-background-timer-throttling / disable-renderer-backgrounding switches were removed, so hidden or minimized windows no longer run rAF and animations at full speed (and no longer block App Nap on macOS). Streaming IPC events still arrive in real time, so background AI sessions are unaffected.
+    - System Settings Read Cache: A 200ms TTL cache was added to the Rust layer for system-setting reads, so high-frequency polling paths (team identity, YOLO mode checks) no longer open a SQLite connection and re-parse the schema on every read.
+    Bug Fixes
+    - Team Identity Polling Loop: Fixed a dependency loop in the team summary hook where the identity reference rebuilt the load callback and re-triggered identity IPC 7–28 times per second, keeping the main process CPU persistently high.
+    Full Changelog: https://github.com/MayDay-wpf/snow-app/compare/v0.2.17...v0.2.18
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/releases/tag/v0.2.18
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    改进
+    - 流式渲染 CPU 优化：显著降低流式渲染期间主进程与渲染进程的 CPU 占用——Markdown 流式渲染降频至约 10fps（超过 100KB 的超长文本进一步降至 3fps）、流式指标（token 数/耗时）改为每 250ms 合并更新、用户消息栏滚动计算用 rAF 合并、大面毛玻璃移除（仅小元素保留）。
+    - 恢复后台节流：移除全局禁用后台定时器节流 / 渲染进程后台化的开关，窗口隐藏或最小化后不再全速运行 rAF 与动画（macOS 上也不再阻止 App Nap）；流式 IPC 事件仍实时到达，后台 AI 会话不受影响。
+    - 系统设置读取缓存：Rust 层为系统设置读取新增 200ms TTL 缓存，团队身份轮询、YOLO 模式检查等高频路径不再每次读取都打开数据库连接并解析 schema。
+    修复
+    - 团队身份轮询死循环：修复团队摘要 hook 中 identity 依赖导致 load 回调重建、每秒触发 7-28 次身份 IPC 的死循环，此前主进程 CPU 持续高位。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/MayDay-wpf/snow-app/blob/HEAD/RELEASE_NOTES_ZH.md#v0218
+ReleaseTime: 2026-08-27T08:35:41.0000000Z

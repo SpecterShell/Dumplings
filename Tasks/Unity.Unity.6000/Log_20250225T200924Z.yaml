@@ -1,0 +1,120 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/157d81624ddf/Windows64EditorInstaller/UnitySetup64-6000.0.40f1.exe
+  ProductCode: Unity 6000.0.40f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/157d81624ddf/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.40f1.exe
+  ProductCode: Unity 6000.0.40f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.40
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.40f1
+    - 3D Physics: Freeze when calling Rigidbody.SweepTestAll in a specific project (UUM-96080)
+    - Analytics: [Android]Crash on lib/arm64/libil2cpp.so when Unity Analytics and Engine Code stripping are enabled (UUM-95408)
+    - Android: [iOS] [UnityWebRequest] Requests with "UnityWebRequest" are open for SSL Proxying (UUM-97194)
+    - Asset - Database: Crash on MonoBehaviour::Transfer when the XR Interaction Toolkit Sample Assets are updated (UUM-76934)
+    - Audio Authoring: Audio Reverb Zone still produces sound when the Audio Source volume is 0 (UUM-92689)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DOTS: URP Cascaded Shadows do not have a falloff in Player when the Player is built not in Development Mode (UUM-97415)
+    - HDRP: Graphics Compositor breaks Unity rendering when the "Output Camera" is changed to a scene Camera and one Camera SubLayer is active.
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84610
+    - Packman: [windows only] Switching Project when importing complete project does not import all assets and project opens incomplete (UUM-88051)
+    - Scripting Runtime: Crash on UnityEditor.AssetDatabase:StopAssetEditing when removing HDRP Package after having imported Water Samples (UUM-78164)
+    - Serialization: Crash on MonoBehaviour::VirtualRedirectTransfer when closing Editor after removing HDRP and importing Water Samples before (UUM-97847)
+    - Serialization: The "UniversalRenderPipelineGlobalSettings.asset" is creating noise in the git diff when building a Player (UUM-80052)
+    - Shader System: Crash after the “State comes from an incompatible keyword space“ log when opening the project (UUM-98620)
+    - Shortcut Management: Adding non-context menu item via ContextMenuUtility API can crash Editor down the line (UUM-98587)
+    - SpeedTree: This release of SpeedTree includes a change to the interface of the SpeedTree8Wind shadergraph node. If you have an animated SpeedTree in the shadergraph, be sure to connect an ObjectSpacePosition node to the input of the SpeedTree8Wind. If the wind node does not have an input on the ObjectSpacePosition port, the mesh will be shrunk down to a point at origin (making it seem to vanish).
+      https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-84616
+    - SRP XR: GPU utilization increases by 20% on Meta Quest headsets when Render Graph is enabled on 6000.0.16f1 and higher (UUM-90118)
+    - SRP XR: The Player renders black on a Quest headset when MSAA, Post Processing, and Spacewarm depth submission are enabled (UUM-84612)
+    - Text: TMP 'Bold' Font Style is rendered with incorrect Font when a Font Asset without Bold typeface is selected (UUM-97382)
+    - UI Toolkit Framework: UI Toolkit buttons stop receiving inputs when entering the new Scene while holding a button during Scene change (UUM-98080)
+    - Vulkan: [Android] [Vulkan] [WebCamTexture] "WebCamTexture.Play" crashes the application when the camera is started (UUM-95365)
+    - Web Platform: The Player freezes on load when building Web platform (UUM-98296)
+    - XR SDK: [Quest] Screen flashes for several seconds when enabling microphone permissions (UUM-72660)
+    6000.0.40f1 Release Notes
+    Features
+    - Version Control: User can create a code review from the list of branches (or changesets) opening either the Desktop App or the Unity Cloud website.
+    - Version Control: User can Shelve your Pending Changes when switching to another branch (or changeset) and decide if you want to apply them automatically after the switch.
+    - Version Control: Users can Shelve your selected Pending Changes, inspect the shelves content, and apply them to your workspace.
+    Improvements
+    - Build Pipeline: Added pdb files for all platform Editor extensions, this will provide better logs in case there are exceptions in platform Editor code.
+    Changes
+    - Graphics: r8g8b8a8 abd b8g8r8a8 srgb formats now report LoadStore unsupported on intel mac, since srgb writes are explicitly not supported there, (UUM-95478)
+    - Version Control: Added dedicated toolbar buttons to open the list of branches and the Branch Explorer of the Desktop App.
+    - Version Control: Improve the Create workspace window to suggest the matching Unity Cloud project if it exists.
+    - Version Control: Moved the 'Unity Version Control' menu item under 'Window'/'Version Control' submenu starting from Unity 6.1.
+    - Version Control: Optimized incoming changes & merge to only reload the Package Manager when needed.
+    - Version Control: Reworded the changeset context menu "Undo this change" to "Revert this file to the previous revision" so it's more explicit.
+    - Version Control: Serialize the Checkin comment and tick selection so they are kept on any domain reload and play mode.
+    Fixes
+    - 2D: Fixed back buffer clear when pixel perfect crop frame is used. (UUM-93255)
+    - 2D: Fixed camera sorting layer not breaking batch correctly for URP 2D. (UUM-90792)
+    - 2D: Fixed depth/stencil errors on Android. (UUM-91055)
+    - 2D: Fixed flickering in the Tile Palette window when the clipboard view is resized. (UUM-93105)
+    - Android: Fixed the problem with additional streaming assets (added using BuildPlayerContext.AddAdditionalPathToStreamingAssets) being compressed in APK/AAB. (UUM-96090)
+    - Android: Fixedmissing pdb files for Android Editor extensions - AndroidPlayerBuildProgram.Data.pdb, AndroidPlayerBuildProgram.pdb, Unity.Android.Gradle.pdb, Unity.Android.Types.pdb, UnityEditor.Android.Extensions.pdb. This will improve Editor.log contents when there's an exception happening in Android editor code. (UUM-95520)
+    - Asset Import: Fixed an issue to handle FBX Skeleton with unsupported RootNode. (UUM-62869)
+    - Documentation: Updated documentation references for URP/HDRP Camera, Decal projector, Probe Volumes. (UUM-91777)
+    - DX12: Fixed the memory of released textures accumulating, when the editor is out of focus. (UUM-86354)
+    - Editor: Fixed a bug that would cause the editor to throw a null reference exception when selecting a Video Clip. (UUM-83274)
+    - Editor: Fixed an issue for missing help button for RenderGraphViewer. (UUM-85773)
+    - Editor: Fixed an issue to hide Edit menu items added by Apple Intelligence. (UUM-96160)
+    - Editor: Fixed an issue where macOS Editor would stutter when navigating Scene View with Middle Mouse Button. (UUM-77258)
+    - Editor: Fixed an issue where the create menu no longer has empty entries after updating packages in the project on Linux or exiting play mode on macOS. (UUM-89106)
+    - Editor: Fixed corrupted uxml file opens in the UI Builder. (UUM-71448)
+    - Editor: Fixed crash related to AudioSource with AudioRandomContainer when performing undo in play mode of clip added in edit mode. (UUM-88955)
+    - Editor: Fixed graphics jobs toggle in projects settings when building for standalone targets. (UUM-91713)
+    - Editor: Prevent "Attempting to draw with missing bindings" warning from being reported in some cases (UUM-92382)
+    - GI: Fixed an issue by not clampping the environment sample count in the lighting window to 2048. (UUM-96953)
+    - Graphics: Fixed a rare crash on certain Samsung devices when running GLES. (UUM-29705)
+    - Graphics: Fixed seams visible for non-infinite instanced quads in the water surface. (UUM-86738)
+    - IL2CPP: Fixed a UnityLinker crash when --enable-report is used on a large project. (UUM-95599)
+    - IL2CPP: Fixed issue where build would fail if the project's root directory contained files named after project assemblies. (UUM-91340)
+    - Linux: Fixed assertion failure on ExFAT File systems when "Build and Run" is executed. (UUM-91555)
+    - Mono: Fixed a crash on domain reload when Windows Form is using a tooltip window. (UUM-79065)
+    - Physics: Fixed an issue where calling Physics.IgnoreCollision(colA, colB, false) would not trigger PhysX's collision filter to re-evaluate contacts. Effectively allowing the two shapes to still ignore collision until one of them had it's filtering data updated. (UUM-96257)
+    - Prefabs: Fixed an issue to reconnect proxy parent in Prefab Stage. (UUM-79087)
+    - Terrain: Fixed terrain billboard grass rendering when dynamic batching is enabled in the URP asset. (UUM-67798)
+    - UI Toolkit: A BaseField's tooltip now appears only when hovering its label, unless the BaseField has a tooltip set on its label directly. (UUM-68606)
+    - UI Toolkit: Fixed a rendering issue caused by reading worldClip in GeometryChangeEvent. (UUM-93269)
+    - UI Toolkit: Fixed warning when importing UXML "Import of asset setup artifact dependency to but dependency isn't used and therefore not registered in the asset database". (UUM-68160)
+    - Universal RP: Fixed an issue to prevent the fog pass from being enqueued when the fog pass was not properly initialized. (UUM-90255)
+    - Version Control: Fixed a performance issue by preventing the ConfigureLogging call on every domain reload when Unity Version Control is not used, reducing the load time by ~200ms.
+    - Version Control: Fixed an issue to ensured ignore.conf was not being reformatted when adding or removing an ignore rule, so it keeps empty lines and comments.
+    - Version Control: Fixed console error GUI Error: Invalid GUILayout state in PlasticWindow view which is caused under some circumstances.
+    - Version Control: Fixed lock statuses to correctly refresh in Project View and Inspector after merging.
+    - Version Control: Fixed missing checked-out for renamed assets.
+    - Version Control: Fixed null exception on entering in Play Mode before creating the workspace.
+    - Version Control: Fixed rename asset leaves 'Added' + 'Remove locally' status instead of 'Moved'.
+    - Version Control: Fixed the create branch operation to work in Gluon mode which uses partial workspaces.
+    - VFX Graph: Fixed an issue by preventing VFXRenderer direct material modification that could lead to crashes. (UUM-89988)
+    - VFX Graph: Fixed VFX Graph template window was empty when the Terrain Tool package is installed. (UUM-95871)
+    - Web: Fixed the UncaughtReference error when clicking the diagnostics_icon in the Web Diagnostics Overlay on desktop browser (UUM-96115)
+    Package changes in 6000.0.40f1
+    Packages updated
+    - com.unity.collab-proxy: 2.6.0 to 2.7.1
+    - com.unity.render-pipelines.core: 17.0.3 to 17.0.4
+    - com.unity.render-pipelines.high-definition: 17.0.3 to 17.0.4
+    - com.unity.render-pipelines.high-definition-config: 17.0.3 to 17.0.4
+    - com.unity.render-pipelines.universal: 17.0.3 to 17.0.4
+    - com.unity.services.wire: 1.2.7 to 1.3.0
+    - com.unity.shadergraph: 17.0.3 to 17.0.4
+    - com.unity.visualeffectgraph: 17.0.3 to 17.0.4
+    - com.unity.memoryprofiler: 1.1.4 to 1.1.5
+Version: 6000.0.40f1
+ReleaseTime: 2025-02-25T16:31:05.0170000Z

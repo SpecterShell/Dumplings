@@ -1,0 +1,270 @@
+Version: 1.4.241
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.241/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Chats and a browser that behave the way you expect 🧭
+    This release makes chats follow your agent settings, brings Chrome-style tools to the built-in browser, and helps SSH connections and managed servers recover. You’ll also find a chat font setting, live agent browsing, and steadier Hermes, Kimi, Kiro and Windows terminals.
+    The short version
+    - Chats that follow your settings: New chats use each agent’s permission from Settings → Agents, renamed chats keep their names in Session History, and a chat won’t write a conversation a terminal is still running.
+    - A browser closer to Chrome: Dock DevTools inside the pane, mute tabs playing sound, see a link’s URL on hover, and use Orca shortcuts and mouse back/forward inside pages.
+    - Watch agents browse: A cursor and badge show where an agent is clicking or typing, chat jumps you to the page, and links from terminals and chat open beside their source.
+    - SSH with fewer dead ends: Saved port forwards return after a restart and explain failures, certificate-only hosts connect through your system ssh, and managed servers update without closing terminals.
+    - Agents that start and resume reliably: Hermes and Kimi panes resume after a restart, Kiro reports status on its V3 engine, and keys typed while an agent starts are kept as a draft.
+    - Polish where it counts: Pick a font for chat, zoom with Cmd/Ctrl + + on non-US keyboards, open cloud-only files from macOS terminals, and get steadier Windows terminals and pasting.
+    Phone & web updates: Phones no longer drop pieces of terminal output, and chat renames and each chat’s permission mode now show there. Session tabs also keep Working and Needs You for Windows agents that never set a title.
+    Compatibility & upgrade notes
+    - Fresh terminal host: New terminals start on a fresh terminal host so this release’s terminal fixes apply. Terminals already open before you update keep running, and stay attached, on the previous host until you close them.
+    - Chat permissions: Settings → Chat no longer has its own permission dropdown; set it per agent in Settings → Agents. Existing chats keep their saved permission, and a chat’s own permission menu changes only that chat.
+    - Conversations open in a terminal: If a terminal might still be writing a conversation, its chat won’t send and asks you to quit the agent there or close that terminal. Closing that terminal lets the next send go through.
+    - Managed SSH servers: Update anyway keeps running terminals going through the update. The offer to resume chats after a restart needs a server already running this release.
+    - OpenCode model picks: OpenCode 2.0.14, 2.0.15, 2.0.17 and 2.0.18 leave the first message unsent when a model is picked, so Orca refuses model picks on those versions.
+
+    Product experience
+    Native chat (experimental)
+    Chats share your agent settings, keep their names, and stay out of conversations a terminal is still writing.
+    - Start new chats with each agent’s permission setting from Settings → Agents, the same as terminals by @brennanb2025 in https://github.com/stablyai/orca/pull/32334
+    - Never start a chat’s agent on a conversation a terminal is still writing, and keep restored panes from resuming a conversation an open chat holds by @brennanb2025 in https://github.com/stablyai/orca/pull/30930
+    - Save chat renames as the chat’s name, so Session History, phones and other windows keep showing them after the tab closes by @brennanb2025 in https://github.com/stablyai/orca/pull/31602
+    - Show turns made outside an OpenCode or Grok chat when the chat continues by @brennanb2025 in https://github.com/stablyai/orca/pull/31616
+    - Offer to resume interrupted chats after a paired or managed server restarts or updates by @brennanb2025 in https://github.com/stablyai/orca/pull/28978
+    - Add a custom font family setting for chat, with a preview and installed-font suggestions by @AmethystLiang in https://github.com/stablyai/orca/pull/33687
+    - Retry a failed agent start before rejecting your message by @brennanb2025 in https://github.com/stablyai/orca/pull/33045
+    - Keep goal text whose delivery is uncertain, and send each distinct goal control to the host by @brennanb2025 in https://github.com/stablyai/orca/pull/33022
+    - Keep an idle Claude chat idle when a background task reports progress by @innocarpe in https://github.com/stablyai/orca/pull/22879
+    - Fold Claude thinking-only transcript records into the reasoning section by @nwparker in https://github.com/stablyai/orca/pull/33344
+    - Honour Claude Code’s rejected ANTHROPIC_API_KEY setting in chats by @nwparker in https://github.com/stablyai/orca/pull/33346
+    - Keep long Pi replies with lots of thinking from stopping early by @nwparker in https://github.com/stablyai/orca/pull/33293
+    - Reconnect an OMP chat when OMP drops its session by @nwparker in https://github.com/stablyai/orca/pull/33359
+    - Keep a remembered effort for OMP models other than the running one in new chats by @nwparker in https://github.com/stablyai/orca/pull/33646
+    - Stop refusing new Pi chats when a remembered effort is missing from the saved model list by @nwparker in https://github.com/stablyai/orca/pull/33637
+    - Read WSL Claude transcripts through linked folders, so chats from Orca-managed Claude accounts load on mobile by @Kooooojun in https://github.com/stablyai/orca/pull/33172
+    - Keep a resting Codex chat’s skills check from blocking worktree removal on Windows by @nwparker in https://github.com/stablyai/orca/pull/33569
+    Browser
+    Chrome-style DevTools, tab audio and link previews, plus a live view of agents using the browser.
+    - Dock DevTools inside the browser pane, with dock side, resizing and pop-out by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33003
+    - Show a speaker icon on browser tabs playing sound, with tab mute by @AmoabaKelvin in https://github.com/stablyai/orca/pull/32981
+    - Show a hovered or focused link’s URL in a bubble at the bottom of the page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/32978
+    - Make Orca shortcuts, split focus and mouse back/forward buttons work inside web pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/31859
+    - Open browser links beside their source by @AmethystLiang in https://github.com/stablyai/orca/pull/32907
+    - Show agent browsing live, with a jump to the page from chat by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33075
+    - Ask before sites use the local network by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33399
+    - Show bigger new tab tiles and a roomier workspace card by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33178
+    Agent launch, status & accounts
+    Agents start on the first try, report the right status, resume in the right place, and keep the right account.
+    - Keep the permission pill inside Arguments and share the Permissions menu by @brennanb2025 in https://github.com/stablyai/orca/pull/32971
+    - Skip Codex’s startup update prompt when Orca launches Codex by @nwparker in https://github.com/stablyai/orca/pull/33355
+    - Keep keys typed into a starting agent pane as an unsubmitted draft by @nwparker in https://github.com/stablyai/orca/pull/33315
+    - Press Enter again while a Windows Codex composer is still reading a long task by @nwparker in https://github.com/stablyai/orca/pull/33295
+    - Press Enter again while DeepSeek Harness’s launchpad still holds the prompt by @nwparker in https://github.com/stablyai/orca/pull/33316
+    - Make flagged --command agent launches wait for the agent’s screen to be ready by @nwparker in https://github.com/stablyai/orca/pull/33466
+    - Deliver Devin launch prompts on its command line instead of typing them after start by @nwparker in https://github.com/stablyai/orca/pull/33349
+    - Start a Claude worker on its composer when its terminal title is turned off by @nwparker in https://github.com/stablyai/orca/pull/33384
+    - Pre-trust the folder for Kimi Code so its trust menu does not swallow the prompt by @nwparker in https://github.com/stablyai/orca/pull/33411
+    - Refuse model picks on OpenCode 2.x releases that drop the startup prompt by @nwparker in https://github.com/stablyai/orca/pull/33436
+    - Recognize Qwen Code launched through Node on Windows by @nwparker in https://github.com/stablyai/orca/pull/33461
+    - Keep Codex from reading as idle while its plan menu is showing after its Stop hook by @nwparker in https://github.com/stablyai/orca/pull/33335
+    - Let a settled screen clear a blocked-prompt state left over after the agent erased its dialog by @nwparker in https://github.com/stablyai/orca/pull/33485
+    - Show Needs You while a Claude MCP elicitation dialog is open by @nwparker in https://github.com/stablyai/orca/pull/33517
+    - Let a pane’s own agent reclaim its status from a nested agent’s hooks by @nwparker in https://github.com/stablyai/orca/pull/33572
+    - Keep agent status on a terminal moved into a new tab after a restart by @nwparker in https://github.com/stablyai/orca/pull/33601
+    - Stop an Antigravity subagent finishing from ending its parent’s turn by @nwparker in https://github.com/stablyai/orca/pull/33645
+    - Keep Pi in-process subagent sessions from taking over the lead pane by @nwparker in https://github.com/stablyai/orca/pull/33595
+    - Follow Claude sessions continued into a daemon job by @nwparker in https://github.com/stablyai/orca/pull/33605
+    - Keep launch flags on a woken agent’s record so a restart restores them by @nwparker in https://github.com/stablyai/orca/pull/33523
+    - Resume an agent from the folder it ran in, not the pane’s starting folder by @nwparker in https://github.com/stablyai/orca/pull/33527
+    - Resume Hermes panes after a restart, on the pane’s own session by @nwparker in https://github.com/stablyai/orca/pull/33514
+    - Keep a finished Hermes pane done when its background memory review calls tools by @nwparker in https://github.com/stablyai/orca/pull/33418
+    - Use the Windows %LOCALAPPDATA%\hermes home for Hermes hooks and session history by @nwparker in https://github.com/stablyai/orca/pull/33413
+    - Recognize Hermes readiness and its installed launcher by @nwparker in https://github.com/stablyai/orca/pull/33606
+    - Keep a resumed Kimi pane resumable across the next Orca restart by @nwparker in https://github.com/stablyai/orca/pull/33489
+    - Report Kiro status on Kiro’s V3 engine, including the built-in default agent by @nwparker in https://github.com/stablyai/orca/pull/33660
+    - Run the native Windows Claude hook for profile paths with spaces by @nwparker in https://github.com/stablyai/orca/pull/33364
+    - Exit skipped Windows hook replays without waiting on input by @nwparker in https://github.com/stablyai/orca/pull/33470
+    - Let the WSL hook relay run on the Orca server’s bundled Node by @nwparker in https://github.com/stablyai/orca/pull/33089
+    - Show DeepSeek Harness rows for WSL terminals on Windows by @denchu-unagi in https://github.com/stablyai/orca/pull/31205
+    - Start Claude Agent Teams teammates on headless Linux servers by @nwparker in https://github.com/stablyai/orca/pull/33389
+    - Capture Git Bash agent environments with native Windows paths by @nwparker in https://github.com/stablyai/orca/pull/33619
+    - Write folder trust into the managed Codex account home the launch uses by @nwparker in https://github.com/stablyai/orca/pull/33377
+    - Apply global ~/.codex/rules in Orca-managed Codex homes by @nwparker in https://github.com/stablyai/orca/pull/33493
+    - Migrate resumed Windows Codex sessions whose transcript path has a \?\ prefix by @nwparker in https://github.com/stablyai/orca/pull/33558
+    - Index a new WSL Codex account home before bringing history into it by @nwparker in https://github.com/stablyai/orca/pull/33630
+    - Read the sign-in link Codex prints on stderr when adding a Codex account by @nwparker in https://github.com/stablyai/orca/pull/29811
+    - Keep the old Codex login until re-authentication finishes, and relabel swapped account homes by @nwparker in https://github.com/stablyai/orca/pull/33568
+    - Keep the selected Antigravity account after agy refreshes its token by @nwparker in https://github.com/stablyai/orca/pull/33656
+    - Resume Claude in the folder it was started in after an account-switch restart by @nwparker in https://github.com/stablyai/orca/pull/33659
+    - Leave your node or python program alone after a Claude account switch by @adifsgaid in https://github.com/stablyai/orca/pull/30328
+    - Share folders Claude created in an account folder before its first setup by @nwparker in https://github.com/stablyai/orca/pull/33479
+    - Show an idle Claude account whose access token lapsed as waiting for Claude, not signed out by @nwparker in https://github.com/stablyai/orca/pull/33542
+    - Show a Claude Enterprise seat’s monthly spend cap when it has no 5-hour or weekly window by @nwparker in https://github.com/stablyai/orca/pull/33655
+    - Count fork-copied Codex token events once in usage by @nwparker in https://github.com/stablyai/orca/pull/33478
+    - Show Codex usage while Codex’s session index is stuck rebuilding by @nwparker in https://github.com/stablyai/orca/pull/33636
+    - Keep Codex automation and agent-created threads in Agent Session History by @nwparker in https://github.com/stablyai/orca/pull/33477
+    - List Claude sessions stored under a CLAUDE_CONFIG_DIR set only in your login shell by @nwparker in https://github.com/stablyai/orca/pull/33506
+    Orchestration
+    Mail reaches workers when they can take it, and worker starts fail clearly instead of stalling.
+    - Let a new orca orchestration check --wait start while an old one is still waiting by @Jinwoo-H in https://github.com/stablyai/orca/pull/33013
+    - Wake an agent for new mail even while it still holds an unacknowledged batch by @Jinwoo-H in https://github.com/stablyai/orca/pull/33639
+    - Point idle headless terminals at their mail by @nwparker in https://github.com/stablyai/orca/pull/33258
+    - Submit mail pointers to Cursor CLI instead of leaving them in the composer by @nwparker in https://github.com/stablyai/orca/pull/33347
+    - Hold mail pointers while the agent shows an open dialog by @nwparker in https://github.com/stablyai/orca/pull/33366
+    - Hold mail pointers while the composer has an unsent draft by @nwparker in https://github.com/stablyai/orca/pull/33429
+    - Press Enter again when DeepSeek Harness’s launchpad refuses a worker’s first task by @nwparker in https://github.com/stablyai/orca/pull/33499
+    - Start Antigravity workers in a terminal when its chat runtime isn’t installed by @nwparker in https://github.com/stablyai/orca/pull/33520
+    - Fail a Codex worker’s dispatch when its session can’t reconnect by @nwparker in https://github.com/stablyai/orca/pull/33543
+    - Let worker-start reuse an idle native-install Claude terminal by @nwparker in https://github.com/stablyai/orca/pull/33544
+    - Paste CLI prompts as one block for every recognized agent, not just Claude and Codex by @nwparker in https://github.com/stablyai/orca/pull/33571
+    Terminals
+    A fresh terminal host, steadier Windows terminals, and history and folders that survive sleep, restarts and phones.
+    - Start new terminals on a fresh terminal host so this release’s terminal fixes apply by @Jinwoo-H in https://github.com/stablyai/orca/pull/33705
+    - Respawn a Windows ConPTY pane that started without keyboard input by @nwparker in https://github.com/stablyai/orca/pull/33423
+    - Keep a Windows terminal’s output-relay write error from stopping the terminal host by @nwparker in https://github.com/stablyai/orca/pull/33391
+    - Send Ctrl+Enter to Claude Code on Windows in the form it understands by @nwparker in https://github.com/stablyai/orca/pull/33473
+    - Preserve OpenCode Ctrl+Enter on Windows by @Pr1p in https://github.com/stablyai/orca/pull/33149
+    - Keep Windows Codex multiline Ctrl+V and Edit > Paste as one draft by @nwparker in https://github.com/stablyai/orca/pull/33339
+    - Keep restored history when ConPTY repaints after a resize by @nwparker in https://github.com/stablyai/orca/pull/33577
+    - Apply the terminal host’s ConPTY resize rule in the window too by @nwparker in https://github.com/stablyai/orca/pull/33584
+    - Send ESC d for Option+Forward-Delete on macOS by @nwparker in https://github.com/stablyai/orca/pull/33296
+    - Let macOS terminal shells download cloud-only files by @Jinwoo-H in https://github.com/stablyai/orca/pull/33623
+    - Show the stalled terminal host banner when the host is actually stalled by @Jinwoo-H in https://github.com/stablyai/orca/pull/33000
+    - Bound folder permission checks while creating terminal sessions by @AmethystLiang in https://github.com/stablyai/orca/pull/33643
+    - Clean up an agent’s leftover tools when closing a plain shell pane on macOS and Linux by @nwparker in https://github.com/stablyai/orca/pull/33317
+    - Let agents run exit hooks before an immediate close force-quits them by @nwparker in https://github.com/stablyai/orca/pull/33367
+    - Don’t resume an agent whose terminal is still running by @nwparker in https://github.com/stablyai/orca/pull/33380
+    - Keep fish’s startup terminal reply out of the Codex composer by @nwparker in https://github.com/stablyai/orca/pull/33381
+    - Wait for escape sequences to finish before resetting the cursor of an idle agent by @nwparker in https://github.com/stablyai/orca/pull/33616
+    - Keep split color sequences intact during a quiet terminal restore by @nwparker in https://github.com/stablyai/orca/pull/33677
+    - Stop false recovery warnings in running full-screen programs when pane sizing is slow by @nwparker in https://github.com/stablyai/orca/pull/33474
+    - Confirm a live agent has exited before resetting its mouse modes by @nwparker in https://github.com/stablyai/orca/pull/33603
+    - Start a woken pane’s new prompt on its own line when reattached by @nwparker in https://github.com/stablyai/orca/pull/33494
+    - Let Kiro’s terminal relay release the shell-ready wait by @nwparker in https://github.com/stablyai/orca/pull/33495
+    - Finish saving history before a shutdown’s connection can close by @nwparker in https://github.com/stablyai/orca/pull/33504
+    - Keep desktop history when a hidden pane is revealed by @nwparker in https://github.com/stablyai/orca/pull/33534
+    - Keep desktop terminal history after a phone opens the terminal by @nwparker in https://github.com/stablyai/orca/pull/33537
+    - Wake a slept WSL pane on Windows in the folder its shell was in by @nwparker in https://github.com/stablyai/orca/pull/33398
+    - Keep history and folder for a slept pane the relaunched app had not reopened yet by @nwparker in https://github.com/stablyai/orca/pull/33425
+    - Keep the folder of a WSL pane a relaunched window reattached when it is slept by @nwparker in https://github.com/stablyai/orca/pull/33496
+    - Reopen a slept agent whose tab is gone in a fresh tab instead of stranding it by @nwparker in https://github.com/stablyai/orca/pull/33598
+    SSH & remote servers
+    Port forwards that come back, more hosts that connect, and managed servers you can update without closing terminals.
+    - Bring saved SSH port forwards back after a restart that reconnects through the host’s Orca server by @nwparker in https://github.com/stablyai/orca/pull/33388
+    - Show saved SSH port forwards that couldn’t start, with the reason, and let you remove them by @nwparker in https://github.com/stablyai/orca/pull/33450
+    - Retry over system ssh when the built-in client shares no algorithm with the host by @nwparker in https://github.com/stablyai/orca/pull/33680
+    - Add Update and Update anyway for a managed SSH server, keeping its running terminals by @nwparker in https://github.com/stablyai/orca/pull/33397
+    - Move an SSH host onto its managed server even when a pane saved no terminal history by @nwparker in https://github.com/stablyai/orca/pull/33681
+    - Explain that adding a project on a paired server’s SSH host isn’t supported yet by @nwparker in https://github.com/stablyai/orca/pull/33284
+    - Drop a paired server’s old workspace rows when it relists them under new project ids by @nwparker in https://github.com/stablyai/orca/pull/33396
+    - Keep one paired runtime’s updates from dropping another runtime’s terminals in a shared workspace by @nwparker in https://github.com/stablyai/orca/pull/33414
+    - Fix orca agent hooks commands on headless Orca servers by @nwparker in https://github.com/stablyai/orca/pull/33700
+    - Drive Android emulators from headless orca serve hosts by @nwparker in https://github.com/stablyai/orca/pull/33701
+    Workspaces, sidebar & everyday polish
+    Workspaces stay on the right branch and dialogs don’t get stuck, with quicker previews and tidier sidebar controls.
+    - Keep each same-path workspace copy on its own host’s branch by @nwparker in https://github.com/stablyai/orca/pull/33428
+    - Start the agent when a workspace is opened during creation by @nwparker in https://github.com/stablyai/orca/pull/33562
+    - Keep the create-worktree dialog from getting stuck on a stalled setup step by @OrcaWin in https://github.com/stablyai/orca/pull/33400
+    - Explain the shallow-clone warning for keeping local main up to date, and let you stop the refresh by @OrcaWin in https://github.com/stablyai/orca/pull/33260
+    - Keep the Jira Board view selected in Tasks after you leave the page by @kazuki-hanai in https://github.com/stablyai/orca/pull/30588
+    - Keep the workspace hover card open behind link actions by @OrcaWin in https://github.com/stablyai/orca/pull/33409
+    - Close the link chooser when you click elsewhere on a hover card by @nwparker in https://github.com/stablyai/orca/pull/33679
+    - Show tab previews after 500 ms instead of 800 ms by @AmethystLiang in https://github.com/stablyai/orca/pull/33447
+    - Keep the sidebar header buttons in place when switching to Activity by @AmethystLiang in https://github.com/stablyai/orca/pull/33648
+    - Give the notification bell room for its status and count by @AmethystLiang in https://github.com/stablyai/orca/pull/33683
+    - Make Cmd/Ctrl + zoom in on non-US keyboards by @AmoabaKelvin in https://github.com/stablyai/orca/pull/33014
+    - Keep Orca CLI commands working in sandboxes that deny chmod by @nwparker in https://github.com/stablyai/orca/pull/33662
+    Phone & web
+    Phones keep every piece of terminal output and the right agent status, and explain what they can’t show.
+    - Stop phones losing pieces of terminal output by @nwparker in https://github.com/stablyai/orca/pull/33405
+    - Keep Working and Needs You in a phone’s session tabs on Windows agents that never set a title by @nwparker in https://github.com/stablyai/orca/pull/33614
+    - Explain why a file outside the workspace can’t be shown on the phone by @nwparker in https://github.com/stablyai/orca/pull/33341
+    Tests, builds & maintenance
+    Broader behavioral coverage with fewer low-value tests, faster local checks and dev setup, continued module organization, a repository-wide comment cleanup, and relay service improvements.
+    All test, build and maintenance changes
+    - Log the relay director’s zone and round-trip speed on each runtime line by @Jinwoo-H in https://github.com/stablyai/orca/pull/33372
+    - Cap how many reserve relay cells a director outage sends to the database by @Jinwoo-H in https://github.com/stablyai/orca/pull/33415
+    - Build the macOS terminal host on a patched Node runtime to recover stalled workers (reverted later in this release, apart from its stall telemetry) by @nwparker in https://github.com/stablyai/orca/pull/29133
+    - Return the macOS terminal host to official Node, keeping stall telemetry by @Jinwoo-H in https://github.com/stablyai/orca/pull/33688
+    - Clean up after the agent integration fixes by @nwparker in https://github.com/stablyai/orca/pull/33644
+    - Repair main’s line limits and a stale test import by @brennanb2025 in https://github.com/stablyai/orca/pull/33675
+    - Complete the repository-wide comment cleanup by @OrcaWin in https://github.com/stablyai/orca/pull/33249
+    - Finish the launcher and configuration comment review by @OrcaWin in https://github.com/stablyai/orca/pull/33513
+    - Fix suppressed lint violations instead of ignoring them by @OrcaWin in https://github.com/stablyai/orca/pull/33294
+    - Split STYLEGUIDE.md into a core guide plus topic deep dives by @nwparker in https://github.com/stablyai/orca/pull/33402
+    - Add component fixtures with headless screenshots for fast UI checks by @nwparker in https://github.com/stablyai/orca/pull/33406
+    - Give coding agents TypeScript 7 code intelligence, with load-aware type checkers by @nwparker in https://github.com/stablyai/orca/pull/33408
+    - Give each worktree its own pnpm dev profile, ports and seeded profiles by @nwparker in https://github.com/stablyai/orca/pull/33416
+    - Skip mobile dev-client rebuilds when the native fingerprint is unchanged by @nwparker in https://github.com/stablyai/orca/pull/33410
+    - Move mobile to TypeScript 7, Vitest 5 and the root typecheck runner by @nwparker in https://github.com/stablyai/orca/pull/33419
+    - Speed up the local test loop and changed-test runs in cold worktrees by @nwparker in https://github.com/stablyai/orca/pull/33421
+    - Keep JS plugins out of default oxlint and adopt ast-grep by @nwparker in https://github.com/stablyai/orca/pull/33430
+    - Make pnpm check:changed the single pre-handoff check by @nwparker in https://github.com/stablyai/orca/pull/33432
+    - Add an opt-in bundled renderer dev mode by @nwparker in https://github.com/stablyai/orca/pull/33433
+    - Serve the renderer with bundled dev mode by default by @nwparker in https://github.com/stablyai/orca/pull/33449
+    - Drop the load-based type checker cap by @nwparker in https://github.com/stablyai/orca/pull/33444
+    - Skip the mobile native fingerprint report on draft PRs by @nwparker in https://github.com/stablyai/orca/pull/33438
+    - Rerun a WSL2 CI job once when its hosted runner freezes by @nwparker in https://github.com/stablyai/orca/pull/33532
+    - Run topology SQLite fixture tests in Node by @nwparker in https://github.com/stablyai/orca/pull/33533
+    - refactor: group agent-session conversation and message identity by @nwparker in https://github.com/stablyai/orca/pull/33324
+    - refactor: group PTY delivery and drain ownership by @nwparker in https://github.com/stablyai/orca/pull/33358
+    - refactor: group mobile chat composer ownership by @nwparker in https://github.com/stablyai/orca/pull/33390
+    - refactor: group Parcel watcher process ownership by @nwparker in https://github.com/stablyai/orca/pull/33401
+    - refactor: group local and WSL filesystem watchers by @nwparker in https://github.com/stablyai/orca/pull/33407
+    - refactor: group filesystem IPC registration and suites by @nwparker in https://github.com/stablyai/orca/pull/33458
+    - refactor(native-chat): group tool attribution modules by @nwparker in https://github.com/stablyai/orca/pull/33482
+    - refactor: group native chat edit and patch modules by @nwparker in https://github.com/stablyai/orca/pull/33497
+    - refactor: organize native chat tool content and presentation by @nwparker in https://github.com/stablyai/orca/pull/33515
+    - refactor: group PTY bindings and lifecycle suites by @nwparker in https://github.com/stablyai/orca/pull/33566
+    - refactor: group renderer session launch lifecycle by @nwparker in https://github.com/stablyai/orca/pull/33586
+    - refactor: group local filesystem guards and search owners by @nwparker in https://github.com/stablyai/orca/pull/33624
+    - refactor(mobile): group native chat send and stream state by @nwparker in https://github.com/stablyai/orca/pull/33640
+    - test(connectors): drive a connector conversation end to end on a headless serve host by @Jinwoo-H in https://github.com/stablyai/orca/pull/33613
+    - Stabilize notification dispatch tests with fixed timestamps by @AmethystLiang in https://github.com/stablyai/orca/pull/33698
+    - test(git-bash): give ssh-agent a load-tolerant bound in the Windows pane proof by @nwparker in https://github.com/stablyai/orca/pull/33287
+    - test(windows): read the grandchild pid from accumulated pane output by @nwparker in https://github.com/stablyai/orca/pull/33320
+    - test(browser): route input into the baseline sandboxed frame before clicking it by @nwparker in https://github.com/stablyai/orca/pull/33330
+    - test(mobile-web): act on the HTML preview frame only once input reaches it by @nwparker in https://github.com/stablyai/orca/pull/33336
+    - test(windows): warm WMI before timing the NSIS capability probe by @nwparker in https://github.com/stablyai/orca/pull/33340
+    - test(mobile-web): click the drawer chip once it is actionable, and honour the wait timeouts by @nwparker in https://github.com/stablyai/orca/pull/33342
+    - test(terminal): load the alt-screen chain’s host graph at collection by @nwparker in https://github.com/stablyai/orca/pull/33343
+    - test: run released-phone compatibility checks under Node by @nwparker in https://github.com/stablyai/orca/pull/33480
+    - test(runtime): compare existing-folder imports against the resolved temp path by @nwparker in https://github.com/stablyai/orca/pull/33540
+    - test: honor startup paste timer delays and cancellation by @nwparker in https://github.com/stablyai/orca/pull/33550
+    - test: remove duplicate checks and repair weak fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/33353
+    - test: remove redundant cases and strengthen regression assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33356
+    - test: remove 13 low-value checks and strengthen runtime coverage by @OrcaWin in https://github.com/stablyai/orca/pull/33373
+    - test: remove redundant checks and repair audit coverage gaps by @OrcaWin in https://github.com/stablyai/orca/pull/33385
+    - test: remove redundant checks and repair misleading fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/33394
+    - test: remove self-validating checks and repair behavioral coverage by @OrcaWin in https://github.com/stablyai/orca/pull/33412
+    - Remove low-value test inventories and repair behavioral assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33437
+    - test: remove seven low-value cases and repair behavioral assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33453
+    - test: remove schema inventory and strengthen boundary coverage by @OrcaWin in https://github.com/stablyai/orca/pull/33476
+    - test: exercise boundary assertions and repair audit fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/33483
+    - test: verify retry identities and complete boundary outputs by @OrcaWin in https://github.com/stablyai/orca/pull/33491
+    - test: remove redundant checks and strengthen runtime assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33498
+    - test: remove duplicate diff cases and repair audit fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/33503
+    - test: remove mock-only cases and repair audit fixtures by @OrcaWin in https://github.com/stablyai/orca/pull/33509
+    - test: repair CLI and mobile fixtures and remove duplicate checks by @OrcaWin in https://github.com/stablyai/orca/pull/33518
+    - test: strengthen CLI and mobile behavior checks by @OrcaWin in https://github.com/stablyai/orca/pull/33526
+    - test: strengthen CLI errors and mobile lifecycle checks by @OrcaWin in https://github.com/stablyai/orca/pull/33529
+    - test: strengthen transport lifecycle and benchmark checks by @OrcaWin in https://github.com/stablyai/orca/pull/33538
+    - test: strengthen transport recovery and benchmark assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33547
+    - test: tighten transport, recovery, and diagnostic checks by @OrcaWin in https://github.com/stablyai/orca/pull/33559
+    - test: strengthen relay, persistence, and benchmark checks by @OrcaWin in https://github.com/stablyai/orca/pull/33563
+    - test: tighten relay assertions and repair benchmark checks by @OrcaWin in https://github.com/stablyai/orca/pull/33573
+    - test: remove redundant checks and tighten runtime query coverage by @OrcaWin in https://github.com/stablyai/orca/pull/33583
+    - test: remove redundant metadata checks and strengthen runtime coverage by @OrcaWin in https://github.com/stablyai/orca/pull/33611
+    - test: remove redundant renderer and shared checks and strengthen assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33625
+    - test: strengthen Git and Linear assertions and remove redundant checks by @OrcaWin in https://github.com/stablyai/orca/pull/33633
+    - test: strengthen watcher and mobile async assertions by @OrcaWin in https://github.com/stablyai/orca/pull/33641
+    - test: strengthen filesystem and settings coverage; remove redundant cases by @OrcaWin in https://github.com/stablyai/orca/pull/33652
+    New Contributors
+    - @adifsgaid made their first contribution in https://github.com/stablyai/orca/pull/30328
+    - @denchu-unagi made their first contribution in https://github.com/stablyai/orca/pull/31205
+    - @Kooooojun made their first contribution in https://github.com/stablyai/orca/pull/33172
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.240...v1.4.241
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.241
+ReleaseTime: 2026-10-26T03:48:28.0000000Z

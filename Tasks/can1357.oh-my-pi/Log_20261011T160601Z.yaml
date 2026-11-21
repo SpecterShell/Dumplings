@@ -1,0 +1,34 @@
+Version: 18.9.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.9.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Added
+    - Added compat.supportsThinkingBindingControls for Bedrock Converse: setting it to false stops prefix-bound Claude requests from sending thinking.block_binding, the thinking-binding-controls-2026-08-01 beta and the /input_transformations response path, for gateways or regions that reject them (#15316 by @harshaygadekar)
+    Fixed
+    - Fixed Bedrock Claude Fable 5.1 requests with thinking off and a forced tool choice sending the forced choice next to adaptive thinking; the choice now falls back to auto (#15316 by @harshaygadekar)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the supports-thinking-binding-controls axis to Bedrock Converse models (on by default) so a rule or models.yml override can turn off Claude thinking-binding controls on hosts that reject them (#15316 by @harshaygadekar)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added supportsThinkingBindingControls to Bedrock compat in models.yml, so a Bedrock gateway or region that rejects Claude thinking-binding controls can turn them off (#15316 by @harshaygadekar)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed executable scripts without a #! line failing with "Exec format error" in the embedded shell (#15271 by @iliaal).
+    @oh-my-pi/pi-tui
+    Fixed
+    - Fixed inline charts and images leaving overlapping copies over text when moved, resized, replaced, or hidden, while preserving images in scrollback.
+    What's Changed
+    - fix(bedrock): add supportsThinkingBindingControls catalog opt-out by @harshaygadekar in https://github.com/can1357/oh-my-pi/pull/15316
+    - fix(shell): preserve executable text fallback with posix_spawn by @iliaal in https://github.com/can1357/oh-my-pi/pull/15271
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.9.0...v18.9.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.9.1
+ReleaseTime: 2026-10-11T11:10:18.0000000Z

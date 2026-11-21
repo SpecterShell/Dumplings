@@ -1,0 +1,38 @@
+Version: 17.3.2
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v17.3.2/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-ai
+    Fixed
+    - Dropped unsigned thinking blocks from Antigravity Claude requests instead of sending them without a signature, preventing HTTP 400 responses when resuming sessions or switching models.
+    - Classified Antigravity HTTP 429 responses from structured google.rpc.ErrorInfo reasons (QUOTA_EXHAUSTED, RATE_LIMIT_EXCEEDED, and INSUFFICIENT_G1_CREDITS_BALANCE), using retry delays of five minutes or longer to distinguish rotatable quota windows from transient throttling instead of relying only on message regexes.
+    Removed
+    - Removed the Antigravity identity-prompt injection (ANTIGRAVITY_SYSTEM_INSTRUCTION and shouldInjectAntigravitySystemInstruction): Cloud Code Assist accepts arbitrary system instructions on gemini-3.x and Claude routes (verified live), and the injected stub never matched the real client's system prompt anyway. User system prompts are now sent unmodified (still tagged role: "user").
+    - Fixed Antigravity auto mode not failing over to the sandbox endpoint when the daily endpoint returned a thinking-only STOP, which caused Advisor turns to be falsely recorded as empty-response failures (#8480).
+    @oh-my-pi/pi-catalog
+    Added
+    - Added support for the deepseek-v4-pro:preview model
+    - Added support for the gemini-3.7-flash model
+    - Added dynamic Antigravity client-version discovery from the official update manifest (darwin/arm64 channel), so version-gated models appear without a code change; PI_AI_ANTIGRAVITY_VERSION remains available as an override.
+    Fixed
+    - Fixed Antigravity discovery missing Gemini 3.7 Flash: Cloud Code Assist gates newer models on the client version in the User-Agent, and the pinned antigravity/hub/2.1.4 was too old. The user-agent now matches the captured 2.8.0 client format (antigravity/hub/2.8.0 (aidev_client; os_type=darwin; arch=arm64; cl=963137146)); os_type/arch stay pinned to the darwin/arm64 reference client. Overridable via PI_AI_ANTIGRAVITY_VERSION / PI_AI_ANTIGRAVITY_CL / PI_AI_ANTIGRAVITY_OS / PI_AI_ANTIGRAVITY_ARCH.
+    Removed
+    - Removed ANTIGRAVITY_SYSTEM_INSTRUCTION from wire/gemini-headers; the Antigravity transport and web search no longer inject a fake identity prompt.
+    @oh-my-pi/pi-coding-agent
+    Fixed
+    - Fixed the parent TUI stalling after a subagent submits its result until terminal focus or resize wakes the event loop (#8462).
+    - Fixed omp update misclassifying foreign npm/bun bin aliases while preserving package-manager ownership for globally linked checkouts (#8468).
+    - Fixed read hashline headers collapsing nested in-workspace paths to the bare basename, which let a same-basename file at the session cwd capture a verbatim follow-up edit and deterministically reject it with hash is not from this session. Headers now retain the workspace-relative path (e.g. [src/settings.json#0063]) (#8482).
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed fetchWithRetry() aborts during retry backoff to preserve the documented "Request was aborted" error contract (#8450).
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v17.3.1...v17.3.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v17.3.2
+ReleaseTime: 2026-08-13T22:53:13.0000000Z

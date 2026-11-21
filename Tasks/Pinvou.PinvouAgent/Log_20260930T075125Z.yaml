@@ -1,0 +1,62 @@
+Version: 0.10.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Pinvou/pinvou-agent/releases/download/v0.10.6/pinvou-agent_0.10.6-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    官方下载 / Official Downloads
+    Pinvou 已在新华三官网提供官方下载渠道：
+    - Windows x64：新华三官网 — pinvou3 for Windows
+    - macOS Universal：新华三官网 — pinvou3 for macOS
+    - H3C LinSeer MegaCube（Linux ARM64）：新华三官网 — pinvou3 for MegaCube
+    新华三官网与 GitHub Assets 均为官方分发渠道，版本同步可能存在时间差；下载前请确认页面显示的版本。v0.10.6 官网页面尚未同步更新，当前版本请优先使用本页下方 Assets。
+    新功能
+    1. Swarm 模式二阶段：委派从强制约定改为父代理按实际收益的判断，简单或串行任务直接处理。专家发现从关键词预选改为真实 fleet 面：agent action=roster 列出内建角色与宿主呈现的 prompt-only 专家档案（上限 48 行并如实标注），profile_query 关键字过滤让大池尾部成员仍可被发现，profile=<member_id> 以与 roster 相同的宽容解析孵化。Swarm 契约每次引擎孵化注入一次（跨压缩存活、不进入子代理系统提示），每轮材料压缩到最多 8 行专家候选。匹配与文本处理同步硬化：泛化词按文档频率抑制、content/match-input 换型改为编译错误、用户撰写的卡片文本在每次插入模型可见 envelope 时逐字符转义并剥离不可见/双向字符。
+    问题修复
+    1. 可选行为遥测客户端移除，代码与随附隐私清单恢复一致：应用随附的 macOS PrivacyInfo.xcprivacy 声明社区版不含遥测、不上报用户数据给第三方——此前一个默认关闭的可选遥测客户端与此矛盾。客户端、命令、4 个环境变量与任务生命周期埋点接线全部移除；早期构建遗留的 ~/.pinvou3/behavior-telemetry.json 现在是惰性文件（无读取无写入），保留在原处，可手动删除。
+    2. 代理从不回答的 ACP 会话不再永久挂起：ACP 运行时吸收 prompt 而不响应时（现场观察到由后台通知触发），宿主运行后端中立的不活动守卫——3 分钟代理侧静默给出停滞提示，30 分钟请求取消，60 秒宽限后本地结算，一小时内两次本地结算请求重启运行时。轮完成归属显式化（claim → timing → busy），迟到的响应、看门狗或 Stop 兜底不再误关下一轮的状态；延迟 Stop 兜底绑定具体运行时实例与轮次；人在权限对话框上的思考时间不计入停滞时钟；捆绑的 claude-agent-acp 桥刷新 0.70.0 → 0.79.0。
+    3. Linux 图片粘贴恢复：WebKitGTK 构建不向页面的 paste 事件提供图片数据（截图工具与「复制图像」皆然，文本同样被吞），Ctrl+V 到聊天或 code-mode 输入框此前静默无效果。新增原生 GTK 剪贴板读取器派发到 GTK 主线程异步读取，带 3 秒主循环超时（挂起的剪贴板持有者无法再冻结 UI），覆盖 X11 与 Wayland；paste_clipboard_image 命令只返回保存路径，图片字节不过 IPC 桥；经 Linux 专属能力门控（不做 user-agent 嗅探），Windows/macOS/web 行为不变。
+    4. Linux 依赖安装重试瞬时 apt 失败：最多 3 次尝试、间隔 2 秒；重试在同一 pkexec 授权内尽力刷新软件包索引（不出现第二次密码提示）；只有 pkexec 退出码 126/127（授权被拒/未授权）跳过重试——被拒绝的授权提示仍立即失败，重试只会再次弹框；最终失败的错误文案逐字节不变，新增进度行宣告每次重试。
+    5. 交叉构建按 --target 选择平台 overlay 而非构建主机：x86_64 构建机上 --target aarch64 曾选中主机的 ASR/knowledge-host overlay；overlay 选择现在由请求的 target 推导，冲突请求以显式违规清单失败，不再发错运行时。
+    6. 两条日志不再携带会话 id（memory 运行时提示失败日志、引擎空闲驱逐清扫日志），关闭 CodeQL 明文日志告警。已披露的取舍：多引擎池中空闲回收事件不再能归属到具体会话。
+    内部改进
+    1. CI 与打包诊断硬化：memory-setup 环境穿透 sudo（每个调用点 --preserve-env，zram/swap 标注真正生效，4 条总是嘈杂的可恢复慢路径从 ::warning:: 降为纯日志）；SenseVoice 安装大声失败（期望/实际校验和、stderr 透出、临时文件+原子改名安装、pinned-source tripwire）；connector 校验和不匹配在 verify_file 内部报告诊断；共享 Linux ASR bundle 文件逐一映射，避免 Tauri bundle 目标冲突；发布缓存与 8G 磁盘交换策略由测试钉住；windows-rust-test 拆为同一必需名下的两条并行腿（all-targets-check、regression）；路由测试接受 CRLF 检出。
+    2. 发布管道收紧：release-packages.yml 去掉结构性无操作的每 job sync-version.mjs 写入（check-version-bump 门无条件 --check 且覆盖两个触发器）；release-deb.sh/release-macos.sh 从根 VERSION 权威取版本（9 文件/12 字段）而非三个文件互相比对；release-deb.sh 从产物推导 deb 架构而非 dpkg（非 Debian 的 arm64 主机不再静默猜 amd64）；fetch-connectors.sh 用 unzip 解包 ZIP 产物（被删的 tar 回退在关键处不可达）；run-user-journey-tests.sh 只在带运行器显式 SKIP: 标记时把 exit 2 计为跳过，经 tee 流式输出并用 trap 清理临时日志；Windows 发布构建预算 90 → 150 分钟（v0.10.5 发布运行在构建后缓存保存步骤撞上旧上限，全部实际工作与产物上传当时已成功）。
+    3. 既有中文注释翻译为英文：assistant 引擎池（engine_pool.rs/bridge.rs）与 sessions 模块共 6 个 Rust 文件，外加一条经认可的 .gitignore 行——仅注释，strip 注释比对证明代码与 main 逐字节一致；一处披露的范围放宽：multiagent_plan_normalize.test.mjs 的注释字节窗口 9000 → 12000，断言本身未动。
+    4. 测试可靠性：attachment-drop UI 冒烟不再用固定 80 ms sleep 赌 dragenter 提交，改为等待确定的 overlay 状态（从 DOM 移除 = withheld，aria-hidden=false = published），断言本身未动；scheduled-run 重命名冒烟在 macOS 上改为经 DOM input.select() 锚定自动聚焦字段选择（Chrome 不把注入的修饰键和弦翻译成 SelectAll），尾部精确标题断言未动。
+    注意事项
+    - 早期构建遗留的遥测本地凭据文件（~/.pinvou3/behavior-telemetry.json）如存在，现为惰性——无读取无写入——保留在原处不自动删除；如需可手动删除。
+    - Swarm 模式不再强制委派；模型依据契约的收益框架自行决策，专家候选匹配只见原始用户/计划文本。
+    - ACP 停滞阈值（3 分钟提示 / 30 分钟取消请求 / 60 秒宽限结算）是 stall.rs 中的命名常量。
+    - Windows 和 macOS 安装包尚未正式签名。Windows 首次安装可能出现 SmartScreen 提示；macOS 首次打开如被 Gatekeeper 拦截，可在确认安装包来源可信后解除隔离再打开。
+    - 安装包与发布产物由版本 PR 合入 main 后触发的发布工作流构建，未在本地构建。
+    - 本次为预览版本，欢迎通过 GitHub Issues 反馈问题。
+    构建来源：main @ ae7f1f3b / Actions #36424322198（四平台安装包同源构建）
+    官网更新日志
+    zh-CN
+    新功能
+    - Swarm 模式二阶段：委派是父代理按实际收益的判断（不再强制）；专家经 fleet roster 发现与孵化（action=roster、profile_query 过滤、profile= 选择）；契约每次孵化注入一次，每轮提示压缩到 ≤8 行候选，匹配与 envelope 注入全程硬化。
+    修复
+    - 可选行为遥测客户端移除，代码与随附隐私清单一致；遗留 ~/.pinvou3/behavior-telemetry.json 为惰性文件，可手动删除。
+    - 代理从不回答的 ACP 会话不再挂起：不活动守卫提示（3 分钟）、请求取消（30 分钟）、本地结算（60 秒宽限），轮完成归属显式化，捆绑 claude-agent-acp 桥刷新到 0.79.0。
+    - Linux 图片粘贴恢复（GTK 剪贴板回退，X11 与 Wayland，3 秒持有者超时）；其他平台不变。
+    - Linux 依赖安装重试瞬时 apt 失败（最多 3 次）；被拒绝的授权仍立即失败；错误文案不变。
+    - 交叉构建按 --target 而非构建主机平台选择 overlay。
+    - 两条日志不再携带会话 id；多引擎空闲回收事件不再可按会话归属（已披露取舍）。
+    en-US
+    Features
+    - Swarm mode phase 2: delegation is the parent agent's judgment by actual benefit (no longer mandated); experts are discovered and spawned through the fleet roster (action=roster, profile_query filter, profile= selection); the contract is injected once per spawn, per-turn hints shrink to ≤8 candidate lines, with matcher and envelope-injection hardening throughout.
+    Fixes
+    - The optional behavior telemetry client is removed; the code now matches the shipped privacy manifest. Any leftover ~/.pinvou3/behavior-telemetry.json is inert and can be deleted manually.
+    - ACP sessions the agent never answers no longer hang: an inactivity guard notices (3 min), requests cancellation (30 min), and settles locally (60 s grace), with explicit turn-completion ownership and the bundled claude-agent-acp bridge refreshed to 0.79.0.
+    - Image paste works again on Linux (GTK clipboard fallback, X11 and Wayland, 3-second owner timeout); other platforms unchanged.
+    - Transient apt failures are retried (up to 3 attempts) during Linux dependency setup; dismissed authorizations still fail immediately; error text unchanged.
+    - Cross builds pick platform overlays by --target instead of the builder host's platform.
+    - Two log lines no longer carry session ids; multi-engine idle-reclaim events are no longer per-session attributable (disclosed trade-off).
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Pinvou/pinvou-agent/releases/tag/v0.10.6
+ReleaseTime: 2026-09-30T05:37:58.0000000Z

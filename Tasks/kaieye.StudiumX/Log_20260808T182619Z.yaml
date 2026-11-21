@@ -1,0 +1,23 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/kaieye/StudiumX/releases/download/v0.2.0/StudiumX-0.2.0-win-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    StudiumX 0.2.0
+    0.2.0 为 AI 教学工作区带来可持续运行的对话执行、更加清晰的资源治理，以及面向兼容模型服务的原生工具调用支持；同时完善了模型设置与会话版本同步，减少多轮对话中的状态冲突。
+    更新内容
+    - 持续运行与资源治理：对话运行可在长任务中持续推进，并提供可审计的上下文压缩、续接、取消与资源限制处理；资源压力会明确报告为 resource_limit 或 suspended，不会被误报为学习完成。
+    - 原生工具调用支持：模型适配层可使用服务商原生的工具调用格式，改进流式响应、工具结果配对与使用量解析，同时仍遵循既有的 effect lattice、审批与 ToolOutcome 结算边界。
+    - 模型服务配置更灵活：模型设置新增上游端点格式选择，并统一使用设置控件呈现端点格式和推理强度，方便连接兼容 OpenAI 格式但细节不同的服务。
+    - 会话状态更一致：打开或新建临时对话时会同步其当前分支 revision，避免后续带 expectedRevision 的操作因界面仍使用旧版本号而发生不必要的并发冲突。
+    - 开发体验改进：在开发模式按 Ctrl-C 时会终止 Electron 进程树，减少残留进程和端口占用。
+    升级说明
+    无需迁移已有学习工作区或模型配置。长时间运行的对话会继续遵循现有的工具审批、工作区信任、路径围栏和恢复不自动重放工具的安全规则。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kaieye/StudiumX/releases/tag/v0.2.0
+ReleaseTime: 2026-08-08T17:45:43.0000000Z

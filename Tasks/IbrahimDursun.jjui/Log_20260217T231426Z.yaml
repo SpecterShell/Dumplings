@@ -1,0 +1,36 @@
+Version: 0.9.12
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/idursun/jjui/releases/download/v0.9.12/jjui-0.9.12-windows-amd64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: jjui-0.9.12-windows-amd64.exe
+    PortableCommandAlias: jjui
+- Architecture: arm64
+  InstallerUrl: https://github.com/idursun/jjui/releases/download/v0.9.12/jjui-0.9.12-windows-arm64.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: jjui-0.9.12-windows-arm64.exe
+    PortableCommandAlias: jjui
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release 0.9.12 (Final 0.9.x Series)
+    [!NOTE]
+    This is a quick release before marking the end of 0.9.x series due to breaking changes introduced by the work in #533
+    Fixes & Improvements
+    - Modal rendering now fills the entire git, bookmarks, and custom command dialogs before drawing rows, eliminating gaps introduced by the new renderer #535
+    - Fixed a regression where ui.colors.selected = { bg = "black" } no longer highlighted the selected revision by restoring the correct lipgloss → ANSI color conversion #534
+    - jj git fetch --tracked uses the t shortcut so f remains dedicated to the default fetch, matching the push command’s tracked shortcut #532
+    - Added a [keys.diff_view] config section so diff scrolling, paging, and closing bindings are customizable #527
+    - Completion now auto-inserts () when selecting a parameterless function, improving Lua/script authoring speed #530
+    - Lua’s flash() accepts error and sticky fields, so scripts can show error toasts and control persistence without additional helpers #529
+    What's Changed
+    - Auto-append () for parameterless functions in completion by @Dima-369 in https://github.com/idursun/jjui/pull/530
+    - Add customizable keybindings for the diff view ([keys.diff_view]) by @Dima-369 in https://github.com/idursun/jjui/pull/527
+    - fix(ui/git): update key for jj git fetch --tracked by @PrayagS in https://github.com/idursun/jjui/pull/532
+    New Contributors
+    - @Dima-369 made their first contribution in https://github.com/idursun/jjui/pull/530
+    Full Changelog: https://github.com/idursun/jjui/compare/v0.9.11...0.9.12
+- Key: ReleaseNotesUrl
+  Value: https://github.com/idursun/jjui/releases/tag/v0.9.12
+ReleaseTime: 2026-02-17T23:01:05.0000000Z

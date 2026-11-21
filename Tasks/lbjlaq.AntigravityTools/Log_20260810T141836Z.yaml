@@ -1,0 +1,19 @@
+Version: 4.5.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.5.4/Antigravity.Tools_4.5.4_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.5.4/Antigravity.Tools_4.5.4_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [核心修复] 解决自适应熔断器设置输入框高频 IPC 调用导致前端 UI 卡死的 Bug (Circuit Breaker Input Freeze Fix):
+      - 修改输入事件解耦与防抖：修正 CircuitBreaker.tsx 数字输入框绑定的 onChange 实时保存机制。修改为使用本地内部状态配合 onBlur 离开焦点时保存，避免用户连续编辑退避秒数时向 Rust 后端密集发送 save_config IPC 请求并导致应用界面冻结卡死。
+      - 相关 Issue: 详见 Issue #3290。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.5.4
+ReleaseTime: 2026-08-10T13:29:44.0000000Z

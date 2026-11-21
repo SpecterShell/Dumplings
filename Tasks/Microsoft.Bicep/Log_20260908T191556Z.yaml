@@ -1,0 +1,102 @@
+Version: 0.47.16
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.47.16/bicep-win-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.47.16/bicep-win-arm64.exe
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Azure/bicep/releases/download/v0.47.16/bicep-setup-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    [Experimenta] Bicep module documentation generation (#20183)
+    Adds the experimental bicep docs generate command, which renders module documentation to a Markdown file. Formatting can be customized using a Scriban template.
+    # Generate README.md beside one module
+    bicep docs generate .\main.bicep
+
+    # Render one module to stdout
+    bicep docs generate .\main.bicep --stdout
+
+    # Generate documentation for matched modules
+    bicep docs generate --pattern '.\modules\**\main.bicep'
+    See https://github.com/Azure/bicep/blob/main/docs/experimental/docs-commands.md for more details.
+    Bicep Configuration Inheritance (#20176, #20181, #20198)
+    This feature adds an extends property to bicepconfig.json, letting a config inherit from another config file and override only the settings it needs to change. Everything not explicitly overridden falls through from the base config.
+    Example: a company-wide bicepconfig.corp.json sets strict linter rules for everyone. This team's config inherits the base's no-unused-params rule as-is, while overriding no-hardcoded-env-urls from warning to error.
+    // /shared/bicepconfig.base.json  (shared org-wide base config)
+    {
+      "analyzers": {
+        "core": {
+          "rules": {
+            "no-hardcoded-env-urls": { "level": "warning" },
+            "no-unused-params": { "level": "warning" }
+          }
+        }
+      }
+    }
+    // /team/bicepconfig.json  (this team's leaf config -- extends the shared base)
+    {
+      "extends": "../shared/bicepconfig.base.json",
+      "analyzers": {
+        "core": {
+          "rules": {
+            "no-hardcoded-env-urls": { "level": "error" }
+          }
+        }
+      }
+    }
+    // Effective (merged) result for this team:
+    {
+      "analyzers": {
+        "core": {
+          "rules": {
+            "no-hardcoded-env-urls": { "level": "error" },     //  overridden by leaf
+            "no-unused-params": { "level": "warning" }          // inherited from base, untouched
+          }
+        }
+      }
+    }
+    Bicep Playground interface redesign (#20225)
+    Main Changes:
+    - Redesign the Bicep Playground with a responsive islands-style interface and native, accessible controls
+    - Moved Bicep WASM compilation to a web worker to prevent the UI from freezing during compilation
+    - Add compilation freshness, diagnostics, ARM output actions, light/dark themes, and in-place sample loading
+    - Fix a regression for ARM template decompilation
+    Try out the new Bicep Playground and see it in action.
+    New linter rules to enforce descriptions (#20036)
+    Thanks @johnlokerse for implementing this!
+    The following linter rules are defaulted to off, but can be enabled, to flag missing or empty @description decorators.
+    - use-description-params - flag missing or empty descriptions on parameters
+    - use-description-vars - flag missing or empty descriptions on variables
+    - use-description-outputs - flag missing or empty descriptions on outputs
+    - use-description-types - flag missing or empty descriptions on type declarations
+    - use-description-type-properties - flag missing or empty descriptions on type properties
+    Performance improvements
+    We optimized the startup path of the Bicep CLI to significantly reduce cold-start times and address a performance regression introduced by the move to .NET 10. The optimization includes enabling ReadyToRun (R2R) to reduce startup overhead, making common CLI operations more responsive, particularly in automation and short-lived execution scenarios. To preserve the existing distribution footprint, we also enabled single-file compression, keeping the binary size roughly unchanged from previous releases while delivering faster startup performance. (#20255)
+    Other improvements to VSCode extension responsiveness & CLI compilation speed:
+    - Avoid re-initializing ApiVersionProvider on multiple requests (#20133)
+    - Cache regex pattern validation results (#20143)
+    - Cache configuration source directories (#20146)
+    - Ensure Configuration and Features are cached in SemanticModel (#20152)
+    Features and Bug Fixes
+    - Fix Bicep console rendering for wrapped input (#20154)
+    - Fix resource ID imports in parameter files (#20142)
+    - Add "placement" top-level property to fallback Az resource type (#20172)
+    - Fix scalar YAML aliases in loadYamlContent (#20151)
+    - Add RPC client support for management group snapshots (#20170)
+    - Add "placement" top-level property to fallback Az resource type (#20172)
+    - fix: skip secure params lint for type aliases (#19796)
+    - Refactor visual designer architecture and graph coordination (#20249)
+    - Add resource creation to the visual designer (#20221)
+    - Emit GA Language Version for NullableExisting and ThisNamespace (#20258)
+    Community Contributions!
+    - Stop recording npm registry URLs in lockfiles (#20224) - thanks @JamieMagee!
+    - Add MegaLinter to community Bicep projects list (#20157) - thanks @nvuillam!
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Azure/bicep/releases/tag/v0.47.16
+ReleaseTime: 2026-09-08T18:04:56.0000000Z

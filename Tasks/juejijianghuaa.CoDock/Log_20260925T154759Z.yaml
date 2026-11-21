@@ -1,0 +1,32 @@
+Version: 0.4.9
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.4.9/CoDock-Setup-0.4.9-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.4.9 (2026-09-25)
+    这一版带来会话正文全文搜索与会话记录完整翻阅：历史里的对话不再只是标题和用量卡片，每一条消息正文、每一段写过的代码、每一次调用的工具都可以毫秒级直接搜索定位；已全面接入 9 家主流 Agent 的消息投影（设计参考了开源项目 Wake）。
+    新功能
+    - 会话正文全文搜索（FTS5 trigram 索引）：
+      - 左侧历史搜索框直接打通后端全文检索。输入关键词（支持多词 AND，中文 2 字以上即搜），毫秒级返回匹配会话与高亮代码/正文片段。
+      - 搜的是经各 Agent 投影器规范化清洗后的纯文本，自动排除 base64 图片与注入环境块乱码。
+      - 本地索引库保存在 ~/.codock/search.db，定位为纯本地可重建缓存，绝不改写或破坏各 Agent 的本地原始记录。
+    - 消息级投影全面覆盖 9 家 Agent：
+      - 原有 4 家：Claude Code、Codex、CodeBuddy、Qoder。
+      - 本版新增 5 家：Pi、Kimi Code、Cline、OpenCode，以及 Antigravity (agy)。
+      - 各家特点均得到精准处理：Pi 的连续 assistant 消息合并与工具结果回填；Kimi 的 wire.jsonl 去重与模型识别；Cline 的工具调用清洗；OpenCode 的 v1/v2 SQLite 双路支持；Antigravity 完整提取 brain 明文日志与 prompt 清洗。
+    - 会话记录视图与会话内二次搜索：
+      - 点击搜索命中条目或会话菜单中的「查看记录」，可打开完整的 Markdown 会话记录弹窗，自动平滑滚动到命中消息的锚点。
+      - 工具调用的参数预览与返回结果可单独展开/折叠，系统注入上下文默认收起。
+      - 弹窗顶部支持在当前会话内再次搜索，高亮匹配项并支持前后快捷跳转。
+    致谢
+    - 会话正文全文搜索与各 Agent 消息投影的设计和部分解析逻辑参考了开源项目 Wake。特此致谢！
+    官网
+    - hero 上的版本徽章更新为 v0.4.9；新增「正文全文搜索，直达消息」特性卡片与 Wake 致谢链接。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.4.9
+ReleaseTime: 2026-09-25T13:24:29.0000000Z

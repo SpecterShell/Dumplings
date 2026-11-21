@@ -1,0 +1,84 @@
+Version: 1.12.14
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.14_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.14/cpa-manager-plus_v1.12.14_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.12.14_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.12.14/cpa-manager-plus_v1.12.14_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.14
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.12.14
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.14 is a small maintenance release focused on model-price management and monitoring readability. Manager Server can now discover models currently exposed by CPA before they have produced any usage, allowing price synchronization to cover them ahead of first use. The Web UI surfaces newly discovered models that are still missing prices across Dashboard, Request Monitoring, and Usage Analytics, with a direct path into the missing-price filter.
+    The manual Model Prices editor now preserves and edits context-threshold and service-tier pricing rules, including inherited fields and explicit zero prices, instead of dropping synchronized advanced rules when base prices are changed. This release also fixes opaque-hash and unknown-provider source presentation in monitoring, improves narrow-screen auto-refresh controls, and adds -v / --version reporting to Manager Server.
+    This release introduces no database schema migration, requires no offline maintenance, and adds no required configuration.
+    Highlights
+    Features
+    - Add Manager Server -v / --version. Version queries print the binary version and exit before configuration, database, or network initialization. (Manager Server)
+    - Add missing model-price attention across Dashboard, Request Monitoring, and Usage Analytics. Newly discovered runtime models without prices are surfaced consistently and link directly to the Model Prices missing filter. (Web / Manager Server)
+    - Extend the Model Prices manual editor with context-threshold and service-tier rule editing. Rules can be added, updated, and removed while preserving inheritance and explicit $0 semantics. (Web)
+    Fixes
+    - Include models currently exposed by CPA in price synchronization before their first UsageEvent. If runtime discovery fails, synchronization falls back to known models without clearing existing prices or incorrectly acknowledging pending models that were never checked. (Manager Server / Web)
+    - Fix overlapping auto-refresh controls in Request Monitoring at narrow widths such as 320px and 360px. (Web)
+    - Fix opaque h:<sha256> source identities taking precedence over readable metadata; account, channel, host, and other readable source evidence are preferred when available. (Web)
+    - Fix unknown or dynamic provider labels taking precedence over credential account identity. Provider-like labels no longer hide a more useful account name while distinct custom channels and key disambiguation remain intact. (Web)
+    - Preserve synchronized context/service-tier rules when manually editing an existing model's base price, and continue refreshing missing-price attention after a successful save. (Web)
+    Upgrade Notes
+    - No database schema migration or offline maintenance is required. Existing data structures and deployment modes remain compatible.
+    - No new required configuration or minimum CPA version is introduced.
+    - Runtime model discovery is performed by Manager Server through the existing CPA Management API and /v1/models; CPA API keys are not exposed to the browser or sent to external price catalogs.
+    - If runtime model discovery is unavailable, price synchronization safely falls back to the existing known-model path; existing manual prices remain authoritative.
+    - Advanced pricing-rule editing changes only existing Model Price data and does not modify routing, provider configuration, or credentials.
+    Acknowledgements
+    - @camy-x - Contributed Manager Server version reporting, the mobile monitoring refresh-layout fix, and context/service-tier pricing-rule editing.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.13...v1.12.14
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.14-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.12.14 是一个以模型价格管理与监控可读性为重点的小型维护版本。Manager Server 现在可以在模型首次产生用量之前发现 CPA 当前暴露的运行时模型，并在价格同步时提前纳入；Web 会在 Dashboard、Request Monitoring 与 Usage Analytics 中提示尚未配置价格的新模型，并提供直达缺失价格筛选的入口。
+    模型价格手动编辑器现在支持保留并编辑 context threshold 与 service tier 特殊价格规则，包括继承字段和显式零价格，不再因为修改基础价格而清空同步得到的高级规则。同时，本版本修复了监控中的 opaque hash / 未知 provider 来源展示和窄屏自动刷新控件布局，并为 Manager Server 增加 -v / --version 版本查询。
+    本版本不包含数据库 schema 迁移，不需要离线维护，也没有新增必填配置项。
+    Highlights
+    Features
+    - 新增 Manager Server -v / --version。查询版本时会直接输出并退出，不初始化配置、数据库或网络连接。（Manager Server）
+    - Dashboard、Request Monitoring 与 Usage Analytics 新增模型价格缺失提醒。新发现但尚未配置价格的运行时模型会显示提示，并可直接进入 Model Prices 的 missing 筛选。（Web / Manager Server）
+    - Model Prices 手动编辑器支持 context threshold 和 service tier 特殊价格规则，可新增、修改和删除规则，并保留字段继承与显式 $0 价格语义。（Web）
+    Fixes
+    - 模型价格同步会在首次使用前发现 CPA 当前暴露的运行时模型，不再要求模型先产生 UsageEvent 才能进入同步范围。运行时发现失败时会回退到已知模型，失败路径不会清空已有价格或错误确认未实际同步的 pending model。（Manager Server / Web）
+    - 修复 Request Monitoring 在 320px / 360px 等窄屏宽度下自动刷新控件重叠的问题。（Web）
+    - 修复安全哈希来源 h:<sha256> 抢占可读来源的问题；存在 account、channel、host 等可读 metadata 时优先展示可读身份。（Web）
+    - 修复未知或动态 provider 名称抢占凭证 account 显示的问题。provider-like label 不再覆盖更有辨识度的账号信息，同时保留真实自定义 channel 与 key disambiguation。（Web）
+    - 手动修改已有模型基础价格时，不再丢失已同步的 context/service-tier 规则；保存成功后仍会重新检查缺失价格提醒状态。（Web）
+    Upgrade Notes
+    - 无需数据库 schema 迁移，也无需离线维护。 现有数据结构和部署方式保持兼容。
+    - 无新增必填配置项，也没有新增 CPA 最低版本要求。
+    - 运行时模型发现由 Manager Server 读取现有 CPA Management API 与 /v1/models；CPA API Key 不会暴露给浏览器或发送到外部价格目录。
+    - 如果运行时模型发现不可用，价格同步会保留现有已知模型路径并安全降级；现有手动价格继续保持优先。
+    - 高级价格规则编辑仅改变现有 Model Price 数据，不涉及请求路由、Provider 配置或凭证数据。
+    Acknowledgements
+    - @camy-x - 贡献 Manager Server 版本查询、移动端监控刷新布局修复，以及 context/service-tier 特殊价格规则编辑能力。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.12.13...v1.12.14
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.12.14-zh.md
+ReleaseTime: 2026-09-16T13:52:21.0000000Z

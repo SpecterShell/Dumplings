@@ -1,0 +1,26 @@
+Version: 0.1.20
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.20/hellogrok-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.20/hellogrok-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.20
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.20
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Per-channel absorb layer for transient upstream soft failures. While the upstream response headers have not been sent, retryable failures (busy/overloaded 503, 429, retryable 5xx, response-header timeouts) are retried inside the proxy with exponential backoff (2s–30s, honoring an upstream Retry-After up to 60s) for up to 90 seconds by default (absorb_retry_max_secs, absorb_retry_backoff_cap_secs). Grok Build's native 15-attempt retry budget stays untouched during the window; only when the window is exhausted does the failure pass through, still retryable. Transport errors are not absorbed so Grok Build's first-retry HTTP/1.1 client rebuild keeps working. UP absorb log lines record each wait.
+    - Synthesized 30-second Retry-After on retryable busy/overloaded 5xx passthroughs that carried none, pacing Grok Build's own retries. Upstream Retry-After headers are preserved.
+    - Opt-in dead-channel breaker (dead_channel_fail_fast, default off; dead_channel_fail_threshold, default 6). Only dial-level failures (connection refused, DNS, TLS handshake) count, because those can never succeed on retry; after the streak the proxy answers a non-retryable 503 proxy_circuit_open with X-Should-Retry: false, with one probe allowed after a 5-minute cooldown and any upstream response closing the breaker.
+    Changed
+    - The circuit breaker no longer fast-fails soft failures. Busy 503, 429, timeouts, transport resets, and error-body read failures pass through as retryable (or are absorbed first), so Grok Build keeps its complete native retry budget. X-Should-Retry: false is reserved for deterministic failures whose retries cannot succeed (authentication, permission, billing, quota, invalid request/model).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0120-2026-08-30
+ReleaseTime: 2026-08-30T09:31:23.0000000Z

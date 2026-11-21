@@ -1,0 +1,21 @@
+Version: 1.2.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.3/openpipal-1.2.3-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/yuanlang12/OpenPipal/releases/download/v1.2.3/openpipal-1.2.3-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release reworks the model picker under the input box (thinking depth is now a slider) and fixes every request to the OpenCode Zen / Go gateway being rejected with 400 MissingSessionID.
+    What's new
+    - Thinking depth slider. Click the model chip under the input box. The popover now shows the current thinking level at the top with a reset button, the model name (click it to open the model list), and a slider underneath. Drag it, click a stop, or use the ← / → keys: the change applies immediately and the popover stays open so you can keep adjusting. The stops come from the model. A model with a plain thinking toggle gets off / on; a model with an effort dial gets its own levels (for example low / medium / high / max); a model that is always thinking has no off stop.
+    - Tidier composer. Every control in the bottom row of the input box (attach, microphone, permission tier, model chip, send) is now the same 32px height, and the model chip no longer sits on a grey background: it only highlights on hover or while its menu is open. The same picker is used on the welcome page and in the Pal preflow panel.
+    What's fixed
+    - OpenCode Zen / Go gateway: no more 400 MissingSessionID. The gateway requires an x-opencode-session header on every request, and nothing in OpenPipal was sending it, so every turn (and the connection test in Settings) failed with 400 MissingSessionID. The header is now sent for the opencode and opencode-go providers and for any custom OpenAI-compatible endpoint whose host is opencode.ai.
+    Windows installers are rebuilt from the same source. There is still no OS sandbox on Windows (the agent asks before running shell commands).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/yuanlang12/OpenPipal/releases/tag/v1.2.3
+ReleaseTime: 2026-09-22T09:53:02.0000000Z

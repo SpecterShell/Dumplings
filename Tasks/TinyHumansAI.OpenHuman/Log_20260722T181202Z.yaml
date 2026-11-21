@@ -1,0 +1,27 @@
+Version: 0.63.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.63.1/OpenHuman_0.63.1_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tinyhumansai/openhuman/releases/download/v0.63.1/OpenHuman_0.63.1_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The Composio Reliability Upgrade
+    This patch release tightens up Composio task execution and makes tool-calls more resilient, so your agents can get to work faster and recover more gracefully when model output gets messy. 🚀
+    Highlights
+    Composio task execution & schema validation 🧩
+    Composio actions triggered via integrations_agent now avoid a frustrating “first call bounce” and can execute immediately when the model’s arguments already match the resolved live contract. This prevents loops like “fetch my latest email” stalling before GMAIL_FETCH_EMAILS ever runs, especially along the text-mode per-action path. (#5132) — Thank you @M3gA-Mind!
+    Tool-call parsing robustness (Kimi recovery) 🛠️
+    Tool-call parsing has been hardened to better recover from Kimi-K2-family garbled tool-call bodies. The normalization now strips the <|\"|> argument-quote sentinels and rewrites malformed NAME{unquoted-json} into a canonical form, improving resilience when model output is slightly corrupted. (#5132) — Thank you @M3gA-Mind!
+    Contributor Credits
+    Thanks to everyone who contributed to v0.63.1: @M3gA-Mind and @github-actions[bot].
+    Full Compare
+    https://github.com/tinyhumansai/openhuman/compare/v0.63.0...v0.63.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tinyhumansai/openhuman/releases/tag/v0.63.1
+ReleaseTime: 2026-07-22T16:47:35.0000000Z

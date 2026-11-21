@@ -1,0 +1,84 @@
+Version: 0.2.9
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.2.9/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.2.9
+    覆盖范围：v0.2.8（a07414c）→ 本版（含 SourceLayer 分层、冷/暖启动、搜索管线与 last-good 稳定性）。
+    版本重点
+    空 Query 只展示正式应用；冷启动先出可搜索首屏，再后台补全。搜索改为常驻 worker + 代际取消，输入更跟手。同产品多入口收敛成一行，System32 / 命令发现源不再刷屏。
+    新增
+    启动与索引
+    - SourceLayer 分层（Tier A/B/C）：Formal 白名单（开始菜单/桌面/UWP/apps-folder/用户 Portable）空 Query 可见；Tier B 仅 curated 系统入口；Tier C（App Paths/Uninstall/Scoop/WinGet 等）只作精确命令或兜底。
+    - Cold Bootstrap：首屏扫高价值正式入口并带图标；BootstrapReady 独立推进索引代际并立刻刷新，不再误用 Full 的 pending 语义。
+    - Warm Start：兼容 last-good 快照直接恢复；启动后后台 Full 刷新。快照过期仅记日志，不再硬拒。
+    - last-good 原子写：ReplaceFileW / MoveFileExW 覆盖索引快照，避免「先删再改名」中间态损坏。
+    - 单实例：再次启动会激活已有主窗口。
+    搜索
+    - 常驻 app-search worker：latest-wins、协作式取消；结果组装收拢到 worker 路径。
+    - 匹配证据（命中位置/字段）贯穿排序；同产品多入口折叠时保留启动身份。
+    - 降权（Demote）与偏好加分统一；demoted 表 schema 迁移。
+    - 评分诊断标签（调试用，不改变排序）。
+    - 短输入与启动组覆盖收紧；SymSpell 删除种子缩小，按键路径减负。
+    修复
+    - Bootstrap/Fast 不再按本轮 seen 裁剪 LNK 缓存，Full 不必整树重解析。
+    - 空 Query 补满隐藏 System32 噪声（含 Narrator 等），仍可搜索、可 Pin。
+    - shell+exe、双 .url 等同名 Formal 收敛成一行；不同安装根/不同 args 保留两行。
+    - 文档类 .lnk（PDF 说明书等）不进索引。
+    - 异步启动关闭、alias cache、demote 合并缺口。
+    - 交互路径日志统一挂在 Query 日志开关后。
+    - 设置/托盘重扫仍走 FullIndexReady，保留完成提示。
+    - 安装器去掉旧版卸载组件段。
+    升级影响
+    设置、历史、固定项、别名无需迁移。从上一版覆盖安装即可；首次启动可能多跑一轮后台 Full 以刷新分层索引。
+    已知限制
+    安装包仍无 Authenticode 数字签名。同名 shell 吸收在极端撞名场景仍可能过合并，实机若出现可用 dry-run 测试对照。跨机全流程仍依赖用户环境复测。
+    构建与验证
+    - 发布 tag：v0.2.9
+    - tag 提交：319ad293d0a8fae7efb1807e8a0ef1a28d1a0cf2
+    - 上一个发布：v0.2.8
+    - 提交数量：33
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #8
+    本次提交范围
+    - chore(release): v0.2.9 (319ad29)
+    - fix(app,ui): bootstrap ready path, partial cache prune, soft warm age, atomic last-good (d15029a)
+    - docs(spec): source tier boundary spec and tickets (6cc3827)
+    - fix(app): snapshot overwrite and cache TTL (d686cff)
+    - feat(search): empty-query fill hides System32 noise and Tier C (6292f5a)
+    - feat(scanner): Bootstrap A+B gates, discovery absorb, and shell+exe merge (4df2518)
+    - feat(model,search): Formal whitelist SourceLayer and empty-query tier hide (d3a527a)
+    - feat(app,ui,search): cold/warm startup, SourceLayer noise control, and search UI polish (88c6e3e)
+    - Update docs (7598519)
+    - perf(docs): refresh the baseline and fix two measurement defects (44c3b3c)
+    - docs(spec): record ticket 10 clause-(b) closure (a2763f9, 902ff48) (f181c86)
+    - fix(ui): gate the settings-window interaction logs too (902ff48)
+    - fix(ui): gate every interactive-path log behind the query log switch (a2763f9)
+    - docs(spec): retain search-service-hardening spec/issues and memory-vq sample (fb5908c)
+    - fix(search,ui): report compact hits in source coordinates and gate keypress logs (7d45454)
+    - perf(search,ui): lighten the keypress path and cancel mid-verify (e8e6ff0)
+    - fix(search,ui): close async launch, alias cache and demote merge gaps (279e4b8)
+    - chore(installer): drop the old-version uninstall component (7848e1a)
+    - refactor(ui): collapse result assembly into one worker-backed path (e7b462e)
+    - chore(skills): add grill-me and writing-for-agents, refresh skills-lock (99ab9ef)
+    - fix(search): address review — initial position, base-ranked cache, index-gen merge (375212d)
+    - refactor(search,storage): unify preference boost and migrate demoted schema (6e19b99)
+    - feat(search): resident app-search worker with latest-wins and cooperative cancel (f51500a)
+    - feat(search): absorb reference launchers — evidence positions, field typo, async search, demote, diagnostics (1c6d32e)
+    - perf(search): shrink SymSpell deletes seed and drop hot-path launch-group logs (08e516b)
+    - Update README (25c793b)
+    - docs(perf): record 2026-09-16 baseline for invoke latency, idle CPU/memory, and search benches (bd2c2ac)
+    - feat(system): enforce single instance and activate primary on relaunch (4f434cc)
+    - fix(search): precompute launch groups with start-menu .lnk main entry (e1e185b)
+    - Update README.md (af590b6)
+    - fix(search): preserve launch identity when collapsing same-product entries (9fcc655)
+    - feat(search): carry match evidence through final rank and collapse duplicate launch entries (44a3eb4)
+    - feat(search): unify ranking pipeline and tighten short-input coverage (bd0f56f)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.2.9
+ReleaseTime: 2026-09-16T18:55:32.0000000Z

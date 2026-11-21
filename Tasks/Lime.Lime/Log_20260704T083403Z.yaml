@@ -1,0 +1,36 @@
+Version: 1.89.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.89.0/Lime-1.89.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.89.0
+    新功能
+    - Aster runtime 迁移继续推进：旧 crates/aster-rust 迁到 lime-rs/vendor/aster-rust，当前 Rust workspace 保留 App Server / Agent 侧事实源，Aster 只作为受控 vendor 兼容依赖。
+    - App Server workflow control 面补齐 workflow/respond、workflow/retry、workflow/cancel 协议、schema、client 方法和 runtime control 入口，为工作流暂停、重试、取消和人工响应建立 current JSON-RPC 主链。
+    - Article Workspace / General Workbench 新增工作流控制条、详情面板和 read model 投影，支持从聊天工作区查看 workflow 状态、证据和下一步操作。
+    修复
+    - 修复 Agent Session / Aster session store 投影、历史压缩、runtime conversation 和 todo / subagent projection 的多处边界，减少旧 Aster 存储与 Lime current session 之间的状态漂移。
+    - 修复图片任务预览、文稿内联配图、draft materialization 和任务发送链路的恢复与回填问题，让失败、完成、手动应用和工作区同步状态更一致。
+    - 修复 Plugin / Workflow 运行时旧入口漂移，删除旧 workflowRuntimeHost、useWorkflow 和相关 policy 残留，避免测试或前端入口继续依赖过期 workflow host。
+    优化与重构
+    - Agent 侧拆出 agent-runtime ask / turn executor、Aster trait skeleton、session projection、message content adapter、runtime snapshot / timeline adapter 和 subagent adapter，降低中心文件职责。
+    - model-provider、thread-store、tool-runtime 继续拆分 provider safety / router、会话记录、工具 IO、MCP notification 和工具结果模型，为后续替换 Aster 内部实现做准备。
+    - App Server workflow processor、runtime read model、media task 和 image command presentation 继续收口到 current owner；协议类型和 npm client 同步生成。
+    测试与质量
+    - 新增 / 更新 workflow control、App Server protocol catalog、media task JSON-RPC、workflow read model、Agent session store、Article Workspace workflow、图片任务预览和 inline image sync 回归。
+    - 前端回归覆盖 General Workbench sidebar / workflow panel、Article Workspace 右侧面板、draft send / materialization、Plugin 页面、导航和五语言 i18n 资源。
+    - Release workflow skill 更新为单页 release notes 策略：每次发布替换 RELEASE_NOTES.md / RELEASE_NOTES.en.md，只保留当前版本内容。
+    文档
+    - 更新 Aster migration 主计划、Phase 2 阻塞分析、feature gate、vendor downgrade、冲突解决和本轮执行总结，记录 vendor 迁移与 compat-aster 收口口径。
+    - 更新 Workflow PRD / 架构 / 图示 / 实施计划、images v2 progress 和 workflow standardization 执行计划，保持路线图与当前实现一致。
+    其他
+    - 版本事实源更新到 1.89.0：根应用、CLI npm package、Rust workspace、lime-rs/Cargo.lock 和 current-turn smoke client。
+    - 本版不纳入本地备份文件 lime-rs/crates/agent/src/aster_session_store_adapter.rs.bak；该文件仅为冲突处理临时参考。
+    完整变更：v1.88.0 → v1.89.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.89.0
+ReleaseTime: 2026-07-04T06:08:35.0000000Z

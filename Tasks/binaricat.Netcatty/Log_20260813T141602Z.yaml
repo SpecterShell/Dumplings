@@ -1,0 +1,60 @@
+Version: 1.1.79
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/binaricat/Netcatty/releases/download/v1.1.79/Netcatty-1.1.79-win-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ✨ Release Highlights
+    Netcatty v1.1.79 tightens terminal keyword highlighting, hardens SFTP (sudo / virtual root), and fixes a cluster of SSH reconnect and AI provider-URL issues.
+    🔦 Keyword highlight
+    - Idle Enter no longer treats Ubuntu RTT onScroll (before buffer dims update) as a user scroll, so still-visible keyword matches do not flash (#2931, #2879).
+    - Prompt redraw after idle Enter mutes decoration dispose/apply for the Enter guard window, avoiding an xterm full-viewport repaint that made custom rules (e.g. ~ / #) flicker.
+    - End / jump-back-to-bottom during the Enter guard still scans immediately by tracking prior scrollback browsing; sustained command output lifts the mute early via write-burst detection.
+    - Earlier Enter-guard work for bottom-pinned echo deferral is included (#2880).
+    📂 SFTP: sudo, virtual root, and session reuse
+    - Sudo SFTP can reuse the existing SSH session (including MFA-aware paths) and aligns session-backed open with openSftp fallbacks (#2938, #2945).
+    - Virtual-root sessions, provisional root listing, and home-candidate recovery when realpath root is not listable (#2934, #2941).
+    - Side-panel auto-connect dedupe edge cases fixed.
+    🔌 SSH reconnect & terminal
+    - Parked reconnect no longer restores a stale CWD; Dropbear server-stats stay safe; connect scripts rerun cleanly on manual reconnect (#2917, #2932, #2928).
+    - Terminal font shortcuts / focus routing, command popups after vault hydration, docker/tmux popup timeout, and theme header button alignment (#2906, #2929, #2937).
+    🤖 AI providers
+    - Anthropic-compatible Base URL only gets /v1 appended when the URL is bare — custom paths are no longer double-prefixed (#2946 / #2944).
+    - host_open session lifecycle hardened.
+    📝 Notes & polish
+    - Notes tree width resize is driven from the DOM for smoother drag; narrow sidebar titles ellipsize correctly (#2909, #2908).
+    - Workspace host-drop focus targets, port-forward panel polish, macOS small app icon, and assorted system-manager mount filters.
+    Code signing policy
+    Netcatty is applying to the SignPath Foundation open-source program. Once
+    approved, covered Windows release artifacts will use Free code signing provided by SignPath.io, certificate by SignPath Foundation.
+    See the
+    Code signing policy
+    and Privacy policy.
+    What's Changed
+    - Update Nix release metadata for v1.1.78 by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2910
+    - fix(zmodem): fail skipped uploads and auto-overwrite on terminal drag-drop by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2914
+    - fix(system): exclude NFS/CIFS mounts from overview disk totals by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2913
+    - fix(ssh): skip idle-park reconnect PID discovery that breaks bastions by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2927
+    - fix(ai): sync side panel color-scheme for light Codex composer by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2921
+    - fix(workspace): allow dragging hosts into focus-mode sidebar by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2918
+    - fix(terminal): start command popups after vault hydration by @binaricat in https://github.com/binaricat/Netcatty/pull/2929
+    - fix(ssh): stop parked reconnect PID probes by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2917
+    - fix(ssh): keep server stats safe for Dropbear by @binaricat in https://github.com/binaricat/Netcatty/pull/2932
+    - fix(terminal): re-run onConnect scripts on manual reconnect by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2928
+    - fix(ai): keep host_open sessions after sidebar scope sync by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2925
+    - Fix theme header button alignment by @binaricat in https://github.com/binaricat/Netcatty/pull/2937
+    - fix: include setShowTabNumberBadgesState in storage sync deps by @binaricat in https://github.com/binaricat/Netcatty/pull/2939
+    - 修复 SFTP 虚拟根目录会话的传输失败 by @pplulee in https://github.com/binaricat/Netcatty/pull/2934
+    - fix(sftp): keep home candidates when realpath root is not listable by @binaricat in https://github.com/binaricat/Netcatty/pull/2941
+    - fix(sftp): 复用 SSH 会话打开 sudo SFTP by @myderr in https://github.com/binaricat/Netcatty/pull/2938
+    - fix(sftp): session-backed sudo 对齐 openSftp 回退 by @binaricat in https://github.com/binaricat/Netcatty/pull/2945
+    - fix(terminal): stop idle-Enter keyword highlight flash after #2880 hole by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2931
+    - fix(ai): align Anthropic-compat Base URL for detect and chat by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/2946
+    Full Changelog: https://github.com/binaricat/Netcatty/compare/v1.1.78...v1.1.79
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/binaricat/Netcatty/releases/tag/v1.1.79
+ReleaseTime: 2026-08-12T11:43:00.0000000Z

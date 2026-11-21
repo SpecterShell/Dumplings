@@ -1,0 +1,30 @@
+Version: 0.37.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win32.zip
+- Architecture: x64
+  InstallerUrl: https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/mozilla/geckodriver/releases/download/v0.37.1/geckodriver-v0.37.1-win-aarch64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known problems
+    - Startup hang with Firefox running in a container (e.g. snap, flatpak):
+      When Firefox is packaged inside a container (like the default Firefox browser
+      shipped with Ubuntu versions since 22.04), it may see a different filesystem
+      to the host. This can affect access to the generated profile directory, which
+      may result in a hang when starting Firefox. Workarounds are listed in the
+      geckodriver [usage documentation].
+    Changed
+    - Browser UI testing for Firefox now requires the geckodriver
+      [--allow-system-access] command-line argument. Setting the
+      Firefox --remote-allow-system-access command-line argument
+      via moz:firefoxOptions is no longer supported.
+    Fixed
+    - Fixed a regression in geckodriver 0.37.0 that could cause Firefox for Android
+      to exit immediately on startup on non-rooted Android devices.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mozilla/geckodriver/releases/tag/v0.37.1
+ReleaseTime: 2026-07-20T10:46:11.0000000Z

@@ -1,0 +1,180 @@
+Version: 1.1.27
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: moli-v1.1.27-x86_64-pc-windows-msvc/moli.exe
+  InstallerUrl: https://github.com/lexmount/moli/releases/download/v1.1.27/moli-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: moli-v1.1.27-aarch64-pc-windows-msvc/moli.exe
+  InstallerUrl: https://github.com/lexmount/moli/releases/download/v1.1.27/moli-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    Browser, CDP & DevTools
+    - feat(browser): add instance-scoped --disable-web-security #2963
+    - feat(devtools): make external renderer automation optional #3042
+    - fix(protocol): bound retained navigation stack usage #3110
+    - refactor(protocol): resolve resource state once per target #3133
+    - feat(runtime): publish exception and script load diagnostics by @Spxg in #3091
+    - refactor(target): decouple Browser sessions from Renderer readiness by @coolswood in #3108
+    - fix(devtools): eliminate build warnings when DevTools is disabled by @Spxg in #3235
+    - fix: avoid unused UI event import without DevTools #3273
+    - fix(cdp): restore Audits replay after navigation #3285
+    - perf(devtools): batch marker styles and share generation rules #3236
+    Security & CSP
+    - fix(csp): report every inline script policy violation #3220
+    - fix(csp): report each inline handler, style, and navigation violation #3237
+    Fetch, XHR, Networking & HTTP Cache
+    - refactor(worker): simplify native fetch and XHR setup #3094
+    - refactor(network): simplify controlled resource loading and XHR failures #3130
+    - fix(network): announce child parser script requests before completion #3008
+    - fix(timing): distinguish CSS imports from linked stylesheets #3119
+    - fix(timing): retain resource entries for null-body iframe loads #3125
+    - fix(timing): retain SVG image resource initiator types #3117
+    - fix(preload): derive load events from Fetch results #3154
+    - fix(xhr): fail Worker uploads rejected before transmission #3177
+    - fix(cache): reject partial and wildcard Vary responses before reading bodies #3188
+    - fix(fetch): match encoding cache variants against wire request headers #3157
+    Service Workers & Workers
+    - fix(worker): publish WebSocket events on worker targets #3097
+    - fix(service-worker): resolve clients.claim after applying the claim #3145
+    - fix(service-worker): preserve waitUntil promise settlement timing #3146
+    - fix(service-workers): read navigation preload state before activation #3185
+    - fix(service-worker): apply Window CSP before registration jobs #3191
+    Navigation, Window & Lifecycle
+    - fix(scripts): preserve preparation eligibility before committing state #3005
+    - fix(runtime): retire child realms with their LocalWindow owner #3131
+    - fix(iframe): reload unchanged src during load callbacks #3123
+    - fix(navigation): resolve empty Location URLs against the entry base #3141
+    - fix(navigation): report traversal aborts once #3175
+    DOM, HTML & Accessibility
+    - fix(dom): resolve Attr through shared native Node references #2997
+    - refactor(dom): make detached projection modes explicit #3009
+    - refactor(dom): share branded Attr and Node accessors #3010
+    - refactor(dom): share native Node tree mutation bindings #3011
+    - fix(html): reflect area hyperlink metadata through native descriptors #3093
+    - fix(ax): align native links and ARIA presentation semantics #3089
+    - perf(dom): walk shadow-including subtrees without a worklist #3126
+    - fix(dom): select fragment parser contexts from native Range state #3118
+    - fix(dom): avoid allocating a Range fragment context node #3163
+    - fix(dom): initialize child realms for inline event handlers #3164
+    - fix(popover): suppress closing events on removal #3219
+    - fix(accessibility): give each frame root its own title, url and focus by @lanyue-llk in #2815
+    CSS, Style & Layout
+    - feat(cssom): expose native container condition snapshots #3096
+    - refactor(style): coalesce structural mutation effects on admission #3139
+    - fix(cssom): reject CSSStyleSheet.replace binding errors #3187
+    - refactor(css): discover and install imports from native rules #3239
+    - perf(layout): reuse a document style resolution pass #3238
+    - fix(css): unify font support queries #3284
+    - perf(style): read current styles directly from canonical storage #3287
+    SVG, Canvas, Images & WebGL
+    - fix(images): settle decode against its owning image request #3061
+    - fix(svg): use shaped bounds for whole SVG text ranges #3142
+    - fix(images): truncate fractional raster natural dimensions #3148
+    - fix(images): include src in density candidate selection #3137
+    - fix(canvas): restore Path2D rendering and WebGL API compatibility #3270
+    - fix(canvas): parse absolute CSS colors in 2D style setters by @Supersynergy in #2660
+    - fix(canvas): round-trip non-finite HSL and HWB colors #3286
+    Web APIs, WebIDL & Native Bindings
+    - perf(collections): reuse immutable native static length values #3092
+    - feat(events): implement the native PageRevealEvent constructor #3095
+    - feat(events): expose the native PageSwapEvent interface #3246
+    - fix(webrtc): expose native sender RTP capabilities #3120
+    - refactor(webapi): share Streams, file APIs, and native values #3161
+    - refactor(webapi): check declared interface receivers by default #3134
+    - refactor(webapi): share CSSOM, SVG, and renderer value factories #3241
+    - refactor(webapi): share bindings and native value construction #3262
+    - refactor(webapi): share native factories and WebIDL options #3266
+    Cookies & Storage
+    - refactor(cookies): store one method-independent site relation #3129
+    - refactor(cookies): reuse navigation context for CDP reports #3135
+    WPT, Testing & Reliability
+    - test(cdp): pin Chromium disabled web-security contracts #2994
+    - test: stabilize CLI readiness tests under shared runner load #3087
+    - test(audio): cover fractional sample rates in ConvolverNode #3112
+    - test(service-worker): cover waitUntil on synthetic FetchEvent #3115
+    - test(wpt): assert Request copies skip the public headers getter #3116
+    - test(css): cover font-size-adjust in Typed OM font shorthands #3114
+    - test(wpt): wait for the last MessagePort close listener #3109
+    - test(events): cover legacy initialization of RTC error events #3113
+    - test(service-worker): wait through stale fixture wakeups #3136
+    - test(indexeddb): cover version payloads on delete success #3153
+    - test(dom): cover DOM exceptions across custom-element reactions #3151
+    - test(fetch): settle initial document before preload interception #3149
+    - test(indexeddb): cover binary queued query snapshots #3150
+    - test(parser): cover continuation publication during page restore #3143
+    - test(forms): cover unpaired surrogates in native FormData #3140
+    - fix(wpt): allow Chrome test popups without user activation #3107
+    - test(indexeddb): extend key-range coverage to binary bounds and bulk operations #3156
+    - test(fetch): cover UTF-8 BOM decoding in Request streams #3155
+    - test(preload): retain resource timing for the first parser script #3160
+    - test(worker): cover controllerchange before navigator access #3144
+    - test(fetch): exercise lazy Blob body reads from native completion #3165
+    - test(cdp): cover module completion after named popup reuse #3168
+    - test(cdp): check popup navigation subscription replies #3167
+    - test(dom): cover Document factories in isolated realms #3169
+    - test(modules): isolate malformed child parser JSON from valid imports #3172
+    - test(xhr): cover Document upload serialization and text charset #3171
+    - test(navigation): verify renderer replacement in Navigation API entries #3170
+    - test(wpt): refresh all-profile release case lists #3174
+    - test(window): cover retained child frameElement accessors after detachment #3173
+    - test(fonts): await native tasks when validating FontFace payloads #3180
+    - test(dom): cover shared template contents owner documents #3178
+    - test(html): cover cross-realm area metadata accessors #3176
+    - test(workers): cover worker onerror listener ordering #3184
+    - test(modules): cover child parser module import-map integrity #3183
+    - test(dom): cover the realm used by native factory results #3182
+    - test(renderer): cover metadata element reflectors #3189
+    - test(fetch): finish unmatched navigation before checking the next pause #3190
+    - test(css): check CSP when parser-created styles reach EOF #3192
+    - test(cssom): keep invalid keyframe edits out of the active cascade #3206
+    - test(core): allow diagnostics in lifecycle panic isolation #3203
+    - test(indexeddb): cover cross-agent upgrade and delete notifications #3204
+    - test(service-worker): expand navigation and soft reload cache modes #3205
+    - test(indexeddb): retire blocked worker upgrades without stalling successors #3200
+    - test(fetch): check Request referrers across retained realms and base URLs #3194
+    - test(cssom): cover native ownership and NewObject for computed style #3196
+    - test(inspector): cover UTF-16 wire encoding and byte limits #3199
+    - test(input): cover native drag source ancestry across slots and shadow roots #3198
+    - test(css): cover font shorthand resets of font-size-adjust #3207
+    - test(debugger): preserve pause balance with raw UTF-16 call frames #3197
+    - test(document): cover constructed location accessor reuse #3195
+    - test(fonts): wait for initial readiness before a second load #3214
+    - test(preload): retain stylesheets that finish before the first external script #3215
+    - test(document): cover domain spelling in popup documents #3210
+    - test(blob): check read Promise realms after iframe retirement #3209
+    - test(modules): cover caught V8 TypeErrors during module evaluation #3217
+    - test(history): cover empty state update URLs with a document base #3222
+    - test(blob): await unreadable upload body failures #3221
+    - test(geometry): cover readonly point dictionary member ordering #3225
+    - test(fetch): cover encoding metadata on bodyless responses #3230
+    - test(cache): cover inherited options and cache name conversion #3231
+    - test(svg): cover optional point arguments on text spans and paths #3228
+    - test(events): cover native Window and Worker onerror event data #3227
+    - test(webmidi): keep shared BufferSource coverage active #3260
+    - test(encoding): exercise shared TextDecoder input snapshots consistently #3259
+    - test(webrtc): isolate negotiated data-channel conversions #3257
+    - test(wpt): refresh full release case lists #3263
+    - test: consolidate web platform regression coverage #3265
+    - revert: remove runtime changes from #3265 (#3268)
+    - test(workers): propagate errors after truthy onerror returns #3278
+    - test: consolidate browser API regression fixtures #3279
+    Documentation & Build
+    - docs(examples): add local e2e sign-in example #3128
+    - build: update Rust toolchain to 1.100.0 #3186
+    - docs: link Awesome Moli from the README #3232
+    - docs: move Awesome Moli below Star history #3233
+    - docs: rename the section to Moli's Friends #3234
+    Full Changelog: https://github.com/lexmount/moli/compare/v1.1.26...v1.1.27
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lexmount/moli/releases/tag/v1.1.27
+ReleaseTime: 2026-11-20T11:08:30.0000000Z

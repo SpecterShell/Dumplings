@@ -1,0 +1,35 @@
+Version: 1.0.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.0/Belfry_1.0.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/ChengSoon/belfry-desktop/releases/download/v1.0.0/Belfry_1.0.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/releases/tag/v1.0.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 协作房间收件箱：房间中栏新增「收件箱」页签，与对话、流程并列，按成员会话查看本房间收到的任务、协商与回复；页签角标显示有待处理消息的会话数。详情显示原文、引用、逐个问题的答复状态，以及等待投递、已投递待回复、处理情况未知等状态，可直接打开目标成员终端。收件箱只读，查看、筛选和翻页不会触发投递。
+    - 持久化收件与自动投递：成员忙碌、离线或房间暂停期间，新消息持续保存；会话空闲、输入区为空、没有待处理选择且终端支持安全粘贴时，才按议题整批提交。新任务等上一项任务正式交差后送达，协商与回复可在任务之间的空闲轮次送达。
+    - 按角色设置模型：在成员菜单中选择「设置角色模型」，可沿用默认或为单个角色单独指定模型；支持从该角色实际使用的供应商拉取模型列表后选择，也可手动输入。设置在该角色下次启动时生效，不改动供应商的全局模型与凭据。支持 Codex、Claude Code、Pi、Antigravity CLI、OpenCode 和 Kimi Code。
+    改进
+    - 投递时用户输入优先：用户抢先输入、终端代次变化或出现选择框时，本次投递作废且不写入；提交结果不确定时不会自动重贴，重启、迟到回执和重复请求也不会重复发送。
+    - 粘贴前核对实际写入内容与冻结正文一致，终端自动应答（如光标位置查询）不会打断批次。
+    - 收件箱读取带请求代次，切换房间、翻页或刷新期间的迟到响应不会覆盖当前内容；被引用的原文不在当前页或来自其他会话时，显示后台保存的原文预览。
+    - Agent 可用 belfry inbox 子命令查询、阅读并确认收件处理状态；旧的 belfry inbox 任务列表与 --reply 保持兼容。
+    升级提示
+    - 首次启动会把房间与收件箱数据升级为新格式。升级后旧版本应用及其 belfry 命令行无法再写入房间（发消息、交差会被拒绝并提示存储版本），请同时更新所有设备上的应用；降级前先备份应用数据目录。
+    - 升级后请重开 Agent 会话，让协作命令和协作说明使用新版本。
+    - 提供 macOS Apple Silicon / Intel 与 Windows 安装包、自动更新资产及 SHA256SUMS.txt；安装包签名状态与上一版相同。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ChengSoon/belfry-desktop/blob/HEAD/CHANGELOG.md#100---2026-11-11
+ReleaseTime: 2026-11-11T03:29:54.0000000Z

@@ -1,42 +1,52 @@
-$Object1 = Invoke-RestMethod -Uri 'https://gitee.com/qianjigroup/qianji-public-test/raw/master/upgrade-windows.txt'
+$Object1 = Invoke-RestMethod -Uri 'https://upkit.qianji.app/qj.json'
 
 # Version
-$Task.CurrentState.Version = $Object1.versionName
+$this.CurrentState.Version = $Object1.windows.version.versionName
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.downloadUrl
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.windows.version.downloadUrl
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.changeLogs | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Object2 = Invoke-WebRequest -Uri 'https://docs.qianjiapp.com/change-log/change_log_pc.html' | ConvertFrom-Html
-
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
     try {
-      $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='book-search-results']/div[1]/section/h2[contains(./text(), '$($Task.CurrentState.Version)-$($Object1.versionCode)')]")
-      if ($ReleaseNotesNode) {
-        # ReleaseTime
-        $Task.CurrentState.ReleaseTime = $ReleaseNotesNode.SelectSingleNode('./following-sibling::p[1]').InnerText | Get-Date -Format 'yyyy-MM-dd'
-      } else {
-        $Task.Logging("No ReleaseTime for version $($Task.CurrentState.Version)", 'Warning')
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.windows.version.changeLogs | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+    # RealVersion
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+
+    # $Object2 = Invoke-WebRequest -Uri 'https://docs.qianjiapp.com/change-log/change_log_pc.html' | ConvertFrom-Html
+
+    # try {
+    #   $ReleaseNotesNode = $Object2.SelectSingleNode("//*[@id='book-search-results']/div[1]/section/h2[contains(./text(), '$($this.CurrentState.Version)-$($Object1.versionCode)')]")
+    #   if ($ReleaseNotesNode) {
+    #     # ReleaseTime
+    #     $this.CurrentState.ReleaseTime = $ReleaseNotesNode.SelectSingleNode('./following-sibling::p[1]').InnerText | Get-Date -Format 'yyyy-MM-dd'
+    #   } else {
+    #     $this.Log("No ReleaseTime for version $($this.CurrentState.Version)", 'Warning')
+    #   }
+    # } catch {
+    #   $this.Log($_, 'Warning')
+    # }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,105 @@
+Version: 0.14.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/fortran-lang/fpm/releases/download/v0.14.0/fpm-0.14.0-windows-x86_64-gcc-14.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/fortran-lang/fpm/releases/download/v0.14.0/fpm-installer-0.14.0-gcc-14.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Fix: lfortran release flag and Windows ifx variant mapping by @gha3mi in https://github.com/fortran-lang/fpm/pull/1249
+    - chore(deps): bump actions/upload-artifact from 6 to 7 by @dependabot[bot] in https://github.com/fortran-lang/fpm/pull/1256
+    - chore(deps): bump fortran-lang/setup-fortran from 1.8.1 to 1.9.0 by @dependabot[bot] in https://github.com/fortran-lang/fpm/pull/1255
+    - chore(deps): bump actions/download-artifact from 7 to 8 by @dependabot[bot] in https://github.com/fortran-lang/fpm/pull/1254
+    - fix(help_test): correct pack source for book2 filtering by @ZainabTravadi in https://github.com/fortran-lang/fpm/pull/1270
+    - Fix parsing of USE statements with inline comments without whitespace by @ZainabTravadi in https://github.com/fortran-lang/fpm/pull/1272
+    - Fix false intrinsic module detection for substring matches in USE parsing by @ZainabTravadi in https://github.com/fortran-lang/fpm/pull/1274
+    - ci: ship parallel (OpenMP-enabled) fpm release artifacts by @zbeekman in https://github.com/fortran-lang/fpm/pull/1281
+    - fix: lfortran uses '--shared' not '-shared' by @amckinstry in https://github.com/fortran-lang/fpm/pull/1280
+    - fix(targets): per-profile build dirs for archive, shared, and exe targets by @perazz in https://github.com/fortran-lang/fpm/pull/1286
+    - fix(source-parsing): correct macro extraction for indented #if defined() by @krystophny in https://github.com/fortran-lang/fpm/pull/1284
+    - CI: Remove macos-14 + gcc-11 build by @bonachea in https://github.com/fortran-lang/fpm/pull/1315
+    - build(nag): rm headerpad flags for nagfor on macOS by @rouson in https://github.com/fortran-lang/fpm/pull/1312
+    - chore: ignore local tool config files by @perazz in https://github.com/fortran-lang/fpm/pull/1343
+    - ci: restore green CI and refresh the compiler matrix by @perazz in https://github.com/fortran-lang/fpm/pull/1344
+    - perf: make manifest config allocatables polymorphic to cut compile time by @perazz in https://github.com/fortran-lang/fpm/pull/1345
+    - Fix: make an elemental subprogram impure so flang builds fpm by @rouson in https://github.com/fortran-lang/fpm/pull/1318
+    - ci: add gcc 16 to the CI matrix by @perazz in https://github.com/fortran-lang/fpm/pull/1349
+    - fix: avoid class array allocations that gfortran 15+ leaves without a rank by @perazz in https://github.com/fortran-lang/fpm/pull/1352
+    - ci: add LLVM Flang jobs on Linux and Windows by @perazz in https://github.com/fortran-lang/fpm/pull/1350
+    - ci: keep the Linux Intel and MPI jobs working on ubuntu-26.04 by @perazz in https://github.com/fortran-lang/fpm/pull/1359
+    - fix: do not read module procedure::name as a module statement by @perazz in https://github.com/fortran-lang/fpm/pull/1358
+    - fix: rebuild static archives from scratch by @perazz in https://github.com/fortran-lang/fpm/pull/1360
+    - CI: retry setup-fortran once on Windows by @perazz in https://github.com/fortran-lang/fpm/pull/1317
+    - fix: fpm run: improve error message by @perazz in https://github.com/fortran-lang/fpm/pull/1303
+    - Initialize the return code in delete_env by @Shubham-Padkonde in https://github.com/fortran-lang/fpm/pull/1325
+    - fix feature caching in fpm by @JorgeG94 in https://github.com/fortran-lang/fpm/pull/1320
+    - fix: keep absolute local dependency paths absolute by @perazz in https://github.com/fortran-lang/fpm/pull/1362
+    - fix: rebuild targets whose dependencies changed since their last build by @perazz in https://github.com/fortran-lang/fpm/pull/1363
+    - test: build the generated package in new-test by @chaitanya-bhardwaj in https://github.com/fortran-lang/fpm/pull/1351
+    - fix: restore parser active state after #elif conditional blocks by @chaitanya-bhardwaj in https://github.com/fortran-lang/fpm/pull/1340
+    - fix: reject positional arguments in subcommands that take none by @perazz in https://github.com/fortran-lang/fpm/pull/1364
+    - Keep Unix Intel debug flags off Windows by @Sarthak-Shreshtha01 in https://github.com/fortran-lang/fpm/pull/1342
+    - ci: link GCC runtimes statically into the macOS release artifacts by @yuki-nishikawa in https://github.com/fortran-lang/fpm/pull/1333
+    - fix: serialize mkdir shell fork on the run_command lock by @krystophny in https://github.com/fortran-lang/fpm/pull/1298
+    - chore(deps): bump actions/checkout, actions/setup-python and setup-fpm by @perazz in https://github.com/fortran-lang/fpm/pull/1366
+    - ci: run the metapackage and single-file release jobs with gcc 16 by @perazz in https://github.com/fortran-lang/fpm/pull/1370
+    - feat: exec Fortran compiles via argv (posix_spawn/CreateProcess) by @krystophny in https://github.com/fortran-lang/fpm/pull/1299
+    - feat: run link and archive in parallel via argv spawn by @krystophny in https://github.com/fortran-lang/fpm/pull/1300
+    - feat: exec C/C++ compiles via argv, close the shell-fork gap by @krystophny in https://github.com/fortran-lang/fpm/pull/1301
+    - refactor: share argv command building and running across compile and link by @perazz in https://github.com/fortran-lang/fpm/pull/1371
+    - refactor: serialize shell commands inside run() by @perazz in https://github.com/fortran-lang/fpm/pull/1372
+    - fix: libgfortran restores a freed locale string on MinGW (Windows SIGSEGV) by @perazz in https://github.com/fortran-lang/fpm/pull/1377
+    - fix: bump jonquil and read TOML without toml-f re-opening units by @perazz in https://github.com/fortran-lang/fpm/pull/1374
+    - fix: delete_file deletes through C remove() by @perazz in https://github.com/fortran-lang/fpm/pull/1379
+    - build(deps): bump fortran-lang/setup-fortran from 1.10.0 to 1.11.0 by @dependabot[bot] in https://github.com/fortran-lang/fpm/pull/1383
+    - build(deps): bump JamesIves/github-pages-deploy-action from 4.7.6 to 4.9.0 by @dependabot[bot] in https://github.com/fortran-lang/fpm/pull/1382
+    - feat: add --jobs/-j to set the number of parallel build jobs by @perazz in https://github.com/fortran-lang/fpm/pull/1388
+    - fix(compiler): use /OUT: for a user-set lib archiver, set os_type first by @perazz in https://github.com/fortran-lang/fpm/pull/1389
+    - fix: lock deferred-length string results on the parallel build path by @perazz in https://github.com/fortran-lang/fpm/pull/1381
+    - perf: use native directory checks on Unix by @krystophny in https://github.com/fortran-lang/fpm/pull/1291
+    - feat: lock the build directory against concurrent fpm runs by @perazz in https://github.com/fortran-lang/fpm/pull/1390
+    - fix: keep quotes inside flags when compiling without a shell by @perazz in https://github.com/fortran-lang/fpm/pull/1391
+    - fix: detect amdflang before flang and enable its OpenMP flag by @ShryukGrandhi in https://github.com/fortran-lang/fpm/pull/1387
+    - fix: build with AOCC, whose flang is classic flang by @perazz in https://github.com/fortran-lang/fpm/pull/1392
+    - perf: create Unix directories without shell by @perazz in https://github.com/fortran-lang/fpm/pull/1396
+    - fix: build fpm with nagfor, and build packages with it by @perazz in https://github.com/fortran-lang/fpm/pull/1397
+    - ci: install LLVM Flang with setup-fortran, add a macOS job by @perazz in https://github.com/fortran-lang/fpm/pull/1399
+    - ci: checksum fpm.F90 and fpm.zip in the current prerelease by @perazz in https://github.com/fortran-lang/fpm/pull/1401
+    - ci: ship a static Linux ARM64 release binary by @perazz in https://github.com/fortran-lang/fpm/pull/1400
+    - fix: re-resolve a cached dependency when its local path changes by @krystophny in https://github.com/fortran-lang/fpm/pull/1395
+    - fix: rebuild sources when their included files change by @perazz in https://github.com/fortran-lang/fpm/pull/1402
+    - ci: pin setup-fortran to the commit that reads the gzipped apt.llvm.org listing by @perazz in https://github.com/fortran-lang/fpm/pull/1403
+    - Fix glob backtracking over repeated characters by @Shubham-Padkonde in https://github.com/fortran-lang/fpm/pull/1326
+    - fix: preserve include directories containing spaces by @krystophny in https://github.com/fortran-lang/fpm/pull/1339
+    - release: add the make-release checklist by @perazz in https://github.com/fortran-lang/fpm/pull/1404
+    - test: allow LFortran unknown warning flag by @shubhambhar007 in https://github.com/fortran-lang/fpm/pull/1376
+    - Allow fetch-only updates for test-only packages by @krystophny in https://github.com/fortran-lang/fpm/pull/1330
+    - Only strip the last suffix in basename(suffix=.false.) by @Shubham-Padkonde in https://github.com/fortran-lang/fpm/pull/1327
+    - ci: pass -C after the subcommand in run_tests.sh by @perazz in https://github.com/fortran-lang/fpm/pull/1407
+    - fix: keep --verbose commands on one line with any compiler by @perazz in https://github.com/fortran-lang/fpm/pull/1406
+    - fix: make fpm clean use --build-dir and FPM_BUILD_DIR by @perazz in https://github.com/fortran-lang/fpm/pull/1410
+    - ci: bump the patch version after each release by @perazz in https://github.com/fortran-lang/fpm/pull/1409
+    - fix: stop without the runtime's stop code or IEEE exception notes by @perazz in https://github.com/fortran-lang/fpm/pull/1412
+    - fix(cli): declare --config-file for fpm export by @perazz in https://github.com/fortran-lang/fpm/pull/1414
+    - FPM release v0.14.0 by @perazz in https://github.com/fortran-lang/fpm/pull/1418
+    New Contributors
+    - @gha3mi made their first contribution in https://github.com/fortran-lang/fpm/pull/1249
+    - @ZainabTravadi made their first contribution in https://github.com/fortran-lang/fpm/pull/1270
+    - @zbeekman made their first contribution in https://github.com/fortran-lang/fpm/pull/1281
+    - @amckinstry made their first contribution in https://github.com/fortran-lang/fpm/pull/1280
+    - @bonachea made their first contribution in https://github.com/fortran-lang/fpm/pull/1315
+    - @Shubham-Padkonde made their first contribution in https://github.com/fortran-lang/fpm/pull/1325
+    - @chaitanya-bhardwaj made their first contribution in https://github.com/fortran-lang/fpm/pull/1351
+    - @Sarthak-Shreshtha01 made their first contribution in https://github.com/fortran-lang/fpm/pull/1342
+    - @yuki-nishikawa made their first contribution in https://github.com/fortran-lang/fpm/pull/1333
+    - @ShryukGrandhi made their first contribution in https://github.com/fortran-lang/fpm/pull/1387
+    - @shubhambhar007 made their first contribution in https://github.com/fortran-lang/fpm/pull/1376
+    Full Changelog: https://github.com/fortran-lang/fpm/compare/v0.13.0...v0.14.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/fortran-lang/fpm/releases/tag/v0.14.0
+ReleaseTime: 2026-11-20T08:35:38.0000000Z

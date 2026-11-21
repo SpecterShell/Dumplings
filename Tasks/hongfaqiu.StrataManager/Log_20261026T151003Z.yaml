@@ -1,0 +1,20 @@
+Version: 0.2.25
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.25/Strata.Manager_0.2.25_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed engine start failing when its log file is in use or not writable: Older Strata releases (such as v0.2.1.x) exit with PermissionError: [Errno 13] on Windows when they cannot open engine.log. Before every engine start (imported and managed installs alike), Manager now opens the log file for appending and closes it right away. If that fails it switches to a new engine-<time>.log in the same folder, or to Manager's own log folder or the system temp folder when that folder is not writable either, writes the new path into the configuration, starts as usual and notes "The original log file is in use or not writable; logging to … instead" in the log. Viewing logs, startup diagnostics and diagnostic exports all read the file actually in use, and only the 3 newest replacement logs are kept per folder.
+    - Startup diagnostics recognize "Log file in use or not writable": When the engine reports PermissionError / Errno 13 for a .log file, the diagnostic names the cause with the steps to fix it: end leftover python / strata processes, delete the log file or clear Read-only, check the folder permissions, and temporarily quit or allow security software such as 360 or Huorong; it also suggests upgrading an old Strata. Automatic recovery no longer retries such failures three times blindly: it retries once with a new log file and then stops with a notice.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复引擎日志文件被占用或无权限时启动失败：旧版 Strata（如 v0.2.1.x）在 Windows 上打不开 engine.log 会直接报 PermissionError: [Errno 13] 退出。现在每次启动引擎前（导入的和受管的安装都包括），Manager 会先用追加方式试着打开日志文件并立刻关闭；打不开就改用同目录下新的 engine-<时间>.log，同目录也写不进时改用 Manager 自己的日志目录或系统临时目录，把新路径写进配置后照常启动，并在日志里提示「原日志文件被占用或无权限，已改写到 …」。查看日志、启动诊断和导出诊断都读实际在用的文件；每个目录只保留最近 3 个替换日志。
+    - 启动诊断能识别「日志文件被占用或无权限」：引擎输出里出现针对 .log 文件的 PermissionError / Errno 13 时，诊断会直接给出原因和处理步骤：结束残留的 python / strata 进程、删除日志文件或取消只读、检查文件夹权限、临时退出 360 / 火绒等安全软件或加入白名单；Strata 版本较旧时建议升级。自动恢复遇到这类错误不再盲目重试 3 次：先换一个新日志文件重试一次，仍失败就停下并提示。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.25
+ReleaseTime: 2026-10-26T14:09:11.0000000Z

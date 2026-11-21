@@ -1,0 +1,20 @@
+Version: 3.4.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.4.4/MotrixNext_3.4.4_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release resolves HTTPS download failures on Linux caused by a TLS certificate verification issue in the custom-built aria2c engine.
+    🐛 Bug Fixes
+    - Reverted aria2c engine to v1.36.0 — The custom-compiled aria2c 1.37.0 (OpenSSL 3.x static build) failed to locate system CA certificates on Linux, causing SSL/TLS handshake failure: unable to get local issuer certificate on all HTTPS downloads. Reverted to the proven 1.36.0 binaries across all platforms until the build configuration is corrected
+    - Capped max connections per server to 64 — aria2c 1.36.0 enforces a maximum of 64 connections per server; the UI now reflects this limit
+    🛠 Improvements
+    - Exit dialog reliability on Linux/Wayland — Exit confirmation dialog is now emitted from the backend for improved reliability on Wayland compositors
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.4.4
+ReleaseTime: 2026-03-17T09:56:30.0000000Z

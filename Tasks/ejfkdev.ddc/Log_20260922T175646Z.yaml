@@ -1,0 +1,49 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.9/ddc-v0.1.9-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.9/ddc-v0.1.9-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc v0.1.9 — the name-resolution & value-fidelity release
+    Full-APK javac gate (android.jar classpath, four corpora): 315,986 →
+    70,265 errors (−77.8%). weixin 196,268→45,595 · weibo 67,917→15,206 ·
+    lark 44,321→5,492 · reqable 7,280→3,972.
+    Name resolution (JLS 6.4.2 obscuring, the dominant root):
+    - obscuring-class renames gated by descriptor- AND body-level
+      cross-package reference scans (per-package first segments)
+    - nested types (incl. Outer$$x orphans) join the package-shadow rule
+    - static-member qualifiers render concrete (never the SAM fallback):
+      Kotlin object-lambda INSTANCE singletons, $SwitchMap holders
+    - member-access downcast witnesses with interface/owner guards
+    - obscured nested refs resolve via imports ($-tail simple names)
+    Value fidelity:
+    - method-wide final-read analysis: allocs survive across blocks
+      (the new X(..).f = .. + dangling-int-local family)
+    - boolean/numeric register reuse splits into generations, incl.
+      post-booleanize re-splits and Kotlin or/and chains
+    - literal receivers keep their constants ("http".equals(x), was
+      ((String) null) at 73.5k sites — silent NPEs)
+    - primitive bridges at call/ctor args ((byte)(b?1:0), x != 0)
+    - numeric narrowing casts at assign/def/return positions
+    Structuring & declarations:
+    - switch payload targets are CFG leaders: protobuf-style op()
+      switches keep their case bodies and per-case returns
+    - Kotlin default-arg bridge ctors fold into ternary delegations;
+      branched this()/super() merges keep consumed defs out of tails
+    - enums: field-less constants and ordinal gaps promote faithfully
+    - inherited-ctor bridges for dex hierarchy-resolved new C(args)
+    - Kotlin multi-file facades remap to their public XxxKt
+    Perf: weixin 15.4s · weibo 9.3s · lark 8.4s · reqable 0.5s (M-series,
+    release). Determinism: byte-identical double runs (gson walk-deadline
+    floor aside). 51 tests green, clippy clean.
+    jdc-core 0.2.4: New.arg_tys, Ctx::obscured_simple, concrete static
+    qualifiers, downcast witnesses, literal receivers.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.8...v0.1.9
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.9
+ReleaseTime: 2026-09-22T14:35:04.0000000Z

@@ -1,0 +1,142 @@
+Version: 3.103.0
+Installer:
+- InstallerUrl: https://logtalk.org/files/logtalk-3.103.0.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Logtalk compiler and runtime
+    - CHANGED: Allow the logtalk_load_context/2 built-in predicate singletons/1 and variable_names/1 key arguments to be either the term being term-expanded or the goal being goal-expanded.
+    - IMPROVED: Minor compiler performance improvements.
+    - FIXED: Runtime race condition on multi-threaded backends when cleaning the dynamic binding caches. Thanks to Andrew Davison and Arun Majumdar for the bug reports and patches.
+    - FIXED: Potential deadlock when calling the threaded_engine_destroy/1 predicate to terminate an engine whose goal creates or destroys engines. Thanks to Arun Majumdar for the bug report and patch.
+    - FIXED: The linter check for duplicated clauses could report false positives due to logical update semantics.
+    - FIXED: Duplicated float comparison using unification linter warning for a (\=)/2 goal as the condition in a if-then-else control construct. Thanks to Lindsey Spratt for the bug report.
+    - FIXED: Missing duplicated float comparison using unification linter warning for (=)/2 goals as conditions in soft-cut control constructs.
+    Prolog adapter and integration files
+    - ADDED: Support for Shumway (Prolog on .NET) 0.9.3 and later versions.
+    - UPDATED: The Trealla Prolog file to set the coinduction flag to supported for 3.14.42 and later versions.
+    Documentation
+    - IMPROVED: The PDF version of the API documentation by using better and more compact styling, adding internal links, and reducing the number of pages.
+    Library
+    - CHANGED: The ant_colony, differential_evolution, genetic_algorithm, particle_swarm_optimization, simulated_annealing, and tabu_search libraries to take as parameter a random generator object instead of a random generator algorithm for additional flexibility.
+    - ADDED: New flow_networks library implementing network flow algorithms over capacitated directed graphs: maximum flow, minimum cut, and minimum cost flow, with flow verification and decomposition, Gomory-Hu cut trees, convex arc costs, and time-expanded network builders.
+    - ADDED: New asp library for representing Answer Set Programming (ASP) problems as Logtalk objects, invoking the Clingo (default) or zetesis command-line solver through the process library, and inspecting collected models and diagnostics.
+    - ADDED: New minizinc library for representing constraint satisfaction and optimization problems as Logtalk objects, invoking the MiniZinc command-line tool with a selectable backend solver through the process library, and inspecting collected results.
+    - ADDED: New problog library for representing ProbLog problems as Logtalk objects, invoking the ProbLog command-line tool through the process library, and inspecting collected results.
+    - ADDED: New sat library for representing SAT problems as Logtalk objects, invoking the Kissat (default), CaDiCaL, Glucose, or Z3 command-line solvers through the process library, and inspecting collected results.
+    - ADDED: New smt library for representing SMT problems as Logtalk objects, invoking the Z3 (default), cvc5, Bitwuzla, or Yices 2 command-line solvers through the process library, and inspecting collected results.
+    - ADDED: New omt library for representing OMT (optimization modulo theories) problems as Logtalk objects, invoking the Z3 (default) or OptiMathSAT command-line solvers through the process library, and inspecting collected results.
+    - ADDED: New souffle library for representing Datalog problems as Logtalk objects, invoking the Souffle command-line engine through the process library, and inspecting collected relations and relation sizes.
+    - ADDED: New simple_temporal_networks library implementing Simple Temporal Networks (STNs).
+    - ADDED: New atms library implementing the Horn fragment of Johan de Kleer's Assumption-based Truth Maintenance System (ATMS).
+    - ADDED: New emeans_clusterer library implementing Meta FAIR e-means algorithm.
+    - ADDED: New time_series_protocols library defining protocols, common predicates, and test datasets for implementing time series forecasting algorithms.
+    - ADDED: New baseline_forecasting library implementing univariate naive, seasonal naive, mean, and drift forecasting.
+    - ADDED: New intermittent_demand_forecasting library implementing Croston, the Syntetos-Boylan approximation (SBA), and Teunter-Syntetos-Babai (TSB) forecasting for non-negative demand series with periods of zero demand.
+    - ADDED: New exponential_smoothing library implementing univariate time series forecasting using simple exponential smoothing, Holt linear-trend smoothing, and additive or multiplicative Holt-Winters seasonal smoothing.
+    - ADDED: New theta_forecasting library implementing automatic seasonality detection and classical additive or multiplicative seasonal adjustment.
+    - ADDED: New knn_forecasting library implementing univariate time series forecasting using the k-Nearest Neighbors ("analog") method.
+    - ADDED: New time_series_regression library implementing univariate time series forecasting using autoregressive (AR) models fitted by least squares.
+    - ADDED: New recommender_protocols library providing rating and item-content dataset protocols, a common scoring recommender protocol, shared validation and rating-matrix utilities, and cosine, Pearson, Jaccard, inverse mean squared difference, and Spearman similarity strategies.
+    - ADDED: New knn_item_recommender library implementing a item-based k-nearest neighbors recommender.
+    - ADDED: New knn_user_recommender library implementing a user-based k-nearest neighbors recommender.
+    - ADDED: New slope_one_recommender library implementing a weighted Slope One recommender.
+    - ADDED: New tfidf_recommender library implementing content-based filtering with TF-IDF or preweighted sparse item vectors, positive-feedback centroid profiles, and cosine relevance scores.
+    - ADDED: New jaccard_recommender library implementing content-based filtering with categorical or binary item features, positive-feedback union profiles, and Jaccard relevance scores.
+    - ADDED: New bm25_recommender library implementing content-based filtering with raw term counts, positive-feedback query profiles, and BM25 relevance scores.
+    - ADDED: New feature_selection_protocols library providing protocols and common predicates used in the implementation of (filter- based) feature selection algorithms.
+    - ADDED: New fisher_score_feature_selector library implementing feature selection using Fisher scores.
+    - ADDED: New mutual_information_feature_selector library implementing feature selection using mutual information.
+    - ADDED: New chi_square_feature_selector library implementing feature selection using chi-square scores.
+    - ADDED: New relief_feature_selector library implementing Relief feature selection for binary classification.
+    - ADDED: New relieff_feature_selector library implementing ReliefF feature selection for multiclass classification.
+    - ADDED: New rrelieff_feature_selector library implementing RReliefF feature selection for regression.
+    - ADDED: New mrmr_feature_selector library implementing minimum-redundancy maximum-relevance feature selection using mutual information differences.
+    - ADDED: New lasso_feature_selector library implementing feature selection using Lasso regression coefficients.
+    - ADDED: New git library root/2, remote/3, working_tree_clean/1, and working_tree_status/2 predicates.
+    - ADDED: New linear_algebra library predicate symmetric_eigen_partial/7.
+    - ADDED: New process library wait/3 predicate providing access to both raw and normalized process exit status.
+    - ADDED: Support to the process library for using the create/3 predicate type/1 option when running on XVM 12.2.1 or later version.
+    - ADDED: New random library sample/3-4 predicates.
+    - CHANGED: The mlp_classifier library to require ground classifier terms, complete diagnostics, and consistency between model fields, diagnostics, and effective training options. Previously accepted incomplete or inconsistent terms are now rejected. Improved performance with cached training configuration, prepared class indices and weights, trace-free forward evaluation, fused affine evaluation and parameter updates, direct transpose-vector products, and specialized zero-momentum, zero-L2, and loss-convergence paths. Fixed bias-only learning for datasets without attributes, saturated cross-entropy loss and premature loss convergence, and custom-functor prediction, diagnostics, and printing. Expanded regression and numerical tests and code coverage, reduced repeated training in the tests, added benchmarks, and updated documentation.
+    - CHANGED: The one_class_svm_anomaly_detector library learned detector term to one_class_svm_detector/7, adding an immutable cache argument before the diagnostics argument. The previous detector representation is not accepted. Added an optimality tolerance option, convergence and decision-geometry diagnostics, and spectral step-size safeguards. Fixed large-offset capped-simplex projection, unstable learning rates, premature convergence, detector and coefficient validation, and non-ground kernel-option handling. Improved performance with matrix-free linear training and cached weights, symmetric kernel matrices and reused training references, fused kernel scoring, scalar-only projection passes, and indexed empirical ranks. Expanded regression tests and code coverage, reduced repeated training in the tests, added benchmarks, and updated documentation, including linear-kernel limitations.
+    - CHANGED: The umap_projection library to use self-inclusive neighbor counts, introducing backwards incompatible neighborhood semantics. Fixed duplicate-row self neighborhoods, fractional local connectivity, endpoint-biased negative sampling, zero-weight transform scheduling, and reducer and metric-option validation. Improved performance with sparse fuzzy graph merging, AVL graph and row indexes, partial spectral initialization with residual checks, bounded exact neighbor selection, cached curve-fitting samples, indexed identifier validation and attribute bindings, skipped redundant heap-index updates, and reused spectral graph indexes. Expanded regression tests and coverage and reduced repeated training in the tests. Updated documentation.
+    - CHANGED: The tsne_projection library to require ground identifiers and reducer terms, complete effective options, and consistent model diagnostics. Training perplexity is bounded by one and the sample count minus one, inclusively; affinity diagnostics report tie-limited and search-budget-limited matching, and transformations warn when matching is incomplete. Fixed the conditional transform gradient and negative KL roundoff. Improved exact dense optimization with quadratic symmetrization, cached Gaussian search inputs, direct weight normalization, triangular symmetric matrix construction, fused row-major weight summation, scalar gradient accumulation, fused gradient-row computation and coordinate updates, aligned preprocessing, AVL validation, row-wise centering, and hoisted optimizer settings. The fused operations preserve floating-point accumulation order. Expanded numerical and regression tests to full clause coverage, including exact comparisons with unfused references, reduced repeated training in tests, added focused and larger-workload benchmarks, and updated documentation.
+    - IMPROVED: Performance of the crypto, http_websocket_frames, isolation_forest_anomaly_detector, logistic_regression_classifier, and simulated_annealing libraries.
+    - IMPROVED: Performance of the random library circular_uniform_polar/3, logseries/2, standard_normal/1, and von_mises/3 sampling predicates.
+    - IMPROVED: Faster training data preprocessing across the clustering libraries. A shared pass validates and orders attribute values in ordinary training rows and collects numeric columns only when feature scaling is enabled. Encoding reuses the ordered values instead of rereading the raw bindings. Validation error precedence, numerical results, prediction behavior, and exported model formats are unchanged.
+    - IMPROVED: Performance of the adaptive_boosting_classifier, ant_colony, arbitrary, ccsds_packets, c45_classifier, crypto, cuid2, differential_evolution, genetic_algorithm, gradient_boosting_classifier, gaussian_process_regression, ids, sgd_classifier, knn_distance_anomaly_detector, ksuid, linear_svm_classifier, lof_anomaly_detector, logistic_regression_classifier, nanoid, particle_swarm_optimization, paseto, random_forest_classifier, simulated_annealing, snowflakeid, svr_regression, tabu_search, typeid, and uuid library tests.
+    - IMPROVED: Rewrite predicate definitions as tail-recursive in the ant_colony, association_rule_miner, byte_order, ccsds, colley_ranker, crontab, crypto, datalog, genetic_algorithm, gpx, hashes, http_core, http_digest, http_multipart, http_router, http_session, http_websocket_service, integer_partitions, intervals, json_graph, json_path, mcp_server, linear_programming, mqtt, nmea, numerical_analysis, open_api, ranking_protocols, sqids, regression_tree, spectral_clusterer, subsequences, tsne_projection, umap_projection, uri_template, and wkt_wkb libraries.
+    - IMPROVED: The adaptive_boosting_classifier library with faster weighted sampling, cached training predictions, efficient ensemble construction and vote aggregation, numerically stable weight updates, and stronger model validation. Fixed singleton-class and attribute-free datasets, empty ensembles, perfect-learner handling, and temporary dataset cleanup. Expanded tests and documentation.
+    - IMPROVED: The differential_evolution library with indexed donor lookup, fused mutation and binomial crossover, single-pass exponential crossover, combined selection and best tracking, and on-demand population statistics. Fixed random donor and crossover coordinate selection, continuous population initialization, equal-fitness trial replacement, bounds validation, and progress reporting. The updates/1 option limits the total number of reports, including the final report. Expanded regression tests and documentation.
+    - CHANGED: The c45_classifier library learned model representation to c45_model(Tree, Statistics) for population-weighted missing-value predictions. Raw trees remain accepted. Annotated exports delegate to the classifier object; updated the adaptive_boosting_classifier and random_forest_classifier libraries to accept the annotated models.
+    - IMPROVED: The c45_classifier library with histogram-based continuous split scoring, shared discrete split statistics, cached node entropy and partitions, single-pass model statistics, bottom-up pruning, and difference-list raw export. Expanded regression tests, generated property checks, and documentation.
+    - FIXED: The c45_classifier library threshold overflow and rounding, missing-value mass duplication, split eligibility and gain selection, weighted entropy rounding, pruning parameter validation and minimum-population semantics, categorical exports, and variable-model validation errors.
+    - IMPROVED: The http_process_transport library to only warn about a missing default socket command (socat on POSIX systems and ncat on Windows systems).
+    - CHANGED: The lof_anomaly_detector library learned detector term from lof_detector/7 to lof_detector/8, adding an immutable cache argument before the diagnostics argument. The previous detector representation is not accepted. Improved performance with cached neighborhoods, k-distances, and densities, indexed reference lookups, shared normalization statistics, compact bounded neighbor selection, and symmetric distance reuse. Fixed neighbor reference populations, boundary ties, insufficient comparable neighbors, feature validation, and instantiation errors. Expanded regression tests, achieved full clause coverage, and updated documentation.
+    - IMPROVED: The tabu_search library with optional tabu keys, custom tenure and aspiration policies, restart diversification, and exhaustive neighborhood evaluation. Optimized candidate sampling and tabu scans; fixed tenure expiration, large-energy handling, non-ground state identity, and progress reporting. Expanded tests and documentation.
+    - IMPROVED: The language_detection library with load-time caching of built-in trigram vectors and squared norms, reused input norms, per-request candidate profile resolution, and memoized stop-word matching. Expanded regression tests and code coverage, improved test performance, and corrected documentation examples.
+    - IMPROVED: The linear_svm_classifier library with binary model symmetry, cached optimizer settings, direct-tail categorical encoding, and fused prediction scoring and class selection. Fixed non-ground classifier validation and bias-only learning and prediction for datasets without attributes. Expanded regression and numerical tests to full clause coverage, reduced repeated training in the tests, added focused benchmarks, and updated documentation, including algorithm limitations.
+    - IMPROVED: The hashes library with linear block processing, bounded-tail MD5 and SHA padding, sequential SHA message schedules, batched SipHash blocks, indexed CRC tables, and fixed-position BLAKE2 and Keccak mixing. Fixed BLAKE2 non-ground key validation and MurmurHash3 tail determinism. Added explicit exceptions for invalid SipHash keys and SHAKE output lengths. Expanded regression tests and code coverage, improved test performance, and added benchmarks and documentation.
+    - IMPROVED: The geohash library with faster hierarchy compression, integer-native encoding and decoding, grid-based adjacency and neighborhoods, fused geometry filtering, and hierarchical pruning for adaptive geometry covers. Also improved bounded-integer portability and expanded regression tests, code coverage, and documentation.
+    - FIXED: The geohash library antimeridian and degenerate bounding-box coverage, dateline coordinate handling, zero-buffer semantics, precision limits, bit-precision validation, and concave polygon containment.
+    - FIXED: The geospatial library bounding-box intersection, overlap, and containment predicates to consider both longitude segments of antimeridian-crossing boxes.
+    - IMPROVED: The linear_algebra library symmetric_eigen_partial/7 predicate by skipping the unused matrix deflation after extracting the final requested eigenpair, avoiding a quadratic-time matrix update and allocation. Expanded regression tests.
+    - CHANGED: The spectral_clusterer library learned model representation from spectral_clusterer/9 to spectral_clusterer/10, adding prepared projection coefficients before the centroids argument. The previous representation is not accepted. Added independent eigensolver tolerance, iteration budget, and eigenvalue cutoff options, with residual and orthogonality diagnostics and explicit rejection of insufficient spectral accuracy. Improved performance with an analytical leading eigenpair, partial eigendecomposition, symmetric affinity reuse, cached degree scaling, exact median selection, single-pass centroid aggregation, cached minimum distances for spread initialization, prepared prediction coefficients, and fused prediction affinity generation and maximum tracking. Fixed model validation, empty attribute declarations, extreme bandwidth arithmetic, embedding normalization, and prediction underflow. Expanded regression tests, added focused benchmarks, and documented algorithm limitations.
+    - FIXED: Classifier libraries handling of classifiers with custom functors.
+    - FIXED: Regression libraries handling of regressors with custom functors.
+    - FIXED: The cbor library encoding of floats to account for backends not outputting the plus sign when writing floats in scientific notation. Thanks to Andrew Davison for the bug report and patch.
+    - FIXED: Spurious choice-points in the character_sets library bytes_to_codes/2 predicates.
+    - FIXED: Spurious choice-points in expected deterministic graphs library predicates.
+    - FIXED: The http_core library strict request and response validation could spuriously reject a multipart/form-data body whose parts omit an optional per-part Content-Type header (as commonly sent by web browsers) by recomputing its length from a re-generated wire representation that restores the omitted header. The validation now reuses the original parsed body bytes when available.
+    - FIXED: The os library ECLiPSe definition for the absolute_file_name/2 predicate to not add an ending slash to the expanded path if not present in the original path.
+    - FIXED: The os library ECLiPSe definition for the shell/2 predicate on non-Windows systems that don't define the SHELL environment variable.
+    - FIXED: Operator standard conformance issue in the s3 library.
+    - FIXED: Bug in the sockets library with the SWI-Prolog backend where the client_open/4-5 and server_accept/4-5 predicates would return a stream pair instead of separate input and output streams. Thanks to Arun Majumdar for the bug report.
+    - FIXED: bug in the term_io library read_term_from_chars/4 and read_term_from_codes/4 predicates with backends using as default the eof_action(error) stream option.
+    - FIXED: The text_vectorization library to allow for repeated options when validating vectorizer terms (leftmost options always take precedence).
+    - FIXED: The types library definition of the entity type would fail to recognize a parametric category as a valid entity and would throw the wrong exception for an invalid entity identifier.
+    Tools
+    - CHANGED: The packs tool lock file saving and restoring to require complete and consistent lock data and reject non-git registries and directory packs. Locked restores now resolve dependencies using only locked versions, propagate registry restoration and pack installation failures, and verify the final setup against the lock file.
+    - CHANGED: The lgtunit tool linter warning for misuse of ^^assertion/1-2 goals to print the original variable names.
+    - CHANGED: The logtalk_tester.sh and logtalk_tester.ps1 testing automation scripts handing of the -w option to wipe the default scratch directives once before running any test sets.
+    - ADDED: Support to the lgtunit tool for exporting code coverage stats in the Sonar Generic Coverage XML format.
+    - ADDED: Support to the issue_creator tool and the logtalk_tester scripts for creating bug reports at Azure DevOps, Gitea, and Jira servers.
+    - ADDED: Tests for the issue_creator tool.
+    - ADDED: New relational_operator_inversion mutator to the mutation_testing tool.
+    - ADDED: Support to the logtalk_tester.sh and logtalk_tester.ps1 testing automation scripts for a -k option for passing a file listing expected failed tests and broken, timedout, and crashed test sets, which are ignored when computing the scripts exit status.
+    - ADDED: Support to the logtalk_tester.* scripts for using a Shumway Prolog executable that includes Logtalk for better performance.
+    - IMPROVED: The performance of the code_metrics, dead_code_scanner, diagrams, and lgtdoc tool tests.
+    - IMPROVED: The diagrams tool experimental support for Mermaid. Mermaid version 12 or later is now required.
+    - IMPROVED: The lgtunit tool to print the fastest test, slowest test, mean test runtime, and median test runtime at the end of a test run.
+    - IMPROVED: The performance of the logtalk_tester.sh Bash shell script.
+    - IMPROVED: The logtalk_tester.sh Bash shell script to use null-terminated test-set discovery and locale-independent sorting, preserving deterministic order while safely handling paths containing newlines and other special characters.
+    - IMPROVED: The logtalk_tester.ps1 testing automation script no longer depends on external commands for timeout support and sorts discovered test sets using ordinal, case-sensitive path comparisons with deterministic tie-breakers for reproducible ordering across locales.
+    - UPDATED: The logtalk_tester.sh and logtalk_tester.ps1 testing automation scripts to print the fastest and slowest test set names and execution times plus the mean and median test set running times.
+    - UPDATED: The sbom tool to export CycloneDX 1.7 documents using schemas from the official 1.7.2 release and SPDX License List 3.29.0. Refreshed the SPDX 2.3 schema and patched license descriptions for compatibility with backends without Unicode support. Updated tests, examples, and documentation.
+    - FIXED: The lgtunit tool XML, Cobertura, and LCOV code coverage exporters to correctly report source locations for predicates defined in included files. Also fixed missing element declarations in the XML code coverage report DTD.
+    - FIXED: The help tool inline opening of documentation pages when their file paths contain spaces.
+    - FIXED: The issue_creator tool creation of bug reports for recent changes to the lgtunit tool representation of test failure reasons.
+    - FIXED: Bug in the packs tool when calling the registries::defined/4 with a bound URL argument would leak an open stream handle on failure.
+    - FIXED: Duplicated work in the sbom tool and documentation typos.
+    - FIXED: The diagrams tool support for .dot files to avoid a SVG rendering issue where node labels don't fit in the node boxes depending on how Graphviz was built and its installed plug-ins.
+    - FIXED: The diagrams tool support for .dot files to escape graph and node identifiers, tooltips, and URLs.
+    Examples
+    - ADDED: New full_adder_diagnosis example illustrating the new atms library.
+    - ADDED: New flow_networks_modeling example illustrating how to model project selection, image segmentation, and baseball elimination as network flow problems using the flow_networks library.
+    Tests
+    - CHANGED: The Prolog conformance tests for unbound integers support for the functor/3 and arg/3 to use practical values.
+    - ADDED: Additional test for the ISO Prolog (>>)/2 arithmetic function.
+    IDEs, text editors, and syntax highlighters support
+    - ADDED: Default AI coding assistant support files at coding/ai.
+    Installers and installation scripts
+    - UPDATED: The portable Docker image to support Shumway Prolog.
+    - UPDATED: The portable Docker image to include the latest versions of Allure (2.46.2), d2 (0.9.0), glab (1.130.0), and a compatible version of ncat (7.99).
+    - UPDATED: The portable Docker image to run memcached and redis services to enable the corresponding Logtalk libraries.
+    - FIXED: The portable Docker image ECLiPSe installation by building it from sources.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/LogtalkDotOrg/logtalk3/blob/master/RELEASE_NOTES.md#31030---november-19-2026
+ReleaseTime: 2026-11-19

@@ -1,0 +1,42 @@
+Version: 3.9.19
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/eoyilmaz/displaycal-py3/releases/download/3.9.19/DisplayCAL-3.9.19-Windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/eoyilmaz/displaycal-py3/releases/download/3.9.19/DisplayCAL-3.9.19-Windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A quick follow-up to 3.9.18, this release adds Linux AppImage/Flatpak packages and fixes 20 issues, mostly stability and crash fixes surfaced by users right after the last release, plus several latent Python 3 bytes/str bugs found during a code audit.
+    Warning
+    In MacOS, after installing DisplayCAL you need to run the following in Terminal:
+    xattr -dr com.apple.quarantine /Applications/DisplayCAL
+    ✨ Highlights
+    - AppImage and Flatpak packages are now built and published alongside the existing DEB/RPM installers. (#232 by @eoyilmaz)
+    🚀 Improvements
+    - DEB/RPM postinstall now prints progress instead of running silently, installs prebuilt wxPython wheels from the wxPython extras index, and pulls in the dbus-python build dependencies, fixing installation on Ubuntu 24.04/26.04. (#805 by @eoyilmaz)
+    🐛 Bug Fixes
+    🧩 General
+    - Fixed displaycal.ini becoming mangled and ballooning to gigabytes in size, eventually crashing the app from memory exhaustion. Config writes are now atomic and lock-protected, oversized config files are quarantined instead of parsed, and the config is explicitly read as UTF-8 so mismatched locale codepages can no longer corrupt it further. (#828, #828 by @eoyilmaz)
+    - Fixed several pip-installed console scripts (displaycal-vrml-to-x3d-converter, displaycal-scripting-client, displaycal-eecolor-to-madvr-converter and their console variants) crashing with AttributeError because their entry-point functions didn't exist. (#797 by @eoyilmaz)
+    - Fixed invalid filename characters from surviving into color profile names. (#819 by @eoyilmaz)
+    - Fixed unsupported format string passed to tuple.__format__ error when generating a cube 3D LUT. (#827 by @eoyilmaz)
+    - Fixed a TypeError crash and incorrect CTI3 file-type comparisons in measurement/profile handling caused by leftover Python 2-to-3 bytes/str bugs. (#811 by @eoyilmaz)
+    - Fixed the profile.unsupported dialog showing a raw bytes value (e.g. b'mntr') instead of the decoded text, across 12 sites. (#815 by @eoyilmaz)
+    - Fixed three latent bytes/str Python 3 port bugs in load_cal_handler/import_session_archive_producer. (#817 by @eoyilmaz)
+    - Fixed four more bytes/str bugs that made load_cal_handler's 3D LUT/profile B2A metadata-restore block unreachable dead code. (#820 by @eoyilmaz)
+    - Fixed a TypeError from str regex patterns matched against bytes content in the ReShade/MasterEffect 3D LUT install patchers. (#808 by @eoyilmaz)
+    - Fixed an Event is undefined error when the number of worker threads is 1. (#799 by @lexxxel)
+    🍎 macOS
+    - Fixed a crash when the first measurement taken after launch is a Measurement Report or Colorimeter Correction. (#822 by @ethanbrookins)
+    - Fixed an infinite black-screen ping-pong across multiple displays during VideoLUT recovery, by reloading the clobbered LUTs via CoreGraphics from a single persistent process instead of spawning dispwin. (#824 by @eoyilmaz)
+    🪟 Windows
+    - Fixed DisplayCAL.mscms.manager's logger writing to sys.stderr, which made the frozen windowed .exe falsely show an "Errors in..." dialog on every close even though nothing had actually failed. (#804 by @eoyilmaz)
+    🙏 Thanks
+    Thanks to everyone who contributed to this release, including @lexxxel for their first contribution, and @ethanbrookins.
+    Full Changelog: https://github.com/eoyilmaz/displaycal-py3/compare/3.9.18...3.9.19
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/eoyilmaz/displaycal-py3/releases/tag/3.9.19
+ReleaseTime: 2026-07-13T14:14:11.0000000Z

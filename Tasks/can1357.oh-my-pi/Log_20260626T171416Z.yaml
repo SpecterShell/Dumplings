@@ -1,0 +1,89 @@
+Version: 16.1.23
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v16.1.23/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Changed
+    - Changed AgentLoopConfig.onTurnEnd and Agent.setOnTurnEnd callbacks to receive whether the loop will continue with another provider request.
+    Fixed
+    - Fixed stale snapcompact archive frames leaking into context-full compaction after compaction.strategy was switched from snapcompact to context-full. Switching strategy left the latest compaction entry's preserveData.snapcompact in place, so context-full kept rebuilding context with old image frames attached — inflating context/token usage and making sessions appear to compact early (around ~60% apparent window use). The first context-full compaction after the switch now folds the prior archive's plaintext into the LLM summary input and strips preserveData.snapcompact from the new entry; legacy frame-only archives (no plaintext to migrate) are stripped outright. (#3561 by @serverinspector)
+    @oh-my-pi/pi-ai
+    Added
+    - Added a third streaming thinking-loop detection heuristic to catch "progress-lexicon stalls" where models endlessly reshuffle motivational filler without introducing new vocabulary or concrete technical references
+    - Added branded wordmark and logo animation to authentication flow
+    - Added a third streaming thinking-loop detection shape — a progress-lexicon stall — alongside verbatim tail repetition and near-duplicate (trigram) segments. It catches reasoning-summarizer loops that reshuffle the same motivational filler ("just doing it, pushing ahead, maintaining momentum") into fresh word order every paragraph: word-trigrams never cluster, but a run of substantial segments that recycle the recent vocabulary and introduce no new concrete reference (path / identifier / code-span) trips the guard. Summarizer title/heading lines (**Bold Title**, ## Heading) are stripped before analysis so their ever-changing wording cannot mask the stall by inflating novelty. Calibrated against 537k real non-Gemini reasoning blocks (zero false positives at novelty floor 0.2 / run length 8; the real loop sustains runs of 10+).
+    - Added CoreWeave Serverless Inference provider login support via COREWEAVE_API_KEY and WANDB_API_KEY fallback.
+    Changed
+    - Redesigned the OAuth callback page (oauth.html) to match the oh-my-pi web brand language: OKLCH purple-tinted dark neutrals, magenta→iris→cyan brand gradient on the wordmark, frosted-glass card over an ascii grid backdrop, and a colored status halo around the success/error icon. All assets are inlined; the __OAUTH_STATE__ injection contract and success/error JS logic are unchanged.
+    Fixed
+    - Fixed local llama.cpp (and any local OpenAI-compatible server rendering the Qwen3.6+ chat template) re-processing the full prompt every new user message even with replayReasoningContent enabled (#3541 follow-up to #3528). Sending reasoning_content alone wasn't enough: Qwen3's chat template strips <think>...</think> from any assistant turn whose index is <= last_query_index, so the moment a new user message (the user's next prompt, or the auto-learn capture-at-stop nudge) lands, every prior assistant turn becomes "older" and is re-rendered without the <think> block — diverging from the generation tokens still in the slot's KV cache. The chat-completions encoder now emits preserve_thinking: true for Qwen thinking dialects on local servers, route-split the same way the existing enable_thinking emission is: the qwen dialect rides the top-level field (llama.cpp's --jinja hook and Alibaba Cloud Model Studio's compatible-mode), the qwen-chat-template dialect (NVIDIA NIM, vLLM/SGLang's chat-template-kwargs path) rides only chat_template_kwargs.preserve_thinking because NIM's request schema is additionalProperties: false and rejects unknown top-level fields (#2299). The emission is hoisted above the reasoning.enabled gate so it fires for THREE cases the original gating missed: (1) runtime-discovered local Qwen models that ship with reasoning: false because the upstream /v1/models doesn't advertise the capability (same gotcha #3532 fixed for replayReasoningContent), (2) caller-disabled reasoning (/think off) — the kwarg is a history-rendering knob, not a per-turn thinking switch, and the slot still holds <think> tokens from earlier turns, and (3) forced-tool-choice / DeepSeek-style auto-disable. Qwen3.6+ then renders <think>...</think> for every assistant turn regardless of position, and the next-turn render matches the cached generation tokens. (#3541)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added OpenAICompat.qwenPreserveThinking — auto-enabled when the resolved thinkingFormat is "qwen" or "qwen-chat-template" AND replayReasoningContent is on (i.e. the four built-in local OpenAI-compatible providers, or a custom provider pointed at a loopback / RFC1918 / *.local baseUrl). Pairs with the chat-completions encoder change so the request body carries preserve_thinking: true (twin top-level + chat_template_kwargs emission), keeping Qwen3.6+ from stripping <think>...</think> off older assistant turns and breaking the local slot's KV cache between user messages. Non-Qwen chat templates ignore the parameter, so the flag stays a no-op outside the Qwen path; users on a cloud Qwen host (Alibaba Dashscope / Qwen Portal) can opt in with compat.qwenPreserveThinking: true. (#3541)
+    - Added CoreWeave Serverless Inference as an OpenAI-compatible provider with models.dev-backed bundled catalog metadata.
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added compaction.midTurnEnabled for mid-turn threshold auto-compaction before the next tool-loop provider request. (#3525)
+    - Added grep -q/--quiet/--silent and -x/--line-regexp to the in-process grep builtin used by the bash tool. -q suppresses all stdout and exits 0 on the first match (short-circuiting, with match status taking precedence over read errors per GNU); -x anchors each pattern to whole lines. Unblocks shell conditionals such as grep -qx "$applet" <(strings bin).
+    - Added plan-mode guidance (hashline edit mode only) steering the agent to revise the plan file section-by-section with SWAP.BLK/DEL.BLK/INS.BLK.POST anchored on markdown headings — a heading resolves its whole section (through nested deeper headings), so the agent can rewrite, drop, or append sections without rewriting the file.
+    - Added tui.renderMermaid to control Mermaid fenced-block ASCII rendering; disabling it also removes the Mermaid diagram hint from the generated system prompt so Mermaid blocks fall back to ordinary highlighted code fences.
+    - Added /resume <session-id> in the interactive command system, reusing the existing session-id/prefix resolver while bare /resume still opens the selector.
+    - Added manual omp gc storage maintenance with gc.* defaults for blob sweeping, cold-session archiving, and SQLite WAL checkpointing.
+    Fixed
+    - Fixed /resume <session-id> in the interactive TUI only searching the active cwd's session directory; id-prefix lookup now falls back to sessions from other cwd buckets like CLI --resume <session-id>.
+    - Fixed plan mode rejecting edits to plan artifacts when models refer to them by bare filenames
+    - Fixed absolute paths to session-owned artifacts being incorrectly routed through the editor bridge
+    - Fixed Windows stdio MCP wrapper chains spawning visible PowerShell/cmd windows on startup after the #3544 fix. StdioTransport.connect() now probes whether OMP already has an inheritable console and resolveStdioSpawnCommand skips windowsHide/CREATE_NO_WINDOW in that case, so cmd.exe/PowerShell grandchildren reuse the terminal console instead of allocating visible conhosts during MCP startup or reconnects. (#3567)
+    - Fixed Kimi-family models defaulting to hashline edit mode; they now fall back to replace unless edit.modelVariants, PI_EDIT_VARIANT, or PI_STRICT_EDIT_MODE explicitly opts into hashline.
+    - Fixed MCP OAuth discovery rejecting Atlassian-style cross-host issuer metadata during the resource-server fallback probe; issuer matching now remains enforced for advertised auth-server candidates but no longer blocks fallback metadata where the resource host and authorization-server issuer differ. (#3551)
+    - Fixed plan approval applying the wrong execution model when the model-tier slider sat on the model that exit would restore. The match check now compares the selected role's effective thinking level against the pre-plan thinking level, so picking the active planning tier is retained and picking a same-model tier with an explicit thinking suffix (e.g. default = sonnet:off while plan-mode raised thinking to high) goes through applyRoleModel instead of silently restoring the pre-plan level. (#3554)
+    - Fixed plan approval applying the wrong execution model when the model-tier slider sat on the model that exit would restore. The match check now compares the selected role's effective thinking level against the pre-plan thinking level, and a singleton cycle (only modelRoles.plan configured, default unset, so getRoleModelCycle synthesizes a lone default entry from the active plan model and the slider stays hidden) is no longer pinned as the execution tier — approval falls through to the pre-plan restore instead of silently switching back to the plan model. (#3554)
+    - Fixed the eval Julia kernel showing only runner-internal backtrace frames (at top-level scope (./none:N), at main (…runner-…jl:635)) with no exception type or message, making cell errors undebuggable. The host renderer (packages/coding-agent/src/eval/kernel-base.ts) displays a non-empty traceback verbatim and only falls back to ename: evalue when it is empty; the Python and Ruby runners embed the rendered error in traceback, but the Julia runner (packages/coding-agent/src/eval/jl/runner.jl) built traceback from stack frames only, so the message was dropped. emit_error now seeds traceback with the showerror output (matching the REPL's ERROR: text) ahead of the frames.
+    - Fixed Windows stdio MCP servers timing out (and popping a visible terminal) when their direct child was a cmd.exe wrapper that itself launched a console grandchild — node wrappers, npx.cmd -y mcp-remote, similar nested shells. StdioTransport.connect() unconditionally passed detached: true to Bun.spawn, but Windows has no SIGTSTP/SIGTTIN to escape; detached only maps to CreateProcess(DETACHED_PROCESS), which strips the parent's inherited console. The hidden direct cmd.exe lost its console, so the grandchild allocated a brand-new visible conhost whose stdout no longer routed through OMP's pipe — the proxy reported the bridge was up while OMP timed out waiting for the MCP initialize response. resolveStdioSpawnCommand now returns detached: false for every Windows return shape (direct .exe, cmd.exe-wrapped batch / unresolvable command, npm cmd-shim launched through node) and keeps detached: true on POSIX, where the original SIGTSTP/SIGTTIN reason still holds; connect() consumes the resolved flag. (#3544)
+    - Fixed the LSP tool's per-cwd config cache (getConfig in packages/coding-agent/src/lsp/index.ts) never being invalidated, so .omp/lsp.json, root markers, and plugin LSP configs added after the first LSP call stayed invisible for the remainder of the process — even after reload *. The cached observation persists across chat sessions because OMP is a single-process binary, so users were stuck on No language servers configured until they killed the process. The reload handler now drops the cwd's cache entry and re-runs loadConfig before iterating servers, so the explicit refresh request behaves as the prompt documents. (#3546)
+    - Fixed stale snapcompact archive state being reintroduced at the AgentSession manual and auto LLM compaction save paths; preserveData.snapcompact is now stripped after hook- and result-supplied preserve data are merged, so a prior snapcompact pass can no longer leak frames into a later context-full compaction. (#3561 by @serverinspector)
+    - Fixed the snapcompact→context-full migration shipping the prior archive's plaintext to the summarization provider without secret redaction. When secrets are configured, the migrated archive's text/textHead/textTail regions are now obfuscated alongside the previous summary, while opaque provider-replay state (OpenAI remote-compaction encrypted_content) stays byte-identical. (#3561)
+    - Fixed fresh interactive launches ignoring modelRoles.default when the configured default lives on an extension-registered provider (e.g. an openai-compat plugin's posthog/claude-opus-4-8). createAgentSession resolved the default role before extension factories registered their providers, so the role-pointed model wasn't visible there; on a fresh launch (no -c/--resume) the post-extension fallback then went straight to pickDefaultAvailableModel, replacing the user's configured default with the first bundled provider default with auth (commonly openai/gpt-5.5 when OPENAI_API_KEY was set). The fallback now retries the default-role lookup against the post-extension allowed-model set — including its explicit thinking selector — before falling back to a bundled provider default. (#3569)
+    @oh-my-pi/collab-web
+    Fixed
+    - Hid advisory wrapper tags in collab transcript Markdown while preserving their content. (#3559)
+    @oh-my-pi/hashline
+    Added
+    - Updated prompt documentation to include support for Markdown section operations
+    Fixed
+    - Improved file path recovery to correctly handle read-only or incorrectly typed paths
+    @oh-my-pi/pi-natives
+    Added
+    - Added Nix and Mermaid syntax highlighting support to highlightCode/supportsLanguage via vendored Nix.sublime-syntax and Mermaid.sublime-syntax definitions plus nix, mermaid, and mmd aliases.
+    - Added in-process uutils-backed shell builtins to the embedded brush Shell: cat, head, tail, wc, sort, uniq, ls, find, grep, mkdir, rm, and mv. These vendored + patched utilities run inside the shell process (no fork/exec), resolve path operands against the shell working directory, route stdio through the command's (possibly piped/redirected) file descriptors, read the shell's exported environment, and honor abort/timeout cancellation (a blocked stdin read unwinds cleanly). grep is built on the ripgrep grep-* crates and find on uutils/findutils; the rest are pinned to uutils/coreutils 0.8.0 (matching the bundled uucore). Registration is gated: set PI_DISABLE_UUTILS_BUILTINS to fall back to the system binaries for the whole set, or PI_DISABLE_UUTILS_DESTRUCTIVE / PI_DISABLE_RM_BUILTIN / PI_DISABLE_MV_BUILTIN to disable only the destructive rm/mv shadows.
+    @oh-my-pi/snapcompact
+    Added
+    - Added archiveSourceText(archive) to extract a persisted frame archive's source text as plain text for LLM summarization. (#3561 by @serverinspector)
+    - Added stripPreservedArchive(preserveData) to drop the persisted frame-archive slot (PRESERVE_KEY) and collapse to undefined when no other state remains — shared by the agent and coding-agent compaction paths instead of duplicating the strip rule.
+    What's Changed
+    - fix(mcp): stay attached on Windows stdio so nested cmd wrappers keep stdout routed back by @roboomp in https://github.com/can1357/oh-my-pi/pull/3545
+    - fix(ai): emit Qwen preserve_thinking so local-server cache survives new user messages by @roboomp in https://github.com/can1357/oh-my-pi/pull/3549
+    - fix(lsp): invalidate configCache on reload * so newly written .omp/lsp.json is observed by @roboomp in https://github.com/can1357/oh-my-pi/pull/3550
+    - fix(auth): accept cross-host MCP OAuth issuers on fallback by @roboomp in https://github.com/can1357/oh-my-pi/pull/3552
+    - fix(coding-agent): retain selected plan approval model by @roboomp in https://github.com/can1357/oh-my-pi/pull/3556
+    - fix(collab): hide advisory tags in transcript markdown by @roboomp in https://github.com/can1357/oh-my-pi/pull/3560
+    - fix(agent): stop stale snapcompact state leaking into context-full by @serverinspector in https://github.com/can1357/oh-my-pi/pull/3561
+    - fix(mcp): avoid visible Windows MCP wrapper consoles by @roboomp in https://github.com/can1357/oh-my-pi/pull/3568
+    - fix(coding-agent): honor modelRoles.default for extension-provided models on fresh launch by @roboomp in https://github.com/can1357/oh-my-pi/pull/3570
+    - Add manual coding-agent GC command by @Kenmege in https://github.com/can1357/oh-my-pi/pull/3540
+    - feat(coding-agent): add resume by ID, Nix/Mermaid highlighting, and LSP reload rediscovery by @arg3t in https://github.com/can1357/oh-my-pi/pull/3562
+    - feat(ai): add CoreWeave Serverless Inference provider by @lance0 in https://github.com/can1357/oh-my-pi/pull/3564
+    - fix(agent): compact long tool loops mid-turn by @riverpilot in https://github.com/can1357/oh-my-pi/pull/3565
+    New Contributors
+    - @Kenmege made their first contribution in https://github.com/can1357/oh-my-pi/pull/3540
+    - @lance0 made their first contribution in https://github.com/can1357/oh-my-pi/pull/3564
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v16.1.22...v16.1.23
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v16.1.23
+ReleaseTime: 2026-06-26T17:00:14.0000000Z

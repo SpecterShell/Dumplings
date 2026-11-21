@@ -1,35 +1,43 @@
-$Object = Invoke-WebRequest -Uri "https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/latest.yml?noCache=$((New-Guid).Guid.Split('-')[0])" | Read-ResponseContent | ConvertFrom-Yaml
+$Prefix = 'https://fanyiapp.cdn.bcebos.com/tongchuan/assistant/update/'
+
+$Object1 = Invoke-WebRequest -Uri "${Prefix}latest.yml" | Read-ResponseContent | ConvertFrom-Yaml
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $Object1.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.files[0].url
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Join-Uri $Prefix $Object1.files[0].url
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [datetime]::ParseExact(
-  $Object.releaseDate,
-  "ddd MMM dd yyyy HH:mm:ss 'GMT'K '(GMT'K')'",
-  [cultureinfo]::GetCultureInfo('en-US')
-).ToUniversalTime()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated|Rollbacked' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
+        $Object1.releaseDate,
+        "ddd MMM dd yyyy HH:mm:ss 'GMT'K '(GMT'K')'",
+        (Get-Culture -Name 'en-US')
+      ).ToUniversalTime()
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.detail | Format-Text | ConvertTo-UnorderedList
-}
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.detail | Format-Text | ConvertTo-UnorderedList
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated|Rollbacked' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated|Rollbacked' {
+    $this.Submit()
   }
 }

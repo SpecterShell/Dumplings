@@ -1,0 +1,1 @@
+$Global:DumplingsStorage.SyncROSoftApps = Invoke-RestMethod -Uri ((Invoke-RestMethod -Uri 'https://www.oxygenxml.com/allVersions.xml').versions.version | Sort-Object -Property { [int]$_.number } -Bottom 1 | Select-Object -ExpandProperty 'build-file')

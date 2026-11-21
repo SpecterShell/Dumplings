@@ -1,0 +1,25 @@
+Version: 0.1.38
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.38/hellogrok-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.38/hellogrok-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.38
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.38
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Usage rectifier that repairs provider token-usage measurements before they reach Grok Build's token ledger and auto-compaction meter. Stringly-typed counts ("prompt_tokens": "12345"), whole floats, and json.Number values are normalized to integers; invalid optional decorations (null detail values, non-map detail containers, fractional cost_in_usd_ticks) are removed without poisoning the core measurement; unrecoverable core counts (negative, fractional, overflowing, non-numeric) are deleted so the downstream validator drops the measurement instead of trusting corrupt data. Applied across Chat Completions, Responses, and Messages, in streaming and non-streaming responses, and in protocol-translation paths, with repairs logged as usage rectified proxy notes.
+    - streamFrameRectifier interface unifying the three frame-rewriting stream rectifiers (Chat tool calls, Messages tool blocks, Responses function calls) under a single contract, so future protocol rectifiers plug into the same pipeline without touching dispatch logic.
+    Fixed
+    - Channels whose relays report usage with non-standard JSON types (GLM and potentially other one-api/new-api-style gateways) no longer have their entire usage measurement silently dropped on format defects. Grok Build now receives real provider token counts instead of falling back to a byte-based estimate that overshoots by 25% or more on Chinese and JSON-heavy content, which previously fired auto-compaction at roughly 50% real usage instead of the configured threshold. The premature compaction dropped all tool results, the model re-read files it had already processed, context ballooned again, and a second compaction stalled the session entirely.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0138-2026-09-16
+ReleaseTime: 2026-09-16T13:09:31.0000000Z

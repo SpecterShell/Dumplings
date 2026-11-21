@@ -1,0 +1,52 @@
+Version: 0.10.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.10.2/Agentero_0.10.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/poco-ai/Agentero/releases/download/v0.10.2/Agentero_0.10.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release polishes the PDF dual-pane translation reading experience, adds a system setting to replace the current tab when opening a paper, and fixes several stability issues in the Agent inline composer and highlight annotation interactions.
+    Features
+    - Replace current tab when opening a paper: Added a system setting that closes the active tab before opening a new paper, supporting a single-paper-at-a-time workflow; covers the Host schema, frontend settings pane, i18n, and workspace behavior. (#503 by @Phil-Fan)
+    Improvements
+    - Dual-pane translation performance and sync: Lightened plugin loading in the translation companion pane to only core raster, scroll, and zoom capabilities, and coalesced paired scroll events into a single animation frame to reduce rendering overhead. (commit by @Phil-Fan)
+    Fixes
+    - Dual-pane translation scroll and zoom sync: Two independent EmbedPDF providers now synchronize scroll ratio and zoom bidirectionally via module peering, with wheel zoom/pan re-enabled on the translation pane so either side can drive the other. (commit by @Phil-Fan)
+    - Translation rendering and paragraph fitting: Fixed mounting errors when the translation companion omits selection plugins; limited expansion logic to headings and captions so body prose no longer borrows neighboring whitespace; improved paragraph fitting and unified PDF translation layout. (commit by @Phil-Fan)
+    - Highlight annotation UI stability: Kept highlight color-stack overlap order consistent with the text-selection toolbar and anchored the existing-highlight edit menu by its right edge so actions stay put when the stack fans out on hover. (commit by @Phil-Fan)
+    - Inline composer and selection chips: Stabilized Agent inline composer cards; truncated selection chip titles while preserving page numbers; hid citation previews during text selection to reduce clutter. (commit by @Phil-Fan)
+    - TypeScript target compatibility: Replaced toSorted with slice().sort to match the current TypeScript compilation target. (commit by @Phil-Fan)
+    Resolved Issues
+    - Source and translation pages stay in sync: The left and right panes now keep page navigation in sync, preventing misalignment while reading source and translated content. (#493 by @Phil-Fan)
+    - Page jumps back after turning: Fixed the translation pane automatically jumping back to the previous position after a page turn. (#489 by @Phil-Fan)
+    Full Changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次发布主要围绕 PDF 双栏翻译阅读体验进行打磨，新增“打开新论文时替换当前标签页”的系统设置，同时修复了 Agent 行内 Composer 和高亮批注交互中的多项稳定性问题。
+    新功能
+    - 打开论文时替换当前标签页：新增系统设置，开启后点击新论文会先关闭当前标签页再打开，适合一次只聚焦一篇论文的工作流；覆盖 Host 配置、前端设置面板、i18n 及工作区行为。（#503 by @Phil-Fan）
+    改进
+    - 双栏翻译性能与同步：为翻译副面板精简插件加载，仅保留核心光栅、滚动和缩放能力，并将成对的滚动事件合并到同一动画帧，显著降低渲染开销。（commit by @Phil-Fan）
+    修复
+    - 双栏翻译滚动与缩放同步：两个独立的 EmbedPDF 提供器现在通过模块对等机制双向同步滚动比例和缩放，并重新启用翻译面板的滚轮缩放/平移，使左右两侧可互相驱动。（commit by @Phil-Fan）
+    - 翻译渲染与段落适配：修复翻译副面板缺少选择插件时的挂载错误；限制标题和说明文字的扩展逻辑，避免正文占用相邻空白；优化段落适配并统一 PDF 翻译排版。（commit by @Phil-Fan）
+    - 高亮批注 UI 稳定：保持高亮色卡重叠顺序与文本选择工具栏一致，并将已有高亮的编辑菜单按右边缘锚定，避免悬停展开时操作按钮移位。（commit by @Phil-Fan）
+    - 行内 Composer 与选区卡片：稳定 Agent 行内 Composer 卡片状态；截断选区芯片标题并保留页码信息；文本选择期间隐藏引用预览，减少干扰。（commit by @Phil-Fan）
+    - TypeScript 目标兼容：将 toSorted 替换为 slice().sort，以兼容当前 TypeScript 编译目标。（commit by @Phil-Fan）
+    已解决问题
+    - 原文及译文同步翻页：左右面板现在保持同步翻页，避免阅读原文和译文时页面错位。（#493 by @Phil-Fan）
+    - 翻页会自动跳回：修复翻译面板翻页后自动跳回原位置的问题。（#489 by @Phil-Fan）
+    Full Changelog
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.10.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/poco-ai/Agentero/releases/tag/v0.10.2
+ReleaseTime: 2026-09-12T11:07:59.0000000Z

@@ -1,55 +1,113 @@
-# en-US
-$Object1 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_version' -Method Post -Body (
-  @{
-    data   = @{
-      language = 'en-US'
-    }
-    client = 'windows'
-  } | ConvertTo-Json -Compress
-)
-# zh-CN
-$Object2 = Invoke-RestMethod -Uri 'https://config.mypikpak.com/config/v1/client_version' -Method Post -Body (
-  @{
-    data   = @{
-      language = 'zh-CN'
-    }
-    client = 'windows'
-  } | ConvertTo-Json -Compress
-)
+function Read-Installer {
+  $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+  # Version
+  $this.CurrentState.Version = $InstallerFile | Read-FileVersionFromExe
+  # RealVersion
+  $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
+  # InstallerSha256
+  $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+}
 
-# Version
-$Task.CurrentState.Version = $Object1.values.client_version.newVersionName
-
-# RealVersion
-$Task.CurrentState.RealVersion = [regex]::Match($Task.CurrentState.Version, '(\d+\.\d+\.\d+)').Groups[1].Value
+function Get-ReleaseNotes {
+  try {
+    if ($Global:DumplingsStorage.Contains('PikPak') -and $Global:DumplingsStorage.PikPak.Contains($this.CurrentState.Version)) {
+      # ReleaseNotes (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotes'
+        Value  = $Global:DumplingsStorage.PikPak[$this.CurrentState.Version].ReleaseNotes
+      }
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Global:DumplingsStorage.PikPak[$this.CurrentState.Version].ReleaseNotesCN
+      }
+    } else {
+      $this.Log("No ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+    }
+  } catch {
+    $_ | Out-Host
+    $this.Log($_, 'Warning')
+  }
+}
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://api-drive.mypikpak.com/package/v1/download/official_PikPak.exe?pf=windows'
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://download.mypikpak.net/desktop/official_PikPak.exe'
 }
 
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.values.client_version.news | Format-Text
+$Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
+# Last Modified
+$this.CurrentState.LastModified = $Object1.Headers.'Last-Modified'[0]
+
+# Case 0: Force submit the manifest
+if ($Global:DumplingsPreference.Contains('Force')) {
+  $this.Log('Skip checking states', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  $this.Message()
+  $this.Submit()
+  return
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object2.values.client_version.news | Format-Text
+# Case 1: The task is new
+if ($this.Status.Contains('New')) {
+  $this.Log('New task', 'Info')
+
+  Read-Installer
+  Get-ReleaseNotes
+
+  $this.Print()
+  $this.Write()
+  return
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+# Case 2: The Last Modified is unchanged
+if ([datetime]$this.CurrentState.LastModified -eq [datetime]$this.LastState.LastModified) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest", 'Info')
+  return
+} elseif ([datetime]$this.CurrentState.LastModified -lt [datetime]$this.LastState.LastModified) {
+  $this.Log("The last modified datetime from the current state `"$($this.CurrentState.LastModified)`" is older than the one from the last state `"$($this.LastState.LastModified)`"", 'Warning')
+  return
+}
+
+Read-Installer
+
+# Case 3: The current state has an invalid version
+if ([string]::IsNullOrWhiteSpace($this.CurrentState.Version)) {
+  throw 'The current state has an invalid version'
+}
+
+Get-ReleaseNotes
+
+# Case 4: The Last Modified has changed, but the SHA256 is not
+if ($this.CurrentState.Installer[0].InstallerSha256 -eq $this.LastState.Installer[0].InstallerSha256) {
+  $this.Log('The Last Modified has changed, but the SHA256 is not', 'Info')
+
+  $this.Write()
+  return
+}
+
+switch -Regex ($this.Check()) {
+  # Case 6: The Last Modified, the SHA256 and the version have changed
+  'Updated|Rollbacked' {
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
-  }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  # Case 5: The Last Modified and the SHA256 have changed, but the version is not
+  Default {
+    $this.Log('The Last Modified and the SHA256 have changed, but the version is not', 'Info')
+    $this.Config.IgnorePRCheck = $true
+    $this.Print()
+    $this.Write()
+    $this.Message()
+    $this.Submit()
   }
 }

@@ -1,0 +1,365 @@
+Version: 5.1.71
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.71/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.71/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The builtin architect category now defaults to Claude Fable 5.2 at thinking level xhigh instead of max: both chain rungs (the 5.2 lead and the 5.1 fallback, kept as the fallback at the same effort) carry xhigh, verified against the engine model catalog per the #9378 rule. Docs that spell the builtin default follow. Other categories, agent chains, and model profiles are unchanged (#13543). (#13545) (#13563)
+    Memory sync names the last unexplained "authority is unavailable" causes, and its log stays free of memory text. When closing a sync operation, releasing its claim, or the request handler itself failed, Settings still showed the bare "Memory sync authority is unavailable." with nothing in the log. These now carry a code (close_failed, release_failed, handler_failed) and log a warning. Logged errors name the error type, not its message; only a sync service error keeps its service code and status, because other messages can quote memory content. A device or pending-request read whose failure returns after the service refused a request is logged again. Carried by the next train top's bundle regeneration. (#13332, follow-up to #13157) (#13563)
+    A signed-out desktop no longer looks like a memory-sync error to the engine. When the desktop had no signed-in account, the engine's main thread treated the desktop's refusal as a broken channel and the sync runner reported an error; it now reads it as signed out, as session Workers already did, and picks up the account once you sign in. Carried by the next train top's bundle regeneration. (#13329, follow-up to #13325) (#13563)
+    Memory sync keeps working when you sign out and back in on the desktop. Signing out and signing in again (with the same or another account) while the engine runs used to leave Settings > Memory > Sync on "Memory sync authority is unavailable." until the engine restarted. The engine now ends only the old account when the desktop retires it, ends that account's open sync sessions once, and picks up the new account on the next status read. It needs a desktop that keeps the private channel open across the rollover; with an older desktop the behaviour is unchanged. Carried by the next train top's bundle regeneration. (#13327, fixes #13325) (#13563)
+    omo remote accepts -- to end its options. omo remote send <device>/<session> -- --text that starts with dashes now sends that text, and the same works for a model id given to omo remote model; before, any argument starting with -- was refused as an unknown option. Options before -- still apply. (#13496, fixes #13431)
+    The omo remote reference matches the command again. It lists open, send, model, interrupt and close with their flags, and describes attach as a view you can type into; it no longer says the attach view is observe-only. The Senpi plugin README lists all 27 skills it ships (it said 19). (#13492, fixes #13433)
+    omo remote --help and omo remote <command> --help now answer. They print the usage (or that command's entry with its flags) on stdout and exit 0, before any sign-in or device-service check, instead of failing as an unknown argument. omo --help lists remote among the commands. -h now also answers as a help flag after any verb, including in a value position (for example omo remote open dev --project --help prints help instead of taking --help as the project name). (#13489, fixes #13405)
+    omo-opencode tests no longer depend on the order test files run in. Under bun, module mocks leaked into later test files whenever files ran in sorted order (as bun test --shard runs them): six tmux-utils tests replaced modules with partial mocks, two modules that tests mock re-exported functions (the team-mode member resolver's dependencies and the legacy plugin toast's entry migrator), and two claude-code-hooks tests module-mocked shared modules. The tmux mocks are now complete, those two modules define their own forwarding functions so a mock of them stays scoped, and dispatch-hook.test.ts and execute-http-hook-security.test.ts use spies that are restored after each test. Tests, plus two forwarding-only source changes (features/team-mode/team-runtime/resolve-member-dependencies.ts and hooks/legacy-plugin-toast/plugin-entry-migrator.ts); no runtime behaviour changes. (#13333, fixes #13331)
+    Changed
+    - OmO now pins @code-yeongyu/senpi and its packages at 2026.11.15. That senpi release brings the permission-prompt abort fix, the tool-result slash-command injection fix, sign-in-with-ChatGPT scope and input fixes, and the binary update that reads the GitHub release. (#13563)
+    - Daily · Normal now walks Claude Opus 5.5 (medium), then Claude Fable 5.2 (medium), then Kimi K3.1 Pro (max), matching senpi's shipped Opus 5.5 fallback chain; GLM 5.3 is no longer a Daily · Normal rung, so a GLM-only setup gets no automatic Daily · Normal model (#13562). (#13562) (#13563)
+    - Daily · Heavy runs Claude Fable 5.2 at high (was xhigh); its Fable 5.1 rung stays at xhigh (#13562). (#13562) (#13563)
+    - @oh-my-opencode/utils no longer exports migrateConfigFile from its package root or from its migration entry point (@oh-my-opencode/utils/migration): the re-export in packages/utils/src/migration.ts is removed, and the root entry re-exports that module. Nothing imported it through either entry. The function itself is unchanged. (#13544) (#13563)
+    - Internal: omo remote status and session commands now read the account without loading the code that signs in or refreshes, and reach the device service through the local API client directly. Nothing changes for users; this prepares a faster start for these commands (#13440). (#13477) (#13563)
+    - The gateway store's schema moves to version 12: three nullable columns on deliveries and a unique index on the new ledger id. The first process on this release migrates the store; any process still on the previous build then reports the store's "schema too new" error on its thread tools and inbox drain until it restarts. (#13208) (#13279) (#13563)
+    - Thread gateway: once a build carrying this store ships, every gateway store open runs the schema step to version 13 (one new table, woken_sessions) and raises the store's user_version for good. An older build, or a rolled-back one, that shares the same agent directory then refuses to open that store with its "schema too new" error until it is upgraded again. (#13212) (#13279) (#13563)
+    - The standalone omo binary starts about 4x faster on Linux and 6x faster on macOS: release binaries now carry Bun's bytecode cache, so a launch no longer parses the whole bundled program first (omo --version 880 ms → 202 ms on Linux x64, 214 ms → 33 ms on Apple silicon). Each binary is about 43 MB larger, and the per-binary size budget rises from 210 MiB to 260 MiB. (#13464)
+    Fixed
+    - The remote worktree remove guard's comment no longer claims a failed open's worktree always has exactly one reflog entry: a repo with core.logAllRefUpdates off reports none even for a branch just made, so there the worktree is refused worktree_left_behind and stays for its local owner; a test pins that refusal (#13450 follow-up). (#13542) (#13563)
+    - The bundle marker digest no longer folds the running node's builtinModules into the digested build settings: the builtin family is recorded as one stable token and only source-derived externals are digested, so a byte-identical bundle built under node 26 (which adds node:ffi) no longer reads as stale. A RED test pins the stability and that a source-derived external still changes the digest (#13155). (#13541) (#13563)
+    - A memory reflection or dream launcher now hears its supervisor's exit even when the supervisor dies while the "launched" receipt is still being written. The launcher used to subscribe to the exit only after that write, so an early supervisor death was never reported and the launcher waited for an outcome that could not arrive: until the run deadline (15 minutes by default), or without a deadline while the run was still queued. The run now fails at once with the supervisor's exit status. (#13532) (#13563)
+    - An engine registers its agent dir with the device service again when the service stops and comes right back, whether or not the operating system reports the new socket in time. Once its connection had closed, the registrant used to wait for that file notification alone, and on a macOS machine with heavy file activity the notification arrived seconds to tens of seconds late, so the restarted service did not list that engine's sessions until then. The registrant now arms its endpoint watch again once the endpoint it knew is gone, so a service that is listening again within about a second of that is found by the watch's one-second re-check. A service that returns later than that still waits for the notification (#13531) (#13530, fixes #12733). (#13563)
+    - An in-process child session's shutdown now waits for the session's own whenToolChildClosed() barrier after dispose() before its caller removes the directory that child's agent dir lives in, so a still-pending engine writer can no longer recreate that directory after the removal. The split-local, gated-child and permission-event test fixtures gained the same join, plus a held-writer regression case that proves the teardown does not settle while the writer is held (#13522). (#13522) (#13563)
+    - thread_create on another device with a file as cwd now answers invalid_arguments (not_a_directory, naming the device and the path) once that device's engine refuses it (session_cwd_not_directory, code-yeongyu/senpi#6686), instead of an "update omo" refusal. (#13488, refs #13400) (#13563)
+    - Thread tools: thread_create no longer notes that a new thread is outside the caller's workspace when the caller has no workspace at all (scoped addressing then answers caller_context_missing, not a workspace refusal). (#13462) (#13563)
+    - A thread no engine runs on this device (closed, or its terminal exited) answers every thread tool the way a send to it does: thread_read reads its session file (source: "session_jsonl"), and thread_interrupt, thread_rename, thread_set_model and thread_set_reasoning answer not_resumable, the same refusal a thread that ended on another device gets, instead of not_found while thread_send queued to it. (#13459) (#13563)
+    - thread_create on this device answers the same thread summary as on another device (id, name, folder, state, times and link) instead of the engine's whole session state. (#13459) (#13563)
+    - thread_create on this device in a folder outside the caller's workspace says so: the result adds workspace_scope: "outside" and scope_next_action, because every thread tool answers that thread scope_denied unless all_scope is set. (#13459) (#13563)
+    - A thread tool call that fails (thread_list, thread_send and the rest, plus extension store tools) now returns isError: true, so the engine and the eval bridge report it as failed instead of as a success. The typed failure, with its code and next action, is unchanged. (#13451, fixes #13398) (#13563)
+    - A thread thread_create makes on another device is named by its durable id; the relay listing key it returned before answered not_found in every later thread tool (#13393). (#13450) (#13563)
+    - thread_create's cwd: a relative folder resolves against the caller's folder on this device and is refused on another device, and a folder that does not exist answers invalid_arguments naming it, on both devices, instead of internal_error or "update omo" (#13400). (#13450) (#13563)
+    - thread_create on another device that opened the session but could not name its relay key or apply its name answers the created thread with thread.warnings instead of an error, so a retry replays it and a new key cannot create a second session. (#13450) (#13563)
+    - thread_create { fork_from } is refused unsupported (details.reason: fork_unsupported) on both devices instead of opening a blank thread reported as a fork: the engine's open_session does not fork yet (#13031). (#13450) (#13563)
+    - Thread gateway: a delivery id that the same device repeats after its 30-day receipt expired, while its row is still in the store, is answered from that row as deduplicated instead of failing with a raw unique-constraint error (the review of #13208). (#13212) (#13279) (#13563)
+    - Thread gateway: a session whose file header cannot be read, or names a session kind this build does not know, is never started or reopened unattended. It is refused like a child or worker session instead of being treated as an ordinary interactive one (#13037). (#13279) (#13563)
+    - omo remote send in wait mode printed the previous turn's answer and returned before its own turn settled: the follow printed every text_delta it received and settled on the first agent_settled, including the attach's replayed history, which over the relay arrives only after onEvent returns. A send that started or steered a turn now streams its deltas from the aim on (whatever the attach replayed before the aim is dropped) and settles only at its run's agent_settled, so retries and queued follow-ups stream through; a queued send's answer is read from the session's transcript, anchored on the send's own user entry, final when a later message's turn supersedes it or a run settled with it as the tail. A waiting send carries its own clientMessageId, which senpi stamps on the user entry it stores, so the anchor holds when a prompt template or skill expansion rewrote that entry's text and never lands on an older send of the same text; an engine that stores no id falls back to the text match. Carried by the next release train top. (#13272) (#13563)
+    - omo remote send in wait mode exited 0 with no output when another device interrupted its turn. It now prints omo remote: the turn on <device>/<session> was interrupted before it finished. and exits with the failure code. (#13272) (#13563)
+    - Memory sync settings: when sync cannot read its status, OmO now records WHY. The engine's status path kept one sentence, "Memory sync authority is unavailable.", for every cause, with nothing in the log, so a report of that screen could not be acted on. Each cause now carries a code (no_account, account_aborted, account_not_current, status_read_failed, plus legacy_source where a source answers with no operation-capable account), together with the step that failed, and it is logged once when it starts rather than on every status poll. The device and pending-request reads and the enable and approve operations, which ended in the same sentence, now carry a code too (operation_failed for an unexpected error) and log it with the error; the reads, which the desktop also polls, log once per cause. The message a person sees is unchanged. (#13157) (#13563)
+    - Resolved task planner category config live per plan, caching within the plan window to eliminate redundant disk reads and schema validations during child task spawns, and retaining the last known good configuration only when a reload introduces an error (a file that fails to read, parse or validate) the adopted configuration did not already have; warning-level notices such as ignored unknown keys still apply, and revived tasks no longer report a spurious config generation mismatch after a mid-session edit. (#9741, fixes #9725) (#13563)
+    - Claude Fable sessions (claude-fable-5, claude-fable-5-1, claude-fable-5-2, on Anthropic, Bedrock and Anthropic-namespaced gateway routes) now get the same assistant-tail repair as Claude Mythos: when the history ends on an assistant turn, the OpenCode messages transform appends the synthetic user turn instead of sending an assistant prefill the model rejects (#13537). (#13537)
+    - migrateConfigFile in @oh-my-opencode/utils no longer replaces a config file whose content already equals the migrated output. It used to skip only the backup and still ran the atomic write: a byte-identical replacement that swapped the file's inode and waited on two fsyncs. No current code path calls this function, so the visible effect is in the test suite: the skips backup when file content is identical after migration case no longer waits on disk flushes, which is what let it pass the 20 s limit on a host with stalled storage (#11839). (#13528)
+    - bun run test:fast releases the serial quarantine's process group only when that phase finished normally. While a shutdown is in progress the PGID is retained, so the SIGKILL escalation still reaches a descendant that ignored the signal: the orphan case the registry exists to prevent. The child registry gained an explicit release for a finished group and the serial spawner uses it; a test also pins that no ROOT_TEST_SERIAL_QUARANTINE path falls inside the opencode-memory or senpi group scopes, so the split's disjointness is checked rather than assumed. (#13518)
+    - All three test:fast groups now pass the canonical per-file budget, read from POSIX_TEST_TIMEOUT_MS in script/root-test-serial-quarantine.ts: the same definition the serial phase and the full command use, with no second copy of the value. Without it only the first file of each group got the preload default and every later file fell back to Bun's built-in budget, so a slow file could fail on the budget rather than on its own behaviour. A test asserts the argv actually spawned for each group name, including Bun's flag order for the --config invocation. (#12031) (#13518)
+    - When the temporary directory has a group- or world-writable (or foreign-owned) ancestor, omo now stops with one readable line, omo: trust-tmpdir-unsafe: <dir> is group-writable; run chmod go-w <dir>, or set TMPDIR to a private directory, and start omo again (exit 78), instead of crashing with unsafe trust ancestor and a stack trace (#13503). (#13510)
+    - Contributors: the session-manager storage test removes its temporary storage directory after every test block, so the temp-leak guard no longer reports an omo-test-session-manager-* entry. (#13508, fixes #13502) (#13508)
+    - bun run test:fast now runs the shared serial quarantine before its three parallel groups, and its root-rest group uses bunfig.win2.parallel.toml, so the local full-suite path no longer runs the 15 quarantined files concurrently, the condition every CI root-test leg forbids. A failing serial phase returns its own exit code and starts no group. Coverage under the new split is pinned at the config-pattern level by a test: the parallel config adds exactly the quarantine paths over its sibling (file counts measured at this head: 4149 = 15 serial + 1435/965/1734 across the three groups, 0 missing, 0 overlap) (#12031). (#12031)
+    Added
+    - thread_create { worktree: { branch?, base? } } creates a git worktree for the new thread, on this device or another one, in OmO's worktrees folder there, and starts the thread in it; every failure (not a repository, branch or folder exists, unknown base, no disk space, no permission, git missing, an older omo on the other device) is a typed code with details.reason and a next action (#13408). A worktree whose thread then fails to open, or whose git worktree add fails part way (including git's timeout), is removed with its branch; what cannot be removed is named in a partial_commit failure (worktree_left_behind). The worktree request another device answers takes only absolute folders and removes only a worktree inside its own worktrees folder on the branch named. (#13450) (#13563)
+    - Thread gateway: the store can take in a delivery that another device's service attested for a session on this device that is not running (the intake row of #13037). The row is committed in the same transaction as a same-device delivery, keeps the sender's delivery id, text and display text, is rate-limited per sending device, and is admitted later under the engine's own ledger key, so the engine counts it once even if the same delivery also arrives live. A repeat of a delivery id from the same device is answered with the first answer. A reply to such a delivery continues its chain. Nothing in this release calls the intake yet, so no delivery takes this path. (#13208) (#13279) (#13563)
+    - Thread gateway: the store keeps a record of each session a wake asked for or opened (#13037): one row with its state, a lease and a generation that fences every write, at most 4 such sessions past requested per agent directory, and a transient open failure that returns the row to requested with its attempts and the time of the next one (the third deletes it). A wake primitive resolves a durable id to its one session file, refuses child and worker sessions, ensures the host and sends one plain open_session frame (no attended, no permission preset). Nothing calls the wake yet. (#13212) (#13279) (#13563)
+    - Thread gateway: the pieces that will let a message from another of your signed-in devices reach a session that is not running on this device are in place but not yet active: the delivery consumer, the carrier that opens such a session in its own working directory and hands it back when its turn is done, and the pending sweep (#13037). Nothing in this release starts them, so a message to a session that is not running is handled as before. (#13220) (#13279) (#13563)
+    - a8ec80a7ad release train omo-5171: regenerate after the discard-worktree registered() fix
+    - b59631cd9a fix(thread): count a worktree registered by canonical path on every platform; Windows-safe worktree test kit (#13450 Windows red)
+    - 98c9ed3b41 Merge pull request #13592 from code-yeongyu/fix/13576-offline-test-nits
+    - d8ae4b76fa test(thread): canonical temp folders in the worktree test kit (macOS /var → /private/var; #13450's macOS red)
+    - ddbcaf8e7b Merge pull request #13316 from code-yeongyu/ci/13315-windows-macos-shards
+    - e299b0d964 Merge pull request #13464 from code-yeongyu/perf/omo-binary-bytecode
+    - 21365e9a6a Merge pull request #13508 from code-yeongyu/fix/13502-session-manager-temp-cleanup
+    - 48e6b854d7 Merge pull request #13528 from code-yeongyu/fix/11839-migration-backup-skip-timeout
+    - fb6df4a02e test(memory-core): guard the offline case's fixture arithmetic and drop the pinned cost from its comment (#13576)
+    - e721867fd6 Merge remote-tracking branch 'origin/dev' into ci/13316-devmerge
+    - 4be48f4cf8 release train omo-5171: regenerate service-auth.generated.js after the dev merge
+    - 8a3d24039d Merge pull request #13333 from code-yeongyu/tests/order-dependent-mock-leaks
+    - e387b60fc3 fix(omo-5171): drop the unused NODE_BUILTIN_SET_MARKER export (knip red at b9606f8677; its .d.mts declaration left with #13541's LOW fix)
+    - 2368310809 Merge origin/dev into fix/13502-session-manager-temp-cleanup
+    - b9606f8677 release train omo-5171: regenerate once after the review-H1 fix
+    - f214d04929 Merge origin/dev into release train omo-5171 (#13489/#13492/#13496: remote help moves into remote-usage.ts on top of #13477's remote-local split)
+    - a37aa9faed fix(omo-5171): keep thread-worktree.ts out of the local-only remote graph; pin the #13279 store-worker call sites (review H1 of #13563)
+    - 45e69a7e38 Merge pull request #13496 from code-yeongyu/fix/omo-remote-dashdash-13431
+    - 1cc0ec375b Merge pull request #13492 from code-yeongyu/docs/omo-remote-reference-13433
+    - 23052171dd Merge pull request #13489 from code-yeongyu/docs/omo-remote-help-13405
+    - 3921701e8b release train omo-5171: regenerate once after the dev merge and #13562
+    - d8d97f1811 Merge remote-tracking branch 'origin/dev' into perf/omo-binary-bytecode
+    - 48dde0c4c2 Merge branch 'dev' into fix/11839-migration-backup-skip-timeout
+    - 3a5891d18c Merge pull request #13560 from code-yeongyu/fix/13557-13558-changelog-wording
+    - 60668bc876 Merge pull request #13534 from code-yeongyu/staging/12241-portable-test-fixtures
+    - 39c1bd4a80 Merge pull request #13533 from code-yeongyu/fix/12273-engine-offline-cadence
+    - 789a86c76e style(omo-5171): bun fmt the #13562 model-profile test
+    - 521dc54c32 Merge remote-tracking branch 'origin/dev' into tests/order-dependent-mock-leaks
+    - 78ee716085 train(omo-5171): merge #13562 at df873f0643
+    - f300a028b3 Merge origin/dev into release train omo-5171 (#13510: keep both new trust refusal codes)
+    - df873f0643 docs(changes): fragment for #13562
+    - c0e740d0cb fix(model-profile): Daily · Normal steps Opus 5.5 → Fable 5.2 medium → Kimi K3.1 Pro max; Daily · Heavy runs Fable 5.2 at high
+    - 55a4bb93b5 docs(changelog): drop an empty qualifier and label measured counts in two fragments (#13557, #13558)
+    - 4a31db788e Merge pull request #13510 from code-yeongyu/fix/trust-ancestor-typed-error
+    - f621d06b06 train(omo-5171): merge #13545 at 021cb6eb07
+    - 6d02204af8 train(omo-5171): merge #13462 at a0c5b89688
+    - 44f9685feb train(omo-5171): merge #13459 at 6ed3a9a72f
+    - a4d3608a3d train(omo-5171): merge #13477 at 16a0d19157
+    - a7d3cb6d4f train(omo-5171): merge #13542 at 1f6d7c6a3d
+    - 9613fc95fe train(omo-5171): merge #13488 at 41fbcff048
+    - fdccbfed69 train(omo-5171): merge #13532 at e0ecd4b9f1
+    - 2d52694fd3 train(omo-5171): merge #13522 at 0c44d99891
+    - d7af3a1604 test(omo-native): prove the closure fallback keeps trust-tmpdir-unsafe, and drop the two re-wraps (#13510 review L1, L2)
+    - dcad07ed30 train(omo-5171): merge #13541 at c100aeeb25
+    - 021cb6eb07 changelog: fragment for #13545
+    - c100aeeb25 fix(types): drop the two build-extension-core exports from build-extension.d.mts (review LOW of #13541)
+    - 1e2904f2ee docs(changes): name the package root in the #13544 fragment (review LOW of #13544)
+    - 2dff188e5e train(omo-5171): merge #13544 at 114ac05ee0
+    - 726fd6b594 train(omo-5171): merge #13541 at 9ae56de45e
+    - 1f6d7c6a3d fix(thread): a remote worktree remove names the reflog case it refused, not commits a branch never had (#13542 review L1)
+    - 114ac05ee0 docs(changelog): fragment for #13544
+    - 81711214c7 train(omo-5171): merge #13542 at 5664f4d079
+    - 83b598509e train(omo-5171): merge #13450 at 8c03453238
+    - cd298e38ab train(omo-5171): merge #13527 at 40942662ca
+    - 98be45c1f6 fix(omo-native): name the problem the ancestor verdict refused on, and keep the typed refusal in the closure fallback (#13510 review M1, L1, L2)
+    - 5664f4d079 docs(changelog): fragment for the #13450 follow-up (#13542)
+    - c3dd510ec7 docs(remote): state the -- terminator dependency and the -h help-flag behaviour change (review LOWs)
+    - 3fd98e9dc6 docs(thread): the remote worktree remove comment states the reflog-disabled outcome (#13450 follow-up)
+    - 9ae56de45e chore(changes): fragment for #13541
+    - a0c5b89688 Merge commit '6ed3a9a72f' into fix/13459-review-low
+    - 41fbcff048 Merge commit '8c03453238' into fix/thread-create-cwd-not-directory
+    - d4c2237906 Merge commit '8c03453238' into fix/13459-review-low
+    - 6ed3a9a72f Merge commit '8c03453238' into fix/thread-local-remote-parity
+    - b35d6712b9 fix(build): bundle marker digest ignores the running node's builtin list (#13155)
+    - 815485021a fix(thread): a remote worktree remove also refuses a branch whose reflog shows no creation entry (#13450 re-review L1)
+    - d8c7426d04 style(omo-5171): bun fmt the #9741 task files (omo-6a fmt:check red)
+    - 5b674a0f18 train(omo-5171): merge #13272 at 1dce1f00aa
+    - 4bf129577e train(omo-5171): merge #13332 at b8a20f403f
+    - f688230590 train(omo-5171): merge #13157 at 09d23da50f
+    - d167d7fc80 train(omo-5171): merge #13329 at 7aa3941cac
+    - e4680b8c71 train(omo-5171): merge #13327 at 6f9bb63a02
+    - 4cd4d1ded1 train(omo-5171): merge #13451 at a00babf34e
+    - 1263c1384e train(omo-5171): merge #13279 at f2c1f833a7
+    - 618bf8bb7d train(omo-5171): merge #13472 at 536cea78cb
+    - 836a1f8a56 Merge pull request #13538 from code-yeongyu/fix/fable-prefill-guard
+    - b503f36ab9 train(omo-5171): merge #13530
+    - 9eaab73948 refactor(utils): drop the unused migrateConfigFile re-export
+    - 40942662ca Merge origin/dev into staging/13343-lock-clock-roles
+    - f1b33a3e69 revert: keep the migrateConfigFile re-export removal out of this PR
+    - 9f56af1bd7 revert: take the omo-task.js regeneration out of this PR
+    - 51e285c861 Merge pull request #13343 from code-yeongyu/fix/test-fixed-waits-theme1
+    - 662044434b docs(changes): state when the one-second bound holds (#13530)
+    - b9b00111de fix(device-service-core): the failed-connect path checks for the endpoint after it re-arms (#12733)
+    - 01605478a8 fix(omo-opencode): give Claude Fable the Mythos assistant-prefill repair (Fixes #13537)
+    - f8e59f2317 test(memory-core): state the offline case's per-cycle journal cost exactly
+    - f944c95a93 Merge commit '3222d6b66f' into fix/13459-review-low
+    - a1f1e80655 Merge commit 'f4e63c3880' into fix/thread-create-cwd-not-directory
+    - 63d8bd8d59 Merge commit 'f4e63c3880' into fix/13459-review-low
+    - 3222d6b66f Merge commit 'f4e63c3880' into fix/thread-local-remote-parity
+    - 76290a4565 docs(changelog): fragment for #13532
+    - 9099daebb5 fix(memory): hear a supervisor's exit that lands during the launch receipt write (#12031)
+    - f69b97397c test(memory): RED for a supervisor that exits during the launch receipt write (#12031)
+    - cdc6db9153 docs(changes): fragment for the registrant re-arm (#13530)
+    - 83bb737c58 test(memory): keep one real reftable repository where git can migrate one (#12241)
+    - 3cbf4620ed test(memory-core): sync every fifth fixture day in the offline catch-up case (#12273)
+    - 874545cee6 fix(device-service-core): the registrant re-arms its endpoint watch once the endpoint it knew is gone (#12733)
+    - 285920132b fix(thread): a remote worktree remove also refuses work status hides and the branch's own commits (#13450 re-review L2)
+    - a9747c9dce Merge remote-tracking branch 'origin/dev' into fix/trust-ancestor-typed-error
+    - 6aefbe1796 style(omo-native): wrap the UnsafeTrustAncestor problem union (fmt:check)
+    - 5b558740e0 Merge origin/dev into staging/12241-portable-test-fixtures
+    - f8bed3936e Merge branch 'dev' into fix/11839-migration-backup-skip-timeout
+    - 1cb42b647e chore(changelog): add the #13522 fragment for the child teardown join
+    - 50d5217f58 refactor(utils): drop the unused migrateConfigFile re-export
+    - b915fd9d2e Merge pull request #13525 from code-yeongyu/fix/13524-child-shutdown-budget-settings
+    - 79e8f8797f Merge pull request #13523 from code-yeongyu/staging/13521-dead-session-constants
+    - 33d0db80f9 Merge origin/dev into fix/test-fixed-waits-theme1
+    - afcf1023ba docs(changelog): fragment for #13528
+    - 760dc57b2e fix(utils): leave a config that already holds the migrated content in place
+    - 88cbb46389 test(opencode): say what passing the restore-set export check costs knip (#13523 review LOW)
+    - 44665e3a52 Merge pull request #13521 from code-yeongyu/staging/13502-session-manager-storage-leak
+    - a774ee7e0d test(memory-core): pin the journal lock clock by role and read the wait from lock.ts (#13343 review LOWs)
+    - 9f4e0fc0d7 Merge pull request #13518 from code-yeongyu/t1-test-fast-followups
+    - fb6c965bc9 chore(knip): drop the now-used POSIX_TEST_TIMEOUT_MS exemption
+    - 4368ebbc7e test(opencode): fail when the ./constants restore set drifts from the module's exports (#13523 review LOW)
+    - 3b159c9c90 style(test-fast): apply bun fmt
+    - 89d33bd550 docs(changelog): use colons instead of em dashes
+    - 4398d6de8b fix(test-fast): keep the serial group's PGID through a shutdown
+    - 0f40bc8159 fix(test-fast): pass the canonical per-file timeout to every group
+    - f0b1fabb43 test(opencode): drop the dead session-manager constants the storage test kept alive (#13521 review LOW)
+    - 135e356d08 Merge origin/dev into fix/13520-split-fixture-lifecycle
+    - e78b583184 test(opencode): stop mocking the storage-paths leaf and assert the file leaves no module behind (#13502)
+    - 1747f64528 Merge pull request #13517 from code-yeongyu/t1-test-structure
+    - 186265caec Merge origin/dev into codex/followup-20261113-opencode-storage-paths
+    - ceb5c69c53 docs(changelog): fragment for #13518
+    - e981393ed5 fix(test-fast): release the serial phase's process group when it exits
+    - 999c42e7f9 docs(changelog): pin the coverage claim at the config-pattern level
+    - 7b9c9fd5a7 test(local): run the serial quarantine before test:fast's parallel groups
+    - eedadab6b2 fix(omo-native): format the remote boundary files and export-check the call-site helper
+    - 27d29ff0c5 docs(changes): fragment for #13510
+    - 4e1f044c8a fix(omo-native): a typed trust-tmpdir-unsafe refusal naming the unsafe TMPDIR ancestor instead of a raw stack (#13503)
+    - 473c09fba8 docs(changes): name the #13502 fragment after its PR (#13508)
+    - f02cd40719 fix(device-service-core): explicit field instead of a parameter property in LocalOnlyNetworkRefused (erasableSyntaxOnly in omo-opencode) (#13440)
+    - 17f138d1ad test(session-manager): remove the storage test's temp root after every block (#13502)
+    - 1e3359770e Merge pull request #13396 from code-yeongyu/fix/qa-report-origin-follow-up
+    - 39498f0c20 Merge commit '517c393113cc7a5e6ab6b99f0f2e4405687ba23c' into fix/13459-review-low
+    - 517c393113 Merge commit 'b21be86489046f9429e58270b44f5d32e35cde9c' into fix/thread-local-remote-parity
+    - 6b4ca1150e Merge commit 'b21be86489046f9429e58270b44f5d32e35cde9c' into fix/thread-create-cwd-not-directory
+    - b21be86489 fix(thread): a remote worktree remove refuses a worktree with uncommitted work (#13450 re-review L2)
+    - 7473b49f50 test(omo-native): pass the launch kind to the trust stage instead of mocking the classifier module, which leaked into trust-stage.test.ts (#13440)
+    - 7f1feaaa4c test(omo-native): POSIX-normalize repo paths in the section 7 reachability test so it runs on Windows (#13440)
+    - f555b2e31c feat(remote): inert local-only refusals at the four owned network call sites and the trust stage (#13440)
+    - edb4696fe4 test(omo-native): section 7 reachability in full - three roots, positive controls, connect pin, parsed spawn call-site set (#13440)
+    - 522a92644c perf(thread): thread_create folder and worktree code loads from the thread client sidecar, not omo.js (#13450 main-entry budget)
+    - 729ac9965f fix(remote): accept -- as the end of options for omo remote session verbs
+    - e2b546b689 test(omo-binary): isolate the timing run from the real home, musl binary name, worker fixture under the shipped bytecode flags (review M1, L1, L2)
+    - ecc9de1d44 docs(changes): fragment for the omo remote reference (#13433)
+    - bdefd44de2 docs(remote): bring the omo remote reference to the real verbs and the plugin README to its 27 skills
+    - 06b85927af docs(changes): fragment for omo remote --help (#13405)
+    - e141463bcd changes: fragment for #13488
+    - a48c6cd174 fix(thread): a cwd that is a file on another device answers invalid_arguments not_a_directory naming it (refs #13400)
+    - 86ee80a239 style(remote): format with the repository formatter and keep compile-entry.ts to its one help line
+    - de93bd073b test(remote): use a quantifier for the two-space usage indent
+    - 8b7b012b97 fix(remote): answer --help for omo remote and each verb, list remote in omo --help
+    - 1b3a3acaa4 refactor(omo-native): leaf modules for listProcesses and RELEASE_VERSION so runtime pruning reaches no network module
+    - 58391e8909 refactor(remote): local verbs in remote-local.ts, runRemoteVerb delegates (no new launch kind)
+    - 07bde7f4f8 Merge commit '7506d26fca46e5a6505dc16a364eec215753c179' into fix/13459-review-low
+    - 7506d26fca Merge commit 'af365ce140bcdf9519483994b6276aadd1df73ff' into fix/thread-local-remote-parity
+    - 632f912235 test(remote): pin the utils runtime spawn importers; changes fragment for #13477
+    - af365ce140 style(thread): bun fmt the #13450 thread files so fmt:check and lint pass (#13450 review M2)
+    - e7fd98392d qa(thread): list report-origin-auto-steer.mjs as a knip entry like its sibling scenarios (#13396 knip red)
+    - 0e195c685f docs(thread): drop literal backslash-escaped backticks from the worktree doc comments (#13450 review L1)
+    - 0703f37832 fix(thread): the remote worktree remove refuses any folder that is not the top of a linked worktree (#13450 review M1)
+    - 61e2a4a218 refactor(remote): keep the local remote path off network modules (omo#13440 groundwork)
+    - b8a20f403f fix(memory): log only an identifier-shaped error code (#13332 review LOW)
+    - 1dce1f00aa fix(remote): a turn aborted before the aim and settled after it ends interrupted (#13272 review L2)
+    - 8480b08c89 changes: fragment for #13464
+    - d5441db782 changes: fragment for #13462
+    - 7b2e7a9ec6 fix(thread): no workspace note when the caller has no workspace root (review LOW of #13459)
+    - 5d04350d9f perf(omo-binary): build release binaries with bytecode, raise the size budget to 260 MiB (#13440)
+    - 99332f60c6 fix(thread): a worktree thread_create made is removed when the thread's open or the add fails (#13450 review)
+    - 8e8cfecc92 test(remote): cover an interrupted turn that finished before the send caught up (probe path, #13272 review)
+    - 661925b74c changes: fragment for #13459
+    - 4aa40e56ca fix(thread): one answer on this device and on another one for a not-running thread, a created thread and an out-of-workspace create
+    - a7cfe2b60a fix(remote): an interrupted turn read from the transcript also fails the waiting send (#13272 review)
+    - a00babf34e changes: fragment for #13451
+    - cef430843b changes: fragment for #13450
+    - f2c1f833a7 chore(knip): drop GatewayMigrationError, parseSessionLines, summarizeSessionEntries from the pre-existing unused list (the wake train uses them)
+    - 1be89ad1fd fix(remote): a waiting send whose turn is interrupted fails with a typed line (#13272)
+    - cb35acf79f feat(thread): thread_create places a thread on any device, in any folder or a new git worktree, and fails typed
+    - 270fc8cdfe changes: one fragment for #13279, which lands #13208 #13212 #13220 with it
+    - d9d3900eba Merge feat/13037-carrier (review LOW fixes) into fix/13037-session-kind-closed
+    - 060c9d1567 fix(thread): consumer reports a failed tracked step instead of leaving an unhandled rejection; 13220 notes say the wake is not active yet (review LOWs of #13220)
+    - 6cfe840a81 qa(thread): cover the default steer into a two-binding session (report-origin-auto-steer); drop the fragment (QA-only, no-changelog) - review LOWs of #13396
+    - f53e7000fb fix(thread): flag failed thread tool results isError
+    - a609d84aa7 changes: fragment for #13396
+    - 2cf6e8e64a qa(thread): bind report-origin threads with follow_up so B queues behind A (Fixes #13395)
+    - 1ebd8b9504 fix(thread): a thread created on another device is named by its durable id (#13393)
+    - 050a11e8ae Merge branch 'feat/13037-carrier' into fix/13037-session-kind-closed
+    - 64b1ca5b94 changes: fragment for #13220
+    - 311126273c Merge feat/13037-carrier into fix/13037-session-kind-closed (adopted train, rebase on dev)
+    - 12a41f0f53 Merge feat/13037-woken-record into feat/13037-carrier (adopted train, rebase on dev)
+    - b7bc4774af Merge feat/13037-intake-row into feat/13037-woken-record (adopted train, rebase on dev)
+    - 081d97430f Merge origin/dev into feat/13037-intake-row (adopted train, rebase on dev)
+    - 606e6b49e8 test(remote): the #13268 wait-notice test stores the queued send's entry, as the engine does (#13272 with #13273)
+    - b08169b637 Merge commit '83373dcbb545ae2336e58abb46af028e9ad29a9e' into fix/13267-stale-turn-answer
+    - 83373dcbb5 Merge pull request #13375 from code-yeongyu/release/v5.1.70-source-state
+    - 4a4f159692 changes: name the two forwarding-only source changes in the #13333 fragment (#13331)
+    - 7328a0bca5 test(memory-core): drive the journal lock clock instead of waiting out 10 s
+    - 92117b0145 changes: describe the final order-dependent test mock fix (#13331)
+    - 1aa4e3659f tests: keep the hook-command shim and dispatch-hook as on dev (#13331)
+    - 0f8e4065a6 tests: spy on dispatch-hook's dependencies instead of module-mocking them (#13331)
+    - be84cedb2d tests: spy on the shared logger instead of module-mocking the shared barrel (#13331)
+    - 4b982bbcef tests: stop dispatch-hook.test.ts leaking its hook-command mock (#13331)
+    - 36b8549e51 tests: complete the remaining tmux-utils mocks and the legacy toast barrel (#13331)
+    - d33d2f5f9c changes: fragment for the order-dependent test mock fix (#13331)
+    - 6528b2df34 docs(changes): fragment for #13332
+    - 8bbd7b22c1 fix(memory): name and log the close, release and handler sync failures; log error names, not messages (#13157 review LOWs)
+    - 3c4532fa6d test(memory): RED - close/release/handler failures name a code, logs carry no message text, a refused read re-arms the read log (#13157 review LOWs)
+    - 890ba9b5c4 tests: stop the resolve-member barrel mock leaking into delegate-task (#13331)
+    - dd7f09c2fd tests: make the tmux-utils module mocks complete (#13331)
+    - 862123750c fix(remote): a not-yet-stamped send prefers its own exact entry over a message that wraps its text (review of #13272)
+    - 1db22e4237 docs(changes): fragment for #13329
+    - 7f91e65527 fix(memory-sync): a desktop refusal on the main-thread channel is DesktopSyncRefused, read as signed out (#13325 follow-up)
+    - a7128f8827 test(memory-sync): a desktop refusal on the main-thread channel reads as signed out (RED, #13325 follow-up)
+    - 2650040663 test(remote): the engine e2e stops at the stored user entry with egress blocked; anchor a not-yet-stamped send by entry identity (review of #13272)
+    - 0b5b25f089 docs(changes): fragment for #13327
+    - fa9628a565 fix(memory-sync): a retired desktop account ends the account, not the private channel (#13325)
+    - 95db846a2a test(memory-sync): an account rollover on a live desktop channel reaches the new account (RED, #13325)
+    - b156cf31aa fix(remote): a waiting queued send never takes an older same-text answer; prove the stored id on the pinned engine (review of #13272)
+    - 09d23da50f fix(memory): name and log the read/enable sync unavailable causes too (#13153)
+    - 63e8da53b7 test(opencode): restore session storage module exports
+    - ef7ddd5078 fix(remote): anchor a waiting send on its own client message id; fix the e2e's await (review of #13272)
+    - 6dc4a36b28 Merge remote-tracking branch 'origin/dev' into fix/13267-stale-turn-answer
+    - a2b0cc7fe3 fix(remote): prove the transcript anchor against the shipped engine's persisted prompt entry (review of #13272)
+    - 11053ab0c6 test(thread): pin the unknown session kind in the waker, the same-device wake and the consumer gates (review of #13279) (#13037)
+    - 456db6cd03 style(thread): wrap the classifier test table as the formatter does (#13037)
+    - 54f299c776 docs(changes): fragment for the closed session-kind classifier (#13279)
+    - a02a2b8188 fix(thread): the session-kind classifier is closed: an unreadable header or an unrecognised kind is unknown, which no wake or takeover opens (review of #13220) (#13037)
+    - 0f387b9286 test(thread): a header the classifier cannot read and an unrecognised session kind are refused on the wake and the takeover (review of #13220) (#13037)
+    - f1306f02ea chore(thread): open the follow-up that closes the session-kind classifier (#13037)
+    - 9351a872b6 style(thread): wrap the undecodable-acknowledgement row as the formatter does (#13037)
+    - 194ea1002e fix(remote): follow a queued send through agent_end turns, not run settles (review of #13272)
+    - 2168e4865d docs(changes): name the fragment for its PR
+    - 796a6f54c2 fix(remote): print only the turn a remote send starts (fixes #13267)
+    - 16b975b221 fix(thread): a restart reads the wake off until its own acknowledgement, a wake with nothing queued ends only a requested record, and a takeover refuses a child or worker session (delta review of #13220) (#13037)
+    - 0b0674abab test(thread): a restart without an acknowledgement reads the wake off, a wake with nothing queued leaves another carrier's live record alone, and a takeover refuses a child or worker session (delta review of #13220) (#13037)
+    - da331c654d style(thread): wrap the serve-acknowledgement table title as the formatter does (#13037)
+    - e925c22696 feat(thread): the consumer holds the receiving device's wake switch from its serve acknowledgement and event, and a carrier opens only for a queued row its own switch allows (A7.2.3) (#13037)
+    - e6f4950cd4 test(thread): the consumer reads the receiving device's wake switch from its own serve acknowledgement and event, and a carrier opens only for a queued row its own switch allows (A7.2.3) (#13037)
+    - d447e01630 fix(thread): a takeover reopens the session in its own directory and ends a gone or ambiguous row; the sweep opens only for a queued row its switch allows (review of #13220) (#13037)
+    - 9c3a231b0e test(thread): a takeover reopens in the session's own directory and ends a gone or ambiguous row; the sweep opens a same-device wake only while its switch is on (review of #13220) (#13037)
+    - 3ede65eece test(thread): the carrier's open frame carries no field from the record (section 9 mutant: a preset taken from the record) (#13037)
+    - 77fadabe9f test(thread): name each repeat case's expected answer in its title; bun fmt (#13037)
+    - 2393c23720 fix(thread): answer a repeat from its ledger row before the capacity checks, and compare it with the row (review LOWs of #13212)
+    - a0f77ede10 test(thread): a repeat answered from its ledger row is compared with the row and answered before the backlog check (RED, review LOWs of #13212)
+    - 24e57da4dc chore(config): regenerate the config schema
+    - ab47705981 style(thread): bun fmt the carrier, consumer and drain files (#13037)
+    - 325f032b4f fix(thread): the sweep's session list orders by a listed column; a takeover evaluates inside its own chain (#13037)
+    - d4072ff523 test(thread): the harness's device service admits; apply the queued second delivery; type the fake answer envelope (#13037)
+    - 4f49621fa3 Merge remote-tracking branch 'origin/feat/13037-woken-record' into feat/13037-carrier
+    - 95d8dff7b2 fix(thread): answer a repeated delivery id from its row once the receipt expired (base review LOW, #13037)
+    - 1a345d7031 test(thread): a repeated delivery id after its receipt expired is answered from its row (RED, base review LOW, #13037)
+    - 8bb99fd641 feat(thread): the same-device switch (default off) and the row answers (#13037 5.3, A3.1.6, A2.6, A2.11)
+    - a5e2b03de5 feat(thread): admission at wake and run, the opening gate and the pending sweep (#13037 5.6, A2.2, A3.1.5, 5.4)
+    - 593c5449bf feat(thread): the consumer behind a port (#13037 5.4, 5.12, A2.4, A2.14, A5)
+    - 1b46226f9e feat(thread): the carrier and the close (#13037 A3.1.3-A3.1.8, A3.2)
+    - 28b123fbed test(thread): a queued answer names the session's stored wait by kind (RED, #13037 5.1)
+    - 82f8f02879 style(thread): bun fmt store-worker.ts (#13037)
+    - a9fc58512d test(thread): delivery.answer's reply is the engine's RPC response envelope (RED, #13037 A5 addendum 2)
+    - 86c5de1607 test(thread): the consumer side of the local delivery messages (RED, #13037 A5)
+    - 30377142aa test(thread): two sender devices with one command id each get their own answer (RED, #13037 A5.1)
+    - d8d2e11ed4 fix(thread): keep the woken-session ops in the store worker (knip), one doc block per marker path, say what the v13 step changes (review of #13212)
+    - adf647128a Merge remote-tracking branch 'origin/feat/13037-intake-row' into feat/13037-woken-record
+    - da41a7f841 test(thread): the wake count restarts when a person's input moved the revision between wakes (RED, #13037)
+    - 2f63fb8ad5 test(thread): the carrier, the consumer, admission at wake and run, and the close (RED, #13037)
+    - 861d8fa69a fix(thread): key the intake receipt on the attested device alone; ledger id unique (review LOWs)
+    - 09e135cd46 test(thread): a repeated delivery id from one device under another claimed sender is one delivery (RED)
+    - 65b0aeb61c fix(thread): keep the intake op in the store worker so store-ops gains no worker-only export (knip)
+    - c7f1c7e619 style(thread): bun fmt the woken-session files (#13037)
+    - 66ca236f1c test(thread): type the woken-session expectations for tsgo (#13037)
+    - 10598d31ce feat(thread): the woken-session record and the wake primitive, steps 1 to 5 (#13037)
+    - 6b6f01eb57 test(thread): the opening gate's exits and its gate read (RED, #13037 A3.1.1/A3.1.5)
+    - 098265afdd test(thread): woken-session record and wake primitive contract (RED, #13037)
+    - ec329189a4 test(thread): rewind fixtures past schema v12; reserve the deliveries_ledger index
+    - 7c3fbb46b6 fix(thread): type the legacy mailbox read in store-ops (oxlint no-implicit-any-let)
+    - 0024d87d57 docs(changes): intake row fragment (#13208)
+    - 89e61ec1ac feat(thread): gateway intake row for sessions that are not running (#13037)
+    - d4035502fa test(thread): intake row contract for sessions that are not running (RED, #13037)
+    - 5fa21444eb style(memory): bun fmt the sync status diagnostic files (#13157)
+    - 82b20ca187 Merge remote-tracking branch 'origin/dev' into fix/13153-sync-status-diagnostic
+    - fe67612aa9 chore(plugin): regenerate omo.js for the sync status diagnostic (#13157, node 24.22.0)
+    - c09bc752ff docs(changes): fragment for #13157
+    - c0d6103e8a fix(memory): sync status names why authority is unavailable and logs it once (#13153)
+    - 57711deaa3 test(memory): RED - sync status names why authority is unavailable and warns once (#13153)
+    - ec0f1a38f2 test(memory): cover reftable directory head delegation
+    - 3ffc93c23a Merge origin/dev into fix/12241-portable-test-fixtures
+    - fed195f9dc Merge commit '5a1db393c84c61c47a80a4814cfaafae270a49eb' into HEAD
+    - 3eb5004605 fix(tests): integrate current dev seam contract (fixes #12241)
+    - 8fa56d52e6 fix(tests): integrate runner permission changes from dev (fixes #12241)
+    - cdf43fc2c8 fix(tests): refresh portable fixtures against current dev (fixes #12241)
+    - 48144cf7c9 fix(tests): pin launch-spec home display fixture (fixes #12241)
+    - 0f730d8e36 fix(tests): isolate host-dependent regression fixtures (fixes #12241)
+    Thank you to 2 community contributors:
+    - @PeterPonyu:
+      - test(opencode): restore session storage module exports
+    - @YeongYU:
+      - changelog: fragment for #13545
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.71
+ReleaseTime: 2026-11-15T15:58:45.0000000Z

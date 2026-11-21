@@ -1,0 +1,28 @@
+Version: 0.5.25
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge-Release/releases/download/v0.5.25/AnyBridge_0.5.25_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge-Release/releases/download/v0.5.25/AnyBridge_0.5.25_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 Antigravity 混合模式下官方模型完全不显示、官方模型无法对话的问题：
+      - 修复语言服务崩溃循环：客户端升级后内部模块变化，接入补丁引用的依赖已不存在，导致模型列表与对话全部失效。现在补丁自带依赖，并支持自动修复历史写入的旧补丁，无需重装客户端。
+      - 修复官方模型列表无法读取：转发官方请求时沿用了压缩协商，返回的压缩内容无法解析，33 个官方模型被整块丢弃。现在改为请求明文响应，官方模型正常合并显示。
+      - 修复官方请求经系统代理时延迟波动导致超时、以及流式回复被中途掐断的问题，混合模式下官方模型可正常对话。
+    - Antigravity（独立桌面端）汉化升级：
+      - 之前内置词库条目太少，设置页、模型与用量、限额等界面仍是英文。
+      - 现已内置社区完整汉化引擎与词库，覆盖设置页、面板、对话框与动态提示，代码区、输入框与模型思考过程依然保持原文不被误译。
+      - 若仍有零星英文，可在汉化面板点「检查汉化更新」同步上游最新词库，无需升级 AnyBridge。
+    - Grok 模型注册增强：
+      - 支持按模型设置上下文窗口（token），避免小上下文模型按默认值 200,000 处理，几轮对话就溢出。
+      - 支持一次注册多个模型，在 Grok 中用 /model 或 Ctrl+M 直接切换，不用回 AnyBridge 重新保存。
+      - 支持配置子代理模型，并自动清理 AnyBridge 写入的过期条目。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.25
+ReleaseTime: 2026-10-02T20:04:14.0000000Z

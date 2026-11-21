@@ -1,71 +1,123 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://www.openoffice.org/download/index.html')
+$DownloadInfo = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
 
-$Prefix1 = $EdgeDriver.ExecuteScript('return DL.SF', $null)
-$Prefix2 = $EdgeDriver.ExecuteScript('return DL.ASF_DIST', $null)
-$Lang = $EdgeDriver.ExecuteScript('return DL.REL_FULL_LANG', $null)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.openoffice.org/download/index.html'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression @'
+() => ({
+  Prefix2: DL.ASF_DIST,
+  Lang: DL.REL_FULL_LANG,
+  Version: DL.VERSION,
+  Build: DL.BUILD,
+  ReleaseDate: DL.REL_DATE,
+  ReleaseNotesUrl: l10n[`dl_rel_notes_aoo${DL.VERSION.replaceAll('.', '')}_link`]
+})
+'@
+}
+
+$Prefix2 = $DownloadInfo.Prefix2
+$Lang = $DownloadInfo.Lang
 
 # Version
-$Version = $EdgeDriver.ExecuteScript('return DL.VERSION', $null)
-$Build = $EdgeDriver.ExecuteScript('return DL.BUILD', $null)
-$Task.CurrentState.Version = [regex]::Replace($Version, '(\d+)\.(\d+)\.(\d+)', '$1.$2$3') + '.' + $Build
+$Version = $DownloadInfo.Version
+$Build = $DownloadInfo.Build
+$this.CurrentState.Version = [regex]::Replace($Version, '(\d+)\.(\d+)\.(\d+)', '$1.$2$3') + '.' + $Build
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl       = "${Prefix1}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe/download"
-  InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
-}
-$Task.CurrentState.Installer += $Lang | Where-Object -FilterScript { $_ -ne 'en-US' } | ForEach-Object -Process {
-  [ordered]@{
-    InstallerLocale    = $_
-    InstallerUrl       = "${Prefix1}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe/download"
-    InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+# $this.CurrentState.Installer += [ordered]@{
+#   InstallerUrl       = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe"
+#   InstallerSha256Url = "${Prefix2}${Version}/binaries/en-US/Apache_OpenOffice_${Version}_Win_x86_install_en-US.exe.sha256"
+# }
+switch ($Lang) {
+  # # en-US is the default locale of the manifests but not listed at the beginning of the list. Add en-US locale explicitly and skip it in this process
+  # 'en-US' { continue }
+  # The language-only locales gd and sr are not supported by WinGet client
+  'ast' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'ast-ES'
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  'gd' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'gd-GB'
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  'sr' {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'sr-Cyrl'
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = 'sr-Latn'
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
+  }
+  Default {
+    $this.CurrentState.Installer += [ordered]@{
+      InstallerLocale    = $_
+      InstallerUrl       = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe"
+      InstallerSha256Url = "${Prefix2}${Version}/binaries/${_}/Apache_OpenOffice_${Version}_Win_x86_install_${_}.exe.sha256"
+    }
+    continue
   }
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $EdgeDriver.ExecuteScript('return DL.REL_DATE', $null) | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $DownloadInfo.ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
 
-# ReleaseNotesUrl
-$Task.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl = $EdgeDriver.ExecuteScript("return l10n['dl_rel_notes_aoo$($Version.Replace('.', ''))_link']", $null)
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.CurrentState.Installer | ForEach-Object -Process {
-      $_.InstallerSha256 = (Invoke-RestMethod -Uri $_.InstallerSha256Url).Split()[0].ToUpper()
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrl = $DownloadInfo.ReleaseNotesUrl
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Object = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+    $this.CurrentState.Installer | ForEach-Object -Process {
+      $_.InstallerSha256 = (Invoke-RestMethod -Uri $_.InstallerSha256Url).Split()[0].ToUpper()
+      $_.Remove('InstallerSha256Url')
+    }
 
     try {
-      $ReleaseNotesTitleNode = $Object.SelectSingleNode('//div[@id="main-content"]/h2[contains(@id, "GeneralRemarks")]')
+      $Object1 = Invoke-WebRequest -Uri $ReleaseNotesUrl | ConvertFrom-Html
+
+      $ReleaseNotesTitleNode = $Object1.SelectSingleNode('//div[@id="main-content"]/h2[contains(@id, "GeneralRemarks")]')
       if ($ReleaseNotesTitleNode) {
-        $ReleaseNotesNodes = @()
-        for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node.Name -ne 'h2'; $Node = $Node.NextSibling) {
-          $ReleaseNotesNodes += $Node
-        }
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and $Node.Name -ne 'h2'; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
-        $Task.CurrentState.Locale += [ordered]@{
+        $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
-        $Task.Logging("No ReleaseNotes for version $($Task.CurrentState.Version)", 'Warning')
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

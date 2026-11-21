@@ -1,0 +1,67 @@
+Version: 2.5.2
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.5.2/nextcowork-2.5.2-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    文档引擎编辑画布：办公文档在 NextCoWork 里直接编辑，画布与 Agent 改的是同一个活动模型
+    - 需求：办公插件(Word / Excel / PPT / PDF)要做到「编辑器画布和 Agent 工具操作同一个活动文档模型」。现有 ncw:doc:* 通道只能整文件搬运文本或图片，对 OOXML 只会送空串 —— 拿它改办公文件只能「整文件覆盖」,会把用户还没保存的输入、选区、撤销栈一起冲掉。所以这里是会话协议(shared/document-engine/protocol.ts):打开一次，之后所有修改都以带修订号的操作进入同一个 session
+    - 协议的三条不变式：格式白名单封闭(首发只承诺 OOXML 含宏变体与 PDF;.doc/.xls/.ppt 与 ODF 不在表里 —— 不在表里就是清单解析直接拒，而不是「声明了、打开时才发现不支持」);操作是有限的判别联合(没有 uno: 串、没有脚本 URL、没有原始 XML —— 给出任意命令通道等于绕开所有按操作划分的权限与校验);每次修改都带修订号(准备操作期间用户又改过，旧位置作废、整批拒绝，不按旧坐标写进去)
+    - 按字面文字定位的三支操作(text.findReplace / paragraph.style / paragraph.insert):引擎目前给不出稳定的语义 ref,这三支按字面文字定位、expectedCount 让调用方声明预期命中数，不符整批拒绝(拒绝是引擎判的、模型未动 —— 集成测试锁死)。宿主协议里没有它们时，Word 经宿主只能在文首/文末追加，Agent 改不了任何现有内容，且零报错
+    - 只读查询走新方法 documents.query:Agent 改文档前必须先读结构，而 OOXML 是二进制 zip,普通 Read 只会报「二进制文件」。每种查询都有字符上限 —— 查询结果要进模型上下文，一次把整本书读进来就是把上下文窗撑爆。新加四种：layout(某一部分的文档尺寸与 Writer 页矩形，twips;画布按它算渲染区域，没有它视图只能猜)、fonts / styles(功能区的字体框与样式框)、headers(表格可见区域的行列头)
+    - 主进程会话账目(manager.ts 的 input / command):画布键鼠与功能区命令和 Agent 的 apply 走同一条串行队列、同一套修订号 —— 用户打了字，Agent 基于旧修订号准备的批次被 stale_revision 挡下，而不是把刚打的字覆盖掉。只在引擎回报 modified 时推进修订号：方向键、点选、组字不改模型，若也推进，Agent 每读一次就被用户挪一下光标作废一次。引擎没有给出明确拒绝的失败(超时、helper 退出、回执不可解析)一律按结果未知处理并标崩溃 —— 不知道按键进没进模型时继续叠输入，修订号就和真实内容对不上
+    - 新错误码 busy:用户正在输入法组字(拼音已在模型里，读会读到拼音、写会被下一次组字吞掉、存会把拼音存进文件)时，Agent 的读写与保存收到 busy —— 什么都没做，稍后原样重试即可。不是故障：会话不标崩溃、不记结果未知，同一个 operationId 稍后可原样重试
+    画布渲染与输入(宿主下发的 DocumentCanvas,插件不再各写一份)
+    - 坐标换算与 tile 网格收进纯函数(viewport.ts):1 CSS px = 15 twips(100% 缩放)。这些换算各处自己写一遍，症状是「点的位置和光标落点差一两个字」「tile 之间有一像素缝」,且只在特定缩放 / 高 DPI 屏上出现。相邻 tile 共用同一条边(各自四舍五入会出一条缝);tile 的像素尺寸固定，高 DPI 屏上一块覆盖的文档面积随 DPR 变小，而不是把低分辨率位图拉伸(Retina 上字发虚)
+    - tile 缓存账目(tile-cache.ts,纯数据结构，单测直冲):旧块先留着显示，不先擦 —— 先擦再画的表现是每打一个字那行闪一下白；回来晚了的结果不能冒充新的(照样收进缓存但仍标 stale,再要一次，否则最后一次按键的效果可能永远画不出来);同一块同时最多一个请求在途；缩放 / DPR / generation / part 一变全部作废(同一个序号在新配置下是文档里另一片);内存按字节预算淘汰最久没用的，可见块永不淘汰(淘汰了下一帧又要，来回抖)
+    - 键盘换算(keys.ts):快捷键的字母先看字符再看物理键位 —— 法语 AZERTY 上按印着 Z 的键，Ctrl+Z 仍是撤销(只看键位就变成 Ctrl+W);俄语布局没有拉丁字母可认时退回键位。组字中、单独修饰键一律不交引擎(再发一次就是重复输入)。macOS 的 Cmd 是 MOD1、Ctrl 是 MOD3,Option+键产出的是字符不是快捷键；非 macOS 的 Win/Super 归操作系统
+    - 鼠标键位换算(canvas-input.ts):DOM 的 buttons 位是 左 1/右 2/中 4,LibreOffice 是 左 1/中 2/右 4 —— 原样透传，右键菜单变成中键粘贴
+    - 输入合批与队列：同一时刻只有一批在途，在途期间攒下的并成下一批；连续的组字更新、鼠标移动、可见区域只留最后一个(中间态没有意义)。只合并相邻的同类事件 —— 组字更新之间夹着一次提交时，两边都必须保留，否则提交落在错误的组字内容上
+    - 迟到事件补拉：LibreOffice 的重绘失效与功能区状态都在空闲时才发(实测晚 0.7~1.5s)。只在「改了模型」后补拉的话，移动光标后按钮停在上一个位置的状态、打开时字体框是空的；按 250/1000/2000ms 补拉，连续打字只在停下后补；补拉本身不改模型，不会连环触发
+    - 输入法组字是一等公民：compose / commit 事件进活动模型；组字进行中引擎只收 text 事件。视图离开(关 Tab、切走)前先发一次空串组字取消 —— 组字状态没人结束的话，Agent 之后的每一次读写都被 busy 挡
+    - 表格画布的可滚动范围画布自己留余量(滚到哪儿长到哪儿):引擎报的表格尺寸只跟着单元格光标长(空表约 A1:R51),按它画，滚轮滚到底就停住，下面的格子看不到也点不到。只长不缩，往回滚时滚动条不跳
+    通道与生命周期
+    - 办公插件视图跑在没有 preload 的 iframe 里，ncw:engine:* 报文经主窗口受信渲染层转进主进程(view-frame.ts → document-engine-channel.ts → ipc/document-engine.ts → plugin/document-view.ts)。报文里没有路径、没有 token:打开哪个文件由 Tab 绑定决定，token 只留在主窗口 —— 视图拿到的能力上界正好是「这个 Tab 的那个文件」。渲染像素以 ArrayBuffer 转移给视图，不拷贝(一块 512² 的 tile 是 1MiB,滚动时每秒几十块，拷贝会让主线程掉帧)
+    - token 绑窗口(别的窗口拿着同一个 token 按「会话不存在」拒，不告诉它「存在但不是你的」);账户作用域在打开时冻结，切账户后旧 token 全部作废；窗口销毁或重载时释放它打开的全部视图 —— 钩子挂在 did-navigate 上，did-start-loading 的话每个画布 iframe 一加载就会把同窗口的全部视图收掉
+    - 会话新增「编辑器画布」这一种占用(DocumentEditorView):生命周期跟 Tab 走，不跟插件 RPC 的租约走 —— 租约 5 分钟不用就被收掉，而用户盯着一页文档看五分钟不动是常态；画布挂在租约上，下一次重画就是 session_closed。画布里没保存的改动，在禁用 / 卸载插件时同样被释放守卫拦下
+    - 会话状态变化定向推给打开它的那个窗口，不广播；同一文件开在两个 Tab 时两个画布都收到，且最后一个画布关闭时才取消组字(取消早了会打断另一个 Tab 里正在进行的组字)
+    Office 三件套插件(ncw.writer / ncw.sheets / ncw.slides)与 e2e 探针
+    - 清单里 customEditors[].documentEngine 把编辑器绑到文档引擎，画布、输入、保存都走视图侧，逻辑侧(main)有意为空；viewId 指明编辑器用哪个视图 —— 一个插件同时贡献 Writer 和 Sheets 时，取第一个视图会让表格打开成文字处理的界面(不声明的旧插件保留原行为)
+    - 画布由宿主经 nextcowork/view 下发(DocumentCanvas / openEngineDocument / 键位与坐标换算):这件事做错的表现(点击落点偏一字、输入法候选窗飞到屏幕角落、某个缩放下 tile 有缝)都只在特定机器、特定缩放下出现，每个插件各写一份等于各踩一遍
+    - 功能区零件抽在 plugins/office-common(不是一个插件，由各 build.mjs 打进各自视图):只画引擎声明了的命令(capabilities.commands)—— 没有后端能力的按钮是一次必失败的承诺；引擎报 disabled(无可撤销、只剩一张幻灯片)就置灰；色板里的十六进制是文档颜色，不是界面配色
+    - 功能区命令表(commands.ts)是封闭的：按产品概念命名(format.bold),宿主先按表收窄参数、多出来的键一律丢掉(透传的话，引擎升级后新认的键就成了后门);表里只有改当前文档内容 / 格式的命令 —— 没有保存(必须经宿主的路径与冲突检查)、没有宏
+    - npm run e2e:office:真 Electron 里走「打开 → 画布出像素 → 点击、打字、输入法 → 功能区加粗 → 保存回工作区」,表格与演示同理。画布每一段都有单测，但把它们连起来的那几处(preload 白名单、postMessage 来源核对、ArrayBuffer 转移、隐藏输入框的焦点与输入法)只在 Electron 里存在，任何一处断了的表现都是「画布一片空白 / 打字没反应」且零报错。原生 helper 的执行确认对话框在测试进程里替换成「允许」,生产代码不带调试出口
+    - 第一方插件的类型检查进 npm run typecheck(plugins/tsconfig.json):视图 import 的 nextcowork/view / nextcowork/ui 类型取对外发布的那两份声明(插件作者拿到的就是它们),不用宿主源码
+    使用统计云同步：概览合并多台设备，请求日志不跨设备
+    - 需求：使用统计概览(热力图、趋势、费用表、连续天数)要合并同一账户下多台设备的数据；请求日志不跨设备(usage_records 整张表留在本机，不进快照)。同步引擎(ipc/config-sync-usage.ts)在 providers 每轮 tick 之后跑，失败隔离 —— 统计同步出问题(比如服务端还没部署这个 category)不上抛到同步面板的错误态，供应商配置同步不该陪着挂「同步失败」;会话级错误(换账户、设备被撤销)照常上抛
+    - 快照形状 { devices: { [originId]: … } },每台设备一片、只由它自己改写：合并 = 远端其它片原样保留 + 本机片整体替换，所以冲突总能自动解，不存在「保留本地 / 使用远端」二选一 —— 那会丢掉某台设备的数据。片键是本机 ensureSyncDeviceId(),不能用同步会话的 deviceId:那个值每次重新登记都会变，用它做键，同一台机器重登一次就多出一片，历史用量被算两遍，图上看不出任何异常
+    - 行用定长数组而不是对象：键名重复几万次会让快照膨胀两倍多，而整份上限 8MiB。列序只能在末尾追加 —— 改顺序等于让新旧客户端互相把 token 数读成费用
+    - 节奏与 providers 三处不同，都是故意的：顺序 pull → 组装 → push(本机片的真源是 usage_daily,远端快照永远改不到它，先拉反而少一次冲突);五分钟一轮，不是每 5 秒(每次推一整份快照，统计不需要秒级新鲜度);冲突自动解(落地远端快照 → 重新合并 → 重推，封顶 3 次，防服务端异常时一轮里无限打请求)。与上次已知的云端快照比指纹决定推不推，而不是与本机上次上传的比 —— 别的设备推过之后，本机没变也不需要重推
+    - 落库(迁移 v27):usage_daily_remote + usage_remote_origin 两张新表。远端表里永远没有本机那片(快照带回来的旧本机片一律丢弃，否则图上出现两份);一个账户的远端数据整体替换(先删后插同事务),不做行级增量 —— 增量会留下「某台设备删掉的片本机永远留着」的漂移；不能并进 usage_daily:刷新器发现时区变了会整表重建，远端数据混在里面会被一起清掉，而本机算不回来；带 account_id,换账号登录后上一个账号的用量不能出现在这个账号的图上，按账号隔离是为了切回来不用重拉
+    - 概览查询 = 本机 ∪ 当前同步账户的远端，按「天 × 供应商 × 模型 × 币种」在 SQL 里合成一桶(usage-rollup.ts):交给前端同键两行会互相覆盖，表现为「另一台设备的用量时有时无」。SUM(cost_micros) 全 NULL 时仍是 NULL(NULL = 一条也算不出钱，和 0 不是一回事，别 COALESCE)。「最长一场聊天」依赖 messages,只有写入设备自己算得出 —— 远端随快照带来各自的值，取最大；syncedDevices 顺带成为「有几台设备贡献了数据」的来源
+    - 数据页新增「同步使用统计」开关(只在同步已解锁并确认时出现 —— 没有后端能力的开关不该有入口):关掉丢弃本机持有的远端数据、概览回纯本机，云端里本机那片不删(真实发生过的用量，其它设备继续展示);重新打开从 cursor 0 重拉。切换会等进行中的一轮跑完再改 —— 中途清空进度，那一轮的确认就对不上，表现为关开关的同时冒一条同步失败
+    - 概览顶部说明「已合并另外 N 台设备的用量；请求日志与明细只含本机」:概览合并了多设备、下方请求日志只含本机，两处数字必然对不上 —— 不把口径说出来，用户只会以为统计算错了。没有其它设备时不画
+    - 老版本写下的同步状态里没有 usage 键(schema 是 strict 的)会整块进错误态：读取时自动补齐迁移(已在同步供应商的账户默认一并合并，数据页可关)
+    退出兜底看门狗
+    - macOS 云端占位文件的 pread 可以长期阻塞，Electron 在 Node CleanupHandles 等它时已经无法执行主进程的 JS 定时器 —— 最终退出必须由独立进程提供时限。will-quit(窗口确认与应用收尾均已放行)才启动一个 6 秒后 SIGKILL 的小进程；不继承应用凭据，通过父子关系识别目标、每 250ms 核对 ppid —— 父进程已退出时绝不杀复用同一 PID 的进程。取消退出时不留延迟强杀；仅 darwin(本次证据是 APFS,其他平台行为不变)
+    模型目录：gpt-6.1-sol
+    - 窗口 / 最大输出 / effort 集合有一手依据(官方 model 页当日核对):1,050,000 / 128,000 / reasoning.effort = low|medium(默认)|high|xhigh|max,不支持 none / minimal;费率录 pricing-seed.ts
+    改动
+    插件 API 0.3.2 → 0.3.3(patch,纯新增)
+    - nextcowork/view 新增 openEngineDocument、DocumentCanvas 与画布换算函数；nextcowork 的 documents 新增 query、三支按文字定位的操作、capabilities.interaction 与逐条操作回执(results[].matches)。用画布的编辑器把 engines.nextcowork 下限写成 >=0.3.3,旧宿主上明确拒绝装载，而不是打开一个永远等不到回执的空白画布
+    - 主窗口 PluginViewFrame 新增 channel 报文通道(文档引擎画布用):来源核对与文档通道同一条口径(只认这个 iframe、这个 origin),post 写死 targetOrigin 并支持转移缓冲；引用不稳定的话每次渲染都会重开一次文档会话
+    - IconButton 新增 pressed:开关按钮(加粗、倾斜)给读屏报「已按下」。与 active 分开 —— active 在宿主里多半是「面板正开着 / 当前项」,一律输出 aria-pressed 会把导航项读成开关
+    - 主题新增 --color-page-ink(画布光标色):办公画布画的是引擎渲染的白纸，纸不跟随界面深浅色，深色主题下用 fg 就是一根浅灰线压在白纸上，用户会以为画布没获得焦点。不进 THEME_TOKENS —— 纸面是文档内容，不是界面皮肤
+    插件视图运行时构建的三处修复(build-plugin-runtime.mjs)
+    - React 门面 import 从 ./react-core.js 改为 ./__react-core.js:运行时文件按 __ 前缀那张表下发，写成产物文件名的症状是 React 写的插件视图一片空白，控制台只有一条 404
+    - ui.js 补 define: NODE_ENV = "production":Vite 的 lib 模式不替换它(假设使用方还有打包器),而这份产物直接下发浏览器 —— framer-motion 那句一执行就是 process is not defined,用 nextcowork/ui 的插件视图整页白屏(Electron 实测)
+    - 运行时指纹把 src/shared/document-engine 与 plugins/ 算进来：改了换算函数而运行时不重建，宿主与视图的坐标换算从此对不上；Tailwind 从仓库根扫 class,内置插件新写的工具类不重建就不存在 —— 两处都是零报错
+    测试
+    - 新增 15 个测试文件，覆盖：协议校验(未知 kind、未声明操作整批拒绝、paragraph.insert 不收 expectedCount、上限)、tile 账目(迟到结果仍 stale、失效纪元、淘汰不丢可见块、配置一变全作废)、viewport / keys 换算(AZERTY、AltGr、组字不投递)、输入合批(相邻同类才合并、组字夹提交两边都留)与迟到补拉排程、主进程通道(token 绑窗口、账户冻结、共享会话不取消组字、窗口收尾)、主窗口转发(连续 ready 只认最后一次、dispose 后迟到的打开也关掉)、视图客户端(dispose 即 reject、只收父窗口报文)、会话管理器 input / command(modified 才推进修订号、结果未知标崩溃、busy 可原样重试)、usage 快照(输出确定性 —— 顺序一变指纹就变、合并规则、列序 tuple)、usage 同步(冲突自动解、pendingApply / 未确认推送的断点续推、失败隔离)、usage-remote(本机片丢弃、整体替换、排序与指纹一致)、看门狗(非 darwin 不启动)、gpt-6.1-sol 录入
+    - 真实引擎的宿主集成测试(office-runtime.integration.test.ts,经 npm run test:office-native):真 helper + 随包 LibreOffice 走生产代码路径，锁「画布输入与 Agent 修改同一活动模型」「expectedCount 不符整批拒绝且模型未动」「渲染、导出 PDF 不动源文件」;需要 NCW_OFFICE_RUNTIME 环境变量，缺失时跳过(全量套件 29 个 skipped 里的 6 个)
+    - 全量套件 6737 项通过(29 skipped),零失败；typecheck(node + web + plugins 新增)与 lint 通过(0 error,4 个既有 any warning)
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.5.2
+ReleaseTime: 2026-09-30T14:47:45.0000000Z

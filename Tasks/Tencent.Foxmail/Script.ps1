@@ -1,36 +1,36 @@
-$Object = Invoke-WebRequest -Uri 'https://datacollect.foxmail.com.cn/cgi-bin/foxmailupdate?f=xml' -Method Post -Body @'
-<?xml version="1.0" encoding="utf-8"?>
-<CheckForUpdate>
-    <ProductName>Foxmail</ProductName>
-    <Version>0</Version>
-    <BuildNumber>0</BuildNumber>
-    <RequestType>1</RequestType>
-</CheckForUpdate>
-'@ | Read-ResponseContent | ConvertFrom-Xml
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = 'https://www.foxmail.com/win/download'
+}
 
 # Version
-$Task.CurrentState.Version = $Object.UpdateNotify.NewVersion
+$this.CurrentState.Version = [regex]::Match((Get-RedirectedUrl -Uri 'https://www.foxmail.com/win/download'), '(\d+(?:\.\d+)+)').Groups[1].Value
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.UpdateNotify.PackageURL.Replace('dldir1.qq.com', 'dldir1v6.qq.com')
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('Foxmail') -and $Global:DumplingsStorage.Foxmail.Contains($this.CurrentState.Version)) {
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.Foxmail[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.UpdateNotify.Description.'#cdata-section'.Replace('\r\n', "`n").Replace('\n', "`n") | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

@@ -1,0 +1,140 @@
+Version: 1.4.8
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/BlueHeisenberg/SCSKiller/releases/download/v1.4.8/SCSKiller-Setup.exe
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    This build isn't code-signed yet, so the first run will probably show SmartScreen's "Windows protected your PC".
+    Click More info, then Run anyway. Updates never show it.
+    To check the download arrived whole, compare its SHA-256 with the one at the end of these notes (PowerShell:
+    Get-FileHash <file>). These notes aren't signed, so that doesn't prove who built it. The source: https://github.com/BlueHeisenberg/SCSKiller/tree/v1.4.8.
+    Smart App Control (Windows 11) blocks unsigned apps outright, with no Run anyway.
+    New on Windows
+    - Hunt: Showdown 1896 compiles from its game files on NVIDIA. On AMD, on the game's current build, it compiles part of
+      its shaders from the game's files, about half of what the game built in a measured session, and the rest still
+      compiles while you play. The game contains anti-cheat. Enabling the recorder in it is at your own risk, and SCSKiller
+      isn't responsible for bans.
+    Changed
+    - RE Requiem's recorder is off by default instead of blocked, and the recorder switch on its page turns it on.
+    - No game key is in SCSKiller's code, binaries or server. Encrypted RE Engine and FromSoftware games download their
+      key at run time from its public source, and Unreal Engine games that need one read it from the game's exe or from
+      the key you enter on the game's page, the others show as encrypted.
+    Improved
+    - The compile size limit on a game's page is No limit or Custom size, set with a number box or a slider from 1 to 128
+      GB, or with presets of 4, 8, 16, 32, 64 and 128 GB.
+    - Encrypted RE Engine and FromSoftware games whose key can't be downloaded say so in their status and show a key field
+      to add it by hand.
+    - Encrypted RE Engine and FromSoftware DirectX 12 games without a key are recorded while you play and compile what was
+      recorded, and the key adds the rest.
+    - Frostbite games such as Dead Space have their shaders read from the game's files. DirectX 12 ones still need a
+      recording.
+    - When the recorder didn't load in a game's last launch, its status asks you to send a report instead of asking for
+      another recording.
+    - Games the recorder can't run in say they can't be compiled yet, instead of asking for a recording.
+    - On a first run, the recorders wait until the Welcome is answered.
+    Improved on Windows
+    - With AMD and NVIDIA, encrypted RE Engine and FromSoftware DirectX 11 games without a key, and DirectX 11 games whose
+      shaders are packed, are recorded while you play and compile what was recorded.
+    - A start no longer reads every game's exe again for the AMD checks when the game hasn't changed.
+    Fixed
+    - Opening the window no longer takes gigabytes of memory for a few seconds while the Library loads its game icons.
+    - Reading a game's shaders in the background no longer takes most of the PC's memory.
+    - A game's shaders read for the recorder in the background no longer start over again and again while other games
+      compile.
+    - A stopped background read of an older Unreal game's shaders goes on where it stopped instead of starting over.
+    - The first scan is faster on large Unreal Engine games.
+    - Rescans are faster after you play a large Unreal Engine game.
+    - The Epic library no longer lists Unreal Engine and plugin installs as games, which made the first scan slow.
+    - Epic games, Fortnite included, stay in the library while the Epic Games Launcher updates them, and a Fortnite added by
+      hand gets the Normal and Performance modes.
+    - Games whose exe holds a very large icon show their icon in the library again.
+    - Half-Life 2 and other games that ship DXVK for an optional Vulkan renderer read as DirectX 9.
+    - A game whose exe imports DirectX 10 but makes a DirectX 11 device, such as Ryse: Son of Rome, is read as DirectX 11.
+    - Games that run on DirectX 11 or 12 no longer show 0% covered after a DirectX 11 compile.
+    - Hookshot ports installed with their launcher beside a bin folder are detected as Vulkan games.
+    - Far Cry 5 picks the game's exe instead of the .NET installer in its Support folder, and its bin_plus build no longer
+      replaces bin.
+    - Far Cry 3, Far Cry 3 Blood Dragon and other games with an updater exe pick the game's exe.
+    - Games whose exe name contains "Crash", such as Crash Bandicoot N. Sane Trilogy, are found.
+    - Max Payne 3 picks the game's exe instead of its launcher.
+    - PRAGMATA added by hand no longer gets the recorder, and a game that doesn't start with the recorder no longer asks you
+      to turn on recording.
+    - The recorder stays out of 32-bit games that contain anti-cheat, as it does in 64-bit ones.
+    - Where Winds Meet is shown as a game that contains anti-cheat.
+    - The recorder no longer refuses a Steam game because a free pack installed into its folder, such as 007 First Light's
+      Starter Pack, names the same folder.
+    - The recorder no longer goes into, or stays in, a game whose update added anti-cheat deep in its folder, and an
+      anti-cheat check that doesn't finish keeps the recorder out until one does.
+    - The anti-cheat check of recorder games reads a game's folder again only after something in it changed, one game at a
+      time per disk, and follows folder links.
+    - A game's recorder comes back within a few minutes once its anti-cheat is removed, without restarting SCSKiller.
+    - Turning the recorder on takes over a recorder another SCSKiller copy chained to a mod, and the mod stays chained.
+    - A game with anti-cheat no longer keeps a recorder another SCSKiller copy chained to a mod, the mod goes back under its
+      own name.
+    - A game you just recorded no longer keeps asking for a recording when its plan was empty, it compiles what was recorded.
+    - Picking a whole drive or a folder of many programs as a game's folder says so, instead of saying the game's exe isn't
+      in it.
+    - A second SCSKiller copy with its own data folder no longer shows facts from another copy's recorder sessions, such as
+      the exe name a game runs as.
+    - An offline or anti-cheat recording session's files are still cleaned up when the game folder's SCSKiller marker was
+      briefly unreadable.
+    - When SCSKiller runs as administrator and places the recorder in a folder the game can't write, the game records into
+      SCSKiller's data folder.
+    - With AMD, a game is no longer marked Not compatible after a single launch, or after a compile it hasn't been played
+      since. It needs a miss on two separate launches after the compile.
+    - A recompile no longer fails with "not enough space on the disk" when the drive with SCSKiller's data is short of room
+      for its work files. It compiles every pipeline instead.
+    - Problem reports include the lines about reading the game's shaders.
+    - Turning off "Allow the recorder in games with anti-cheat" while another program holds the recorder's file removes it
+      once that program lets go, and Settings shows "Some recorders are still in place" until then.
+    - scskiller compile exits 0 when a stop comes after every item was already compiled.
+    - scskiller index writes its output as it goes, so it no longer takes gigabytes of extra memory on a large game.
+    - The first-run Welcome no longer gets skipped when another dialog is open at the same time.
+    - Turning off "Allow the recorder in games with anti-cheat" during a scan turns off those games' recorder switches at
+      once, instead of after the scan.
+    - The recorder note of a game that contains anti-cheat no longer says the game is compiled from its files only.
+    - A compile in a copy of SCSKiller's data folder no longer deletes recordings in the original folder.
+    - The coverage percent leaves out pipelines this GPU can't compile, so a complete compile reads 100%.
+    - On Vulkan games, the first launch line after a compile no longer says "0 with a shader set already known".
+    - With Always record, the recorder is back as soon as a game exits or restarts itself, and the "didn't load" note stays
+      until a session records.
+    - A Vulkan game planned from Steam's archives says so, "planned from Steam's shader cache of your play" or "planned from
+      Steam's shader download", instead of "planned from a recording".
+    Fixed on Windows
+    - SCSKiller starts on PCs without the Visual C++ redistributable.
+    - With NVIDIA, Vulkan compiles land in the cache the game reads.
+    - With AMD, Before and after no longer counts the before run as cold when a driver cache file of the game could still
+      be in place.
+    - With Always record, a Vulkan game that restarts itself as a new process keeps its recorder in the new process.
+    - Clearing a game's cache keeps the files a hidden game with the same exe still uses.
+    - Games with an older Streamline, such as Dead Space, are recorded.
+    - Before and after: the panel under FSR 3 frame generation no longer crashes the game after the November Windows update.
+    - With AMD, stopping a compile keeps the pipelines the driver has already written, so the next compile goes on from there
+      instead of from where the compile process started.
+    - With AMD, compiling Dragon's Dogma 2 and other games with FSR frame generation no longer loops on "Recovering from a
+      GPU driver crash".
+    - A compile that was stopped and resumed no longer redoes its earlier part on the next compile on AMD, older NVIDIA
+      drivers and Intel.
+    - A Hookshot port's hidden shader precompile no longer counts as the game running, which stopped its compile again and
+      again.
+    - Luma is named on the game's page instead of plain ReShade.
+    Fixed on Linux
+    - A DirectX 12 game planned from Steam's shader cache alone, such as The Witcher 3, no longer shows Needs rebuilding for
+      upscaler pipelines that plan can't take. Thanks to brunofgmag.
+    - A compile whose process keeps restarting no longer stops with "can't create a staging folder" (error 183).
+    - A DirectX 11 compile on NVIDIA keeps all the pipelines it compiled instead of losing some when it ends.
+    - Compiling a DirectX 11 game again no longer recompiles all its DirectX 11 shaders, which grew the cache with each
+      compile.
+    - A compile that the driver refuses shows as failed with its reason, instead of "this GPU doesn't support what they
+      need".
+    - Dragon's Dogma 2 Character Creator, Street Fighter 6 and some other games say the recorder can't run in them yet,
+      instead of a misleading reason.
+    - scskiller steam-place says the cache is up to date whenever Steam's files already hold the same bytes.
+    - Games that set STEAM_COMPAT_DATA_PATH in their Steam launch options compile in that Proton prefix.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BlueHeisenberg/SCSKiller/releases/tag/v1.4.8
+ReleaseTime: 2026-11-15T07:48:30.0000000Z

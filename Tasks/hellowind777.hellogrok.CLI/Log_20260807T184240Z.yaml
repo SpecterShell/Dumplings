@@ -1,0 +1,38 @@
+Version: 0.1.1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.1/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.1/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.1
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Explicit search model selection via [models].web_search config key and GROK_WEB_SEARCH_MODEL environment variable, with env taking precedence over config.
+    - Hosted search capability auto-detection for Grok relay channels at startup (web_search + x_search probing).
+    - Chat Completions search dialect auto-detection (search_parameters vs web_search_options).
+    - CC Switch takeover detection before config rewrite — start is refused when CC Switch already owns Grok Build.
+    - Single-instance enforcement for both tray and foreground modes via OS-level lock.
+    - Windows log window application icon display in title bar and taskbar.
+    - Search route resolution logging at startup, visible in hellogrok routes and the log window.
+    Changed
+    - Tray now defaults to proxy-enabled on first launch.
+    - Tray quit defers exit when a config-ownership conflict exists, preventing orphaned proxy URLs.
+    - SIGINT/SIGTERM handlers retry stop on deferred errors instead of leaving the process inconsistent.
+    - BackendSearchSet field distinguishes explicit supports_backend_search declarations from Build's false default, enabling runtime probing for unset values.
+    - Route now carries HostedSearchKnown, HostedWebSearch, HostedXSearch, and HostedChatSearchDialect for capability-aware request normalization.
+    - Tool choice normalization is now capability-aware — only confirmed hosted search declarations are injected.
+    Fixed
+    - Managed search flag now placed after channel settings in config rewrites, preventing key-ordering issues.
+    - Client search wire alias properly hidden from upstream requests.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#011-2026-08-07
+ReleaseTime: 2026-08-07T10:01:38.0000000Z

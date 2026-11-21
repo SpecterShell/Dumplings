@@ -1,89 +1,101 @@
-# International x64
+# Global x64
 $Object1 = Invoke-RestMethod -Uri 'https://onemark.neux.studio/updates/latest.x64.xml'
-# International x86
+# Global x86
 $Object2 = Invoke-RestMethod -Uri 'https://onemark.neux.studio/updates/latest.xml'
-# Chinese x64
+# China x64
 $Object3 = Invoke-RestMethod -Uri 'https://onemark.neuxlab.cn/updates/latest.x64.xml'
-# Chinese x86
+# China x86
 $Object4 = Invoke-RestMethod -Uri 'https://onemark.neuxlab.cn/updates/latest.xml'
 
-if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.item.version } -Unique).Length -gt 1) {
-  $Task.Logging('Distinct versions detected', 'Warning')
-  $Task.Config.Notes = '检测到不同的版本'
+if ((@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.item.version } -Unique).Count -gt 1) {
+  $this.Log("Global x86 version: $($Object2.item.version)")
+  $this.Log("Global x64 version: $($Object1.item.version)")
+  $this.Log("China x86 version: $($Object4.item.version)")
+  $this.Log("China x64 version: $($Object3.item.version)")
+  throw 'Inconsistent versions detected'
 }
 
 # Version
-$Task.CurrentState.Version = $Object1.item.version
+$this.CurrentState.Version = $Object1.item.version
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x86'
   InstallerUrl = $Object2.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
   InstallerUrl = $Object1.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x86'
   InstallerUrl    = $Object4.item.url
 }
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerLocale = 'zh-CN'
   Architecture    = 'x64'
   InstallerUrl    = $Object3.item.url
 }
 
-# ReleaseNotesUrl
-$Task.CurrentState.Locale += [ordered]@{
-  Key   = 'ReleaseNotesUrl'
-  Value = $ReleaseNotesUrl1 = $Object1.item.changelog
-}
-# ReleaseNotesUrl (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotesUrl'
-  Value  = $ReleaseNotesUrl2 = $Object3.item.changelog
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = $ReleaseNotesUrlEN = $Object1.item.changelog
+      }
+      # ReleaseNotesUrl (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $ReleaseNotesUrlCN = $Object3.item.changelog
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromMsi
-
-    $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrl1 | ConvertFrom-Html
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromMsi
 
     try {
+      $Object5 = Invoke-WebRequest -Uri $ReleaseNotesUrlEN | ConvertFrom-Html
+
       # ReleaseNotes (en-US)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotes'
         Value  = $Object5.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Object6 = Invoke-WebRequest -Uri $ReleaseNotesUrl2 | ConvertFrom-Html
-
     try {
+      $Object6 = Invoke-WebRequest -Uri $ReleaseNotesUrlCN | ConvertFrom-Html
+
       # ReleaseNotes (zh-CN)
-      $Task.CurrentState.Locale += [ordered]@{
+      $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotes'
         Value  = $Object6.SelectNodes('//*[@id="main"]/div') | Get-TextContent | Format-Text
       }
     } catch {
-      $Task.Logging($_, 'Warning')
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
     }
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 -and (@($Object1, $Object2, $Object3, $Object4) | Sort-Object -Property { $_.item.version } -Unique).Length -eq 1 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

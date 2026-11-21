@@ -1,0 +1,52 @@
+Version: 1.2.0-Preview
+Installer:
+- InstallerType: nullsoft
+  Architecture: x64
+  InstallerUrl: https://github.com/EthanYoQ/AI-Novel-Writer/releases/download/v1.2.0-Preview/ai-novel-writer-setup-1.2.0-Preview.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    1.2.0-Preview
+    本次重构版已正式发布，版本名保留 1.2.0-Preview。欢迎用项目副本试写并反馈问题。我们会继续修复，再推出 1.2.0。
+    本轮重构涉及 1008 个文件。重点改进规划、续写、人物管理和项目恢复。
+    - 规划长篇时，每批默认生成 5 章大纲或蓝图，可选 1 至 10 章，再继续下一批。
+    - 大纲和蓝图默认每章目标 600 字，可设 1 至 1000 字。生成结果超过目标也会完整保存。
+    - 蓝图单次请求最多处理 5 章。内容不完整时可缩小批次，或改为逐章生成。
+    - 大纲生成中断时，可通过正常、紧凑 2 级恢复继续处理。已经完整生成的章节可以保留。
+    - 人物多的故事不再受原来的 12 个角色、8 条关系、12 个新角色候选限制。
+    - 长姓名和详细关系说明可以保留，不再因超过 32 字符或 80 字符而拒收蓝图。
+    - 正文超出目标 30% 时，最多压缩 1 次。压缩后仍超长，也会保留全文并提示作者。
+    - 修稿建议长度为原稿的 70% 至 130%。超过上界仍可保存，明显截断的稿件仍会检查。
+    - 正文太短时，最多补写 7 轮。模型会看到本章全文，不再只看到末尾 1600 字符。
+    - 接着写下一章时，模型会收到直接前 1 章的完整正文，更容易接上人物行动和情节。
+    - 大纲有明确章节划分时，只带入当前 1 章和全局设定，减少无关章节占用输入空间。
+    - 发现新人物时，作者可选 3 种处理：新建、关联已有角色、暂不处理。同名人物不会直接合并。
+    - 审稿、直接修稿、按意见修稿这 3 个入口支持恢复。保存失败时保留候选内容，供作者继续处理。
+    - 支持 v1.0.0 和 v1.1.0 两代旧项目。导入时创建新版副本，保留旧项目，转换过程不调用 AI。
+    - 项目归档使用 SHA-256 校验。恢复时创建新副本，保留正文、历史和创作资料。
+    - 可通过 WebDAV 手动上传、下载完整项目。归档传输期限为 30 分钟，大小上限为 16 GiB。
+    - 新建或重置模型时，最大输出默认设为 65536 Tokens。实际可用长度仍取决于模型能力。
+    - 审稿、目录蓝图、单章紧凑蓝图这 3 类请求，取消原来的固定 4K 或 8K 输出限制。
+    请下载适合电脑的安装包。
+    Windows 安装包未签名。Mac 安装包未获 Developer ID 签名和 Apple 公证。系统可能提示未知发布者或阻止打开。
+    AI 仍可能遗漏细节或给出错误判断。请检查人物关系、连续性和定稿内容。以上数字说明功能范围，不代表文学质量提升比例。
+
+    Qualified desktop release v1.2.0-Preview
+    Source: 0d85037320502b98c90be45b8d9724f0aa785af0
+    Verified assets:
+    - ai-novel-writer-mac-arm64-1.2.0-Preview-installer.dmg: sha256:dd48b3bd23667730d28ad3a80a885993df0ffc3660bb6fb7ea4e0d4c7848d178
+    - ai-novel-writer-mac-arm64-1.2.0-Preview-installer.dmg.sha256: sha256:5b933275406ed7193b1d98dc4b505812326a0ac831e5056d4b4f2ca5c145f890
+    - ai-novel-writer-mac-x64-1.2.0-Preview-installer.dmg: sha256:485111d5292a30edf9561fd8a8b531ee73735285379ea72a29e00ee7fe4e07f9
+    - ai-novel-writer-mac-x64-1.2.0-Preview-installer.dmg.sha256: sha256:5a68a6c21afea5115cdba543d894c5d7c6ecfcf75563466b3049a00205f9b7b6
+    - ai-novel-writer-setup-1.2.0-Preview.exe: sha256:14a011c17592e71848b623822435d72fb02f5ad29984fa3711afe25612b1563b
+    - ai-novel-writer-setup-1.2.0-Preview.exe.blockmap: sha256:3044a989caa2ea4ed5d5f2918716e0184417d78b8a36ca03c8ca282b8f4fceae
+    - latest.yml: sha256:efbf5e9249e87539b02fe26bcc7d76fb7f351e427cee526e735e1b40b1af82df
+    Signing and notarization disclosure:
+    - macos-arm64: unsigned; validation=Observed ad_hoc code signing without a Developer ID identity. Apple notarization is not_notarized; Gatekeeper assessment exited with 3.; unsigned-impact=macOS Gatekeeper can warn about or block this package because it has no Developer ID distribution identity and is not notarized.
+    - macos-x64: unsigned; validation=Observed ad_hoc code signing without a Developer ID identity. Apple notarization is not_notarized; Gatekeeper assessment exited with 3.; unsigned-impact=macOS Gatekeeper can warn about or block this package because it has no Developer ID distribution identity and is not notarized.
+    - windows: unsigned; validation=NotSigned; unsigned-impact=Windows SmartScreen may display an unknown-publisher warning, enterprise policy may block execution, and users cannot verify publisher identity through a code-signing certificate.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EthanYoQ/AI-Novel-Writer/releases/tag/v1.2.0-Preview
+ReleaseTime: 2026-10-09T20:44:36.0000000Z

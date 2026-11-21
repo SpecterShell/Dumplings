@@ -1,30 +1,38 @@
-$EdgeDriver = Get-EdgeDriver
-$EdgeDriver.Navigate().GoToUrl('https://www.cocos.com/creator-download')
-
-$Object = $EdgeDriver.ExecuteScript('return window.__NUXT__.data[0].dashboardLatest', $null)
-
-# Version
-$Task.CurrentState.Version = $Object.version
-
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.win32_url
+$Object1 = Use-PlaywrightPage -Stealth -Headless {
+  param($Page)
+  $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.cocos.com/creator-download'
+  Invoke-PlaywrightJavaScript -Page $Page -Expression '() => window.__NUXT__.data[0].dashboardLatest'
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = $Object.publish_time | ConvertFrom-UnixTimeSeconds
+# Version
+$this.CurrentState.Version = $Object1.version
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.win32_url
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = $Object1.publish_time | ConvertFrom-UnixTimeSeconds
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

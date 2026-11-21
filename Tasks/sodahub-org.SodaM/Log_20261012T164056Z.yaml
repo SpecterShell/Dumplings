@@ -1,0 +1,27 @@
+Version: 0.2.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/sodahub-org/sodam/releases/download/v0.2.4/sodam-0.2.4-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    SodaM v0.2.4：播放上报
+    进度 / 时长
+    - 官方客户端把进度 / 时长交给 applog 埋点（POST https://mcs.zijieapi.com/v1/json），
+      把播放计数交给业务接口（POST /luna/pc/action，action_type=play）。
+    - sodam 现在在开播 / 首次进度 / 暂停 / 播完 / 切歌时都会上报：进度按秒（player_metrics
+      type=progressed），时长按实际播放毫秒（audio_finish / audio_over，含 duration_pct）。
+    - 打开 SODAM_REPORT_LOG 可看每次上报结果。
+    最近播放
+    - 开播时同步调用 AppendRecentlyPlayedMedia，手机 / 其它端的历史播放可见。
+    分层
+    - 所有上报接口（报文 + 请求）都封装在 libresoda 的新 report 模块，sodam 只跟踪播放状态
+      并调用；没配设备指纹时用官方 getFallbackDid 同款的进程内回退 did。
+    开发钩子
+    - SODAM_VOLUME 设初始音量（测试时静音），SODAM_REPORT_LOG 打印上报结果。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sodahub-org/sodam/releases/tag/v0.2.4
+ReleaseTime: 2026-10-12T13:57:28.0000000Z

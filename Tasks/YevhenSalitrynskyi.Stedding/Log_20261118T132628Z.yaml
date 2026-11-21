@@ -1,0 +1,170 @@
+Version: 0.6.0
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/ysalitrynskyi/stedding-browser/releases/download/v0.6.0/Stedding-0.6.0-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Stedding 0.6.0
+    Pinned tabs and essentials are now in every window, sync can carry Stedding's settings and the
+    list of your extensions, a live folder keeps your open GitHub pull requests in the sidebar, and
+    the address row can hide until the pointer rests at the window's top. It also fixes the
+    window's buttons over a page's corner on Windows and a number of faults found in a review of the
+    whole browser.
+    New
+    - Pins and essentials in every window (GitHub issue 111). Pinned tabs, pinned folders and
+      essentials belong to the profile now, as in Arc: every window shows them all, and a new window
+      has them as it opens, asleep until chosen. A pin, an unpin, a rename, a new order or a move to
+      another Space reaches every window at once, as do a folder's name, icon and open or closed
+      state. Each window keeps its own page of a pin, with its own history. A pin removed in one
+      window and open in another stays there as an ordinary tab. A Blank Window keeps pins of its
+      own. The first launch of 0.6.0 combines every window's pins and essentials, after a backup of
+      each window's sidebar; a pin with the same address in the same Space counts once.
+    - Settings and extensions in sync (GitHub issue 109). Sync has two more boxes, Settings
+      and Extensions, under Also sync in Settings → Stedding → Sync and import. Both are
+      ticked for a new join; a computer that already syncs gets neither part until you tick its box.
+      Settings carries your choices in Settings → Stedding and the sites you send to Spaces, each
+      keeping its later edit. Sizes, shortcuts and what only a Mac or only Windows has stay on each
+      computer, and Chromium's own settings do not travel. When both computers have changed
+      settings, Stedding asks whose to start from. Extensions carries the list of your Chrome Web
+      Store extensions: a computer that lacks one offers it in Settings and once in a bar, and
+      installs it only through Chromium's own confirmation. One you decline is not offered again by
+      those computers, one you uninstall is not offered again here, and nothing is ever removed
+      because of another computer. An older version ignores both and keeps syncing the sidebar.
+    - Live Folders: your GitHub pull requests (GitHub discussion 106). A pinned folder of your
+      open pull requests on GitHub, the ones you opened, are assigned, are asked to review or are
+      mentioned in, up to 50, each a row asleep until chosen. Right-click an empty part of the
+      sidebar → New Live Folder → GitHub Pull Requests…, or open Settings → Stedding → Sync
+      and import, and paste a fine-grained, read-only token you make on GitHub. Merged and closed
+      pull requests leave the folder (a page you have open stays, as an ordinary tab), and a row you
+      remove stays out. A failed refresh keeps the last list and puts ⚠ after the folder's name, with
+      the reason in its tooltip. Every window shows the folder; sync never carries it. Delete Live
+      Folder, in its menu or in Settings, forgets the token at once, without asking, as do Unpin
+      Folder and Close Folder's Tabs on it. One per profile, on github.com.
+    - The address row only on hover (GitHub issue 120). Settings → Stedding → Sidebar and the
+      command bar → Show the address row only on hover, off by default. On, a window whose
+      sidebar is closed (⌘S, Ctrl+S on Windows), to the rail or hidden, hides the address row and the
+      bookmarks bar under it, and the page takes the window's top. Rest the pointer at the window's
+      top edge and the row comes in over the page, which does not move; it stays while the pointer is
+      on it or the keyboard is in it, and slides away when the pointer leaves for the page. The
+      edge and the rest are the ones that show a hidden sidebar at the window's right edge, from the
+      same two settings, so a page's own controls along its top stay the page's. On Windows the
+      window's buttons go to the window's corner over the page and come and go with the row. A
+      localhost page and ⇧⌘D keep the row; full screen, popups, little windows and apps' windows keep
+      their own rules. The command bar has the same on/off row, and sync carries the setting.
+    Fixed
+    - A join makes no second copy of a Space. From 0.3.0 beta 16 to 0.5.1, combining Spaces of
+      the same name at a join could make a second Space of that name on one computer, which then took
+      the other computer's pins, renames and deletions. Importing a sync backup made after such a join
+      could make one too. 0.6.0 makes one. A second Space made before stays and still takes those
+      changes; 0.6.0 neither merges nor removes it. To remove it, after updating: go to the Space you
+      use and delete the other one from its menu (Delete Space). Its pins move into the Space on screen, and nothing
+      is removed on your other computers. Do not unpin or close its pins one by one first: that
+      removes them on the other computer too.
+    - Windows: the window's buttons no longer cover a page's corner (GitHub issues 118, 119). With
+      the address in the open sidebar at the window's leading edge, minimize, maximize and close
+      showed whenever the pointer was anywhere on their corner, over the page, so a site's own
+      controls there were missed and a press meant for them met the window's buttons. They now show
+      from a thin strip along the window's top edge over that corner, and stay while the pointer is
+      on them. The page's corner shows nothing of them.
+    - The page's top corners are rounded again (GitHub issue 118). Under an address row or a
+      bookmarks bar that takes no colour from the page, the page was cut square at the top, on the
+      Mac as on Windows, and on more pages since 0.5.1. The corners are square only where the row is
+      painted in the page's colour over them, pane by pane in a split.
+    - Closing a Space's last tab wakes nothing asleep (GitHub issue 121). The window used to show
+      the essential or pin the Space used last, even one asleep or never opened since the launch,
+      and load it. It now shows only a pin or an essential that is awake, the one used most recently
+      first, else the Space's own page. A switch to a Space with no tab, or back to one you left on
+      its page, wakes nothing there either.
+    - A tab's title runs to the end of its row. At rest a title fills its row, and a row under the
+      pointer makes room for its close button, as in Arc. Every row had kept the button's room, so a
+      title stopped short of the edge.
+    - Spaces with a session of their own. Back and Forward between a web page and a browser
+      page did nothing in such a Space; they work. Clear Session Data left the pages kept for Back
+      signed in and live, and a Back after a Space's session changed could show a page in the session
+      the Space had left; both now load the page again in the right session. A notification from a
+      site in the shared session opened its page in the session of the Space on screen; it now opens
+      in the shared one.
+    - Sync. Other computers refused this computer's whole sync file, and so stopped taking its
+      changes, when two computers' folder moves made a folder its own ancestor or nested one deeper
+      than five folders, or when a computer's name was cut inside a character (names in Chinese or
+      with emoji; Settings now takes at most 85 characters). A sidebar past the sync file's size caps
+      was written anyway, and again every few seconds; it is not written now, and Settings says the
+      sidebar is too large to sync. A computer that stopped syncing through WebDAV or S3 stayed
+      listed as present, with its extensions still offered. A backup made while others carried a
+      later time was deleted as it was written. Reloading or leaving one Settings page cancelled a
+      sync setup another page was in the middle of.
+    - Peeks. A peek closed as it first showed could crash the browser when its link had made its
+      own page. A link from another app that arrived while a peek asked "Leave site?" opened twice,
+      and a link for a new tab that waited behind that question showed a blank peek after Leave.
+      ⇧⌘O in a peek whose pinned tab had gone split the page with an unrelated tab; it now opens a tab.
+    - Imports and bookmarks. An Arc import put Arc's older password over one saved in Stedding for
+      the same site, and counted blocked sites as passwords. Turn Bookmarks into Pinned Tabs made a
+      bookmark folder's bookmarks plain tabs under the Clear line; they are pinned in pinned
+      folders now. Arc lists or bookmark folders nested more than five deep came in as loose tabs;
+      they now go into the fifth folder. The command bar kept offering Turn Bookmarks into Pinned
+      Tabs when what was left was in a folder you had removed.
+    - Mac: an app another profile also has keeps its Dock tile. Removing an app made from a page
+      in one profile took away the Dock tile Stedding had added, though another profile still had the
+      app and its launcher. The tile now stays until the last profile with the app removes it.
+    - Smaller fixes. Move to Trash on an old download could move a newer download's file that
+      had taken the same name; it now moves only the download's own, unchanged file. With tidy names
+      on, a file opened from a typed address, a bookmark or a dropped link took the title of the
+      page the tab still showed. In a narrow window with the sidebar open the ⌃⇥ strip ran past the
+      page and the window's edge. Export Space, and a screenshot of a site with a very long host
+      name, failed because the name was too long for a file; both now save. A host-suffix route
+      typed with an international domain, or an IPv6 address without brackets, never routed anything.
+      After a clock that ran ahead was put right, the blocker's lists were not fetched again until
+      the date the wrong clock had set.
+    Privacy
+    - A page the address bar made ahead in a Space with its own session went out with the shared
+      session's cookies. Chromium makes such a page in the profile's shared session, so a site
+      typed in a Space with a session of its own was asked for with cookies of another session. A
+      page is now made ahead only in the tab's own session, and only when it needs no other; in a
+      Space on the shared session it is made as before.
+    - ⌘L sent the page's address to the search engine before you typed. With "Send what you
+      type" on, opening the bar with ⌘L sent the page's address, path included for an http page, for
+      suggestions. Until you edit the text, suggestions now come from this computer alone.
+    - Windows: turning automatic updates off during a check still downloaded the installer.
+      Turning it off now stops the request under way, and each next step asks again.
+    - A script address pasted or dropped into ⌘L's bar ran in the page. The bar now cleans a paste
+      or a drop as the address bar does.
+    - Live folder: no request before you make one. Then it asks api.github.com
+      (/search/issues) when it is made, every 10 minutes while a normal window of the profile is
+      open, when such a window comes to the front and on Refresh, never more than once a minute: four
+      HTTPS GETs, one per search, with your token in the Authorization header. No cookies, no cache
+      shared with pages, nothing extensions see. The token is sealed by the system's key store, never
+      synced, and forgotten when the folder is deleted.
+    - Extension list: ids and names, written to your own sync place; it makes no request of its
+      own. Only Install… has Chromium's installer ask the Chrome Web Store (Google) for that
+      extension's details and icon, for its confirmation, and download it after you confirm. No
+      extension's data, settings, logins, cookies, passwords or tokens travel.
+    Chromium
+    - Built on Chromium 157.0.8103.79, as 0.5.1 was.
+    - On 2026-11-12 Chromium released 157.0.8103.80, a security update to M157, and made M158
+      stable. Stedding takes a Chromium security update within 14 days, so a release on newer
+      Chromium is due by 2026-11-26.
+    Known limits
+    - The Windows installer is unsigned (S-56).
+    - Netflix, Disney+, Prime Video and Spotify's web player do not play yet (S-270).
+    - Spaces that share a session share their essentials; a Space's own essentials with shared
+      sign-ins are not offered (GitHub issue 87, S-445).
+    - In a window whose pinned run holds a split, that run keeps its order when another window
+      reorders it (S-94).
+    - An exported sidebar file, and the sidebar's backups, hold a live folder's rows as ordinary pins
+      (S-478).
+    - A second Space made by sync before 0.6.0 stays until you delete it (S-494).
+    - A peek closed from outside, by its pinned tab closing, the pinned page going to another site,
+      the window closing or the browser quitting, does not ask "Leave site?", and what was typed in
+      it is lost.
+    - A second window's asleep pins and a live folder's rows may show the generic globe, not the
+      site's icon, until chosen; the join sheet counts "1 folders" (S-496, S-497).
+    - Finished downloads missing from the Downloads list (GitHub issue 90) are not understood yet; the
+      steps that lead there would help.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ysalitrynskyi/stedding-browser/releases/tag/v0.6.0
+ReleaseTime: 2026-11-18T04:47:44.0000000Z
+RealVersion: 157.6.0.999

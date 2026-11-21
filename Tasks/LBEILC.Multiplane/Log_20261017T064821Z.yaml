@@ -1,0 +1,19 @@
+Version: 0.3.10
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/LBEILC/Multiplane/releases/download/v0.3.10/Multiplane-Setup-0.3.10-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes for renders whose process is cut off: no more half-written videos at the output path, and the desktop app now shows why a render process died. Both the renderer and the desktop app changed; an npm release follows.
+    Renderer
+    - No partial video after an interruption. Without --overwrite, the finished video was copied to the output path. If the process was ended during that copy, an incomplete file was left behind while the job could still be resumed, and multiplane resume then failed with output_exists. The video is now published in one step (a hard link, or a same-directory rename where hard links are not supported), so the output path holds either nothing or the complete video. An existing file at the output path is still never replaced without --overwrite.
+    - Skill: long renders. The bundled skill tells agents that a render can outlast their command tool's timeout: give it a long enough timeout or run it in the background, and if the command is cut off, check the job with multiplane status and continue it with multiplane resume instead of starting over.
+    Desktop app
+    - See why a render process died. Renders started by the app (hosted renders and resumes started from the Jobs page) now keep their standard error in stderr.log in the job directory. When such a render exits unexpectedly, the job details show the last 20 lines of it. When there is no error output, the details explain the usual cause (the agent session that started the render timed out or ended) and point to hosting in Settings; finished segments are kept and the job can be resumed.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/LBEILC/Multiplane/releases/tag/v0.3.10
+ReleaseTime: 2026-10-17T02:32:36.0000000Z

@@ -1,0 +1,148 @@
+Version: 5.1.0
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-win32.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-win64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-winarm64.exe
+- Architecture: x86
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.0-win32\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-win32.zip
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.0-win64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-win64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: fluent-bit-5.1.0-winarm64\bin\fluent-bit.exe
+  InstallerUrl: https://packages.fluentbit.io/windows/fluent-bit-5.1.0-winarm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    https://fluentbit.io/announcements/v5.1.0/
+    What's Changed
+    - workflows: bump docker/login-action from 4.3.0 to 4.4.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12055
+    - build: bump to v5.1 (dev) by @edsiper in https://github.com/fluent/fluent-bit/pull/12066
+    - skills: Extract skills from memory by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12068
+    - in_opentelemetry: return not found for invalid endpoint by @edsiper in https://github.com/fluent/fluent-bit/pull/12064
+    - workflows: bump actions/stale from 10.3.0 to 10.4.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12081
+    - workflows: bump github/codeql-action/upload-sarif from 4.36.3 to 4.37.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12074
+    - tls: openssl: don't recycle a connection after peer close_notify by @ku524 in https://github.com/fluent/fluent-bit/pull/12079
+    - in_winevtlog: Enrich EventData key-value map if enabled by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12082
+    - lib: cmetrics: upgrade to v2.2.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12083
+    - thread_storage: Fix incorrectly to detect C TLS existence by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12067
+    - in_forward: fix stale byte accounting when multiple frames share a buffer by @zshuang0316 in https://github.com/fluent/fluent-bit/pull/12049
+    - lib: cfl: upgrade to v1.0.0 by @edsiper in https://github.com/fluent/fluent-bit/pull/12084
+    - opentelemetry: reduce protobuf log allocation churn by @edsiper in https://github.com/fluent/fluent-bit/pull/12087
+    - in_gpu_metrics: Handle NVIDIA GPU metrics via NVML by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11720
+    - log_event_decoder: time: plug 2038 problem on timestamp by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11549
+    - in_etw: Implement event tracing for windows input plugin by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12072
+    - tests: runtime: plugins: Enable to build and run runtime testcases on windows by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12092
+    - lib: cmetrics: upgrade to v2.2.1 by @edsiper in https://github.com/fluent/fluent-bit/pull/12088
+    - in_opentelemetry: reduce protobuf decode allocation churn by @edsiper in https://github.com/fluent/fluent-bit/pull/12089
+    - in_node_exporter_metrics: Add a capability to adjust log level w/ error paths by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12057
+    - downstream: re-architect workers support by @edsiper in https://github.com/fluent/fluent-bit/pull/11775
+    - github: workflows: Enable runtime tests only for x64 Windows architecure by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12098
+    - http_server: plug unsupported shared port issue on windows by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12101
+    - workflows: bump softprops/action-gh-release from 3.0.1 to 3.0.2 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12099
+    - tests: runtime: Handle byte order mark for non-ASCII environment of Windows correctly by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12100
+    - network: Plug an unintialized member by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12102
+    - tests: runtime: out_tcp: Make more rigid accumutated assertions by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12104
+    - workflows: bump github/codeql-action/upload-sarif from 4.37.0 to 4.37.1 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12108
+    - github: workflows: Enable unit testing on 5.0 branch by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12122
+    - mp: avoid unbounded recursion in chunk cobj record iteration by @zshuang0316 in https://github.com/fluent/fluent-bit/pull/12126
+    - tests: link test binaries against shared library by @edsiper in https://github.com/fluent/fluent-bit/pull/12128
+    - out_s3: add format=parquet,arrow with selectable page compression codecs by @rituparnakhaund in https://github.com/fluent/fluent-bit/pull/11885
+    - in_opentelemetry: optimize batched protobuf ingestion by @edsiper in https://github.com/fluent/fluent-bit/pull/12171
+    - out_syslog: tls: io: Handle dtls protocol on out syslog by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11728
+    - alias: handle input, output, filter, and processor plugin aliases by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11656
+    - config: engine: Implement adaptive flushing by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11498
+    - out_gcs: Implement Google Cloud Storage(gcs) plugin by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11792
+    - in_node_exporter_metrics: implement additional metrics (filesystem, EXT_* metrics, powersupplyclass) on node exporter metrics by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11765
+    - out_file: Support RA placeholders for dynamic creation of files by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11840
+    - tls: openssl: Reload and watch certificates mainly on Linux by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11950
+    - tests: integration: Adopt to trace for memory issues for macOS and optimize executions by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12134
+    - downstream: add coroutine-based event dispatch by @edsiper in https://github.com/fluent/fluent-bit/pull/12146
+    - in_podman_metrics: add per-container disk I/O metrics by @stondo in https://github.com/fluent/fluent-bit/pull/11986
+    - filter_kubernetes: Plug SEGV occurence on enabling Use_Pod_Association by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12153
+    - in_process_exporter_metrics: Fix the reported RSS ram by @anagno in https://github.com/fluent/fluent-bit/pull/12139
+    - config: fips: bin: Initial implementation to enable FIPS compliance by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12024
+    - in_lib: Adjust consuming mechanism to improve throughput by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12130
+    - tests: runtime: isolate Loki mock server configuration by @edsiper in https://github.com/fluent/fluent-bit/pull/12132
+    - in_node_exporter_metrics: fix netstat file reads by @edsiper in https://github.com/fluent/fluent-bit/pull/12173
+    - build: plugins: Generate plugin defs on separated build directories by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12109
+    - in_process_exporter_metrics: Expire metrics for dead processes by @piwai in https://github.com/fluent/fluent-bit/pull/11760
+    - tests: runtime: out_http: out_chronicle: fix output runtime test races by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12154
+    - in_forward: batch Forward mode worker ingress by @edsiper in https://github.com/fluent/fluent-bit/pull/12163
+    - in_tail: add Windows UTF-8 path encoding mode by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12020
+    - opentelemetry: validate JSON container value types by @edsiper in https://github.com/fluent/fluent-bit/pull/12131
+    - input: input_chunk: Handle flow with events metrics per window by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11698
+    - config_format: yaml: handle configuration metadata on yaml conf by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11690
+    - parser: Handle too long time string on parsing by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11682
+    - workflows: bump reviewdog/action-actionlint from 1.72.0 to 1.73.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12136
+    - workflows: bump github/codeql-action/upload-sarif from 4.37.1 to 4.37.3 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12135
+    - workflows: bump actions/checkout from 7.0.0 to 7.0.1 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12124
+    - workflows: bump actions/setup-python from 6.3.0 to 7.0.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12117
+    - out_kafka: Implement resolving registry of avro schema by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11953
+    - in_kubernetes_events: bound watch connection lifetime by @edsiper in https://github.com/fluent/fluent-bit/pull/12105
+    - engine: fail startup when HTTP server cannot start by @edsiper in https://github.com/fluent/fluent-bit/pull/12176
+    - out_s3: fix prefix match in log_key extraction by @Vaibhav-C-S in https://github.com/fluent/fluent-bit/pull/12008
+    - packaging: add packages index generator and release CI by @lecaros in https://github.com/fluent/fluent-bit/pull/12150
+    - out_syslog: tls feature glitches for selecting protocols by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12196
+    - build: run daemon-reload and restart service in deb postinst by @guoard in https://github.com/fluent/fluent-bit/pull/12195
+    - out_es: sds: Implement es upstream with sds view by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/11647
+    - out_file: add logs rotation feature by @SagiROosto in https://github.com/fluent/fluent-bit/pull/11352
+    - in_node_exporter_metrics: add timex linux collector by @ngillen in https://github.com/fluent/fluent-bit/pull/11718
+    - tls: openssl: preserve syscall error details by @edsiper in https://github.com/fluent/fluent-bit/pull/12178
+    - avro: out_kakfa: handle empty map even if avro schema defines map type by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12181
+    - dockerignore: Add an entry not to collide type definition on package creations by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12199
+    - filter_expect: validate all records in batches by @edsiper in https://github.com/fluent/fluent-bit/pull/12188
+    - in_emitter: reject self-referential senders to prevent recursive pause SIGSEGV by @Nahid-NHB in https://github.com/fluent/fluent-bit/pull/12190
+    - metrics: extend support for Tag metrics by @edsiper in https://github.com/fluent/fluent-bit/pull/11887
+    - tests: integration: cover kubernetes pod association isolation by @edsiper in https://github.com/fluent/fluent-bit/pull/12208
+    - input: add pause/resume callbacks by @edsiper in https://github.com/fluent/fluent-bit/pull/10616
+    - tests: runtime: out_file_rotation: Wait with flexible intervals by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12211
+    - workflows: bump docker/login-action from 4.4.0 to 4.6.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12198
+    - workflows: bump reviewdog/action-hadolint from 1.51.0 to 1.53.0 by @dependabot[bot] in https://github.com/fluent/fluent-bit/pull/12197
+    - in_exec: unblock threaded shutdown by @edsiper in https://github.com/fluent/fluent-bit/pull/12221
+    - oauth2: fix request body ownership on allocation failure by @edsiper in https://github.com/fluent/fluent-bit/pull/12213
+    - lib: monkey: upgrade to v1.8.9 by @edsiper in https://github.com/fluent/fluent-bit/pull/12212
+    - github: workflows: Update release workflow for 5.1 development cycle by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12217
+    - tests: runtime: Stabilize out_loki tests to catch EV_THREAD events by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12218
+    - tests: internal: Plug an uninitialized coro stack by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12214
+    - tests: runtime: Use long json payloads to trigger rotataion easily by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12215
+    - dockerfile: windows: Create an image of windows nano server ltsc2025 by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12219
+    - in_calyptia_fleet: enhance relative paths handling by @edsiper in https://github.com/fluent/fluent-bit/pull/11962
+    - packaging: pass the elements to jq by pipes instead of command line by @lecaros in https://github.com/fluent/fluent-bit/pull/12226
+    - log: mem: signv4: Plug possible memory errors by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12234
+    - tls: support HTTPS proxy by @antoniomrfranco in https://github.com/fluent/fluent-bit/pull/11778
+    - in_kubernetes_events: fix unsafe MessagePack field parsing by @edsiper in https://github.com/fluent/fluent-bit/pull/12222
+    - tests: runtime: Adopt the test config path for Windows and others by @cosmo0920 in https://github.com/fluent/fluent-bit/pull/12227
+    - http_server: accept empty HTTP header values by @kimonus in https://github.com/fluent/fluent-bit/pull/12223
+    New Contributors
+    - @ku524 made their first contribution in https://github.com/fluent/fluent-bit/pull/12079
+    - @rituparnakhaund made their first contribution in https://github.com/fluent/fluent-bit/pull/11885
+    - @stondo made their first contribution in https://github.com/fluent/fluent-bit/pull/11986
+    - @anagno made their first contribution in https://github.com/fluent/fluent-bit/pull/12139
+    - @guoard made their first contribution in https://github.com/fluent/fluent-bit/pull/12195
+    - @SagiROosto made their first contribution in https://github.com/fluent/fluent-bit/pull/11352
+    - @ngillen made their first contribution in https://github.com/fluent/fluent-bit/pull/11718
+    - @Nahid-NHB made their first contribution in https://github.com/fluent/fluent-bit/pull/12190
+    - @kimonus made their first contribution in https://github.com/fluent/fluent-bit/pull/12223
+    Full Changelog: https://github.com/fluent/fluent-bit/compare/v5.0.9...v5.1.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/fluent/fluent-bit/releases/tag/v5.1.0
+ReleaseTime: 2026-08-06T02:29:07.0000000Z

@@ -1,0 +1,110 @@
+Version: 6000.4.9f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/f7258d6eebbe/Windows64EditorInstaller/UnitySetup64-6000.4.9f1.exe
+  ProductCode: Unity 6000.4.9f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/f7258d6eebbe/WindowsArm64EditorInstaller/UnitySetupArm64-6000.4.9f1.exe
+  ProductCode: Unity 6000.4.9f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.4.9
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity User Manual
+    DocumentUrl: https://docs.unity3d.com/6000.4/Documentation/Manual/
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.4/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.4.9f1
+    - 6000.0.61f1: Crash on tlsf_free when generating Font Atlas with SDF16 or SDF32 (UUM-141061)
+    - 6000.0.6f1: [RenderGraph][D3D12] Crash on D3D12SwapChain::Present when using AddComputePass with EnableAsyncCompute(true) and UseTexture (UUM-140183)
+    - 6000.2.0a8: Crash on Scripting::LogException when async HTTP callback executes after scripting domain teardown (UUM-141434)
+    - 6000.4.0a1: All values are 0 when inspecting Rendering module in Profiler (UUM-131281)
+    - 6000.6.0a2,6000.3.14f1,6000.4.4f1,6000.5.0b5: 'AudioSampleProvider buffer overflow' warnings are thrown when any video is played in Play Mode (UUM-140747)
+    - Asset Importers: Editor crashes on "(Unity) WriteObjectToVector" when entering into the Play Mode (UUM-112617)
+    - Text (TextMeshPro): Crash on UNITY_FT_Load_Glyph when generating multi-threaded Font Atlas in TMPro Font Asset Creator (UUM-125366)
+    - : Crash on mdb_cursor_sibling when performing various actions in the Editor (UUM-141720)
+    - : Crash on mono_log_write_logfile when more than one copy of bee_backend is running (UUM-142773)
+    6000.4.9f1 Release Notes
+    Improvements
+    - Shaders: Added an "Unapplied Changes" dialog that appears when navigating away from the Shader Build Settings UI with pending modifications.
+    Fixes
+    - 2D: Fixed an issue where Select, Pick, Box, and Move tool operations on the Tilemap were not properly cancelled or finalized when the mouse button was released outside the SceneView or Tile Palette window. (UUM-139284)
+    - 2D: Fixed issue for the Brush Picks list view where a user can disable all columns in the list view, resulting in error messages and the loss of the SceneView. (UUM-141552)
+    - 2D: Fixed issue where a Tile with the Collider Type Grid does not line up correctly when the Tilemap's tile anchor is different from the default cell center (UUM-136995)
+    - 2D: Fixed return from GetCellCenterLocal/World when the Grid has a non-zero cell gap value set. (UUM-137327)
+    - Adaptive Performance: Replace FindFirstObjectByType with FindAnyObjectByType in adaptive performance (UUM-139862)
+    - Animation: Fixed crash on invalid state machine transitions when importing project. (UUM-141640)
+    - Build Pipeline: Added support to reserve capacity for PersistentManager.Remapper using a BootConfig key "remapper-initial-capacity" which specifies the initial hashmap size. (UUM-136275)
+    - Core: Make stacktrace logging thread safe again. (UUM-140063)
+    - DX12: Fixed crash on DX12, when performing memory-heavy operations. (UUM-141699)
+    - Editor: Added a Stable Light Index Tracking using dataIndex in HDRP. (UUM-136171)
+    - Editor: Added an option called enableHeightmapLODFrustumCulling, which is available in the Terrain Inspector settings in debug mode, to opt out of terrain frustrum based LOD culling. (UUM-141589)
+    - Editor: Changing the Graphics API list on custom build profiles now works correctly. (UUM-127416)
+    - Editor: Fixed "ArgumentNullException" is thrown when dragging a selector between greyed-out built-in child elements in UI Builder (UUM-140859)
+    - Editor: Fixed an "Invalid double parameter" error that occurred when entering Inf or NaN in the Fixed Timestep field. (UUM-138227)
+    - Editor: Fixed an Editor freeze when entering a very large value (for example, 24124124) in the Size field of an Inspector array, such as Player Settings > Preloaded Assets. (UUM-139781)
+    - Editor: Fixed an issue where it was not possible to interact with the Texture Importer's "Aniso Level" slider when the texture was set to import as a Cubemap or without a mipmap, even though the selected level has an effect for these textures. (UUM-138249)
+    - Editor: Fixed an issue where the Editor analytics toggle in preferences did not
+      display the restart Editor warning correctly. (UUM-129044)
+    - Editor: Fixed directories in ProjectBrowser not displaying their contents when they are named with certain Korean language characters. (UUM-141018)
+    - Editor: Fixed Editor restart prompt appearing when switching build profiles by adding extra check for Graphics API setting restart condition. (UUM-139685)
+    - Editor: Fixed Hub still opening via the reconnect loop when Editor was launched with -projectPath argument. (UUM-142653)
+    - Editor: Fixed null exception when in build profile, an empty custom scaler field is added in scaler profile and the ui is reset. (UUM-140845)
+    - Editor: Fixed Project window path breaking upon changing Color Space settings. (UUM-139519)
+    - Editor: Fixed ShaderGraph and ShaderSubGraph import errors (DirectoryNotFoundException) that occurred on Windows when project paths were long enough to exceed the 260-character MAX_PATH limit. (UUM-120311)
+    - Editor: Reverted a change that caused a bug where the Default UI Material preview was empty for a TMP Button. (UUM-137964)
+    - Editor: Reverted a change that caused a bug where the Inspector was throwing NRE errors on domain reload. (UUM-139557)
+    - Editor: Reverted a change that caused a bug where the Material Preview window has an empty dropdown when converted to a floating window. (UUM-138929)
+    - Editor: Reverted a change that caused a bug where the Video Player preview was not shown anymore. (UUM-139952)
+    - EmbeddedLinux: Added missing documentation for GameWindow.DisposeAsync. (UUM-141650)
+    - Engine Diagnostics: Fixed an issue where duplicate managed exception counts were lost during shutdown because the async crash reporting pipeline could not complete after the player loop stopped. (UUM-141101)
+    - Engine Diagnostics: Fixed crash caused by JNI native methods being deregistered prematurely, leading to java.lang.UnsatisfiedLinkError on nativeOnAndroidAppSetIdResult. (UUM-137662)
+    - Entities: Fixed an issue where BlobAssets would cause the resulting artefact hash from baking to be different, even though the same input was used. (UUM-142329)
+    - Entities: Fixed Null Reference when using the UnityObjectRef property drawer (viewing a gameobject with a component having that field on it) (UUM-142298)
+    - Entities Graphics: Fixed an issue where baking lightmap-affected renderers would cause the baked artefact hash to be different between editor sessions. (UUM-142162)
+    - Graphics: Apply GPU skinning to meshes that only have blend shapes when available. (UUM-137953)
+    - Graphics: Fixed an issue where FrameTimingManager.GetLatestTimings returned zero values for valid frames. (UUM-127766)
+    - Graphics: Fixed GPU-resident drawers incorrectly rendering quad topology meshes as triangles during GPU Occlusion Culling. (UUM-132444)
+    - Graphics: Fixed text overflowing the "Open Project Settings > Graphics ..." button when the Inspector is narrow. (UUM-141971)
+    - Graphics: Fixed Camera.AddCommandBuffer not warning about an active Scriptable Render Pipeline when called from MonoBehaviour.OnEnable or Start. (UUM-135653)
+    - IL2CPP: Fixed IL2CPP code generation issue with multi-dimensional arrays with rank over 18. (UUM-138552)
+    - iOS: Ensure Xcode project build fails if il2cpp command building GameAssembly fails. (UUM-141609)
+    - N/A (internal): Fixed links to specific Hub documentation pages and headers.
+    - Physics: Fixed an issue where ConfigurableJoint with projection mode enabled could cause a crash due to it's connected body being turned dynamic from kinematic (UUM-135394)
+    - Physics 2D: Fixed a crash when tessellating outline paths into Polygons. Potentially affects PolygonCollider2D, TilemapCollider2D and PhysicsComposer. (UUM-142017)
+    - Physics 2D: Fixed to stop the PhysicsCore2D renderer from rendering on overlay cameras. (UUM-142142)
+    - Prefabs: Add opt-out for session to ExecuteInEditMode Prefab Mode warning dialog. (UUM-139861)
+    - Profiler: Fixed rename warning popup drawing underneath the main profiler pane. (UUM-122505)
+    - Profiler: Improved PersistentManager.Remapper memory tracking. (UUM-141167)
+    - QNX: Added missing documentation for GameWindow.DisposeAsync. (UUM-141650)
+    - Scripting: Updated the Obsolete warning for FindObjectOfType to suggest the new FindAnyObjectByType after the InstanceID refactor also made FindFirstObjectByType Obsolete (UUM-142315)
+    - Shaders: Added an "Unapplied Changes" dialog that appears when navigating away from the Shader Build Settings UI with pending modifications. (UUM-138992)
+    - Shaders: Fixed an issue where disassembling shaders containing hit shaders didn't produce any output. (UUM-137361)
+    - Shaders: Fixed an issue where the warning icon was cut off and misaligned in the Inspector when selecting a Shader with a compiler warning. (UUM-142330)
+    - Shaders: Fixed the Shader Inspector showing an empty "Properties" foldout for shaders that have no properties. (UUM-127146)
+    - Text: Fixed NullReferenceException when word wrapping sup and sub tag. (UUM-139927)
+    - uGUI: Fixed null reference after setting Toggle and Slider target graphic to None and attempting to reassign target graphic which prevented the target graphic from being assigned (UUM-142512)
+    - UI Elements: Optimised new code which causedsome UIToolkit
+      .Bindings.PerformanceTests regressions (UUM-139531)
+    - UI Toolkit: Added serializable to binding classes to fix some localization package warnings.
+    - UI Toolkit: Fixed an issue where reordering list view can throw an exception. (UUM-129733)
+    - UI Toolkit: Fixed the GradientFIeld not updating during some undo/redo changes and incorrectly combining undo operations when the picker was still open. Selection is now also preserved. (UUM-142114)
+    - UI Toolkit: Fixed UIDocument regenerating the root VisualElement when selected in the Inspector. (UUM-127851)
+    - UI Toolkit: Fixed MissingReferenceException error when entering Play mode while UI Document is selected in Hierarchy. (UUM-131364)
+    - Video: When seeking, fix the race condition that can occur between the frame ID reported by the platform, and the frame ID that we report to the C# layer. (UUM-134928)
+    - Web: Fixed Gamepad API not working in multithreaded Web builds. (UUM-136543)
+    - WebGL: Fixed an issue where R16UNorm, R16SNorm, RG16UNorm, RG16SNorm, RGBA16UNorm, and RGBA16SNorm were incorrectly declared as filterable. (UUM-139873)
+    Package changes in 6000.4.9f1
+    Packages updated
+    - com.unity.xr.arcore: 6.4.2 to 6.4.3
+    - com.unity.xr.arfoundation: 6.4.2 to 6.4.3
+    - com.unity.xr.arkit: 6.4.2 to 6.4.3
+ReleaseTime: 2026-05-27T12:52:34.8700000Z

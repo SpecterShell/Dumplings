@@ -1,0 +1,77 @@
+Version: 0.1.8
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.8/vibex-0.1.8-windows-x86_64-nsis.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/vibex-ai/vibex/releases/download/v0.1.8/vibex-0.1.8-windows-aarch64-nsis.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    🚀 Highlights
+    - Your Agent answers in chat: a Telegram or Lark / 飞书 bot can be paired with one runtime and then prompt the same Agent session the desktop shows. Ask for work, watch it run, answer a permission, and read the final answer without opening the app. This lands behind Settings → Developer → Experimental features → IM channels (beta), off by default; the guide is IM Chat Channels.
+    - A turn is visible while it runs: every assistant text block is its own message and is edited as that block streams, while one progress line — ⏳ Thinking · 12s, ⏳ Running a command · 30s, ✅ Done — reports the kind of work without its input or output. An answer too long for one message is sent as (1/3), (2/3), … and an interrupted turn leaves ⏹ Stopped. behind.
+    - Approvals resolve from the chat: the pending request is posted with one button per option — Approve, Always allow, Deny — as a Telegram inline keyboard or a Lark interactive card. Every button carries a one-shot token, so a second tap, an expired card or a forwarded card is refused, and the first tap wins even against the desktop pressing approve at the same moment. /approve <code> works wherever buttons do not.
+    - Attachments go in, not out: a photo or document sent to a paired bot becomes an attachment on the prompt, up to 10 MB, and the Agent receives the bytes rather than a provider URL. A larger file is rejected with a reason instead of being dropped.
+    - Pairing is deliberate: a channel refuses everyone until an identity is paired with a VBX-… code that expires in 10 minutes and is bound to the kind of chat it was minted for. A direct code pasted into a group is refused; a group needs its own code, minted from the command line. Anyone paired has full control of the channel — prompt, approve, and /unbind — so read-only watchers need a separate bot, not a smaller role.
+    💬 IM channels
+    - Two transports, one seam: Telegram uses long polling with HTML rendering generated from Markdown, and Lark / 飞书 uses the long connection with plain text and interactive cards. im:message, im:message:send_as_bot, im:chat:readonly, and the im.message.receive_v1 and card.action.trigger event subscriptions are what the Lark adapter asks for; no public callback URL is involved. Enterprise WeChat and personal WeChat are not implemented and are not offered.
+    - Both Lark deployments are separate apps: an app id created on open.feishu.cn does not exist on open.larksuite.com, and the token endpoint answers 10014 app id not exists when the deployment is picked wrong. The channel form now names the deployment, and 飞书 中国 is the choice for a China-registered app.
+    - The command set covers the whole loop: /pair, /help, /whoami, /status, /sessions, /use, /agent, /provider, /model, /effort, /mode, /new, /stop, /approve, /always, /deny, /say, and /unbind. Telegram publishes the table through setMyCommands, so the / picker in a client offers the same names; where a command takes a choice the reply carries buttons, and every button also prints a short code for clients without an inline keyboard. Each picker card carries the selection revisions it was read at, so a card left open while someone else changed the runtime is refused instead of overwriting the newer choice.
+    - /new uses an explicit default: it needs a workspace and an Agent, so it uses the channel's default session when one is set, and otherwise copies the workspace and runtime selection of the session the chat is bound to. With neither it answers with instructions rather than guessing.
+    - Groups are quiet until they are meant to answer: a group answers commands, and on Telegram messages that begin with the bot's @username when the mention requirement is on. An unpaired group is otherwise ignored, so the bot stays silent in a busy room.
+    - Reactions are mirrored: when message reactions are on in the desktop, the emoji the Agent attached is set on the chat message that sent the prompt. The mirror follows the provider's vocabulary: a Telegram reaction outside its own list is skipped rather than sent and refused, and a transport without reactions ignores them.
+    - Rate limits protect the channel: 20 messages per minute per identity, 40 per chat, and 5 pairing attempts per chat per 10 minutes. A refused message gets one reply with the retry delay, while approval and answer buttons are never throttled, because a press answers a card that was already delivered.
+    - Headless deployments: a desktop closes and takes its channels with it, so 7×24 service runs vibex-server on a host that stays up. vibex-server im list, im bindings, im pair, im unbind, im test, im enable, im disable, and im revoke administer channels over SSH, and --channel accepts the channel id or its display name.
+    - State and secrets stay apart: channels, pairings, bindings and cards live in the runtime SQLite database; bot tokens and app secrets go to the OS keychain, or to <home>/im-secrets.json on a headless host. Pairing and approval are audited in im_audit_logs for 180 days and delivered messages are kept in im_messages for 14 days; an approval also writes a PermissionResolution to the session timeline, which remains readable after the log entry is pruned.
+    - Diagnostics respect the reader: a bundle carries an imChannels section with one row per channel — kind, enabled, configured, connection state — and deliberately no chat id, session id, or message text.
+    🖥 Desktop
+    - Settings keeps Undo where it can be reached: the settings dialog pins the Undo action beside Close in its top-right corner, and the Beta features group is renamed Experimental features.
+    - The composer menu obeys the caret: the /, @, and $ popup re-ran its trigger scan on every key-up, mouse-up and focus event, so placing the caret inside existing text opened it and an Escape key-up reopened it immediately. Typing now opens the menu; caret movement only refreshes one that is already open, and Escape records the token it closed so the menu stays shut until the trigger changes.
+    - A typed slash is prose: text that merely began with / was sent through the Agent's slash-command path whenever the Agent advertised the capability, so a message like /status 是什么 failed with acp_slash_command_not_available and lost the draft. A draft now executes a command only when the composer menu armed one and the text still matches it; anything else reaches the Agent as written.
+    - The turn header wears the session's Agent mark: the default reasoning display mode can drop a still-streaming reasoning row, leaving the header to fall back to its own Agent · account · model string. That string names the Agent by display label, which was passed straight to the brand table, so an Agent such as "DeepSeek Harness" drew the default robot until its thought settled. The label-only fallback now resolves through the same catalogue lookup the row path and the terminal fold use.
+    - A local file link outside the workspace opens again: a local markdown link resolved only when it sat under the session workspace, so a link to another checkout on the same machine did nothing. The preview now falls back to the absolute platform path for a local file outside the workspace, while a relative destination and a non-file scheme keep their handling.
+    ⚙️ Runtime reliability
+    - Claude keeps auto when the model offers it: model-gated auto mode was normalized to default for every Provider Profile or route selection with an explicit model, even when the model-scoped probe advertised auto. The picker offered a value the switch path always refused, so the mode flipped back to Manual seconds later with no explanation. auto is now kept when the model-scoped probe advertises it, and in a real session that answers a requested auto with another mode the durable selection settles onto the Agent's answer, with one system notice naming the substitution instead of failing the convergence fence.
+    - Permission resolution keeps one responder field: the resolution literals now agree on a single responder field, so a stored outcome reads back the same shape it was written with.
+    - The IM host-file helpers stay out of test builds: the config-switch helpers that maintain the headless host file are compiled only where the runtime uses them.
+    ⬆️ Upgrading
+    Install 0.1.8 over 0.1.7 as usual: sessions, workspaces, Provider configuration, Skills, remote hosts and drafts carry over, and the updater manifest format is unchanged. The channel tables reuse the existing schema version and are created on first open when they are missing, so an existing database upgrades in place without a manual step. IM channels are new and off by default; turn them on at Settings → Developer → Experimental features → IM channels (beta), then add a channel under Settings → IM channels, test it, and pair a chat. Nothing about the feature changes how the desktop, mobile, or terminal clients behave when it is left off; turning it off again hides the entry and stops new work while the recorded pairings and audit rows stay in the database.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 核心亮点
+    - Agent 可以直接在聊天里回答你： Telegram 或 Lark / 飞书的机器人可以与某个 runtime 配对，之后就能对桌面端所显示的同一个 Agent 会话下达提示。无需打开应用即可交代任务、查看执行过程、回应权限请求并阅读最终回答。该功能位于 设置 → 开发者 → 实验功能 → IM 频道（Beta） 之后，默认关闭；使用指南见 IM Chat Channels。
+    - 回合运行过程中即可看到进展： 每个助手文本块都是独立的一条消息，并随该块的流式输出被编辑；同时有一条进度行——⏳ Thinking · 12s、⏳ Running a command · 30s、✅ Done——说明正在做哪类工作，而不暴露其输入或输出。超出单条消息长度的回答会按 (1/3)、(2/3)……分段发送，被中断的回合会留下 ⏹ Stopped.。
+    - 审批可以直接在聊天里完成： 待处理的请求会附上每个选项一个按钮——Approve、Always allow、Deny——在 Telegram 上是 inline keyboard，在 Lark 上是 interactive card。每个按钮都带一次性令牌，因此重复点击、已过期的卡片或被转发的卡片都会被拒绝；即使桌面端同时按下批准，也是先按下的一方生效。没有按钮可用时，/approve <code> 仍然有效。
+    - 附件只进不出： 发送给已配对机器人的照片或文档会成为提示的附件，上限 10 MB，Agent 收到的是文件字节而不是服务商 URL。超限文件会附带原因被拒绝，而不是被静默丢弃。
+    - 配对是有意为之的： 在身份完成配对之前，频道拒绝所有人。配对码形如 VBX-…，10 分钟后过期，并且绑定到它生成时对应的聊天类型。把单聊配对码贴进群聊会被拒绝；群聊需要自己的配对码，并且只能通过命令行生成。任何已配对的身份都拥有该频道的完整控制权——提示、批准以及 /unbind——因此只读观察者应当使用单独的机器人，而不是一个权限更小的角色。
+    💬 IM 频道
+    - 两种传输，一套接口： Telegram 使用长轮询，并把 Markdown 渲染为 HTML；Lark / 飞书 使用长连接、纯文本与 interactive card。Lark 适配器需要 im:message、im:message:send_as_bot、im:chat:readonly 权限，以及 im.message.receive_v1 和 card.action.trigger 事件订阅，不需要公网回调 URL。企业微信与个人微信没有实现，也不在设置或命令行中提供。
+    - Lark 的两个部署是两个不同的应用： 在 open.feishu.cn 创建的 app id 在 open.larksuite.com 上并不存在，部署选错时令牌端点会返回 10014 app id not exists。频道表单现在会明确选择部署，中国大陆注册的应用应选择「飞书 中国」。
+    - 命令覆盖整个流程： /pair、/help、/whoami、/status、/sessions、/use、/agent、/provider、/model、/effort、/mode、/new、/stop、/approve、/always、/deny、/say 与 /unbind。Telegram 通过 setMyCommands 发布该表，因此客户端里的 / 选择器会列出同样的名称；需要做出选择的命令会在回复中附带按钮，每个按钮同时打印一个短代码，供无法显示 inline keyboard 的客户端使用。每个选择卡片都会带上读取时的选择版本，因此卡片在打开期间被他人改动运行时时会被拒绝，而不会覆盖更新的选择。
+    - /new 使用明确的默认值： 它需要工作区和 Agent，因此优先使用频道设置的默认会话；没有默认会话时，就复制该聊天当前绑定会话的工作区与运行时选择。两者都没有时，它会给出说明而不是随意猜测。
+    - 群聊在被明确启用前保持安静： 群聊会响应命令，并在开启提及要求时响应 Telegram 上以机器人 @username 开头的消息。未配对的群聊会被忽略，因此机器人在热闹的房间里不会多话。
+    - Reaction 会被同步过去： 当桌面端开启消息 Reaction 时，Agent 附加的 emoji 会被设置在发送该提示的聊天消息上。同步会遵循服务商自己的词汇表：不在 Telegram 自身列表中的 reaction 会被跳过，而不是发送后被拒绝；不支持 reaction 的传输则会忽略它。
+    - 限流保护频道： 每个身份每分钟 20 条消息，每个聊天每分钟 40 条，每个聊天每 10 分钟 5 次配对尝试。被拒绝的消息会收到一条带重试延迟的回复；审批与回答按钮永不限流，因为按下按钮回应的是已经送达的卡片。
+    - 无头部署： 桌面端关闭时会带走它的频道，因此 7×24 服务需要在常开主机上运行 vibex-server。可通过 SSH 使用 vibex-server im list、im bindings、im pair、im unbind、im test、im enable、im disable、im revoke 管理频道，--channel 接受频道 id 或显示名称。
+    - 状态与密钥分开存放： 频道、配对、绑定与卡片存放在 runtime 的 SQLite 数据库中；机器人令牌与应用密钥写入操作系统钥匙串，无头主机上则写入 <home>/im-secrets.json。配对与审批记录在 im_audit_logs 中保留 180 天，已送达消息记录在 im_messages 中保留 14 天；一次审批还会把一条 PermissionResolution 写入会话时间线，因此日志条目被清理之后仍然可读。
+    - 诊断信息尊重阅读者： 诊断包中的 imChannels 段落每个频道一行——类型、是否启用、是否已配置、连接状态——并且刻意不包含聊天 id、会话 id 或消息文本。
+    🖥 桌面体验
+    - 设置把「撤销」放在触手可及的位置： 设置对话框把撤销操作固定在右上角「关闭」旁边，并把 Beta 功能 分组更名为 实验功能。
+    - 输入框菜单遵从光标位置： /、@ 与 $ 弹窗此前会在每次按键抬起、鼠标抬起和焦点事件时重新扫描触发条件，因此把光标放进已含有这些符号的文本里会打开菜单，而按 Escape 时的抬起事件又会立刻把它重新打开。现在只有输入才会打开菜单；光标移动只会刷新已经打开的菜单，Escape 会记录它关闭的令牌，因此在同一令牌内移动光标或继续输入都会让菜单保持关闭，直到触发条件改变。
+    - 手动输入的斜杠就是普通文本： 只要 Agent 声明了斜杠命令能力，以 / 开头的文本就会被送进斜杠命令路径，于是像 /status 是什么 这样的消息会以 acp_slash_command_not_available 失败并丢失草稿。现在只有当输入框菜单真正选中过某个命令、且文本仍然匹配时才会执行命令，其它情况一律作为用户写下的消息送达 Agent。
+    - 回合标题栏显示会话 Agent 的标志： 默认的推理展示模式可能会隐藏仍在流式输出的推理行，使标题栏退回它自己的 Agent · account · model 字符串。该字符串使用的是 Agent 的显示名称，而它被直接传给了品牌表，因此像「DeepSeek Harness」这样的 Agent 在思考结束前会显示默认机器人图标。现在仅凭名称的回退也会走行路径与终端折叠所用的同一套目录查找。
+    - 工作区之外的本地文件链接可以再次打开： 本地 Markdown 链接此前只在会话工作区之内才会被解析，因此指向同一台机器上另一个检出的链接没有反应。现在对于工作区之外的本地文件，预览会回退到平台绝对路径；相对目标和非文件协议保持原有处理方式。
+    ⚙️ 运行时可靠性
+    - 模型支持时 Claude 会保留 auto： 对于任何带显式模型的 Provider Profile 或路由选择，受模型门控的 auto 模式都会被归一化为 default，即使该模型范围的探测结果声明了 auto。于是选择器提供了一个切换路径总会拒绝的值，模式在几秒后悄悄变回 Manual 且没有任何说明。现在只要模型范围的探测声明了 auto 就会保留它；在真实会话中，如果 Agent 对请求的 auto 返回了另一种模式，持久化的选择会收敛到 Agent 的答复，并用一条系统通知说明这次替换，而不是让收敛校验失败。
+    - 权限决议只保留一个 responder 字段： 决议字面量现在一致使用同一个 responder 字段，因此已存储的结果读回来的形状与写入时相同。
+    - IM 宿主文件辅助代码不再进入测试构建： 维护无头宿主文件的 config-switch 辅助代码只在运行时真正使用它的地方编译。
+    ⬆️ 升级
+    按正常方式用 0.1.8 覆盖 0.1.7 即可：会话、工作区、Provider 配置、Skills、远程主机与草稿都会保留，更新清单格式也没有变化。频道表沿用现有的 schema 版本，并在首次打开检测到缺失时创建，因此已有数据库会就地升级，无需手动步骤。IM 频道是新功能且默认关闭；在 设置 → 开发者 → 实验功能 → IM 频道（Beta） 中开启，然后在 设置 → IM 频道 里添加频道、测试连接并配对聊天。功能保持关闭时，桌面端、移动端和终端的任何行为都不受影响；再次关闭它会隐藏入口并停止新的工作，而已记录的配对与审计行仍保留在数据库中。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/vibex-ai/vibex/releases/tag/v0.1.8
+ReleaseTime: 2026-11-17T04:00:06.0000000Z

@@ -1,0 +1,137 @@
+Version: 6000.0.61f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/74a0adb02c31/Windows64EditorInstaller/UnitySetup64-6000.0.61f1.exe
+  ProductCode: Unity 6000.0.61f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/74a0adb02c31/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.61f1.exe
+  ProductCode: Unity 6000.0.61f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.61
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.61f1
+    - Metal: The Player freezes and Execution of the command buffer was aborted due to an error. Several games started having freezes after the CAMetalDisplayLink was added. (UUM-111494)
+    - 3D Physics: No valid hits are returned when using RaycastCommand (UUM-123124)
+    - Android: [GameActivity] APK built with Development Build enabled gets flagged as having Malware (UUM-116588)
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: [Intel] Crash on BufferD3D12::BeginWrite when opening a newly created URP project with DirectX12 set as the default graphics API (UUM-104889)
+    - Editor Application Shell Integration: [Linux] Crash on ModalProgressBackendLinux::Clear when Domain Reload progress bar appears (UUM-122055)
+    - GPU Resident Drawer: False Warning "BatchRendererGroups currently don't support override shaders" is spammed in Play mode when using H-Trace WSGI with BatchRenderGroups (UUM-122367)
+    - License: Builds failing with the Error Code 404 (UUM-121408)
+    - Metal: Crash on mono_dump_native_crash_info in a project with a Render Pipeline, which uses a 2D renderer when changing the Shader of a material to Standard Unlit (UUM-121727)
+    - Serialization: Editor performance degrades when PlayableDirector with multiple bindings remains visible in the Inspector during Play mode (UUM-122354)
+    - Shader System: Crash on tlsf_free when selecting a cube in the "Getting Started With Unity" template (UUM-107673)
+    6000.0.61f1 Release Notes
+    Features
+    - Bug Reporter: Use the email address for the Unity ID logged into the Hub in the bug reporter.
+    - Version Control: Added a new Editor Toolbar Button for Unity Version Control that lets you view project status, track changes, and perform key actions with one click.
+    - Version Control: Added Unity Version Control actions to the prefab and prefab variant header context menus.
+    - Version Control: Added Unity Version Control status icons to prefab assets in the hierarchy view in "Edit Mode".
+    Improvements
+    - Bug Reporter: Signed the bug reporter on MacOS.
+    - Bug Reporter: Signed the bug reporter on Windows.
+    Changes
+    - Bug Reporter: Replaced the Unity Bug Reporter.
+    - Version Control: Improved overlay icons to align with the Unity Editor design. Added icons for "Controlled" and "Changed" items, removed the icon for "Private" items, and added a "Contains Changes" overlay for directories containing changes.
+    Fixes
+    - 2D: Allow Tile Palette Edit Mode to persist when entering Play mode. (UUM-117622)
+    - 2D: Fixed Assertion error "(dx - width < padding) || (dy - height < padding)" when using Pack Preview. (UUM-116057)
+    - 2D: Fixed crash issue with the TilemapRenderer where the TilemapRenderer is destroyed while the graphics renderer is still rendering the TilemapRenderer. (UUM-119285)
+    - 2D: Fixed Create New Tile Palette/Create New Target dropdown menu's vertical alignment when there are no selected options available. (UUM-117545)
+    - 2D: Fixed issue where the "Invalid SortingGroup index set in Renderer" assert is triggered when multiple SortingGroups and SpriteRenderers are disabled and enabled in a single frame without a SortingGroupManager.Update occurring. (UUM-119198)
+    - 2D: Fixed memory regression from Light2D shader. (UUM-119296)
+    - 2D: Fixed Tile Palette Active Target being changed when saving the scene. (UUM-119587)
+    - 2D: Fixed Tile Palette view changing when entering Play mode. (UUM-117623)
+    - Android: Renamed Android JNI tests that share the same name "TestProcess".
+    - Android: [Android] Upgrade Gradle and Android Gradle Plugin versions to fix development build APKs being incorrectly flagged as malware on Unity 6.0. (UUM-116588)
+    - Animation: Fixed corrupted animator window because of dangling animator controller serialized in the layout. (UUM-117808)
+    - Animation: Fixed issues where normalized time would not be incrementing on some animator states, along with excessive errors being logged. (UUM-121440)
+    - Animation: Fixed memory leak caused by accumulating event handlers in IMGUI inspectors when changing GameObject selection. (UUM-121239)
+    - Audio: Fixed a bug that would cause the audio to not resume properly after unpausing a timeline. (UUM-91654)
+    - Editor: Allow to use backspace key to delete gradient field keys. (UUM-122403)
+    - Editor: Fixed an Editor crash happening when .shader files contain raygeneration, miss or callable shaders. These shader types are supported in .raytrace files only. (UUM-109230)
+    - Editor: Fixed an issue where popup menus with submenus could be placed incorrectly on macOS when deep submenu items were selected. (UUM-116574)
+    - Editor: Fixed an issue where using the "Select Texture" window would, in certain specific scenarios, spam the console with errors related to an uninitialized variable. (UUM-119204)
+    - Editor: Fixed corrupted kernings. (UUM-121371)
+    - Editor: Fixed crash in AssetDB worker process. (UUM-112436)
+    - Editor: Fixed crash when inputting long text in IMGUI. (UUM-120863)
+    - Editor: Fixed inability to drag Tabs to a display right of primary in Windows Editor when using different DPI scales. (UUM-116022)
+    - Editor: Fixed issue with a Build Profile tooltip not showing correct path to Build Profile asset if it was moved.
+    - Editor: Fixed Manual license activation flow via command-line. (UUM-122146)
+    - Editor: Fixed missing underline in primary font preventing text rendering. (UUM-120878)
+    - Editor: Fixed possible crashes and exceptions when triggering a scene save from script with an unsaved "Untitled" scene. (UUM-121358)
+    - Editor: Fixed Tesselation plus Quad topology plus SRP Batcher. (UUM-121990)
+    - Editor: Fixed thread exception when using Fonts instead of FontAssets. (UUM-121614)
+    - Editor: Fixed: https://jira.unity3d.com/browse/UUM-108146
+      NullReferenceException thrown when Terrain component is removed and re-added with the existing Terrain data. (UUM-108146)
+    - Editor: Open Popups and Tooltips on the display the mouse is currently on for Windows Editor when monitor look-up fails. (UUM-117239)
+    - Editor: Removed missing scripts in SplitScreen and OcclusionEffect scenes from the URP samples. (UUM-71852)
+    - Editor: Replaced the Active Input Handling set to the new Input System instead of the "Both" option.'. (UUM-109503)
+    - Editor: Updated Unity Editor icon on mac for macOS 26 "Liquid Glass" design. (UUM-120993)
+    - GI: Ensured that we don't crash the Editor in a specific edge case, when a reflection probe is added to a scene which has never been saved and the scene is then baked without first explicitly saving the scene. (UUM-120770)
+    - Graphics: Color Picker - Swatches - HDR - Was storing the color.gamma instead of the color. (UUM-121056)
+    - Graphics: Fixed ComputeBuffer.GetData sometimes not waiting for gpu to finish. (UUM-122369)
+    - Graphics: Fixed occasional crash on exit. (UUM-120761)
+    - Graphics: Fixed unreferenced assets not being destroyed when switching scenes or calling Resources.UnloadUnusedAssets when using GPU Resident Drawer. (UUM-120539)
+    - Graphics: Removed GC allocations caused by RayTracingAccelerationStructure.AddInstances. (UUM-121305)
+    - HDRP: Fixed GC Allocation in Lens Flare Post Processing effect. (UUM-108846)
+    - Input System: Fixed mouse warp not working correctly on macOS since it would not update Mouse position state. (UUM-121296)
+    - iOS: Fixed a bug related to changing the default audio output device while recording from the built-in microphone. In that case, sometimes microphone data would stop being captured properly. (UUM-98507)
+    - iOS: Fixed a crash with -nographics launch argument (Simulator only). (UUM-117757)
+    - Linux: Fixed Steam Deck D-Pad is either not working or sometimes working when UI->Navigation is set to "Pass Through" in Input Actions. (UUM-97138)
+    - Plugins: AMDUnityPlugin/FSR2: Fixed white flickering around the edges of the image when the camera is rotated. (UUM-110296)
+    - Scene/Game View: Fixed an issue where the editor would throw if layers StateCache json file was empty. (UUM-116877)
+    - Scene/Game View: Fixed Shortcut Manager's UI elements overlapping when window is resized down to narrow width. (UUM-115947)
+    - Scene/Game View: Fixed the Cameras overlay popup having the wrong height when first person controls are toggled in the overlay. (UUM-110292)
+    - Services: Fixed exception events not appearing on the Diagnostics dashboard. (ULO-7366)
+    - Shadergraph: Fixed extra scrollbars sometimes appearing in ShaderGraph blackboard when dragging attributes. (UUM-108024)
+    - Shaders: Fixed unnecessary shader warnings and errors being logged when running with -batchmode -nographics. (UUM-114187)
+    - SRP Core: Dispose of compiled graphs on cleanup. (UUM-117495)
+    - Terrain: Added missing selected icons for Terrain properties. (UUM-114855)
+    - TextMeshPro: Fixed incorrect preferred height calculations when using more than one font per line of text. (UUM-104237)
+    - TextMeshPro: Improved CJK line break handling. (UUM-121295)
+    - TextMeshPro: Improved line breaking for Chinese and Japanese. (UUM-120042)
+    - UI Toolkit: Added ClearValue API to allow any numeric input field to be cleared. (UUM-122277)
+    - UI Toolkit: Fixed gradient fields in UI Builder not using correct timing numbers, causing a green key to appear out of place. (UUM-122159)
+    - UI Toolkit: Fixed null exception sometimes thrown when removing focus from element that's no longer in a panel while inside another event callback. (UUM-121130)
+    - UI Toolkit: Fixed the incorrect padding top applied on the collection view's contentContainer when rebuilding a list with a valid offset. (UUM-92179)
+    - UI Toolkit: Fixed the item first item of the list view disappearing and the items not showing when spamming the add button. (UUM-114653)
+    - UI Toolkit: Removed unused background repeat fields in canvas settings in UI Builder. (UUM-122232)
+    - UNET: Fixed the UI Builder's selector pill being frozen when dragging and scrolling at the same time. (UUM-93877)
+    - Universal RP: Fixed Warning logged when injecting a pass on AfterRenderPostProcessing + X. (UUM-109361)
+    - Version Control: Fixed applying shelves when some files cannot be checked out due to exclusive checkout lock rules. These files are now applied as local changes instead of failing the whole operation.
+    - Version Control: Fixed incorrect tab name showing as "Unity.PlasticSCM.Editor.PlasticW" with no icon when upgrading a project to Unity 6.x.
+    - Version Control: Fixed the missing "Hide" contextual menu on the Unity Version Control button in the Unity 6.3 Toolbar.
+    - VFX Graph: Fixed "An edge with the same input and output already exists" error popping in the graph. (UUM-120233)
+    - VFX Graph: Properly handle empty enum values in the blackboard and now forbid to remove the last enum value so the list is never empty. (UUM-120288)
+    - WebGL: WebGPU: fix compressed 3d textures if the WebGPU extension is available. (UUM-121604)
+    Package changes in 6000.0.61f1
+    Packages updated
+    - com.unity.netcode: 1.9.0 to 1.9.1
+    - com.unity.collab-proxy: 2.9.3 to 2.10.0
+    - com.unity.ide.visualstudio: 2.0.23 to 2.0.25
+    - com.unity.services.user-reporting: 2.0.11 to 2.0.14
+    - com.unity.remote-config-runtime: 4.0.2 to 4.0.4
+    - com.unity.xr.hands: 1.5.0 to 1.7.0
+    - com.unity.xr.management: 4.5.1 to 4.5.3
+    - com.unity.xr.meta-openxr: 2.0.1 to 2.0.2
+    - com.unity.profiling.systemmetrics.mali: 1.0.3 to 1.1.0
+    Packages deprecated
+    - com.unity.muse.common - "This package is no longer supported. Muse is being replaced with Unity AI."
+    - com.unity.muse.sprite - "This package is no longer supported. Muse is being replaced with Unity AI."
+    - com.unity.muse.texture - "This package is no longer supported. Muse is being replaced with Unity AI."
+    - com.unity.muse.chat - "This package is no longer supported. Muse is being replaced with Unity AI."
+ReleaseTime: 2025-10-30T06:44:03.1510000Z

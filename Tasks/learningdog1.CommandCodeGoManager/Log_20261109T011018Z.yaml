@@ -1,0 +1,25 @@
+Version: 0.2.16
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.16/CommandCodeGo.Manager-Setup-0.2.16-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/learningdog1/CommandCodeGo-manager/releases/download/v0.2.16/CommandCodeGo.Manager-Setup-0.2.16-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    fix(rotation): 额度耗尽自动轮转三处失灵(#12)
+    - 固定/绑定不再越过账户状态：「切到此账号」与密钥绑定原先不检查 status,锁定一个已耗尽/已停用的账户后永远不会再换号。现在固定与绑定都只是偏好，不可用时按同一套可用性规则兜底。
+    - 429 额度语义认得出：真身 RATE_LIMITED + 「weekly usage limit … limit resets at 」文本原先认不出(只认 USAGE_EXCEEDED/rateLimit.window)。现在额度码或额度措辞都认，重置时间优先取 rateLimit.reset,其次取报文里的 ISO 时间；瞬态 429 与请求类错误(Bad Request / 模型不可用 / 地区限制)仍不轮转。
+    - 额度耗尽回 200 也认：上游把「no credits remaining」塞进 200 的 SSE 体里时，转发前窥探响应首段(≤16KB / ≤3s,见到正文事件立即放行),命中错误事件按额度耗尽处理并当笔轮转重试。
+    - 月度信用归零：用量刷新发现 totalRemaining === 0 时标记到当期结束(补额度自动解除),不再每笔请求都打到一个必然失败的账户上。
+    fix(rotation): thinking 流首字节延迟
+    窥探正则 CONTENT_STARTED 漏了本协议的 reasoning-start/reasoning-delta,推理先行的流会被扣满 3s 预算才放行；已补上(含 tool-call 兜底)并加回归用例。
+    New Contributors
+    - @bixianzuose made their first contribution in https://github.com/learningdog1/CommandCodeGo-manager/pull/12
+    Full Changelog: https://github.com/learningdog1/CommandCodeGo-manager/compare/v0.2.15...v0.2.16
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/learningdog1/CommandCodeGo-manager/releases/tag/v0.2.16
+ReleaseTime: 2026-11-09T00:55:25.0000000Z

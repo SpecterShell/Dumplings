@@ -1,0 +1,25 @@
+Version: 1.0.8
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.8/OpenCowork-win-amd64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/AIDotNet/OpenCowork/releases/download/1.0.8/OpenCowork-win-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - feat(updater): confirm install after update download by @cipherTing in https://github.com/AIDotNet/OpenCowork/pull/119
+    New Contributors
+    - @cipherTing made their first contribution in https://github.com/AIDotNet/OpenCowork/pull/119
+    Added
+    - Added an install-confirmation step to the auto-updater: downloaded updates now wait for the user to choose "Update now" (restart and install) or "Update later" instead of restarting automatically.
+    - Introduced update:status and update:install IPC handlers so the renderer can query whether a downloaded update is ready and trigger installation on demand.
+    - Added a "ready to install" update state in the title bar and settings, with matching UI strings across all supported locales.
+    Changed
+    - Deferred quitAndInstall until the user confirms; install failures now surface an update:error back to the window instead of force-quitting the app.
+    - Clarified the auto-update setting description to reflect that updates download automatically but ask before restarting to install.
+    - Refined the context-memory compression description to reflect model-aware compression thresholds and summary-based history preservation.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/OpenCowork/releases/tag/1.0.8
+ReleaseTime: 2026-07-05T04:30:22.0000000Z

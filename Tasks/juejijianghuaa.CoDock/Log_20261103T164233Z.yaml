@@ -1,0 +1,21 @@
+Version: 0.6.5
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/juejijianghuaa/CoDock-Release/releases/download/v0.6.5/CoDock-Setup-0.6.5-x64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.5 (2026-11-03)
+    这一版只修分享页的两个按键，但都是「顺手就按」的那种。
+    修复
+    - 分享页的 Ctrl+V / Ctrl+C 改用访客自己的剪贴板：Windows/Linux 访客在局域网分享页按 Ctrl+V 时，
+      xterm 发出的是裸 \x16，Claude 会拿它去读主机剪贴板里的图片——访客看到的是「粘贴没反应」，
+      顺手再按 Ctrl+Z 撤销就把 Claude 挂起了；有选区时按 Ctrl+C 发出 \x03，复制直接变成中断。
+      现在这两种按键交还浏览器原生粘贴/复制，剪贴板是访客自己的。局域网 http 不是安全上下文，
+      没有 navigator.clipboard，所以复制仍由 xterm 按选区填 clipboardData。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/juejijianghuaa/CoDock-Release/releases/tag/v0.6.5
+ReleaseTime: 2026-11-03T14:34:10.0000000Z

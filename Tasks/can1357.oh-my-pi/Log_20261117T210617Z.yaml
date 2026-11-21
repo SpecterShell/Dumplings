@@ -1,0 +1,258 @@
+Version: 18.22.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.22.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Provider replay (filterProviderReplayMessages, the default convertToLlm) now sends a tool call stopped by a provider error as "not executed" without the provider's error text, so a refusal explanation is never fed back to the model (#19419 by @flosrn)
+    - Fixed one-shot retries and title generation to pass the model endpoint so custom Zhipu Coding Plan providers honor the Beijing-time quota reset (#19446 by @yuzu-octopus)
+    @oh-my-pi/pi-ai
+    Added
+    - buildAnthropicSearchHeaders takes extraBetas, request-specific betas sent beside the web search beta (#18125 by @will-bogusz)
+    - Added omitDemotedReasoning to StreamOptions: an Anthropic request leaves out other models' reasoning that it would otherwise replay as text, and a refused request reports how many such blocks it carried in demotedReasoningBlocks (#10407) (#17610 by @will-bogusz)
+    - Added metadata.credentialId to usage reports probed from stored credential rows (API-key and OAuth), and a read-only AuthStorage.sessions.sticky lookup of the credential a session is currently served from (#19456) (#19492 by @thekitaev).
+    - Added riskAcknowledgement to OAuthPrompt, set on the login-warning acceptance prompt so hosts that refuse input before the auth URL can still show it (#19523)
+    Fixed
+    - Fixed OpenAI Decisions judge usage reading as zero from gateways such as Bifrost that report prompt_tokens/completion_tokens instead of input_tokens/output_tokens (#19053 by @Xytronix)
+    - Fenced (```thinking) reasoning with very long unbroken lines no longer slows down as it streams (#19493 by @H4vC)
+    - Fixed Anthropic requests that replay a signed server-compaction block still asking for a message thread, which the API refuses (thread_unsupported_request), so every such request first paid a rejected round trip before resending without the thread (#19473 by @alphastorm)
+    - Anthropic requests whose connection drops before any response now say how long after the request started it dropped and whether the request body was still uploading or had all been written to the socket, with its size, instead of a bare "Connection error." (#18624 by @will-bogusz)
+    - Fixed Anthropic requests dropping the reasoning of earlier non-Claude turns signed in under another credential, or kept through a compaction; it is now replayed like other models' reasoning (#7241) (#17610 by @will-bogusz)
+    - Fixed credential rotation and one-shot retries so custom providers pointing at the Zhipu Coding Plan endpoint honor the Beijing-time quota reset instead of waiting about eight hours too long (#19446 by @yuzu-octopus)
+    - Fixed Claude Fable and Mythos usage-limit rejections rotating to a sibling account that still has quota, instead of waiting out the capped account or falling back to another model (#19484 by @BadAd84)
+    - Invalid Antigravity CLI tool arguments now return the validation issues and the tool's expected schema to the model instead of ending the turn. (#19413 by @SenCha930511)
+    - Abandoned Antigravity CLI login directories without a credential are removed after 24 hours, so cancelled or crashed sign-ins do not accumulate. (#19420 by @SenCha930511)
+    - Fixed the managed Antigravity CLI download failing on slow connections and being reported as a sign-in timeout; it now aborts only after 60 seconds with no data and reports the bytes received (#19463)
+    - Fixed Antigravity CLI host tools whose schemas contain mixed-type unions (such as yield with a typed output schema) being published as empty objects, which left subagents unable to submit results (#19502)
+    @oh-my-pi/browser-relay
+    Fixed
+    - Fixed omp never learning which other extension's frame the extension emptied and hid in a tab omp drives: the extension now reports the frame's page and that page's own title, checked by loading the page from the tab itself (#19001 by @will-bogusz)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added GPT-6.2 Astra and Sol. openai/gpt-6.2-astra ($8/$40, $0.40 cached) and openai/gpt-6.2-sol ($2/$10, $0.10 cached) are now bundled with a 1.05M window, a higher price tier above 272K input, and Ultrafast at 3x through 2027-02-28. On Codex, gpt-6.2-astra and gpt-6.2-sol show API-equivalent costs, bill Fast at 2x and Ultrafast at 6x, offer a 922K window with extended context on, and use only Plus-or-higher accounts.
+    - Added Bifrost (bifrost), a self-hosted OpenAI-compatible AI gateway: its /models roster is discovered live per virtual key from BIFROST_BASE_URL (default http://localhost:8080/v1), chat models run over Chat Completions, known decision models become openai-decisions judges on the gateway's /decisions route, and /login bifrost stores the virtual key (BIFROST_API_KEY) (#19053 by @Xytronix)
+    - Added Factory Droid's Claude Fable 5.2, Gemini 4 Carbon (with its launch credit promotion, half the input rate until 2026-12-01) and Kimi K3.1 Pro, each listed once the account's feature flag enables it, and GPT Image 2.6 and GPT Image 2.6 Flare ahead of GPT Image 2.5 in the image role's Factory defaults (#19191 by @will-bogusz)
+    Fixed
+    - Fixed Factory Droid's Muse Spark 1.3 dropping image input and staying hidden behind its retired feature flag; it now accepts images and lists without the flag (#19191 by @will-bogusz)
+    - Fixed GitLab Duo's Claude models (duo-chat-opus-*, duo-chat-sonnet-*, duo-chat-haiku-*) not being treated as Claude when quoting earlier reasoning: compaction summaries and interrupted-turn notes now leave it out for them, and a reasoning_extraction refusal is retried without it, as for Claude elsewhere (#17610 by @will-bogusz)
+    - Fixed stale Command Code image inputs, reasoning controls, token prices, and deployment context limits (#12542, #19462 by @jasonharrison).
+    - Fixed retry-reset timezone resolution for custom providers pointing at the Zhipu Coding Plan endpoint, including trailing-slash base URLs (#19446 by @yuzu-octopus)
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - The JavaScript eval commit helper now throws a TypeError for option names it does not know (e.g. commit.draft({ cwd }), which used to draft the session's own checkout) and for a non-object options argument, naming the expected options; scripts that passed extra keys must drop them. Committing a draft of an unchanged repository now says so instead of suggesting take() (#19440)
+    Added
+    - Added the providers.webKeyless setting (default on): turn it off and web_search and URL reading use only services you configured, skipping keyless Parallel, Exa, Firecrawl, Keenable, and Perplexity, the Jina reader, and scraped engines even when your web chain lists them; omp q --model web/<engine> still runs one on request (#13694, #16336)
+    - Added live.endpoint and live.apiKey settings: live voice (/live, RPC live_start/live_connect, extension startLive) can run on any OpenAI Realtime WebRTC-compatible server instead of Codex, with no ChatGPT sign-in and in offline mode; live.voice accepts any voice name
+    - Computer el.setValue(75) now writes the number as "75" instead of refusing a non-string; NaN, Infinity, booleans and objects are still refused, as are a whole number past 2^53 and a number that prints with an exponent, which are passed as text in digits instead (#19405 by @will-bogusz)
+    - Added a report of native windows to browser results on macOS for visible managed browsers, spawned Chromium browsers and a loopback relay: a <select> menu, colour or date picker, or a print, save, sign-in, passkey or permission sheet or bubble a call raised over its tab is named with its computer.window() id while the browser's tab list shows that tab in front of its window, by the next call when it shows just after the call returned, and on failed calls too; connected CDP endpoints, remote relays and page-backed popup windows are excluded (#18925 by @will-bogusz)
+    - Browser select() accepts {label}, {value}, and zero-based {index} choices alongside strings, including mixed choices for multi-selects, on Chromium, Tern, and cmux tabs (#19518 by @will-bogusz)
+    Changed
+    - Keyless Parallel web searches send only the query; they no longer include your session id or model id (#13694)
+    - On macOS the computer tool's takeover notice now says what it did with your keyboard ("handed the keyboard back to Notes's window", "left as the user chose") instead of "focus returned", which it could not verify (#19208 by @will-bogusz)
+    - Browser tab.observe() and tab.ariaSnapshot() on Chromium tabs now wait, up to 3 seconds, for the requests and page updates (including child frames) the actions since your last look started, so a cell that clicks and then observes shows the result instead of the page before it; concurrent looks share the wait even across another action, clearing the request log does not discard pending work, and requests already open before the action do not delay the look (#19045 by @will-bogusz)
+    - When another agent's computer call holds the desktop, your agent's InputBusy says which one: its agent id and omp process id (#18987 by @will-bogusz)
+    - Subagents no longer open browser tabs in your Chrome (with browser.relay on) or over your Tern or cmux pane unless the open asks with app: "relay" or app: "tern"; they use browser.cdpUrl or omp's own Chromium (#18789 by @will-bogusz)
+    - Browser tasks start without reading xd://eval/browser: a short guide follows the first browser call as a hidden session message, outside cell output limits and shaping. Compaction or a rewind that drops or shortens it sends it again. Advisors keep reading the full guide first; real-session, borrowed-tab and page-integrity safety rules arrive before the first call (#18786 by @will-bogusz)
+    - Named-menu reads now include exposed nested commands with their full paths, avoiding a separate read for each submenu (#18222 by @will-bogusz)
+    - On macOS the first background computer win.move() of a session now says in its output that the app gets no hover from it and that a control shown only on hover is pressed with a takeover click, instead of returning as a plain success (#19509 by @will-bogusz)
+    - The eval commit helper now also runs Git hooks defined in config (hook.<name>.event, Git 2.54+), alongside .git/hooks/ ones, as git commit does. With such hooks configured, including in your global Git config, commits made through omp can now be slower or rejected where they used to pass (#19443)
+    Fixed
+    - Fixed Exa and Firecrawl web searches silently falling back to their keyless public endpoints when a configured credential failed to resolve (for example a failing !command); they now report the credential error
+    - Fixed eval cells being able to call yield (directly or through xd://yield) without finishing the delegated task; eval now rejects yield and points to the direct tool (#19470 by @alphastorm)
+    - Fixed service ready.log and wait patterns not matching ^ and $ at line boundaries after earlier output (#19471 by @alphastorm)
+    - Fixed the shell's stat, diff and find builtins ignoring TZ when printing file times; find -ls now prints times in the shell's time zone instead of UTC, and find -newermt reads dates like Nov 15, 2023 in the shell's time zone (#19482 by @alphastorm)
+    - With TTSR rules active, large write and edit calls no longer slow down as their arguments stream (#19494 by @H4vC)
+    - Fixed /commit and eval commit creating a single-parent commit during a merge; committing now refuses while a merge, cherry-pick, revert, rebase or git am is in progress or the index has unresolved conflicts (#19474 by @alphastorm)
+    - Fixed the apply_patch tool description calling it a shell command and forbidding absolute paths (#19325, #19468 by @alphastorm)
+    - Fixed the shell's rg builtin ignoring --glob patterns that contain a slash (#19476 by @alphastorm)
+    - Fixed eval commit only(...) failing when one of its paths or globs matched no changed file; unmatched ones are now reported (#19472 by @alphastorm)
+    - Fixed a Tern browser block answering every later browser call with "Tab is busy: another call on this tab is still running" after a call whose page evaluation never returned, such as one cut off by a redirect; such a call now ends at its time limit or when cancelled, and the tab takes the next call
+    - Fixed the browser tool reporting a JavaScript confirm or prompt as still open, and failing page calls on it, after the user clicked it away or another CDP client answered it (#19481 by @will-bogusz)
+    - Fixed computer setValue on a <select> in Chrome or an Electron app on macOS failing with an empty list of options; it now chooses the option the value names (#19224 by @will-bogusz)
+    - A relay tab is no longer closed when another extension's frame, such as a password manager's autofill menu that undoes the relay clearing it, keeps Chrome refusing omp: the call fails saying what holds the tab, the tab stays open as the user left it, and the next call reattaches to it (#19178 by @will-bogusz)
+    - Fixed the computer tool telling the model that only an X11 takeover can end with nothing sent because the user kept typing; a macOS takeover now waits for the user's pause too and reports UserIntervened the same way (#19296 by @will-bogusz)
+    - When the browser relay hides another extension's frame in a tab omp drives (a password manager's inline menu or save card), the call that ran into it, or a later one on that tab, now names the frame's page, the extension's id and the page's own title, and says the frame is hidden for the user too (#19001 by @will-bogusz)
+    - Anthropic web search now passes site:-scoped queries to Claude with the domain and path still in the text, and tells Claude to always search, so those lookups and queries it thought it could answer from memory no longer fail with "returned no sources" (#18125 by @will-bogusz)
+    - Anthropic web search on models with a refusal fallback (Opus 5 and 5.5, Sonnet 5.5, Fable 5) has Anthropic retry a query the safety classifier declines on another Claude model, and reports a refusal or a failed search (too_many_requests, …) by name instead of "returned no sources" (#18125 by @will-bogusz)
+    - Subagents without an output schema (including eval agent() calls without schema) no longer get a yield tool; their final message is the result.
+    - A yield without data no longer uses the subagent's last message as the result; it only finalizes incremental sections that were already submitted.
+    - A computer key press that opens a macOS popup button's or menu button's menu in the background now fails listing the items and naming the press or click that chooses one, instead of leaving the menu open with your keyboard (#19179 by @will-bogusz)
+    - Fixed Claude not seeing the reasoning of earlier Codex, Kimi, Grok and other non-Claude turns after a model switch, including turns kept through a compaction; it now gets that reasoning as text. When Claude refuses a turn with Refusal (reasoning_extraction) because of that carried reasoning, the turn is retried once without it, and the session stops sending it to Claude (#7241) (#17610 by @will-bogusz)
+    - After an Anthropic refusal, later turns no longer resend the refusal text with the tool calls it stopped: those calls now replay as "not executed" only, so one reasoning_extraction refusal stops making every following turn of the session likely to be refused too (#19419 by @flosrn)
+    - Fixed selective commits skipping updated submodule pointers; existing initialized gitlinks can now be reviewed and explicitly selected without committing changes inside the submodule (#19556 by @kim-dali)
+    - Fixed git reads such as /commit's status scan hanging when a background git process kept the output pipe open (#19478 by @alphastorm)
+    - Fixed the browser falling back to Chromium on the first launch of a new WebKit engine build on macOS: the WebKit host now gets 60 seconds instead of 10 to answer its greeting while macOS scans the engine's binaries and libraries (#19423 by @shgew)
+    - Fixed --continue opening a new empty session when the terminal's last session was started in another directory and closed before its first message; it now resumes the current directory's newest session (#19495).
+    - Fixed a rejecting pre-commit hook's stdout (e.g. the pre-commit framework's per-hook report) missing from the error raised by the eval commit namespace and omp commit (#19449)
+    - /commit now shows the subject a commit-msg hook wrote onto the commit, instead of the subject from before the hook ran (#19448 by @eggpeat)
+    - ^model references followed by sentence punctuation now register their model agent instead of remaining literal (#19445 by @yuzu-octopus)
+    - Selective commits in sparse checkouts no longer report paths outside the cone as unstaged deletions to commit hooks (#19453 by @yuzu-octopus)
+    - Custom providers pointing at the Zhipu Coding Plan endpoint now retry at the Beijing-time quota reset instead of waiting eight hours too long (#19446 by @yuzu-octopus)
+    - /copy now copies what a mid-turn out:// reply showed, instead of the reply tool's own "Shown to the user." result, and lists the reply's code blocks in the turn's blocks (#19551 by @bannert1337)
+    - Fixed tools enabled during goal mode becoming unavailable after leaving it (#19514 by @yuzu-octopus)
+    - Fixed the status-line usage segment showing another account's quota for multi-credential API-key providers such as opencode-go; it now follows the credential row the session router actually serves from (#19456) (#19492 by @thekitaev).
+    - Fixed Objective-C message results and arm64 retain-register data flow in Ghidra analysis of Mach-O binaries, including previously analyzed cache-extracted frameworks (#19558 by @shgew).
+    - With a modal dialog open, browser fill, type and press aimed at a field behind it now fail naming what covers it, as click does, instead of typing into the dialog's button and reporting success (on Chromium tabs and Tern tabs without native DOM reads); press also refuses a disabled element (on Chromium tabs and Tern tabs without native DOM reads), and Chromium drag refuses a covered start or end (#19524 by @will-bogusz)
+    - Fixed RPC login refusing providers with an at-your-own-risk warning (antigravity-cli, google-antigravity): the warning now reaches the host as an extension_ui_request input, and login continues on "yes" and cancels on anything else (#19523)
+    - On Linux, file watching for language servers no longer puts an inotify watch on every directory under node_modules and .git/objects, which could use up the system's inotify watch limit and keep other programs such as systemd from adding watches (#19459)
+    - /restart now re-execs through the launcher omp was started by, so an open session moves onto an upgraded binary instead of re-running a retained old install (#19529 by @yuzu-octopus)
+    - RPC hosts now always receive a terminal agent_end after an over-quota 429: usage-limit bookkeeping is bounded so a stalled usage report can no longer hold the event (#19411, #19417 by @yuzu-octopus)
+    - Rex and other OSC 7501 terminals no longer play a success sound mid-run when a stale agent end arrives after another run has opened (#17307, #19418 by @yuzu-octopus)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed embedding requests failing with HTTP 400 (Invalid JSON) when clipping an oversized input cut an emoji or other astral-plane character in half (#19455)
+    @oh-my-pi/pi-natives
+    Added
+    - DesktopFocusReturn.keyboard says what a macOS takeover did with the user's keyboard (handedBack, leftAsChosen, kept, frontOnly, notSent) (#19208 by @will-bogusz)
+    - Added desktopWindowRoster() to @oh-my-pi/pi-natives/desktop: every on-screen window on macOS, popup menus, pickers and system prompts included, with owner, layer and whether listWindows reports it, in one pass and without a desktop session (#18925 by @will-bogusz)
+    - Added readTreeKeepingSparse() to seed a private commit index from HEAD while keeping the shared checkout's sparse exclusions; diffText({ cached: true }), commitCreate() and writeTree() now preserve out-of-cone files and collapsed sparse-directory entries (#19453 by @yuzu-octopus)
+    Changed
+    - macOS scroll now goes the same way as on Windows and Linux: a positive dy scrolls down and a positive dx right, where macOS scrolled up and left (#19165 by @will-bogusz)
+    - Computer InputBusy names the agent holding input/focus control and its omp process id (agent "Main.Scout" (omp pid 4242) owns input/focus control) when the holder's session set agentId, on macOS and Linux, and on Windows when that agent runs in the same omp; cross-process names retain the last 64 characters so long dotted ids keep their distinct suffixes (#18987 by @will-bogusz)
+    - Wayland computer.type() now types characters your keyboard layout has no key for, such as ä, 日本 or emoji, on compositors that offer libei text (KDE Plasma 6.8 and later); elsewhere they are still refused before anything is typed (#18013 by @will-bogusz)
+    Fixed
+    - Fixed macOS press() on a list row, cell or text that has no press action sending agents to a window click at the element's bounds(): the refusal now names the element's own click() and lists only actions perform() takes (#19063 by @will-bogusz)
+    - Fixed a macOS coordinate click made before any screenshot telling agents only to take one: the refusal now also names the element's own click(), which needs none (#19063 by @will-bogusz)
+    - Fixed every Windows takeover saying "focus was not confirmed afterwards": it now says where focus went, such as "focus returned to Windows Explorer", as on macOS (#18298) (#19062 by @will-bogusz)
+    - Fixed Windows computer keys and shortcuts typing the wrong characters when the receiving control, including an embedded editor on another UI thread, uses a different keyboard layout from omp (#19025 by @will-bogusz)
+    - Fixed the macOS computer tool failing a click or press on an Activity Monitor process row with StaleRef whenever the table refreshed since ax() read it: the ref now follows its row when exactly one row still reads as it did in every cell, a click is refused when the app has sorted another row into its place, and the error otherwise shows the row then and now (#19048 by @will-bogusz)
+    - Row-ref clicks on macOS check every takeover press and deeply nested row descendants; an off-screen activation primer does not count as a target press when reporting a moved row (#19048 by @will-bogusz)
+    - Fixed Linux el.type putting the agent's text into the field the user was typing in, and reporting success, while it took over the keyboard: GTK fields and Qt multi-line text edits now take printable ASCII text through accessibility, with no keys, focus change or takeover; an unfocused GTK single-line field requires an empty or fully selected value so its selection-on-focus setting cannot cause text loss. On Wayland those fields now take text instead of refusing. Other fields keep the key path, including Qt single-line fields where an accessibility write skips validation (#19035 by @will-bogusz)
+    - Fixed Linux press() on a GTK 3 or Qt combo box opening its list as a popup that took the keyboard, so a user typing elsewhere lost their keys to it: that press is now refused with nothing sent, even when takeover is allowed, naming the options. setValue("Two") and press({ menu: ["Two"] }) choose a GTK 3 or Chromium combo box's option with no popup and check the choice took; Qt combo boxes have no such route and are refused (#19034 by @will-bogusz)
+    - macOS ax() now shows a toggle in a SwiftUI settings form with the label beside it, and find({ title }) matches that label, instead of leaving the control unnamed (#19061 by @will-bogusz)
+    - Fixed macOS computer input leaving your window inactive after putting your app back in front, both after a takeover and after background input whose target brought itself forward: the title bar stayed inactive and web pages saw a blur until you clicked, while a takeover reported focus returned (#19208 by @will-bogusz)
+    - Fixed X11 takeover and desktop typing arriving in the wrong case or layout while Caps Lock, a StickyKeys modifier or a second keyboard layout was active (#19080 by @will-bogusz)
+    - Fixed X11 takeover keys for a window going to another application that held the keyboard, such as its open menu or a screen locker's password prompt, while the call reported them typed into the window; they now wait up to half a second for such a grab to end and otherwise fail with nothing sent. A menu of the window's own application, or the window itself grabbing the keyboard (a VM viewer, a game), still gets the keys unless another application's popup is above it (#19066 by @will-bogusz)
+    - Fixed macOS axSetValue refusing every option of a Chromium <select> (Chrome, Electron) with an empty option list: options are matched by the text Chromium reports as their value, the menu is opened when the closed popup publishes only its chosen option, and the menu is closed afterwards with Escape only when, after AXCancel, it neither reports closing nor leaves the window list within 300 ms, as a Chromium menu that ignores the cancel does, instead of being left open with your keystrokes when no option matched (#19224 by @will-bogusz)
+    - Fixed macOS posting Escape to an application whose background menu had already closed, or whose menu windows could not be read, when closing a menu a click opened: Escape now goes only to a menu window listed right before it, so it cannot cancel a dialog or form in the app instead (#19224 by @will-bogusz)
+    - Fixed setValue on macOS sliders, steppers and other number-valued controls failing with AXError(-25201): the value is now written as a number and read back, and a value the control clamped or rounded is reported with what it now reads (#19405 by @will-bogusz)
+    - setValue on a macOS control whose value is not settable but that steps (a SwiftUI Slider) now refuses naming the AXIncrement/AXDecrement actions it offers and the number it reads, so the next call can step it (#19405 by @will-bogusz)
+    - Fixed macOS takeover putting a typing user's keys into the agent's target: a takeover, the background fallback's rerun included, now waits until you have pressed no key or button anywhere for 5 s and hold no modifier or mouse button, failing UserIntervened with nothing sent if you are still at it near the run's timeout (#19296 by @will-bogusz)
+    - Fixed macOS press() and background el.click() reporting success on a control a person could not click, such as a hover toolbar's button after the pointer left, a hidden control, or one of a window that shows a sheet; they now fail before anything is sent and name what the window shows there (#19258 by @will-bogusz)
+    - Fixed a background computer key press (Space or an up or down arrow) on a macOS popup button or menu button leaving its menu open, which took your typing once omp stopped sending your keys back to your app; the menu now closes before the call returns, and holding those keys on such a control is refused before anything is sent (#19179 by @will-bogusz)
+    - Fixed Linux ax(), find(), el.children() and focus reads freezing a Qt app with a very long table (up to 45 s, over 1 GB) or knocking it off the accessibility bus, and showing nothing of a GTK 3 list over 65,536 cells; they read only the children they can use, and ax() says how many it left out (#19036 by @will-bogusz)
+    - Fixed macOS background input leaving its target in front after you clicked in your own app while that app was busy or hung, or just before a session's first action; a drag and drop from your app onto the target, or a click on it from a remote-control tool, now counts as choosing it (#16553 by @will-bogusz)
+    - Fixed Wayland screenshots, and the clicks, drags and scrolls that need them, failing in released Linux builds; without PipeWire installed, capabilities() reports capture: false and the capture error says why (#18353 by @will-bogusz)
+    - Fixed a Windows crash in the native IPC transport that left every daemon-served tool hanging after another session closed its pipe mid-operation (#16045, #19508 by @ve3xone)
+    - Tree listings now include gitlink modes so selective commits can distinguish submodule pointers from ordinary files (#19556 by @kim-dali)
+    - Fixed macOS background actions stopping with UserIntervened while you typed in your own app and the target briefly took the keyboard, such as when a pop-up button's menu opened (#19515 by @will-bogusz)
+    - Fixed commitCreate() dropping a rejecting pre-commit/commit-msg hook's stdout from the error; hook output now arrives interleaved in stderr and the message, as under git commit (#19449)
+    - Block edits (PUT N*, CUT N*) anchored on the first #[...] attribute or /// doc comment of a Rust item now cover the item, instead of failing as a single-line block (#19464 by @acfrazier)
+    - Fixed Linux find(), ax() and element reads taking seconds in large apps: each element's independent accessibility questions now go out together, so find() takes about half as long in Kate, Dolphin and LibreOffice Writer (#19521 by @will-bogusz)
+    Removed
+    - Removed the wayland-pipewire Cargo feature and OMP_NATIVE_FEATURES, which only existed to pass it (#18353 by @will-bogusz)
+    @oh-my-pi/omp-stats
+    Fixed
+    - The stats Gain tab counts the context snapcompact compactions free, beside imaged tool results, so sessions that compact with snapcompact no longer show zero savings; the first sync after upgrading re-reads transcripts written since 2026-08-20 once to fill in that history (#19120 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Added
+    - Agent names in Task tool rows and agent hub rows take a colour of their own in the terminal UI: Main takes the theme accent, and subagents take one of six colours in the order they arrive, picked from the theme's own palette so each stays readable on its background; themes can set them with the optional subagent1–subagent6 tokens (#18987 by @will-bogusz)
+    - Added a wrap overflow for TableColumn and renderTableRowLines(), which word-wraps such cells over extra lines and keeps their hard line breaks; Table renders them the same way (#19506)
+    Changed
+    - StatusAccountIdentity now carries an optional credentialId so hosts can attribute the usage segment to a credential-scoped (API-key) account, and cached usage invalidates when it changes (#19456) (#19492 by @thekitaev).
+    Fixed
+    - Ask form pictures in WebP, JPEG or GIF now show in Kitty-protocol terminals (Kitty, Ghostty, herdr) instead of leaving a blank gap (#19512 by @jaredlyon)
+    - Model mentions followed by punctuation collapse into editable chips without swallowing the punctuation (#19445 by @yuzu-octopus)
+    - /copy copies the prose a mid-turn out:// reply showed, including a reply a command sent in its result, instead of the reply tool's own "Shown to the user." result (#19551 by @bannert1337)
+    - Fixed tables in Ask forms cutting long cells off with an ellipsis and dropping their <br> lines; cells now wrap within their column (#19506)
+    What's Changed
+    - perf(ai): stop rescanning the open line in FencedThinkingScanner by @H4vC in https://github.com/can1357/oh-my-pi/pull/19493
+    - perf(coding-agent): check TTSR tool arguments for changes per value, not per byte by @H4vC in https://github.com/can1357/oh-my-pi/pull/19494
+    - fix(commit): let draft.only skip globs that match no changed path by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19472
+    - fix(ai): send replayed Anthropic compaction blocks without a thread by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19473
+    - fix(commit): refuse to commit a draft while a merge or rebase is in progress by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19474
+    - fix(edit): describe apply_patch as tool input, not a shell command by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19468
+    - fix(builtins): match rg anchored globs relative to the working directory by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19476
+    - fix(eval): reject yield through the eval tool bridge by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19470
+    - fix(launch): match service ready patterns per line by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19471
+    - fix(builtins): honor the shell's TZ in stat, diff and find by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19482
+    - feat(catalog): add the Factory Droid models droid 1.7.1 serves by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19191
+    - fix(natives): map Windows keys on the receiving keyboard layout by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19025
+    - fix(natives): put Linux el.type text into GTK and Qt text fields through accessibility by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19035
+    - fix(natives): follow rebuilt macOS table rows without selecting a neighbour by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19048
+    - fix(natives): name a macOS control by the label its AXTitleUIElement links to by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19061
+    - fix(natives): report where focus went after a Windows takeover by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19062
+    - fix(natives): point a refused macOS press at the element's own click by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19063
+    - fix(natives): refuse X11 XTest keys while another client grabs the keyboard by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19066
+    - fix(natives): type X11 XTest text through a neutral keyboard state by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19080
+    - fix(stats): count snapcompact compactions on the Gain tab by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19120
+    - fix(natives): scroll down for a positive dy on macOS, as on Windows and Linux by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19165
+    - fix(browser-relay): keep a relay tab when another extension's frame keeps omp out by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19178
+    - test(ai): keep captured Factory Droid parity cases when one case fails by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19194
+    - fix(natives): give the user's key window back after macOS takeover and focus-guard hand-backs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19208
+    - fix(natives): choose a Chromium select's option on macOS and close the menu it opens by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19224
+    - fix(browser): forget a dialog the user or another client answered by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19481
+    - fix(natives): choose Linux combo box options without opening their keyboard-grabbing list by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19034
+    - fix(natives): stop Linux accessibility reads from freezing apps that show long tables by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19036
+    - feat(browser): let observe() settle the effects of the preceding action by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19045
+    - fix(natives): close the menu a macOS background key press opens by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19179
+    - fix(natives): refuse macOS element actions on a control a person could not click by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19258
+    - fix(natives): keep macOS takeover from taking a typing user's keys by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19296
+    - fix(natives): set macOS sliders and other number controls from setValue by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19405
+    - feat(tui,natives,coding-agent): give each agent a colour and name the input-lock holder in InputBusy by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18987
+    - fix(browser-relay): say what the relay hid in a driven tab by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19001
+    - fix(natives): place macOS clicks for the focus guard where WindowServer routed them by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/16553
+    - feat(natives): type text the wayland layout lacks through libei text by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18013
+    - feat(coding-agent): find nested menu commands in one read by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18222
+    - fix(natives): load libpipewire at runtime so released addons capture on Wayland by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18353
+    - fix(ai): say whether an Anthropic request body finished uploading when its connection drops by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18624
+    - feat(agent,coding-agent): send a short browser guide with the first browser call by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18786
+    - feat(coding-agent): keep subagents' browser tabs out of the user's Chrome and Tern pane unless asked by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18789
+    - feat(coding-agent): name the native windows a browser call raised on macOS by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18925
+    - fix(ai,coding-agent): carry other models' reasoning to Claude and retry its refusal without it by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17610
+    - fix(ai,coding-agent): keep Anthropic web search queries intact, always search, and report refusals by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/18125
+    - fix(web-search): require opt-in before keyless third-party search by @H4vC in https://github.com/can1357/oh-my-pi/pull/19562
+    - feat(catalog): add Bifrost gateway provider by @Xytronix in https://github.com/can1357/oh-my-pi/pull/19053
+    - fix(vcs): reported commit hook stdout in the rejection error by @roboomp in https://github.com/can1357/oh-my-pi/pull/19452
+    - fix(coding-agent): skipped inotify watches on excluded lsp watch dirs by @roboomp in https://github.com/can1357/oh-my-pi/pull/19461
+    - fix(pi-ast): resolve Rust attribute and doc comment block anchors through the item by @acfrazier in https://github.com/can1357/oh-my-pi/pull/19464
+    - fix(ai): bounded agy downloads by stall instead of total deadline by @roboomp in https://github.com/can1357/oh-my-pi/pull/19469
+    - fix(vcs): stop git reads waiting on pipes a background child holds by @alphastorm in https://github.com/can1357/oh-my-pi/pull/19478
+    - fix(ai): rotate Claude Mythos usage limits to a sibling with quota by @BadAd84 in https://github.com/can1357/oh-my-pi/pull/19484
+    - fix(ai,tui,coding-agent): attribute the usage segment to the session's serving credential by @thekitaev in https://github.com/can1357/oh-my-pi/pull/19492
+    - fix(session): ignored other-cwd fresh breadcrumbs on --continue by @roboomp in https://github.com/can1357/oh-my-pi/pull/19498
+    - fix(ai): published antigravity-cli host tools with mcp schema normalizer by @roboomp in https://github.com/can1357/oh-my-pi/pull/19503
+    - fix(tui): wrapped ask form table cells instead of truncating them by @roboomp in https://github.com/can1357/oh-my-pi/pull/19507
+    - fix(natives): bump mio to 1.2.4 to fix Windows named-pipe panic by @ve3xone in https://github.com/can1357/oh-my-pi/pull/19508
+    - fix(coding-agent): say once that a macOS background move gives no hover by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19509
+    - fix(tui): convert ask form pictures to PNG for Kitty by @jaredlyon in https://github.com/can1357/oh-my-pi/pull/19512
+    - fix(coding-agent): preserve live tool roster on goal-mode exit by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19514
+    - fix(natives): count keys moved back to a macOS user's app as theirs by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19515
+    - feat(browser): accept explicit dropdown option selectors by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19518
+    - fix(natives): read each AT-SPI element in two concurrent rounds by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19521
+    - fix(coding-agent): refuse browser keys aimed at a field a modal dialog covers by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/19524
+    - fix(rpc): routed login-warning risk prompt to rpc hosts by @roboomp in https://github.com/can1357/oh-my-pi/pull/19527
+    - fix(coding-agent): restart through the upgraded launcher by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19529
+    - fix(tui): copy out:// reply prose from /copy by @bannert1337 in https://github.com/can1357/oh-my-pi/pull/19551
+    - fix(ghidra): repair Objective-C analysis of Mach-O programs by @shgew in https://github.com/can1357/oh-my-pi/pull/19558
+    - fix(antigravity-cli): return actionable tool schema errors by @SenCha930511 in https://github.com/can1357/oh-my-pi/pull/19413
+    - fix(coding-agent): bound usage-limit bookkeeping so agent_end still arrives by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19417
+    - fix(coding-agent): suppress stale agent_end status reports mid-run by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19418
+    - fix(agent): stop replaying provider refusal text in tool placeholders by @flosrn in https://github.com/can1357/oh-my-pi/pull/19419
+    - fix(antigravity-cli): clean abandoned login directories by @SenCha930511 in https://github.com/can1357/oh-my-pi/pull/19420
+    - fix(browser): waited for a WebKit host still starting up on macOS by @shgew in https://github.com/can1357/oh-my-pi/pull/19423
+    - fix(coding-agent): rejected unknown options in the js commit prelude by @roboomp in https://github.com/can1357/oh-my-pi/pull/19442
+    - fix(tui,coding-agent): resolve model mentions with trailing punctuation by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19445
+    - fix(catalog,coding-agent): honor Zhipu reset timezone for custom providers by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19446
+    - fix(vcs): ran config-defined git hooks in the commit helper by @roboomp in https://github.com/can1357/oh-my-pi/pull/19447
+    - fix(commit): return the hook-rewritten commit subject by @eggpeat in https://github.com/can1357/oh-my-pi/pull/19448
+    - fix(vcs): keep sparse-checkout paths out of selective-commit hook diffs by @yuzu-octopus in https://github.com/can1357/oh-my-pi/pull/19453
+    - fix(mnemopi): kept clipToWindow cut points off surrogate pairs by @roboomp in https://github.com/can1357/oh-my-pi/pull/19458
+    - fix(catalog): update Command Code models and prices by @jasonharrison in https://github.com/can1357/oh-my-pi/pull/19462
+    - fix(commit): support explicitly selected gitlink SHA updates by @kim-dali in https://github.com/can1357/oh-my-pi/pull/19556
+    New Contributors
+    - @BadAd84 made their first contribution in https://github.com/can1357/oh-my-pi/pull/19484
+    - @thekitaev made their first contribution in https://github.com/can1357/oh-my-pi/pull/19492
+    - @ve3xone made their first contribution in https://github.com/can1357/oh-my-pi/pull/19508
+    - @SenCha930511 made their first contribution in https://github.com/can1357/oh-my-pi/pull/19413
+    - @kim-dali made their first contribution in https://github.com/can1357/oh-my-pi/pull/19556
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.22.0...v18.22.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.22.1
+ReleaseTime: 2026-11-17T21:05:23.0000000Z

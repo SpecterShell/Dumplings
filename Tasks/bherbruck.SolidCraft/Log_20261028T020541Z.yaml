@@ -1,0 +1,27 @@
+Version: 0.25.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.25.1/solidcraft-0.25.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.25.1/solidcraft-0.25.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.25.1/solidcraft-0.25.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A fix release. Please update if you use assemblies with Extrude to Object.
+    SolidCraft is open-source parametric 3D CAD in Rust: sketch, constrain, extrude, and change a parameter to watch the timeline rebuild. Website · documentation · try it in the browser · Discord · issues · roadmap.
+    Fixed
+    - Bodies in different components no longer merge. Since 0.24.1, an Extrude to Object set to Join also joined the body it ran up to, even when that body belonged to another component, so separate parts (a PCB, a connector, an enclosure) could fuse into one body under one name. A Join now only reaches bodies in its own component. Designs saved in 0.24.1 or 0.25.0 open correctly again; nothing broken was stored in the file (#7975).
+    New
+    - New designs save as .sc. .solidcraft files keep opening everywhere, and saving one keeps its name; only Save As offers .sc (#7325).
+    Compatibility
+    0.25.1 writes design file format 41, the same as 0.25.0.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.25.1
+ReleaseTime: 2026-10-28T01:45:03.0000000Z

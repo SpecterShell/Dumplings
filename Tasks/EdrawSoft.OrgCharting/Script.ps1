@@ -1,21 +1,22 @@
-$Task.CurrentState = Invoke-WondershareXmlDownloadApi -ProductId 5373
+$Object1 = Invoke-RestMethod -Uri 'http://platform.wondershare.com/rest/v2/downloader/runtime/?product_id=5373&wae='
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Task.CurrentState.Version, '(\d+\.\d+)').Groups[1].Value
+$this.CurrentState.Version = $Object1.wsrp.downloader.runtime.version.'#cdata-section'.Split('.')[0..1] -join '.'
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = 'https://download.edrawsoft.com/cbs_down/orgchartcreator_full5373.exe'
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $Object1.wsrp.downloader.runtime.download_url.'#cdata-section' | ConvertTo-Https
 }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

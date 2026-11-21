@@ -1,0 +1,28 @@
+Version: 0.2.38
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.38/Strata.Manager_0.2.38_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Download DFlash2 for Qwen3.8 by hand, with a confirmation and progress: upstream never downloads the DFlash2 drafter on a start, and until it is downloaded Auto actually runs MTP. Drafting (speculative decoding) on Qwen3.8 now offers "Download DFlash2". The confirmation names the source incoai/Qwen3.8-Flash-Next-DFlash2 (Apache-2.0): about 1.2 GB to download, about 0.52 GB on disk after packing and about 0.72–0.89 GB more VRAM. Progress shows while it downloads, it can be cancelled, and a failure shows why. The wrong "about 1.2 GB on first start" wording is fixed. Unsloth quantizations of Qwen3.8-Flash-Next (such as qwen3.8-flash-next-unsloth-ud-q4_k_xl) can choose DFlash2 too.
+    - The Models page shows the drafter in use: managed services get "Drafter in use" under Details, read from the verified engine command line (DFlash2 / MTP / Off); when it differs from the configuration it says so, e.g. "MTP (configured as Auto)".
+    - Engine updates are stopped on CPUs without AVX2, with "Update code only": the official prebuilt engines need AVX2. On such a CPU the update dialog stops the engine update and offers "Update code only", which replaces the source of the same release and keeps the current engine.
+    - Windows PCs with only Intel graphics are told "No matching official engine": the official Windows engines are NVIDIA (CUDA) and AMD (HIP) only. A CUDA 13 package was picked by default before; now the dialog says no engine matches, and a package can still be chosen by hand.
+    - A renamed local model copy no longer runs the installed model of its size (upstream #5052): upstream setup.py finds an existing pack by size alone, so a renamed GGUF (a fine-tune, say) ran the official model of the same quantization. A renamed copy now gets its own data folder <data>/local/<name>-<quant> and config strata-local-<name>-<quant>.json, and the official config of that size is restored.
+    - Agents and several users get one slot when more would spill experts to the SSD: when several slots would push the expert cache out of RAM and VRAM, one request at a time is recommended (reason: spills to the SSD); a saved multi-slot configuration gets a warning and a one-click fix.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Qwen3.8 可手动「下载 DFlash2」，带确认和进度：上游启动时从不下载 DFlash2 预测器，未下载时“自动”实际用 MTP。现在「预测（投机解码）」在 Qwen3.8 上显示「下载 DFlash2」：确认框写明来源 incoai/Qwen3.8-Flash-Next-DFlash2（Apache-2.0）、下载约 1.2 GB、打包后约占 0.52 GB 磁盘、运行时约多用 0.72–0.89 GB 显存；下载时显示进度，可取消，失败会显示原因。原先「首次下载约 1.2 GB」的说法不对，已改正。Unsloth 量化的 Qwen3.8-Flash-Next（如 qwen3.8-flash-next-unsloth-ud-q4_k_xl）也可选 DFlash2。
+    - 模型页显示实际在用的预测器：受管服务的「详情」里新增「实际预测」，读取已核验的引擎命令行（DFlash2 / MTP / 关）；与配置不同时注明配置值，例如「MTP（配置为自动）」。
+    - CPU 不支持 AVX2 时拦下引擎更新，可「只更新代码」：官方预编译引擎需要 AVX2；在不支持的 CPU 上更新弹窗会拦下引擎更新，并提供「只更新代码」：只替换同一版本的源码，保留当前引擎。
+    - 只有 Intel 显卡的 Windows 明确提示「没有匹配的官方引擎」：官方 Windows 引擎只有 NVIDIA（CUDA）和 AMD（HIP）版本；以前会默认选 CUDA 13 包，现在说明没有匹配的引擎，需要时可手动选择更新包。
+    - 改名的本地模型副本不再运行同尺寸的已装模型（上游 #5052）：上游 setup.py 只按大小找已有的 pack，改了名的 GGUF（如微调版）会运行同量化的官方模型。现在改名副本放到自己的数据目录 <数据目录>/local/<名称>-<量化>，配置名为 strata-local-<名称>-<量化>.json，并恢复该尺寸的官方配置。
+    - 专家会溢出到 SSD 时，智能体和多人场景推荐单路并发：多路并发会让专家缓存放不进内存和显存时，推荐一次处理一个请求（原因：会溢出到 SSD）；已保存的多路配置会提示，并可一键修正。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.38
+ReleaseTime: 2026-11-04T08:06:58.0000000Z

@@ -1,0 +1,33 @@
+Version: 0.2.8
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/NGLSL/Kite/releases/download/v0.2.8/kite-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Kite v0.2.8
+    版本重点
+    修复设置页「重新扫描」看起来没反应的问题：点击后立刻有进度提示，扫描结束后无论索引是否变化都会给出完成反馈。
+    修复
+    - 设置页与托盘触发的重新扫描，在点击后立即提示「正在重新扫描应用索引…」，扫描完成后提示「扫描完成，共 N 条」。
+    - 索引内容未变化时也会通知 UI；此前只有快照真正被替换才会刷新，应用无增删时用户看不到任何结果。
+    - 快照内容比较补上 Windows 设置标准搜索词（search_context），避免系统词汇变化被误判为「无变化」而不发布。
+    升级影响
+    设置、历史记录、固定项、别名和安装目录无需迁移。从上一版覆盖安装即可。
+    已知限制
+    安装包仍无 Authenticode 数字签名。提示条仅在设置页可见；从托盘触发时若正停留在搜索页，完成提示会写入设置页 toast，切到设置页或再次打开时可见。跨机全流程仍依赖用户环境复测。
+    构建与验证
+    - 发布 tag：v0.2.8
+    - tag 提交：a07414ce4d1894e3dfabe0fa86f66653d8d057e9
+    - 上一个发布：v0.2.7
+    - 提交数量：1
+    - 构建环境：GitHub Actions windows-latest
+    - 验证步骤：cargo test、cargo build --release、NSIS 安装包构建
+    - 构建记录：Release #7
+    本次提交范围
+    - fix(ui): surface rescan progress and completion for v0.2.8 (a07414c)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/NGLSL/Kite/releases/tag/v0.2.8
+ReleaseTime: 2026-09-15T06:31:58.0000000Z

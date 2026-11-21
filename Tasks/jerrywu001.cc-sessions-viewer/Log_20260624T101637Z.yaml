@@ -1,0 +1,33 @@
+Version: 0.1.13
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.13/cc-sessions-viewer_0.1.13_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jerrywu001/cc-sessions-viewer/releases/download/v0.1.13/cc-sessions-viewer_0.1.13_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/releases/tag/v0.1.13
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Features
+    - Tab keyboard shortcuts — added Cmd/Ctrl+T (new tab), Cmd/Ctrl+W (close tab), Cmd/Ctrl+R (rename tab) shortcuts with matching File menu entries and Settings page display
+    - Fallback pricing for unknown models — third-party models without an entry in the models.dev price table now use the average of Claude Sonnet 4.6 / Opus 4.7 / Opus 4.8 prices instead of showing $0.00
+    Bug Fixes
+    - Fix zero token stats for third-party model sessions — sessions using non-Anthropic models (e.g. mimo-v2.5-pro) showed 0 in | 0 out | 0 cached | 0 written because streaming intermediate JSONL entries (with 0 usage) shared the same message.id as the final entry; the aggregator's cross-file dedup kept the first (empty) record and skipped the real one. Now coalesces duplicate message.id entries within a turn, keeping the one with actual usage data.
+    - Infer cache creation for third-party models — models that report cache_read_input_tokens but always return cache_creation_input_tokens: 0 now get cache creation inferred from the growth of cache_read between consecutive API calls, splitting each call's reported cache_read into actual read (previously cached) + inferred creation (delta), with per-call totals preserved
+    - Fix terminal Cmd/Ctrl+W/T/R swallowed by xterm — terminal key handler now lets Cmd+W, Cmd+T, Cmd+R (macOS) / Ctrl+W, Ctrl+T, Ctrl+R (Linux/Windows) bubble up to the app-level handler instead of being consumed by the terminal
+    - Stop rendering system-injected records as "Me" — compaction summaries, skill injections, task notifications, <local-command-stdout> / command output, system prompts, and cross-session "teammate" messages are type:"user" JSONL records but were never typed by the human, yet showed up as user ("Me") bubbles. They now render as labeled, collapsible cards with the agent prefix — notification / teammate payloads as clean key/value rows, command output as monospace, compaction & meta as markdown — and are excluded from the user-prompt count and the session-title fallback
+    - Render [Request interrupted by user] as a system event — the interrupt marker (and its "for tool use" variant) now renders as a centered system-event line, the same as the rename event, instead of a "Me" bubble
+    - HTML / Markdown export parity — exports now reflect the above: system-injected records export as labeled collapsible cards rather than "Me" bubbles, and interrupt / rename markers export as centered system lines
+    - Fix wrapped buttons in the delete confirmation dialog — "Delete permanently" / "Move to Trash" labels no longer break onto two lines; buttons keep their natural width and the dialog is slightly wider to fit all three on one row
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jerrywu001/cc-sessions-viewer/blob/HEAD/CHANGELOG.md#v0113
+ReleaseTime: 2026-06-24T10:12:02.0000000Z

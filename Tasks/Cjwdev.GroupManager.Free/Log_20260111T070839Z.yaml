@@ -1,0 +1,34 @@
+Version: 3.0.1
+Installer:
+- Architecture: x86
+  InstallerUrl: https://cjwdev.com/Software/GroupMan/GroupManagerFreeInstaller.zip
+  InstallerSha256: 936097B0DEA0AE3DD9AA6FE5D69413F58D874EADC5AB6DED791BBBFF7FBDFD2F
+  ProductCode: '{21723DB9-28D4-48B1-A34C-176996E24D64}'
+  AppsAndFeaturesEntries:
+  - UpgradeCode: '{C694085E-4C4F-4CE3-A017-06E8EE61FB45}'
+    InstallerType: msi
+- Architecture: x64
+  InstallerUrl: https://cjwdev.com/Software/GroupMan/GroupManagerFreeInstaller.zip
+  InstallerSha256: 936097B0DEA0AE3DD9AA6FE5D69413F58D874EADC5AB6DED791BBBFF7FBDFD2F
+  ProductCode: '{21723DB9-28D4-48B1-A34C-176996E24D64}'
+  AppsAndFeaturesEntries:
+  - UpgradeCode: '{C694085E-4C4F-4CE3-A017-06E8EE61FB45}'
+    InstallerType: msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New GUI with dark theme
+    Managed groups are now cached between sessions so you don't have to wait for them to be discovered again each time the program is launched
+    Commonly used groups can now be "pinned" to the top of the list of managed groups
+    When adding new members to groups you will now see a summary of the new member (their full name etc) before they get added to the group
+    Added the option to limit searches for new members to only find results from a specific OU instead of the entire domain - this can only be set via Group Policy
+    Added support for SSL over LDAP (aka LDAPS), also only configurable via Group Policy
+    Added the option to view other types of group members that are not users, contacts, groups or computers (off by default but can be enabled in the settings menu)
+    Any group members from trusted domains that could not be resolved to a display name will now show up in the members list, although just as a SID (assuming you have the option to view "other" member types enabled)
+    Removed the Display Name column so now there is just one Name column but this can be configured via Group Policy to show the display name instead of common name
+    Changed default behavior to not expand the full list of nested groups that the user is a member of when searching for managed groups, instead it will only get the user's direct group membership. The old behavior can be enabled again in the settings window or via Group Policy
+    Fixed a bug that caused the error "objectSid item has already been added to dictionary" when searching for managed groups
+    Settings moved from the registry to JSON files stored here: %APPDATA%\Cjwdev\GroupManager
+ETag:
+- '"1720ab1-135a1b-647f670881cb2-br"'

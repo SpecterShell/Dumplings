@@ -1,0 +1,43 @@
+Version: 0.13.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dataelement/dsh-desktop/releases/download/v0.13.2/dsh-desktop-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    中文 | English
+    本版本重点提升 Safe Mode 和启动稳定性，并改进故障报告、安装器及 Windows 环境下的兼容性。
+    新增功能
+    - 故障报告：将待处理报告汇总为每次启动最多一个确认弹窗；用户同意后最多发送 5 份报告，避免重复打扰。
+    体验优化
+    - 故障诊断：相同诊断错误在 10 分钟内去重，减少重复捕获与报告。
+    - Office 集成：Office 运行时资源缺失或配置无效时，发出警告并停用 Office 功能，不再阻断 Harness 启动。
+    - 安装器：恢复安装完成后自动启动应用，同时避免强制提升安装器权限。
+    问题修复
+    - Safe Mode 与会话启动：确保 Safe Mode 配置包含可用的默认模型；缺少模型选择时回退到 DeepSeek 官方默认模型，避免会话控制器卡住。
+    - 凭据与会话持久化：遇到无效或旧版凭据键时跳过并警告；损坏的会话日志不再导致异常退出，并可隔离后继续列出其他会话。
+    - 锁文件恢复：自动清理超过 10 秒的陈旧凭据和 Profile 写入锁，避免异常退出后下次启动等待超时。
+    - Windows 沙箱与显卡回退：为安装目录授予 Chromium AppContainer 所需的读取权限；显卡回退时放宽 GPU 沙箱限制，同时保留 Renderer 沙箱，改善受限权限或驱动环境下的启动兼容性。
+    其他变更
+    - Harness 兼容性：更新会话控制器、凭据和会话持久化补丁，并补充对应回归测试，覆盖 Safe Mode、损坏数据容错、锁恢复和故障报告汇总。
+
+    This release improves Safe Mode and startup stability, and strengthens diagnostics, installer behavior, and compatibility on Windows.
+    Features
+    - Error Reporting: Consolidate pending reports into at most one confirmation dialog per launch; user consent allows up to five reports to be sent, reducing repeated prompts.
+    Improvements
+    - Diagnostics: Deduplicate identical diagnostic errors for 10 minutes to reduce repeated captures and reports.
+    - Office Integration: Warn and disable Office features when runtime resources are missing or configuration is invalid, rather than blocking Harness startup.
+    - Installer: Restore automatic app launch after installation without forcing the installer to elevate privileges.
+    Bug Fixes
+    - Safe Mode & Session Startup: Ensure Safe Mode includes a usable default model and fall back to DeepSeek’s official default when model selection is unavailable, preventing the session controller from hanging.
+    - Credentials & Session Persistence: Skip and warn about invalid or legacy credential keys; corrupted session logs no longer cause failures and can be isolated so other sessions remain available.
+    - Stale Lock Recovery: Automatically remove credential and profile writer locks older than 10 seconds, preventing launch timeouts after an abnormal exit.
+    - Windows Sandbox & GPU Fallback: Grant Chromium AppContainer the required read access to the install directory. GPU fallback relaxes the GPU sandbox while preserving the Renderer sandbox, improving startup compatibility in restricted-permission or driver environments.
+    Chores
+    - Harness Compatibility: Update the session-controller, credentials, and session-persistence patches, with regression coverage for Safe Mode, corrupted data, stale-lock recovery, and aggregated error reporting.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dataelement/dsh-desktop/releases/tag/v0.13.2
+ReleaseTime: 2026-11-03T12:48:07.0000000Z

@@ -1,0 +1,25 @@
+Version: 4.2.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.7/Antigravity.Tools_4.2.7_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/lbjlaq/Antigravity-Manager/releases/download/v4.2.7/Antigravity.Tools_4.2.7_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - [全新功能] 新增 APIKEY.FUN 官方合作中转站 (APIKEY.FUN Hub Partner):
+      - 专属集成面板：全新内置 APIKEY.FUN 专属功能页，为用户提供稳定、高性价比的大模型 API 接入服务。支持统一管理 API Key，一键自动查询剩余额度、Token 消耗及历史请求记录。
+      - 一键开发环境同步：支持将您的 API Key 与接口地址，一键无缝同步至本地 Codex 或 Claude Code 等开发环境，实现零配置开箱即用。
+    - [核心修复] 解决 HTTP/429 报错导致的重试中断及额度显示不同步问题 (HTTP/429 Exhaustion Handling & Quota Display Sync):
+      - 重试逻辑修复：修复了代理处理 429 错误时 force_rotate 状态作用域错误的问题。现在当代理端遇到 429 Too Many Requests (或 INSUFFICIENT_G1_CREDITS_BALANCE) 时，能快速阻断降级策略，并在全局重试循环中立刻触发账号轮换，避免在不可用节点上进行无效耗时等待。
+      - 额度实时同步：修复了部分 API 渠道耗尽文本生成配额（429）但 Google 官方查询接口仍返回 100% 额度的问题。现在系统会在返回前端的额度数据中，动态融合底层 TokenManager 拦截的 429 封锁状态，使得此类耗尽状态能在仪表盘中精准显示为 0% 额度。
+    - [核心修复] 修复了 Gemini 函数调用在多轮对话中缺失 thought_signature 报错 400 的 Bug (Gemini Tool Calling Fix):
+      - 问题修复：修复了在使用工具调用（Function Calling）功能时，由于代理在第二轮请求中向 /v1internal 接口发送驼峰命名的 thoughtSignature 字段，而接口实际校验蛇形命名的 thought_signature，导致 API 返回 400 INVALID_ARGUMENT 报错（Function call is missing a thought_signature）的问题。
+      - 双重兼容：优化了 OpenAI 映射器、Claude 映射器以及 Gemini 包装层，对思维链签名进行双重注入（同时发送 thoughtSignature 和 thought_signature），并在响应反序列化中添加别名兼容，确保在多轮对话中，工具调用的签名能够被安全地往返传输 (Issue #3202)。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lbjlaq/Antigravity-Manager/releases/tag/v4.2.7
+ReleaseTime: 2026-06-24T06:16:33.0000000Z

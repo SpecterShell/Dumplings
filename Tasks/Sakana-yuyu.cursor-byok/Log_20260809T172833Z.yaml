@@ -1,0 +1,51 @@
+Version: 0.0.85
+Installer:
+- Architecture: x86
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.85/cursor-byok-0.0.85-windows-x32-installer.exe
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.85/cursor-byok-0.0.85-windows-x64-installer.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Sakana-yuyu/cursor-byok/releases/download/v0.0.85/cursor-byok-0.0.85-windows-arm64-installer.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.0.85
+    本版本汇总 v0.0.84 之后的全部更新，重点完善 Cursor 内的持续目标执行、技能稀疏激活、会话隔离、委派可靠性、历史管理与设置体验。
+    新功能
+    - Cursor /goal 持续目标模式：支持 /goal <目标> 与 /goal --strict <目标>，加入开关、执行预算、重试、校验子代理、进度与终态报告；goal-loop 技能随包安装。目标执行仅服务于 Cursor，已移除助手首页中的 Goal 面板和相关客户端 API。
+    - 技能默认关闭与稀疏激活：扫描到的技能默认不参与 BYOK；用户启用的技能组成候选池，再按当前请求相关性稀疏注入，降低扫描、提示词和模型开销。Cursor 客户端显式附带的技能仍可能生效，并新增 .codex/skills/.system 扫描支持。
+    - Windows 文件管理器式历史视图：历史与日志支持图标视图和详细信息表格双视图、年/月/日逐级浏览、面包屑与返回上级，选择状态跨视图共享并记住上次模式。
+    - 全局上下文投影：持久化会话上下文并按预算使用滑动窗口，保留重要规则与近期交互，在长会话中更稳定地控制上下文体积。
+    - 会话级调度与隔离：同一会话按所有者顺序执行，不同会话可并行；provider、缓存、上下文投影和终态写入均按会话隔离，支持排队取消和关闭时安全收口。
+    - 委派与子代理增强：加入工具白名单、最大步数、SubagentAwait、fork 协议、thinking 转发、LLM 摘要压缩、超长工具结果裁剪、早期消息对回收以及上下文溢出自救。
+    - 协议与工具扩展：接入 allowlist 预检、脱敏读取、异步 AskQuestion、Bidi data_binary，OpenAI Responses 支持 parallel_tool_calls。
+    - Shell Profile：可选择 auto、PowerShell、pwsh、cmd、Git Bash 或 WSL。
+    - 技能清单自修复：Reader/Image Reader 的技能清单缺失或损坏时可自动修复，改善视觉能力与 Kimi 等模型的能力识别。
+    修复与可靠性
+    - 证书与启动修复：自动修复 CA 证书/私钥不匹配并提示重启 Cursor；启动 Cursor 前等待本地代理和配置真正就绪。
+    - 流式响应收口：统一 EOF 与中途断流语义；已有部分输出时不再整体重试，并在失败前保存已推送内容。
+    - 循环与超时保护：修复 send_final_summary 无限 resume；普通回合加入 provider pass/总时长预算；用户交互加入 15 分钟超时。
+    - 委派可靠性：放宽长静默 worker 看门狗，视觉委派支持取消与超时，溢出后回到正确 provider pass，并记录看门狗恢复错误。
+    - 后台任务保护：后台 goroutine 增加 panic 兜底；MITM 上游请求继承客户端取消上下文；prompt 同步和 CLI 拉取增加 30 秒截止时间。
+    - 缓存与历史正确性：包含工具调用的回合不再写入响应缓存；容忍历史中的孤立工具结果；终态写入保持幂等，避免启动失败覆盖既有终态。
+    - 请求上下文完整性：实时上下文继续保留非文件规则；长耗时前端 API 使用明确超时预算。
+    - 终端与错误诊断：修复子代理闪窗、委派错误空白、流命令高频分配和请求体重复序列化，改进结构化错误与安全日志。
+    - 跨平台构建兼容：隔离 Windows 专属的桌面输入与隐藏窗口实现，恢复 Linux 和 macOS 的完整编译与打包。
+    界面与性能
+    - 设置导航统一：分类选择与 URL、浏览器历史、本地存储保持同步；“更多设置”默认展开，所有分类选中状态一致，普通分组增加清晰的上下级间距。
+    - 历史页面布局：优化可用高度、窄屏单列与横向溢出，工具栏、统计区和文件列表更接近 Windows 文件管理器。
+    - 技能说明：界面明确说明默认关闭、启用候选池、相关性稀疏注入，以及 Cursor 显式技能不受 BYOK 开关完全控制。
+    - 请求与日志面板：收敛设置导航、请求明细列序和日志面板布局，改善计量单位、余额告警与诊断信息。
+    - 前端加载性能：路由懒加载、供应商分包、Markdown 编辑器按需加载并清理未使用代码；同时异步化历史回填，缩短应用启动等待。
+    - 代码结构清理：拆分大型前后端模块，移除不可达分支、孤儿组件、死导出与已被新投影方案替代的旧压缩逻辑。
+    测试与质量
+    - 新增模型编辑、模型组、监督委派、供应商、设置导航、历史双视图、Goal 边界、并发调度、跨会话隔离、技能启用、请求上下文和清单修复回归测试。
+    - 更新四种语言目录并校验键集合一致，强化错误恢复、并发、终态、流式中断和上下文压缩覆盖。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sakana-yuyu/cursor-byok/releases/tag/v0.0.85
+ReleaseTime: 2026-08-09T17:15:49.0000000Z

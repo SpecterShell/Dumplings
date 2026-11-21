@@ -1,0 +1,38 @@
+Version: 263.7307.48
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/rider/JetBrains.Rider-2026.3-EAP8-263.7307.48.Checked.exe
+  ProductCode: JetBrains Rider 263.7307.48
+  InstallerSha256: 1A6E5E013FA04BCC0D0CAA57071EAB7400621D7FC25A50E24E1FDFC532F684D4
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/rider/JetBrains.Rider-2026.3-EAP8-263.7307.48.Checked-aarch64.exe
+  ProductCode: JetBrains Rider 263.7307.48
+  InstallerSha256: A1D00659FDE680D2E21EF0956DE16AA2EFDFEA26EA0C619B8F58443B55989236
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    JetBrains Air now requires an open solution or project
+    Starting with 2026.3 EAP 8, JetBrains Air is no longer available from the Welcome screen. To start using JetBrains Air in Rider, open a solution or project first.
+    Let AI agents run .NET tests through Rider
+    Agents need to run tests to check their own work. Without IDE support, an agent runs dotnet test, parses the console output, and handles each test framework's quirks on its own. The Rider MCP server now supports this workflow.
+    An agent starts a test run with test_run_start and then retrieves its status and results. Rider builds the required projects, runs the tests through its own test infrastructure, and returns structured results to the agent, including test failures and build problems. Rider returns results in the same format regardless of the test framework or runner, including VSTest and Microsoft.Testing.Platform.
+    Nothing happens out of sight. Agent-run tests show up in Rider as regular test sessions: you can follow a run, inspect results and failures, and navigate directly to the relevant code.
+    Structured results can also require fewer tokens for the agent to process than raw console output, potentially reducing token usage and execution cost. How much depends on the model, project, context, and workflow.
+    Better async debugging for AI agents
+    Asynchronous hangs and deadlocks are notoriously difficult to investigate, and restarting the application to set one more breakpoint often causes timing-sensitive bugs to disappear entirely. Rider's debugging-code skill now gives AI agents direct access to runtime state from active debug sessions.
+    Agents can now inspect the async task graph and active call stacks in real time to understand dependencies between operations and see where execution is blocked. Instead of relying on trial-and-error breakpoints, restarts, or guesswork, the agent can pinpoint the method blocking an async operation or identify the exact tasks and lock sites involved in a deadlock.
+    Database AI skills get better .NET integration
+    The database skills introduced in DataGrip 2026.2 are now integrated with .NET projects in Rider.
+    When creating or updating a database connection, the rider-database-connection-management skill can now discover and reuse connection strings from your .NET project configuration – saving you from entering the connection details from scratch.
+    The skill also streamlines setup for Microsoft SQL Server and LocalDB by automatically configuring JetBrains’ bundled drivers and settings.
+    Support for .NET 11 runtime-async in the decompiler
+    The embedded decompiler in Rider now supports runtime-async from .NET 11. When you inspect assemblies compiled with runtime-async, both the IL Viewer and Assembly Explorer metadata tree now recognize and display runtime-handled async constructs and metadata.
+
+    For the complete list of updates included in this build, please see our release notes.
+- Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/rider/whatsnew/
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/zh-cn/rider/whatsnew/
+ReleaseTime: 2026-10-26

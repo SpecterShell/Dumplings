@@ -1,0 +1,33 @@
+Version: 0.5.22
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.22/AnyBridge_0.5.22_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/soulvon/AnyBridge/releases/download/v0.5.22/AnyBridge_0.5.22_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 修复 ZCode (v0.21.0+) 自定义模型图片理解完全失效问题：
+      - 根因：ZCode v0.21+ 桌面版核心运行时不再消费 `~/.zcode/v2/config.json`，仅将其作为单向遗留导入源；首次启动迁移至 `~/.zcode/v2/provider_config.json` 时仅复制 `contextWindow` 字段，丢弃了 `modalities`（图片能力），导致未命中官方预置正则的模型（如 gemini-3.x 系列、自定义别名等）全部被默认置为 `supportsImage: false`，模型丧失视觉理解能力。
+      - 修复：新增 `sync_zcode_personal_config` 核心同步逻辑，写入遗留文件的同时无缝同步权威配置文件 `provider_config.json`，正确写入各模型 `inputFormat.supportsImage`、`contextWindow`、`maxOutputTokens.max`；同时完整保留用户在 ZCode 客户端内手动勾选的视频、PDF、原生联网搜索等扩展字段，增量合并互不干扰。
+      - 链路贯通：在供应商切换生效 (`apply_zcode`)、模型列表保存 (`save_codebuddy_models`) 以及配置还原 (`restore`) 完整生命周期闭环同步与备份。
+    - 新增 ZCode 思考档位 (Reasoning Level) 配置与双向同步：
+      - ZCode 模型编辑中引入思考档位支持（`none` / `minimal` / `low` / `medium` / `high` / `xhigh` / `max`），提供「常用三档」、「全选」、「清空」快捷操作，默认留空不配置（安全回退 ZCode 内置默认行为）。
+      - 选中的档位值随配置同步写入 `optionSpecs.reasoningLevel.values`，经代理层透传为 `reasoning_effort` 参数；支持可选高级参数映射表达式。
+      - `load_zcode_models` 接入双向回读，打开编辑弹窗时自动回显已持久化的思考档位设置。
+    - 编辑模型模态框全面重构与现代化设计：
+      - 空间扩展：模态框宽度从 640px 提升至 780px（自适应宽度 92%，高度放宽至 85vh），彻底解决内容拥挤与内层纵向滚动条。
+      - 响应式多列布局：基础配置重构为 2 列自适应网格，上下文与生成参数重构为 3 列平等等宽网格（`repeat(3, minmax(0, 1fr))`）。
+      - 消除控件对齐错位：将「填入推荐值」从输入框内部移至分组标题栏右上角（`[ 🔄 填入官方推荐值 ]`），与思考档位快捷按钮保持统一设计语言，三列输入框顶部完全水平对齐。
+      - 胶囊化档位控件：档位选择升级为精致胶囊开关（Pill Toggle），去除原生小方框复选框，选中态平滑变蓝高亮。
+      - 高级映射折叠收纳：99% 用户无需配置的 JSON 映射表达式设计为低调实线折叠面板，默认收起不占位，配置非空时自动展开。
+      - 隐藏 ZCode 不支持的「工具调用」复选框，避免无效选项产生认知误导。
+    - 供应商模型列表快捷复制体验优化：
+      - 供应商卡片与模型选择抽屉的模型 ID 胶囊悬浮支持一键复制，并联动底部轻量 Toast 提示，方便跨平台快速流转 ID。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/soulvon/AnyBridge/releases/tag/v0.5.22
+ReleaseTime: 2026-09-22T05:40:07.0000000Z

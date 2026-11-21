@@ -1,0 +1,78 @@
+Version: 0.1.21
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.21/ddc-v0.1.21-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.21/ddc-v0.1.21-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.1.21
+    Supersedes v0.1.20, which shipped with a stale Cargo.lock: the lockfile
+    still pinned jdc-core 0.2.12 while every fix below lives in 0.2.13, and
+    cargo build does not re-resolve a satisfied-but-stale pin — the release
+    binary silently linked the old core. The workspace now requires
+    jdc-core = "0.2.13" (the bump regenerates the lock) and release.sh
+    verifies the lock resolution before publishing. crates.io users of 0.1.20
+    should take 0.1.21.
+    Everything below was on main for v0.1.20 and is actually linked here.
+    Exception handling (ddc-dex 0.2.4)
+    - parse_handler takes the cursor by reference. Cursor is Copy, so the
+      by-value call left the caller's cursor pinned at the handler-list start:
+      EVERY catch handler parsed the first one's bytes. Any method with more
+      than one distinct handler (nested try/catch, multi-catch lists) silently
+      routed all its catches to the first handler's code, and the handler list
+      itself collapsed to a single entry. Wrong since the first release;
+      javac-based gates cannot see it (the mis-routed code still compiles).
+      Four-corpus battery: 11,345 → 7,857 ddc-class errors (-30.7%), with
+      decompile time down on every corpus (weibo -29%, weixin -30%).
+    - The catch-all rethrow is no longer swallowed. d8 emits a self-protection
+      try range over the handler's own monitorexit; once merged into the
+      group, the handler head block was counted as group body, the handler
+      walk's stop set contained its own entry block, and reachable_within
+      returned empty — the walk never reached the rethrow tail. Output read
+      catch (Throwable t) { /* monitorexit */ } with the bytecode's
+      throw gone (exception swallowed).
+    Value-view soundness (ddc-dec)
+    - Field writes kill stale value views. A pending register view that reads
+      the written field anywhere — receiver chains count: this.h.e is
+      killed by this.h = null — materializes ahead of the write; a
+      field-read definition read past a same-field write materializes at its
+      defining pc. Previously such views re-rendered the field read at the
+      use site, past the write: this.h = null; this.j((String) this.h.f, …, (n.e) this.h.e) — a guaranteed NPE on every call of that path.
+    - has_side_effects treats this-receiver field reads (implicit-this and
+      the receiver register) as side-effect-free, and orphan pure-value
+      statements drop instead of rendering as /* x; */ comments (25k lines
+      of that noise on one corpus; the remainder — non-this receivers — are
+      kept: they can NPE).
+    synchronized reconstruction (ddc-dec)
+    - The Stmt::Synchronized machinery existed but the fold never matched
+      real-world shapes. Rebuilt: absorbed alias defs between monitorenter
+      and the try, Block-nested catch bodies, lock identity resolved through
+      defining expressions, implicit in-body releases stripped, mid-control-
+      flow enters folded in place (the catch-all reduces to a bare rethrow —
+      keeping the handler's monitorexit would double-release), and the
+      split-protected-region shape absorbs its sibling try back inside the
+      lock (it previously ran outside: racy field writes and monitor leaks on
+      unexpected exceptions).
+    - try with no catches and a missing/empty finally (the close-rethrow
+      recast's no-op wrapper) unwraps to X.
+    Performance
+    - expand_orphan_group_tails keeps group-presence sets over the arm
+      universe instead of rescanning out x groups per frontier node and
+      binary-searches block windows. With the real (post-fix) handler count
+      it was the dominant hotspot; weibo 72s → 11.1s, output byte-identical.
+    Verification
+    - Four-corpus javac battery (reqable/weibo/lark/weixin, with classpath):
+      7,871 ddc-class errors (from 11,345 at v0.1.19).
+    - 74 unit tests green, clippy clean, deterministic re-run (0 diff).
+    - Human read-through of the touched regions against disassembly
+      (s2.w, v8.m, f0.a, y5.e$b, n7.a, y5.c) — the defects below were found
+      by reading, not by the gates.
+    - jdc-core 0.2.13 from crates.io (verified via cargo tree).
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.19...v0.1.21
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.21
+ReleaseTime: 2026-09-29T23:52:05.0000000Z

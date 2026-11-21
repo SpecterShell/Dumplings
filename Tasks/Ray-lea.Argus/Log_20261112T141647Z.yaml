@@ -1,0 +1,98 @@
+Version: 0.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ray-lea/Argus/releases/download/v0.5.0/Argus_0.5.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.5.0 adds process suspend and resume, process groups by user, four process information columns and column widths that fit the content. The device list on the Performance page can hide and reorder devices. The interface is now available in Traditional Chinese, Spanish, German, Japanese, French and Russian. This release also avoids requests that can freeze some Intel RST systems after Argus starts, corrects a problem that blocked the safe removal of USB disks, and decreases memory and CPU usage while the window is hidden.
+    Features
+    - Suspend and resume processes: Process and app group menus now offer "Suspend process" and "Resume process". Argus blocks suspension of critical system processes, the Desktop Window Manager and itself, and asks for confirmation before it suspends other processes. Suspended processes show a "Suspended" badge after the name. (@digital-bombyx #65)
+    - Process information columns: Four new optional columns are available: "File version", "Architecture", "Elevated" and "Command line". They are hidden by default. Enable them in the column header menu or in "Select columns". (@digital-bombyx #72)
+    - Process column widths: Automatic widths fit the content and leave unused space on the right. Drag a column border to set its width, or double-click it to restore automatic width. The new "Full width" option gives the remaining width to the Name column.
+    - Group processes by user: In Settings → Language and appearance → Group processes by user, select Automatic, Always group or Never group. With Automatic, Argus groups processes only when more than one user is signed in. The context menu of a group row has "Manage user accounts" and "Sign out".
+    - Hide system processes: The Processes and Connections pages have a new "Hide system processes" switch. It is off by default, and each page keeps its own setting. Edit the lists of programs to always show or to also hide on the Settings page. (#32)
+    - Process tree and overview band: The process tree starts collapsed, and the header menu has "Expand all" and "Collapse all". Set "Process overview band" to Automatic, Always show or Hidden. Automatic mode hides the band when the window is too short.
+    - Device list on the Performance page: Right-click a device to hide it, or select the devices to show in the "Shown devices" submenu. Drag a device to change the order. Disks can be sorted by disk number, by drive letter or in a custom order.
+    - CPU multi-core view: Each logical processor graph shows kernel time, which can be hidden from the CPU graph menu. Argus identifies Intel low-power efficiency cores (LP E-cores) with a separate color and filter. The graphs fill complete rows when possible.
+    - Hardware information: The GPU page shows the driver version, driver date and DirectX version, including the feature level. Disk details support remaining life and total data read and written for more SATA SSDs. HDD statistics now include power-on hours, start/stop counts, reallocated sectors and pending sectors.
+    - Interface languages: The interface is now available in Traditional Chinese, Spanish, German, Japanese, French and Russian. The tray, system messages and the installer are also translated. Numbers and dates use the Windows regional format. (@abc0922001 #45, @Rimuwu #51, @s0ftw4r8 #52, @khativari #55, @hayxe1 #62)
+    - Release notes: The About page and the update dialog show release notes in the interface language. In Settings → Updates, "See what's new" opens the dialog, which has "Expand all" and "Collapse all" controls. Opening, expansion and hover transitions follow "Interface animations".
+    - Icons and motion: Interface icons now come from the Lucide icon library. When the pointer moves onto a button or a navigation item, its icon plays one short animation. The animation does not play when "Interface animations" is off.
+    - Window and tray: A separate "Window transitions" switch is available. "Reopen from tray" can open the default page. The default window size is now 1000×680, and the minimum size is now 640×480. (#27, #40)
+    - Task Manager replacement: "Replace Task Manager" has a new "Open Windows Task Manager once" button. It opens the Windows Task Manager and does not change the replacement settings.
+    - Notices and reminders: The portable version explains its differences from the installed version and provides download links in the welcome guide and at the bottom right of the window. The new "Star reminder" appears at most once a day and can be turned off in Settings → Updates. The tips above "This PC" can be collapsed.
+    - Telegram channel: About → Project and support has a new "Telegram channel" item. "Join channel" opens t.me/argustask, and "Copy link" copies the channel link.
+    Performance
+    - Background memory usage: The new "Free memory when hidden" setting releases chart images and returns unused memory to Windows after the window stays minimized or hidden in the tray for the set time (10 minutes by default). CPU usage for the interface decreases when all windows are hidden or minimized. Sampling, history recording and rules continue to run. (@SpookySandwich #54)
+    Fixes
+    - System freeze: Argus no longer reads the temperature of disks behind RAID controllers such as Intel RST. Some driver versions do not respond to this request, and the system can freeze a few seconds after Argus starts. The temperature of these disks now shows as unknown. (#48)
+    - Safe removal of USB disks: Disk monitoring no longer keeps USB disks in use, so Windows can safely remove them. (#57)
+    - Disk list and performance data: Some NVMe disks showed device information but no performance data. Disks also disappeared from the list when performance counters were not available. Both problems are corrected.
+    - Disk details: The SMART table keeps values close to their attribute names and avoids large gaps between groups. Raw values fit in narrow windows. Health bars use green for normal values and threshold-based warning colors for temperature and spare capacity.
+    - Process data: When system queries are slow, Argus continues to update the process list and keeps the last valid resource readings. Exited processes no longer stay in the list. Process actions update the displayed state even when refresh is paused. (#66)
+    - Process table: Efficiency mode and pin icons appear next to the process name. Column headers align with the data columns. Process usage values include the percent sign.
+    - Connections page: Connections without an owning process now show as "No owning process".
+    - CPU readings: Hybrid CPUs now show the correct speed. Some 6-core Ryzen processors now show the correct per-core voltage and temperature. Intel internal sensor readings no longer stop at intervals, and the temperature graph no longer breaks. (#58)
+    - Authorization and uninstallation: Argus can revoke authorization and uninstall after the permissions of Program Files or the runtime folder change. Kernel sensors can use a PawnIO driver that is already running. Uninstallation no longer leaves the "Argus Sensor Setup" folder and an empty "Argus Runtime" folder. (#46)
+    - Startup permissions: After installation or an in-app update, Argus first tries to start with the desktop account's permissions, as it does from a shortcut. When Argus runs as administrator, it can restart File Explorer that already runs as administrator and keep its existing permissions.
+    - Window display: After the window size is restored, the interface fills the window again. After a cold start from the Task Manager replacement entry, a maximized window shows completely. The window background is no longer transparent on Windows 11 21H2. After a switch to another app, the Argus window no longer stays in front of other windows. (#44, #37, #35)
+    - Tray: CPU usage no longer stays high after the window closes to the tray. After an in-app update, the tray icon keeps its position and does not move to the overflow area. (#31)
+    - Interface display: The update dialog stays centered while it loads, and the file lock dialog stays in place when results appear. All content on the About page can be reached by scrolling in short windows. Text box context menus use the interface language. (#39)
+    - Numbers and rendering: Live numbers stay in place when they update. Light text on dark backgrounds has corrected edges. Small colored artifacts no longer appear below the overview band.
+    - Stability: Argus no longer exits when the display timing is not valid or when network adapter address queries fail many times. The interface no longer stops responding when graphics device recovery and window closure occur at the same time.
+    - Large fonts, process rules and startup items: Performance readings no longer overlap the specifications at large font sizes. When a program name contains non-ASCII letters, the process menu no longer adds a duplicate rule. Argus no longer crashes when it reads the startup tasks of packaged apps. (@hayxe1 #59)
+    - Build type: Settings, About and the status bar show "Development build", "Beta", "Stable" from the running program. The update channel separately selects the source for future update checks.
+    Upgrading
+    - Privileged service: This release updates the service communication protocol to version 11. An upgrade with the installer or an in-app update also updates the installed service and the Task Manager replacement copy. For the portable version, replace the executable, then select "Update service" in Settings → Permissions → Privileged service and approve the administrator prompt.
+    - Settings and history: The upgrade keeps your settings and history. At the first start, "Window transitions" uses the window transition setting of the previous "Interface animations" option.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.5.0 新增进程暂停与恢复、按用户分组进程、四个进程信息列与按内容计算的列宽，性能页设备列表支持隐藏与排序，界面新增繁体中文、西班牙文、德文、日文、法文和俄文。本版还避免部分 Intel RST 系统在 Argus 启动后冻结，修复 USB 磁盘无法安全弹出等问题，并降低窗口隐藏后的内存与 CPU 占用。
+    新功能
+    - 暂停与恢复进程：进程与应用组的右键菜单新增“暂停进程”和“恢复进程”。暂停前显示影响说明并请求确认；系统关键进程、桌面窗口管理器与 Argus 自身不可暂停。已暂停的进程在名称后显示“已暂停”标记。（@digital-bombyx #65）
+    - 进程信息列：新增“文件版本”“架构”“已提升”和“命令行”四个可选列，默认隐藏，可在表头右键菜单或“选择列”中启用。（@digital-bombyx #72）
+    - 进程列宽：自动列宽按内容计算，剩余空间留在表格右侧。拖动列边界可单独调整一列的宽度，双击列边界恢复自动宽度。表头菜单新增“全宽”，开启后名称列占用剩余宽度。
+    - 按用户分组进程：“设置 → 语言与外观 → 按用户分组进程”提供自动、始终分组和不分组三种方式；自动方式仅在多个用户登录时分组。分组行的右键菜单提供“管理用户账户”和“注销”。
+    - 隐藏系统进程：进程页与连接页新增“隐藏系统进程”开关，默认关闭，两页分别保存开关状态。始终显示与额外隐藏的程序名单可在设置页编辑。（#32）
+    - 进程树与概况带：进程树默认折叠，表头右键菜单提供“展开所有”和“折叠所有”。“进程概况带”可设为自动、始终显示或隐藏；自动模式在窗口高度不足时收起概况带。
+    - 性能页设备列表：右键单击设备可将其隐藏，也可在“显示的设备”子菜单中逐项选择。拖动设备可调整顺序；磁盘可按磁盘编号、盘符或自定义顺序排列。
+    - CPU 多核视图：各逻辑处理器的小图显示内核时间，可在 CPU 图表的右键菜单中关闭。识别 Intel 低功耗能效核（LP E 核），以独立颜色显示并支持单独筛选。小图优先排成没有空位的行列。
+    - 硬件信息：GPU 页显示驱动版本、驱动日期与 DirectX 版本（含功能级别）。磁盘详情支持更多 SATA SSD 的剩余寿命与累计读写量，并新增机械硬盘的通电时间、启停次数、重映射与待映射扇区等统计。
+    - 界面语言：新增繁体中文、西班牙文、德文、日文、法文和俄文。界面、托盘、系统提示与安装程序均提供译文，数字与日期采用 Windows 区域格式。（@abc0922001 #45、@Rimuwu #51、@s0ftw4r8 #52、@khativari #55、@hayxe1 #62）
+    - 更新内容：关于页与更新对话框按界面语言显示更新内容。“设置 → 更新”改为通过“查看更新内容”按钮打开更新对话框，对话框提供“展开所有”和“折叠所有”。打开、展开与悬停时的过渡遵循“界面动画”设置。
+    - 图标与动效：界面图标改用 Lucide 图标库。指针移到按钮或导航项上时，图标播放一次短动效；关闭“界面动画”后不播放。
+    - 窗口与托盘：新增独立的“窗口过渡动画”开关。“从托盘打开”可设为打开默认页面。默认窗口尺寸调整为 1000×680，最小尺寸降至 640×480。（#27、#40）
+    - 任务管理器替换：“替换系统任务管理器”新增“临时打开系统任务管理器”，可打开 Windows 自带的任务管理器，替换设置保持不变。
+    - 提示与提醒：免安装版在首次启动引导和窗口右下角说明与安装版的差异，并提供安装版的下载入口。新增“Star 提醒”，每天至多显示一次，可在“设置 → 更新”中关闭。“本机配置”上方的操作提示可收起。
+    - Telegram 频道：“关于 → 项目与支持”新增“Telegram 频道”。单击“加入频道”打开 t.me/argustask，单击“复制链接”复制频道链接。
+    性能
+    - 后台内存占用：新增“隐藏时释放内存”设置。窗口最小化或隐藏到托盘达到设定时长（默认 10 分钟）后，Argus 释放图表图像，并将未使用的内存归还 Windows。全部窗口隐藏或最小化时减少界面相关的 CPU 开销，采样、历史记录与规则照常运行。（@SpookySandwich #54）
+    修复
+    - 系统冻结：不再向 RAID 控制器（如 Intel RST）之后的磁盘查询温度，避免部分驱动版本无响应导致系统在 Argus 启动数秒后冻结。此类磁盘的温度显示为未知。（#48）
+    - USB 磁盘安全弹出：修复磁盘监控持续占用设备，导致 USB 磁盘无法安全弹出的问题。（#57）
+    - 磁盘列表与性能数据：修复部分 NVMe 磁盘仅显示设备信息而没有性能数据，以及性能计数不可用时磁盘从列表消失的问题。
+    - 磁盘详情：修复 SMART 属性表数值远离属性名、分组留出大片空白，以及窄窗口下原始值被裁切的问题。健康条正常状态统一使用绿色，温度与备用空间按阈值区分告警颜色。
+    - 进程数据：系统查询缓慢时，进程名单仍会更新，资源读数保留最近一次有效值。修复已退出的进程持续留在列表，以及暂停刷新期间操作进程后状态不更新的问题。（#66）
+    - 进程表格：效率模式与固定标记紧随名称显示，表头与数据列边界保持对齐。进程占用率补齐百分号。
+    - 连接页：没有所属进程的连接现在显示为“无所属进程”。
+    - CPU 读数：修复混合架构处理器的速度显示异常、部分六核锐龙处理器的每核电压与温度读数错误，以及 Intel 内部传感器读数间断导致温度曲线中断的问题。（#58）
+    - 授权与卸载：修复 Program Files 或运行目录的权限改变后无法撤销授权与卸载、已运行的 PawnIO 驱动无法用于内核传感器，以及卸载后残留 Argus Sensor Setup 文件夹与空的 Argus Runtime 文件夹的问题。（#46）
+    - 启动权限：安装完成或应用内更新后，Argus 优先使用桌面账户的权限启动，与从快捷方式启动一致。以管理员身份运行的 Argus 可重启已经以管理员权限运行的资源管理器，并保留其原有权限。
+    - 窗口显示：修复恢复窗口尺寸后界面仅显示在左上角、从任务管理器替换入口冷启动后最大化窗口显示不全、Windows 11 21H2 下窗口背景透明，以及切换应用后窗口仍遮挡其他窗口的问题。（#44、#37、#35）
+    - 托盘：修复关闭窗口隐藏到托盘后 CPU 占用持续偏高，以及应用内更新后托盘图标移入溢出区的问题。（#31）
+    - 界面显示：修复更新对话框加载时偏离居中、文件占用对话框在结果出现后抖动，以及关于页在较矮窗口中无法滚动到全部内容的问题。文本框右键菜单按界面语言显示。（#39）
+    - 数字与绘制：修复动态数字刷新时横向跳动、深色主题下浅色文字的边缘显示异常，以及概况带底部出现细小彩色残影的问题。
+    - 运行稳定性：修复显示时序异常或网卡地址枚举连续失败时程序退出，以及图形设备恢复与关闭窗口同时发生时界面卡死的问题。
+    - 大字号、进程规则与启动项：修复大字号下性能页读数与规格信息重叠、程序名含非 ASCII 字母时从进程菜单重复添加规则，以及读取应用包启动任务时程序崩溃的问题。（@hayxe1 #59）
+    - 版本类型：设置页、关于页与状态栏按当前程序的实际构建显示“开发版”、“测试版”、“稳定版”，更新通道单独控制后续检查的版本来源。
+    升级提示
+    - 特权服务：本版将服务通信协议升级至第 11 版。安装版通过安装程序或应用内更新升级时，同步更新已安装的服务与任务管理器替换副本；免安装版替换程序后，需在“设置 → 权限 → 特权服务”中单击“更新服务”并完成管理员确认。
+    - 设置与历史：升级保留已有设置与历史记录。“窗口过渡动画”首次启动时沿用原“界面动画”对窗口过渡的设置。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ray-lea/Argus/releases/tag/v0.5.0
+ReleaseTime: 2026-11-12T13:20:26.0000000Z

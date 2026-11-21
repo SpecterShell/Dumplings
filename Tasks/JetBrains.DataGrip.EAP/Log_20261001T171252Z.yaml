@@ -1,0 +1,40 @@
+Version: 263.6259.36
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.jetbrains.com/datagrip/datagrip-263.6259.36.exe
+  ProductCode: DataGrip 263.6259.36
+  InstallerSha256: EB5EA94FD58EB54CDC038282DA1E50927AFC2796E0704656D85764ECE4A6570F
+- Architecture: arm64
+  InstallerUrl: https://download.jetbrains.com/datagrip/datagrip-263.6259.36-aarch64.exe
+  ProductCode: DataGrip 263.6259.36
+  InstallerSha256: 4B5DB498B66B073BC9372C1C1621208A13C273371295D82AA12B521B124B3A32
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Support for MariaDB sequences
+    DataGrip now recognizes MariaDB sequences and displays them in a dedicated sequences group under the schema node in Database Explorer. Previously, they appeared as tables.
+    To keep introspection efficient:
+    - For MariaDB 10.3-11.4, sequence properties are not introspected.
+    - For MariaDB 11.5 and later, sequence properties are introspected, except for the cache size and the sequence's table properties, such as its comment and engine.
+    Database connections disabled in untrusted projects
+    DataGrip now asks you to trust an untrusted project before connecting to a database. This also applies when you click Test Connection in the Data Sources and Drivers dialog.
+    Connecting to a database can execute potentially malicious code, like if the connection URL, startup scripts, or driver files have been tampered with. The dialog explains this risk and lets you trust the project to proceed or stay in safe mode, where database connections are disabled.
+    New mode for database transactions in query consoles
+    Previously, DataGrip offered two transaction modes to commit transactions to a database: Auto and Manual. Now we've added a third one - Transparent.
+    In this mode, as in Manual mode, you commit changes explicitly. Unlike Manual mode, it does not automatically issue SQL statements to set the isolation level, re-read the current search path, or create temporary savepoints around your statements. This is so that DataGrip sends only the statements you execute.
+    When establishing a connection, DataGrip still reads the current search path and sets it if a different one is configured.
+    This mode applies to a session. If you have several query consoles attached to the same session, switching one of them to Transparent mode also switches the others. Switching any of them to Auto mode switches the others to Auto, too.
+    Transparent mode comes in handy when only your own statements should run in the session, like when reproducing a bug, auditing what the IDE does, or working with a server where extra statements can cause side effects or appear in logs.
+    Bug fixes for Manual transaction mode
+    - DBE-26311: Executing COMMIT or ROLLBACK commands now works the same way as clicking the Commit or Rollback toolbar buttons.
+    - DBE-25789: In Single shared session session control mode, the Commit and Rollback toolbar buttons are now synced across query consoles.
+    - DBE-11547: COMMIT and ROLLBACK statements no longer fail and leave transactions in a failed state, allowing subsequent queries to run normally.
+    - DBE-26753: SAVEPOINT and RELEASE SAVEPOINT statements no longer fail.
+    - DBE-26757: SAVEPOINT and RELEASE SAVEPOINT statements now execute without triggering introspection.
+- Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/datagrip/whatsnew/
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://www.jetbrains.com/zh-cn/datagrip/whatsnew/
+ReleaseTime: 2026-10-01

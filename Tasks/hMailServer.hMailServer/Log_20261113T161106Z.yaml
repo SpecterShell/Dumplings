@@ -1,0 +1,35 @@
+Version: 5.7.2-b3164
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/hmailserver/hmailserver/releases/download/hMailServer-5.7.2-b3164/hMailServer-5.7.2-B3164-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release contains several critical security fixes.
+    - IMAP: FETCH could read and return out-of-bounds data.
+    - IMAP: SETACL, GETQUOTAROOT and SORT with unbalanced parentheses caused out-of-bounds reads.
+    - IMAP: Literal sizes were not limited, allowing unbounded memory use.
+    - IMAP: APPEND with a date missing seconds caused an exception.
+    - SQL injection vulnerability when using MySQL/PostgreSQL.
+    - DKIM: A key record in test mode (t=y) turned a failed verification into Pass.
+    - DKIM: Out-of-range vector access when c= ends with a slash.
+    - MIME: Deeply nested messages could cause a stack overflow.
+    - SMTP: Attachment blocking missed attachments in forwarded or deeply nested messages.
+    - SMTP: A negative X-hMailServer-LoopCount header from the sender bypassed the forward loop limit.
+    - AntiVirus: ClamAV/ClamWin scan errors caused messages to be treated as clean.
+    - AntiVirus: Strip attachments kept the virus when it was in the first or only part of the message.
+    - SpamAssassin: Invalid responses could cause unbounded reads.
+    - External POP3 fetching: Oversized server responses could cause unbounded memory use.
+    - COM API: Rules, rule actions, criteria and fetch accounts could be moved to other accounts by changing AccountID/RuleID.
+    - WebAdmin: CSRF and session fixes.
+    - The BlockedIPHoldSeconds setting has been removed. Holding blocked connections tied up the server more than the client.
+    Breaking changes:
+    - IMAP master user: if no domain is specified, the default domain is used. To log on to accounts in other domains, specify the master user's full email address.
+    Thanks to @Stoupard for contributing information about the above issues.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hmailserver/hmailserver/releases/tag/hMailServer-5.7.2-b3164
+ReleaseTime: 2026-11-13T16:06:05.0000000Z
+RealVersion: 5.7.2.3164

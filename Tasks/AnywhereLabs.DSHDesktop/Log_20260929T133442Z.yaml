@@ -1,0 +1,56 @@
+Version: 2.0.16
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anywhere-labs/dsh-desktop/releases/download/v2.0.16/DSH-Desktop-2.0.16-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release upgrades to DeepSeek Harness v0.2.0-rc.1, adds automation task notifications, and improves plugin management, update downloads, and macOS recording permissions.
+    DSH Desktop is a community-maintained open-source project, not an official DeepSeek product.
+    New and improved
+    - Updated core: Upgraded DeepSeek Harness from v0.1.7-rc.2 to v0.2.0-rc.1, adapting to the new runtime and plugin compatibility checks.
+    - Automation notifications: Added desktop notifications for automation task completion and failure, with separate switches enabled by default.
+    - Bundled plugins: Updated integration for Agents Anywhere 2.0.2 and plugin-market compatibility patches.
+    - Opt-in plugin market: Desktop setup defaults to disabling the plugin market for newly created Profiles.
+    Fixes
+    - Fixed installer downloads being blocked by a fixed origin allowlist. HTTPS mirror and CDN redirects are supported, while URL, artifact format, and size checks remain in place.
+    - Aligned macOS application and Helper signing with the pinned upstream entitlements. Recording uses native OS consent, improving microphone-access compatibility.
+    - Adapted to the updated AA Connector, retaining proxy and session-sync compatibility fixes and using a writable project copy in the data directory.
+    - Fixed global and outcome-specific notification switches requiring a restart. Active tasks now also follow the latest settings.
+    - Restored the official terminal card and configuration writes on Windows, connected to the Desktop PowerShell executor.
+    - Hid the Desktop-managed dshmarket card from the ordinary plugin list to avoid duplicate entries.
+    Usage notes
+    - Quit the previous version and back up ~/.dsh before installing. This upgrade includes upstream data and configuration changes; the bundled v0.2.0-rc.1 is still a release candidate.
+    - The new core checks declared plugin compatibility and may skip incompatible plugins. Check for plugin updates if a plugin does not load.
+    - General settings includes the upstream “Upload Session Log” option, retaining the upstream default (enabled). Review or change it in Settings.
+    - Windows uses opaque windows. Linux supports Compatibility mode only; ARM64 packages are not provided.
+    Full changelog · Project website
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新升级至 DeepSeek Harness v0.2.0-rc.1，新增自动化任务通知，并改善插件管理、更新下载和 macOS 录音权限。
+    DSH Desktop 是社区维护的开源项目，并非 DeepSeek 官方产品。
+    新增与改进
+    - 升级内核： 从 DeepSeek Harness v0.1.7-rc.2 升级至 v0.2.0-rc.1，适配新版运行时及插件兼容性检查。
+    - 自动化任务通知： 新增任务完成和失败的桌面通知，提供独立开关，默认开启。
+    - 内置插件： 更新 Agents Anywhere 2.0.2 适配及插件市场兼容补丁。
+    - 插件市场按需开启： 新建 Profile 的桌面设置向导默认关闭插件市场。
+    修复
+    - 修复更新安装包下载被固定域名限制拦截的问题，支持 HTTPS 镜像及 CDN 跳转，并保留下载地址、文件格式和大小检查。
+    - macOS 应用及 Helper 统一使用所固定上游的签名权限配置，录音通过系统原生授权流程处理，改善麦克风访问兼容性。
+    - 适配新版 AA Connector，保留代理与会话同步兼容修复，并使用数据目录中的可写项目副本。
+    - 修复通知总开关及完成／失败开关需要重启才生效的问题，运行中的任务也遵循最新设置。
+    - 修复 Windows 官方终端卡片与配置写入，正确关联 Desktop PowerShell 执行器。
+    - 在普通插件列表中隐藏由 Desktop 管理的 dshmarket 卡片，减少重复入口。
+    使用提示
+    - 请先退出旧版应用并备份 ~/.dsh。本次升级包含上游数据与配置变化，内置的 v0.2.0-rc.1 仍为候选发布版本。
+    - 新版内核会检查插件声明的兼容版本，不兼容的插件可能被跳过；遇到插件未加载时，请先检查并更新插件。
+    - 通用设置新增上游“上传 Session Log”选项，保留上游默认值（默认开启）；可在设置中查看并调整。
+    - Windows 使用不透明窗口；Linux 仅提供兼容模式，暂不提供 ARM64 安装包。
+    完整变更记录 · 项目网站
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.16
+ReleaseTime: 2026-09-29T08:23:53.0000000Z

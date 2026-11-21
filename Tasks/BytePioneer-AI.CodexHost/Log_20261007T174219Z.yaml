@@ -1,0 +1,63 @@
+Version: 0.13.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.13.0/codexhost-0.13.0-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.13.0/codexhost-0.13.0-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    What's New
+    codexhost now tracks usage for external Harnesses such as Claude Code and OpenCode, showing cost and speed for each request, with model prices you can refresh and a total across the whole machine. Harness plugins load dynamically, remote Host threads can be opened from any Harness, and Linux builds now run on older systems (glibc 2.28).
+    现在可以统计 Claude Code、OpenCode 等外部 Harness 的用量：显示每次请求的费用和速度，模型价格可在线更新，还能汇总整台机器的用量。Harness 插件改为按需加载，可在任意 Harness 中查看远程 Host 上的对话，Linux 版可在更旧的系统（glibc 2.28）上运行。
+    Features
+    - Add machine-wide usage statistics and Host-side usage metering for external Harnesses, including Claude Code, OpenCode, OMP, Pi, CodeBuddy, WorkBuddy, DSH and ZCode
+    - Show cache hit rate, time to first output, output speed and cost in a grouped Usage popover, with a lower-bound cost when some models are unpriced
+    - Refresh model prices from models.dev, with user overrides and price suggestions
+    - Add Cordis lifecycle and dynamic Harness plugin catalogs (#506)
+    - Read remote Host threads from any Harness (#499)
+    - Support personal Coding Plan accounts in ZCode (#498)
+    - Lower the Linux native binary glibc baseline from 2.35 to 2.28 (#485)
+    - Show native API average speed in Grok without repricing costs
+    Fixes
+    - Show background-task continuations in Claude Code as autonomous turns (#501)
+    - Allow stopping remote Hosts with outdated configuration (#500)
+    - Keep individual subagent identities in OMP task batches, allow Off for models without thinking controls, settle local-only command turns, and recover cancellation and faulted sessions (#497, #496, #468, #492)
+    - Recover the local official Codex backend after disconnection (#479)
+    - Bound External Thread history pagination work (#477)
+    - Settle Claude background commands before session close (#463)
+    - Activate hermes_bootstrap before Hermes gateway delegation imports (#461)
+    - Preserve remote image attachments, the Harness picker and Harness icons across refreshes
+    - Keep unsubmitted prewarm threads out of history
+    - Isolate Desktop launch from SSH session markers
+    - Preserve answer boundaries in WorkBuddy, Kimi and Cursor
+    - Default Grok context to 500K and refresh its native usage
+    新功能
+    - 新增全机用量统计，并为外部 Harness 提供 Host 侧用量统计，覆盖 Claude Code、OpenCode、OMP、Pi、CodeBuddy、WorkBuddy、DSH 和 ZCode
+    - Usage 弹窗分组展示缓存命中率、首次输出时间、输出速度和成本；部分模型无价格时显示成本下限
+    - 从 models.dev 刷新模型价格，支持用户覆盖和价格建议
+    - 新增 Cordis 生命周期和动态 Harness 插件目录 (#506)
+    - 可从任意 Harness 读取远程 Host 线程 (#499)
+    - ZCode 支持个人 Coding Plan 账号 (#498)
+    - Linux 原生二进制的 glibc 基线从 2.35 降到 2.28 (#485)
+    - Grok 显示原生 API 平均速度，且不改变成本计价
+    修复
+    - Claude Code 后台任务完成后的续段显示为自主回合 (#501)
+    - 允许停止配置已过期的远程 Host (#500)
+    - OMP 任务批次保留各子代理身份，无思考档位的模型可选 Off，本地命令回合正确结束，并可恢复取消和故障会话 (#497, #496, #468, #492)
+    - 断开后可恢复本地官方 Codex 后端 (#479)
+    - 限制 External Thread 历史分页的工作量 (#477)
+    - 会话关闭前先结束 Claude 后台命令 (#463)
+    - Hermes 网关委托导入前先激活 hermes_bootstrap (#461)
+    - 刷新后保留远程图片附件、Harness 选择器和 Harness 图标
+    - 未提交的预热线程不再出现在历史中
+    - Desktop 启动不再受 SSH 会话标记影响
+    - WorkBuddy、Kimi 和 Cursor 保留回答边界
+    - Grok 上下文默认 500K，并刷新原生用量
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.13.0
+ReleaseTime: 2026-10-07T16:51:49.0000000Z

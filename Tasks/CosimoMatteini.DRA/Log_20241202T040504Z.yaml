@@ -1,0 +1,31 @@
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/devmatteini/dra/releases/download/0.7.0/dra-0.7.0-x86_64-pc-windows-msvc.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: dra-0.7.0-x86_64-pc-windows-msvc\dra.exe
+    PortableCommandAlias: dra
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    Install multiple executables from tar/zip archives in one command (#234, thanks @duong-dt for the initial implementation).
+    You can now specify -I/--install-file option multiple times:
+    $ dra download -s helloworld-many-executables-unix.tar.gz -I helloworld-v2 -I random-script devmatteini/dra-tests
+    # [...]
+    Extracted archive executable to '/home/<user>/helloworld-v2'
+    Extracted archive executable to '/home/<user>/random-script'
+    Installation completed!
+    Note that the following syntax is not valid as it's not backward compatible:
+    dra download -s helloworld-many-executables-unix.tar.gz -I helloworld-v2 random-script devmatteini/dra-tests
+    #                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #                                                       you can't pass space-separated values to -I
+    When you install multiple executables, --output must be a directory path.
+    Updated dependencies
+    - bump serde from 1.0.210 to 1.0.214
+    - bump clap from 4.5.18 to 4.5.20
+    - bump clap_complete from 4.5.29 to 4.5.34
+- Key: ReleaseNotesUrl
+  Value: https://github.com/devmatteini/dra/releases/tag/0.7.0
+Version: 0.7.0
+ReleaseTime: 2024-11-22T16:55:32.0000000Z

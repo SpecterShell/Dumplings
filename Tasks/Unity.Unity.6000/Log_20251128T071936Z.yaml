@@ -1,0 +1,190 @@
+Version: 6000.0.63f1
+Installer:
+- Architecture: x64
+  InstallerUrl: https://download.unity3d.com/download_unity/9438f9b77a46/Windows64EditorInstaller/UnitySetup64-6000.0.63f1.exe
+  ProductCode: Unity 6000.0.63f1
+- Architecture: arm64
+  InstallerUrl: https://download.unity3d.com/download_unity/9438f9b77a46/WindowsArm64EditorInstaller/UnitySetupArm64-6000.0.63f1.exe
+  ProductCode: Unity 6000.0.63f1
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://unity.com/releases/editor/whats-new/6000.0.63
+- Locale: en-US
+  Key: Documentations
+  Value:
+  - DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+    DocumentLabel: Unity User Manual
+- Locale: zh-CN
+  Key: Documentations
+  Value:
+  - DocumentLabel: Unity 用户手册
+    DocumentUrl: https://docs.unity3d.com/6000.0/Documentation/Manual/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Known Issues in 6000.0.63f1
+    - DirectX12: Increased Memory usage when Update Mode 'On Demand' Realtime lights are used and DX12 API is selected (UUM-90065)
+    - DirectX12: [Intel] Crash on BufferD3D12::BeginWrite when opening a newly created URP project with DirectX12 set as the default graphics API (UUM-104889)
+    - IL2CPP: [iOS] [Android] External library generics fail during IL2CPP build (UUM-125284)
+    - Metal: Game freezes after command buffer Timeout error (UUM-125778)
+    - Metal: [iOS] Screen flashing after the iOS splash screen (UUM-121453)
+    - Serialization: Editor performance degrades when PlayableDirector with multiple bindings remains visible in the Inspector during Play mode (UUM-122354)
+    - Serialization: Exceedingly long wait on InspectorWindow.Repaint when selecting a large SVG file in the Project window (UUM-120424)
+    - Serialization: Silent crash when opening a specific project (UUM-100218)
+    6000.0.63f1 Release Notes
+    Improvements
+    - Editor: Added the Nintendo Switch 2 icon to the Build Profile and Platform Browser windows.
+    - Physics: Due to the coefficient setting changes done for UUM-79798, pinning all particles on a Cloth component is no longer a unsupported operation. (UUM-79798)
+    Changes
+    - URP: Renamed samples to be more cohesive.
+    Fixes
+    - 2D: Fixed case where Texture 2D Importer fails passing a default value to the "namefileidtable" when using a texture preset. (UUM-121031)
+    - 2D: SpriteAtlasPerformance tests are crashing with "Dereferencing nullptr PPtr!". (D2D-7750)
+    - Android: Added activity-alias support to Build and Run. (UUM-120359)
+    - Android: Fixed a bug where Unity Audio was disabled on Android 8.1, which is roughly 3% of Android devices. (UUM-121082)
+    - Android: Fixed an issue where gamepad/Joystick buttons could get stuck in a pressed state. (UUM-116934)
+    - Android: Fixed build failure issue when building application while RenderDoc is running. (UUM-113131)
+    - Android: Fixed for the visible icon artefact during the splash screen on Android XR. (UUM-126180)
+    - Animation: Fixed a crash when attempting to play animation clips from the animation window on animators with invalid controllers (no layers). (UUM-121460)
+    - Animation: Fixed animator state showing a parameter that no long exists. (UUM-125283)
+    - Animation: Fixed crash when deleting playable output with null graph. (UUM-122215)
+    - Animation: Fixed focus on clip selection dropdown preventing use of play shortcut. (UUM-125483)
+    - Animation: Fixed issue where Animator state normalized time would stop incrementing past a certain normalized time. Now, the state time will be guaranteed to increment (or decrement) to the next representable floating point number if the delta time is non-zero. (UUM-123305)
+    - Asset Bundles: Fixed crash when you call UnloadAllAssetBundles and there are pending AssetBundle.UnloadAsync tasks. (UUM-122776)
+    - Asset Pipeline: Fixed for files disappearing in project browser, when doing reimport of folder. (UUM-126423)
+    - Audio: Fixed bad link when using inspector reference for AudioSnapshot. (UUM-120312)
+    - Audio: Fixed FMOD error spam when trying to play timeline when unity audio is disabled, logs a warning once instead. (UUM-112000)
+    - DX12: Fixed for corruption in constant buffers on async compute queue. (UUM-127265)
+    - Editor: Editor layouts on Windows can now restore windows closer to the screen edge. (UUM-120271)
+    - Editor: Fixed a bug where a Raycast hit would not be successful when using the default BoxcastCommand() constructor. (UUM-123124)
+    - Editor: Fixed a bug where a Raycast hit would not be successful when using the default CapsulecastCommand() constructor. (UUM-123124)
+    - Editor: Fixed a bug where a Raycast hit would not be successful when using the default RaycastCommand() constructor. (UUM-123124)
+    - Editor: Fixed a bug where a Raycast hit would not be successful when using the default SpherecastCommand() constructor. (UUM-123124)
+    - Editor: Fixed a crash that rarely occurred on old IOS devices when the total attachment size exceeds the pixel storage limit. (UUM-100073)
+    - Editor: Fixed a crashing issue when dismissing the progress bar dialog. (UUM-122055)
+    - Editor: Fixed a race condition in the licensing client where the Editor would succeed to make the client acquire a floating license faster than it had finished loading licenses at startup, which would make it fail to pick up the new license. (UUM-121408)
+    - Editor: Fixed alignment in Stack Trace section in PlayerSettings. (UUM-126705)
+    - Editor: Fixed an issue where camera rotation could cause ShadowCaster2Ds to be incorrectly clipped. (UUM-90714)
+    - Editor: Fixed an uncommon LinuxEditor crash when maximizing a VFX Graph window tab. (UUM-125788)
+    - Editor: Fixed anchored overlays sometimes creating deadzones in the scene view. (UUM-105555)
+    - Editor: Fixed applying SerializeReference root property overrides from prefab instances to prefab assets when the managed object already exists in the asset. (UUM-122778)
+    - Editor: Fixed crash when some engine textures are used during shadow pass. (UUM-115024)
+    - Editor: Fixed Edit > Delete option for gradient editor keys. (UUM-122403)
+    - Editor: Fixed false warning "BatchRendererGroups currently don't support override shaders". (UUM-122367)
+    - Editor: Fixed for loadable plugin directories being marked as directories when root folder is reimported. Fix updates source db version. (UUM-115935)
+    - Editor: Fixed imgui's charField. (UUM-122800)
+    - Editor: Fixed null material pointer crash in IMGUI. (UUM-117563)
+    - Editor: Fixed null reference exception in the layer inspector when removing items. (UUM-119530)
+    - Editor: Fixed perceptual smoothness in Specular occlusion for shader graphs. (UUM-122489)
+    - Editor: Fixed performance degradation in the inspector when left open for a long time. (UUM-122354)
+    - Editor: Fixed the link that opens when clicking on the ? icon in the RayTracingShader (.raytrace) inspector in the Editor. (UUM-122368)
+    - Editor: Fixed thread issue when using matchMaterialPreset. (UUM-124907)
+    - Editor: Object pickability fix with GRD. (UUM-120294)
+    - Editor: Prevent null asset to be passed to OnWillSaveAssets (backport to unity 6.0). (UUM-122775)
+    - Editor: Project browser search area changes when maximing Game View. (UUM-125689)
+    - Editor: Toggling off the Scene Visibility button in the scene view toolbar now disables hiding of objects and scene correctly when using GPU Resident Drawer. (UUM-120684)
+    - Editor: Updated the Standalone Input Module of the EventSystem to the new input System. (UUM-71675)
+    - GI: Disabled the graphics test UUM-121353. (UUM-121353)
+    - GI: Ensured that the "RenderSettings customReflection texture has invalid type" error is show exactly when relevant. (UUM-121679)
+    - GI: Fixed an issue where using "Live Updates" probe placement mode in the rendering debugger would cause a progress bar to be shown on screen permanently. (UUM-110221)
+    - Graphics: Applied workaround for video black screen issue on Mali GPUs with OpenGLES. (UUM-116491)
+    - Graphics: Fixed an issue where ETC1 assets loaded from old AssetBundles could appear washed out, if the assets were originally imported as sRGB and the project is set to use Linear colorspace. (UUM-113599)
+    - Graphics: Fixed random GPU hang when using GPU Occlusion Culling on certain platforms. (UUM-112854)
+    - HDRP: Cached shadows now removes a light if an undo operation affects the light. This is done to avoid having invalid references which would cause a crash. (UUM-116010)
+    - iOS: Fixed arg typo in updateLayerDrawableSizeFromBounds. (UUM-125390)
+    - iOS: Fixed touch keyboard on iOS reporting it is visible after dismiss. (UUM-121639)
+    - Mono: Re-added support for Jetbrains Rider profiling, which had been temporarily removed with a recent security fix. (UUM-126137)
+    - Package Manager: Fixed packages that couldn't be removed from project. (PAK-8422)
+    - Physics: Fixed a crash that would occur when adding a Cloth component to a GameObject with an existing TextMesh component. By default both Cloth and TextMesh components can't share the same GameObject due to the fact that they require different renderers to work, MeshRenderer and SkinnedMeshRenderer respectively. (UUM-125416)
+    - Physics: Fixed a typo on "Clear Locked Objects" button inside the Physics Debugger. (UUM-124744)
+    - Physics: Fixed an issue where setting constraint data to Cloth components would reset the simulation. (UUM-79798)
+    - Physics: Fixed the padding for all the buttons in the Physics Debugger window, most of the buttons on the right side of the window had no padding. (UUM-124744)
+    - Scene/Game View: Fixed an issue where the shortcut table's selection in Shortcut Manager would not update correctly when changing search queries. (UUM-126160)
+    - Scripting: Fixed GameView not rendering on Quest when hidden in Editor. (UUM-119451)
+    - Scripting: Fixed possible managed memory corruption when using API's that use arrays as output buffers. (UUM-123044)
+    - Shaders: Fixed a regression triggering keyword space mismatches on certain cases with UsePass and Fallback. (UUM-122608)
+    - Shaders: Fixed editor crash occurring often with a freshly created project. (UUM-107673)
+    - Shaders: Updated UnityInput.hlsl to remove incorrect comment about time since level load.
+    - Shaders: When a standard material's render queue value is set out-of-bounds, clicking the log message that is printed to the console will now highlight the material that triggered it. (UUM-110693)
+    - SpeedTree: Fixed a bug where SpeedTrees loaded as asset bundles could cause the player to crash on exit. (UUM-113224)
+    - SRP Core: Flip backbuffer so that it uses the same coordinates as unity textures (OpenGL coordinates). (UUM-101654)
+    - Terrain: Terrain : Fixed crash that could occur when preventing instanced details from being added to detail texture atlas. (UUM-122921)
+    - Terrain: Terrain : Fixed crash that could occur when preventing instanced details from being added to detail texture atlas. (UUM-125363)
+    - Test Framework: Fixed a stack overflow exception in the Test Runner UI that might happen with some assembly setups with precompiled assemblies. (UUM-122047)
+    - Test Framework: Fixed an issue where the test runner UI would repaint too often on some tests, causing performance issues. (UUM-119390)
+    - TextCore: Fixed thread issue with underline. (UUM-124858)
+    - TextMeshPro: Fixed preferred height calculations when text component is using multiple font asset with varying metrics. (UUM-122933)
+    - TextMeshPro: Fixed preferred width calculations not taking into consideration kerning adjustments. (UUM-120270)
+    - TextMeshPro: Revised style padding handling to exclude sprites. (UUM-102112)
+    - TextMeshPro: Revised the UI text component Maskable property to also control the RectMask2D clipping as well as ensuring its state is also mirrored on any potential sub mesh text objects. (UUM-119215)
+    - uGUI: Fixed for flickering caret and highlight while selecting text in a TextMeshPro InputField while continuing to drag cursor above or below of the Input Field. (UUM-122467)
+    - uGUI: UUM-119688: Text color used in Intercepted Events Preview will now match Editor style. (UUM-119688)
+    - UI Elements: Fixed the multiline TextField layout not stretching when flex-grow is applied to the Control. (UUM-122632)
+    - UI Toolkit: Fixed exception when reordering TreeView through expansion. (UUM-100335)
+    - UI Toolkit: Fixed exceptions when deleting/unpacking duplicate template instance in UIBuilder. (UUM-124899)
+    - UI Toolkit: Fixed ListView foldout arrow indentation in the inspector. (UUM-105617)
+    - UI Toolkit: Fixed the behaviour of stretchable columns in a MultiColumn control with StretchMode.Grow. (UUM-101267)
+    - UI Toolkit: Fixed the second pane scrollbar in the TwoPaneSplitView being cut off. (UUM-116527)
+    - UI Toolkit: Fixed the UI Builder StyleSheet placeholder text not showing after undoing USS creation. (UUM-100558)
+    - UI Toolkit: Fixed UI Builder exceptions when name field is being edited during a save. (UUM-125901)
+    - UI Toolkit: Fixed zoom commands on ScrollView being considered as a scroll operation. (UUM-104506)
+    - UI Toolkit: Placeholder text is restored when using SetValueWithoutNotify(string.Empty). (UUM-102333)
+    - UI Toolkit: Removed button in a ListView footer will be disabled when list is empty. (UUM-122811)
+    - Version Control: Fixed a NullReferenceException that was raised on double-clicking an asset that is "Copied (new)" (new file added from a shelve).
+    - Version Control: Fixed a NullReferenceException that was raised when the workspace is removed with Pending Changes.
+    - Version Control: Fixed Inspector and Project's Asset Menu to allow to Check in "Changed" items.
+    - Version Control: Fixed Inspector and Project's Asset Menu to allow to Undo "Changed" items.
+    - Version Control: Fixed Library folder that was sometimes wrongly added to source control on a new project created from the Hub.
+    - Version Control: Fixed the "unknown" status displayed after restoring a workspace that was previously removed.
+    - Version Control: Fixed the alignment of Unity Version Control's settings with the title of the window. (UUM-122499)
+    - Version Control: Fixed the Changesets view that could crash the Editor when displaying a very long changeset comment, with "PPtr<Shader>::operator Shader*() const".
+    - Version Control: Fixed the console error that occured when using CTRL-H keyboard shortcut to Hide a branch.
+    - Version Control: Fixed the Controlled and Private overlay icons reverted back to earlier versions, based on user feedback.
+    - Version Control: Fixed the diff panel keyboard shortcuts that didn't take into account the focus to open the diff on the correct item.
+    - Version Control: Fixed the GUILayout error that occured when applying a shelve with pending merge link.
+    - Version Control: Fixed the icon that was blurry and pixelated when displayed in our Unity Version Control window's tab. (UUM-122495)
+    - Version Control: Fixed the Item checkbox that was unresponsive when the Pending Changes list is empty. It is now disabled.
+    - Version Control: Fixed the merge error message that didn't fit in available space and was truncated.
+    - Version Control: Fixed the merge link text that was not centered vertically with its icon.
+    - Version Control: Fixed the new "Create Branch based on" dialog variant that was truncated, hiding the buttons, in 2.10.0.
+    - Version Control: Fixed the pending changes success message appearing in the status bar instead of the main area when this one is empty.
+    - Version Control: Fixed the Pending changes view that was refreshed on window activation for no reason.
+    - Version Control: Fixed the Project Settings window to automatically refresh when the plugin is enabled. (UUM-122519)
+    - Version Control: Fixed the Shelve view that was missing a keyboard shortcut to open the diff in the Desktop Application.
+    - Version Control: Fixed the Toolbar button icon that was not visible for uncontrolled projects for Editor older than Unity 6.3.
+    - Version Control: Fixed the Toolbar button showing an "unknown" status after removal of the workspace.
+    - Version Control: Fixed the Toolbar button that should be visible by default in 6.3+.
+    - Version Control: Fixed the Toolbar button to correctly hide when disabling the Unity Version Control package. (UUM-122521)
+    - Version Control: Fixed the Undo changes operation so that it can now apply to the selection even if it contains some Private files.
+    - Version Control: UnityYAMLMerge tool was adding long path specifiers to the file paths passed to the fallback merge tools, causing p4Merge to fail. (UUM-126068)
+    - VFX Graph: Clarify documentation about "Enable Ray Tracing" setting. (UUM-103422)
+    - VFX Graph: Fixed memory leak when using motion vectors. (UUM-122249)
+    - VFX Graph: Fixed output ports order in CustomHLSL operators. (UUM-121354)
+    - VFX Graph: Six-way lighting : fix APV indirect lighting when the VFX system is in world space. (UUM-108240)
+    - Video: Fixed settings not being applied when using the Preset Selector to apply a preset to a VideoClip. (UUM-117137)
+    - Video: [Linux] Crash on VideoPlayer::InvokeScriptCallbacks when domain reloads while playing a video. (UUM-110165)
+    - WebGL: Fixed an issue where DownloadHandlerScript.CompleteContent was called twice in WebGL builds. (UUM-109862)
+    - WebGL: Fixed WebGPU performance regression. (UUM-125744)
+    Package changes in 6000.0.63f1
+    Packages updated
+    - com.unity.netcode: 1.9.1 to 1.9.3
+    - com.unity.charactercontroller: 1.3.11 to 1.4.1
+    - com.unity.2d.animation: 10.2.1 to 10.2.2
+    - com.unity.2d.psdimporter: 9.1.0 to 9.1.1
+    - com.unity.animation.rigging: 1.3.0 to 1.4.0
+    - com.unity.collab-proxy: 2.10.0 to 2.10.2
+    - com.unity.inputsystem: 1.14.2 to 1.16.0
+    - com.unity.polybrush: 1.2.0 to 1.2.1
+    - com.unity.purchasing: 4.12.2 to 4.14.0
+    - com.unity.searcher: 4.9.2 to 4.9.3
+    - com.unity.services.core: 1.14.0 to 1.16.0
+    - com.unity.xr.hands: 1.7.0 to 1.7.1
+    - com.unity.xr.interaction.toolkit: 3.0.8 to 3.0.9
+    - com.unity.addressables.android: 1.0.6 to 1.0.8
+    - com.unity.ai.inference: 2.2.1 to 2.4.1
+    - com.unity.cloud.draco: 5.3.0 to 5.4.0
+    Packages added
+    - com.unity.cloud.gltfast@6.14.1
+    - com.unity.cloud.ktx@3.6.0
+    - com.unity.multiplayer.center.quickstart@1.1.0
+ReleaseTime: 2025-11-28T06:25:46.3120000Z

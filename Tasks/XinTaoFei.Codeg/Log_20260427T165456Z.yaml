@@ -1,0 +1,41 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.0/codeg_0.11.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.0/codeg_0.11.0_x64_en-US.msi
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.0/codeg_0.11.0_arm64-setup.exe
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xintaofei/codeg/releases/download/v0.11.0/codeg_0.11.0_arm64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - feat(acp): persist in-flight session state across tab close/reopen, browser refresh, and reconnects. The streaming reply, active tool calls, pending permission prompts, plan updates, modes and usage all rehydrate from a backend snapshot, with seq-based deduplication against the live event stream.
+    - feat(acp): harden the connection lifecycle with an idle sweep, spawn deduplication mutex, serialized prompt sends, and a close-error state machine; sends are cancelled on failure and stuck spawns no longer wedge the session.
+    - feat(acp): keep open conversation tabs alive via a frontend keepalive so connections aren't reaped while the user is still looking at them.
+    - feat(acp): create the conversation row on the first prompt and emit a conversation_linked event, eliminating duplicate rows when the same prompt is sent twice in quick succession.
+    - fix(web-server): release the listening port reliably on shutdown and surface stale-port state instead of silently failing to restart.
+    - fix(web): fall back to a clipboard shim on non-secure contexts so copy actions work over plain HTTP.
+    - fix(workspace-state): apply the cold-scan snapshot after stream restarts and catch up missed deltas when re-acquiring within the shutdown grace window.
+    - fix(mobile-web): improve mobile web UI control accessibility. Thanks to @pia for contributing this fix in #122.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 新增(ACP)：会话进行中关闭/重开标签页、浏览器刷新或重连后，流式回复、进行中的工具调用、待确认的权限请求、计划更新、模式与用量信息均可从后端快照恢复，并通过 seq 与实时事件流去重对账，不再丢失现场；
+    - 新增(ACP)：连接生命周期加固，引入空闲清理、spawn 去重锁、Prompt 串行发送和关闭错误状态机；发送失败时自动取消，避免 spawn 阻塞导致会话卡死；
+    - 新增(ACP)：前端为打开中的会话标签维持 keepalive，避免用户仍在查看时连接被回收；
+    - 新增(ACP)：首次发送 Prompt 时由后端创建会话行并发出 conversation_linked 事件，消除短时间内重复触发产生的重复会话；
+    - 修复(Web 服务器)：关闭时可靠释放监听端口，并对端口残留状态给出明确反馈，避免静默重启失败；
+    - 修复(Web)：在非安全上下文（如纯 HTTP）下使用兜底剪贴板实现，确保复制功能可用；
+    - 修复(工作区状态)：流重启后应用冷扫描快照，并在关闭宽限期内重新接入时补齐遗漏的增量；
+    - 修复(移动端 Web)：改善移动端 Web 控件的可访问性，感谢 @pia 在 #122 中贡献此修复。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xintaofei/codeg/releases/tag/v0.11.0
+ReleaseTime: 2026-04-27T16:51:49.0000000Z

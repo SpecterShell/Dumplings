@@ -1,0 +1,56 @@
+Version: 0.6.0-r.2
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/miaotouy/aio-hub/releases/download/v0.6.0-r.2/AIO.Hub_0.6.0-r.2_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🎉 新版本发布
+    AIO Hub v0.6.0-r.2
+    🚀 新功能
+    媒体生成器增强
+    - 任务卡片支持多张结果图切换预览，显示当前索引
+    - 新增参考图侧边栏，支持点击放大预览
+    - 任务生成时实时显示处理进度和状态文本
+    LLM Inspector 多厂商支持
+    - 新增 API 格式自动识别，支持 OpenAI、Anthropic、Gemini、Cohere、Ollama 等主流厂商的响应解析
+    - 支持提取 reasoning/thinking 块和 tool_calls 等高级特性
+    - 重构流式内容提取和完整响应提取逻辑
+    会话导出增强
+    - 新增"使用上下文管道处理"选项，可导出经过宏解析、世界书注入、Token 裁剪等完整处理后的真实 Payload
+    - Markdown 和 JSON 格式均支持管道处理后的输出
+    UI 组件
+    - 新增 Element Plus 组件库的分离式按钮组样式（.separated-group），支持毛玻璃效果
+    - 新增分段控制器演示
+    其他
+    - 预设消息宏处理支持用户档案变量，档案切换时自动重新解析
+    - 快捷操作新增"引用"、"代码块"和"转发消息"
+    - README 新增 Documentation 徽章和技术栈版本更新（Tauri 2.10、Vite 8.0）
+    🐛 修复
+    - 修复续写或重解析时切换模型后，消息头部模型名称不更新的问题
+    - 修复对话框遮罩层与标题栏重叠的交互问题
+    - 修复媒体任务列表容器宽度未就绪时列数计算错误导致的布局闪烁
+    - 修复 ResizeObserver 在异步加载时因条件渲染未完成而监听失效的问题
+    - 修复 Agent 绑定的用户档案未自动加载导致快捷操作不显示的问题
+    - 会话导出模式下隐藏上下文管道处理选项，避免误操作
+    ⚡ 性能优化
+    - 媒体任务列表引入虚拟滚动（useVirtualList），支持大量任务高效渲染
+    - 任务卡片抽取为独立组件 MediaTaskCard，提升可维护性
+    - 媒体画廊添加 content-visibility: auto，延迟渲染视口外内容
+    - 画廊项移除悬停阴影动画，改用边框高亮，减少重绘开销
+    - 资产 URL 改为按需获取，视频添加 preload="none"
+    - 标签页启用懒加载，减少初始渲染开销
+    🔧 重构
+    - 提取默认快捷操作配置为独立模块 defaultQuickActions.ts
+    - 调整参数编辑器配置分组顺序，"预设消息"移至"模型参数"之前
+    - 优化对话框宽度逻辑，支持动态 maxWidth / maxHeight
+    - 调整媒体任务列表网格布局参数，优化响应式适配
+    📖 文档
+    - 新增 Agent、工具调用与技能系统集成架构文档
+    - 更新 LLM Inspector 架构文档，补充多格式提取引擎说明
+    - 更新 LLM Chat 架构文档，新增技能系统集成章节
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/miaotouy/aio-hub/releases/tag/v0.6.0-r.2
+ReleaseTime: 2026-05-11T23:56:44.0000000Z

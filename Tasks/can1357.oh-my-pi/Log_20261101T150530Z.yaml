@@ -1,0 +1,152 @@
+Version: 18.15.0
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.15.0/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Fixed
+    - Fixed OpenAI remote compaction (/responses/compact) replaying backend-only internal_chat_message_metadata_passthrough metadata that Codex rejects as an unknown parameter (#17590 by @briankeefe)
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed Codex conversation replay failing with an unknown internal_chat_message_metadata_passthrough.content_token_count parameter by omitting backend-internal response metadata from replayed input (#17590, #17597 by @briankeefe).
+    - Fixed service_tier: "ultrafast" being dropped for OpenAI-family models on custom providers even when the model's serviceTiers lists it (#17577 by @jakehemmerle)
+    - Fixed Google Vertex requests with Workforce Identity Federation ADC failing token refresh against the wrong endpoint (#17447).
+    - Fixed Anthropic (and other rotating-token) OAuth accounts being signed out automatically when a background usage poll's token refresh got invalid_grant, including refreshes a client delegates to an auth broker; usage polling no longer disables credentials, so only a real request's refresh can do that (#17468)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added Modular Cloud (modular) as a provider: /login modular with an API key, models and prices from the models.dev modular entry, and per-model reasoning controls for MiniMax M3.1 Flash, MiniMax M3, and Gemma 4 31B (#17334 by @tommyjtl)
+    - SambaNova Cloud follow-up turns now reuse the provider's prefix cache, so multi-turn conversations stop re-processing earlier context (#17555 by @rjuez00)
+    Fixed
+    - Fixed newly discovered OpenAI-compatible models ignoring provider-reported context and output token limits (#17561 by @wolfiesch)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Long or multi-step background shell commands get a one-line caption saying what they do and when they end, written once per job by the widget model role when the job, after running 15 seconds, is shown in a live widget or listed by /jobs full; the jobs sheet and /jobs full show it under the job's purpose. It follows the Live Job Widgets setting (async.widgets), and CreateAgentSessionOptions.jobCaptionWriter replaces the model call (#17649 by @wolfiesch)
+    Changed
+    - In a source checkout, the error for a missing HTML export viewer now names the script that builds it, packages/collab-web/scripts/build-export-viewer.ts, beside bun gen:export-viewer (#17636 by @sjawhar)
+    - Fixed an eval cell running silently on a new kernel after the session's Python kernel or JS worker died between cells (a crash, a kill, an out-of-memory kill, or a cancelled JS cell): the first cell on the replacement now carries Kernel restarted: … state is unavailable. Re-run needed setup ahead of its own output, instead of failing with a bare NameError on a variable an earlier cell set (#17595 by @sjawhar)
+    - Fixed a task worker messaged (write agent://<id>) while still starting up running on the shared context alone and never receiving its tasks[].task assignment; the message now waits for the assignment's turn (#17587)
+    - lsp reload now discovers Rust crates created after rust-analyzer started, so hover and other analysis work without restarting omp (#17658).
+    - A model without image input (GLM, DeepSeek, Grok Composer and the like) reads a snapcompact archive's full kept text instead of image-omitted placeholders for its frames, after a model switch, on resume and in side requests (#17510 by @will-bogusz)
+    - Snapcompact no longer refuses a new archive as "would not reduce context" when it shrinks a session that already holds one (/compact snapcompact, idle and pre-prompt compaction) (#17490 by @will-bogusz)
+    - A failed /compact snapcompact now reports its reason once instead of twice, and names the /compact mode to run instead (#17490 by @will-bogusz)
+    - Background bash and eval jobs now carry the purpose the model gave for the call: /jobs, /jobs full, proc:// listings, wait and job results, and the jobs HUD hover lead with it ahead of the raw command line (#17649 by @wolfiesch)
+    - The seance guidance in the task tool and the archive docs now say that a question about an earlier session is answered by the seance agent, and that reading the session's raw JSONL belongs to narrow mechanical checks only, so a consult is no longer duplicated by transcript reads and re-run checks (#17523 by @iacore)
+    Fixed
+    - A prompt on a model whose provider has no usable credential (logged out, refresh token expired, or an auth broker holding none) now switches to the first retry.fallbackChains candidate that has one instead of failing with "No API key found", and switches back on the first prompt after the credential returns (#17559 by @wolfiesch)
+    - Fixed background results arriving during manual /compact starting turns on stale history or disappearing from the saved session (#17599).
+    - Fixed isolated tasks on fuse-overlayfs leaving their overlay mounted and the fuse-overlayfs daemon running when the unmount hit a transient "Device or resource busy"; a failed unmount now reports fusermount's error and keeps the workspace for omp worktree clear instead of deleting its layers under the live mount (#17644)
+    - Usage-limit retries now count system sleep toward the quota-reset deadline instead of re-arming the remaining uptime delay after the countdown reaches zero (#17606 by @zhiland).
+    - Fixed role assignments to a models.yml model whose id differs only by case from a bundled model of the same provider (such as xiaomi/MiMo-V2.6-Pro beside xiaomi/mimo-v2.6-pro) silently staying unset (#17580)
+    - Fixed Eval's direct browser wait helpers (tab.waitForSelector, tab.waitForText, …) giving up after 29 s when passed a longer { timeout }; the requested timeout is now honored up to the browser tool's 300 s cap (#17617)
+    - Fixed browser.open with a fresh custom Chrome profile failing when Chrome has no initial tabs; it now opens its own tab without navigating an existing one (#17583).
+    - Fixed the read tool's repeated-output notice suggesting a path:A-B selector on xd:// topics, MCP resources and other URLs that reject selectors (#17631)
+    - The lsp tool now starts typescript-native (tsc --lsp --stdio) for a TypeScript 7 tsc installed without a package.json, such as the nixpkgs package, instead of leaving the project with no TypeScript server (#17659)
+    - DuckDuckGo excludes advertising click redirects before applying result limits, keeping them out of direct and Public Web sources (#17564 by @jasonharrison).
+    - Fixed /fast refusing Ultrafast ("The current model does not offer the Ultrafast service tier") on custom OpenAI-compatible providers whose /v1/models row lists ultrafast in service_tiers, such as relays in front of a ChatGPT subscription (#17577 by @jakehemmerle)
+    - Importing the SDK no longer takes over the embedding host's signal and fatal-error shutdown; registered cleanup still runs at exit (#17674).
+    - Fixed raw browser page.waitForFunction waits timing out after a full-document navigation even when the destination matches the predicate (#17584)
+    - Fixed a Ctrl+R history entry picked while an ask dialog's "Other" or note prompt is open landing in the hidden main chat input instead of that prompt (#17565)
+    - Bash commands no longer hang on git rebase -i when git config sets a sequence.editor (an inline GIT_SEQUENCE_EDITOR=… still wins), or on Git Credential Manager GUI/browser sign-in prompts (#17452 by @wolfiesch)
+    - Fixed intercepted bash commands asking for approval before being blocked anyway (#17502 by @asuffield)
+    - Fixed omp --from-claude listing a Claude Code session renamed with /rename by its first prompt; the picker now shows the renamed title and importing the session keeps it (#17361 by @namest504).
+    - Auto-learn capture turns now reuse the main turn's prompt cache instead of re-sending the whole conversation uncached: they advertise the same tool list and refuse every call except learn and manage_skill without running it (#17418 by @STRML).
+    - Fixed extensions being unable to replace the background-job completion card with registerMessageRenderer("async-result", …); a registered renderer now owns the card, and the built-in row remains the fallback when none is registered, when one declines, and when one throws (#17372 by @AlexBrd999, from #14484 by @F0Rextasy; #14131)
+    - Local dictation stops live previews when the speech model repeatedly cannot keep up, so final transcripts no longer wait behind repeated previews (#17410).
+    - ACP clients now receive _omp/compaction/start and _omp/compaction/end notifications, including failures and cancellations, without requiring an active prompt. (#16969; #17384 by @SAKANA-MOONLIGHT).
+    - Fixed cd (and pushd/popd/z) failing with command not found: __zsh_like_cd in agent shells when mise activate or zoxide init installed wrapper functions: the shell snapshot now keeps the underscore-prefixed helper functions those wrappers call, instead of dropping every private-looking function (#17448 by @KamijoToma)
+    @oh-my-pi/collab-web
+    Changed
+    - job tool results name each background job by the purpose the model gave for it, falling back to its command (#17649 by @wolfiesch)
+    @oh-my-pi/pi-natives
+    Fixed
+    - Fixed the bash tool's shell stopping with status 1 and no message after about 40 levels of nested functions, eval or source when the process may open only 1,024 files; a shell that runs out of open files now says so and names the limit to raise (#17668 by @sjawhar)
+    - bun check now runs the Rust half when your branch commits a Rust change on a clean tree, skips it on a TypeScript-only branch even under CI=true, and prints one line saying which it did and why (OMP_FORCE_RUST_TASKS=1 always runs it) (#17628 by @sjawhar)
+    @oh-my-pi/snapcompact
+    Added
+    - Added viewWithoutFrames: what a reader without image input reads for an archive, its kept text in place of its frames (#17510 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - GroupedLineContext.isUrl is replaced by url, the internal URL a header names or a body row belongs to (#17608 by @JustasMasiulis)
+    Added
+    - Added FILE_NAME_COLOR, formatStyledPath and pathNameStart to render/render-utils for paths in tool bodies and Tern file rows; createGroupedRowStyler, groupedLinkTargets, fitGroupsToBudget, groupsByFile and isMatchRow to tools/grouped-file-output; splitReadQuery to tools/read; and HASHLINE_TAG_SUFFIX_RE to tools/hashline-format. classifyGroupedLines reports each file header's full displayPath and suffix, and a TranscriptStatusPart without color keeps its already-styled text (#17608 by @JustasMasiulis)
+    - JobsPanelJob.caption: the jobs sheet's detail pane shows it, muted, between the job's purpose and its command (omp.jobs.caption) (#17649 by @wolfiesch)
+    Changed
+    - The Background jobs sheet names each job by what it is for when the model said so, shows that above the full command in the detail pane, and no longer repeats the command in an empty widget box for jobs that print nothing (#17649 by @wolfiesch)
+    - File paths in tool output share one style: a dim directory and the file name in the custom-message label color (bronze in titanium), with line locations and selectors (:1-175, :42:14, ?q=) muted. This covers Grep, AST Grep, AST Edit, Glob, Find, LSP, diagnostics, grouped Reads and file mentions; Glob's folder icon is muted like the file-type icons, and paths in tool headers keep their color (#17608 by @JustasMasiulis)
+    - Grep, AST Grep and AST Edit results label each file with its full path instead of the model-facing # dir/ and ## file#tag headers, and each file gets its own tree branch. Their collapsed previews fit the same row budget the same way, cutting the last file short rather than overflowing, and end with … N more matches (… N more files for AST Edit) (#17608 by @JustasMasiulis)
+    - AST Grep match rows link to their line, as Grep's do (#17608 by @JustasMasiulis)
+    - LSP diagnostics carry their severity color on the [error]/[warning] tag instead of the location, and collapsed diagnostic rows now show that tag (#17608 by @JustasMasiulis)
+    Fixed
+    - Rex sessions now render Kitty graphics without forcing the protocol, including when only TERM=xterm-rex identifies the client (#17651).
+    - Fixed collapsed AST Grep showing no matches when its first file or folder was taller than the preview, and its … N more row counting hidden folders instead of hidden matches (#17608 by @JustasMasiulis)
+    - Fixed collapsed AST Edit overflowing its preview when the first file's diff was long (#17608 by @JustasMasiulis)
+    - Fixed search and diagnostic file paths in Tern dropping the leading / of absolute paths and a folder's own (…) ending, and AST Edit diffs in Tern losing highlighting to the file's #tag; a file name ending in lowercase or other-length #… text keeps it (#17608 by @JustasMasiulis)
+    - Fixed a read of a URL drawing as dead text in the folded read row: its target is not a file path, so no link was built for it, and clicking the URL did nothing. The row (and each row of a grouped read) now links to the URL itself, gaining an https:// scheme for a bare www. host (#17598 by @iacore)
+    - Fixed replayed transcripts ignoring a registered async-result message renderer, so a replayed conversation rendered differently from the live one (#17372 by @AlexBrd999, from #14484 by @F0Rextasy; #14131)
+    @oh-my-pi/pi-utils
+    Added
+    - Added abortable sleepUntil for wall-clock deadline waits that include system sleep, with bounded timer slices to recheck deadlines after resume (#17606 by @zhiland).
+    Fixed
+    - Importing pi-utils no longer installs process-wide signal and fatal handlers in embedding hosts; exit-time cleanup stays installed (#17674).
+    What's Changed
+    - fix(ai): strip internal response metadata from replay by @briankeefe in https://github.com/can1357/oh-my-pi/pull/17590
+    - feat(tui): share one path style in tool bodies and label search files by full path by @JustasMasiulis in https://github.com/can1357/oh-my-pi/pull/17608
+    - feat(coding-agent): name background jobs by their purpose and caption long commands by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17649
+    - fix: remove dead export-map entries and make export viewer errors name a working command by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17636
+    - fix(iso): retried fuse unmount lazily and kept workspace on failure by @roboomp in https://github.com/can1357/oh-my-pi/pull/17645
+    - docs(review): document /review and how a custom reviewer replaces the bundled one by @haesol-shin in https://github.com/can1357/oh-my-pi/pull/17654
+    - style(robomp): format the Python examples in the incoming-PR review design doc by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17661
+    - fix(lsp): restart rust-analyzer to discover new crates by @roboomp in https://github.com/can1357/oh-my-pi/pull/17663
+    - fix(lsp): kept typescript-native for native tsc without package.json by @roboomp in https://github.com/can1357/oh-my-pi/pull/17664
+    - fix(utils): deferred process handlers until CLI startup by @roboomp in https://github.com/can1357/oh-my-pi/pull/17675
+    - feat(catalog): add Modular Cloud provider by @tommyjtl in https://github.com/can1357/oh-my-pi/pull/17334
+    - docs: explain python memory retention and manual reset by @aktanazat in https://github.com/can1357/oh-my-pi/pull/17353
+    - fix(coding-agent): show Claude session sidecar titles in the import picker by @namest504 in https://github.com/can1357/oh-my-pi/pull/17361
+    - fix(tui): let a registered renderer own the async-result card (supersedes #14484) by @AlexBrd999 in https://github.com/can1357/oh-my-pi/pull/17372
+    - fix(acp): forward automatic compaction lifecycle notifications by @SAKANA-MOONLIGHT in https://github.com/can1357/oh-my-pi/pull/17384
+    - fix(stt): stop slow previews from delaying dictation by @roboomp in https://github.com/can1357/oh-my-pi/pull/17414
+    - fix(coding-agent): reuse the main turn's prompt cache in auto-learn capture turns by @STRML in https://github.com/can1357/oh-my-pi/pull/17418
+    - fix(coding-agent): keep snapshot function dependencies, not just public wrappers by @KamijoToma in https://github.com/can1357/oh-my-pi/pull/17448
+    - fix(ai): supported workforce ADC token refresh by @roboomp in https://github.com/can1357/oh-my-pi/pull/17449
+    - fix(coding-agent): stop git rebase -i and GCM prompts from hanging bash commands by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17452
+    - fix(ai): kept usage-probe oauth refreshes from disabling credentials by @roboomp in https://github.com/can1357/oh-my-pi/pull/17469
+    - fix(coding-agent): let snapcompact replace an archive it shrinks, and report its refusal once by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17490
+    - fix(bash): deny intercepted and invalid calls in BashTool.approval by @asuffield in https://github.com/can1357/oh-my-pi/pull/17502
+    - fix(snapcompact,coding-agent): give models without image input a snapcompact archive's text instead of its frames by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/17510
+    - prompt: send historical-session questions to the seance agent by @iacore in https://github.com/can1357/oh-my-pi/pull/17523
+    - feat(catalog): replay SambaNova reasoning content across turns by @rjuez00 in https://github.com/can1357/oh-my-pi/pull/17555
+    - fix(coding-agent): walk retry fallback chain when the active provider has no credential by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17559
+    - fix(catalog): preserve discovered model token limits by @wolfiesch in https://github.com/can1357/oh-my-pi/pull/17561
+    - fix(web): exclude DuckDuckGo advertising redirects by @jasonharrison in https://github.com/can1357/oh-my-pi/pull/17564
+    - fix(coding-agent): routed ctrl+r history picks to the focused ask prompt by @roboomp in https://github.com/can1357/oh-my-pi/pull/17567
+    - fix(ai): send Ultrafast to OpenAI-compatible relays that advertise it by @jakehemmerle in https://github.com/can1357/oh-my-pi/pull/17577
+    - fix(browser): opened own tab in fresh Chrome profiles by @roboomp in https://github.com/can1357/oh-my-pi/pull/17586
+    - fix(browser): resumed predicate waits after document navigation by @roboomp in https://github.com/can1357/oh-my-pi/pull/17589
+    - fix(coding-agent): resolved exact-case ids that collide by case by @roboomp in https://github.com/can1357/oh-my-pi/pull/17591
+    - fix(task): kept early irc messages from waking workers before assignment by @roboomp in https://github.com/can1357/oh-my-pi/pull/17594
+    - fix(coding-agent): announce a restarted eval kernel on its first cell by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17595
+    - refactor(ai): share replay metadata sanitization by @briankeefe in https://github.com/can1357/oh-my-pi/pull/17597
+    - tui: link the URL a read row names by @iacore in https://github.com/can1357/oh-my-pi/pull/17598
+    - fix(session): guarded async delivery during manual compaction by @roboomp in https://github.com/can1357/oh-my-pi/pull/17601
+    - fix(coding-agent): resume quota retries after system sleep by @zhiland in https://github.com/can1357/oh-my-pi/pull/17606
+    - fix(browser): honored direct wait helper timeouts past the call budget by @roboomp in https://github.com/can1357/oh-my-pi/pull/17621
+    - fix(scripts): decide the Rust gate from the branch's merge-base diff by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17628
+    - fix(read): stopped suggesting selectors on selector-free read targets by @roboomp in https://github.com/can1357/oh-my-pi/pull/17633
+    - fix(tui): recognized native Rex Kitty graphics by @roboomp in https://github.com/can1357/oh-my-pi/pull/17652
+    - fix(shell): share open files across nesting levels and name the open-file limit when it runs out by @sjawhar in https://github.com/can1357/oh-my-pi/pull/17668
+    New Contributors
+    - @briankeefe made their first contribution in https://github.com/can1357/oh-my-pi/pull/17590
+    - @tommyjtl made their first contribution in https://github.com/can1357/oh-my-pi/pull/17334
+    - @namest504 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17361
+    - @AlexBrd999 made their first contribution in https://github.com/can1357/oh-my-pi/pull/17372
+    - @jakehemmerle made their first contribution in https://github.com/can1357/oh-my-pi/pull/17577
+    - @zhiland made their first contribution in https://github.com/can1357/oh-my-pi/pull/17606
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.14.2...v18.15.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.15.0
+ReleaseTime: 2026-11-01T14:17:08.0000000Z

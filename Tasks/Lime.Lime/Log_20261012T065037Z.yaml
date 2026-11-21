@@ -1,0 +1,34 @@
+Version: 1.155.0
+Installer:
+- InstallerType: exe
+  InstallerUrl: https://github.com/limecloud/lime/releases/download/v1.155.0/Lime-1.155.0.Setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Lime v1.155.0
+    新功能
+    - TUI 支持按回答、代码块和显示源块进行语义复制，并提供状态复制选择器、Markdown/HTML 格式与窄屏按键提示。
+    - 历史阅读和复制模式支持吸收分页内容，保留阅读位置、鼠标选区和分组快照，加载旧消息后可继续导航或返回最新内容。
+    - 共享 App Server 为命令提供读取、搜索和目录列表动作，实时通知、会话恢复与历史分页使用同一份投影。
+    修复
+    - 修复连续 ASCII/IME 输入、短 IME 前缀后的 Tab 和断线草稿编辑；输入突发处理先于绘制，减少调度延迟造成的正文分段。
+    - 修复终端缩放与外部编辑器归还后的布局和首键处理；tmux 漏发尺寸通知时可自动重排画面。
+    - 修复异步复制、图片粘贴和跨页面反馈的归属，避免晚到结果影响新会话、选区或草稿；原生剪贴板所有权由统一 worker 保持。
+    - 命令生命周期保留实际执行 argv、工作目录和 process identity，轮询与 stdin 续接共用原调用事实；准备失败、静默命令和输出尾部均保持一次开始/完成。
+    - 修复终端交互记录在完成或恢复时丢失的问题，实时、读取、分页和进程重启后的冷恢复共享完整快照。
+    优化与重构
+    - 统一终端 geometry、输入时钟、绘制门禁、剪贴板调度与阅读快照的 owner，直接替换重复入口。
+    - 收敛命令解析、执行会话和 canonical 投影，拆分大型模块；GUI、CLI 与 TUI 继续共用 App Server 和 RuntimeCore。
+    测试与质量
+    - 扩充命令实际执行、CLI stdio、TUI PTY、历史分页、剪贴板和 tmux 缩放回归，覆盖 canonical 身份、一次完成和终端恢复。
+    - 发布验证使用固定候选与独立构建产物；平台证据按实际运行范围记录，Windows/Linux 原生剪贴板及 live provider 不由 macOS 结果代替。
+    文档
+    - 同步全局架构、命令边界、TUI 结构清单与执行计划，记录 current owner、删除路径和剩余验收范围。
+    其他
+    - 桌面应用、CLI npm 包与 Rust workspace 版本统一为 1.155.0。
+    完整变更：v1.154.0 → v1.155.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/limecloud/lime/releases/tag/v1.155.0
+ReleaseTime: 2026-10-12T00:45:15.0000000Z

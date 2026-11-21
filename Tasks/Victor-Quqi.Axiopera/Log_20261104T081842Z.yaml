@@ -1,0 +1,38 @@
+Version: 0.3.2
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Victor-Quqi/Axiopera/releases/download/v0.3.2/axiopera-v0.3.2-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - macOS: inside an agent's sandbox, such as Claude Code's command sandbox, axiopera no longer starts the daemon and asks you to re-run the command outside the sandbox. A daemon started there stayed in the sandbox, passed it on to every sub-agent, and gave them the sandbox's network proxy settings.
+    - Windows: a process in the Codex sandbox can no longer add an instance of the daemon's named pipe and receive other clients' requests, including the environment that spawn sends. Clients also refuse a pipe served by a sandboxed process.
+    - If the data directory is read-only or not writable, axiopera asks you to re-run the command outside the agent sandbox instead of reporting only the system error.
+    - Linux: axiopera top no longer misses a task update that the daemon saves within a few milliseconds of the previous one.
+    Other notes
+    - Sub-agents can no longer run axiopera daemon stop, skill install or plugin cleanup; run them from the main session or a terminal. Version-mismatch errors shown to sub-agents no longer suggest daemon stop --force.
+    - On Linux the client does not check whether it runs in a sandbox. With Grok's --sandbox workspace and a data directory the sandbox can write, it can still start the daemon inside the sandbox.
+    - Stop the daemon with axiopera daemon stop before replacing the executable.
+    - Updating the Codex plugin may require trusting it again.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    agent 沙箱在 macOS 上不能再启动 daemon，在 Windows 上不能再冒充 daemon，子 agent 也不能再停止 daemon。
+    修复
+    - macOS：在 agent 的沙箱中（例如 Claude Code 的命令沙箱），axiopera 不再启动 daemon，而是提示到沙箱外重新运行。此前在沙箱中启动的 daemon 会一直留在沙箱里，它启动的每个子 agent 也都受沙箱限制，并沿用沙箱的网络代理设置。
+    - Windows：Codex 沙箱中的进程不能再为 daemon 的命名管道另建实例、接收其他客户端的请求，包括 spawn 携带的环境变量。客户端也会拒绝由沙箱进程提供的管道。
+    - 数据目录只读或无权写入时，提示到 agent 沙箱外重新运行，不再只报系统错误。
+    - Linux：daemon 在几毫秒内连续两次更新同一任务时，axiopera top 不再漏掉后一次更新。
+    其它说明
+    - 子 agent 不能再执行 axiopera daemon stop、skill install 和 plugin cleanup，请在主会话或终端中运行。子 agent 遇到版本不一致时，报错不再建议 daemon stop --force。
+    - Linux 客户端不检查自身是否在沙箱中。使用 Grok 的 --sandbox workspace 且沙箱可写数据目录时，仍可能在沙箱中启动 daemon。
+    - 替换程序前先执行 axiopera daemon stop。
+    - 更新 Codex 插件后可能需要重新信任插件。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Victor-Quqi/Axiopera/releases/tag/v0.3.2
+ReleaseTime: 2026-11-04T07:30:18.0000000Z

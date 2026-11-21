@@ -1,0 +1,82 @@
+Version: 0.9.6
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/Hmbown/CodeWhale/releases/download/v0.9.6/codewhale-tui-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Hmbown/CodeWhale/releases/tag/v0.9.6
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Hmbown/CodeWhale/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Codewhale v0.9.6 is a subtractive release: fewer runtime guards, one stable prompt, truthful provider endings, and a smaller compaction path that preserves the provider cache. The changes were grounded by matched Terminal-Bench 2.1 runs against Pi 0.8.41 and by dogfooding repeated manual compaction.
+    Added
+    - web_search defaults to Firecrawl Cloud without an API key; keyless requests are headerless and quota-bounded, while an optional user key raises limits.
+    - Green web builds on main now emit an actionable manual-deploy reminder, so site changes cannot quietly appear shipped while Cloudflare still serves an older revision.
+    - Mistral AI is a first-class provider route, including Codestral models, first-party reasoning support, authentication, picker entries, and aliases.
+    - Headless Bash can transfer explicitly requested persistent Unix services out of an exec run, with ownership and cleanup receipts.
+    - /remote-env opens hosted Work from the current GitHub or CNB branch tip and states exactly which unpushed, dirty, ignored, secret, and session state stays local.
+    - Linux ARM64 release and nightly assets are static musl builds with native launch checks.
+    - Maintainers can report observed daily active installs from the same anonymous, aggregate telemetry dataset; no additional client data is collected.
+    - Fleet-dispatched members under a read-only evidence (no-network) ceiling now keep the Web tool's read-only search and fetch actions — parity with an ordinary scout — while every reaching surface (web.run, fetch_url, github, MCP) stays denied and the sentinel-backed capability envelope remains the fail-closed backstop.
+    - /fleet setup can show an optional, deterministic, unratified role-to-model advisory built only from configured ready routes. Accept, edit, and reject all remain inside the existing human-reviewed profile save boundary; the advisory never launches a Fleet or writes a second configuration.
+    - /update checks for a newer Codewhale release and installs it from inside the TUI, while tui_help gives agents the same command and key map users see.
+    - Markdown file paths render as OSC 8 links where the terminal supports them, and every agent row can open that agent's transcript directly.
+    - ACP editor sessions can execute multi-round file, search, Git, patch, and explicitly enabled shell tool calls through the shared Runtime registry. Shell access requires both the client's terminal capability and Codewhale's headless shell opt-in, and cancellation stops an in-flight tool before the turn returns (#5225 by @rafaelcavalheri).
+    - Lowercase read returns bounded typed PNG, JPEG, GIF, and WebP results to image-capable Chat, Responses, Anthropic, and ACP routes. Text-only routes receive an explicit omission receipt; image bytes never spill into ordinary transcript, export, compaction, or relay text.
+    Changed
+    - Anonymous usage counting is on by default for fresh installs and disclosed in a native first-run Codewhale modal with an immediate opt-out. Prior declines remain off. Codewhale does not collect conversations, code, prompts, files, repo or branch names, credentials, model content, or per-turn activity timelines.
+    - Wide terminals use a responsive, full-screen ocean canvas with modest gutters: prose keeps a readable measure while tools, diffs, work surfaces, the composer, and status chrome can use the available width. Turn and major activity seams breathe without padding every call inside a tool group.
+    - Root CLI help describes product actions directly instead of exposing internal TUI/runtime layers.
+    - Bash action="wait" now blocks by default when a wait is requested; callers can still ask for a nonblocking snapshot, and persistent service ownership remains explicit.
+    - Compaction is one cache-stable summary request followed by one committed replacement summary and a bounded recent-message tail. Older saved sessions still restore.
+    - Ask, Work, Auto-Review, and Full Access share one stable base prompt. Modes continue to differ through permissions and the live tool catalog; the former Act label is now Work throughout the product and shipped locales.
+    - Full Access now auto-approves non-bypassable tools consistently, and the default choice shown on ordinary approval cards is configurable.
+    - Model, context-window, dispatch-name, and nested-agent spawn receipts report the route and limits actually used rather than silently substituting a guessed identity.
+    - Child-agent launches mint one immutable route receipt before admission and preserve it through status, interruption, completion, resume, Work Graph, and ledger projections, so provider/model attribution cannot drift (#5305).
+    - Goal runs no longer stop because of internal continuation, repeated-gap, or unanswered-question guards. Explicit user limits and terminal goal states remain authoritative.
+    - Account-owned /rc remote control now keeps exclusive ownership and a crash-recoverable delivery journal until the server acknowledges terminal, approval, failure, and snapshot state.
+    - todo_write is an optional progress surface rather than required model ceremony.
+    - New turns use one small, stable toolbox: read, write, edit, bash, agent, todo_write, and tool_search. The optional progress tool stays visible as familiar working memory; specialized native, Web, MCP, plugin, memory, task, and verification tools are policy-filtered and searchable; activated schemas stay in a bounded per-conversation cache. Every sub-agent keeps its own search and cache, including policy-allowed Web research, while forked context and parent activations remain warm starts rather than allowlists.
+    - The direct file and shell schemas follow Pi's deliberately small contract: bounded complete-line reads, hash-free writes, unambiguous multi-edit with BOM/CRLF preservation and conservative fuzzy matching, and one foreground bash command with a bounded chronological output tail. Modes change execution authority, not those primitive names.
+    - Codewhale no longer re-states the To-do list to the model. The model learns what is on the list from the tool result its own todo_write call returned, which is ordinary conversation history — the same way Pi's To-do works. The transient <codewhale:work_state> block that used to ride the tail of every parent turn-loop and sub-agent step request is gone, along with the stable system prefix being disturbed by list changes. A snapshot is still shown once, where a person asked for it: the <codewhale:fork_state> block a newly forked sub-agent is handed, /relay handoff instructions, and the agent card. The complete To-do stays visible in the UI. A structural test asserts real outbound provider request bodies do not carry the list.
+    - Scout and Reviewer name the read-only investigator roles. Both expose exactly one shell entry point — canonical lowercase bash, bounded by the strict read-only classifier — and the legacy Bash alias stays denied in the catalog and at dispatch. Previously a case-insensitive name match let a call spelled Bash execute through that carve-out, returning raw shell to a read-only role.
+    Fixed
+    - Sending more context while a lowercase bash command is running now moves the command to /jobs and returns a successful running receipt instead of falsely reporting Command exited with code -1; the process keeps running and its completion still arrives through the normal runtime event.
+    - First-run usage disclosure now opens as a native Codewhale modal instead of a shell questionnaire before application startup. Telemetry remains unarmed until the native choice is made, and an in-memory Disable choice governs the current session even when its preference cannot be saved.
+    - /compact completion, failure, queued, duplicate, and mailbox outcomes are durable transcript receipts instead of short-lived toasts. A stray terminal event can no longer leave every later compaction stuck as already running.
+    - Compaction now follows Codex's simple transcript shape: recent user context followed by one ordinary history checkpoint. It never appends the summary, the To-do list, or volatile shell/worker state to the standing system prompt; reloads migrate the persisted carrier back into exactly one history item.
+    - Automatic compaction uses a percentage of the real context window, clamped to the route's spendable ceiling. Pressure comes from the current parent-route prompt, not cumulative billing or child-model usage.
+    - Compaction, review, verify, routing, setup, Fleet, MCP, RLM, vision, translation, and sub-agent calls inherit the resolved route's normal output, sampling, and reasoning policy. Small internal-task token caps no longer truncate thinking routes or special-case individual providers.
+    - Incomplete provider responses fail truthfully across ordinary turns and every internal model consumer. Partial text stays interrupted, pending tool calls do not execute, and billed usage is retained.
+    - Transport-only (reasoning omitted) placeholders no longer enter new transcripts and are filtered from restored sessions. Reasoning expand/collapse actions stay attached to the exact rendered cell, including after replacement, restore, filtering, and resize (#5291).
+    - Step-budget exhaustion is a typed failure and cannot release a pending persistent service. Cancellation after terminal usage still charges the turn.
+    - Deferred tools now preserve a completed result when a provider reuses its tool-call ID on the retry turn, preventing successful plugin calls from entering a repeated execution loop.
+    - Website setup, provider, diagnostics, Fleet, and single-runtime claims now match the source candidate.
+    - Opening the sub-agent register no longer hides the to-do list: the Agents panel shows the full register and the durable checklist together, and the register header is a two-way door that returns to Tasks on a second click.
+    - The ⌥V / Alt+V details chord opens the selected work-surface row's own inspector instead of the transcript's nearest tool cell, so a selected to-do row shows its own content rather than the latest reasoning.
+    - The first-run usage disclosure now asks a clear question — "Help improve Codewhale?" — with unambiguous "Yes, keep anonymous counts" / "No, turn off tracking" choices in every shipped locale, and states the persistent opt-out command. Consent semantics are unchanged: telemetry stays unarmed until a choice is made.
+    - macOS screencapture screenshots referenced in a message are copied to a stable attachments directory the moment the message is received, and the reference is rewritten to the stable path, so the image still exists when the agent reads it. Only files under a screencapture "Temporary Items" directory are touched; copies are idempotent and a failed copy keeps the original reference.
+    - Manual /compact during an active turn now queues even when the engine's bounded op mailbox is saturated. The request defers client-side, retries as mailbox slots free, and cannot latch as already running after it settles.
+    - Interactive /load, startup --resume, and /resume picker paths preserve the persisted provider, endpoint, and model identity; picker resume also leaves a durable transcript receipt.
+    - Relative mcp_config_path values no longer depend on the launch directory or silently load an empty server pool: Codewhale warns and falls back to the user-global MCP configuration. Explicit absolute paths remain authoritative.
+    - Alibaba Model Studio qwen3.8-max and qwen3.8-max-preview still stream their current reasoning, but no longer replay historical reasoning_content that those routes do not accept. Historical reasoning replay is now gated by the exact provider/API/model contract, so unknown *-thinking lookalikes fail closed while documented Qwen, Kimi, DeepSeek, Mistral, Anthropic, and Responses continuity rules remain intact.
+    - Compatibility File/patch calls retain optional content-hash guards when a caller supplies them. The new direct write and edit schemas do not expose hash or prior-read ceremony.
+    - Shell previews hold back incomplete UTF-8 sequences instead of emitting replacement characters, and compaction receipts report token deltas.
+    - Nested agents may narrow but can never widen their inherited depth budget (#5317 by @ousamabenyounes).
+    - Container publication now assembles AMD64 and ARM64 images in parallel on native runners from the already-verified static release binaries, then publishes and checks one multi-architecture manifest. It no longer rebuilds both targets through the single long-running QEMU job that lost its runner.
+    Removed
+    - The no-progress guard, repeated-read guard, and injected tool-error strategy coaching. Productive polling, repeated inspection, and model-owned recovery are no longer interrupted by runtime heuristics.
+    - Never-wired decision-card, keybinding, hover, shell-execution, engine-op, and release-script paths were deleted so the supported runtime has one route for each behavior.
+    Contributors
+    - Xavier Pestel (@xavierpestel-ai) — Mistral AI provider route (#5295).
+    - Ben Younes (@ousamabenyounes) — inherited nested-agent depth cap (#5317).
+    - Rafael Cavalheri (@rafaelcavalheri) — ACP agentic tool turns (#5225).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Hmbown/CodeWhale/blob/HEAD/CHANGELOG.md#096---2026-08-11
+ReleaseTime: 2026-08-12T08:47:19.0000000Z

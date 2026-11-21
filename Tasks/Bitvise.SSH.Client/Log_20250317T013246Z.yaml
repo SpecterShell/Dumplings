@@ -1,0 +1,29 @@
+Version: "9.43"
+Installer:
+- InstallerUrl: https://dl.bitvise.com/BvSshClient-943.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://www.bitvise.com/ssh-client-version-history-9#943
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - SSH cryptography:
+      - Starting with 9.43, the latest versions of Bitvise software no longer use OpenSSL:
+        - OpenSSL no longer supports versions 1.1.1. Our recent software versions used this to support a handful of algorithms not supported by Windows.
+        - There are new fixes only available in OpenSSL 3.x.
+        - OpenSSL 3.x promotes opaque interfaces and hides details. This is the opposite of our requirements.
+        - OpenSSL 3.x is even larger than 1.1.1, and dramatically increases linker bloat. Updating OpenSSL 1.1.1 to 3.4.1 increases the size of CiWinCng64.dll from 3.3 MB to 5.0 MB. Removing OpenSSL reduces the size to 1.4 MB. The difference, 3.6 MB, is a lot of complexity to support some marginal algorithms.
+        This change does not affect most algorithms. We support most algorithms using Windows cryptography. Only the following is affected:
+        - chacha20-poly1305: We now support this algorithm using public domain ChaCha20 implementations from Goll & Gueron (on most CPUs with AVX2), Daniel J. Bernstein (on CPUs without AVX2), and Poly1305 from Andrew Moon (poly1305-donna).
+          In new Bitvise software installations, chacha20-poly1305 is disabled by default, because it is the most susceptible to the Terrapin attack if the counterparty does not implement strict key exchange. This algorithm is secure if both parties support strict key exchange. In Bitvise software, strict key exchange is supported in versions 9.32 and newer.
+        - ECDSA and ECDH over the curve secp256k1: On Windows 10 and newer, and Windows Server 2016 and newer, we continue to support this curve using Windows cryptography. On these Windows versions, there is no change.
+          On Windows Vista to 8.1, and Windows Server 2008 to 2012 R2, secp256k1 is now supported using Crypto++ 5.6. This implementation is not constant-time, so in this case, we enable signature timing mitigations. The timing mitigations favor security over performance: a signature is delayed to take e.g. 50 ms instead of 1 ms.
+          In SSH, this prime field curve is rarely used. We support it for compatibility with previous versions. We originally added this curve because it is used in Bitcoin, so it is subject to intense scrutiny. However, users who want elliptic curve cryptography, but doubt the widely used NIST curves, have usually chosen Curve25519 and Ed25519.
+        If FIPS 140-2 cryptography is enabled in Windows, there is no change. If FIPS mode is enabled, Bitvise software already restricts itself only to algorithms supported by Windows. In this case, chacha20-poly1305 is not available, and secp256k1 is available only on Windows versions 10 and newer, which support it.
+      - Bitvise software versions 9.xx remain compatible with Windows XP and Windows Server 2003. To support SSH cryptography on these platforms, our installers include DLL files CiCpFips32/64.dll and CryptoPP530Fips32/64.dll. These DLLs are not used on Windows Vista and newer, but were previously installed on all Windows versions. They are now no longer installed on Windows versions where they are not used.
+    - SFTP:
+      - When resuming or updating files using hash-based synchronization, progress was being reported incorrectly. When the destination file was larger than the source, the final file size was also displayed incorrectly. Fixed.
+    - Terminal:
+      - In previous versions, the SSH Client's xterm implementation would stop parsing unrecognized CSI escape sequences at the first unrecognized byte, and render the bytes which follow. The SSH Client now continues to parse unrecognized CSI sequences according to ECMA-48, and ignores them. This avoids unexpected characters in output when a server application sends sequences which the SSH Client does not support. For example, the fish shell sends such sequences associated with the Kitty Keyboard Protocol.
+ReleaseTime: 2025-03-15

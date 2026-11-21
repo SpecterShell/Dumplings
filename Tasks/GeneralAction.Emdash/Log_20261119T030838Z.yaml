@@ -1,0 +1,20 @@
+Version: 1.2.12
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/generalaction/emdash/releases/download/v1.2.12/emdash-x64.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/generalaction/emdash/releases/download/v1.2.12/emdash-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release sends Emdash 2.0 waitlist signups through emdash.com and makes importing data from Emdash v0 more reliable.
+    Fixes
+    - Waitlist signups from the sidebar are sent to emdash.com in a single request. When a signup fails, the dialog now says why: the email address doesn't look valid, there have been too many attempts, or the server couldn't be reached.
+    - Importing data from Emdash v0 runs in one transaction that is never held open while other work happens. A failed import no longer rolls back unrelated changes made at the same time, starting a second import no longer fails with "cannot start a transaction within a transaction", an import that overlaps a running one is rejected, and terminal sessions are renamed only after the import has been saved.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/generalaction/emdash/releases/tag/v1.2.12
+ReleaseTime: 2026-11-19T02:41:27.0000000Z

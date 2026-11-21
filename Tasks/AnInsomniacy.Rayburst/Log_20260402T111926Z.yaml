@@ -1,0 +1,32 @@
+Version: 3.5.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/motrix-next/releases/download/v3.5.2/MotrixNext_3.5.2_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release consolidates the v3.5.2 beta cycle into a stable release, focusing on proxy configuration reliability, GPU hardware rendering support for Linux, and comprehensive table UX improvements across the application.
+    ✨ New Features
+    - Hardware rendering toggle for Linux — Added a GPU hardware acceleration setting with automatic crash recovery via gpu_guard, ensuring the app remains usable even if GPU rendering causes crashes
+    - Streaming tracker probing — Tracker reachability results now update progressively in real-time as each URL is probed, instead of waiting for all probes to complete
+    - Sortable data tables — All 6 data tables throughout the app now support click-to-sort on column headers (file lists, peer tables, tracker tables, and database browser)
+    - Clear completed records on exit — Added an option to automatically purge completed task records when the application closes
+    - Tri-state proxy mode — Replaced the simple proxy toggle with a None / Global / Custom selector, restricting protocol support to HTTP for compatibility
+    🛠 Improvements
+    - Proxy reactivity & consistency — Task dialogs now reactively sync proxy mode when global proxy settings change, preventing stale states after configuration updates
+    - Proxy URL normalization — Fixed misclassification of aria2's reconstructed proxy URLs by normalizing trailing slashes before comparison
+    - Explicit proxy clearing — all-proxy is now explicitly set to empty when proxy mode is "none", preventing unintended inheritance from global settings
+    - Global proxy hint — Task configuration now displays the active global proxy server address for user reference
+    - Localized table headers — All previously hardcoded column headers (%, ↓, ↑, S, ✓) are now fully translated across all 26 locales
+    - Flexible column widths — Tables use minWidth instead of fixed width, allowing columns to grow when space is available while still wrapping gracefully on narrow windows
+    - Hardware rendering label clarity — Improved localization strings across all locales for GPU acceleration settings
+    🐛 Bug Fixes
+    - Fixed proxy mode persisting as "global" after the global proxy was disabled in settings
+    - Fixed tasks silently inheriting global proxy settings when proxy mode was set to "none"
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/motrix-next/releases/tag/v3.5.2
+ReleaseTime: 2026-04-02T10:25:24.0000000Z

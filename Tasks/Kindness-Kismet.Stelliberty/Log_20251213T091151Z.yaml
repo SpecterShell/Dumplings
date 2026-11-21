@@ -1,0 +1,114 @@
+Version: 1.1.70
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.70/Stelliberty-v1.1.70-windows-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.70/Stelliberty-v1.1.70-windows-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    📦 构建信息
+    项目 内容
+    包名 stelliberty
+    版本号 1.1.70
+    Mihomo 核心 1.19.17
+    提交哈希 a5be5e876d14afacb4c6d05cdeb60e51ddddaf10
+    📋 更新日志
+    自 v1.1.60 以来的功能和修复：
+    修复配置重载失败处理逻辑
+    当 Rust 临时配置生成失败时，原配置存在错误，不应降级使用原配置，而应触发失败处理机制：
+    - 标记订阅为配置加载失败
+    - 取消当前订阅选择
+    - 尝试默认配置回退
+    - 显示相应的 Toast 提示
+    提交：a5be5e8 | 作者：ONEUI9
+
+    订阅配置加载失败时自动回退到默认配置
+    移除了强验证机制，实现了三级失败回退策略：
+    1. 配置加载失败时标记订阅并取消选中
+    2. 尝试使用默认配置重载核心
+    3. 若重载失败则使用默认配置重启核心
+    新增功能：
+    - 订阅卡片显示配置失败警告图标
+    - 失败回退流程的国际化 Toast 提示
+    - configLoadFailed 字段用于标记配置加载失败的订阅
+    性能优化：
+    - 使用 _showToast 辅助方法避免 Context 重复获取
+    - 删除 Rust 验证监听器减少常驻异步任务
+    - 统一 notifyListeners 调用避免重复 UI 重建
+    提交：875f18b | 作者：ONEUI9
+
+    移除不必要的代理类型硬编码逻辑
+    - 删除 resolveProxyNodeName 递归解析方法（延迟测试已由 Clash 核心直接处理）
+    - 删除 ProxyNode 的 isGroup/isProxy 方法和 all 字段
+    - 改为直接检查 JSON 数据中的 all 字段判断代理组
+    - 删除 _formatProxyType 方法，直接显示原始类型名称
+    - 移除所有硬编码的代理类型列表，提高对新协议的兼容性
+    提交：4a65ca0 | 作者：ONEUI9
+
+    优化全局状态变量命名
+    统一命名风格，提升代码可读性：
+    - isRestarting → isCoreRestarting
+    - isStarting → isCoreStarting
+    - isStopping → isCoreStopping
+    - version → coreVersion
+    - isUpdating → isUpdatingSubscription
+    - isBatchUpdating → isBatchUpdatingSubscriptions/isBatchUpdatingOverrides
+    - isProcessing → isServiceOperationInProgress
+    - isRunning → isServiceRunning
+    🤖 Generated with Claude Code
+    Co-Authored-By: Claude noreply@anthropic.com
+    提交：c9bf12f | 作者：ONEUI9
+
+    改进 Toast 图标视觉效果
+    - 图标尺寸从 20 增大到 24，提升可见性
+    - 错误图标从感叹号改为圆形+X (cancel_rounded)，更清晰
+    - 统一使用 rounded 风格图标，视觉更柔和一致
+    - success: check_circle_outline_rounded
+    - error: cancel_rounded
+    - warning: warning_amber_rounded
+    - info: info_outline_rounded
+    🤖 Generated with Claude Code
+    Co-Authored-By: Claude noreply@anthropic.com
+    提交：ff77447 | 作者：ONEUI9
+
+    统计信息
+    - 📊 总提交数：7
+    - ✅ 功能/修复提交：5
+    - 🔧 CI/维护提交：2 (已过滤)
+
+    ❓ 故障排查
+    Linux 启动问题
+    如果无法启动应用，请确保已为可执行文件赋予运行权限：
+    # 进入应用目录
+    cd /path/to/stelliberty
+
+    # 赋予权限
+    chmod +x ./stelliberty
+    端口被占用（Windows）
+    如果遇到端口冲突：
+    # 1. 查找占用端口的进程
+    netstat -ano | findstr :端口号
+
+    # 2. 结束进程（以管理员身份运行）
+    taskkill /F /PID XXX
+    ⚠️ 重要：必须以管理员身份运行命令提示符。服务模式启动的核心进程需要提升权限才能终止。
+    软件工作不正常
+    路径要求（ZIP 和 EXE 均适用）：
+    - 路径中不应包含特殊字符（空格除外）
+    - 路径中不应包含非 ASCII 字符（如中文字符）
+    - 支持空格：D:\Program Files\Stelliberty ✅
+    EXE 安装程序的位置限制：
+    如果使用 EXE 安装程序，还有额外的安装位置限制：
+    - 系统盘（C:）：仅允许 %LOCALAPPDATA%\Programs\*（如 C:\Users\用户名\AppData\Local\Programs\Stelliberty）
+    - 其他盘（D:、E: 等）：无限制
+    💡 如需安装到 EXE 不允许的位置，请使用便携版 ZIP（无位置限制，但仍可能受系统目录权限影响）。
+    缺少运行库（Windows）
+    如果应用程序在 Windows 上无法启动或立即崩溃，可能是缺少必需的 Visual C++ 运行库。
+    解决方案：
+    安装 Visual C++ 运行库：vcredist - Visual C++ 运行库合集
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kindness-Kismet/Stelliberty/releases/tag/v1.1.70
+ReleaseTime: 2025-12-13T08:33:00.0000000Z

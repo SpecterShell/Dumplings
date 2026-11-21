@@ -1,0 +1,57 @@
+Version: 1.4.13
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=1.4.15-R8339.1&file=muse-x86-windows.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://lookaside.facebook.com/lookaside/muse/download/?channel=muse&version=1.4.15-R8339.1&file=muse-aarch64-windows.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - On macOS and Linux, permission profiles extending :ask-me with filesystem deny rules now enforce them: workspace-root deny globs (**/*.pem) and absolute/~/ denies refuse matching reads and writes, and sandboxed shell access to matching paths that exist when each shell command starts (files created mid-command under a deny glob are not covered on Linux — macOS enforces globs live through Seatbelt regex with no snapshot window; a deny on a not-yet-existing path is masked at its first missing component), instead of being silently ignored, while the profile keeps its write grants elsewhere
+    - muse usage shows your subscription allowance (window and weekly use, reset times, tier) without running a model turn; muse exec --json reads it too when the run saw no usage update
+    - Desktop and other connected clients offer the same third-party models as the terminal model picker
+    - Added a built-in visual-coding skill: for a 3D page, a browser game or Blender work, it points the agent to the one built-in skill that owns that kind of work before any code is written, so one request no longer runs two competing build processes
+    - Warnings near your usage limit show the remaining allowance and reset time above the message queue
+    Improvements
+    - /game-3d-visuals now runs its plan, build and review as three steps and posts a one-line result to the todo list after each
+    - When cleanup after a finished turn keeps failing (goal accounting or the live turn state), the chat now shows one "cleanup failed after this turn" warning naming what gave up, instead of failing silently. It shows right after that turn, or the next time you open the chat if you have already moved on to another turn (in the rare case that the warning itself could not be saved, it shows only while you are still on that turn)
+    -  --yolo keeps the request_user_input question tool and enables async questions instead of withholding them; pass --disable-request-user-input for runs that should ask nothing
+    Fixes
+    - Security: Sessions in untrusted workspaces no longer receive project rules recorded by an earlier trusted session
+    - Security: Session worktree recovery now enforces the same protected paths as the rest of the session
+    - Security: Served sessions in workspaces you have not trusted no longer run workspace status checks or Sapling snapshots, and sessions that never establish trust now fail closed instead of inheriting trusted behavior
+    - Security: When muse serve resumes, forks or opens a side chat from a chat whose saved history lost a permission change, the chat no longer reopens with older, wider permissions: it resets to your defaults, keeps your saved settings when they were stricter, or switches to read-only when the two cannot be safely combined, and "allow for this session" approvals given before the loss stop applying. A permission profile you choose when resuming such a chat applies after the reset, or in its place when the reset is not allowed. When no safe reset exists, or managed policy forbids it, the chat refuses and asks you to start a new chat
+    - A chat whose tool result could not be saved (for example on a full disk) can compact again right away, and after a restart that turn is kept with the result shown as lost, instead of disappearing
+    - Notes sent to a subagent over a remote session keep their plain summary
+    - Removing a queued message with turn/unqueue now works when the message is waiting behind an internal turn, instead of failing with missing_run and running the message anyway
+    - Session names you gave earlier show up again in the session list and work with muse resume <name>, read from each session's own history
+    - /feedback uploads with a very large session record no longer fail; the record is shortened to fit and the shortening is noted
+    - When a chat's file could not be read while loading it for a save (a brief I/O error), the chat goes back to saving its progress once the read works again, instead of staying unable to save until restart
+    - Stopping messages say whether a workflow or a background command was stopped
+    - Long /goal sessions save their resume checkpoints again, so they stay compact and resume quickly instead of slowing down after every compaction
+    - A forked chat where the start of one of its own turns could not be written to disk keeps working after it compacts and is reopened; that turn stays left out, and Muse says so once per reopen
+    - A chat that messaged a subagent and then ran several tools at once no longer stops saving checkpoints for the rest of the session
+    - Fixed automatic compaction losing Monitor messages after a model response ended early
+    - A prompt that looks like a session-message envelope no longer stops later sessions from saving resume checkpoints
+    - A forked chat where the start of one of its own turns could not be written to disk (for example on a full disk) saves checkpoints again after a restart; that turn is left out, and Muse says so once
+    - After a subagent message or other background record could not be saved to a full disk, compaction checkpoints work again without restarting the chat
+    - session/leave with stop: true no longer releases a session while one of its workflows cannot be stopped (its stop record is in conflict); the leave fails and the session stays with its host, including when you retry it with a new command id; until the host process restarts, such a leave keeps failing (a known limitation)
+    - The todo list now stays on screen while a background workflow is still running, instead of disappearing as soon as the turn that launched it ends
+    - Notes waiting on a busy subagent now show Queued rows while they wait
+    - After a brief storage error in the middle of a task, the chat goes back to saving its progress at the next checkpoint once the error clears, instead of waiting for the task's next tool call or its end
+    - After a brief disk error interrupts one background save, the chat goes back to saving its progress once the error clears, also when the save had fully reached the disk or belonged to a side chat
+    - Loading a forked chat in the app or another client, where the start of one of its own turns could not be written to disk, no longer blocks its checkpoints; that turn is left out, and Muse says so once
+    - A chat forked from a compacted chat, where the start of one of its own turns could not be written to disk, can be reopened and continued; that turn is left out, and Muse says so once
+    - A compaction that runs while a background task's save is still unconfirmed now saves its checkpoint (keeping the older history until the task's save resolves) instead of skipping it
+    - The game-3d-visuals skill now names each of its pipeline runs, so its first launch is no longer refused and retried
+    - Usage limit stops explain when you can continue, and denied requests retain useful error details
+    - Pausing a Workflow that has just finished now reports that it already finished and shows its result, instead of leaving the Workflow paused with no result
+    - The peer message timeline no longer shows as unavailable after a session accepts a message automatically
+    Performance
+    - Context that hooks add after a prompt or tool call now stays in the conversation where it arrived, so a new hook rule no longer makes the whole conversation re-process on the next model call
+    - Reduce repeated session-log bookkeeping while disk writes are failing
+    - Starting the app or muse serve while other sessions are running uses much less memory, because listing sessions no longer keeps a full copy of each running session's history

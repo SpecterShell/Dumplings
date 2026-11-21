@@ -1,0 +1,30 @@
+Version: 0.12.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dataelement/dsh-desktop/releases/download/v0.12.1/dsh-desktop-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    DSH Desktop v0.12.1 — 升级 Harness 并提升启动恢复与发布稳定性
+    更新内容
+    - Harness 运行时：升级至 0.2.1-rc.2，并同步更新相关宿主插件与兼容补丁，跟进上游运行时版本。
+    - 旧版工作流预设：启动时自动迁移旧格式预设，减少升级后预设无法继续使用时的手动处理。
+    - 工作台市场：市场条目改为分页展示，默认按星标数排序，浏览大量条目时更易找到受欢迎的工作台。
+    - 模型设置与启动恢复：模型服务地址异常时仍可进入应用，并在设置界面修改地址；Safe Mode 继承模型配置时会清理无效地址。
+    - PPT 工作区：统一解析工作区目录的实际路径，减少路径别名或软链接导致的目录定位不一致。
+    问题修复
+    - 启动配置恢复：DeepSeek 和第三方模型的地址问题不再阻止 Harness 启动，让用户可以通过设置界面修正配置；启动子进程时也会清理无效的 DEEPSEEK_BASE_URL 环境变量。
+    - 插件加载诊断：改进宿主依赖回退与启动失败归因，避免将插件依赖缺失误报为插件本身不存在，并保留更明确的运行时错误信息。
+    - 打包运行时验证：打包后的 Harness 验证工具会显式结束进程并报告运行时错误；Windows 路径规范化也得到处理，便于发现和定位安装包中的运行问题。
+    - 文件预览错误：本地文件打开失败时向调用方传递原生错误，不再把失败隐藏为看似成功的结果。
+    性能与优化
+    - macOS 安装包：优化 DMG 压缩，并对公证后票据装订失败增加重试，降低临时服务问题导致发布失败的概率。
+    - Office 运行时体积：精简随包提供的 Python 依赖内容，并加强 Office 运行时打包检查，减少不必要的安装包负担并尽早发现缺失文件。
+    - Windows 签名与冒烟检查：避免对捆绑的 Office 运行时文件进行不适用的二进制签名；安装包重打包和最终签名步骤增加重试，冒烟脚本也能处理含空格的可执行文件路径并等待 GUI 程序启动。
+    - 发布与归档：改进版本索引追加逻辑，使归档版本历史能够保留；发布验证补充对打包依赖和资源的检查，并移除冗余的签名后冒烟任务。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dataelement/dsh-desktop/releases/tag/v0.12.1
+ReleaseTime: 2026-10-20T13:41:54.0000000Z

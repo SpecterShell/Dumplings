@@ -1,0 +1,61 @@
+Version: 1.3.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.2/ReadAny_1.3.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/codedogQBY/ReadAny/releases/download/v1.3.2/ReadAny_1.3.2_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    ReadAny v1.3.2 来啦，这一版主要围绕 移动端上架准备、阅读体验、注音、多语言、同步导入稳定性 做了一轮比较扎实的更新。
+    🚀 新功能
+    - 新增 UMD 格式电子书支持：可以导入并阅读 .umd 电子书
+    - 新增拼音注音功能：阅读中文内容时可开启拼音注音，支持桌面端与移动端
+    - 新增多语言界面：新增西班牙语、日语、韩语、法语，并补充繁体中文；同时清理了一批硬编码中英文文案
+    - 新增维吾尔语翻译目标语言
+    - 阅读器支持 PageUp / PageDown 翻页
+    - 反馈入口新增未读红点：有回复时更容易看到
+    - 移动端加入备案信息展示：在“我的”页底部展示 APP 备案号，方便应用商店审核与合规
+    ✨ 优化
+    - 移动端章节切换更快：减少跨章节切换等待，去掉不必要的淡出延迟
+    - 阅读翻页更干脆：禁用部分页面切换动画，降低阅读时的等待感
+    - 移动端手势更稳定：横向翻页与下拉书签手势增加方向锁定，减少误触
+    - 字体导入不再限制 20MB
+    - WebDAV 导入体验优化：记住“连接另一个 WebDAV”的配置，带路径的 WebDAV 地址也能正确列目录
+    - 书架卡片对齐优化：无作者信息时卡片高度保持一致
+    - 自动向量化进度更清晰：导入后自动向量化会显示进度；重复索引前改为应用内确认弹窗
+    🐛 修复
+    - 阅读与标注：
+      - 修复标注、高亮、笔记、书签列表没有按书中位置排序的问题
+      - 修复移动端切换章节后，再切回上一章时高亮/笔记没有重新加载的问题
+      - 修复 AI 获取上下文时拿到章节开头而不是当前可见页面的问题
+      - 修复首次打开部分书籍时可能卡在空章节的问题
+      - 修复隐藏标签页更新阅读样式可能导致界面卡住的问题
+    - 注音与 TTS：
+      - 修复关闭注音后拼音文本可能残留到正文的问题
+      - 修复 TTS 会把拼音注音读出来的问题
+      - 修复没有块级元素时 TTS 找不到朗读内容的问题
+      - 优化注音字典加载与覆盖率
+    - 同步与导入：
+      - 修复 Windows WebDAV 同步遇到非 ASCII 响应头的问题
+      - 修复 WebDAV 限流/401 场景下同步失败率较高的问题，并降低并发
+      - 修复自建 S3 / rclone 场景下 path-style 兼容问题
+      - 修复 WebDAV 导入路径重复问题
+    - AI / 向量化 / 翻译：
+      - 修复 Windows 自定义 AI 端点测试连接和获取模型时的 CORS 问题
+      - 自定义 AI Base URL 未填写 http:// 或 https:// 时自动补全
+      - 向量化批量请求更小，并对 4xx 错误按 chunk 重试，减少整批失败
+      - 修复 Microsoft 翻译英文到中文时可能返回原文的问题
+    - 移动端与桌面端稳定性：
+      - 修复移动端聊天历史侧边栏快速开关时卡在半途的问题
+      - 修复 Android TrackPlayer 重复初始化报错
+      - 修复 iOS 开发环境冷启动偶发 TurboModule 红屏
+      - 修复桌面端拖拽导入书籍失效的问题
+      - 修复反馈日志过大导致提交失败的问题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/codedogQBY/ReadAny/releases/tag/v1.3.2
+ReleaseTime: 2026-05-30T17:01:40.0000000Z

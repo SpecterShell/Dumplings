@@ -1,0 +1,46 @@
+Version: 1.42.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.42.2/skills-manager_1.42.2_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/xingkongliang/skills-manager/releases/download/v1.42.2/skills-manager_1.42.2_x64_en-US.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.42.2
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/xingkongliang/skills-manager/releases/tag/v1.42.2
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Release date: 2026-10-18
+    Commit range: v1.42.1...v1.42.2
+    Release Overview
+    - Two fixes for Linux and Windows: backups and Git installs work again in the Linux AppImage, and Windows and Linux no longer show an empty strip at the top of the window.
+    User-facing
+    - Linux AppImage: backups and Git installs work again — In the AppImage, Back Up Now and installing or updating skills from Git could fail with a Git HTTPS helper / libcurl symbol lookup error. The system git was loading libraries bundled inside the AppImage. Git now runs with the system's own libraries. Thanks to @JonathanPitre (#539, #536).
+    - Windows and Linux: no empty strip at the top of the window — A 28px band reserved for the macOS window buttons also appeared on Windows and Linux, just below the native title bar. It now appears only on macOS. Thanks to @YageGeng (#547).
+    Developer & Governance
+    - The two identical git_command() helpers in git_fetcher.rs and git_backup.rs are now one, in core/git_command.rs. On Linux, when APPDIR is set, Git child processes no longer inherit LD_LIBRARY_PATH; the app's own environment is unchanged. The new regression test runs only on Linux, and the Linux CI job only runs cargo check.
+    Current Verification
+    - ✅ Cross-platform build passed (macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64)
+    - ✅ TypeScript typecheck passed
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    发布日期：2026-10-18
+    递交范围：v1.42.1...v1.42.2
+    发布概览
+    - 两项 Linux / Windows 修复：Linux AppImage 里的备份和 Git 安装恢复正常；Windows 和 Linux 的窗口顶部不再有一条空白。
+    用户可见更新
+    - Linux AppImage：备份和 Git 安装恢复正常 — 在 AppImage 里，「立即备份」以及从 Git 安装、更新 Skill 可能失败，报 Git HTTPS helper / libcurl 符号查找错误。原因是系统的 git 加载了 AppImage 自带的库。现在 Git 使用系统自己的库。感谢 @JonathanPitre（#539、#536）。
+    - Windows 和 Linux：窗口顶部不再有空白条 — 为 macOS 窗口按钮预留的 28px 空白条，在 Windows 和 Linux 上也会出现在原生标题栏下方。现在只在 macOS 上保留。感谢 @YageGeng（#547）。
+    开发者与治理更新
+    - git_fetcher.rs 和 git_backup.rs 里两份相同的 git_command() 合并到 core/git_command.rs。Linux 上设置了 APPDIR 时，Git 子进程不再继承 LD_LIBRARY_PATH，应用自身的环境不变。新增的回归测试只在 Linux 上运行，而 Linux CI 只跑 cargo check。
+    当前校验状态
+    - ✅ 跨平台构建通过（macOS Intel / macOS ARM / Windows x64 / Linux x64 / Linux ARM64）
+    - ✅ TypeScript typecheck 通过
+ReleaseTime: 2026-10-18T14:06:11.0000000Z

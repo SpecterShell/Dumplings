@@ -1,0 +1,29 @@
+Version: 0.1.4
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/QingJ01/Pebble/releases/download/v0.1.4/Pebble_0.1.4_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Added custom and portable profile directories, including environment-variable, pointer-file, and executable-adjacent portable modes with profile-scoped frontend storage.
+    - Added CC recipient display and selectable IMAP sync folders; re-enabling a folder now backfills its complete message history (#74, #82).
+    - Added automatic compose subjects derived from the first attachment when the subject is otherwise empty.
+    Changed
+    - Updated the desktop release metadata to version 0.1.4.
+    - Stored data-encryption keys in a keychain-safe hexadecimal format, with automatic migration and zeroization for legacy binary secrets (#22).
+    - Improved Linux AppImage startup by preferring Wayland when available while retaining X11 fallback, respecting explicit user configuration, and disabling binary stripping for release bundles.
+    Fixed
+    - Fixed Outlook account setup so mailbox identity is resolved from Microsoft Graph without trusting incomplete local profile data.
+    - Hardened Gmail, Outlook, IMAP, and POP3 synchronization against UIDVALIDITY changes, stale cursors, pagination loops, attachment failures, duplicate provider IDs, and interrupted indexing or database commits.
+    - Made outgoing mail crash-safe by persisting the message, attachments, and send state before dispatch; uncertain outcomes are never retried automatically, API-provider placeholders are removed after confirmation, and SMTP copies move atomically to Sent.
+    - Made attachment downloads, draft replacement, trash deletion, and pending remote operations transactional and idempotent, including recovery after restarts and already-absent remote messages.
+    - Bound encrypted records to their storage identity with authenticated encryption, migrated legacy ciphertext safely, and prevented proxy, tracker, signature, template, and cloud-setting state from leaking across records or racing with user updates.
+    - Fixed compose attachment staging, autosave retries, Strict Mode lifecycle handling, rapid realtime preference changes, and several confirmation, selection, accessibility, and starred-message UI races.
+    - Hardened tagged release automation against unsafe tag interpolation, incomplete artifact sets, concurrent publication, and accidental overwrites of existing GitHub Releases.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/QingJ01/Pebble/releases/tag/v0.1.4
+ReleaseTime: 2026-08-07T16:40:09.0000000Z

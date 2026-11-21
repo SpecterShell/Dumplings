@@ -1,0 +1,36 @@
+Version: 0.12.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.12.0/cadcraft-0.12.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.12.0/cadcraft-0.12.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/cadcraft/releases/download/v0.12.0/cadcraft-0.12.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Note
+    FreeBSD aarch64 is dropped from this release. We had to cut releases, and we cannot build this target within the 5-hour CI limit for any of the Craft apps, so we are dropping it for now. This is a known blocker, flagged for a future fix in storytold/craft-common-actions#39. FreeBSD x86_64 and every other platform are included.
+    What's Changed
+    - security: write files atomically through an exclusive temp file (CWE-59) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1840
+    - security: do not follow directory symlinks in cargo xtask stats (CWE-400) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1845
+    - security: bound geometry-kernel degree and work (CWE-407) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1848
+    - security: bound drawing document-model work and allocation (CWE-400/407) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1850
+    - security: budget the rendering pipeline against DoS geometry (CWE-400/407/789) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1849
+    - security: bound constraint-engine work and allocation (CWE-400/407) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1851
+    - security: authenticate the local control server with a per-session token (CWE-306) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1844
+    - security: bound native DXF/SVG/PDF import allocation and quadratic work (CWE-400/407/789) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1846
+    - security: bound Lisp callbacks, native comparisons, and local file reads (CWE-400, CWE-407) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1842
+    - security: bound font outline geometry and MTEXT line scanning (CWE-400/407) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1852
+    - security: guard the DXF->DWG conversion input and document decoder limits (CWE-789) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1847
+    - security: submit XATTACH picked path as literal text, not a command line (CWE-74) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1843
+    - security: confine craft-fonts manifest paths and reject newline Cargo directives (CWE-22, CWE-74) by @dylanmtaylor in https://github.com/storytold/cadcraft/pull/1841
+    Full Changelog: https://github.com/storytold/cadcraft/compare/v0.11.0...v0.12.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/cadcraft/releases/tag/v0.12.0
+ReleaseTime: 2026-10-23T00:34:58.0000000Z

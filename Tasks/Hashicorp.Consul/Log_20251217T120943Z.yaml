@@ -1,0 +1,27 @@
+Version: 1.22.2
+Installer:
+- Architecture: x86
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/1.22.2/consul_1.22.2_windows_386.zip
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://releases.hashicorp.com/consul/1.22.2/consul_1.22.2_windows_amd64.zip
+Locale:
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    SECURITY:
+    - security: Upgrade golang to 1.25.4. [GH-23029]
+    - security: upgrade internal packages of RHEL builds to include security fixes [GH-23078]
+    IMPROVEMENTS:
+    - ui: upgraded Ember framework from v3.28 to v4.12, improving performance and stability. Upgrades multiple other packages which support Ember v4. [GH-23070]
+    BUG FIXES:
+    - agent: fix bug prevents default TCP checks from being re-added on service reload when they were explicitly disabled or when custom checks were specified during initial registration. [GH-23088]
+    - audit-logging: (Enterprise only) Fixed JSON unmarshall error when array of obj is passed for auditReq body. [GH-11546]
+    - cli: Enhanced error messages in consul config write command to provide actionable guidance when config entries cannot be modified due to references by gateways or routers. [GH-22921]
+    - mesh: router + splitter + failover with retry now correctly failover for external services failover subsets through terminating gateways. [GH-23092]
+- Key: ReleaseNotesUrl
+  Value: https://github.com/hashicorp/consul/releases/tag/v1.22.2
+ReleaseTime: 2025-12-17T11:57:33.0000000Z

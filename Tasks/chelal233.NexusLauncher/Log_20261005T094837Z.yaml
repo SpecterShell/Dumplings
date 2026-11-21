@@ -1,0 +1,47 @@
+Version: 1.0.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chelal233/dsh-nexus/releases/download/v1.0.6/dsh-nexus_1.0.6_windows_x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chelal233/dsh-nexus/releases/download/v1.0.6/dsh-nexus_1.0.6_windows_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Update Nexus's integrated third-party market first-install pin from dshmarket@1.52.0 to dshmarket@1.66.8, including English/Chinese prompts and documentation.
+    - The new market declares Harness 0.2 settings compatibility. Verify the published package's integrity and its npm/GitHub operations consuming the Nexus Desktop package interface.
+    - Preserve selected-profile installation, recorded failures and retry, existing dependencies, and enable/disable behavior. The new version is used only when absent; existing markets are not automatically reinstalled or upgraded.
+    Downloads and provenance
+    Windows x64/ARM64: EXE and portable ZIP. macOS Intel x64/Apple Silicon ARM64: DMG and portable ZIP. Linux x86_64/ARM64: AppImage, DEB and RPM.
+    Each platform _build.json records its source commit, build identity and check scope. Verify actual downloads against the per-platform or aggregate SHA256 manifest. The aggregate manifest has a GitHub Actions identity-bound Sigstore signature and certificate. This is provenance, not production OS code signing.
+    Verification scope
+    Eleven local checks passed for this market update, including installation commands/profile preservation, UI/bridge regressions, and the actual 1.66.8 published code consuming Nexus's simulated subprocess handles for npm/GitHub operations. The latter does not install a real plugin; the real Cordis mounting check was not run. Release gates cover frozen dependencies, frontend/Rust regressions, six-platform builds, bundled resources and actual installed-package startup on CI runners for this exact commit. The eight CI artifacts comprise six platform packages, the Git source companion and a separate Linux x64 RPM QA package; the QA package is not an extra public release asset.
+    Earlier original v1.0.4 DMG/ZIP packages passed isolated native checks on both Mac architectures and an official Harness 0.2.0-rc.2 Desktop producer subset, including a synthetic session, a transitive Cordis test plugin, restart, mutation locks and normal cleanup. Those receipts belong to the earlier original packages and do not establish full real-session migration acceptance for v1.0.6. The v1.0.6 Agent Stop regression is verified by its own same-commit native installed-package logs.
+    The real Harness market UI, full in-browser Web sessions, real-session/full offline migration, every third-party plugin, user Mac upgrades, Gatekeeper first-open, production notarization and crash recovery remain unaccepted. Default Safari configuration is restricted on Mac runners and no user Mac is available. These gaps are not counted as passing; earlier failures and cancellations remain recorded.
+    Bundled Harness remains 0.1.6-alpha.2 and user installations are not automatically upgraded. That lock has no official Linux Desktop runtime, so Linux retains Web mode. Explicit runtime paths take precedence; otherwise bundled tools are used. Bundled Git excludes GCM. macOS packages are ad-hoc signed and not notarized; other platforms are unsigned. CI success does not establish production signing or real-device upgrade acceptance.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 将集成的第三方插件市场首次安装版本从 dshmarket@1.52.0 更新为 dshmarket@1.66.8，同步中英文提示与文档。
+    - 新版市场声明兼容 Harness 0.2 设置接口；发布包完整性和 npm／GitHub 操作与 Nexus 的 Desktop 安装接口已核对。
+    - 保留按当前配置档安装、失败记录与重试、已有依赖保护和启用／禁用行为。仅未安装市场时使用新版本；已有市场不会自动重装或升级。
+    下载
+
+    | 系统    | 架构                           | 安装包             |
+    | ------- | ------------------------------ | ------------------ |
+    | Windows | x64、ARM64                     | EXE、portable ZIP  |
+    | macOS   | Intel x64、Apple Silicon ARM64 | DMG、portable ZIP  |
+    | Linux   | x86_64、ARM64                  | AppImage、DEB、RPM |
+
+    每个平台的 _build.json 记录提交、构建身份和检查范围；_SHA256SUMS.txt 及总清单用于核对实际下载字节。总清单附带 GitHub Actions 身份绑定的 Sigstore 签名与证书，这是来源证明，不是操作系统生产代码签名。
+    验证范围
+    本次市场更新的本地检查通过 11 项，包括安装命令／配置档保护、界面／桥接回归，以及真实 1.66.8 发布代码与 Nexus 模拟子进程句柄的 npm／GitHub 操作检查。后者没有执行真实插件安装，真实 Cordis 挂载检查尚未运行。发行门禁覆盖本版本同提交的冻结依赖、前端／Rust 回归、六平台构建、资源核验及 CI runner 上的实际安装包启动。八份 CI artifact 包含六平台包、Git 源码伴随包和单独的 Linux x64 RPM QA 包；QA 包不作为额外公开发行附件。
+    双架构 Mac 的此前原始 v1.0.4 DMG／ZIP 已通过隔离启动及官方 Harness 0.2.0-rc.2 Desktop producer 子集检查，包含合成会话读取、传递 Cordis 测试插件、重启、变更锁和正常清理。这些记录属于此前原包，不能称为 v1.0.6 的完整真实会话迁移验收。v1.0.6 的 Agent Stop 回归以本版本同提交原生安装包日志为准。
+    真实 Harness 市场界面、完整浏览器内 Web 会话、真实会话／完整离线迁移、全部第三方插件、用户 Mac 真机升级、Gatekeeper 首次打开、生产公证及崩溃恢复仍未验收。Mac runner 的默认 Safari 设置受系统权限限制，且目前没有可用用户 Mac；相关项没有被计为通过。此前失败和取消记录保留。
+    内置 Harness 锁仍为 0.1.6-alpha.2，不自动升级用户 Harness；该锁无官方 Linux Desktop 资源，Linux 保留 Web 模式。明确指定的运行时优先，否则使用内置工具；捆绑 Git 不包含 GCM。macOS 包使用临时签名且未公证，其他平台为 unsigned；CI 通过不等于生产签名或用户真机升级。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chelal233/dsh-nexus/releases/tag/v1.0.6
+ReleaseTime: 2026-10-05T03:43:34.0000000Z

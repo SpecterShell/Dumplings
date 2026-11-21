@@ -1,0 +1,51 @@
+Version: 0.10.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Fioooooooo/FylloCode/releases/download/v0.10.3/FylloCode-0.10.3-win-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/releases/tag/v0.10.3
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This patch release focuses on bundle size, Windows compatibility, and local debugging. It tightens the desktop packaging scope, improves cross-platform child process startup paths, and adds a development entry point for diagnosing renderer errors.
+    Added
+    - DevTools launcher in the top navigation for quickly opening developer tools from inside the desktop app
+    - Renderer error and unhandled rejection reporting flow, passing frontend exceptions to main-process logs through the app IPC / preload API
+    Changed
+    - Packaging rules now use stricter allowlist and exclusion strategies, reducing source files, project metadata, tests, examples, documentation, sourcemaps, and other non-runtime content in installers
+    - Windows installer strategy was adjusted to reduce waiting cost during the installer loading phase
+    - External child process startup now consistently uses cross-spawn across the main process, built-in MCP runtime, and script entry points for more stable cross-platform command execution
+    - Added and archived the OpenSpec record for desktop packaging optimization, and updated the related constraints in the Build, CodeStyle, and MainProcess guidelines
+    Fixed
+    - Fixed Windows project path persistence where paths were not safely encoded and could fail to restore correctly for special paths
+    - Fixed inconsistent command resolution on some platforms when using Node's native child process spawn directly
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/HEAD/CHANGELOG.md#0103---2026-05-26
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/doc/CHANGELOG.zh-CN.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这个补丁版本聚焦包体积、Windows 兼容性和本地调试能力。收紧了桌面打包范围，改进了跨平台子进程启动路径，并补上了用于排查 renderer 异常的开发入口。
+    新增
+    - 顶部导航新增 DevTools 启动入口，方便在桌面应用内快速打开开发者工具
+    - 新增 renderer 错误与未处理 rejection 上报链路，通过 app IPC / preload API 将前端异常传递到主进程日志
+    调整
+    - 打包规则改为更严格的白名单与排除策略，减少源码、工程元数据、测试、示例、文档和 sourcemap 等非运行时内容进入安装包
+    - Windows 安装包策略做了调整，降低安装包加载阶段的等待成本
+    - 外部子进程启动统一改用 cross-spawn，覆盖主进程、内置 MCP runtime 与脚本入口，提升跨平台命令执行稳定性
+    - 新增并归档桌面打包优化的 OpenSpec 记录，同时补充 Build、CodeStyle 与 MainProcess guideline 中的相关约束
+    修复
+    - 修复 Windows 项目路径持久化时未安全编码导致特殊路径可能无法正确恢复的问题
+    - 修复部分平台上直接使用 Node 原生 child process spawn 时命令解析不一致的问题
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Fioooooooo/FylloCode/blob/doc/CHANGELOG.zh-CN.md#0103---2026-05-26
+ReleaseTime: 2026-05-26T09:16:08.0000000Z

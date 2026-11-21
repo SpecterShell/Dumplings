@@ -1,0 +1,98 @@
+Version: 0.1.19
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.19/ddc-v0.1.19-x86_64-pc-windows-msvc.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/ejfkdev/ddc/releases/download/v0.1.19/ddc-v0.1.19-aarch64-pc-windows-msvc.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ddc v0.1.19
+    Supersedes the aborted v0.1.18 (its Windows CI link failed on the new
+    getrusage RSS probes; the v0.1.18 tag/release were removed, crates.io
+    0.1.18 stays immutable — Windows cargo-install users should take
+    0.1.19). Twenty-two commits since v0.1.17: eight rounds of randomized-APK
+    quality mining (progressive decompile → full-tree javac family
+    profiling → single-class reads against disassembly), then a
+    performance/memory pass. jdc-core 0.2.12 ships the New-arg
+    descriptor-truth formal selection (arg_tys) alongside this release.
+    Full-tree javac (android.jar + supplementary classpath) error counts:
+    - battery (reqable/weibo/lark/weixin): 14,201 → 12,779 (-10%)
+    - QQ 9.3.65 (329k classes, case-sensitive volume): 16,293 → 7,873 (-52%)
+    - rimet/DingTalk (122k classes): 33,181 → 8,669 (-74%)
+    - news_article (287k classes): 10,529 → 9,313 (-12%)
+    - uuyc: 3,840 → 2,758 (-28%)
+    Families fixed, each root-caused to a single mechanism:
+    - Phantom field writes: R8 strips R-class field declarations but keeps
+      the husks sput-ing to them; side-effect-free writes to
+      fields proven absent over the FULL superclass chain (pool supers +
+      the embedded framework DB) are now dropped. The chain proof matters:
+      an own-fields-only verdict silently deleted legitimate INHERITED
+      field writes (QQ 16,293 → 7,923 with the two companion fixes
+      below).
+    - $assertionsDisabled declarations render under the same private alias
+      the emit side already used for references (QQ jbox2d x166).
+    - Default-package relocation: the case-collision identity pin froze
+      $-tails in the root package while their outer moved to ddcroot
+      (QQ VasUIToken$N x202); find_outer now un-prefixes ddcroot
+      symmetrically with has_class, so relocated nestees render dotted
+      (ddcroot.agv.b) instead of flat $ in method bodies — rimet's
+      dominant family (cannot-find 24,124 → 1,301).
+    - Ctor this-alias propagation: R8 spills this through register
+      chains in huge ctors; the all-sources fixpoint (every assignment
+      traces to this) restores this.field final-field init and rewrites
+      alias reads (uuyc androidx.camera x_2 x103, battery-wide cascade).
+    - Enum ctors: the implicit (String name, int ordinal) pair now strips
+      uniformly — real field-store ctors, d8 synthetic bare-constant
+      bridges, AND multi-arity Java enum forwarding ctors (rimet
+      GaeaConfigKey: ctor-mismatch 1,204 → 35). The old is_bridge/
+      SYNTHETIC gate's "weixin +2.9k" fear did not recur; every corpus
+      improved.
+    - Return-type satisfaction handles ARRAY covariance: the impostor
+      check's strip L..; returned None for [LX; descriptors, so the
+      real Parcelable.Creator newArray was renamed as an impostor and
+      every Parcelable anonymous class failed "not abstract / does not
+      override newArray(int)" (weibo 504, ~1,400 across corpora).
+    - Kotlin Nothing-returning unsupported-ops compile to )Ljava/lang/Void;
+      — ret_void now recognizes the Void class, so the R8 specialization
+      path (bridge keeps the interface name) fires for compose collections.
+    - Boolean/int bitwise chains: bty and the int-operand bridge's
+      side_bool recurse through all-boolean bitwise bins (frozen Int
+      embedded ty), arithmetic/ordering ops bridge each boolean side
+      independently, string concatenation stays exempt (news bitwise
+      operand errors 1,066 → 69).
+    - Null is the zero register: Null constants in int-kind bins become
+      Int(0), and b != null on a boolean side folds to the truth test
+      (battery -172).
+    - filled-new-array keeps its full dimension depth; dead-tail pruning
+      after terminators; late default-init for surviving bare declarations
+      (dex registers are zero-initialized — the faithful value).
+    - QQ peak RSS 2,748 → 2,470 MB (-10%), weixin -81 MB: deflate
+      inflation reserves the exact size from the zip central directory
+      instead of doubling (the realloc copies were the #1 sampled leaf).
+    - weibo worker busy-time -3..6% (interleaved A/B): the generation
+      split's undo gate probes candidate gens with early exit instead of
+      rebuilding a full-subtree read-count HashMap per diverged If; hot
+      per-method u32 maps move off SipHash; the access-widening image scan
+      (1.6 s serial on QQ) runs concurrently with the field-rename
+      registry build, and its finals pre-pass parallelizes per dex.
+    - DDC_STATS now reports per-phase RSS (peak AND instantaneous live) —
+      QQ attribution: parse 1,051 MB, pool +576, registries +786, workers
+      +435.
+    - CLI warns when output paths collide case-insensitively (silent file
+      loss on macOS/Windows); case-collision corpora must be gated on a
+      case-sensitive volume.
+    Windows MSVC link restored (the RSS probes' getrusage fallback is now
+    unix-gated, 0.0 elsewhere).
+    Every change gated on full-tree javac with classpath across the
+    battery plus the round's target corpora, zero regressions; output
+    byte-identical (0-diff) across the performance batch; double-run
+    determinism on a case-sensitive volume; registry-built binary (jdc-core
+    0.2.12 from crates.io) byte-identical to the dev-pinned build; 74 ddc
+    tests + jdc-core suites green; clippy clean.
+    Full Changelog: https://github.com/ejfkdev/ddc/compare/v0.1.17...v0.1.19
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ejfkdev/ddc/releases/tag/v0.1.19
+ReleaseTime: 2026-09-29T01:32:42.0000000Z

@@ -1,0 +1,131 @@
+Version: 18.8.8
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v18.8.8/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added Agent.setModelResolver() to fit every model an agent adopts (via setModel, starting with the current one) before it is used (#15048 by @H4vC)
+    - Added CompactionSettings.baseWindowTokens: when set, resolveThresholdTokens() scales its percentage or reserve-based threshold from that base instead of the full context window (#15065 by @H4vC)
+    Fixed
+    - Fixed OpenAI V1 remote compaction re-attaching a prior Anthropic native payload after a successful compact (#15041 by @PaleRoses)
+    - Fixed resolveThresholdTokens() clamping a positive thresholdTokens to baseWindowTokens; a fixed threshold is checked against the real window, and the base only rescales the percentage and reserve policies (#15074 by @H4vC)
+    - Fixed resolveThresholdTokens() clamping a fixed thresholdTokens at or past the context window to one token below it, so compaction fired only after the next request overflowed; it now clamps to the window less the reserve (#15146 by @will-bogusz)
+    @oh-my-pi/pi-ai
+    Fixed
+    - Fixed OpenAI Responses and Codex tool calls running with empty {} arguments when a compatible host or proxy ends the call with an empty arguments payload after streaming the real ones (#15099 by @will-bogusz)
+    - Fixed truncated Factory Droid Gemini responses ending as a hard error or a half-received tool call instead of being retried (#15103 by @will-bogusz)
+    - Fixed Factory Droid Gemini ignoring an error the server reports mid-response, which hid its status and retried errors that cannot succeed (#15103 by @will-bogusz)
+    - Fixed resumed OpenAI Responses sessions (xAI, Factory Droid, OpenAI and other hosts) dropping all earlier encrypted reasoning on their first request; GitHub Copilot still rebuilds history until its first response (#15148 by @will-bogusz)
+    @oh-my-pi/browser-relay
+    Fixed
+    - Fixed tabs a relay client asks to open in the background being created as the selected tab (#15109 by @will-bogusz)
+    @oh-my-pi/pi-catalog
+    Added
+    - Added the connection-bound-native-history rule axis for Responses hosts that reject native history items from an earlier connection, set for GitHub Copilot (#15148 by @will-bogusz)
+    Fixed
+    - Fixed Devin's discovered models not marking the account's default model, the one Devin's own CLI starts the account on (SWE-2 High on Pro, SWE-1.6 Slow on Free); when it is an effort lane of a family, the family starts at that effort. Cursor's discovered models no longer carry that marker, so Cursor keeps its existing startup selection (#15115 by @will-bogusz)
+    @oh-my-pi/pi-coding-agent
+    Added
+    - Added /jobs kill <id>|all to cancel a running background job (or every one this session owns) from the command line, even while the agent is busy (#14160 by @KanwarGill)
+    - Added omp anonymize [session] [-o dir] to write a shareable copy of a session and its subagent transcripts: only an explicit allowlist of omp metadata (ids, timestamps, models, usage, built-in tool names and options) is kept; message, thinking, and tool-output text become size-annotated [redacted …] markers; tool-call paths become mock paths (/home/seg3/seg4/src/seg9.ts:10-20), shell commands keep known programs and flags, other literals such as a grep pattern become PLACEHOLDER_N, and extension or MCP payloads are redacted whole, with the same original always mapping to the same token across files (#15077 by @H4vC)
+    - Added /dump anon, which writes the same anonymized session and subagent JSONL to a zip in the temp directory and copies its path (#15077 by @H4vC)
+    - Added message times to /dump transcripts (assistant turns also show request duration and time to first token), and live status, last activity, pending tool calls, and the partially streamed turn to /dump all files for subagents still running, so a stuck subagent can be diagnosed from the archive (#15121 by @H4vC)
+    - Added contextFiles.extra to load extra instruction files, such as AGENTS.local.md, beside the usual context file (#15147 by @Shadorain).
+    - /annotate opens the note you are writing, a file or typed-prompt source, or (for local diff reviews) the current working-tree file in $VISUAL or $EDITOR with the external-editor key (Ctrl+G by default); a file source is saved back and its notes follow the edited text (#15151 by @Shadorain)
+    Changed
+    - A /models compaction limit set past a model's standard context window now runs that model on its extended window instead of being silently clamped; the hub warns (noting long-context pricing) and saves on a second Enter, in the terminal and in Tern, and rejects limits past the model's largest window (#15048 by @H4vC)
+    - A token compaction limit set in /models (or compaction.modelThresholds) is now the base omp scales with its usual policy, as if it were the model's window (85% of it by default for bases above ~109k, or compaction.thresholdPercent of it), instead of the exact point. Plain numbers saved since 18.8.5 therefore compact earlier; rewrite one as "f<tokens>" (or type f400k in the hub) to keep it an exact trigger. The /models limit field shows where the model would compact as you type (compacts at 340K · 85% of 400K base), the preview's Compacts at row says why, and the saved message repeats it (#15065 by @H4vC)
+    Fixed
+    - Fixed /usage (or clicking the status-line cost) while the usage dashboard was already open stacking a second dashboard on top; it now focuses the open one (#15145 by @H4vC)
+    - Fixed the browser tool prompt not documenting observe()'s viewportOnly and includeAll options, or that open/close/run timeouts are seconds clamped to 1–300 while waitFor* timeouts are milliseconds (#15104 by @will-bogusz)
+    - Fixed browser relay pages opened in the background (browser.newPage({ background: true }) in tab.run) taking over the user's selected tab; they now open unselected once the relay extension is reinstalled (#15109 by @will-bogusz)
+    - Fixed browser open with app.relay and a target failing with No page target matched or Selected tab is no longer available when the matching tab was opened a moment earlier outside omp; it now waits briefly for the relay to list the tab (#15112 by @will-bogusz)
+    - Fixed a timed-out browser.open holding up the next open of the same browser (apps launched with app.path excepted) until its abandoned launch or connect returned; the timeout error now names the step that stalled (#15117 by @jinpyo-jeon and @will-bogusz)
+    - Fixed browser tabs crashing mid-load on some pages with a same-site iframe, Google Travel among them, after which every open, screenshot and evaluate on the tab timed out (#15118 by @will-bogusz)
+    - Fixed the custom-tool examples' full-documentation link opening a missing page (#15076 by @qingshungLI)
+    - Fixed the /models compaction limit preview and Compacts at row rounding fractional percentages (12.5% showed as 13%) (#15074 by @H4vC)
+    - Fixed /omfg save, overwrite, and validation prompts in Tern opening as a sheet over the candidate rule; they now sit in the composer slot like ask, so the rule stays readable while you choose (#15058 by @H4vC)
+    - Fixed hotkeys pressed in Tern while omp is still starting (such as Alt+P for the model selector) being ignored; like in other terminals, they now take effect once startup finishes (#15120 by @H4vC)
+    - Fixed a startup extension dialog (select, confirm, input) in Tern not receiving keys until it timed out (#15122 by @H4vC)
+    - Fixed auto-compaction overflowing the context window every cycle when compaction.thresholdTokens or an f<tokens> model limit is at or past a window the provider caps lower (such as Factory's 196K Kimi K3); it now compacts at the window less the reserve, and /models shows the trigger as capped (#15146 by @will-bogusz)
+    - Fixed resumed xAI, Factory Droid and OpenAI sessions forgetting earlier reasoning on their first request, while a retry after a stale Responses item error still rebuilds history (#15148 by @will-bogusz)
+    - Fixed the startup default ignoring the model a provider's discovery names as the account's default: with no model chosen, Devin Pro now starts on SWE-2 at High instead of SWE-1.6 (#15115 by @will-bogusz)
+    @oh-my-pi/pi-mnemopi
+    Fixed
+    - Fixed long retained transcripts exhausting local memory extraction models by limiting each extraction input to 8192 characters while keeping the opening context and newest turns (#14956).
+    @oh-my-pi/pi-natives
+    Changed
+    - Reduced macOS accessibility-tree latency for ax() without changing its text output: each element's children are read once, and its bounds, which the tree never shows, are no longer read (#15159 by @will-bogusz)
+    Fixed
+    - Fixed macOS computer use reporting AxFailed instead of StaleRef for a ref whose element the app had removed (#15156 by @will-bogusz)
+    - Fixed macOS el.press() and el.perform() reporting AxFailed when the app did not answer in time, such as a press that opens a modal dialog; they now report AxUnconfirmed (#15156 by @will-bogusz)
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - ModelHubCallbacks.onCompactionPointChange now receives a confirmed flag and returns a CompactionPointChangeResult ({ kind: "error" } or { kind: "confirm" }) instead of an error string; a confirm result shows a warning that a second Enter on the same input accepts (#15048 by @H4vC)
+    - ModelCompactionPoint.percent is replaced by basis, a short explanation of why the model compacts there (fixed, 85% of 400K base, 80% of window) that the model hub preview shows next to the trigger (#15065 by @H4vC)
+    Added
+    - Added an inline option to HookSelectorComponent that keeps a selector in the composer slot in Tern instead of opening it as a sheet over the screen (#15058 by @H4vC)
+    - Added ModelHubCallbacks.previewCompactionPoint, whose line the compaction limit field shows while you type instead of the input syntax (#15065 by @H4vC)
+    - Added Vim find and till motions (f, F, t, T) in the prompt editor, with ; and , to repeat them (#15100 by @Shadorain)
+    - Added Vim replace (r, R) in the prompt editor (#15100 by @Shadorain)
+    - Added Vim bracket and quote matching (%), paragraph motions ({, }), line join (J), and indent (>>, <<) in the prompt editor (#15100 by @Shadorain)
+    - Added an external-editor key (Ctrl+G by default) to the annotation overlay for the note draft and, when the host provides onExternalEditor, the source being annotated; an edited text source is returned as editedText on the paste result (#15151 by @Shadorain)
+    - Added TUI.releaseHeldInput(): on a terminal expected to speak TSP, a deferInput start now holds keystrokes (TSP events and the cell-size reply still apply; Ctrl+C/Ctrl+D release early) until the app calls it once its session is wired; such terminals also skip the sixel probe (#15120 by @H4vC)
+    - Added TUI.replaceHeldFocus(previous, next), which Composer.setEditor() calls so a swapped-in editor inherits held startup keys; only keys for the start-time focus owner are now held, and a dialog that takes focus gets its input live (#15122 by @H4vC)
+    - Added RenderResultOptions.elapsedMs and cancelled, NativeToolHead.command and NativeToolView.preview: "children" for native describe hooks
+    Changed
+    - Tern draws each bash run, eval cell and !/$ run as one box: the command or code, its output, status lines and a foot with state, time and facts; images sit below the box and the bash head shows the intent instead of the command
+    Fixed
+    - Fixed the Agents hub Time column rewinding and freezing for running subagents between progress updates (#15140 by @H4vC)
+    @oh-my-pi/pi-utils
+    Fixed
+    - Fixed formatDuration printing 60.0s for durations just under a minute; they now read 1m (#15121 by @H4vC)
+    @oh-my-pi/pi-wire
+    Added
+    - Added TspToolProps.command (the command line Copy command copies), TspToolProps.preview: "children" (the collapsed body stays whole while its children clamp) and TspCodeProps.preview
+    What's Changed
+    - fix(tui): keep /omfg prompts in the Tern composer slot by @H4vC in https://github.com/can1357/oh-my-pi/pull/15058
+    - feat(coding-agent): let custom compaction limits reach the extended context window by @H4vC in https://github.com/can1357/oh-my-pi/pull/15048
+    - feat(coding-agent): scale per-model compaction limits, add a fixed mode, and explain them in the hub by @H4vC in https://github.com/can1357/oh-my-pi/pull/15065
+    - fix(coding-agent): address review follow-ups on per-model compaction limits by @H4vC in https://github.com/can1357/oh-my-pi/pull/15074
+    - fix(docs): correct custom tool guide link by @qingshungLI in https://github.com/can1357/oh-my-pi/pull/15076
+    - fix(agent): keep cleaned preserve data after V1 remote compaction by @PaleRoses in https://github.com/can1357/oh-my-pi/pull/15041
+    - fix(mnemopi): bound retained transcript extraction input by @roboomp in https://github.com/can1357/oh-my-pi/pull/14959
+    - feat(coding-agent): add /jobs kill |all by @KanwarGill in https://github.com/can1357/oh-my-pi/pull/14160
+    - feat(coding-agent): add session anonymizer (omp anonymize, /dump anon) by @H4vC in https://github.com/can1357/oh-my-pi/pull/15077
+    - fix(tui): queue input during startup in Tern by @H4vC in https://github.com/can1357/oh-my-pi/pull/15120
+    - feat(tui): add the missing Vim editing keys by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15100
+    - fix(tui): exit history on vim replace overwrite and keep counted r linear by @H4vC in https://github.com/can1357/oh-my-pi/pull/15127
+    - fix(coding-agent): show live subagent state and message times in /dump by @H4vC in https://github.com/can1357/oh-my-pi/pull/15121
+    - fix(tui): deliver Tern startup dialog input live and replay held keys before draft restore by @H4vC in https://github.com/can1357/oh-my-pi/pull/15122
+    - fix(tui): keep agent hub Time ticking forward between subagent progress frames by @H4vC in https://github.com/can1357/oh-my-pi/pull/15140
+    - fix(coding-agent): focus the open /usage dashboard instead of stacking another by @H4vC in https://github.com/can1357/oh-my-pi/pull/15145
+    - feat(coding-agent): open the default editor from /annotate by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15151
+    - feat(coding-agent): add contextFiles.extra for custom context filenames by @Shadorain in https://github.com/can1357/oh-my-pi/pull/15147
+    - fix(natives): report removed macOS AX elements as StaleRef and unanswered actions as AxUnconfirmed by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15156
+    - perf(natives): read each macOS AX element's children once and skip unused bounds in ax() by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15159
+    - fix(ai): keep streamed tool arguments when Responses ends with an empty payload by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15099
+    - fix(ai): retry Factory Droid Gemini streams that are cut off mid-response by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15103
+    - docs(browser): document observe viewportOnly/includeAll and timeout units by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15104
+    - fix(browser-relay): open Target.createTarget background tabs without selecting them by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15109
+    - fix(coding-agent): let a relay target adopt a tab opened a moment earlier by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15112
+    - fix(catalog,coding-agent): start on the account's default model when discovery reports one by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15115
+    - fix(browser): name the stalled step of a timed-out open and stop it holding up the next one by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15117
+    - fix(browser): stop the WebMCP page hook getting Chromium to kill the tab's renderer by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15118
+    - fix(agent,coding-agent): compact a fixed trigger past a capped context window before the next request overflows by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15146
+    - fix(ai): keep earlier reasoning on the first request of a resumed Responses session by @will-bogusz in https://github.com/can1357/oh-my-pi/pull/15148
+    - test(browser): run the spawned-app abandoned-open test on Windows by @H4vC in https://github.com/can1357/oh-my-pi/pull/15214
+    New Contributors
+    - @qingshungLI made their first contribution in https://github.com/can1357/oh-my-pi/pull/15076
+    - @KanwarGill made their first contribution in https://github.com/can1357/oh-my-pi/pull/14160
+    - @Shadorain made their first contribution in https://github.com/can1357/oh-my-pi/pull/15100
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v18.8.7...v18.8.8
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v18.8.8
+ReleaseTime: 2026-10-10T15:02:52.0000000Z

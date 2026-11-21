@@ -1,0 +1,15 @@
+Version: 2.0.1
+Installer:
+- InstallerUrl: https://github.com/AIDotNet/NextCoWork/releases/download/v2.0.1/nextcowork-2.0.1-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    改动
+    - 数据目录再收拢：Chromium 的会话集（Cache/Cookies/Local Storage/Network/Partitions 等三十来个条目）从 profile 根层再收进一层 chromium/ 子目录，根层只留 Preferences/Local State/Crashpad 这几样 Chromium 认路径认得死的东西（尤其 Local State 存着 cookie 加密密钥，跟着搬会连累 Cookies 解不了密）；首次启动做一次性迁移，「删除全部数据」同步更新事实源，失败会整体回滚而不留半搬状态
+    修复
+    - 插件宿主窗口销毁竞态：dispose 时如果窗口已经 destroyed，此前会尝试再读一次 webContents.id 而失败；现在建窗那一刻就记下来
+    - 插件休眠状态写入补上未捕获的 Promise rejection 兜底
+- Key: ReleaseNotesUrl
+  Value: https://github.com/AIDotNet/NextCoWork/releases/tag/v2.0.1
+ReleaseTime: 2026-09-18T08:18:38.0000000Z

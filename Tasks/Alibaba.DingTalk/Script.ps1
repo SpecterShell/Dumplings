@@ -1,46 +1,20 @@
-# 自动更新源
-$Object1 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/release_windows_vista_later_all.json' | Read-ResponseContent | ConvertFrom-Json
-# 手动更新源
-$Object2 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/release_windows_vista_later_manual_lowpriority.json' | Read-ResponseContent | ConvertFrom-Json
-# 下载源
-$Object3 = Invoke-WebRequest -Uri 'https://im.dingtalk.com/manifest/new/website/vista_later.json' | Read-ResponseContent | ConvertFrom-Json
-
-$Object = @($Object1, $Object2, $Object3) |
-  Sort-Object -Property { $_.win.package.version -creplace '\d+', { $_.Value.PadLeft(20) } } -Descending |
-  Select-Object -First 1
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = Get-RedirectedUrl1st -Uri 'https://www.dingtalk.com/win/d/qd=oversea' -Method GET
+}
 
 # Version
-$Task.CurrentState.Version = $Object.win.package.version
+$this.CurrentState.Version = '{0}.{1}.{2}-Release.{3}' -f [regex]::Match($this.CurrentState.Installer[0].InstallerUrl, '(\d+(?:\.\d+)+)').Groups[1].Value.Split('.')
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object.win.install.url
-}
-
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = [regex]::Match($Object.win.install.description[0], '(\d{4}-\d{1,2}-\d{1,2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
-
-# ReleaseNotes (en-US)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'en-US'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.win.install.multi_lang_description.en_US | Select-Object -Skip 1 | Format-Text
-}
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object.win.install.description | Select-Object -Skip 1 | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

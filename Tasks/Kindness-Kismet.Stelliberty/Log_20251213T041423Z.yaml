@@ -1,0 +1,92 @@
+Version: 1.1.60
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.60/Stelliberty-v1.1.60-windows-x64-setup.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kindness-Kismet/Stelliberty/releases/download/v1.1.60/Stelliberty-v1.1.60-windows-arm64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    📦 构建信息
+    项目 内容
+    包名 stelliberty
+    版本号 1.1.60
+    Mihomo 核心 1.19.17
+    提交哈希 699954afcfaa6f2bccfc9626c2c180f620c40b5a
+    📋 更新日志
+    自 v1.1.50 以来的功能和修复：
+    增强订阅配置验证，防止无效配置导致核心启动失败
+    - 新增 Rust 层完整配置验证（YAML 语法、必需字段、代理配置、规则、循环引用）
+    - 订阅下载和编辑保存时自动验证，失败则阻止保存
+    - 原子文件写入（临时文件+重命名）避免 IO 异常导致文件损坏
+    - 新增配置验证测试工具（flutter run --dart-define=TEST_TYPE=validation）
+    - 优化订阅更新失败时的错误提示
+    提交：699954a | 作者：ONEUI9
+
+    feat: 添加代理页面竖向布局模式并优化交互体验
+    新增功能：
+    - 添加竖向布局模式，支持横向/竖向视图切换
+    - 实现代理组折叠状态持久化，页面切换后保持展开/折叠状态
+    - 添加骨架屏加载动画，提升页面切换流畅度
+    - 开发模式外部控制器默认端口改为 19090，避免与生产环境冲突
+    修复问题：
+    - 修复应用恢复时覆盖外部控制器节点选择的问题
+    - 优化滚动条高度计算，支持动态内容高度
+    提交：4fd9190 | 作者：ONEUI9
+
+    新增回到顶部按钮并实现与定位按钮互锁
+    - 在代理操作栏添加回到顶部按钮（定位按钮右侧）
+    - 实现定位和回到顶部按钮互锁机制：
+      - 定位过程中禁用回到顶部
+      - 回到顶部过程中禁用定位
+      - 使用 _isScrollAnimating 标志防止冲突
+    - 优化按钮禁用状态显示：
+      - loading 和 disabled 状态统一显示置灰图标
+      - 移除 loading 时的圆圈加载指示器
+      - 保持原图标并降低不透明度
+    - 添加国际化翻译（scrollToTop）
+    提交：e3c1c06 | 作者：ONEUI9
+
+    优化连接详情：分离代理组和代理节点显示
+    提交：7efc12d | 作者：ONEUI9
+
+    统计信息
+    - 📊 总提交数：4
+    - ✅ 功能/修复提交：4
+    - 🔧 CI/维护提交：0 (已过滤)
+
+    ❓ 故障排查
+    Linux 启动问题
+    如果无法启动应用，请确保已为可执行文件赋予运行权限：
+    # 进入应用目录
+    cd /path/to/stelliberty
+
+    # 赋予权限
+    chmod +x ./stelliberty
+    端口被占用（Windows）
+    如果遇到端口冲突：
+    # 1. 查找占用端口的进程
+    netstat -ano | findstr :端口号
+
+    # 2. 结束进程（以管理员身份运行）
+    taskkill /F /PID XXX
+    ⚠️ 重要：必须以管理员身份运行命令提示符。服务模式启动的核心进程需要提升权限才能终止。
+    软件工作不正常
+    路径要求（ZIP 和 EXE 均适用）：
+    - 路径中不应包含特殊字符（空格除外）
+    - 路径中不应包含非 ASCII 字符（如中文字符）
+    - 支持空格：D:\Program Files\Stelliberty ✅
+    EXE 安装程序的位置限制：
+    如果使用 EXE 安装程序，还有额外的安装位置限制：
+    - 系统盘（C:）：仅允许 %LOCALAPPDATA%\Programs\*（如 C:\Users\用户名\AppData\Local\Programs\Stelliberty）
+    - 其他盘（D:、E: 等）：无限制
+    💡 如需安装到 EXE 不允许的位置，请使用便携版 ZIP（无位置限制，但仍可能受系统目录权限影响）。
+    缺少运行库（Windows）
+    如果应用程序在 Windows 上无法启动或立即崩溃，可能是缺少必需的 Visual C++ 运行库。
+    解决方案：
+    安装 Visual C++ 运行库：vcredist - Visual C++ 运行库合集
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kindness-Kismet/Stelliberty/releases/tag/v1.1.60
+ReleaseTime: 2025-12-13T04:10:20.0000000Z

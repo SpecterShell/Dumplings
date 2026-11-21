@@ -1,0 +1,14 @@
+Version: 0.6.20
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/nextai-translator/nextai-translator/releases/download/v0.6.20/NextAI.Translator_0.6.20_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    v0.6.20
+    - Actually fix the high idle CPU usage on Windows that persisted through 0.6.19 (#1886). Hiding a window in Tauri only hides the OS window — it never tells the WebView2 controller it is hidden, so the renderer of the always-alive Quick Translator and writing-indicator panels kept compositing at full frame rate even while the app sat idle in the tray. The WebView2 controller is now explicitly suspended (SetIsVisible) on every hide, and the two panels are no longer pre-created at startup on Windows.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nextai-translator/nextai-translator/releases/tag/v0.6.20
+ReleaseTime: 2026-06-09T11:56:23.0000000Z

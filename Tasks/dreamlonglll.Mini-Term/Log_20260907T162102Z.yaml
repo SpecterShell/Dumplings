@@ -1,0 +1,33 @@
+Version: 1.2.7
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.2.7/Mini-Term_1.2.7_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - oh-my-pi（omp）移动端对话镜像与提问作答（PR #76，感谢 @Clannad47）：手机端现在能看到 omp 会话的实时对话镜像，omp 的 ask 提问以卡片出现、点选项即替你在桌面 TUI 里选中回车；会话按 hook 上报的 id 精确定位，不会串到同项目其它 agent 的对话。历史面板、用量统计与会话分支对 omp 仍未接入。
+    - macOS Intel（x64）安装包：从 v1.2.6 起提供 Mini-Term_<版本>_x64.dmg，本版起随每次发版一起构建。
+    体验
+    - 上次退出留下的终端改为在首帧呈现之后再补建，开窗不再被 PTY 拖慢。
+    - PTY 写入移到独立线程，快速键入或大段粘贴不再卡主线程。
+    修复 / 排障
+    - 装机版（无控制台）启动时把 stderr / stdout 落到数据目录的 mini-term.log，启动埋点、panic 与报错都能事后查看；超 2 MB 自动轮转为 .log.1。
+    - 修正两条只在 Linux 上失败或随机失败的测试用例（不影响功能）。
+    下载
+
+    | 平台                | 文件                                                                                            |
+    | ------------------- | ----------------------------------------------------------------------------------------------- |
+    | Windows x64         | Mini-Term_1.2.7_x64-setup.exe                                                                   |
+    | macOS Apple Silicon | Mini-Term_1.2.7_aarch64.dmg（首次打开若提示已损坏，执行 xattr -cr /Applications/Mini-Term.app） |
+    | macOS Intel         | Mini-Term_1.2.7_x64.dmg（同上需 xattr -cr）                                                     |
+    | Linux x64           | Mini-Term_1.2.7_amd64.deb / Mini-Term_1.2.7_amd64.tar.gz                                        |
+
+    Full Changelog: https://github.com/dreamlonglll/mini-term/compare/v1.2.6...v1.2.7
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.2.7
+ReleaseTime: 2026-09-07T12:40:21.0000000Z

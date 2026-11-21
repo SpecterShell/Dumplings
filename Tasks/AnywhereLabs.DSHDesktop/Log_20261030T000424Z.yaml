@@ -1,0 +1,60 @@
+Version: 2.0.21-next
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/anywhere-labs/dsh-desktop/releases/download/v2.0.21-next/DSH-NEXT-2.0.21-next-x64-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This Next release upgrades upstream to DeepSeek Harness v0.2.1-rc.4, improves launch speed and window state restoration, upgrades Profile repair, undo, and failure reporting in the recovery assistant, adds dshfind plugin index support, and upgrades the bundled Agents Anywhere plugin to 2.1.0 (adding Codex session handoff and dual-device turn-taking, dependency environment reinstallation, and history ordering fixes).
+    DSH NEXT is a community-maintained open-source project, not an official DeepSeek product.
+    Upstream version: DeepSeek Harness v0.2.1-rc.4.
+    New and improved
+    - Startup speed and window experience: Sped up macOS proxy detection when no system proxy is set and parallelized login-shell environment loading, enabled frontend script compilation caching for faster warm launches, and persisted the main window’s position, size, and maximized state across restarts.
+    - Recovery assistant and Profile repair: "Back up and repair current Profile" now creates a full backup before resetting the Profile to default template plugins and re-running first-launch onboarding, with a new "Undo last repair" action on Quick Recovery for one-click restoration. Opening the recovery assistant automatically generates a single-file failure report and captures local crash dumps and memory snapshots for troubleshooting.
+    - Plugin sources and Computer Use (Next): Added one-click dshfind plugin index configuration and switching in Source Configuration, renamed "Custom plugin markets" to "Custom plugin indexes", and renamed the bundled desktop Computer Use plugin to Computer Use (Next) (keeping the /computer-use command).
+    - Agents Anywhere 2.1.0: Continue running Codex desktop sessions directly from the web while keeping viewing read-only and taking over briefly only when sending messages or performing actions so desktop and mobile can take turns in the same session; model and permission changes in the session header take effect immediately, and agent questions now use in-session async forms; added "Reinstall dependency environment" under Settings → Maintenance with PyPI mirror switching and automatic fallback to official PyPI for missing packages.
+    Fixes
+    - macOS permission preservation on restart: Fixed in-app restarts (Profile switches, recovery restarts, and plugin changes) potentially losing macOS Local Network permissions.
+    - Session link resilience: Preserved undecodable dsh-session: text in conversations as plain text instead of failing the turn.
+    - Linux packaging and compatibility: Added Linux ARM64 packaging verification; switched Linux AppImage to a static runtime so libfuse.so.2 is no longer required on the host system; fixed community market peer dependency resolution during Next packaging and upstream ACP diagnostics leaking into stdout.
+    - Agents Anywhere sync stability: Fixed out-of-order or interleaved history after attaching to an existing Codex session (automatically recalibrated on the next sync after upgrading), eliminated duplicate timeline entries from searches, image views, and context compaction, and fixed multi-plugin Codex handoff timeouts and oversized sequence number write stalls.
+    Usage notes
+    - Quit the previous version and back up ~/.dsh (or use Back up in Settings → Desktop settings) before installing. Verify your usual plugins and workflows afterward.
+    - Before managing plugins for the desktop Profile from the bundled terminal, launch Desktop to initialize that Profile.
+    - When upgrading from 2.0.17-next or earlier, download and install manually; in-app updates in those versions may not complete the download.
+    - The Office skills install the bundled runtime under ~/.dsh/dsh-runtimes/dsh-next-primary-runtime on first use, requiring additional disk space.
+    - Defaults to the shared ~/.dsh home. Profiles do not isolate sessions, accounts, or credentials within that home.
+    - Change the data directory in Settings → Desktop settings or the recovery assistant, or set DSH_DESKTOP_NEXT_HOME to an absolute path to isolate DSH data (an in-app choice takes precedence over the environment variable); this does not isolate AA’s default shared sign-in and device-binding state.
+    Full changelog · Project website
+    DSH NEXT replaces the former Stable edition channel.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次 Next 更新将上游升级至 DeepSeek Harness v0.2.1-rc.4，优化应用启动速度与窗口状态恢复，升级恢复助手的 Profile 修复、撤销与故障报告能力，支持 dshfind 插件索引，并将内置 Agents Anywhere 插件升级至 2.1.0（支持 Codex 会话交接与双端轮流对话、依赖环境重装及历史消息顺序修复）。
+    DSH NEXT 是社区维护的开源项目，并非 DeepSeek 官方产品。
+    上游版本： DeepSeek Harness v0.2.1-rc.4。
+    新增与改进
+    - 启动速度与窗口体验：加快 macOS 无系统代理时的网络探测与启动环境变量加载，并启用前端脚本编译缓存以提升二次启动速度；自动记忆并恢复主窗口的位置、尺寸与最大化状态。
+    - 恢复助手与 Profile 修复：“备份并修复当前 Profile”现会先创建完整备份，将 Profile 重置为默认模板插件并重新进入首次设置引导，同时在“快速恢复”页新增“撤销上次修复”支持一键还原；打开恢复助手时自动生成单文件故障报告，并采集本地崩溃转储与内存快照以便排查。
+    - 插件来源与 Computer Use (Next): “来源配置”新增 dshfind 插件索引一键填充与切换，“自定义插件市场”统一更名为“自定义插件索引”；桌面内置 Computer Use 插件更名为 Computer Use (Next)（命令仍为 /computer-use）。
+    - Agents Anywhere 2.1.0: 支持在网页端直接接力正在运行的 Codex 桌面会话，查看会话保持只读、仅在发言或操作时短暂接管，实现电脑与手机在同一会话轮流对话；会话顶部切换模型或权限立即生效，Agent 提问改为会话内异步表单；“设置 → 维护”新增“重装依赖环境”，支持切换 PyPI 镜像重建运行环境并自动从官方源补齐缺失包。
+    修复
+    - macOS 重启权限保持：修复 macOS 下切换 Profile、恢复重启或插件变更重启后可能丢失系统“本地网络”权限的问题。
+    - 会话链接容错：对话中出现无法解析的 dsh-session: 文本时按普通文本保留，不再导致当前轮次对话报错中断。
+    - Linux 打包与兼容：新增 Linux ARM64 打包校验；Linux AppImage 改用静态运行时，不再依赖系统安装 libfuse.so.2；修复 Next 打包时的社区市场依赖解析问题及上游 ACP 模式诊断输出混入 stdout 的问题。
+    - Agents Anywhere 同步稳定性：修复接入已有 Codex 会话后历史消息乱序或交错的问题（升级后下次同步自动校准），消除搜索、图片查看与上下文压缩产生的重复记录，并修复多插件连接同一 Codex 时的交接超时与异常序号写入阻塞问题。
+    使用提示
+    - 请先退出旧版应用并备份 ~/.dsh（或在“设置 → 桌面设置”中使用“备份”），安装后验证常用插件和工作流程。
+    - 如需通过应用内终端管理 desktop Profile 的插件，请先启动 Desktop 完成该 Profile 的初始化。
+    - 从 2.0.17-next 或更早版本升级时，建议手动下载安装；旧版应用内更新可能无法完成下载。
+    - Office 文档技能首次使用时将随包运行时安装到 ~/.dsh/dsh-runtimes/dsh-next-primary-runtime，需要额外磁盘空间。
+    - 默认与旧稳定版共用 ~/.dsh；Profile 不隔离同一目录中的会话、账号和凭据。
+    - 可在“设置 → 桌面设置”或恢复助手中切换数据目录，也可通过绝对路径 DSH_DESKTOP_NEXT_HOME 隔离 DSH 数据（应用内选择优先于环境变量），但不会因此隔离 AA 的默认共享登录与设备绑定状态。
+    完整变更记录 · 项目网站
+    DSH NEXT 已取代原稳定版通道。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anywhere-labs/dsh-desktop/releases/tag/v2.0.21-next
+ReleaseTime: 2026-10-29T23:27:36.0000000Z

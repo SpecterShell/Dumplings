@@ -1,0 +1,38 @@
+Version: 0.0.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/clawwork-ai/ClawWork/releases/download/v0.0.9/ClawWork-0.0.9-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ✨ What's New
+    - 🆔 Device-scoped sessions with title sync — Sessions are now scoped by device ID, preventing cross-device session collisions. Task titles sync back to the server for a consistent view across reconnects. by @samzong in #119
+    🎨 UI Polish
+    - 📐 Typography scale rework — Switched to a 16px root base with a consistent modular scale. Zoom level now persists across restarts. by @samzong in #129
+    🔒 Security Fixes
+    - Fixed path traversal in extracted artifact filenames by @samzong in #120
+    - Fixed symlink traversal in path validation and directory scanning by @samzong in #115
+    - Blocked SSRF and unbounded memory in remote image auto-fetch by @samzong in #123
+    - Added WebSocket frame shape validation before dispatching events by @samzong in #117
+    - Eliminated TOCTOU race in artifact file naming via serialized git operations by @samzong in #112
+    - Added file path validation in URL scheme handlers by @samzong in #114
+    - Fixed path traversal, migration state corruption, and config credential exposure by @samzong in #111
+    - Redacted pairing and bootstrap credentials in debug bundle export by @samzong in #125
+    🐛 Bug Fixes
+    - Fixed Windows gateway connection failure — now trusts system root certificates by @samzong in #136
+    - Replaced hardcoded main agent fallback with gateway catalog defaultId and added response timeout by @samzong in #134
+    - Stabilized gateway sync and persisted tool-call state across reconnects by @samzong in #133
+    - Eliminated message duplication caused by client-server timestamp mismatch in post-final sync by @samzong in #128
+    - Prevented message duplication on startup via hydration serialization and DB unique index by @samzong in #126
+    - Fixed database migration copy consistency — close DB before snapshot by @samzong in #121
+    - Cleared stale stream state on reset and deferred user message persistence until send success by @samzong in #124
+    - Reconciled partial history instead of skipping already-synced tasks by @samzong in #122
+    - Reinitialized database on workspace setup to prevent stale connection by @samzong in #116
+    - Fixed IPC listener leak — onArtifactSaved now returns a cleanup function by @samzong in #113
+    - Added try/catch to ws:abort-chat handler to prevent main process crash by @samzong in #110
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/clawwork-ai/ClawWork/releases/tag/v0.0.9
+ReleaseTime: 2026-03-22T19:27:56.0000000Z

@@ -1,53 +1,58 @@
-$Object = Invoke-WebRequest -Uri 'https://pull.dida365.com/windows/release_note.json' | Read-ResponseContent | ConvertFrom-Json
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = $InstallerUrlX86 = Get-RedirectedUrl -Uri 'https://www.dida365.com/static/getApp/download?type=win'
+}
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x64'
+  InstallerUrl = $InstallerUrlX64 = Get-RedirectedUrl -Uri 'https://www.dida365.com/static/getApp/download?type=win64'
+}
+
+$VersionX86 = [regex]::Match($InstallerUrlX86, '_(\d{4})[_.]').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+$VersionX64 = [regex]::Match($InstallerUrlX64, '_(\d{4})[_.]').Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
+
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("Inconsistent versions: x86: ${VersionX86}, x64: ${VersionX64}", 'Error')
+  return
+}
 
 # Version
-$Task.CurrentState.Version = $Object.version
+$this.CurrentState.Version = $VersionX64
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x86'
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.dida365.com/static/getApp/download?type=win'
-}
-$Task.CurrentState.Installer += [ordered]@{
-  Architecture = 'x64'
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://www.dida365.com/static/getApp/download?type=win64'
-}
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      if ($Global:DumplingsStorage.Contains('Dida') -and $Global:DumplingsStorage.Dida.Contains($this.CurrentState.Version)) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseTime | Get-Date -Format 'yyyy-MM-dd'
 
-# Sometimes the installers do not match the version
-if ($Task.CurrentState.Installer[0].InstallerUrl.Contains($Task.CurrentState.Version -csplit '\.' -join '')) {
-  # ReleaseTime
-  $Task.CurrentState.ReleaseTime = [datetime]::ParseExact($Object.release_date, 'yyyyMMdd', $null).ToString('yyyy-MM-dd')
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseNotes
+        }
+        # ReleaseNotes (zh-CN)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'zh-CN'
+          Key    = 'ReleaseNotes'
+          Value  = $Global:DumplingsStorage.Dida[$this.CurrentState.Version].ReleaseNotesCN
+        }
+      } else {
+        $this.Log("No ReleaseTime, ReleaseNotes (en-US) and ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-  # ReleaseNotes (en-US)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'en-US'
-    Key    = 'ReleaseNotes'
-    Value  = ($Object.data | Where-Object -Property 'lang' -EQ -Value 'en').content | Format-Text
+    $this.Print()
+    $this.Write()
   }
-  # ReleaseNotes (zh-CN)
-  $Task.CurrentState.Locale += [ordered]@{
-    Locale = 'zh-CN'
-    Key    = 'ReleaseNotes'
-    Value  = ($Object.data | Where-Object -Property 'lang' -EQ -Value 'zh_cn').content | Format-Text
+  'Changed|Updated' {
+    $this.Message()
   }
-} else {
-  $Task.Logging('The installers do not match the version', 'Warning')
-
-  # Version
-  $Task.CurrentState.Version = [regex]::Match(
-    $Task.CurrentState.Installer[0].InstallerUrl,
-    '([\d\.]+)\.exe'
-  ).Groups[1].Value -creplace '(?<=\d)(\d)', '.$1'
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
-  }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
-  }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

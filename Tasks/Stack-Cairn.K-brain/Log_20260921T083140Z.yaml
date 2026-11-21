@@ -1,0 +1,37 @@
+Version: 0.104.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.104.0/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.104.0/k-brain-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    氪脑 K-brain v0.104.0
+    新功能
+    - 新增 Codex 风格的无摘要上下文窗口机制。
+    - 新增 new_context 工具，模型可以在上下文接近上限时主动创建新的上下文窗口。
+    - 新增 /new-context 命令，也可以使用 /compact fresh。
+    - 新上下文窗口不调用摘要模型，不携带旧对话消息，仅保留系统提示词和当前任务提示。
+    - 原始 session 历史继续保存，可恢复查看，并可通过 /compact log 查看上下文事件。
+    压缩机制
+    - 保留原有摘要式 /compact，继续支持自动压缩、手动压缩、重试和日志查看。
+    - 新窗口模式与摘要模式并存，按使用场景选择。
+    - 新增 fresh context 会话记录格式和恢复逻辑。
+    TUI 与交互
+    - 优化整体 TUI chrome、输入提示、命令菜单和子代理任务 dock。
+    - 完善子代理状态、耗时、用量、详情页和快捷键展示。
+    - 增加 /new-context 补全、帮助文本以及简体中文和繁体中文翻译。
+    构建与验证
+    - GitHub Actions 已完成 Windows、Linux、macOS 的 x64 与 ARM64 构建。
+    - 同时构建 k-brain-computer 六个平台版本。
+    - 发布 SHA256SUMS 校验文件。
+    - go test ./... -p 2
+    - go vet ./...
+    - git diff --check
+    完整变更：#3
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.104.0
+ReleaseTime: 2026-09-21T05:23:11.0000000Z

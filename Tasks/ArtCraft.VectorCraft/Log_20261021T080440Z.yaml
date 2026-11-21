@@ -1,0 +1,232 @@
+Version: 0.14.0
+Installer:
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/vectorcraft/releases/download/v0.14.0/vectorcraft-0.14.0-windows-x86.msi
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/vectorcraft/releases/download/v0.14.0/vectorcraft-0.14.0-windows-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/storytold/vectorcraft/releases/download/v0.14.0/vectorcraft-0.14.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Note
+    No FreeBSD aarch64 build in this release. We are having trouble building this architecture within the 5-hour CI timeout across all Craft apps, so we are releasing without it to unblock builds. FreeBSD x86_64 and every other platform are included. FreeBSD aarch64 builds will return once the build fits in CI.
+    What's Changed
+    - SVG import: hrefs that need no folder stay as written, and images in a non-absolute folder are read by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2837
+    - MCP: parse errors and overlong lines wait for room in the 64-line queue by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2776
+    - PDF import: an XMP packet nested more than 256 deep is skipped instead of overflowing the stack by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2816
+    - PDF import: PDF and .ai layer names without a byte order mark are read as PDFDocEncoding by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2810
+    - .ai import: a file whose editing data can't be decompressed says why its layers weren't read by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2800
+    - EPS and .ai import: the note for editing data of another page size gives both sizes and the scale by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2799
+    - .ai import: page type over a text object is left out only when that object's text has its letters by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2808
+    - Legacy .ai export: warns when an image in art it flattens or expands can't be decoded by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2817
+    - Legacy .ai export: radial gradients are written with their highlight (Bh) by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2807
+    - Legacy .ai export: images are written in the form the version 7 specification shows by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2801
+    - PDF export: an image that can't be decoded is left out with a note instead of failing the export by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2790
+    - Render: raster exports warn about an undecodable image drawn from a kept Rasterize image by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2781
+    - Place: Bounding Box measures only the art that shows by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2806
+    - Place: justified RTF paragraphs marked right to left end their last line on the right by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2815
+    - Tabs: Repeat Tab measures the first stop from the left indent by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2809
+    - Type: Left and Right reach both sides of a character drawn with no width by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2795
+    - Direct Selection: a group selected whole shows its anchors as selected by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2797
+    - Fields: Shift+Enter applies a pattern, layer, artboard or asset name and keeps the field active by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2785
+    - Accessibility: color and channel sliders report their values to screen readers by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2794
+    - Appearance: the inline effect editor shows 3D, Warp, Rasterize and channel choices as dropdowns by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2796
+    - Shaper: the Lasso, Smart Guides and the anchor tools skip a Shaper Group's original shapes by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2782
+    - Selection: a marquee selects an Intertwine group or a repeat only where it meets their art by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2805
+    - i18n: the History panel translates the step names that contain a style's name by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2803
+    - Color: type, gradient, mesh and swatch commands store RGB input as color-managed CMYK in a CMYK document by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2812
+    - Export: a .ait export names file.saveAsTemplate, and the CLI's convert writes the template by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2813
+    - Save as Template: aiVersion 7 is an error for a .ait, and the dialog shows no Version by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2819
+    - Patterns: Pattern Options refuses a name another swatch has by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2825
+    - Save As: on Linux the file type picked in the save dialog decides the format by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2783
+    - Tests: the drag-budget test sets its thread count, and no render test changes the default by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2836
+    - Color: freeform gradients keep CMYK inks when expanded, meshed or edited by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2829
+    - PDF export: PDF and .ai files keep the document's creation date by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2838
+    - Export for Screens: the dialog's example names the file the export writes by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2839
+    - .ai import: opening a file with a variable library warns that its variables weren't read by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2842
+    - History: the panel menu clears the history by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2843
+    - Paths: a curve with a handle near f64::MAX is measured by its control points by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2844
+    - Selection: a Shift-constrained move that snaps stays on its line by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2845
+    - Slices: resizing a slice snaps as drawing one does by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2846
+    - Blends, meshes and envelopes: a number given as text is refused by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2851
+    - Docs: target-app-parity.md lists seven Evidence items once each by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2852
+    - G4: Paragraph panel menu › Justification… (word and letter spacing, glyph scaling, auto leading, single word justification) by @VL420 in https://github.com/storytold/vectorcraft/pull/2771
+    - Export progress dialog with Cancel, on the shared cancel token by @fabian-co in https://github.com/storytold/vectorcraft/pull/2564
+    - Render: gradient meshes in CMYK documents draw several times faster by @fabian-co in https://github.com/storytold/vectorcraft/pull/2802
+    - Close a dropdown list after an option is picked with the keyboard (#2789) by @MarekSpodBiedry in https://github.com/storytold/vectorcraft/pull/2824
+    - Dialogs: a plug-in's parameters scroll when they don't fit the window by @KaboomFox in https://github.com/storytold/vectorcraft/pull/2840
+    - Batch follow-ups: #2842 note translated, test fixes for #2824, #2771 and #2829, ROADMAP by @bflatastic in https://github.com/storytold/vectorcraft/pull/2865
+    - G9: .ai right-to-left paragraphs keep their alignment by @ham9zah in https://github.com/storytold/vectorcraft/pull/2859
+    - i18n: Georgian (ka) interface language by @devius in https://github.com/storytold/vectorcraft/pull/2045
+    - i18n(pl): Artboard is "obszar kompozycji", Guides "linie pomocnicze" by @lewandowskit in https://github.com/storytold/vectorcraft/pull/2870
+    - G1: test that a group of clipped images shows only its masks and their bounds by @ham9zah in https://github.com/storytold/vectorcraft/pull/2876
+    - Part of #394: required shaping is not an alternate glyph by @ham9zah in https://github.com/storytold/vectorcraft/pull/2887
+    - Fix #2576: poll for fonts that font managers activate while the app is in front by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2884
+    - Add interactive Mirror Repeat axis controls by @AJMakesStuff in https://github.com/storytold/vectorcraft/pull/2877
+    - SVG export: a Japanese face's numbered weight (W0–W9) is its font-weight, W6 600 (#2873) by @bflatastic in https://github.com/storytold/vectorcraft/pull/2896
+    - Canvas: selected point type's baseline marker runs under each line, centred and right-aligned type too (#2879) by @bflatastic in https://github.com/storytold/vectorcraft/pull/2897
+    - docs: drop references to competing commercial software by @dylanmtaylor in https://github.com/storytold/vectorcraft/pull/2893
+    - New Document: Recent and Saved cards keep the orientation they were made in (#2860) by @bflatastic in https://github.com/storytold/vectorcraft/pull/2904
+    - Pencil: a stroke that starts and ends on a selected path redraws the section between (Edit Selected Paths, #2850) by @bflatastic in https://github.com/storytold/vectorcraft/pull/2905
+    - Resolve the "ft" unit suffix to Feet in Unit::named by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/2895
+    - Fix #2723: Reshape tool falloff follows the path, so nodes stretch progressively by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2900
+    - Release: embed the current craft-fonts (adds Noto Sans Georgian, craft-fonts#27) by @devius in https://github.com/storytold/vectorcraft/pull/2934
+    - i18n(de): add missing PSD error messages and effect Soft entry by @ElPaule in https://github.com/storytold/vectorcraft/pull/2940
+    - i18n(ka): Letter and Word Spacing as in the other Craft apps; "weren't read" in the catalog's usual form by @devius in https://github.com/storytold/vectorcraft/pull/2941
+    - CMYK profiles carry every tag an ICC output profile requires (#2707) by @Higgs32584 in https://github.com/storytold/vectorcraft/pull/2913
+    - Fix #2727: opacity-mask editing no longer dims the canvas by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2927
+    - Fix #2646: keep undocked shared-dock panels opaque by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2911
+    - CLI, MCP: the raster scale no longer resizes DXF exports by @MortenHusted in https://github.com/storytold/vectorcraft/pull/2931
+    - Fix #2719: honor Display Print Size for status-bar 100% zoom by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2928
+    - Effects: an Outer Glow grows its solid silhouette by a quarter raster pixel before the blur by @EricKuck in https://github.com/storytold/vectorcraft/pull/2915
+    - Fields: arrow keys and the wheel step to the next whole unit, and Ctrl/Cmd steps to the next tenth by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2916
+    - Type: a click away from the text being edited ends editing without making new text by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2922
+    - Select: select.color picks objects by fill and stroke colour, no object needed by @MortenHusted in https://github.com/storytold/vectorcraft/pull/2939
+    - web: window.vectorcraft, the control channel for the page by @youngeuibae in https://github.com/storytold/vectorcraft/pull/2943
+    - File formats: Targa (.tga) files open and place by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2765
+    - i18n: Traditional Chinese translates status-bar and error messages by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2784
+    - EPS and .ai import: images with TIFF predictor 2 draw their samples at every bit depth by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2907
+    - MCP: document.pdfInfo answers one page for an EPS, a .ps file or a PostScript .ai by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2914
+    - Transform Each, Rasterize, Mosaic, Trim Marks and Rearrange: a number given as text is refused by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2917
+    - Links: a document opened from a mapped drive finds links on its share by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2921
+    - Paths: anchor commands refuse a subpath that is not a whole number by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2929
+    - i18n: number, object id and date parameter errors are translated by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2930
+    - Legacy .ai export: an F line follows each %AI5_EndRaster by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2935
+    - PDF and .ai import: editing data with a UTF-16 description is checked against its pages by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2936
+    - .ai import: the editing data reader warns about each image it can't read by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2937
+    - Legacy .ai export: the title and spot color and gradient names are written in Windows-1252 by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2938
+    - Save for Web: each browser preview is written to its own folder by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2944
+    - i18n: Traditional Chinese and Georgian rows for the parameter-check and pdfInfo errors (#2930, #2784, #2914) by @bflatastic in https://github.com/storytold/vectorcraft/pull/2956
+    - G1: show the system busy cursor during background open, save and export by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2952
+    - #1753: saved workspaces restore dock panel width by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2953
+    - PDF/.ai import: a .ai saved without PDF compatibility opens when pages names every page by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2948
+    - Type: a zero width non-joiner is shaped in the face of the letters around it by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2670
+    - Rotate View: a dial shows the angle while a drag rotates the view by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2677
+    - Exports: SOURCE_DATE_EPOCH stands in for the clock, so output repeats by @Hamza0101 in https://github.com/storytold/vectorcraft/pull/2947
+    - ci: configure Dependabot for Cargo and GitHub Actions by @dylanmtaylor in https://github.com/storytold/vectorcraft/pull/2949
+    - Smart Guides: object highlighting stays off with Snap to Grid or Pixel Preview by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3040
+    - Variables: a data set with no value for any bound variable shows a status message by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3048
+    - 3D and Materials: Extrude & Bevel and Inflate build a solid from each stroke's outline by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3049
+    - Tabs: Snap to Unit, or Shift held, puts a tab stop on the ruler's nearest tick by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3039
+    - Layers: with Locate Selected Objects on, the panel shows the row of art selected on the canvas by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3033
+    - Live Paint: Live Paint Selection Tool Options set what a click selects and the highlight by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3052
+    - Objects on Path: attach objects to a path and spread them along it by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3066
+    - Linux: file managers offer VectorCraft for .ai, EPS and every other format Finder offers it for by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2821
+    - Reject self-intersecting polygons in polygon_covers_rect by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/3115
+    - Clear dangling handles when deleting anchors from a closed path by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/2968
+    - Stop locked guide objects from blocking marquee selection by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/3074
+    - MCP: document.pdfInfo refuses a thumbnail that is not a page number by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2964
+    - Variables: Import and Export Data Sets… show file dialogs on macOS and keep the window running by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2969
+    - eps: read Illustrator text with hyphenation and tab attributes by @rotohun in https://github.com/storytold/vectorcraft/pull/3006
+    - PDF import: say when invisible text is left out (part of #2675) by @00xJS in https://github.com/storytold/vectorcraft/pull/2988
+    - Exports: say that an encrypted PDF still differs, and test the clock fallback by @Hamza0101 in https://github.com/storytold/vectorcraft/pull/2961
+    - i18n(fi): translate 67 labels added since the Finnish review by @Janiz-zzz in https://github.com/storytold/vectorcraft/pull/3120
+    - Keep Type arrows on grapheme boundaries in mixed-direction text by @sanyamsingh001 in https://github.com/storytold/vectorcraft/pull/3004
+    - Anchor Point tool: Shift-drag on an anchor moves it, handles and all by @sungjea713 in https://github.com/storytold/vectorcraft/pull/3095
+    - Effects: effect art redraws when fonts arrive or the color settings change by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3102
+    - #2558: a drag over a wide blur draws it from the still frame's raster by @ariymarkowitz in https://github.com/storytold/vectorcraft/pull/3001
+    - PDF: placed and pasted pages keep live text by @KnottyDyes in https://github.com/storytold/vectorcraft/pull/3042
+    - Batch follow-ups: #3004 test prints, #3095 catalog rows, #3042 doc banners by @bflatastic in https://github.com/storytold/vectorcraft/pull/3131
+    - Preserve cached canvas scale during viewport resizing by @FractalEncrypt in https://github.com/storytold/vectorcraft/pull/3106
+    - DXF: export circular paths as native CIRCLE and ARC entities by @MiQ71 in https://github.com/storytold/vectorcraft/pull/2962
+    - Keep status-bar messages and readouts stable by @FractalEncrypt in https://github.com/storytold/vectorcraft/pull/3107
+    - Rulers: an inch is divided in half, not in ten by @Hamza0101 in https://github.com/storytold/vectorcraft/pull/2951
+    - G1: Pencil Alt key toggles to Smooth Tool (#2001) by @krinry in https://github.com/storytold/vectorcraft/pull/2685
+    - #2008: improve color picker layout by @shorbank in https://github.com/storytold/vectorcraft/pull/2013
+    - G9: Regression tests for Illustrator path guides from editing data (#779) by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3007
+    - Fix #2996: color books copy to user folder under book title by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3003
+    - Fix #2681: distinguish Appearance from Pathfinder panel icons by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2981
+    - Font menu: label the Japanese script filter as 汉字 in Chinese UI (#2206) by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2989
+    - Allow assigning a keyboard shortcut to Enter Isolation Mode by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2999
+    - G1: Spacing Guides snap bounding-box resizes to equal gaps by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2966
+    - Drawing tools: distance and angle measurement labels while placing points by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2983
+    - path.join: corner or smooth at the merged anchor by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2982
+    - G9: .ai/.eps import restores ruler units from %AI5_RulerUnits by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3015
+    - Tests: Graph Data's full-size sheet test counts the cells it draws instead of timing them by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/3142
+    - Fix intersects_rect ignoring paths crossing zero-width/height rects by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/3138
+    - A CMYK JPEG is not labelled JFIF by @Hamza0101 in https://github.com/storytold/vectorcraft/pull/3140
+    - Save: warn when SVG keeps only one of several artboards by @Higgs32584 in https://github.com/storytold/vectorcraft/pull/2994
+    - Simplify: Object › Path › Simplify opens a slider with Auto-Simplify and More Options by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2555
+    - Appearance: image fills and strokes draw the shape Convert to Shape or Outline Object gives them by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2500
+    - G9: .ai import reads Adobe Feather art styles as live effects by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3064
+    - G11: Pen bezier handle drag preview updates while the button is held (#834) by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3065
+    - G1: hide bounding box while dragging type-on-path brackets by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3069
+    - G1: Graph tools show width and height in measurement labels while dragging by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3099
+    - G1: Crop Image tool honors measurement labels while resizing the crop box by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3114
+    - G1: Pie, Live Corners, Width and Print Tiling honor measurement_labels by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3122
+    - G1: Measure tool honors Measurement Labels preference by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3128
+    - G4: Touch Type arrow keys nudge the selected character by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3121
+    - G4: View › Snap to Glyph snaps new type to live-text baselines and glyph bounds by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3124
+    - G4: Properties panel Variable Font axes for selected type by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3127
+    - G1: Effect Warp dialog remembers last confirmed style and sliders by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3100
+    - Keep an island inside a hole a separate Shape Builder region by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/3148
+    - G1: Envelope Distort shows move distance in measurement labels while dragging corners by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3146
+    - Home: Recent Files rows highlight and click as one; Home screen scrolls by @texjer in https://github.com/storytold/vectorcraft/pull/3149
+    - Docs: ROADMAP row for 2026-10-19, and rows doc-conflict merges duplicated by @bflatastic in https://github.com/storytold/vectorcraft/pull/3151
+    - G1: Mesh editing shows move distance in measurement labels while dragging points by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3144
+    - G2: Effect › Sketch › Chalk & Charcoal raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2972
+    - G2: Effect › Sketch › Graphic Pen raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2967
+    - G2: Effect › Sketch › Reticulation raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2976
+    - G2: Effect › Artistic › Plastic Wrap raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3034
+    - Effects: catalog rows for Chalk & Charcoal, Graphic Pen, Reticulation and Plastic Wrap (#2972, #2967, #2976, #3034) by @bflatastic in https://github.com/storytold/vectorcraft/pull/3153
+    - Filter control characters in SVG export title and description by @Silvertree2010 in https://github.com/storytold/vectorcraft/pull/3152
+    - Docs: effects parity counts the Sketch and Artistic filters of 2026-10-19 (36/57) by @bflatastic in https://github.com/storytold/vectorcraft/pull/3155
+    - G1: Alt-drag an existing ruler guide to swap horizontal and vertical by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2997
+    - Ask for the .ai options on Save a Copy like Save As (#3141) by @MarekSpodBiedry in https://github.com/storytold/vectorcraft/pull/3158
+    - Add a generic family to the font-family of SVG export and CSS (#3135) by @MarekSpodBiedry in https://github.com/storytold/vectorcraft/pull/3157
+    - Draw the isolation bar over the canvas instead of squeezing it (#3126) by @MarekSpodBiedry in https://github.com/storytold/vectorcraft/pull/3156
+    - G2: Effect › Sketch › Chrome raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2985
+    - Keep a PDF's invisible text (a scanned page's OCR layer) as type, and save it invisible (#2675) by @odgrim in https://github.com/storytold/vectorcraft/pull/3159
+    - G2: Effect › Sketch › Plaster raster filter by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2990
+    - G5: Art brush Overlap option in Brush Options by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3056
+    - Libraries panel: scrolling, and drag to reorder items and groups by @danngreen in https://github.com/storytold/vectorcraft/pull/3162
+    - Live shapes: a polygon read from a file has 3 to 1000 sides by @Matoo125 in https://github.com/storytold/vectorcraft/pull/3163
+    - Fix #2143: ruler guides and key objects align to each other by @danngreen in https://github.com/storytold/vectorcraft/pull/3165
+    - G1: Rectangular and Polar Grid dialogs reference point locator (#1377) by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3057
+    - Export Selection: the selection becomes one asset, not one per object by @sungjea713 in https://github.com/storytold/vectorcraft/pull/3166
+    - Effects: Artistic: Smudge Stick, Sponge and Watercolor (#2435) by @vangel76 in https://github.com/storytold/vectorcraft/pull/2525
+    - Effects: Sketch › Bas Relief, Charcoal, Photocopy and Stamp (#2527) by @vangel76 in https://github.com/storytold/vectorcraft/pull/2533
+    - Export for Screens: the Assets tab scrolls to the assets it opens on by @sungjea713 in https://github.com/storytold/vectorcraft/pull/3167
+    - G1: Group Selection Shift-click deselects compound path members by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/3050
+    - Fix #2213: a copy with a large image no longer puts its SVG on the clipboard as text by @00xJS in https://github.com/storytold/vectorcraft/pull/2575
+    - Docs: install the CLI and register it with MCP clients by @KnottyDyes in https://github.com/storytold/vectorcraft/pull/3110
+    - Clipboard: a copied .ai or .ait file pastes the objects of its editing data by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2408
+    - docs: make tiled poster printing discoverable (#2857) by @Zaxaerith in https://github.com/storytold/vectorcraft/pull/3029
+    - docs: add typography and custom lettering guide (#2980) by @Zaxaerith in https://github.com/storytold/vectorcraft/pull/3087
+    - Artboards: Width, Height, Preset and Orientation apply to every selected artboard by @dotCooCoo in https://github.com/storytold/vectorcraft/pull/2565
+    - Fix GNOME/Wayland window controls by @danielmigueltejedor in https://github.com/storytold/vectorcraft/pull/2268
+    - Plug-ins: exporters write file formats of their own (G17) by @KaboomFox in https://github.com/storytold/vectorcraft/pull/3171
+    - Plug-ins: labels, units, groups, help and conditions for parameters (G17) by @KaboomFox in https://github.com/storytold/vectorcraft/pull/3172
+    - G2: Effect › Sketch › Note Paper by @nrq6993-a11y in https://github.com/storytold/vectorcraft/pull/2954
+    - Plug-ins: live effects read their object's fills and strokes (G17) by @KaboomFox in https://github.com/storytold/vectorcraft/pull/3173
+    New Contributors
+    - @KaboomFox made their first contribution in https://github.com/storytold/vectorcraft/pull/2840
+    - @devius made their first contribution in https://github.com/storytold/vectorcraft/pull/2045
+    - @nrq6993-a11y made their first contribution in https://github.com/storytold/vectorcraft/pull/2884
+    - @AJMakesStuff made their first contribution in https://github.com/storytold/vectorcraft/pull/2877
+    - @ElPaule made their first contribution in https://github.com/storytold/vectorcraft/pull/2940
+    - @Higgs32584 made their first contribution in https://github.com/storytold/vectorcraft/pull/2913
+    - @MortenHusted made their first contribution in https://github.com/storytold/vectorcraft/pull/2931
+    - @youngeuibae made their first contribution in https://github.com/storytold/vectorcraft/pull/2943
+    - @Hamza0101 made their first contribution in https://github.com/storytold/vectorcraft/pull/2947
+    - @rotohun made their first contribution in https://github.com/storytold/vectorcraft/pull/3006
+    - @00xJS made their first contribution in https://github.com/storytold/vectorcraft/pull/2988
+    - @sungjea713 made their first contribution in https://github.com/storytold/vectorcraft/pull/3095
+    - @ariymarkowitz made their first contribution in https://github.com/storytold/vectorcraft/pull/3001
+    - @FractalEncrypt made their first contribution in https://github.com/storytold/vectorcraft/pull/3106
+    - @MiQ71 made their first contribution in https://github.com/storytold/vectorcraft/pull/2962
+    - @krinry made their first contribution in https://github.com/storytold/vectorcraft/pull/2685
+    - @shorbank made their first contribution in https://github.com/storytold/vectorcraft/pull/2013
+    - @texjer made their first contribution in https://github.com/storytold/vectorcraft/pull/3149
+    - @Zaxaerith made their first contribution in https://github.com/storytold/vectorcraft/pull/3029
+    - @danielmigueltejedor made their first contribution in https://github.com/storytold/vectorcraft/pull/2268
+    Full Changelog: https://github.com/storytold/vectorcraft/compare/v0.13.1...v0.14.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/vectorcraft/releases/tag/v0.14.0
+ReleaseTime: 2026-10-21T07:46:25.0000000Z

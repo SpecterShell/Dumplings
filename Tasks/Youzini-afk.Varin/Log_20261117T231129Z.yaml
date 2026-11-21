@@ -1,0 +1,53 @@
+Version: 0.9.50
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.50/Varin-0.9.50-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.50/Varin-0.9.50-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.50 makes it easier to set up external Agents on the device where they run, adds self-hosted HTTPS access, and cuts redundant traffic between devices. It also fixes the Android workbench startup failure seen after connecting to a Host.
+    Set up and use external Agents
+    - Discover and manage Agents on this Host or a device in Work Connections. Enable one directly from Settings, use an existing installation, or install and update supported packages on the selected device. Sign in through the Agent’s own CLI.
+    - Find execution backends in a searchable, scrollable picker. The expanded catalog includes the official DeepSeek Harness ACP profile. #383
+    - Choose the model, reasoning effort and mode in the composer when the Agent exposes those controls. Codex also exposes its own permission profiles, including profiles available in the current working directory.
+    - Replies show the Agent’s logo and the model and reasoning effort reported for that turn. Desktop and mobile show context occupancy when the Agent supplies it, including for Bot-dispatched external tasks. The last recorded measurement stays available when there is no live reading. Turn token usage remains available in the message footer.
+    Connect across devices
+    - Set up self-hosted access under Settings → External access. Use Varin-managed FRP forwarding, run your own forwarder, or connect an existing HTTPS reverse proxy. Download editable FRP and Caddy deployment files, with examples for existing Caddy and NGINX setups. #376
+    - Browser pairing survives Host restarts. You can revoke an individual device or turn off the external entry separately. Other Varin instances can connect to the same HTTPS endpoint through Work Connections.
+    - Chat, editor and sidebar views share conversation updates. Connections that support the new transport use binary frames for remote desktop images and can stream attachments in a single request, reducing encoding overhead and round trips.
+    Fixes and compatibility
+    - Fix the Android workbench getting stuck after connecting to a Host or switching instances. Startup requests now go to the selected Host. #387
+    - Fix model tests and conversations with OpenAI-compatible gateways such as OpenDesign when later stream chunks have empty response IDs. The stream keeps the ID established by the first chunk, and model tests surface protocol errors with their specific cause. #385
+    - Make composer expansion and collapse animate from the current input size, including when the animation is interrupted. #378
+    - Add Magpie to the built-in model services for easier connection and model discovery. Update bundled Electron and Node.js, along with dependencies used for session authentication, network transport and document previews. #382 · #386
+    Upgrading an existing Host. This release updates the knowledge store to TriviumDB 0.9.1. Stop Varin and back up its data before the first start. If you return to an earlier version after the new writer saves data, restore the pre-upgrade backup. Source deployments should rebuild the application and Rust kernel together. Cold backup and recovery
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Varin 0.9.50 可以在实际运行 Agent 的设备上管理外部 Agent，新增自建 HTTPS 外部访问，并减少多端连接中的重复请求和传输开销。这版也修复了 Android 连接 Host 后工作台卡在启动页的问题。
+    在执行设备上管理和使用外部 Agent
+    - 在设置里选择当前 Host 或工作连接中的设备，检测并启用已有程序，也可为支持的 Agent 安装和更新。登录继续在各 Agent 自己的 CLI 中完成。
+    - 输入框的执行 Agent 列表支持搜索和滚动。内置目录扩充了可接入的 Agent，包括 DeepSeek Harness 官方 ACP 配置。 #383
+    - 直接在输入框选择外部 Agent 支持的模型、思考强度和模式。Codex 还可以切换当前工作目录可用的原生权限档位。
+    - 回复抬头显示 Agent 的产品图标，以及该轮报告的模型和思考强度。桌面、移动端和 Bot 派发的外部任务在有数据时显示上下文占用。实时数据缺失时可查看上次记录，每轮 Token 用量仍可在消息底部查看。
+    自建外部访问与多端连接
+    - 在 设置 → 外部访问 接入自建 HTTPS 地址。可以让 Varin 管理本端 FRP 转发，也可自行运行转发或接入已有反向代理。设置页提供可下载、可编辑的 FRP 与 Caddy 部署文件，以及接入已有 Caddy、NGINX 的示例。 #376
+    - 浏览器配对在 Host 重启后继续有效。可以单独撤销某台设备的授权，或关闭外部入口。其他 Varin 实例也能通过工作连接接入同一 HTTPS 地址。
+    - 聊天、编辑器和侧栏共享同一份会话更新。支持新传输方式的连接会直接发送远程桌面图像的二进制数据，并在一次请求中连续传输附件，减少编码和网络往返。
+    修复与兼容性
+    - 修复 Android 连接 Host 或切换实例后工作台卡在启动阶段的问题。工作台启动请求现在会发往用户当前连接的 Host。 #387
+    - 修复 OpenDesign 等 OpenAI 兼容网关的流式响应在后续分片返回空 ID 时，模型测试和对话失败的问题。后续空 ID 沿用首个分片的有效 ID，模型测试会显示具体的协议错误。 #385
+    - 改善输入框展开和收起的动画。连续切换时从输入框当下的尺寸接着动，减少跳动。 #378
+    - 新增 Magpie 内置模型服务，方便连接本地网关并发现模型。更新桌面内置的 Electron、Node.js，以及会话认证、网络传输和文档预览相关依赖。 #382 · #386
+    已有 Host 升级。 本版将知识库存储升级至 TriviumDB 0.9.1。首次启动前请停止 Varin 并备份数据。新版写入后如需回退，请恢复升级前的备份。源码部署请同时重新构建应用与 Rust 内核。 冷备份与恢复
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Astrmira/Varin/releases/tag/v0.9.50
+ReleaseTime: 2026-11-17T21:52:13.0000000Z

@@ -1,0 +1,16 @@
+Version: 1.4.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/flyhunterl/flymd/releases/download/v1.4.3/flymd_1.4.3_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复：临时库激活时，所有 WebDAV 同步入口都会在同步核心层直接跳过，包括启动同步、F5、设置页测试同步和菜单同步，避免同步仍作用到上一个正式库
+    修复：WebDAV 服务维护、网络中断或远端目录扫描失败时，本轮同步会直接跳过，不再把连接失败误判为空远端目录，从而避免错误触发本地删除或远端删除确认
+    修复：通过系统双击或“打开方式”启动并打开库外文档时，会先建立临时库会话再初始化启动同步，消除启动竞态导致的误同步风险
+    改进：WebDAV 同步增加会话级门禁回调，后续特殊库状态可在同步入口统一拦截，减少只在 UI 按钮上补丁式禁用造成的漏网入口
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/flyhunterl/flymd/releases/tag/v1.4.3
+ReleaseTime: 2026-07-07T11:19:06.0000000Z

@@ -1,23 +1,20 @@
-$Object = Invoke-RestMethod -Uri 'https://godbiao.com/api/getv/' -Headers @{
-  origin = 'https://srf.xunfei.cn'
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrl = Get-RedirectedUrl -Uri 'https://srf.xunfei.cn/winpc/'
 }
 
 # Version
-$Task.CurrentState.Version = [regex]::Match($Object.2 ?? $Object[2], 'v([\d\.]+)').Groups[1].Value
+$this.CurrentState.Version = [regex]::Match($InstallerUrl, '(\d+\.\d+\.\d+)').Groups[1].Value
 
-# Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://srf.xunfei.cn/winpc/'
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
-    $Task.Write()
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

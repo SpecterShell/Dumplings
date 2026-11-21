@@ -1,0 +1,27 @@
+Version: 0.11.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.3/Mini-Term_0.11.3_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v0.11.3/Mini-Term_0.11.3_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    非激活 pane tab 也能悬停看一眼了
+    本版合入社区贡献者 @hitechr 的功能提交（#45，单提交 / 7 个文件，纯前端展示层）。
+    ✨ 新功能
+    - pane tab 悬停缩略图 — 悬停非激活的 pane tab 250ms，弹出该 tab 终端画面的实时缩略图浮层，是 v0.11.0 项目行悬停预览的单格版：同一条渲染链路（缓存终端读 buffer → 同色 run 提取 → canvas 位图），打开期间 500ms 重画——隐藏 tab 的 buffer 一直被全局 pty-output 监听更新，画面是活的。未启动的 tab 显示「未启动」占位，远程断线叠加遮罩；卡片钳制左右边界，底部分屏下方放不下时自动翻到 tab 上方
+    - 刻意不做 AI 开闸 — 与项目行预览「只对 AI 会话弹」的口径不同：项目行预览回答「AI 在别的项目跑到哪了」，而隐藏 tab 的内容不切过去本来就看不见，无论跑不跑 AI 都有预览价值，预览回答的就是「那个 tab 里现在是什么」
+    🔧 内部
+    - 触发时序与项目行预览同一套：250ms 定时器、到点再取 rect、isConnected 判活；移出 / 点击 / 右键 / 滚动即关；收起走「渲染 gate + effect 收 state」双闸——用 X 关掉被悬停的 tab 时点击被 stopPropagation 拦下，只留渲染 gate 会残留旧锚点。这些均为前两版 review 反馈的沉淀写法，本次直接吸收
+    - 入场动画挂 .overlay-menu 类（reduced-motion 豁免名单内），系统关了动画的机器上依然可见
+    - 维护者审查：安全分析干净（纯展示层，无新 command / 网络 / 注入面）；tsc --noEmit 通过，Node 测试 100 条与基线失败集合一致，无回归
+
+    完整变更：https://github.com/dreamlonglll/mini-term/compare/v0.11.2...v0.11.3
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v0.11.3
+ReleaseTime: 2026-08-13T08:12:07.0000000Z

@@ -1,49 +1,58 @@
-$UniVer = '12C0F000'
+$UniVer = $this.LastState.Contains('UniVer') ? $this.LastState.UniVer : '2030F000'
 $Time = Get-Date -Format 'yyyyMMddHHmmss'
 $Hash = [System.BitConverter]::ToString(
   [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
-    [System.Text.Encoding]::UTF8.GetBytes(
-      (('YXBwaWQ9eXlhbmNob3ImdGltZXN0YW1wPXswfSZrPUJQWDQlcElTY3pETDVyZF4yb3QmMVNSanBGN0AwaEVU' | ConvertFrom-Base64) -f $Time)
-    )
+    [System.Text.Encoding]::UTF8.GetBytes("appid=yyanchor&timestamp=${Time}&k=$($Global:DumplingsSecret.YYAnchorKey)")
   )
 ).Replace('-', '').ToLower()
-$Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1"
+$Object1 = Invoke-RestMethod -Uri "https://up.yy.com/api/check/yyanchor/check4update?timestamp=${Time}&sourceVersion=${UniVer}&n=${Hash}&manual=1&hdid="
 
+if ($Object1.code -eq 404) {
+  $this.Log("The version $($this.LastState.Version) from the last state is the latest, skip checking", 'Info')
+  return
+}
 if ($Object1.code -ne 0) {
-  throw "Task $($Task.Name): $($Object1.message)"
+  throw "The server returned an error: $($Object1.message)"
 }
 
-$Object2 = Invoke-RestMethod -Uri "http://forceupdate.yy.com$($Object1.data.configPath)"
+$Object2 = Invoke-RestMethod -Uri "https://forceupdate.yy.com$($Object1.data.configPath)"
 
 # Version
-$Task.CurrentState.Version = $Object2.Product.Version.VerNo
+$this.CurrentState.Version = $Object2.Product.Version.VerNo
 
 # UniVer
-$Task.CurrentState.UniVer = $Object2.Product.Version.UniVer
+$this.CurrentState.UniVer = $Object2.Product.Version.UniVer
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
+$this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://yydl.yy.com/$($Object2.Product.Version.Pack.FileUrl)"
 }
 
-# ReleaseNotes (zh-CN)
-$Task.CurrentState.Locale += [ordered]@{
-  Locale = 'zh-CN'
-  Key    = 'ReleaseNotes'
-  Value  = $Object1.data.discription | Format-Text
-}
-
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    try {
+      # ReleaseNotes (zh-CN)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $Object1.data.discription | Format-Text
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

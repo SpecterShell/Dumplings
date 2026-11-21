@@ -1,0 +1,180 @@
+Version: 1.24.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.24.0-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.24.0-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    2 new features
+    Every pull request merged since v1.23.0, grouped by its conventional-commit type.
+    Added
+    - web: restyle foundations — type roles, layout and surface tokens, web-styling contract #2959
+    - web: calmer side nav — org switcher, one menu, state dots (N1) #2961
+    What's Changed
+    📦 Other Changes
+    - docs(worktree): a copied node_modules is the source checkout's install; reinstall when the lockfile differs by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2858
+    - feat(cli): reliant project delete deletes a project by id, name or path by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2874
+    - fix(prompt): point agent scratch at a persistent per-chat directory, not /tmp by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2872
+    - test(forge): compare forge's guide and start-here by their rendered text, not a byte count or exact heading by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2876
+    - fix(workflows): record a tolerated node's workflow-side failure as its failed attempt by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2877
+    - fix(lint): drop task lint:electron and fmt:electron, which never ran a linter by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2878
+    - feat(web): walk a first-time user on the forge site through the existing welcome wizard, then back by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2866
+    - feat(web): Settings › API tokens lists your CLI logins and revokes one by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2883
+    - fix(ci): seed the Playwright system-package cache before the suite; responsive leg gets 30 minutes by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2879
+    - fix(llm): key validation returns fixed, key-free messages with reason codes and logs provider errors only redacted by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2857
+    - chore: release v1.22.0 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2889
+    - feat(console): Product analytics Overview tab and chart panel kinds by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2851
+    - fix(trigger): activation approval reads a child only with what its parent passes by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2892
+    - fix(claude): an OAuth 401 the store cannot explain refreshes and retries once; a session still refused is the user's to reconnect by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2875
+    - feat(projects): find every forge app in a project's repos by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2873
+    - feat(integrations): the PR projection carries head.repo.fork, head.repo.full_name and author_association by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2870
+    - fix(web): scope product lists to the active org and keep the org per tab by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2837
+    - feat(workflows): a check: block, so a workflow's GitHub check run is created and always concluded by the engine by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2885
+    - test(web): make Forge console paging tests deterministic by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2893
+    - fix(web): the transport trace test waits for its RPC's own span, not for any export by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2895
+    - feat(web): sidebar shows active projects, with pin, hide and show-all by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2848
+    - test(e2e): org-switcher specs sign in as a person, not with an API key (main-red) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2897
+    - chore(pin): forge@4e92ea2af (the runtime's own replay recorder, forge #2310) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2894
+    - test(web): make the ChatInterface deferred-switch tests wait for the commit by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2903
+    - fix(web): every org-scoped query carries and waits for its org by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2900
+    - feat(projects): delete a project with a 7-day restore window by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2890
+    - fix(web): stamp build attributes through forge-web-runtime, not @hyperdx/browser by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2882
+    - fix(hosteduse): report a missing or revoked hosted secret as a user error, not a prod ERROR by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2904
+    - fix(web): an org switch drops the old org's keyed reads instead of re-sending them by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2906
+    - fix(ci): the Reliant review check fails a PR labelled hold or needs:human by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2676
+    - ci(merge-gate): lint changed Go files before the queue does by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2901
+    - fix(web): stop hedging ListMessages; its slow tail is the server's message count, not a lost response by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2910
+    - fix(workflows): report_bug runs as an invoke_tool node; an unexposed tool is refused at save time and ends the run by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2912
+    - fix(daemon): commands do not inherit the hosting daemon's DAEMON_* identity by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2911
+    - fix(workflow): un-pause a given-up unattended run before its on_failure and finally handlers run by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2913
+    - feat(github): the bot token can carry actions (cancel and re-run workflow runs) when a caller names it by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2884
+    - fix(proctree): a new limiter never removes this process's prepared command cgroups by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2922
+    - fix(accesstokenclient): retry control-plane reads once on a dead keep-alive connection by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2915
+    - feat(tools): delete_trigger, an approval-card-gated tool to delete a trigger activation by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2924
+    - build(go): the app builds against this tree's Go SDK (replace sdk/go ⇒ ./sdk/go) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2886
+    - fix(web): forge host skips Reliant onboarding; "Skip for now" no longer ends on a blank page by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2927
+    - fix(gitcredentialclient): pass GitHub's rate limit through as a user-class ResourceExhausted and grade control-plane refusals by class by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2914
+    - fix(worktree): never run git worktree prune beside a worktree add in the same repository by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2918
+    - fix(credsandbox): a process without a daemon data dir never moves the daemon's cred-scratch by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2917
+    - fix(merge-gate): run the web release build when frontends/web dependencies change by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2908
+    - feat(cli): reliant trigger events --outcome filters firings by outcome by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2936
+    - feat(messages): ListMessagesRequest.skip_total, set by the web's ListMessages reads by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2930
+    - perf(chat): ListChats reads its main workspaces' projects in one query by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2940
+    - fix(merge-gate): set webbuild in TestMergeGateSkipLint's harness by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2943
+    - chore(deps): refresh Go dependencies (anthropic, genai, nats, pgx, pdfcpu, x/*, docker/cli) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2909
+    - fix(mcp): log every MCP server removal and death, and tell the caller when its browser restarted by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2923
+    - feat(heavyjob): run scoped heavy commands in forge's express slot lane by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2938
+    - fix(llm): downscale images over 3000px in requests with more than 20 images, so a long chat is never refused by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2920
+    - fix(projects): purge a project in row-bounded batches and run purge-now off the request by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2944
+    - feat(tools): paged, filterable list_triggers and worktree list; worktree get shows bound chats by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2928
+    - feat(tools): propose_connection asks a person to connect an integration by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2948
+    - fix(chat): keep filling the deprecated ListMessagesResponse.Total without tripping SA1019 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2949
+    - feat(web): org switcher on mobile by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2952
+    - feat(web): report calls that hang together as one RpcStall issue, and type client timeouts RpcTimeout by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2929
+    - fix(accesstokenclient): retry a replayable read once when a dead keep-alive connection fails on the write by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2953
+    - perf(inbox): read machine catalogs' workflows only, batch draft lookups, bind trigger-event queries by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2947
+    - perf(web): hidden tabs stop refetching the sidebar lists; the inbox refetch backs off with its own latency by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2941
+    - refactor(web): typed paths for every destination by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2931
+    - fix(settings): expose copyable organization IDs by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2954
+    - feat(web): keep-data env delete, kept databases, and storage cost on stop by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2854
+    - feat(web): restyle foundations — visual-regression baseline of the key surfaces by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2955
+    - fix(daemon): bound repo discovery and forge.yaml discovery per directory, not only per walk by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2958
+    - fix(daemon): a connected event for a machine with no name carries no name, not its id by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2926
+    - fix(web): reland free-first onboarding compute step (#2657 + #2661) with a reachable hosted path by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2921
+    - test(web): reset the global query client between tests; make ForgeEnvPage.liveNoDaemon hermetic by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2939
+    - fix(chat): never send redacted thinking ciphertext to clients by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2956
+    - fix(files): browse a chat-less project on a machine that has it, and never name a machine by its id by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2905
+    - feat(machines): bind trigger activations to a machine pool from the agent tools; label machines and manage pools with an approval card by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2963
+    - feat(machines): reliant daemon start --label declares durable machine labels; reliant machine label and machine pool by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2964
+    - fix(web): a Monaco CDN load failure raises no unhandled rejection (release gate red on rc.10) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2967
+    - fix(projects): retry trigger sync after project delete/restore without a restart by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2957
+    - chore: release v1.23.0 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2970
+    - refactor(web): typed paths for every destination (codemod 1/2) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2932
+    - feat(workflows): priority admission and a per-key running cap for concurrency by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2962
+    - test(daemon): inject the walk clock; state what the directory-read bound covers by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2960
+    - fix(chat): decide what a shared-chat viewer sees by decoding the update, not by byte matching by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2965
+    - fix(test): machine fixtures with real names; test-affected copies pnpm patches by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2972
+    - feat(web): serve the Monaco editor from our own build, not a CDN by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2973
+    - feat(web): restyle foundations — type roles, layout and surface tokens, web-styling contract by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2959
+    - feat(web): calmer side nav — org switcher, one menu, state dots (N1) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2961
+    - chore: release v1.24.0 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2974
+    - refactor(web): typed paths for every destination (codemod 2/2) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2933
+    - fix(projects): key projects by org and keep machine reconcile inside the machine's org by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2861
+    - feat(daemon): drain protocol — RestartRequested, upgrade state on the heartbeat, admission gate by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2978
+    - ci(release): file the desktop renderer's source maps so its prod errors symbolicate by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2881
+    - perf(chats): the chat list reads a user's live chats from a partial index by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2945
+    - feat(workflow): git_publish force_with_lease by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2969
+    - fix(streaming): the chat snapshot skips the full-chat count for first-party callers by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2934
+    - perf(chat): message totals read a maintained counter, not count(*) over the chat by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2942
+    - ci(release): publish signed standalone CLI archives and daemon-channels.json by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2976
+    - fix(test): tests and tasks run the pinned forge through reliant forge when forge is not on PATH by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2977
+    - chore(deps): replace the deprecated go-shiori/go-readability with readeck's fork by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2982
+    - feat(chat): tag a chat with the app it is about (Chat.app_name) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2981
+    - fix(daemons): the connected event names the org of the daemon's credential by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2865
+    - fix(approvals): create a turn's parallel approvals and questions at READ COMMITTED by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2984
+    - chore(pin): forge@982c391f (profile-guided builds, forge #2378) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2975
+    - style(proto): buf-format the protos so forge-proto-format can gate by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2997
+    - fix(test): main green — the trigger test holds the project on its second machine; the drain tests' waits pass test-waits lint by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3000
+    - chore: delete pre-forge leftovers (docker/nats.conf, orphan generated/docs, dead .gitignore entries) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3004
+    - chore(app): drop the dead RELIANT_DATA_DIR setenv by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3002
+    - refactor(handlers): list page cursors use forge orm.EncodeCursor/DecodeCursor by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3001
+    - refactor(integrations): GitHub clients use observe.NewHTTPClient over the netguard transport by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3003
+    - refactor(handlers): one rpc per file in chat, message, streaming, question, approval by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3005
+    - chore(web): one @reliantlabs/forge-web-runtime (0.13.19) in the web lockfile by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3006
+    - chore(web): move the token-bridge sandboxes out of forge's components dir by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3014
+    - refactor(handlers): one rpc per file in settings, connection, model_endpoint, catalog, connector, inbox by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3016
+    - chore(lint): the typed-config guardrail also forbids os.ExpandEnv and syscall env reads by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3023
+    - test(ci): pin Reliant review as head-bound and label-free, merge-group mode included by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3077
+    - perf(chat): page ListArchivedChats, and the sidebar reads it only when the archive is open by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2946
+    - feat(daemon): gateway and worker side of the drain protocol by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2979
+    - fix(llm): every driver retries through the shared rate-limit ladder by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3078
+    - test: restore the daemon drain and metered-stream release checks by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3084
+    - docs(guides): a Guides tab with task guides and How it works deep dives by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3083
+    - feat(web): group personal accounts, organization accounts and models & tools under AI in settings by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3059
+    - test(architecture): forbid unscoped or sealed-table store calls from handlers by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3058
+    - fix(chat): resume paused chats and show their assigned machine by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3048
+    - fix(chat): keep sub-agent errors in their own threads by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3053
+    - perf(web): start the Metrics Explorer catalog before the roster settles by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3054
+    - fix(chat): give agents the attachment ID of uploaded images by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3055
+    - fix(security): ignore the OpenAI SDK's OPENAI_* environment defaults on server roles by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3036
+    - docs(policy): open a breaking window on the v1 line for the forge-compliance work by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3042
+    - fix(chat): honor manual fallback on provider-pinned chats by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3047
+    - chore(catalog): mark the four static catalog rpcs forge:auth-unscoped-ok by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3033
+    - fix(security): ignore the Anthropic SDK's environment credentials and drop the Bedrock default chain by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3034
+    - fix(security): drop the Copilot driver's GITHUB_TOKEN and ~/.config/github-copilot fallback by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3031
+    - refactor(handlers): one rpc per file in account, attachment, mcp, usage, terminal, tool_call, daemon by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3025
+    - docs: AGENTS.md for non-Reliant agents, and docs/runbook.md by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3026
+    - ci(compat): the Reliant bot's approval label counts, as the owner decided by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3028
+    - chore(task): forge's scaffold task names as aliases, plus dev, dev-down and db-seed by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3029
+    - feat(token): let the bot token carry the checks permission by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3030
+    - feat(web): IDENTITY_DATA_LINKS is runtime config; dev serves GATEWAY_URL, DISABLE_TLS and APP_URL again by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3021
+    - feat(web): chat as a conversation — frame, type and one style (C1) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/2968
+    - fix(web): never show another org's usage answer; plain "Couldn't load" copy with Try again by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3046
+    - fix(security): MCP servers on a server role never resolve $ from the process environment by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3043
+    - feat(deploy): declare the dlv debug image as an opt-in dev DockerBuild by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3038
+    - fix(security): ignore the Google GenAI SDK's environment credentials on server roles by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3039
+    - fix(web): make signed-in claim copy independent of free hosting limits by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3086
+    - docs(guides): the rest of the Guides tab — P1/P2 guides, four deep dives, stale-page fixes by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3090
+    - feat(daemon): hot swap — hand running commands across an in-place exec (opt-in) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3093
+    - docs(machines): install the standalone CLI on a headless box or CI runner by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3096
+    - fix(ci): isolate merge queue issue writes from candidate code by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3092
+    - docs(automations): validate workflow node fragments and fix the examples they catch by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3098
+    - docs(forge): document forgeconv-crud-owner-resolver and adopting an app with --kind app by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3099
+    - fix(preview-url): check a named port across the whole port range by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3100
+    - docs(on-call): on-call takes alerts from self-managed environments too by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3102
+    - docs(hosting): bring your own database, IdP or OTel backend; document _headers and 404.html by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3103
+    - fix(router): daemon selectors with labels fail closed and errors name the selector by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3101
+    - fix(triggers): workflow-event runs start from the declared prompt; agentless activations need none; failures name their node by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3109
+    Full Changelog: https://github.com/reliant-labs/reliant/compare/v1.21.3...v1.24.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases/tag/v1.24.0
+ReleaseTime: 2026-11-21T00:05:53.0000000Z

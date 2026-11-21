@@ -1,0 +1,802 @@
+Version: 0.7.0
+Installer:
+- InstallerUrl: https://download.crew.kiro.dev/desktop/stable/0.7.0/KiroCrew-Setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kirodotdev/KiroCrew/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Kiro Crew stops asking you to restart it: almost every setting now reaches the running gateway the moment you save it, updates check on a schedule and wait for your work to finish, and queued work survives a gateway restart. Long chats get a minimap, readable tool-call titles, a model picker that no longer hides reasoning effort behind a drill in and, in preview, Jev choosing the model for each turn. Windows gets isolated pods and a gateway that starts about four times faster, a pull request watch now covers GitLab, Bitbucket and Azure DevOps as well as GitHub, and a Fargate crew is reachable from your laptop.
+    Settings that apply while you work
+    - Almost every setting now reaches the running gateway: saving config.json, or changing a value in Settings, takes effect at once instead of waiting for a restart.
+    - A boot-only setting can flag itself in place: the Slack slash command field under Settings → Channels carries a changes need a restart badge that the gateway's own config schema drives, and it is the only field that shows one.
+    Chat that keeps up with you
+    - A turn minimap in the left gutter of a desktop chat shows one marker per turn, with hover previews, click to jump and an end cap that loads older history; it does not render on a phone or on a touch pointer.
+    - A session's short name opens it: writing a name like chat-1380 in a dashboard chat now renders a chip that switches to that session when it is open, where before only the full slot key did, and a name no open session answers to stays plain text.
+    - An oversized diff can be expanded line by line: the simplified view gains a Show line-by-line diff control that computes the real patch in the background and folds the unchanged ranges away.
+    Chat, tuned to your habits
+    - The composer's model chip no longer hides reasoning effort behind a drill in step, and Settings → Chat → Selectable Models decides which models the list offers, though Auto and a session's active model always stay visible.
+    - Choose what Enter does while the agent is working: Settings → Chat sets Steer or Queue as the default, and, while the split send button is showing and your send shortcut is set to Enter sends, Cmd or Ctrl plus Enter does the opposite for one send.
+    - New dashboard chats can start in the memory mode you prefer, from Settings → Chat → Default Memory Mode, and ticket ids or any other plain text can become links by pairing a pattern with a URL template under Settings → Chat → Text Link Patterns.
+    Side Chat, tables and code blocks
+    - Side Chat can run read only tools on Kiro CLI: open it with /side or the new /btw alias and it auto approves read only shell commands and a short list of built in read tools under a stripped down agent definition, while everything else, including a read only tool served over MCP, is refused because a side turn has no approval card.
+    - Every markdown table in a reply gets a small action row to copy it as Markdown or as CSV.
+    - Long code blocks repeat their copy and edit buttons at the bottom, so you never scroll back up to use them.
+    Around the dashboard
+    - A bookmarkable All sessions page: open /sessions for a chooser that never auto creates or auto selects a session, with search, All and Unread filters, status tag chips and Today, Yesterday and Earlier grouping.
+    - Back and Forward arrows for the dashboard's own history: a desktop-width window's top bar carries two arrows, with Cmd or Ctrl plus the left and right arrow keys as the keyboard twin.
+    - Start a chat in a folder without leaving the one you are reading: Cmd or Ctrl click, or middle click, a folder's plus in the sidebar or on the board now opens the new chat as a background tab, the same gesture the New button takes.
+    Coding hours, and an alert when work finishes
+    - Coding hours on Settings → Overview: a WakaTime card shows the last seven days and opens a drill in with per language and per project bars plus Export hours as CSV or JSON, once wakatime.enabled is on and the API key is stored in the secrets vault.
+    - Get told when a background chat finishes: Settings → Notifications → Desktop alerts adds a default off Notify when a background chat finishes toggle, and flipping it is what asks the operating system for permission.
+    Faster and steadier under load
+    - The Windows desktop app's gateway starts about four times faster from cold, moving the measured import of its bundled Python from about seventeen seconds to about four.
+    - Session search returns results sooner on large histories once a background index pass finishes after the gateway starts, and the sidebar repaints a bounded window of top rows instead of every row when a new chat lands.
+    - Browsing the knowledge library no longer risks freezing the gateway: a busy Knowledge tab on Agent Capabilities, or a contended sync, no longer stalls chat, cron and other sessions at the same time.
+    Isolated pods, on Windows and from the agent
+    - Isolated pods run on Windows: kirocrew pod up and its down, ls, status, token, url, logs, prune and provision verbs work through Task Scheduler, for a git worktree of a source checkout on a host where your own user may create a scheduled task, while pod api is the one verb refused there because Windows has no unix-domain socket for the pod's private request.
+    - An agent can bring a preview pod up by itself: with the Dev Fleet app enabled under Apps → Library, new pod tools let an agent session start a worktree's pod and receive its address, port and short lived token, which its own sandbox blocked before.
+    Windows catches up
+    - Turns work again behind a TLS inspecting proxy, because the gateway no longer replaces the Windows trust store for the agent process.
+    - A directory junction now trips the same defences a symlink does, so seeding into a junctioned data home is refused by name instead of silently detaching it, while a skill install and a source rebuild of the dashboard bundle no longer fail over one.
+    - Two apps stop refusing Windows work they can now do: Issue Radar reads Azure DevOps without WSL once you enable it under Apps → Library and install an authenticated az with the azure-devops extension, and PPTX Maker finds a LibreOffice for its previews at the default Windows install location even when it is not on PATH.
+    Updates that land
+    - Update checks recur instead of running once at boot: the gateway looks for a new version every twelve hours, and an automatic apply pauses new turns and defers scheduled runs until the work already in flight finishes.
+    - A source checkout update that needs a newer Python than this install's virtual environment runs is refused before the checkout moves, with that environment and its interpreter path named.
+    - A managed install's update can now be armed from the update and What's new dialogs too: both offer the same host approval step Settings → About already had, showing one command to run on the gateway host inside a countdown that says when the approval window closes.
+    Channels carry more
+    - Any file type reaches the agent from a chat channel: a video, archive, SVG or otherwise unrecognized attachment sent through Slack, Discord, Telegram, Teams, Webex, WeChat or WeCom is downloaded up to fifty megabytes and handed to the agent as a local path with its original name, type and size.
+    - A message that arrives while the gateway is restarting gets an answer: on the next start the sender is told in the same conversation that it was never processed, with the original text quoted back to resend and nothing replayed as a turn, unless it came from an incognito or temporary conversation or a WhatsApp group.
+    - The agent can edit a Slack message it already sent: the new update_message tool updates a message in place instead of deleting and reposting, in a tracked channel or the owner's own direct message.
+    Voice and dictation
+    - Local Piper replies stream as they synthesize instead of waiting for the whole clip, and a blocked playback now says why instead of staying silent.
+    - Dictation stops losing text: dictated words splice into the draft without gluing onto what is already there or dropping a selection, an unselectable anonymous microphone no longer appears in the Microphone picker under Settings → Voice, and an over long recording is refused with a reason instead of being silently cut.
+    The Browser panel gets hands
+    - Annotate mode in the packaged desktop app's built-in Browser panel, on a page open in that app's own embedded browser view, lets you pick page elements and attach notes, then sends the numbered list and a screenshot into the chat composer for the agent to act on.
+    - The address bar now opens a real public website whose address carries no query string or fragment: in an ordinary web browser the page opens in the gateway host's own managed browser and is framed back into the panel, so it needs that browser installed and only the owner can drive it.
+    Watches beyond GitHub
+    - A pull request watch now accepts GitHub, GitLab, Bitbucket Cloud or Azure DevOps Services URLs: paste one into the composer's Watch a pull request instead form, which needs glab for GitLab, az with its azure-devops extension plus either an az login session or a stored AZURE_DEVOPS_EXT_PAT for Azure DevOps, and BITBUCKET_EMAIL with BITBUCKET_API_TOKEN for a private Bitbucket pull request.
+    - Azure DevOps Server and Bitbucket Data Center are not supported, and an Azure DevOps or private Bitbucket watch must be started from a dashboard conversation.
+    - Stopping a monitoring loop works whichever kind is armed: asking the agent to stop or inspect the loop on your session now reaches a plain timer loop as well as a pull request or workflow watch, and answers from a Webex session too, where a stop used to be refused or silently do nothing.
+    Guided OAuth app setup
+    - GitHub and Asana now show setup cards in Agent Capabilities → Connections: Needs configuration leads to Settings → OAuth Apps instead of offering a connection that cannot yet work.
+    - The owner can configure an OAuth app in Settings → OAuth Apps: follow the provider guide, copy the required redirect URI, and save the client ID and write-only client secret without exposing the stored secret in the UI.
+    - Configuration is not a verified connection: after setup, return to the provider's normal Connect flow, which still performs its first-connection checks rather than treating saved credentials as proof of readiness.
+    New seams for app developers
+    - An installed app you enable under Apps → Library can add its own tab to the chat side panel, and its own rows to the file overflow menu, workspace tree and folder panel.
+    - App developers get ctx.scrub and ctx.audit: the first redacts credentials and exfiltration URLs from outbound data using the same patterns the gateway enforces internally, the second writes an app's own security-relevant decisions into the same audit log the gateway uses.
+    - An MCP server's embedded UI inherits the dashboard's colours, font families, radii and shadows, and re-inherits them when you change theme, for a server you route through the gateway stub under Developer → MCP Management with Developer Mode on.
+    Agents you can shape
+    - On the Kiro backend, an agent can inherit its capabilities from a parent template: Agent Capabilities → Agents → the agent's Capabilities pane offers Follow the parent template with per row Inherited, Override or Removed choices, a review step for incoming template changes, and a preview of what a save will write.
+    - The model and skills on an agent's template are editable in place, unless that agent follows a parent template: the Agent Template pane shows the definition's main fields and your first edit forks a private copy rather than changing the shared template, with a Customized marker, a live count of your changes and Save as new template.
+    - Agents interrupt with a question far less often: the question card is reserved for a permission, an irreversible or costly action and a preference nothing can infer, with everything else decided and the choice reported in one line.
+    Cheaper cron runs, broader knowledge
+    - A cron job can ask for minimal context: creating or editing an agent job on the Schedule page offers a Minimal context toggle with an inline hint suggesting when it fits, cutting the token cost of jobs that do not need the full injected context.
+    - Ask the agent to audit your scheduled-job costs: the new cron-cost-optimize skill uses recorded run history to recommend a cheaper execution mode and never applies a change on its own.
+    - Knowledge takes four more languages and reports what it holds: C#, Kotlin, Swift and Scala files are ingested by a folder scan that used to skip them, local_knowledge_search can be scoped to one namespace, and kirocrew knowledge stats reports how many sources, documents and items the library holds.
+    More agent backends (Preview)
+    - OpenCode joins Claude Code, Codex and KAS as a selectable backend: turn on Developer Mode under Settings → Developer and install the opencode binary on the gateway host, then pick the opencode option on the Developer page's Agent Backend tab.
+    - Kiro Crew's own tools now reach OpenCode and Codex sessions the same way they already reached Claude, except that an OpenCode session withholds one of Crew's own servers whole when any of that server's tools is switched off.
+    - A policy-blocked tool call on Codex no longer silently ends the chat, and an agent that an installed app registers now starts on KAS, resolved by the name it declares rather than by its file name.
+    Pi, with its limits up front (Preview)
+    - Pi is another choice on the Developer page's Agent Backend tab once Developer Mode is on under Settings → Developer: install both pi and pi-acp on the gateway, with the selector naming missing components and Kiro Crew refusing a session whose tool-permission gate cannot be verified.
+    - Pi sessions do not carry Kiro Crew's own MCP tools, which kirocrew doctor reports, so choose another backend when you need its subagents, scheduling or memory tools.
+    Jev decides for the turn (Preview)
+    - Jev picks the model for a turn: set a session's model to Auto (Jev) in the chat model picker and each turn runs on the model you mapped to a simple, medium or complex request through decisions.model_route in config.json, once the Decisions (Jev) card under Settings → Developer → Feature Previews is on.
+    - Jev decides steer or queue: choose Auto (Jev) on the send button and a message you type mid turn is judged to interrupt the turn or to wait for the next one, instead of you guessing about a reply you have not finished reading.
+    - The decisions are on the record: a strip under the reply names the skills the turn loaded, what memory recall dropped and what left the machine, takes your verdict on whether the pick was right, and a governance profile can turn the whole preview off with capabilities.decisions.
+    Work that survives the host
+    - Queued work outlives a restart: every subagent, task-runner step and workflow call is a durable queued row, a gateway restart revives what was queued instead of losing it, and concurrency adapts to the host's real headroom, with the live picture under Tasks and capacity on the System page's Services tab.
+    - A per-session record of what happened: each session keeps an append-only log of what it actually did, so long-horizon work survives compaction; a Crew log view in the chat right panel folds it into status, usage, timeline, tools and approvals when the gateway runs with KIROCREW_CREW_LOG on, and a read-only kirocrew-crew-log MCP server lets an agent verify the trail.
+    - Sessions release what they held: ending a session tears down its whole process tree, its subagents and its per-session MCP servers, so a long-running host stops accumulating hundreds of megabytes per ended session.
+    Notifications you notice
+    - A banner beside the bell: a new notification arrives as a card under the top bar, hides itself into the bell for a normal note and waits for you on a critical one, several stack into a deck, and a prompt offers to turn on system notifications so you are alerted while away.
+    - Waiting versus working: a monitoring loop whose newest reply asks you something shows Waiting on you on its sidebar row instead of a pulsing progress row.
+    - Mute means mute: muting a channel silences its banners and its unread count, and the attention chime sounds only when a conversation hands control back to you rather than at every intermediate pause.
+    The composer and the Files panel
+    - Paths, pastes and spelling: typing ./ or ../ in the composer opens a file picker scoped to that directory, Settings → Chat → Composer gains Show Pasted Text in Full (off by default) so a long paste stays editable text, and Spell Check Message Input (on by default) turns the browser's red underlines off in every composer.
+    - Search inside your files: the chat side panel's Files tab gains a Name/Content toggle that searches what is inside your files and opens a hit at its line, a right-click on a file offers Download, and the Project menu in the tab's header opens a terminal already in the project directory.
+    - More attachments render: the attachment picker accepts a .drawio diagram, a Word document previews with its real headings and lists, and a rendered Mermaid diagram exports as SVG or PNG from its action menu.
+    Tool calls and replies that read well
+    - Readable tool-call titles: tool rows in the transcript read as what the call does, Read file, Search, Git, instead of a raw shell command or a bare tool name, and keep the raw command when a segment cannot be classified.
+    - A content-filter fallback: a refused message is retried once on the model chosen next to the throttle fallback under Settings → Chat (agent.refusal_fallback_model, off by default), and the primary model returns on the next turn.
+    - Response length reaches every agent: the Response Verbosity setting under Settings → Chat now applies to every agent, built in, custom or scheduled, and an agent that declares a welcome message has it shown when it becomes active.
+    Folders, sessions and the command bar
+    - Folders with icons, found from anywhere: a chat folder takes an emoji in its settings Icon field, typed in or Auto-generated, folders appear in the Command Bar (Cmd+K), in Search Everywhere and in the sidebar search, and a nested subfolder can be dragged into a new position among its siblings.
+    - Artifacts from Cmd+K: a Search Artifacts row lists the newest artifacts, filters by name as you type and opens the one you pick, and a row under From your chats on the Artifacts page opens a read-only preview with the save star in its header.
+    - Sessions travel as files: the sidebar's Import a session from a file action takes an exported session back, a session pushed from a peer machine is filed under Imported and then under who sent it, and dashboard.export_include_layer_b (off by default) lets an export carry the exact model context so an import resumes instead of replaying a prefix.
+    Crew members, at home and in the cloud
+    - Is my crew deployed: a Cloud button on the Crew Members page opens a panel that answers in plain language with one action per state, each crew's drawer can show a live webview of what it holds, and the Wake sources block creates a schedule already bound to that member's private memory.
+    - Fargate crews from your laptop: Fargate joins SSH and AWS SSM as a connection method under Settings → Remote crews, forwarding to the task over AWS SSM with no ingress (needs the AWS CLI and the Session Manager plugin), and a task lives six hours by default with ten running at most, set by fargate.task_ttl_seconds and fargate.max_running_tasks in cloud.json.
+    - Ghost reactions: a ghost crew plays a motion when a turn finishes or fails, chosen per crew in the avatar builder's Reactions pane, and a crew wearing an appearance pack plays that pack's own sound.
+    Apps, from more places
+    - Filter the store by source: the Apps page filters by where an app comes from, and a pinned registry shows its label and review tier so you can judge how vetted a source is before installing.
+    - Bring a plugin in: kirocrew app import <dir> converts a plugin package written for another agent harness into an installable app, reporting what does not map, without executing anything from the package.
+    - Apps that act: an app can start, steer and stop sessions once you grant it that in its trust dialog (off per app), an installed app's rail icon shows whether one of its scheduled jobs is running, finished or broken, and Ops Mission Control accepts incident.io as a provider.
+    Agents, backends and skills
+    - Agents as one markdown file: an agent written as a markdown file with YAML frontmatter in ~/.kiro/agents is listed and usable with no JSON twin, the agent picker lists templates alongside crew members without enrolling them as members, and an agent can move its session between board tags with the chat_tag tool under permissions you set in the tag manager.
+    - Backends as a list: Developer → Agent Backend is a list of harnesses with a capability card per row saying what it can do and how it treats your MCP settings, goose joins as a selectable backend (Developer Mode), and Codex and OpenCode sessions now compact.
+    - Skills by search, not by word overlap: skills.max_triggered defaults to 0, so an agent discovers skills from a short index and skill_search instead of having whole skill bodies injected (set a positive integer to restore the old behaviour), Settings → Skills → Discover imports from owner/repo[@ref][:path] pinned to its commit, and a saved lesson declares whether it is a standing rule or a past finding (applies: always or on_topic).
+    Watches, schedules and subagents
+    - Watches that know when to stop: a structured pull-request watch retires once its verdict stops changing, wakes on an edited review comment and on named urgent conditions, and several watched pull requests cost one batched query per check instead of three calls each.
+    - Schedules that fire when asked: a low-frequency job wakes on its scheduled minute instead of being skipped, each job's schedule is shown in its own timezone, a persistent job's tab can be filed in a chat folder from the Schedule page, and a job whose tool call the security gate refused reports the refusal instead of success.
+    - Delegation with a reason: spawn_run refuses a single task that names no reason and no different model, agent or crew, a subagent is told at spawn which of its MCP servers failed or await authorization, and resource_status reports the concurrency cap actually in force against the configured maximum.
+    Security you can operate
+    - Approve a flagged file: the owner can allow delivery of a file the credential scanner flagged, armed in Settings → Security and completed with kirocrew file-delivery approve on the host, and the Denied Commands card states what that tier cannot see: the command line, not the body of a script.
+    - SSH agent forwarding, by consent: git commit signing and git over SSH work inside the sandbox when the operator writes ssh_auth_sock_consent.json from outside it, and the private keys never enter the sandbox.
+    - Policies fail closed: a ceiling folded from two policy tiers has its rules read, a tool the operator denied is refused when the policy cannot be read, and creating or editing a skill over the API requires the owner.
+    Windows, Linux and the installer
+    - Settings shortcut moves off Ctrl+,: on Windows and Linux, Open settings is Alt+, so a Chinese or Japanese input method can type a comma again, and macOS keeps Cmd+,.
+    - Installs that say why: the installer takes prebuilt wheels only and, when no release publishes one for the host, stops with a message naming the host and the packages (KIROCREW_ALLOW_SOURCE_BUILDS=1 opts back in), and the Linux AppImage starts on distributions without the older FUSE library.
+    - A desktop app that recovers: on a host whose GPU process cannot start the app relaunches in software rendering instead of exiting with no window, the reconnect splash carries its own Close window control, and name-based command auto-approval now works on Windows.
+    Faster where it hurt
+    - A backlog no longer freezes the rest: the agent transport yields while draining, the status endpoint reads its counts off the event loop, and memory ranking falls back to lexical order past five seconds, so one busy session cannot hold the dashboard and every other session behind it.
+    - Lighter startup: skill discovery leaves the request path, a fresh session no longer injects daily history and old project notes, and a scheduled job that reuses its session stops re-sending full session-start context on every run.
+    - Measured wins: System page session rows sample in about 150 ms instead of about 500 ms, opening a terminal holds the gateway for 0.5 ms instead of 107 ms, and a dashboard left on a long autonomous session no longer grows its memory without bound.
+    Notable fixes
+    For anyone checking whether their particular annoyance is gone.
+    Chat and sessions. Rewinding or regenerating a message no longer discards a workflow or cron message that arrived at the same moment, and a compaction summary folds into one expandable Context compacted card instead of a multi kilobyte reply in the middle of the conversation. You can fork an incognito or temporary session, and download a persistent one from its session menu with Export to a file to move it to another machine. A sub-agent wave also stops claiming completion while a member's own nested work is still running.
+    On a phone. Chat opens and stays at the bottom of the transcript, composer menus follow the box when the on screen keyboard opens or closes, nested menus open inline instead of running off screen, and the empty strip above the header in Android browsers is gone. The dashboard also makes fewer small requests at startup, which removes one source of mobile loading failures behind proxied connections, and a failed boot-critical script now shows a visible failure panel instead of a blank screen.
+    Security. Inbound WeCom media downloads now connect only to the addresses that were checked, and the dashboard's link preview fetch uses the same pinned connector. Configuration import vets an archive's declared inventory before extracting anything, and a configuration export no longer follows a link out of the crew directory. A local security policy that cannot be read is skipped with one warning where a central governance document is present, and a signature it cannot verify reads as unverified rather than ungoverned.
+    Approvals and the command gate. A file edit is now judged by the path it writes rather than by scanning its text, so an edit that merely quotes a blocked command goes through while one naming no resolvable target is denied. A narrower auto-approve grant correctly covers a matching subagent tool call, and an approval card for a command the gateway could not fully parse keeps its session-wide Trust option. Channel agents can no longer create or retarget a scheduled job, so move that scheduling to a dashboard session.
+    Tools and files under load. A failed re-probe of an MCP server keeps its last known tool list instead of reporting a server that lost every tool, and on an install that has stubbed a server under Developer → MCP Management, slow replies no longer make the shared broker's supervisor kill a healthy daemon. Files with punctuation or emoji in the path open again, and the dashboard's file endpoints do their filesystem work off the gateway loop, so a wedged mount can no longer freeze chat, scheduled runs and tunnels.
+    Messaging. Prose that merely mentions the steering marker is no longer cut off mid sentence on any chat channel, and several more option marker spellings whose brackets do not pair up render as plain text instead of reply buttons. Slack no longer shows a false error when a progress card update is merely rate-limited.
+    Lessons and remote crews. Removing a lesson can name one repository scope, so a repo scoped lesson and a global one that share the same wording no longer both vanish. A chat bound to a remote instance also fills its model list instead of showing an empty one, allowing the remote gateway a longer first read and re-polling a partial answer rather than caching it.
+    Dashboard polish. Switching between chats honors each conversation's folded-steps preference from the first paint, without briefly expanding the transcript and moving your reading position. Reading a session in one open window clears its unread badge everywhere else, a session link to a closed session declines gracefully instead of navigating to a dead page, and widgets detected as hardcoded light canvases stay readable in dark mode wherever they render, including artifact pages and library thumbnails.
+    The terminal, artifacts and shortcuts. Ctrl+Shift+C copies the selection in the packaged desktop app, Enter runs the line you typed rather than a completion you never arrowed onto, and command completion can be switched off under Settings → Display. The Add comment popover on artifact pages copies the original selected text, including surrounding whitespace, with a Copy button or Cmd/Ctrl+C while the comment draft is empty, and reports a clipboard failure instead of false success. Settings → Shortcuts records Control separately from Command on macOS, so custom Control-based Search Everywhere and panel-toggle shortcuts work as configured.
+    Error reports and privacy. Ask the agent opens a pre-filled error report at its first line and keeps the taller composer until you start editing. Failed Browser installs mask npm credentials before displaying or handing errors to chat, and structured legacy assistant or tool messages render safely with consistent redaction in both live chat and history.
+    Windows links and file reads. A file read can no longer be redirected by a junction or symlink planted at the last part of a path, which is how it has always behaved on macOS and Linux. Rebuilding the dashboard from source replaces a broken directory link instead of failing partway, and removes obsolete links without deleting the folders they point to.
+    Streaming and rendering. Scrolling back into a streaming reply holds your place instead of snapping to the end or sliding the text up from under you, on a phone as well as a desktop, and find-in-chat paints its matches without reflowing the message. Math written with LaTeX's own delimiters renders as math, a diff block opens and closes from the same chip, an options footer with prose glued after it still renders as clickable choices, and text a model writes after its own footer is labelled as the model's own. A message whose markdown fails to render degrades on its own instead of blanking the view.
+    Queued prompts and plans. A prompt typed while a turn is running survives a gateway restart and returns as a queue card, answering a question the agent raised mid-turn reaches that turn rather than queuing behind it, and every composer honours the send-shortcut setting so a stray Enter no longer sends a half-written prompt from the session grid or side panel. A message sent between the stages of a running plan is queued for that plan instead of starting a second turn, and a stage that produced nothing is retried rather than counted as done.
+    Dashboard. Settings → Channels is now Messaging Channels, so it stops colliding with the Channels app where several agents share a room, and the composer's git badge is gone as a stale duplicate of the Git panel, which keeps the full view. Hovering a row, badge or card changes only its colour so neighbours stop shifting, a session you close stays gone from the sidebar, a session opened from a pasted link is renamed from its first real turn instead of keeping the URL as its name, and a failed artifact-library load says so and offers Retry. The Git panel no longer draws a clean badge over a working tree it never read and says the status is unavailable instead.
+    Memory stores and members. Your standing rules reach the model again at session start, after the startup allowance had collapsed to about a fifth of its size and on one library delivered 8 of 607 rules. The daily backup covers the default memory store, deleting a lesson from the Memory tab removes exactly that row, a named store whose directory was lost is refused instead of being silently recreated empty, and picking a private member in a brand-new chat binds the conversation to that member's memory. A member stuck on an old private store name can be moved to a current store or back to the shared one.
+    MCP servers and agent backends. A session on an extended thinking model no longer becomes permanently unusable, a server that fails on every attempt stops being respawned each discovery pass, a value you edit on a server source reaches the generated spec on the next rebuild, and a server pinned to a path that has vanished is reported as out of sync with a re-sync offered. Sessions on the managed KAS backend start instead of timing out, a backend's tool-approval prompt is delivered rather than read as a cancelled call, and codex, opencode, goose and pi sessions are no longer refused before the first prompt. Approving a tool by its @server/tool name survives a rename, a disable and a purge.
+    Slack, Teams, WeCom and the rest. Teams answers each queued message under its own sender instead of merging several people's text into one reply, and an over-long Teams message is truncated and delivered instead of rejected. A credential the model split with markup is scrubbed on WeCom, Weixin and Feishu before the platform reassembles it, internal control tags stop reaching Slack, Discord, Telegram and Webex readers as literal text, and a reply whose suspicious link was rewritten now says so. Pressing Stop from a channel stops the linked dashboard turn, a Slack turn counts as delivered only once the answer and its choices reach the reader, and a voice memo past the recognizer's limit is refused with a visible note.
+    Crons, watches and subagents. A cron script whose sandbox is torn down under it fails loudly instead of reporting a run that persisted nothing, a long run summary keeps its outcome line and links, and Autopilot recognises a plan whatever its heading style. A pull-request watch keeps reading on the other rate-limit budget instead of retiring itself, stops waking you on a cancelled check a newer run already replaced, and a session whose monitor its owner stopped is told the arm was refused. Agent process trees whose launcher exited early are reclaimed, where field evidence found ten such trees holding 4 GB on one host, and a subagent already running when the page reconnected reappears in the Subagents panel.
+    Windows and macOS. A killed runtime reports its real exit status instead of "not reaped", the crash log survives non-ASCII text, MCP servers connect under a path with a space, a percent sign or mixed-case segments, and files behind a junction path open. A toolbox-launched or version-swapped Windows gateway is recognised as its own so sign-in retries, recovery and quit work, the Windows app offers its own updater and release stream, and a running MCP gateway daemon is detected so doctor stops calling it absent. On macOS a zombie provider process is reaped, a Homebrew mise is found without the shell's PATH, and the desktop View menu's zoom items work again.
+    Apps and the terminal. An enabled app whose backend exits unexpectedly is restarted, kirocrew app enable and disable take effect in the running gateway, the uninstall dialog shows what else depends on the app, and a slow reader can no longer stop every app UI from loading. A failed Run in terminal cleans up the tab it created, and dock tabs whose shells are gone do not come back on reload.
+    Diagnostics and sign-in. An expired Kiro sign-in is reported as such instead of as advice to enable a billed fallback that spends credits failing, company SSO sign-in completes instead of reporting the auth service unreachable, and a crew that registered without finishing its sign-in offers its device code on its own row. kirocrew doctor finds the AWS CLI where AWS's installer puts it, names the sandbox that really confines a delegated spawn, and reports that it cannot verify user namespaces inside a confined shell rather than claiming the host lacks them. kirocrew stop and restart work against a gateway the desktop app spawned.
+    Privacy and safety. A bearer token carried in a ?token= URL is redacted everywhere the shared scrubber runs, an exported session bundle no longer carries the host name or checkout paths, and a spawned agent cannot redirect its own scratch marker at a protected file. Risky tool call flagging takes its own consent switch under Decisions, off even for someone who consented before it existed, because it sends the tool's arguments. An exact command trust grant shows the whole command, and a sensitive-path check that ran out of budget says it could not verify the path rather than claiming a match.
+    What's Changed
+    - fix(brand): spell the displayed product name "Kiro Crew" everywhere by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1408
+    - fix: default agent model to auto so free-tier first chat works by @krishdhasmana in https://github.com/kirodotdev/KiroCrew/pull/1423
+    - fix: repair Windows usability across onboarding, chat, cron, memory, setup by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1409
+    - fix(apps): dispatch an app's registered agent instead of silently falling back to default by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/1415
+    - feat(apps): make the third-party execution denial actionable by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1430
+    - docs: add a native MCP Apps guide covering enablement and side-panel docking by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1421
+    - feat(windows): switch the desktop target from Squirrel.Windows to NSIS by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1428
+    - fix(apps): enable client apps without their desktop half, and ship pdftoppm by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1427
+    - feat(ci): gate the product name's spelling on the lines a change adds by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1417
+    - fix(acp): cap inlined image dimensions at 2000px to prevent session poisoning by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1405
+    - feat(telemetry): show per-turn context injection breakdown by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1374
+    - fix(autopilot): queue mid-plan messages instead of running them concurrently by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1378
+    - fix(apps): bind registry app identity to its entry and record provenance by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1368
+    - fix(connections): keep the provider revoke link after disconnecting by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1330
+    - fix(acp): buffer OAuth notifications raised during session init by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1327
+    - feat(voice): change the microphone from the chat input, mid-recording by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1283
+    - docs: capitalize Apps and clarify the telemetry no-account claim by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1439
+    - fix(test): repair acp_runtime OAuth tests failing with coroutine-raised StopIteration by @Zedmor in https://github.com/kirodotdev/KiroCrew/pull/1443
+    - docs: consolidate the doc trees behind per-directory indexes by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1433
+    - feat(dev-fleet): drive the gateway service on macOS, not just Linux by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1434
+    - feat(crew): flag upcoming multi-store support under Memory Store picker by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1442
+    - chore(deps-dev): bump pyjwt from 2.10.1 to 2.13.0 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1446
+    - chore(deps-dev): bump black from 24.10.0 to 26.3.1 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1445
+    - chore(deps-dev): bump postcss from 8.5.8 to 8.5.25 in /website by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1447
+    - fix(mcp-gateway): rebuild factory on enable, injection guard, MC_→KIROCREW_ rename (#926, #927, #928) by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1449
+    - ci: pin ota-test.yml actions to full commit SHAs by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1454
+    - feat(ops): add Ops Mission Control — autonomous ops first responder by @Zedmor in https://github.com/kirodotdev/KiroCrew/pull/1310
+    - feat(dashboard): consistent empty states with explanations + CTAs (#701, #703) by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1453
+    - fix(chat): align tool-call detail toggles with KiroCrew visual language by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/1470
+    - fix: close three edition-composition gaps that fail silently by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1466
+    - chore(deps-dev): bump js-yaml from 4.2.0 to 4.3.1 in /website by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1464
+    - fix(brand): spell "Kiro Crew" in the UI strings the backend serves by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1456
+    - fix(ci): omit ephemeral worktree-fixture path from coverage by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1479
+    - fix(slack): keep one Slack thread bound to one session by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1455
+    - fix(sessions): keep a message's real origin through the save round trip by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1480
+    - feat(browser): serve agent browser ops from the native embedded view by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1444
+    - fix: Agent Templates default selection writes to wrong config field by @amergrgic in https://github.com/kirodotdev/KiroCrew/pull/1476
+    - fix(config): include weixin in to_dict() serialization by @qh2244 in https://github.com/kirodotdev/KiroCrew/pull/1461
+    - fix(voice): remote-pane mic, Esc-cancel dictation, whisper discovery by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1371
+    - fix(ci): require anonymous GHCR pull in both publish callers by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1490
+    - fix(tips): drop the Getting Started overview from the tip pool by @darko-mesaros in https://github.com/kirodotdev/KiroCrew/pull/1499
+    - fix: remove internal arcc references from the public tree by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1495
+    - fix(privacy): offer the opt-out before the first heartbeat, not after by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1494
+    - fix(channels): recover dead Discord WS; surface Weixin poll death by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1493
+    - fix(skills): make the pending-skill notification actionable by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1473
+    - fix(notes): align panel header top edge and collapse button with left nav by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/1469
+    - refactor(dashboard): stable per-message identity + unified status derivation (#381, #411, #463) by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1450
+    - feat(voice): insert dictation transcript at the cursor by @cixuuz in https://github.com/kirodotdev/KiroCrew/pull/1129
+    - docs: align PR template with prepare-pr contract + screenshot/video guidance by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1505
+    - refactor(core): resolve data home off the event loop + tighten import-freeze guard (#1057, #1059) by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1451
+    - fix(ci): restore the readable YYYYMMDD nightly desktop stamp by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1513
+    - feat(chat): List New chat in the create-button caret menu by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1512
+    - docs(readme): document where to find KiroCrew logs for debugging by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1517
+    - fix(chat): wrap long tool-call labels instead of overflowing the column by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/1508
+    - fix(mcp): enforce the consent gate inside probe_server by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/1484
+    - feat(telemetry): attribute session startup to a channel and a construction path by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1406
+    - ci: self-heal PR Readiness stuck on dropped workflow_run events by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1510
+    - fix(webpreview): canonicalize IPv6 loopback preview host to IPv4 by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1511
+    - chore(deps): bump dompurify from 3.3.3 to 3.4.12 in /website by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1463
+    - feat(chat): collapsible subagent chip; stop message list panning sideways by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/1523
+    - fix(mochi): repair tool discovery and pet-click focus stealing by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/1468
+    - fix(subagent): suppress duplicate injection for spawn_sub_agents results by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1458
+    - fix(security): audit Teams inbound auth failures + version audit LogBucket by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1460
+    - fix(palette): make double-Shift trigger opt-in, default to mod-k by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1521
+    - feat(apps): Spec Builder builtin — spec-driven development surface by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/518
+    - fix(windows): clean a sweep of Windows OS-compatibility bugs by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1492
+    - fix(dev-fleet): stop Pull+Build needing host workarounds on stock macOS by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1509
+    - fix(spec-builder): capture the guarded state dir on first use, not at import by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1543
+    - docs(prepare-pr): require an explicit reply to every concern before review-ready by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1530
+    - fix(acp): recover verifiable command from structured use_aws params by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1519
+    - fix(taskrunner): replace batch loop with semaphore to eliminate batch-stall by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1520
+    - fix(models): scope the model picker to what the account can actually use by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1549
+    - fix(acp): tell users an unavailable model is an access problem, not capacity by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1550
+    - fix(chat): pin the latest prompt by default by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1522
+    - feat: give every error message an "Ask the agent" hand-off by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1457
+    - fix(dashboard): stop session-row menu clicks bubbling into switchSlot by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1475
+    - fix: stop Dev Fleet Pull+Build from rewriting the live gateway's served assets by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1432
+    - fix(sandbox): wait for the boot probe instead of racing it by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1514
+    - feat(telemetry): attribute credit spend and stop rounding faults to zero by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1438
+    - docs(readme): say what the missing Windows sandbox layer actually costs by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1569
+    - fix(setup): ask for the unsandboxed-exec opt-in on a backend-less host by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1527
+    - fix(ci): omit every pytest tmp path from coverage, not one fixture name by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1583
+    - feat(stt): add an on-device Apple speech provider with live streaming by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1284
+    - style(voice): thicken dictation strands and pull end nodes inward by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1577
+    - fix(session): recycle under the held semaphore after a failed compact by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/1587
+    - fix(slack): show a Slack turn in its dashboard tab as it happens by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1539
+    - fix(chat): show auto-denied tool calls as amber alert, not green success by @krishdhasmana in https://github.com/kirodotdev/KiroCrew/pull/1585
+    - fix(dashboard): stabilize crash-dump fd lifetime so faulthandler writes real stacks by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1582
+    - fix(gatewayd): provide fd_count/rss_kb on macOS+Windows, add pid field by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1579
+    - feat(about): explain Stable vs Insider channels by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1578
+    - fix(notes): align settings divider with the left nav footer divider by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/1541
+    - fix(channels): !unlink frees the conversation's location, not just its key spelling by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1536
+    - feat(i18n): localise built-in app manifest copy without touching the manifests by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1459
+    - fix(chat): settle the streaming reveal edge during a mid-stream pause by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/1426
+    - fix(chat): make a file:line reference clickable and jump to the line by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1424
+    - fix(dashboard): keep the Terminal nav row lit while the panel is open by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1590
+    - feat(knowledge): add documents automatically, and dedup per document by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1380
+    - fix(test): eliminate process_matches timing flake with readiness pipe by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1593
+    - chore(deps-dev): bump brace-expansion from 1.1.16 to 1.1.18 in /site by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1448
+    - feat: add SSM as a connection method for remote instances by @ryancormack in https://github.com/kirodotdev/KiroCrew/pull/1500
+    - fix(setup): surface a missing agent spec instead of failing every turn by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1548
+    - feat(desktop): integrated Windows titlebar + launcher follow-ups (#486, #774, #487) by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1452
+    - fix(deploy): correct audit LogBucket retention on versioned bucket by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1528
+    - fix(acp): guard set_mode against unknown modeId + self-heal missing agent config by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1542
+    - fix(acp): stop dumping the raw JSON-RPC error dict into chat by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1544
+    - fix(models): never send a model the account cannot use by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1596
+    - feat(chat): Continue an interrupted turn instead of retyping the prompt by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1595
+    - fix(dev-fleet): find node where version managers install it by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1586
+    - feat(diagnostics): "Report a Problem" support-bundle collector (CLI + UI) by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/583
+    - test(instances): stub _is_port_free in SSM transport-selection tests by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1626
+    - refactor(telemetry): one sortable table with four column-sets, not six stacked sections by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1635
+    - fix(packaging): ship the vendored libllama.so in the sdist by @Xianwen-Peng in https://github.com/kirodotdev/KiroCrew/pull/1526
+    - fix(installer): prefer supported Python 3.12 over untested 3.13 by @Xianwen-Peng in https://github.com/kirodotdev/KiroCrew/pull/1524
+    - fix(acp): show the provider's real error instead of a fake 5xx by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1649
+    - feat: make open-file path breadcrumb segments clickable by @Jpontone in https://github.com/kirodotdev/KiroCrew/pull/1642
+    - feat(test_brand_name_gate): make brand-gate linearity timing test robust on noisy windows runners by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1610
+    - chore(version): bump dev base to 0.2.0 after v0.1.3 by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1656
+    - fix(dev-fleet): make the live target a pointer the gateway resolves at startup by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1615
+    - perf(security): cache sensitive-path targets; raise skills scan TTL by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/1614
+    - fix(mcp-gateway): add bridge liveness monitor to stub by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1584
+    - fix(service): stop the installed service opening a browser, and let it carry the port by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1565
+    - feat(pr-maintenance): pr 918 follow-up: branch-aware manifest fast path (round-8 admission desync) by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1489
+    - fix: admit relevant episodic memories before recency ranks them out (#1622) by @aniketshukla1 in https://github.com/kirodotdev/KiroCrew/pull/1655
+    - fix: make meeting settings scrollable by @Frxnesvo in https://github.com/kirodotdev/KiroCrew/pull/1651
+    - fix(dashboard): reset context meter when post-compact usage lacks counts by @JohnCrickett in https://github.com/kirodotdev/KiroCrew/pull/1650
+    - docs: add temp-screenshots/README.md convention doc by @leeclarkuk in https://github.com/kirodotdev/KiroCrew/pull/1613
+    - fix(a11y): add focus-visible outline to ApprovalModePicker trigger by @qh2244 in https://github.com/kirodotdev/KiroCrew/pull/1594
+    - feat(terminal): configurable font family and size by @benwart-consensus in https://github.com/kirodotdev/KiroCrew/pull/1540
+    - fix(security): any local web page could open a shell through the terminal WebSocket by @kaizawa97 in https://github.com/kirodotdev/KiroCrew/pull/1534
+    - ci: bind readiness runs by head ref, not the fork-empty pull_requests by @clareliguori in https://github.com/kirodotdev/KiroCrew/pull/1659
+    - feat(cloud): register launched instances over native SSM transport by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1606
+    - fix: tolerate Unicode lookalike brackets on the [OPTIONS:] marker by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/1518
+    - feat: redesign sidebar folders and de-clutter the sessions sidebar by @krishdhasmana in https://github.com/kirodotdev/KiroCrew/pull/1211
+    - fix(core): retry the atomic rename on Windows sharing violations by @smeyffret in https://github.com/kirodotdev/KiroCrew/pull/1200
+    - refactor(settings): Turn the Security panel into an inspector by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1672
+    - refactor(notifications): Drop the per-kind filter chips by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1670
+    - fix(settings): remember the tab you opened across navigation by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1669
+    - docs(remote-crew): EC2 setup guide (SSH + SSM) and cloud launch how-to by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1671
+    - feat(models): configurable per-role model + reasoning effort for background and sub-agent work by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1600
+    - chore: Add Nathan Beals to contributors list in README by @ndbeals in https://github.com/kirodotdev/KiroCrew/pull/1680
+    - fix(chat): side panel + tab menu on the shared shadcn dropdown by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1695
+    - fix: folder palette single-source, spec sync, new-chat row labels by @krishdhasmana in https://github.com/kirodotdev/KiroCrew/pull/1681
+    - feat(chat): Offer Continue on any idle slot, not just broken turns by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1692
+    - feat(skills): add Windows support to gateway-restart skill by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1705
+    - fix(history): keep a turn's transcript rows ordered when the clock does not tick by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1690
+    - fix(slack): seed a linked thread with readable, untruncated history by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1688
+    - fix(chat): group the side panel + tab menu with separators by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1714
+    - fix(dashboard): clear SelectionToolbar's deferred checks on unmount by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1044
+    - fix(chat): Keep the sigil hint when Continue is offered by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1719
+    - fix(windows): remove the top causes of Backend Tests (Windows) flakiness by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1733
+    - fix(chat): put Logs behind Developer Mode alongside Context breakdown by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1740
+    - fix(messaging): make every capability declaration true, and ratchet it by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1253
+    - fix(dev-fleet): make launchd restarts graceful by @konippi in https://github.com/kirodotdev/KiroCrew/pull/1640
+    - fix(security): harden doc XML parsing (XXE), non-crypto hash, and web deps by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1727
+    - test: stop tests from reconfiguring or restarting the host's real service by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1728
+    - fix(dev-fleet): let re-pointing at the running checkout cancel a staged cutover by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1701
+    - test(credwatch): make the windows-skipped credwatch tests deterministic by @smeyffret in https://github.com/kirodotdev/KiroCrew/pull/1674
+    - fix(dashboard): match macOS Activity Monitor memory accounting by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1742
+    - feat(dashboard): per-session and per-task memory, clickable through to the chat by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1597
+    - refactor(telemetry): key the panel on sessions, and give latency a shape instead of a table by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1709
+    - fix(website): render the real brand mark in screenshot harnesses by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1754
+    - chore(i18n): stop reporting parser-facing literals as untranslated copy by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1751
+    - fix(dashboard): give each chat row a delivery id so a redelivered frame renders once by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1706
+    - feat(onboarding): detect Kiro CLI instead of installing and signing in by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1729
+    - feat(chat): fade the line-reveal highlight out, and honour line ranges by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1715
+    - feat(chat): suggest a folder for a new session once it is titled by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1720
+    - perf(skills): let a skill opt out of full-body injection on trigger by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1726
+    - feat(sandbox): grant userns to a directly launched AppImage, not just the service by @darko-mesaros in https://github.com/kirodotdev/KiroCrew/pull/1653
+    - chore(deps-dev): bump vitest from 2.1.9 to 3.2.6 in /site by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1758
+    - fix(prepare-pr): terminal-state and superseded-run defects; babysit docs by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1746
+    - fix(models): resolve background model selection to a served model by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1756
+    - fix(update): make the dashboard update check install-aware and honest by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1734
+    - docs: add merged-PR and survey-consented contributors to README by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1769
+    - ci: evaluate fork AI reviews in PR Readiness so a green fork can pass by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1767
+    - docs(agents): simplify Model selection guidance and add scenario tests by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1771
+    - chore(deps-dev): bump vite, @vitejs/plugin-react, @vitest/coverage-v8 and vitest in /website by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1759
+    - feat(i18n): route interpolated template literals through the catalog by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1750
+    - docs: RFC for tailnet-native dashboard access by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1748
+    - chore(deps): bump esbuild and vite in /site by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1766
+    - fix(dev-fleet): recover and reveal macOS launchd gateway ownership by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1703
+    - fix(dashboard): report the session pin's real scope instead of asserting it by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1761
+    - fix: detect Docker container context in sandbox for actionable error … by @MohammedAnes in https://github.com/kirodotdev/KiroCrew/pull/1630
+    - fix(skills): record hotness only on body delivery, not trigger match by @Christian-Sidak in https://github.com/kirodotdev/KiroCrew/pull/1772
+    - fix(a11y): replace ring with outline on edit-message bubble by @qh2244 in https://github.com/kirodotdev/KiroCrew/pull/1765
+    - fix(telemetry): warn when a non-finite usage value is zeroed by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1745
+    - test(chat): isolate flaky empty-response retry test by @bayshanhai-dev in https://github.com/kirodotdev/KiroCrew/pull/1747
+    - fix(security): resolve OS-introspection spawns from trusted system dirs by @ashvinctrl in https://github.com/kirodotdev/KiroCrew/pull/1621
+    - fix(scripts): install the demo app from website/, not frontend/ by @kazimovzaman2 in https://github.com/kirodotdev/KiroCrew/pull/1566
+    - feat: add japanese dashboard localization by @yoshidashingo in https://github.com/kirodotdev/KiroCrew/pull/1675
+    - fix(security): address 8 CSE scan findings from 2026-08-05 by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1691
+    - chore(deps-dev): bump pytest to 9.0.3 and pytest-split to 0.11.0 by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1795
+    - test(sandbox): pin the guidance branch instead of reading the host's AppArmor sysctl by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1804
+    - fix(chat): read the tool-purpose argument by shape, not by key allowlist by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1812
+    - fix(stt): Build the Apple streaming helper against the shipping SDK by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1808
+    - docs(rfc): fold #1734's honesty contract into the update-architecture RFC by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1797
+    - fix(cli): self-heal stale editable installs instead of dying on missing deps by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/1822
+    - fix(history): keep turn persistence off the event loop and order slot rows against foreign writes by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1768
+    - fix(slack): make one safe render pipeline the only way text reaches Slack by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1760
+    - feat: add prevent-sleep-while-running toggle by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1784
+    - chore(deps): bump anthropics/claude-code-action from 1.0.181 to 1.0.183 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1852
+    - chore(deps): bump step-security/harden-runner from 2.17.0 to 2.20.0 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1851
+    - chore(deps): bump docker/login-action from 4.5.1 to 4.6.0 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1850
+    - chore(deps): bump actions/attest-build-provenance from 96b4a1ef7235a096b17240c259729fdd70c83d45 to e8998f949152b193b063cb0ec769d69d929409be by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1849
+    - chore(deps): bump softprops/action-gh-release from 2.6.2 to 3.0.2 by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1848
+    - feat(config-baseline): sync stale config-baseline.json with loader.py help text (stops worktree pollution) by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1833
+    - perf(palette): stop re-scanning the session corpus on every keystroke by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1827
+    - fix(agents): non-string model in one agent spec crashes the Agent Templates tab by @ryancormack in https://github.com/kirodotdev/KiroCrew/pull/1815
+    - feat(crews): say the workspace and memory bindings are a preview by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1800
+    - fix(chat): honor a ?sid= deep link followed from another dashboard page by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1791
+    - feat(skills): expose the injection opt-out on the Skills page by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1790
+    - fix: resolve tool-approval prompt on "Request a Feature" button click by @eajajhossain in https://github.com/kirodotdev/KiroCrew/pull/1847
+    - feat(chat): switch sessions from the collapsed sidebar without expanding it by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1786
+    - feat(webhooks): top-level Webhooks surface with named tokens, HMAC signing and a kill switch by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/819
+    - fix(sandbox): name the host mechanism behind a user-namespace denial by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1668
+    - feat(pod): let a pod choose its approval mode and cron scheduler by @smeyffret in https://github.com/kirodotdev/KiroCrew/pull/1732
+    - fix(dashboard): put every dropdown on the shared components, not a native select by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1741
+    - fix(deps): bump the electron js-yaml override to 4.3.1 by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1933
+    - fix(test_sandbox_docker_detection): fix 2-tuple _last_unshare_failure fixtures broken by #1668 by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1923
+    - test(e2e): disambiguate 'Knowledge Library' locator in help-dialog spec by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1937
+    - fix(i18n): add 11 missing kiroPrerequisiteGate keys to ja catalog by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1939
+    - fix: use lucide expand/minimize for the browser panel toggle by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/1898
+    - feat: align Spec Builder app-store art with other builtins by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/1922
+    - feat(palette): make installed apps searchable and launchable by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1920
+    - feat(auto-improvement): measurement-first self-improvement app (GitHub-native) by @Zedmor in https://github.com/kirodotdev/KiroCrew/pull/1013
+    - feat(acp): report unconsumed _kiro.dev/metadata fields at debug level by @cixuuz in https://github.com/kirodotdev/KiroCrew/pull/1946
+    - fix(autopilot): stop a hung stage wedging the slot and abandoning live subagents by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1779
+    - chore(deps-dev): bump js-yaml from 4.3.0 to 4.3.1 in /site by @dependabot[bot] in https://github.com/kirodotdev/KiroCrew/pull/1934
+    - docs: say who each release channel is for in the README by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1953
+    - fix(stt): find Whisper installed into the app's own virtualenv by @kaizawa97 in https://github.com/kirodotdev/KiroCrew/pull/1950
+    - feat(dashboard): accept this machine's own tailnet origin without hand-writing dashboard.url by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1908
+    - fix: make semantic context reads thread-safe under concurrent writers by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1859
+    - fix(test_handlers_system_macos_paths): fix darwin-only mem test broken by #1742 accounting change by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1838
+    - fix(skills): truncate index descriptions, drop dir, disable trigger matcher by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1864
+    - ci: resolve fork PRs by open-PR head SHA so readiness re-evaluates by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1858
+    - feat(chat): add punchline-first response verbosity level by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1855
+    - fix(browser): resolve native-panel session key from host_pid for warm-pool proxies by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1860
+    - docs: drop guidance for retired review gates and deleted labels by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1938
+    - feat(skills): a Context budget screen for per-skill injection cost by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1926
+    - test(test_brand_name_gate): stabilize brand-gate linearity ratio on noisy windows runners by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1965
+    - fix(issue-radar): cut first-open latency and three UX defects by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1918
+    - fix(acp): enforce the per-image byte cap on the encoded payload by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1941
+    - ci: skip the opposite surface's single-surface tests by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1757
+    - feat(schedule): group cron jobs into collapsible folders by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1483
+    - feat(chat): hover preview on the collapsed pasted-lines chip by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1488
+    - fix(md_notebook): env-overridable git timeouts; widen budget on Windows CI by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1678
+    - feat(tags): add color picker to tag manager by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1879
+    - fix(chat): message footer follows the Font Family setting, and drops the year by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1970
+    - fix(apps): forward KIROCREW_DEVFLEET_REPO to app backends by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1966
+    - fix(meetings): ask for the agents by the name that can be dispatched by @kaizawa97 in https://github.com/kirodotdev/KiroCrew/pull/1949
+    - fix(file-explorer): open at home dir instead of /opt on macOS by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1967
+    - fix: gate mochi ambient chat pushes against live conversation by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1962
+    - fix(dev-fleet): restart the macOS gateway with a domain-targeted launchctl kill by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1979
+    - docs: settle tailnet pin scope as configurable, defaulting to node by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1905
+    - fix(gate): offer organization SSO alongside the personal sign-in command by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1944
+    - fix(acp): classify expired sessions as auth, not transient 5xx by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1984
+    - fix(context): re-inject skill index after compaction by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1866
+    - fix(build): install glibc-217 Node 20 on Amazon Linux 2 for vite 8 by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1854
+    - fix(stt): gate --fp16 flag to openai-whisper only by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/1916
+    - fix(cron): publish turn identity so spawn_run resolves its parent by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1954
+    - fix(history): stamp transcript metadata timestamps offset-aware by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1958
+    - fix(issue-radar): add progressive first-page fast path to the PR list by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1983
+    - fix: re-check cron governance at execution, not just cron_add by @yogeshselvarajan in https://github.com/kirodotdev/KiroCrew/pull/1883
+    - docs: add a reference egress defense-in-depth security_policy.json by @yogeshselvarajan in https://github.com/kirodotdev/KiroCrew/pull/1884
+    - docs(rfc): wheel managed-venv replacement invariants + apply-consent open question by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1909
+    - fix: repair Windows usability across apps, hooks, cron, voice and discovery by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1437
+    - docs: add Trendshift daily-ranking badge to README by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1993
+    - perf(search): memoize snippet sources and put a byte ceiling on both search memos by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1987
+    - docs(guides): document refresh cookies in the remote/mobile guide in https://github.com/kirodotdev/KiroCrew/pull/2024
+    - fix(dev-fleet): warn when the primary checkout is parked off-branch by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2006
+    - fix(cron): run a just-created job instead of 404ing for up to 30s by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2002
+    - fix(dashboard): refresh transient-5xx retry budget after terminal error by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2000
+    - feat: obvious bug-report entry for prerelease users, auto-tagged by channel by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1996
+    - fix(instances): pin ssh multiplexing off in supervised tunnels by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1995
+    - fix(config): report restart_required for startup-read subagent settings by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/1994
+    - feat(chat): show each model's credit multiplier in the model picker by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1985
+    - feat: auto-add merged-PR authors to the README Contributors list by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/1982
+    - feat(terminal): complete subcommands and flags, not just paths by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1930
+    - feat(cli): make kirocrew update work for wheel/cli.sh installs by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1877
+    - feat(apps): ship Crew Companion as a first-party builtin by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/1794
+    - feat(dashboard): restructure System into a task manager by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/1810
+    - fix(security): address 6 CSE scan findings from 2026-08-07 by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/1990
+    - fix(test): stop the Windows shards depending on whether \tmp exists by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2049
+    - fix(dashboard): make the /usage text scrape opt-in — the credit meter must not spend credits by default by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2039
+    - fix(knowledge): pace hand-added folder ingestion with a default chunk budget and surface cost up front by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2043
+    - fix(models): stop the picker showing a model the account lost access to by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1611
+    - fix(session): recycle knowledge-pool sessions between documents and repair the dead _bg blind-recycle fallback by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2040
+    - feat(chat): render sub-agent completion events as a card, not a prompt bubble by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1774
+    - fix(knowledge): transition failed folder ingestions out of scanning and cap crash-recovery retries by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2042
+    - fix(dashboard): keep a channel tab's reads and writes on one transcript by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1921
+    - fix(dashboard): retry transient transcript reads so restore keeps the tab by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2052
+    - feat(schedule): browsable template gallery with 15 new presets by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/409
+    - fix(ci): stop the brand gate's quadratic guard from skipping its own check by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2057
+    - fix(test): skip POSIX-only ACP tests on Windows fork runners by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2044
+    - docs: add new contributors to README by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2067
+    - fix(dashboard): make the prerelease report chip read as an action, not a badge by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2064
+    - fix(chat): offer Resume only when a turn was actually interrupted by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2074
+    - fix(security): change sandbox default from 'off' to 'auto' by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2054
+    - fix(ci): self-heal a PR Readiness verdict frozen by a job-level re-run by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2083
+    - chore(ci): raise backend coverage floor to 77% and single-source the floors by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2079
+    - fix(auth): scope the inbound-webhook bypass to POST by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2077
+    - test(auto-improvement): stop GC interleaving flaking the pstats recursion test by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2087
+    - fix(mcp-gateway): detect dead stub transports so their backends can be reclaimed by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2005
+    - feat(automation): guard prepare-pr pushes against stale merge bases by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1418
+    - docs(autosde): forbid side effects in tests by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2093
+    - test(ci): stop measuring test files CI never executes, lock it with a contract by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2090
+    - test(i18n): fail loudly on duplicate keys in a locale catalog by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2081
+    - fix(test): skip POSIX executable-resolution ACP tests on Windows by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2073
+    - fix(stt): stop the whisper install compiling numpy and pulling CUDA by @cixuuz in https://github.com/kirodotdev/KiroCrew/pull/2071
+    - fix(ci): keep the reduced Windows scope from naming uncollectable suites by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2066
+    - fix(settings): Say when auto-approve ends, not that it exists by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2084
+    - feat(terminal): pop out the terminal panel into a standalone window with tabs by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2050
+    - fix(test): stop the gateway-service check asserting real launchctl state by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2088
+    - fix(dashboard): show progress while a complex widget's Tailwind JIT compiles by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2076
+    - fix(sidebar): restore the folder row's two left alignment guides by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1906
+    - fix(windows): stop leaking a ctypes type per Win32 metrics call by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2095
+    - test(brand-gate): measure the linearity ratio in CPU time, not wall clock by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2105
+    - fix(dashboard): read transcript before backfilling tab_id so restore keeps the tab by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2112
+    - refactor(verbosity): rewrite ultra mode for genuine ADHD brevity by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2075
+    - ci(review): give the fork GPT reviewer the PR intent for a scope-match check by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2113
+    - fix(electron): stop the token prompt trapping the user in fullscreen by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/1876
+    - feat(dashboard): tailnet access status card + governance ceiling by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2102
+    - fix(apps): Crew Companion overlay — theme, dismissal, celebrate, eyes, props, bubble, idle motions by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2089
+    - ci(release): require a CHANGELOG section and a shipped candidate before stable by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2125
+    - fix(shell): Stop replaying the entrance on every Local tab return by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2120
+    - test(backend): add unit coverage for 11 dashboard, Slack and app-platform modules by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2115
+    - fix(dev-fleet): portal the Pull+Build confirm popover so the Card cannot clip it by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2111
+    - test(backend): add unit coverage for 9 under-tested backend modules by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2103
+    - feat(code-review-sage): read reviews in the app, post and publish them deliberately by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/862
+    - fix(apps): Crew Companion — make-your-own saves, avatar-aware surfaces, PetDex clips, stop ≠ done by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2151
+    - chore(ci): ratchet the backend coverage floor 77% → 80% by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2144
+    - ci(review): port the full same-repo GPT contract into the fork GPT reviewer by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2133
+    - ci(review): bring fork Opus lane to operational parity with same-repo Opus by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2132
+    - fix(install): make the Linux install/start/configure/update path work on Ubuntu and CentOS by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2097
+    - fix(system): stop the Sessions table wedging the renderer in a setState loop by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2146
+    - test(system): cover autoResetPageIndex guard against pagination setState loop by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2162
+    - fix(telemetry): name a closed conversation from its persisted title by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1839
+    - test(metrics): pin the unattributed-subagent exclusion on the context path by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1824
+    - fix(lessons): stop dropping the negative clause by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/625
+    - docs(skills): cap web-verify frames at 2000px before reading them by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2137
+    - feat(browser): persistent Browser Mode with real install and multi-engine by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2101
+    - fix(ci): make PR Readiness base-aware so stacked PRs aren't stuck pending by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2153
+    - feat(schedule): shadcn table + dialog, and a layout that fits one screen by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2139
+    - refactor(messaging): channel registry + boot eviction + the §9 address parser by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2138
+    - feat(apps): per-app trust grants for third-party app execution by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1364
+    - feat(i18n): add the korean catalog, unregistered (1 of 2) by @szto in https://github.com/kirodotdev/KiroCrew/pull/2160
+    - feat(chat): keep a pending tool approval answerable across a mid-turn steer by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/2163
+    - fix(security): stop loopback secret leaking to HTTP_PROXY by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/2165
+    - feat(system): a Storage screen behind Performance > Disk by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2159
+    - perf(system): share one process-table snapshot per sampling pass by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2124
+    - fix(acp): drop an oversize stdout frame instead of tearing down the runtime by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2119
+    - fix(panel): restore the file panel's two desktop hand-off menu entries by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2180
+    - fix(vitest): pin test timezone and stop asserting the runtime Intl surface by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/2172
+    - test: cover the source launcher contract by @vinayshah1998 in https://github.com/kirodotdev/KiroCrew/pull/2150
+    - feat(autonudge): wall-clock runtime budget for monitoring loops by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2116
+    - fix(browser): make Playwright MCP install robust and never error on enable by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2177
+    - feat(knowledge): honor .kiroignore in folder source scans by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2100
+    - fix(knowledge): skip CDK output and dependency lock files by default by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2098
+    - fix(dashboard): stop a failed restore erasing the tab's reopen seed by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2094
+    - fix: correct misleading star tooltip on artifacts library pages by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2085
+    - fix(chat): reopen a chat on the side-panel tab it was left on by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2072
+    - fix(mochi): keep a remote pet alive when the host instance disables it by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/2062
+    - fix(chat): stop pinning a new chat to a model the user did not pick by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2058
+    - fix(history): persistent backoff and attempt cap for consolidation retries by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2038
+    - feat(storage): report what sessions cost on disk and reclaim it to a trash by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2032
+    - feat(skills): credit skill bodies the model reads directly by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2031
+    - fix(dev-fleet): sort equal pod-status rows by PR state, not name by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2026
+    - refactor(memory): serialize all VectorMemoryStore reads through a locked fetch helper by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1971
+    - fix(dev-fleet): surface repo-discovery failures instead of an empty fleet by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1968
+    - feat(chat): open a session's pull request or issue in the side panel by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/1960
+    - fix(dashboard): seed the context meter for cron-created sessions by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1943
+    - feat(subagent): let the parent scope a sub-agent's injected context by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2173
+    - fix(test): kiroignore walk tests broke when cdk.out joined HARD_SKIP_DIRS by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2184
+    - docs: add edition authoring guide to extension seams by @ShotaroKataoka in https://github.com/kirodotdev/KiroCrew/pull/2181
+    - feat(subagent): follow_up delivery mode for spawn_steer by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2126
+    - fix(apps): send the host theme to MCP apps instead of hardcoding dark by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2191
+    - fix(packaging): guarantee the vendored llama.cpp libs reach every install by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2196
+    - fix(meetings): show the newest speech in the live caption by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2195
+    - feat(dashboard): drag a session into the open chat to reference it by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2186
+    - fix(browser): unify not-ready copy and pin the launched Playwright version by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2182
+    - fix(chat): hide the half-streamed follow-up marker from the transcript by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2179
+    - fix: use nearest-rank context percentiles by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/2194
+    - fix: cap wave-digest delivery latency with a hold deadline (#2215) by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2223
+    - fix(dev-fleet): pass Windows platform env vars to build subprocesses by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2214
+    - fix(test): isolate doctor embeddings tests from leaked LLAMA_CPP_LIB_PATH by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2206
+    - feat: ship korean in the dashboard (2 of 2) by @szto in https://github.com/kirodotdev/KiroCrew/pull/2161
+    - fix: surface session documents in the default gallery view of Artifacts by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2108
+    - fix(chat): keep the tip/folder card flush against the composer by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2187
+    - feat(dashboard): play notification sound on approval prompt by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2015
+    - feat(dashboard): auto-tag sessions with their project name in the background by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1880
+    - fix(website): stop iOS Safari zooming when the composer takes focus by @LucaButBoring in https://github.com/kirodotdev/KiroCrew/pull/1901
+    - fix(agents): stop warning on a package's own local- twin during dedup by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1900
+    - fix(dashboard): recover an interrupted turn without replaying the request by @LucaButBoring in https://github.com/kirodotdev/KiroCrew/pull/1899
+    - feat(dashboard): recover from PreToolUse hook blocks by @LucaButBoring in https://github.com/kirodotdev/KiroCrew/pull/1902
+    - fix: show the message action footer on touch devices by @Premshay in https://github.com/kirodotdev/KiroCrew/pull/1895
+    - fix(chat): intercept /side before mid-turn steer routing by @darko-mesaros in https://github.com/kirodotdev/KiroCrew/pull/1863
+    - fix(slack): point the setup-guide link at the packaged doc by @jfnlewis-aws in https://github.com/kirodotdev/KiroCrew/pull/1842
+    - test(dashboard): assert open-slot restore yields between tabs by @hazlijohar95 in https://github.com/kirodotdev/KiroCrew/pull/1816
+    - fix: improve telemetry opt-out guidance by @JoernZheng in https://github.com/kirodotdev/KiroCrew/pull/1811
+    - fix(skills): persist the skill-usage ledger on Windows by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1802
+    - fix: guard /api/voice/voices when aws CLI is absent by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1799
+    - feat: show shell command progress in dashboard by @bayshanhai-dev in https://github.com/kirodotdev/KiroCrew/pull/1796
+    - docs(temp-screenshots): correct the attachment rationale and add the skill cross-refs by @Souptik96 in https://github.com/kirodotdev/KiroCrew/pull/1738
+    - docs(telemetry): state what attribute redaction actually guarantees by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1737
+    - docs: add new contributors to README by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2259
+    - fix(windows): spawn one-shot kiro-cli reads at the configured sandbox tier by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2252
+    - fix(i18n): restore ko catalog parity broken on main by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2244
+    - fix(mcp): read built-in server tools in-process so they list without a sandbox by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2261
+    - docs: document PWA install and iOS Safari support in https://github.com/kirodotdev/KiroCrew/pull/2270
+    - fix(weixin): reuse one X-WECHAT-UIN per process so iLink keeps the session by @huanghang111 in https://github.com/kirodotdev/KiroCrew/pull/2247
+    - test(panel): guard the file panel's whole menu inventory, not just two entries by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2242
+    - fix: stop idle sweep reaping live app-worker sessions as orphaned tabs by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2258
+    - fix: package the kirocrew-dev skills that shipped skills point at (#1603) by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/1730
+    - fix(dashboard): route subagent events to cron/channel-born tabs by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1952
+    - fix(usage): retain Auto model attribution by @aniketshukla1 in https://github.com/kirodotdev/KiroCrew/pull/2257
+    - fix(browser): omit storageState when the file is absent by @Walsen in https://github.com/kirodotdev/KiroCrew/pull/2237
+    - fix(sidebar): preserve relevance order in history search results by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2226
+    - fix(auto-research): replace window.confirm campaign delete with in-app dialog by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2275
+    - feat(chat): find folders in the @-mention picker by @hoang-phan98 in https://github.com/kirodotdev/KiroCrew/pull/2272
+    - fix(dashboard): re-render an edited local image instead of the previous bytes by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2198
+    - feat(settings): add a Releases tab with the per-version changelog by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2189
+    - fix(memory): honor incognito mode when a session's in-memory state is gone by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2185
+    - fix(auto-research): don't mark deliberately-ended campaigns as failed by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2174
+    - fix(usage): read the social-login token key in the free credit API path by @darko-mesaros in https://github.com/kirodotdev/KiroCrew/pull/2292
+    - feat: reorder queued messages from the queue stack by @el-pedrito in https://github.com/kirodotdev/KiroCrew/pull/2250
+    - feat(system): a session inventory for Storage, and stop calling idle sessions "in use" by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2208
+    - feat(chat): serialize folder mentions and derive chips from tokens by @hoang-phan98 in https://github.com/kirodotdev/KiroCrew/pull/2287
+    - fix: stop two tests leaking state outside their own sandbox by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2229
+    - fix: never adopt a draining gateway; bounded recovery for adopted local gateways by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2276
+    - fix(chat): escape poisoned conversations via one-shot discard by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2239
+    - docs: add the 0.2.0 and 0.1.3 changelog sections by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2305
+    - feat(links): add Jira issue URL detection and link chips by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2019
+    - feat(settings): make setting references clickable links by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1907
+    - fix: Manual /compact times out at 120s while auto-compaction gets 300s for the same work (#2183) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2310
+    - fix: enforce consolidation retry eligibility inside _consolidate (#2135) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2307
+    - fix(i18n): resync ko Storage catalog with the inventory model by @k33bz in https://github.com/kirodotdev/KiroCrew/pull/2306
+    - feat(telegram): inbound attachment support (image vision, documents, audio transcription) by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2201
+    - fix(telemetry): record canonical session sources in usage rows by @leonlaiyc in https://github.com/kirodotdev/KiroCrew/pull/2230
+    - fix(gateway): refuse to boot when the data home cannot persist state by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2279
+    - fix(workflows): thread extra_env through both agent adapters by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/2283
+    - feat(connections): provider registry and consent-URL security by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/2285
+    - docs(session-storage): spec the inventory surface #2208 shipped undocumented by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2296
+    - fix: resolve trusted system binaries on non-FHS hosts by @EllianCarlos in https://github.com/kirodotdev/KiroCrew/pull/2303
+    - fix: spend the full compaction budget and unpin the OpenAI-compat turn cap (#2183) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2313
+    - fix: report consolidation backoff refusals and pre-check maybe_consolidate (#2135) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2314
+    - fix(terminal): stop the title poller forking lsof twice a second per session by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2106
+    - docs: add 4 contributors to README (survey batch + Liam-Wirth) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2317
+    - feat(instances): send a copy of a session to another instance by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1744
+    - fix: guard _run_cmd proc.kill() against already-reaped children (#2096) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2318
+    - fix: allowlist agent-document route for internal-secret auth (#2197) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2316
+    - docs: document the Windows NSIS build path in electron README (#2211) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2311
+    - refactor: share one env allowlist matching helper (#2220) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2315
+    - fix(i18n): correct and shorten the ultra-verbosity Settings description by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2265
+    - fix(i18n): add the five missing Korean sendToInstanceSubmenu keys by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2327
+    - docs: RFC for perpetual agents (self-scheduled, goal-driven, supervised) by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2328
+    - fix(discord): continue the connected session when a reply arrives by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/2326
+    - fix(slack): render OPTIONS as a control in Slack (vs. a literal), and remove them when no longer relevant by @NicholasRBowers in https://github.com/kirodotdev/KiroCrew/pull/1467
+    - feat(mcp): give MCP Apps its own switch instead of riding the pooling toggle by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2293
+    - fix(knowledge): run per-file dedup off the event loop by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2175
+    - ci(review): raise GPT BLOCKING budget from 2 to 5 and add 2-pass falsification to fork lane by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2322
+    - fix(chat): keep steer the default while sub-agents are still running by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2218
+    - fix(auto-tag): suppress trivial workspace basenames from session tags by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2329
+    - ci: add the Opus review prompt files (bootstrap half) by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2333
+    - fix(markdown): bold, italic and strikethrough in CJK prose by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2323
+    - feat: redesign Agent Templates as a two-pane inspector by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1346
+    - ci(review): switch Opus reviewer from opus-5 to opus-4.8 for faster reviews by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2339
+    - fix: support GitHub Enterprise Server URLs in Code Review Sage (#2154) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2309
+    - fix(voice): Honor mic picks, mark the live device by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2281
+    - feat(dashboard): refresh stale auto-titles in the background by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1956
+    - fix(acp): bound the liveness consult to one outstanding executor job by @LucaButBoring in https://github.com/kirodotdev/KiroCrew/pull/1903
+    - feat(telegram): support multiple bot accounts per gateway by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2203
+    - fix: route subagent completion replies to non-Slack channel parents (#2319) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2352
+    - fix: window manual title regeneration to the recent conversation (#2092) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2349
+    - ci: add PR quality gates and make Design Review actually block by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2345
+    - feat(webhooks): gate the unreleased Webhooks page behind a preview flag by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2343
+    - ci(review): rename the Opus review lane from 'Opus 5' to 'Opus 4.8' by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2342
+    - feat(security): show an operator note in the refusal for user deny patterns by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/2341
+    - fix(settings): contain the Releases pane and quiet its unreleased badge by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2338
+    - fix(knowledge): run the ingest-path item deletes off the event loop by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2336
+    - fix(sidebar): preserve relevance order in active-session search results by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2299
+    - fix(code-review-sage): make a finding readable at a glance by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2225
+    - feat: discover project-local kiro agents, not just user-level ones by @jeeshofone in https://github.com/kirodotdev/KiroCrew/pull/2167
+    - fix(lessons): attach a NOT-clause to an already-stored rule by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/2166
+    - feat(side): give /side the main chat's steer and queue semantics by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2130
+    - fix(watchdog): stop empty startup dumps from evicting real stall evidence by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2122
+    - fix(acp): bound and isolate AcpSessionHandle's offloaded liveness consult by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2371
+    - fix: detached gateway double-writes every log record to gateway.log by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2227
+    - fix(ui): enabled secondary buttons no longer read as disabled by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1820
+    - feat(server): dev fleet worktree removal: refuse force on dirty+unmerged, ancestry-gate ref deletion, log verdicts by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/1840
+    - fix(command-palette): distinguish a failed scoped search from empty by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/1961
+    - fix: grow the chat action footer to 40px touch targets on touch devices by @Premshay in https://github.com/kirodotdev/KiroCrew/pull/2013
+    - feat: opt-in Slack setup and multi-channel repositioning by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2340
+    - fix: lock floor-enforced git-publish deny rules in Settings (#2358) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2369
+    - fix(dashboard): bound the tool-approval window below the turn ceiling by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2372
+    - fix(ops-mission-control): credentialed MCP tool for agent API access by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2170
+    - fix(browser): re-attach CDP control after the embedded view is rebuilt by @Walsen in https://github.com/kirodotdev/KiroCrew/pull/2366
+    - fix(i18n): match ko sort_largest spacing to the catalog convention by @k33bz in https://github.com/kirodotdev/KiroCrew/pull/2370
+    - feat(mcp): let the shared gateway follow the MCP Apps switch on by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2337
+    - fix(watchdog): bound the stall windows by the turn ceiling and surface long deferrals by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2373
+    - fix(dashboard): drop a stateless question card once the session moves on by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2131
+    - feat: eagerly create chat-slot sessions on intent signals by @hoang-phan98 in https://github.com/kirodotdev/KiroCrew/pull/2344
+    - fix(i18n): drop shebangs that break test collection on Windows by @k33bz in https://github.com/kirodotdev/KiroCrew/pull/2378
+    - docs: add new contributors to README by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2385
+    - feat(chat): live countdown and early-end button for the wait tool by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2331
+    - feat: add meeting deletion by @Frxnesvo in https://github.com/kirodotdev/KiroCrew/pull/2268
+    - fix(mcp): emit oauthScopes and oauth.clientId that kiro-cli actually reads by @pepmach in https://github.com/kirodotdev/KiroCrew/pull/2286
+    - docs: reconcile the 0.2.0 changelog with what rc.6 actually ships by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2412
+    - docs: document four shipped apps the notes never mentioned, and the rc.7 delta by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2413
+    - refactor: extract shared hardened gh runner for all gh spawn paths (#342) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2407
+    - feat(security): operator keystone extension for OAuth consent-endpoint allowlist (#1341) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2402
+    - fix: redact model-authored tool titles on all deny surfaces (#2274) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2389
+    - feat(chat): message-level pinning with pinned messages panel by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/1676
+    - ci(review): expand Opus to correctness blocking + sync fork prompt by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2379
+    - feat(mcp-pool): Toggle all switch for poolable MCP servers by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2433
+    - fix(knowledge): make the three auto-ingest paths opt-in by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2448
+    - fix(dev-fleet): report slow actions as indeterminate, not as a fake percentage by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2439
+    - test(dashboard): make chat-pins transient-I/O test portable on Windows by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2454
+    - feat(voice): add a push-to-talk key for voice input by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/1608
+    - feat(watchdog): detect a stalled turn from outside the turn's read loop by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2466
+    - feat: receive images, voice and files on the Weixin channel by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2444
+    - fix(dev-fleet): refuse the sync when pip cannot reinstall into the live venv by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2445
+    - fix(prepare-pr): re-mirror the local review gate onto the current CI contract by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2456
+    - feat(voice): show info banner + mic-click modal on remote instances by @cixuuz in https://github.com/kirodotdev/KiroCrew/pull/2471
+    - refactor: centralize title hydration by @JoernZheng in https://github.com/kirodotdev/KiroCrew/pull/2467
+    - fix(test_wait_tool_early_end): scope the wait-tool fake clock to the wait loop thread by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/2460
+    - fix(terminal): complete subcommands for tools the user installed by @dwu96 in https://github.com/kirodotdev/KiroCrew/pull/2429
+    - feat: first-party fixed-argv carve-out in sandbox fail-close (#1563) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2428
+    - feat: verify internal-API session claims via unix-socket peer creds (#302) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2424
+    - fix: re-vet cron jobs at fire time; move SEL key to trust/ (#1881) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2421
+    - build: target Node 24 LTS with a single 22+ floor everywhere (#1070) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2415
+    - feat: pin tunnel sessions to daemon-verified tailnet peer (#1762) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2411
+    - fix(appstore): compute app trust fields server-side (#580) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2408
+    - fix: detect and audit tier downgrades in nested-sandbox passthrough (#691) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2406
+    - fix: per-root hardlink-scan budgets with loud truncation (#646) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2387
+    - fix: make revocation generation cover refresh tokens (#2028) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2388
+    - ci: gate vendored _vendor tree behind a sha256 manifest (#492) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2392
+    - fix(dashboard): restore isort-clean import order in the dashboard auth module by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2479
+    - feat(instances): carry the kiro-cli context so a sent session resumes by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2260
+    - revert: withdraw multi-account Telegram until a bot is governable (#2203) by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2476
+    - docs(autosde): forbid new work on the gateway boot path by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2472
+    - docs: revise perpetual-agent RFC after a first-principles re-read by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2506
+    - fix: restore leading slash on git-mangled diff header paths (#2493) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2517
+    - fix: attach clipboard images despite text/html and synthesize filenames (#2489) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2520
+    - test(acp): stop the leaked stderr-drain task from mocked _spawn tests by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/2509
+    - test(website): cover six app surfaces that had no tests at all by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2514
+    - feat(cloud): durable launch jobs + owner-only API for EC2 crew setup by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2059
+    - feat(browser): make the built-in browser the default for chat by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2082
+    - fix: reject unknown tag ids on board columns instead of silent drop (#1897) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2568
+    - fix: surface permanent turn-failure reasons in Telegram replies (#1831) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2565
+    - refactor(i18n): run the unit-literal scan as a gate, not a vitest test by @k33bz in https://github.com/kirodotdev/KiroCrew/pull/2562
+    - fix(chat): drop the sessions sidebar's pinned Split View button by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2557
+    - fix(dev-fleet): actionable error when no trusted git resolves (#2530) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2553
+    - fix: seed artifact companion composer on first open by @fanhongy in https://github.com/kirodotdev/KiroCrew/pull/2529
+    - fix: detect kiro-cli API-key auth in the readiness probe by @jtoloui in https://github.com/kirodotdev/KiroCrew/pull/2527
+    - fix(cli): match macOS framework Python in stop/restart gateway detection by @mnaameh in https://github.com/kirodotdev/KiroCrew/pull/2523
+    - fix: self-heal dangling storageState in playwright config at load time (#2491) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2522
+    - feat: deep-link a notification by ts on the notifications page (#2018) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2518
+    - feat(ci): summarize filed issues, per-issue and in the ship report by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2511
+    - fix: match multi-word chat-history queries token-wise by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/2508
+    - test(subagent): drop the Windows-tick duration floor from the turn-duration test by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/2505
+    - fix(side): render the side panel through the shared chat transcript by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2503
+    - fix(dashboard): stop a hung usage fetch parking the credit pill forever by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2498
+    - feat: stagger gateway startup after a recent loopstall crash dump by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2486
+    - fix: audit safety-override renew fail-closed before commit (#2453) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2484
+    - fix: audit deactivate of an already-lapsed safety override grant (#2475) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2483
+    - fix: label the prune merged-scan as scanning and drop danger styling while it runs (#2451) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2482
+    - feat(knowledge): global budget, rate limit, source cap, and configurable extraction model by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2468
+    - fix(cloud): keep EC2 UserData dist-check free of $ so !Sub accepts it by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2596
+    - fix(preview): report a target that is this gateway instead of a blank frame by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2080
+    - feat(webhooks): reach inbound webhooks from Settings, not the nav rail by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2056
+    - fix(chat): keep link-preview favicons visible on every theme by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2593
+    - fix(voice): keep the draining transcript after a manual dictation stop by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2469
+    - fix(markdown): stop CJK punctuation being swallowed into bare URLs by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2171
+    - docs(autosde): freeze the chat session row's line count by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2512
+    - ci: split Opus review into discovery and validation passes by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2332
+    - fix: surface the wedged thread's stack in doctor and boot replay by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2490
+    - style: restore import order in dashboard token_auth (unblocks all PRs) by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2478
+    - fix(security): check bash operands verb-independently in the normalizer by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2603
+    - fix(ui): solid glass fallback when backdrop-filter is unsupported (#1817) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2569
+    - fix(terminal): stop scanning PTY output on the way to the browser by @buluoray in https://github.com/kirodotdev/KiroCrew/pull/2152
+    - fix(test): make the reduced Windows scope green for frontend-only PRs by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2606
+    - fix(chat): pop the quote overlay before it drops, and land it deterministically by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2630
+    - fix(mcp-apps): advertise a published SEP-1865 revision, document deviations by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2617
+    - fix: keep the nav and sessions toggles live in preview expand mode by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/2635
+    - fix: scope dashboard skill resolution to the requesting chat slot by @jeeshofone in https://github.com/kirodotdev/KiroCrew/pull/2465
+    - fix: sweep orphaned agent-spawned test runs (pytest, xdist workers) by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2442
+    - feat: cap pytest -n auto workers by available memory at agent spawn by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2441
+    - docs: record where a stall detector belongs, in the read loop or out of band by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2436
+    - fix(cloud): install Node >=22 on the EC2 crew so the dashboard build succeeds by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2626
+    - fix(browser): declare every open chat as reachable, not just the active one by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2605
+    - feat(apps): add Personal Shopper — life-problem advisor with RAG preferences by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2470
+    - test: make hanging beacon test deterministic by @JoernZheng in https://github.com/kirodotdev/KiroCrew/pull/2430
+    - fix(desktop): ship a full Linux icon set so the AppImage icon resolves by @jkiepert in https://github.com/kirodotdev/KiroCrew/pull/2625
+    - test(website): cover seven under-tested app surfaces by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2624
+    - test(website): cover nine more frontend modules, eight to 100% by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2642
+    - test(website): cover nine more under-tested frontend surfaces by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2640
+    - fix(dashboard): base the Slack status badge on the socket connect outcome by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/2637
+    - fix(mcp-apps): withhold app-only tools from the agent's tools/list by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2632
+    - fix(apps): Crew Companion gallery copy 'pet' → 'companion' by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2051
+    - fix: stop maximizing the preview panel once the session list is back by @michellemxm in https://github.com/kirodotdev/KiroCrew/pull/2662
+    - perf(stt): cap Whisper subprocess threads on many-core hosts by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2629
+    - fix(browser): sync native address bar and keep Browser view across panel close by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2653
+    - fix(ci): stop discarding Code Review Sage's measured coverage by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2614
+    - feat: render a sole-link Jira URL as a link card (#2582) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2654
+    - fix: unpin a managed model when the global returns to auto (#2558) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2643
+    - fix: broadcast notification clear-all so every view's badge converges (#2528) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2561
+    - fix: keep the config.json meta stamp on dataclass round-trip writes by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2621
+    - chore(i18n): name the Crews tab Agents and localize the tab rail by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2607
+    - perf(i18n): stop the unit-literal gate parsing files it cannot flag by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2592
+    - feat(desktop): ship Linux arm64, and give the gateway restart + channel controls by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2473
+    - fix: guard claim-push against PID reuse with process start tokens (#1018) by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2394
+    - feat(messaging): enforce max_buttons as the capability seam by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2178
+    - feat(knowledge): per-source spend and progress visibility by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/2114
+    - feat(tailnet): kirocrew tailnet up — actually publish the dashboard by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2109
+    - feat(channels): optionally file a channel's sessions in its own sidebar folder by @kyleseaman in https://github.com/kirodotdev/KiroCrew/pull/1096
+    - perf(security): retire whole runs the bare-secret slide cannot match by @patrigao in https://github.com/kirodotdev/KiroCrew/pull/2665
+    - test(wait): harden the fake wait clock's thread scoping and keep exact-timing asserts by @tlobinger in https://github.com/kirodotdev/KiroCrew/pull/2611
+    - fix(security): recover session-identity signing and audit every refusal by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2574
+    - fix(pod): make teardown zero-residue instead of racing the pod's own processes by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2564
+    - fix(session-storage): open the inventory fast and let sessions be deleted by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2552
+    - docs(skills): make the PR loop's exit condition and gate floor match CI by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2547
+    - docs: add new contributors to README by @bolichen97 in https://github.com/kirodotdev/KiroCrew/pull/2684
+    - fix(safety-override): say so when auto-approve expires mid-unattended-run by @chenmingwei23 in https://github.com/kirodotdev/KiroCrew/pull/2496
+    - test(website): cover sixteen more frontend modules by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2664
+    - docs(autosde): cap a button row at two, overflow the rest by @CrysisDeu in https://github.com/kirodotdev/KiroCrew/pull/2679
+    - fix(crew-companion): preserve CTA and avatar overrides by @xuejinT in https://github.com/kirodotdev/KiroCrew/pull/2672
+    - test: deflake terminal Ctrl+C SIGINT integration test by @iamwhatever in https://github.com/kirodotdev/KiroCrew/pull/2687
+    - test(website): use restorable spies for URL.createObjectURL stubs by @rnoack1 in https://github.com/kirodotdev/KiroCrew/pull/2681
+    - fix(dashboard): run blocking directory and replay scans off the event loop by @rnoack1 in https://github.com/kirodotdev/KiroCrew/pull/2680
+    - fix(memory): render an imported lesson as its rule, not a dict repr by @isotope14 in https://github.com/kirodotdev/KiroCrew/pull/2656
+    - perf(chat): freeze sidebar row order during a drag by @rnoack1 in https://github.com/kirodotdev/KiroCrew/pull/2644
+    - fix(dashboard): stop find shortcuts swallowing macOS Control+Command+F in https://github.com/kirodotdev/KiroCrew/pull/2634
+    - fix(dev-fleet): reattach to in-flight sync on page revisit by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2613
+    - fix: cron history attributes previous run's result to result-less runs by @rubencu in https://github.com/kirodotdev/KiroCrew/pull/2532
+    - fix(setup): warn when --slack is ignored under --agent-only by @SebastianYuSun in https://github.com/kirodotdev/KiroCrew/pull/2423
+    - fix(followup): hide OPTIONS chips immediately on Quick Send when slot is busy by @RohanK6 in https://github.com/kirodotdev/KiroCrew/pull/2410
+    - feat: speculative session/loa
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kirodotdev/KiroCrew/releases/tag/v0.7.0
+ReleaseTime: 2026-09-24T12:52:04.0000000Z

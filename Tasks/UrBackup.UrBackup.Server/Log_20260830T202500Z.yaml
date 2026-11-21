@@ -1,0 +1,25 @@
+Version: 2.5.38
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://hndl.urbackup.org/Server/2.5.38/UrBackup Server 2.5.38.exe
+- InstallerType: wix
+  InstallerUrl: https://hndl.urbackup.org/Server/2.5.38/UrBackup Server 2.5.38(x64).msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Only copy hash potion of old chunkhash file on failure. This fixes incremental partial backup failures when downloading a script with indeterminate size is interrupted
+    - Fix issue with too small sparse extents causing patch failures
+    - Prevent ignoring permissions when restoring files via tokens (reported by Valentino Paulon)
+    - Add optional proof of work DoS mitigation to Internet authentication
+    - Limit max PBKDF2 iterations performed on server fixing a DoS issue (reported by Matheus)
+    - Timeout connection after 30s in initial state when authenticating Internet connections fixing a DoS issue (reported by Andrew Elmore)
+    - Add settings to allow a client to restore all clients and a setting to disable client rename detection
+    - Reset allow_restore_clients when updating virtual clients if necessary, making the server setting allowing all clients to restore apply without server restart
+    - Don’t take image backup interval into account when image backups are disabled
+    - Improve error handling when hashing patch
+    - Only startup one virtual client at a time, not all at the same time
+    - Remove hash threads beta setting
+    - Add setting to limit max number of simultaneous backups per client group
+    - Increase send MBR connect timeout fixing issue when this takes longer than 10s
+    - Improve logging for send MBR issues

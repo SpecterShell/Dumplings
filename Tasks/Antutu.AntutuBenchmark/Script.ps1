@@ -1,32 +1,45 @@
-$Object = Invoke-WebRequest -Uri 'https://www.antutu.com/' | ConvertFrom-Html
+$Object1 = Invoke-WebRequest -Uri 'https://www.antutu.com/' | ConvertFrom-Html
 
-$Node = $Object.SelectNodes('//*[@class="download" and contains(./div/h4/text()[1], "安兔兔评测") and contains(./div/h4/span, "Win")]')
+$Node = $Object1.SelectNodes('//*[@class="download" and contains(./div/h4/text()[1], "安兔兔评测") and contains(./div/h4/span, "Win")]')
 
 # Version
-$Task.CurrentState.Version = [regex]::Match(
-  $Node.SelectSingleNode('./div/p/text()').InnerText,
+$this.CurrentState.Version = [regex]::Match(
+  $Node.SelectSingleNode('./div/p').InnerText,
   'v([\d\.]+)'
 ).Groups[1].Value
 
 # Installer
-$Task.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Node.SelectSingleNode('./div/a').Attributes['href'].Value
+$InstallerUrlRaw = [uri]$Node.SelectSingleNode('./div/a').Attributes['href'].Value
+$Hash = [System.BitConverter]::ToString(
+  [System.Security.Cryptography.MD5CryptoServiceProvider]::HashData(
+    [System.Text.Encoding]::UTF8.GetBytes("$($InstallerUrlRaw.AbsolutePath)$($Global:DumplingsSecret.AntutuKey)2147483647")
+  )
+).Replace('-', '').ToLower()
+$this.CurrentState.Installer += [ordered]@{
+  InstallerUrl = $InstallerUrlRaw.AbsoluteUri + '?auth_key=' + $Hash + '&expires=2147483647'
 }
 
-# ReleaseTime
-$Task.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseTime
+      $this.CurrentState.ReleaseTime = ($Node.SelectSingleNode('./div/p/span').InnerText | ConvertTo-HtmlDecodedText).Trim() | Get-Date -Format 'yyyy-MM-dd'
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
 
-switch ($Task.Check()) {
-  ({ $_ -ge 1 }) {
+    $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
     # RealVersion
-    $Task.CurrentState.RealVersion = Get-TempFile -Uri $Task.CurrentState.Installer[0].InstallerUrl | Read-ProductVersionFromExe
+    $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
-    $Task.Write()
+    $this.Print()
+    $this.Write()
   }
-  ({ $_ -ge 2 }) {
-    $Task.Message()
+  'Changed|Updated' {
+    $this.Message()
   }
-  ({ $_ -ge 3 }) {
-    $Task.Submit()
+  'Updated' {
+    $this.Submit()
   }
 }

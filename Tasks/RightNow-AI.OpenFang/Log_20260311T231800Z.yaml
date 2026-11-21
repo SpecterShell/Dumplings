@@ -1,0 +1,35 @@
+Version: 0.3.47
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.47/openfang-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/RightNow-AI/openfang/releases/download/v0.3.47/openfang-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fix 11 Community Issues
+    Bug Fixes
+    #532 — Agent tool filtering — Only send tools declared in agent.toml to the LLM, not all available tools. Massively reduces token usage for agents with specific tool sets. Backwards compatible (empty tools list = all tools).
+    #531 — Streaming display bug — "streaming" text no longer leaks into chat responses. Fixed phase event handling in dashboard UI so tool-use loops don't show lifecycle signals as content.
+    #528 — Telegram image MIME detection — Added magic-byte detection (JPEG/PNG/GIF/WebP) so Telegram's application/octet-stream Content-Type no longer breaks vision. Three-tier detection: trusted image/* header → magic bytes → URL extension.
+    #527 — Custom provider misidentification — Explicit provider names in config are now preserved instead of being overridden by auto-detection. Fixes Tencent/custom base_url setups.
+    #506 — Gemini 3.x thoughtSignature — Captured at part level for both text and functionCall parts. Fixes INVALID_ARGUMENT: Function call is missing a thought_signature on Gemini 3.x thinking models.
+    #507 — Telegram group message drops — Added sender_chat fallback when from is absent, and populated was_mentioned metadata so GroupPolicy::MentionOnly works for Telegram groups. Debug logging on all dropped updates.
+    #519 — Trigger reassignment after restart — Triggers now survive agent restarts via take/restore mechanism, mirroring the existing cron job reassignment pattern.
+    #523 — Hand re-activation tool profile — tool_allowlist and profile are now correctly set from hand definition on re-activation, preventing tool surface drift.
+    #524 — Hand readiness API — Enriched with active, degraded, and per-requirement optional fields. Browser's chromium requirement marked optional since Playwright can auto-install it.
+    #515 — Claude Code agent permissions — Added skip_permissions config (default: true) so Claude Code agents work in daemon mode without blocking on terminal approval prompts.
+    #509 — Proactive channel_send — Added thread_id parameter for Telegram topic targeting and file_path for local file attachments with MIME detection.
+    Stats
+    - 27 files changed, +1730/-252 lines
+    - 2074 tests passing, 0 clippy warnings
+    - 14 crates, all clean
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/RightNow-AI/openfang/releases/tag/v0.3.47
+ReleaseTime: 2026-03-11T22:24:44.0000000Z

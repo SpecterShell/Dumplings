@@ -1,0 +1,27 @@
+Version: 0.40.14
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/ollama/ollama/releases/download/v0.40.14/ollama-windows-amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/ollama/ollama/releases/download/v0.40.14/ollama-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - ollama launch claude now applies the model's output token limit for Claude Code, so cloud models no longer run into the 128k default cap
+    - Cloud web search responses on /api/chat are now decoded correctly, including compressed responses
+    - OpenAI-compatible endpoints no longer override a model's packaged sampler defaults — clients that send no temperature/top_p get the model's own values instead of 1.0, matching /api/chat
+    - /v1/responses now preserves readable input content, including prior assistant refusals, instead of flattening it
+    - Ollama's app can now retry ChatGPT disconnect failures instead of leaving the connection in a broken state
+    - ollama launch codex verifies ChatGPT routing before configuring, and reports a clear error when routing is unavailable
+    - Faster top-k sampling on MLX for large vocabularies
+    Full Changelog: https://github.com/ollama/ollama/compare/v0.40.13...v0.40.14
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ollama/ollama/releases/tag/v0.40.14
+ReleaseTime: 2026-11-03T01:40:40.0000000Z

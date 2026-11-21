@@ -1,0 +1,22 @@
+Version: 0.1.18
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.18/hellogrok-cli-windows-amd64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/hellowind777/hellogrok/releases/download/v0.1.18/hellogrok-cli-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.18
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/releases/tag/v0.1.18
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Per-channel upstream failure circuit breaker. Grok Build retries retryable statuses up to 15 times (≈5.5 minutes per turn), so a channel whose relay is down leaves the user stuck in the "retrying" phase until every attempt fails. After 4 consecutive retryable upstream failures (5xx, transport errors, or error-body read failures) the proxy now answers immediately with a non-retryable 503 proxy_circuit_open and X-Should-Retry: false, so the turn fails fast instead of burning the retry budget. A single probe request is allowed through after a 90-second cooldown: success closes the breaker automatically, failure re-arms it. Any non-5xx upstream response (including 429) resets the failure streak, and each channel has an independent breaker. Streaming failures that occur after headers are sent are unaffected. 10→
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hellowind777/hellogrok/blob/HEAD/CHANGELOG.md#0118-2026-08-28
+ReleaseTime: 2026-08-28T15:03:08.0000000Z

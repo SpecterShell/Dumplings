@@ -1,0 +1,64 @@
+Version: 0.11.130
+Installer:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://prod.download.desktop.kiro.dev/releases/stable/win32-x64/signed/0.11.130/kiro-ide-0.11.130-stable-win32-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kiro.dev/changelog/ide/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    MCP Registry Governance, Model Governance, and Document Attachments
+    This release gives enterprise teams centralized control over MCP server access and model availability, and adds document attachment support to chat.
+    MCP Registry Governance
+
+    Enterprise administrators using IAM Identity Center can now control which MCP servers their organization is allowed to use. Create a JSON registry file listing approved servers, host it over HTTPS, and configure the URL in the Kiro console. The registry supports remote (HTTP) and local (stdio) servers across npm, PyPI, and OCI package types, with ${VAR} placeholders for user-specific values like auth tokens. Kiro syncs with the registry every 24 hours, enforces version-pinned access, and works alongside the existing MCP on/off toggle to give you full control at the org or account level.
+    Model Governance
+
+    Enterprise administrators can now control which AI models are available to users in their organization. Toggle on model access management in the Kiro console under Settings > Shared settings > Model availability, then curate an approved list of models. You can also set a default model that auto-applies across all clients. This is especially relevant for data residency requirements — experimental models using global cross-region inference can be removed from the approved list until they move to GA with regional inference. Once enabled, only approved models appear in the model selector across both the IDE and CLI.
+    Document Attachments
+    You can now attach documents directly to chat messages by pasting or dragging files into the input. Supported formats include PDF, CSV, DOC, DOCX, XLS, XLSX, HTML, TXT, and Markdown. Documents are sent to the model as native document blocks, so the agent can read and reason over their contents. You can attach up to 5 documents per message and mix them with text and images in the same prompt.
+    Improvements
+    - Subagent context: Subagents now receive richer context from parent sessions, including file tree structure, for more accurate responses
+    - Chat performance: Reduced re-renders and improved responsiveness in large chat sessions
+    - Session storage cleanup: Least-recently-modified sessions are automatically evicted when storage exceeds 500 MB
+    - Streaming animation: Agent responses render with a smoother streaming animation
+    - Rename symbol: The rename symbol tool now supports accept/reject in supervised mode, consistent with other file-modifying tools
+    - Code editing accuracy: Improved how the agent targets and modifies code, with better accuracy for Java and fewer misplaced edits
+    - Web fetch rendered mode: A new rendered fetch mode uses a browser engine to extract content from JavaScript-heavy pages that return empty results with standard fetching
+    - Web fetch: Web fetch now supports `text/plain` content type responses.
+    - MCP connection sharing: MCP server connections are now shared across chat sessions instead of created per session, reducing resource usage
+    - In-chat search: Search within chat conversations using Cmd+F (Ctrl+F on Windows/Linux)
+    - Protected file approval: Kiro now prompts for confirmation before modifying sensitive workspace files like mcp.json, .kiroignore, .vscode/ settings, .git/, and .code-workspace files, regardless of autonomy mode
+    - Support link: Updated the IDE support link to point to the new support form
+    Fixes
+
+    Patches
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://kiro.dev/changelog/ide/0-11/
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release adds 2 new slash commands that streamline the spec workflow, improves Linux compatibility, and resolves several issues affecting Windows and remote SSH users.
+    Improvements
+
+    - /quick-spec slash command: Type /quick-spec followed by a description to generate all three spec documents (requirements, design, tasks) in one shot. After generation, you can iterate conversationally to refine all documents at once
+    - /architecture-selection slash command: Invoke /architecture-selection to run a systematic architecture analysis between the requirements and design phases. Produces 2-3 candidate architectures with metrics, selects the best fit, and feeds the result into design generation.
+    - Spec testing guidance — The spec workflow now intelligently skips property-based testing for scenarios where it doesn't apply, such as IaC templates, UI components, and simple CRUD operations, and recommends appropriate alternatives instead
+    - Linux compatibility: Lowered the glibc requirement to 2.28+, expanding support to RHEL 8+ and Ubuntu 20.04+
+    - Command working directory: Command chat cards now display the working directory next to the command label, so you can tell where a command is running
+    Fixes
+
+    - Fixed autocomplete showing error toasts for unsupported file types
+    - Fixed login failures when using Kiro over remote SSH connections
+    - Fixed the # context provider dropdown closing immediately when triggered after a previously inserted mention node
+    - Fixed the Spec "Continue" button injecting extra text into the chat message
+    - Fixed a path validation issue on Windows
+    - Fixed long-running terminal commands being incorrectly terminated due to execution timeout on Windows
+    - Fixed subscription API calls missing profile information, which could cause issues with plan management
+    - Fixed drag-and-drop from the file explorer not working on Windows
+    - Fixed context provider submenu showing the top-level providers list instead of the expected submenu items
+ReleaseTime: 2026-04-02

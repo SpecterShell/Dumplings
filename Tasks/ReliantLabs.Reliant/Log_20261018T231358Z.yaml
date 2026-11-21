@@ -1,0 +1,306 @@
+Version: 1.8.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.8.2-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.8.2-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Agents that ride out disconnects, an Apps console, and shortcuts everywhere
+    The first published build of Reliant 1.8, so it carries everything in the 1.8.0 and 1.8.1 notes: forge, cloud dev-boxes, connected workflows, the web app, messages that always arrive, GPT-6.1 and resizable cloud machines. On top of that, agents keep working through short machine disconnects, Apps gains an observability console, workflows can be enabled in one step, and keyboard shortcuts work on every screen and in the browser.
+    Agents keep going when a machine blinks
+    A tool call no longer fails the instant a machine drops for a few seconds during an update, and a chat that was paused because its machine stayed offline resumes by itself once the machine is back. A sub-agent that stopped on an error can be resumed by sending it a message, a message to an agent now cuts short a long wait instead of sitting unread, and agents can wait out a machine disconnect.
+    Cloud machines sleep when nobody asked for work, and warn before the disk fills
+    A machine is now kept awake only by work a person or an agent asked for, so background polling and an open tab no longer stop it from sleeping. Disk warnings now cover the volumes that actually fill up, the storage item in your Inbox returns only when the disk gets worse, and where your plan allows it you can grow a machine's disk from its settings. Creating a workspace shows Creating… and reports success only once it is ready.
+    Apps, with logs, traces and metrics for each environment
+    Deployments is now called Apps and sits directly under New chat. Each deployed environment gains an observability console with logs, traces, metrics, profiles and dashboards, plus alerts and release dashboards, and usage shows your allowance, any overage and quota messages. The per-branch Changes and Checks tabs are gone; look at your CI builds instead.
+    Enable a workflow's triggers in one step
+    A workflow's page now has Enable and Disable for all of its triggers at once, with a card showing the state of each one; if one trigger is missing a connection, nothing is enabled and the dialog names it. Automations can act as the Reliant bot instead of as you, trigger filters can read who the automation belongs to, and built-in workflows now review pull requests, work issues you opt in, respond to review feedback and triage alerts.
+    Keyboard shortcuts on every screen and in the browser
+    Shortcuts now work in Settings, the Inbox, Workflows, Runs and Apps, not only in the chat view. In the browser they match the physical key, so they work on non-Latin layouts, and they no longer collide with browser shortcuts. In the desktop app the Navigate menu items now work, they no longer break text selection in the composer, and Cmd+Tab brings a window back when none is open.
+    Your chosen provider follows into sub-agents
+    The provider you pick for a chat now carries down to its sub-agents. Chats pinned to Gemini previews, Gemini 2.5 on Vertex or gpt-5.2-codex, which their providers have shut down, move to the provider's replacement with a notice, and gpt-6.1-sol now works through a ChatGPT account in Codex.
+    Smaller fixes
+    Agents create worktrees where the app shows them, instead of folders inside your project, and a clean, squash-merged worktree is now cleaned up. A bad branch or base name is reported as a clear message. The detected-ports chip opens its menu when clicked, and the terminal takes focus only when you ask for it.
+    What's Changed
+    📦 Other Changes
+    - docs(license): forge is Apache-2.0, not BSL by @reliant-01 in https://github.com/reliant-labs/reliant/pull/708
+    - fix(errors): a busy machine's daemon command is DeadlineExceeded, not a page; one Sentry issue per RPC procedure by @reliant-01 in https://github.com/reliant-labs/reliant/pull/709
+    - test(grpc): one failed RPC is one Sentry event, through the real chain; rpc failed obeys errclass (ELECTRON-CH, CJ, AW) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/714
+    - refactor(daemonstate): move the daemon state NATS contract to pkg/daemonwire by @reliant-01 in https://github.com/reliant-labs/reliant/pull/710
+    - fix(logging): attribute forwarded ERRORs to their real call site (ELECTRON-CM/CK/CE) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/711
+    - fix(workflow): loop-exit gate re-enters for unread spawn reports, not completions (ELECTRON-CM) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/713
+    - fix(web): apiOrigin no longer trips the release bundle's dev-leak guard (unblocks Electron release) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/716
+    - fix(daemon): reap orphaned processes when reliant runs as PID 1 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/717
+    - fix(daemon): a live stream's lease self-heals; a stream nobody reads is detected from both ends by @reliant-01 in https://github.com/reliant-labs/reliant/pull/718
+    - fix(gateway): only work someone asked for keeps a cloud machine awake by @reliant-01 in https://github.com/reliant-labs/reliant/pull/719
+    - fix(codex): claim codex-tui 0.162.1 so the backend serves gpt-6.1-sol, Codex's default by @reliant-01 in https://github.com/reliant-labs/reliant/pull/720
+    - fix(models): use Vertex's documented model ids for Claude 4.5 haiku/sonnet by @reliant-01 in https://github.com/reliant-labs/reliant/pull/721
+    - fix(models): retire Vertex Gemini 2.5 (2026-10-20); pinned chats move to Gemini 3.8 Flash by @reliant-01 in https://github.com/reliant-labs/reliant/pull/724
+    - chore(pin): forge f6ba9a48 (gc: dangling images + anonymous volumes, forge#635) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/725
+    - fix(about): name the build — app, server and release identity on the About page; refuse unversioned release builds by @reliant-01 in https://github.com/reliant-labs/reliant/pull/726
+    - feat(db): DATABASE_DIRECT_URL — session-scoped work on a session-capable connection by @reliant-01 in https://github.com/reliant-labs/reliant/pull/727
+    - fix(daemon,web): a lease is released only by its own session; a failed daemon-list read blames the connection, not the machine by @reliant-01 in https://github.com/reliant-labs/reliant/pull/722
+    - chore(approvals): remove integration action prompts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/664
+    - feat(worktree): agents create worktrees where the UI does by @reliant-01 in https://github.com/reliant-labs/reliant/pull/655
+    - fix(models): retire shut-down Gemini previews and gpt-5.2-codex@openai; no tier routes to a dead model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/730
+    - fix(models): retire Veo 3.1 previews on the Gemini API; pinned Veo keeps generating on Omni by @reliant-01 in https://github.com/reliant-labs/reliant/pull/731
+    - feat(auth): keep a Supabase token's email only when email_verified says so by @reliant-01 in https://github.com/reliant-labs/reliant/pull/732
+    - feat(tools): preemptable tools — a message for the agent ends its wait early by @reliant-01 in https://github.com/reliant-labs/reliant/pull/729
+    - chore(proto): re-vendor control-plane contract (cp#749 import order, cp#809 hub_converged, cp#811 doc) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/728
+    - feat: disk pressure telemetry + honest UI for the volumes that actually fill by @reliant-01 in https://github.com/reliant-labs/reliant/pull/723
+    - fix(web): the detected-ports chip opens its menu when clicked by @reliant-01 in https://github.com/reliant-labs/reliant/pull/733
+    - feat(daemon): structured JSON logs to stdout for hosted daemons, with redaction and identity fields by @reliant-01 in https://github.com/reliant-labs/reliant/pull/735
+    - chore(proto): re-vendor control-plane contract (cp#821 billing email docs) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/734
+    - ci: fail a reliant PR whose proto-vendor/controlplane/ differs from control-plane main by @reliant-01 in https://github.com/reliant-labs/reliant/pull/736
+    - ci(cp-contract): read control-plane with a read-only deploy key by @reliant-01 in https://github.com/reliant-labs/reliant/pull/742
+    - fix(daemon): a tool call rides out a short daemon disconnect instead of failing at once by @reliant-01 in https://github.com/reliant-labs/reliant/pull/737
+    - feat(tools): wait_for_machine lets an agent wait out a machine disconnect by @reliant-01 in https://github.com/reliant-labs/reliant/pull/747
+    - refactor(contracts): make accesstokenclient, gitcredentialclient and ghusers forge-canonical by @reliant-01 in https://github.com/reliant-labs/reliant/pull/740
+    - refactor(proto): move ScenarioService into its own scenario.proto (wire-identical) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/741
+    - chore: delete unused internal/permission and internal/envutil by @reliant-01 in https://github.com/reliant-labs/reliant/pull/743
+    - refactor: type cliauth and mcpserver Deps fields as consumer interfaces by @reliant-01 in https://github.com/reliant-labs/reliant/pull/744
+    - chore: mark pure utility packages forge:exclude-contract with reasons by @reliant-01 in https://github.com/reliant-labs/reliant/pull/745
+    - docs(research): forge migration plan, research and P5a cutover runbook by @reliant-01 in https://github.com/reliant-labs/reliant/pull/746
+    - ci(pr-ci): bound the main-branch queue and right-size job timeouts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/748
+    - fix(daemon): do not stamp tenant identity into daemon log lines (follow-up to #735) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/738
+    - chore(deps): pin forge to 07720bbc (forge-migration wave 1) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/749
+    - fix(daemon): honest log levels and structured lifecycle events by @reliant-01 in https://github.com/reliant-labs/reliant/pull/739
+    - docs(research): forge migration status — pin, dev-DB teardown decision by @reliant-01 in https://github.com/reliant-labs/reliant/pull/750
+    - chore(deps): pin forge to 4aa7e58b (forge-migration wave 2) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/751
+    - chore(forge): adopt forge.yaml with every service unmanaged (forge-migration 1g) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/752
+    - docs(research): forge migration status — 1g landed by @reliant-01 in https://github.com/reliant-labs/reliant/pull/753
+    - feat(web): observability console — logs, traces, metrics, profiles and dashboards per environment by @reliant-01 in https://github.com/reliant-labs/reliant/pull/754
+    - fix(inbox): one storage item per machine, re-raised only when the disk gets worse by @reliant-01 in https://github.com/reliant-labs/reliant/pull/755
+    - fix(electron): Cmd+Tab with no window open brings a window back by @reliant-01 in https://github.com/reliant-labs/reliant/pull/756
+    - fix(terminal): the terminal takes focus only when the user asks for it by @reliant-01 in https://github.com/reliant-labs/reliant/pull/757
+    - fix(shortcuts): keyboard shortcuts work in the browser by @reliant-01 in https://github.com/reliant-labs/reliant/pull/758
+    - docs(research): Actions spend analysis and the local-gate principle by @reliant-01 in https://github.com/reliant-labs/reliant/pull/759
+    - chore(deps): pin forge to 377b6153 (#639 golangci export-data detection, #642 CI cancel only on PRs) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/761
+    - fix(shortcuts): keyboard shortcuts on every authenticated route by @reliant-01 in https://github.com/reliant-labs/reliant/pull/762
+    - fix(electron): menu shortcuts reach the renderer by id, and leave context chords alone by @reliant-01 in https://github.com/reliant-labs/reliant/pull/763
+    - fix(terminal): stop delayed refits and the initial-fit retry when the terminal unmounts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/760
+    - chore(proto): re-vendor control-plane contract (buf format of observability.proto, cp#855) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/764
+    - chore(deps): pin forge to fe790add (pkg/lease + lifecyclekit.Singleton) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/765
+    - fix(daemonevents): EnsureStream keeps the stream's existing replica count by @reliant-01 in https://github.com/reliant-labs/reliant/pull/766
+    - feat(workflow): resume chats the offline breaker paused when their machine reconnects by @reliant-01 in https://github.com/reliant-labs/reliant/pull/767
+    - chore(forge): sync forge.yaml forge_version with go.mod's pin by @reliant-01 in https://github.com/reliant-labs/reliant/pull/768
+    - chore(proto): re-vendor control-plane contract (GrowDaemonDisk, Daemon.disk; cp#865) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/769
+    - chore(config): one reader for the control-plane URL; drop dead DatabaseDriverFromEnv by @reliant-01 in https://github.com/reliant-labs/reliant/pull/770
+    - docs(forge-migration): P3a handler map of internal/grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/771
+    - refactor(daemonerr): extract daemon-command error mapping from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/772
+    - refactor(machinewake): extract the machine-wake step from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/774
+    - fix(shutdown): end long-lived streams on Stop, retry a draining PgBouncer, quiet benign close errors by @reliant-01 in https://github.com/reliant-labs/reliant/pull/773
+    - refactor(daemonplacement): extract chat/worktree machine placement from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/775
+    - refactor(messageproto): extract chat-message conversion from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/776
+    - refactor(daemonchoice): extract the chosen-daemon check from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/777
+    - feat(web): grow a cloud machine's disk by @reliant-01 in https://github.com/reliant-labs/reliant/pull/778
+    - feat(web): move the observability client to control-plane query scope v2 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/779
+    - refactor(automationcred): canonical forge contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/780
+    - refactor(integrations/catalog): exclude from forge contracts as embed-only data by @reliant-01 in https://github.com/reliant-labs/reliant/pull/781
+    - refactor(drain): exclude from forge contracts as server-main shutdown plumbing by @reliant-01 in https://github.com/reliant-labs/reliant/pull/782
+    - refactor(migrationcheck): exclude from forge contracts as pure fs.FS rules by @reliant-01 in https://github.com/reliant-labs/reliant/pull/783
+    - refactor(llm/drivers/registry): exclude from forge contracts as a strategy registry by @reliant-01 in https://github.com/reliant-labs/reliant/pull/784
+    - fix(workflow): a message resumes a sub-agent that stopped on an error by @reliant-01 in https://github.com/reliant-labs/reliant/pull/785
+    - refactor(replaytest): exclude the replay suite from forge contracts as test-support by @reliant-01 in https://github.com/reliant-labs/reliant/pull/786
+    - refactor(daemon/rootwatch): exclude the daemon's root watcher from forge contracts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/787
+    - refactor(serverapi): exclude the api-server composition root from forge contracts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/788
+    - refactor(workersetup): exclude the Temporal worker composition from forge contracts by @reliant-01 in https://github.com/reliant-labs/reliant/pull/789
+    - refactor(workspacecreate): declare its collaborators in a forge contract by @reliant-01 in https://github.com/reliant-labs/reliant/pull/790
+    - refactor(queueddelivery): canonical forge contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/791
+    - refactor(contracts): suppress db/postgres outbound-io refusal until the P5b ORM port by @reliant-01 in https://github.com/reliant-labs/reliant/pull/792
+    - refactor(contracts): make connections a contract package with Authenticator in contract.go by @reliant-01 in https://github.com/reliant-labs/reliant/pull/793
+    - refactor(contracts): make videogen.Client the package contract by @reliant-01 in https://github.com/reliant-labs/reliant/pull/794
+    - refactor(contracts): declare the local driver's seams in contract.go by @reliant-01 in https://github.com/reliant-labs/reliant/pull/795
+    - refactor(contracts): make mcpserver a contract package by @reliant-01 in https://github.com/reliant-labs/reliant/pull/796
+    - refactor(contracts): make localprobe an outbound adapter by @reliant-01 in https://github.com/reliant-labs/reliant/pull/797
+    - refactor(contracts): move diskwatch's docker engine client into a dockerengine adapter by @reliant-01 in https://github.com/reliant-labs/reliant/pull/798
+    - refactor(contracts): suppress netguard's outbound-io refusal with the reason it is a dialer primitive by @reliant-01 in https://github.com/reliant-labs/reliant/pull/799
+    - feat(web): observability usage — allowance, overage, customer metadata, quota messaging by @reliant-01 in https://github.com/reliant-labs/reliant/pull/800
+    - chore(forge): regenerate gen/forge_descriptor.json for #785's resumable field by @reliant-01 in https://github.com/reliant-labs/reliant/pull/801
+    - docs(forge-migration): update the P3a handler map for wave 2 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/802
+    - chore(grpc/services): delete the dead chatUpdateTypeFromString and LOG_PREFIX_STREAM by @reliant-01 in https://github.com/reliant-labs/reliant/pull/803
+    - refactor(daemoncmd): extract daemon-command forwarding from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/804
+    - refactor(workflowcatalog): extract the workflow-listing catalog from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/805
+    - refactor(projectfacts): extract the daemon-observed project facts from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/806
+    - refactor(gitremote): extract remote-URL redaction from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/807
+    - refactor(processproto): extract background-process enum mapping from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/808
+    - refactor(planproto): extract plan/task enum mapping from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/809
+    - refactor(runstateproto): extract run-state enum mapping from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/810
+    - refactor(connectionrpc): extract the connection handlers' shared wire helpers by @reliant-01 in https://github.com/reliant-labs/reliant/pull/811
+    - refactor(auth): move bearerToken out of grpc/services as auth.BearerToken by @reliant-01 in https://github.com/reliant-labs/reliant/pull/812
+    - refactor(checkoutstate): extract the checkout-state read from grpc/services by @reliant-01 in https://github.com/reliant-labs/reliant/pull/813
+    - test(toolexectest): share the handler tests' daemon-router doubles by @reliant-01 in https://github.com/reliant-labs/reliant/pull/814
+    - test(dbtest): share the seeded tool-call fixture across handler tests by @reliant-01 in https://github.com/reliant-labs/reliant/pull/815
+    - test(signaltest): share the Temporal signal recorder across handler tests by @reliant-01 in https://github.com/reliant-labs/reliant/pull/816
+    - test(workflowlisttest): share the counting workflow-listing fake across handler tests by @reliant-01 in https://github.com/reliant-labs/reliant/pull/817
+    - chore(forge): pin forge 3bdbf3db (deploy preflight checks Secrets where their pods read them) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/818
+    - refactor(vault): canonical forge contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/819
+    - refactor(mcp/serverclient): canonical forge adapter contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/820
+    - refactor(integrations/ghdelegated): canonical forge contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/821
+    - refactor(integrations/connauth): canonical forge contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/822
+    - refactor(integrations/gmail): canonical forge adapter contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/823
+    - refactor(integrations/httpaction): forge adapter contract (Service, Deps, New) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/824
+    - refactor(triggers): make the shared collaborator interfaces the forge contract by @reliant-01 in https://github.com/reliant-labs/reliant/pull/826
+    - feat(web): observability console v2 — project-level area, semi-dynamic dashboards, workloads by @reliant-01 in https://github.com/reliant-labs/reliant/pull/825
+    - chore(forge): pin-forge.sh syncs forge.yaml and runs the pinned forge generate by @reliant-01 in https://github.com/reliant-labs/reliant/pull/827
+    - chore(forge): pin forge d67d2a72 (config file/env layers, migratekit fixes, contract lint fixes) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/828
+    - refactor(auth): public rpcs declare auth_required: false; the API interceptor reads forge's generated set by @reliant-01 in https://github.com/reliant-labs/reliant/pull/829
+    - refactor(proto): catalog.proto list filters are optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/830
+    - refactor(proto): chat.proto ListStepExecutionsRequest.node_path is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/832
+    - refactor(proto): connection.proto list filters are optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/833
+    - refactor(proto): filesystem.proto ListDirectoryRequest.path is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/834
+    - refactor(proto): forge.proto ListForgeCheckoutsRequest.with_tree is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/835
+    - refactor(proto): package_commands.proto ListPackageProcessesRequest.worktree_id is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/836
+    - chore(proto): re-vendor control-plane contract (buf format of observability.proto, cp#890) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/831
+    - refactor(proto): run.proto ListRunsRequest filters are optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/837
+    - refactor(proto): scenario.proto ListScenariosRequest.project_id is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/838
+    - refactor(proto): token.proto ListTokensRequest.kind is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/839
+    - refactor(proto): workflow.proto ListWorkflowsRequest.include_hidden is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/840
+    - refactor(proto): worktree.proto ListWorktreesRequest.include_archived is optional by @reliant-01 in https://github.com/reliant-labs/reliant/pull/841
+    - docs(forge-migration): PLAN status for waves 2-3 (P2, P3a, P6 done; P5a ready for review) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/842
+    - chore(forge): pin forge 5ac85910 (deploy render-once #705, observability opt-out, config file layer fixes) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/843
+    - refactor(handlers/system): move SystemService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/844
+    - refactor(handlers/question): move QuestionService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/845
+    - docs(forge-migration): P3b recipe for moving one service onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/846
+    - refactor(handlers/account): move AccountService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/847
+    - refactor(handlers/connector): move ConnectorService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/848
+    - chore(proto): re-vendor control-plane contract (K4 dashboard annotations) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/849
+    - refactor(handlers/preset): move PresetService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/850
+    - refactor(handlers/token): move TokenService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/851
+    - refactor(handlers/run): move RunService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/852
+    - refactor(handlers/streaming): move StreamingService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/853
+    - refactor(handlers/tool_call): move ToolCallService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/854
+    - refactor(handlers/message): move MessageService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/855
+    - refactor(proto): declare required list parents with buf.validate (P2 follow-up) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/856
+    - chore(forge): pin forge 6f9811cb (F5 forge:custom, merge driver for parallel lanes, validate without linking, migration tooling) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/857
+    - refactor(handlers/attachment): move AttachmentService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/858
+    - refactor(handlers/file_system): move FileSystemService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/859
+    - refactor/p3b package commands by @reliant-01 in https://github.com/reliant-labs/reliant/pull/860
+    - refactor(handlers/daemon_registry): move DaemonRegistryService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/862
+    - fix(worktrees): a bad branch or base is the user's error — typed across the daemon boundary, INFO not Sentry, said in the UI by @reliant-01 in https://github.com/reliant-labs/reliant/pull/861
+    - refactor(handlers/tools_daemon): move ToolsDaemonService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/864
+    - fix(web): a workspace create shows 'Creating…' and reports success only when ACTIVE by @reliant-01 in https://github.com/reliant-labs/reliant/pull/865
+    - refactor/p3b model endpoint by @reliant-01 in https://github.com/reliant-labs/reliant/pull/866
+    - fix: Sentry triage — terminal focus, resumable stopped sub-agents, error classification by @reliant-01 in https://github.com/reliant-labs/reliant/pull/863
+    - fix(toolexec): pending-command drain no longer churns an R3 consumer per poll (prod NATS /healthz) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/868
+    - refactor(handlers/daemon): move DaemonService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/869
+    - refactor(grpc): delete the unreachable local BackgroundService by @reliant-01 in https://github.com/reliant-labs/reliant/pull/870
+    - refactor(handlers/background): move BackgroundService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/871
+    - refactor/delete local terminal by @reliant-01 in https://github.com/reliant-labs/reliant/pull/872
+    - refactor(handlers/terminal): move TerminalService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/873
+    - ci(build-images): never push reliant:latest to prod GAR by @reliant-01 in https://github.com/reliant-labs/reliant/pull/874
+    - workflow: evaluate inline workflow body templates in the body's scope by @reliant-01 in https://github.com/reliant-labs/reliant/pull/875
+    - chore(lint): give the typed-config guardrail its forbidigo patterns (advisory) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/876
+    - feat(config): typed root config for reliant; the logger reads it by @reliant-01 in https://github.com/reliant-labs/reliant/pull/877
+    - feat/config api server by @reliant-01 in https://github.com/reliant-labs/reliant/pull/878
+    - integrations/github: automation events and actions by @reliant-01 in https://github.com/reliant-labs/reliant/pull/879
+    - feat/config runtime env by @reliant-01 in https://github.com/reliant-labs/reliant/pull/880
+    - workflow: CEL-aware template scanner; malformed templates are validation errors by @reliant-01 in https://github.com/reliant-labs/reliant/pull/881
+    - feat/config control plane by @reliant-01 in https://github.com/reliant-labs/reliant/pull/882
+    - workflow: standard CEL libraries, json.decode, cost limit by @reliant-01 in https://github.com/reliant-labs/reliant/pull/883
+    - fix(test): workspacecreate's log capture passes logging.Settings (main's test build) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/884
+    - chore(forge): pin forge 8d812662 (fail-closed test stubs, v0.1.45) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/885
+    - docs(forge-migration): PLAN status for wave 4 (23 services on forge handlers, P4 typed config, F5) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/886
+    - docs(forge-migration): PLAN counts 19 of 35 services moved, not 23 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/887
+    - integrations/github: labels.create (idempotent) and labels.list by @reliant-01 in https://github.com/reliant-labs/reliant/pull/888
+    - workflow: compute node (named outputs from CEL, no model or shell) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/889
+    - test: resolve source paths from the package dir, not runtime.Caller (works under -trimpath) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/890
+    - workflow: cel_eval tool, 'reliant workflow eval', trigger dry-run in validate by @reliant-01 in https://github.com/reliant-labs/reliant/pull/891
+    - refactor(handlers/approval): move ApprovalService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/894
+    - integrations: write ledger for mutating integration calls (provenance P1) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/893
+    - triggers: webhook dedupe_key (payload-derived key, explicit window) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/895
+    - refactor(plan): move PlanService onto forge's handler model (P3b) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/896
+    - integrations/github: correlation keys at parse time (provenance P2) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/897
+    - docs, skill: compute node, template rules, CEL libraries, cel_eval, dedupe_key by @reliant-01 in https://github.com/reliant-labs/reliant/pull/899
+    - fix(forge): main is a generate fixed point and contract-clean again (writeledger, provenance, celeval, #895's descriptor) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/902
+    - fix(gateway): in-flight tool calls survive a daemon-gateway rollout by @reliant-01 in https://github.com/reliant-labs/reliant/pull/898
+    - refactor/p3b task by @reliant-01 in https://github.com/reliant-labs/reliant/pull/904
+    - agents: remove activate_trigger; only the user enables automations by @reliant-01 in https://github.com/reliant-labs/reliant/pull/903
+    - refactor(settings): move SettingsService onto forge's handler model (P3b) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/905
+    - refactor/p3b scenario by @reliant-01 in https://github.com/reliant-labs/reliant/pull/906
+    - refactor/p3b connection by @reliant-01 in https://github.com/reliant-labs/reliant/pull/907
+    - refactor/p3b repo by @reliant-01 in https://github.com/reliant-labs/reliant/pull/908
+    - feat(console): Alerts area, release dashboards (K4), re-vendor alerting + observability (clears vendored-proto red) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/867
+    - triggers: trigger.origin and origin_filter (provenance P3) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/909
+    - docs(forge-migration): P5a runbook for the goose bridge; PLAN status by @reliant-01 in https://github.com/reliant-labs/reliant/pull/910
+    - feat(db): forge migrations baseline equal to goose head, declaring goose adoption by @reliant-01 in https://github.com/reliant-labs/reliant/pull/912
+    - triggers: filters, inputs and prompts can read the activation's params by @reliant-01 in https://github.com/reliant-labs/reliant/pull/892
+    - feat/p5a migrate up migratekit r2 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/914
+    - worktree reclaim: a squash-merged, clean worktree is done by @reliant-01 in https://github.com/reliant-labs/reliant/pull/913
+    - test(workflow): allow trigger.origin's "workflow" key in the node-type literal guard by @reliant-01 in https://github.com/reliant-labs/reliant/pull/916
+    - test(preset): assert ListPresetsForWorkflow's reads overlap by counting them, not timing them by @reliant-01 in https://github.com/reliant-labs/reliant/pull/917
+    - docs(forge-migration): PLAN status after wave 5 (P3b wave 3, P5a merged) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/918
+    - test: repair three red tests on main by @reliant-01 in https://github.com/reliant-labs/reliant/pull/919
+    - chore(proto): re-vendor control-plane contract (DeliveryInsightsService, cp#895/#922) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/920
+    - automations: enable and disable a workflow's triggers in one step by @reliant-01 in https://github.com/reliant-labs/reliant/pull/915
+    - shell and run nodes: credentials: none strips GitHub, git, ssh and cloud credentials (G2) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/921
+    - feat(console): release markers, before/after comparison and Delivery (DORA) from the release ledger (K5) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/922
+    - refactor(handlers/chat): move ChatService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/923
+    - chore(forge): pin forge 5f84ae8c (cross-package embeds in harness stubs, one package directive) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/924
+    - refactor/p3b inbox by @reliant-01 in https://github.com/reliant-labs/reliant/pull/925
+    - git_publish: commit a worktree's changes and push to a feature branch with a one-shot credential (G1) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/926
+    - refactor(handlers): mark the CRUD-named rpcs of Attachment, Message and ModelEndpoint forge:custom by @reliant-01 in https://github.com/reliant-labs/reliant/pull/927
+    - refactor(handlers): move WorktreeService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/928
+    - refactor(handlers): move ForgeService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/929
+    - refactor(handlers/project): move ProjectService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/930
+    - refactor(handlers/mcp): move MCPService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/931
+    - feat(console): alert-based time to restore with ongoing incidents in Delivery (cp#924) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/932
+    - refactor(handlers/trigger): move TriggerService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/934
+    - refactor(handlers/workflow): move WorkflowService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/935
+    - refactor(handlers/catalog): move CatalogService onto forge's handler model by @reliant-01 in https://github.com/reliant-labs/reliant/pull/936
+    - chore(grpc): delete internal/grpc/services now every service is a forge handler by @reliant-01 in https://github.com/reliant-labs/reliant/pull/937
+    - chore(forge): pin forge f3fd8c02 (migration compat declaration, run-lock polling, deps-are-interfaces guidance) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/938
+    - refactor/model endpoint controlplane dep by @reliant-01 in https://github.com/reliant-labs/reliant/pull/939
+    - autopilot: the starter pack and alert triage as built-in workflows by @reliant-01 in https://github.com/reliant-labs/reliant/pull/940
+    - chore/migrations forge compat declaration by @reliant-01 in https://github.com/reliant-labs/reliant/pull/941
+    - ci(migrations): check-migrations proves the forge migration path, not the deleted schema.sql drift by @reliant-01 in https://github.com/reliant-labs/reliant/pull/942
+    - docs(forge-migration): PLAN status after wave 6 (P3b complete, re-pins, forge fixes) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/943
+    - chore(make): full-mode Go test lanes take a host heavy slot (forge slot run) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/933
+    - automations: act as reliant-labs[bot] instead of the owner (acting_identity) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/911
+    - test(workflow): TestBuiltinWorkflowCELExpressions declares the trigger namespace by @reliant-01 in https://github.com/reliant-labs/reliant/pull/944
+    - test(inbox): CleanupStorage proves it does not wait for the machine by holding it, not by timing it by @reliant-01 in https://github.com/reliant-labs/reliant/pull/945
+    - fix: five bugs agents hit while authoring a workflow (toJson, trimPrefix/Suffix, scenario expectations, skill suggestions, forge --version) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/901
+    - chore(forge): pin forge fed5bd9f (generate --steps harness, optional-dep stubs, per-service observability files) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/947
+    - fix(skills): deliver forge's start-here whole under a temporary allowance (forge#808) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/946
+    - refactor/trigger plain maps by @reliant-01 in https://github.com/reliant-labs/reliant/pull/948
+    - feat(guidance): agents propose Reliant workflows for scheduled work and describe forge beyond SaaS by @reliant-01 in https://github.com/reliant-labs/reliant/pull/900
+    - docs(forge-migration): P3c options — composing the handlers through forge's root (decision pending) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/949
+    - chore(forge): pin forge b8d998f1; DB startup retry (serverkit.RetryConnect) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/950
+    - feat(test): make test-affected runs only the tests a diff can reach by @reliant-01 in https://github.com/reliant-labs/reliant/pull/951
+    - chore(forge): pin forge 023fcdef (F2 per-unit convergence, F7, F13) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/952
+    - ci: short Go tier on PRs, full tier on main + nightly; parallel lint and sharded vitest by @reliant-01 in https://github.com/reliant-labs/reliant/pull/953
+    - chore(forge): pin forge eb7f1202 (FI1 identity, FI9, FI6 shared-issuer auth, FI3/FI2 ManagedIdentity) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/958
+    - test: make fixed-wait tests fast, fix the NATS cluster flake, parse builtins once by @reliant-01 in https://github.com/reliant-labs/reliant/pull/959
+    - ci: shard the Go tests across 3 runners, balanced by measured duration by @reliant-01 in https://github.com/reliant-labs/reliant/pull/957
+    - chore(proto): re-vendor control-plane's contract (observability.proto comment) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/955
+    - chore(deps): pin forge 2eebdde3 (omit zero profile rows, forge#829) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/962
+    - chore(deps): pin forge 381702eb (IdentityConsumer.deliver_only, forge#833) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/964
+    - test(buildmode): never require the AGPL Zitadel server module (CI14) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/965
+    - chore(deps): pin forge 7b1ca6f0 (IdentityConsumer.omit, forge#835) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/966
+    - chore(deps): pin forge 583ad6ea (FI4/FI5 managed identity on host) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/968
+    - fix(forge): Changes and Checks tabs load: budgets fit forge's real runtime, tabs stop gating on topology by @reliant-01 in https://github.com/reliant-labs/reliant/pull/967
+    - feat(forge): remove the per-branch Changes and Checks tabs and their RPCs by @reliant-01 in https://github.com/reliant-labs/reliant/pull/969
+    - test(daemon): cancel only after the command's SIGTERM trap is installed by @reliant-01 in https://github.com/reliant-labs/reliant/pull/971
+    - chore: remove the monolith mode references; reliant is distributed-only (api, worker, gateway, daemon) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/972
+    - refactor(grpc): mount every API service unconditionally by @reliant-01 in https://github.com/reliant-labs/reliant/pull/973
+    - refactor/forge api disabled typed config by @reliant-01 in https://github.com/reliant-labs/reliant/pull/974
+    - chore(deps): pin forge 7fb6d653 (forge#837 HelmChart plan objects, forge#841 secrets ledger) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/970
+    - chore(proto): re-vendor control-plane's contract (deploy: per-tree budgets, Flux timestamps; cp#977) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/976
+    - chore(deps): pin forge ee3bded4 (whole-word Go initialisms forge#846/#795; carries #842-#845) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/977
+    - feat(web): rename the Deployments entry to Apps and move it under New chat by @reliant-01 in https://github.com/reliant-labs/reliant/pull/979
+    - fix(llm): propagate a chat's provider to sub-agents; provider preference can move a Claude-led tier by @reliant-01 in https://github.com/reliant-labs/reliant/pull/982
+    - fix(llm): Claude subscription is its own provider (claude), distinct from the Anthropic API key by @reliant-01 in https://github.com/reliant-labs/reliant/pull/983
+    - chore: release v1.8.2 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/984
+    Full Changelog: https://github.com/reliant-labs/reliant/compare/v1.8.1...v1.8.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases/tag/v1.8.2
+ReleaseTime: 2026-10-18T22:15:18.0000000Z

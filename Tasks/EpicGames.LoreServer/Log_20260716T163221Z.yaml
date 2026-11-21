@@ -1,0 +1,26 @@
+Version: 0.8.5
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/EpicGames/lore/releases/download/v0.8.5/loreserver-v0.8.5-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changes since v0.8.4.
+    Features
+    - Implement the low-level revision-tree read verbs on the C API: tree_load/tree_close, resolve_path, list_children, revision & node info, and node_path
+    - Forward BranchCreate, BranchDelete, and BranchGet to a remote Lore server, opt-in per-RPC under [server.grpc_public_services.forwarded_requests]
+    - Add repository info --local to read repository metadata from the local store without contacting the remote
+    Fixes & Improvements
+    - Fix a corrupt-tree race in concurrent node_add where a half-initialized node could be observed on the child chain
+    - Protect non-durable local-only fragments from being orphaned by store GC eviction/compaction
+    - Fix dirty-add reclassifying remaining files when committing multiple added files individually
+    - Parallelize staging of multiple explicit paths instead of a serialized per-path loop
+    - Make CLI paths relative to the current working directory across all path-printing commands
+    - Bump anyhow, crossbeam, and memmap2 for security advisories
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/EpicGames/lore/releases/tag/v0.8.5
+ReleaseTime: 2026-07-16T12:02:48.0000000Z

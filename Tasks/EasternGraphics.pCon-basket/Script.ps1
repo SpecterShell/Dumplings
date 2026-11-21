@@ -1,0 +1,45 @@
+$Object1 = Invoke-RestMethod -Uri 'https://download-center.pcon-solutions.com/?feed=rss2&cat=20' | Where-Object -FilterScript { $_.title -match 'pCon\.basket \d+(?:\.\d+)+' } | Select-Object -First 1
+
+# Version
+$this.CurrentState.Version = [regex]::Match($Object1.title, '(\d+(?:\.\d+)+)').Groups[1].Value
+
+# Installer
+$this.CurrentState.Installer += [ordered]@{
+  Architecture = 'x86'
+  InstallerUrl = "https://downloads.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/p-bk_$($this.CurrentState.Version)_Installer.zip"
+}
+
+switch -Regex ($this.Check()) {
+  'New|Changed|Updated' {
+    try {
+      # ReleaseNotesUrl
+      $this.CurrentState.Locale += [ordered]@{
+        Key   = 'ReleaseNotesUrl'
+        Value = "https://docs.pcon-solutions.com/pCon/basket/release/$($this.CurrentState.Version)/pCon.basket_Sales-History_$($this.CurrentState.Version)_en.pdf"
+      }
+    } catch {
+      $_ | Out-Host
+      $this.Log($_, 'Warning')
+    }
+
+    foreach ($Installer in $this.CurrentState.Installer) {
+      $this.InstallerFiles[$Installer.InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Installer.InstallerUrl
+      $InstallerFileExtracted = New-TempFolder
+      7z.exe e -aoa -ba -bd -y -o"${InstallerFileExtracted}" $InstallerFile 'pCon.basket_installer.exe' | Out-Host
+      $InstallerFile2 = Join-Path $InstallerFileExtracted 'pCon.basket_installer.exe'
+      $InstallerInfo = Get-InstallShieldMsiInfo -Path $InstallerFile2 -Name 'pCon.basket.msi'
+      # RealVersion
+      $this.CurrentState.RealVersion = $InstallerInfo.DisplayVersion
+      Remove-Item -Path $InstallerFileExtracted -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
+    }
+
+    $this.Print()
+    $this.Write()
+  }
+  'Changed|Updated' {
+    $this.Message()
+  }
+  'Updated' {
+    $this.Submit()
+  }
+}

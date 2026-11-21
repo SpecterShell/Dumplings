@@ -1,0 +1,82 @@
+Version: 1.14.5
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.5_windows_amd64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.5/cpa-manager-plus_v1.14.5_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: cpa-manager-plus_v1.14.5_windows_arm64/cpa-manager-plus.exe
+  InstallerUrl: https://github.com/seakee/CPA-Manager-Plus/releases/download/v1.14.5/cpa-manager-plus_v1.14.5_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/releases/tag/v1.14.5
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.5 is a maintenance patch after v1.14.4 and remains within the frozen 1.x maintenance boundary. It fixes two confirmed areas: known Codex reset-credit counts could be overwritten by lower-confidence zero observations during quota refresh and a CPAMP auto-disabled credential could remain disabled after consuming a banked reset; separately, OpenAI-compatible upstreams that do not require an API key were still blocked by CPAMP save, test, and model-discovery flows.
+    Codex reset state now reconciles observations by evidence authority. When positive reset-credit evidence is already known, only a dedicated reset-credit detail response with an explicit empty inventory may clear it; detail failures and timeouts preserve the last trusted state and mark it stale. After a banked reset is consumed, Manager can attempt one-shot recovery of an exactly matched CPAMP-owned cooldown after quota health is verified, while manual or pre-disabled credentials remain protected. No periodic provider polling, background reset-credit queue, or new timer is introduced.
+    OpenAI-compatible providers can now be saved, reopened, tested, queried for models, and health-checked without an API key when the upstream supports anonymous access. CPAMP no longer injects an empty Bearer header or synthesizes a token for anonymous requests. When CPA cannot provide per-key usage accounting for keyless traffic, CPAMP reports statistics as unavailable or partial instead of fabricating zero traffic.
+    Highlights
+    Fixes
+    - Fix Codex reset-credit counts disappearing or remaining incorrect after quota refresh. When positive reset evidence already exists, count-only or usage-summary zero values are no longer authoritative; only an explicit empty inventory from the dedicated reset-credit detail path can clear the known state. (Web / Codex quota)
+    - Preserve the last trusted reset count and detail when the dedicated detail request fails or times out, marking it stale instead of deleting user-visible state. Persisted quota snapshots follow the same evidence-authority rule. (Web / Data consistency)
+    - After banked-reset consumption, reuse the existing one-shot quota refresh to verify recovery. Manager can then request early recovery of an exactly matched CPAMP-owned Codex quota cooldown while continuing to reject manual disables, pre-disabled credentials, and ambiguous ownership. (Web / Manager Server)
+    - Keep the flow event-driven: no provider polling, background reset-credit queue, periodic job, or new timer is added. (Web / Manager Server)
+    - Support saving and editing OpenAI-compatible providers without an API key, correctly representing them as empty api-key-entries or explicit keyless entries that retain CPA-supported per-entry settings such as proxy and weight. (Web / OpenAI compatibility)
+    - Keyless connectivity tests, model discovery, and health checks no longer send an empty Authorization: Bearer header. User-defined headers, per-entry proxy settings, and existing CPA auth-index routing remain intact; editing a real API key invalidates only the stale transient auth-index tied to the previous credential identity. (Web / Authentication)
+    - When keyed and keyless entries coexist, model discovery prefers a real API-key entry and falls back to a configured keyless entry only when no real key is available. (Web / Model discovery)
+    - When CPA cannot account for keyless traffic, CPAMP marks the usage data unavailable; mixed keyed/keyless providers are marked partial. Coverage-aware sorting and detail views preserve that distinction instead of interpreting missing accounting as zero traffic. (Web / Usage integrity)
+    - Keys Count now counts only real non-empty API keys, while keyless routes are labeled explicitly in health checks and provider details. (Web / Provider UI)
+    Upgrade Notes
+    - No database migration or CPAMP configuration change is required.
+    - Existing OpenAI-compatible providers that use API keys retain their previous behavior. Keyless support is limited to OpenAI-compatible providers and does not extend to other provider families.
+    - Keyless requests do not receive a placeholder API key or empty Bearer authentication. Existing custom headers and per-entry proxy settings continue to apply.
+    - The Codex reset-state fix adds no periodic polling. Single-account manual refresh remains event-driven, and bulk/list refresh does not start a background reset-credit refresh queue.
+    - Manager-backed early recovery applies only when CPAMP can prove ownership of the exact cooldown. Deployments without Manager or without sufficient ownership evidence fail closed and retain partial-success semantics.
+    - The full Muse / Meta compatibility baseline remains CPA v7.3.4+; this release does not raise the minimum CPA compatibility baseline.
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.4...v1.14.5
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.5-en.md
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Overview
+    v1.14.5 是 v1.14.4 之后的维护补丁版本，继续遵守 1.x 功能冻结边界，集中修复两个已确认问题：Codex 已知的重置次数可能在额度刷新后被低置信度的零值覆盖、消费重置后由 CPAMP 自动禁用的凭证可能无法及时恢复，以及 OpenAI-compatible 上游即使本身不需要 API Key，也会被 CPAMP 的保存、测试和模型发现流程要求填写占位密钥。
+    Codex 重置状态现在按证据可信度合并：已有正向证据时，只有专用重置详情明确返回空库存才能清除已知次数；详情请求失败或超时时保留已知状态并标记为陈旧。消费重置后，Manager 可在一次性额度验证成功后尝试恢复精确匹配的 CPAMP 自有冷却状态，并继续保护手动禁用或预先禁用的凭证。整个修复不引入周期轮询、后台重置队列或新的定时器。
+    OpenAI-compatible 提供商现在可以真正以无密钥方式保存、重新打开、测试、发现模型并执行健康检查。CPAMP 不再构造空的 Bearer 鉴权，也不会为匿名请求生成虚假 Token；当 CPA 无法为无密钥流量提供按 Key 用量统计时，界面会明确显示统计不可用或部分可用，而不是伪造零请求。
+    Highlights
+    Fixes
+    - 修复 Codex 重置次数在额度刷新后消失或长期停留在错误值的问题：已有正向重置证据时，count-only / usage summary 的零值不再具有清除权限；只有专用详情明确返回空库存才会清除已知重置。（Web / Codex quota）
+    - 专用重置详情失败或超时时保留最近一次可信的重置次数与详情并标记为陈旧，避免一次瞬时失败删除仍有效的用户状态；持久化额度快照采用同一证据规则。（Web / Data consistency）
+    - 在消费 banked reset 后复用一次性额度刷新进行验证；验证恢复后，Manager 可请求提前恢复精确匹配、由 CPAMP 管理的 Codex quota cooldown，并继续拒绝手动禁用、预先禁用或归属不明确的凭证。（Web / Manager Server）
+    - 明确保持事件驱动：没有新增 provider polling、后台 reset-credit queue、周期任务或定时器。（Web / Manager Server）
+    - 支持无需 API Key 的 OpenAI-compatible 提供商保存与编辑，并正确映射为空的 api-key-entries 或带代理 / 权重等 CPA 支持配置的显式无密钥条目。（Web / OpenAI compatibility）
+    - 无密钥连通性测试、模型发现与健康检查不再发送空 Authorization: Bearer，同时保留用户自定义 Header、每条目代理设置与已有 CPA auth-index 路由语义；编辑真实 API Key 时会使旧的瞬时 auth-index 失效。（Web / Authentication）
+    - 当 keyed 与 keyless 条目混合存在时，模型发现优先使用真实 API Key；仅在没有真实 Key 时回退到已配置的无密钥条目。（Web / Model discovery）
+    - CPA 无法统计无密钥流量时，CPAMP 将该统计标记为 unavailable；混合 keyed / keyless 提供商标记为 partial，并在排序和详情中保留覆盖信息，不再把缺失统计解释为零流量。（Web / Usage integrity）
+    - Keys Count 仅统计真实非空 API Key；无密钥路由在健康检查和详情中明确标识。（Web / Provider UI）
+    Upgrade Notes
+    - 无需数据库迁移，也无需修改现有 CPAMP 配置。
+    - 现有使用 API Key 的 OpenAI-compatible 提供商保持原行为；无密钥支持只对 OpenAI-compatible 提供商开放，不扩展到其他 Provider 类型。
+    - 无密钥请求不会自动添加占位 API Key 或空 Bearer 鉴权。用户已配置的自定义 Header 和每条目代理设置继续生效。
+    - Codex 重置状态修复不增加周期轮询。单账号手动刷新仍是事件驱动，批量 / 列表刷新不会启动后台 reset-credit 刷新队列。
+    - Manager-backed 的提前恢复仅作用于能够证明由 CPAMP 管理的精确 cooldown；没有 Manager 或无法证明归属时会 fail closed，并保留部分成功语义。
+    - 完整 Muse / Meta 功能的 CPA 基线继续为 v7.3.4+；本版本没有提高最低兼容基线。
+
+    Full Changelog: https://github.com/seakee/CPA-Manager-Plus/compare/v1.14.4...v1.14.5
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/seakee/CPA-Manager-Plus/blob/HEAD/docs/release-notes/v1.14.5-zh.md
+ReleaseTime: 2026-10-09T08:29:31.0000000Z

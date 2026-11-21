@@ -1,0 +1,140 @@
+Version: 0.15.0
+Installer:
+- Architecture: x86
+  InstallerUrl: https://github.com/mapillary/mapillary_tools/releases/download/v0.15.0/mapillary_tools-0.15.0-win-32bit.exe
+- Architecture: x64
+  InstallerUrl: https://github.com/mapillary/mapillary_tools/releases/download/v0.15.0/mapillary_tools-0.15.0-win-64bit.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    mapillary_tools v0.15.0
+    This release reworks how videos are geotagged from GPX tracks and from their own GPS clocks, adds NMEA logs for
+    videos, native GPS for Novatek-based dashcams, and saved organization names, and makes process report every file
+    it is given instead of leaving some out silently. Several fixes change results or exit codes: read
+    Backward compatibility before upgrading scripts.
+    A new command reference lists
+    what each command does, its options, and common pitfalls (#936, #937).
+    Important changes
+    - FFmpeg 9: video sampling works again. FFmpeg 9 removed an option that sample_video and video_process
+      used, so they could not extract any frame (#829).
+    - LabPano videos are timed correctly. Their GPS timestamps were read about 10 years off, which crashed the
+      upload of a LabPano video geotagged from a GPX and stamped its samples with dates in 2016 (#828, #846). Their GPS
+      clock is now read at its real rate, about 1.14 GPS seconds per second of video (#889). Re-sample LabPano videos
+      sampled with an older version: their frames can move by up to about 1 km.
+    - GPX tracks are placed on videos where they belong. A GPX is synced to the start of the video by the
+      video's own GPS clock, at the clock's real rate (timelapses included), or by --video_start_time; otherwise it
+      is assumed to start with the video. The creation time of a video, which comes from the camera's clock, is never
+      used. Before, a GPX could land minutes off on a GoPro whose first GPS fix comes late, or at the wrong times on a
+      timelapse (#832, #847, #849, #852–#859, #888, #889, #939, #944). Distance sampling now follows the GPX too,
+      instead of ignoring it (#841).
+    - process no longer leaves files out silently. Every file given gets an entry in the description file. Files
+      that no geotag source can read, and files named on the command line that are not supported images or videos,
+      now fail, and process exits with code 6 (#868, #890, #897, #900).
+    -  --video_geotag_source alone now processes images too. process_and_upload DIR --video_geotag_source X
+      also uploads the images in DIR, including the frames left there by an earlier video_process (#865).
+    - A gap of more than an hour in a GPX or NMEA track counts as outside it. Images and videos recorded in such a
+      gap, such as between two trips in one file, are no longer geotagged across it
+      (MAPILLARY_TOOLS_MAX_GPX_GAP_SECONDS sets the limit) (#874, #899, #916).
+    New
+    - NMEA logs for videos: --video_geotag_source nmea, or --geotag_source nmea --geotag_source_path LOG
+      (#869, #870). NMEA logs from many more loggers are read: see NMEA below.
+    - Novatek-based dashcams read natively (Viofo A129 and A139, Vantrue N4, Anker Roav C1 Pro, Rove R2-4K Pro,
+      AZDome GS63H), so they can be distance-sampled without ExifTool (#843). GKU D900 and Abask A8 dashcams are read
+      through ExifTool in process (#878).
+    - Saved organization names: upload with --organization_key ID --organization_name NAME once, then with
+      --organization_name NAME. authenticate lists and deletes them (#932).
+    - check_upload_history tells whether processed files were uploaded from this computer before, without
+      logging in; process --process_report_path writes a JSON report of the files found and skipped, and of the
+      geotagging warnings, for applications that run process (#830, #945).
+    - A GPX can rescue a video whose own GPS is unusable (empty or rejected as noise), such as a GoPro HERO12
+      without GPS (#831).
+    Changes and fixes by area
+    Videos and GPX/NMEA tracks
+    - Tracks that miss the video, as placed on its timeline, fail instead of passing silently, and when no other
+      source geotags the file, that miss is the error reported, saying by how much (#848, #938). In process, a track
+      is cut to the video when the video's clock places it (#860).
+    - A track assumed to start with a video without GPS gets a MapillaryGPXAlignmentWarning when the two differ in
+      length by more than a minute. video_process refuses a track that runs on past the video for longer than the
+      video lasts, unless --video_start_time places it, and process refuses a track of a day or more on a much
+      shorter video (#861, #884, #944, #948).
+    -  --interpolation_offset_time and --interpolation_use_gpx_start_time apply to videos geotagged from a track
+      (#851, #853, #885).
+    Video GPS and clocks
+    - CAMM GPS times, GoPro GPS9 accuracy (MAX 2, HERO11 and newer) and ExifTool tracks are read more carefully:
+      noisy GPS9 tracks are rejected through ExifTool as they are natively, and ExifTool points timestamped far from
+      the rest of the track, such as a stale first fix, are left out (#823, #840, #855, #858, #876, #877, #930).
+    - A video's GPS timestamps are judged on their own: placeholder dates (before 2016) and dates more than a day ahead
+      are left out, and the creation time is no longer used to tell them apart. A GPX of another day now misses a
+      noisy GoPro video instead of being synced from its start (#939).
+    - A video whose GPS points are too far apart in time to store fails on its own, in process and in the upload,
+      instead of stopping the whole upload (#928, #929, #931).
+    Video sampling (sample_video, video_process)
+    - A video that cannot be sampled fails, instead of the command exiting 0 with no frames. The other videos are
+      still sampled and processed (#839, #887).
+    - Interval sampling: GoPro MAX .360 videos (two video streams) are sampled right; frames are geotagged by the
+      video's own GPS or along a GPX or NMEA track; frames outside the track are left out (#854, #896, #898, #903).
+    - Anamorphic videos give frames at their displayed aspect ratio; samples of videos with the same name in
+      different folders, and of symlinked videos, are matched to the right video (#881, #910, #934).
+    process inputs and geotag sources
+    -  --video_geotag_source video|camm|gopro|blackvue read the video's own GPS, as documented; they were broken in
+      0.14.x (#891, #905). exiftool_xml reads %g.xml by default, and the exiftool_runtime pattern works for
+      videos, e.g. for Insta360 videos stitched by Insta360 Studio (#892, #893, #906, #908).
+    - Sidecar and companion files named on the command line (.gpx, .xml, .thm, .lrv and others) are skipped
+      with a warning (#920, #925). --filetypes keeps videos of other types out (#875).
+    Images
+    - Placeholder capture dates and dates before 1970 are rejected, and so are EXIF GPS minutes or seconds over 60 by
+      the built-in EXIF reader (#824, #879, #880, #911, #918).
+    GPX and NMEA files
+    - GPX files are read as UTF-8 on every platform, once per run (much faster for many videos on one large GPX).
+      A GPX file whose track points have no time that can be read fails with an error that says why, instead of
+      "Stationary video" (#912, #927, #933, #935).
+    - NMEA: fixes after midnight are dated right; malformed, cut-short or non-text sentences are skipped with one
+      warning; logs with a byte order mark, NUL padding, or sentences without checksums or optional fields are read;
+      files that are not text are rejected at once (#894, #895, #901, #902, #909, #913, #915, #919, #923, #924).
+    Upload and others
+    - upload caches the checksums of the files, so it skips already uploaded files without reading them again, and
+      shows a progress bar while it computes checksums. Clearing its cache of expired entries takes under a second
+      instead of minutes (#941, #942, #943).
+    - Corrupt upload cache databases no longer abort the upload (#813). Messages of worker processes are printed once
+      (#886).
+    Backward compatibility
+    No command-line option was removed, and Python 3.9 or newer is still required. These changes can affect existing
+    scripts and results:
+
+    | Change                                                                                                                                                                                                                                                                                                                                                                                               | What to do                                                                                                                                               |
+    | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | More files fail in process (exit code 6): files no geotag source can read (e.g. videos with --geotag_source exif), unsupported files named on the command line, placeholder or pre-1970 image dates, EXIF GPS minutes or seconds over 60 (unless ExifTool geotags the image instead), GPX tracks that miss the video, and GPX tracks of a day or more on a video without GPS less than half as long. | Fix the inputs, or add --skip_process_errors to upload the rest.                                                                                         |
+    | The description file has an entry, possibly an error entry, for every file given.                                                                                                                                                                                                                                                                                                                    | Tools that read it should expect error entries for videos and unsupported files.                                                                         |
+    | video_process and sample_video fail (exit code 7) for a video that cannot be sampled, such as one without usable GPS, instead of exiting 0 with no frames.                                                                                                                                                                                                                                           | Add --skip_sample_errors to skip such videos.                                                                                                            |
+    | With only --video_geotag_source, images are processed and uploaded too.                                                                                                                                                                                                                                                                                                                              | Pass the videos themselves, or --filetypes video.                                                                                                        |
+    | Times in a GPX or NMEA gap of more than an hour are outside the track.                                                                                                                                                                                                                                                                                                                               | Set MAPILLARY_TOOLS_MAX_GPX_GAP_SECONDS.                                                                                                                 |
+    | --interpolation_offset_time moves videos geotagged from a track too, not only images.                                                                                                                                                                                                                                                                                                                | Process images and videos separately if they need different offsets.                                                                                     |
+    | Distance sampling with a GPX picks frames along the GPX. For a video without GPS, a track is assumed to start with the video in every kind of sampling: interval sampling no longer places it by the creation time, and refuses a track more than twice as long as the video, as distance sampling does.                                                                                             | Give --video_start_time, and act on the MapillaryGPXAlignmentWarning when the track and the video differ in length.                                      |
+    | Frames sampled by an older version from LabPano videos, or interval-sampled along a GPX, have different times now. video_process skips videos it sampled before, so the fixes do not reach them on their own.                                                                                                                                                                                        | Re-sample them with --rerun. Re-run process on LabPano videos too: description files written by older versions carry their GPS times about 10 years off. |
+    | In process, an exiftool_xml pattern now wins over --geotag_source_path, and exiftool_xml reads %g.xml by default.                                                                                                                                                                                                                                                                                    | Check commands that combine them.                                                                                                                        |
+    | Noisy GPS of GoPro GPS9 cameras read through ExifTool is now rejected, as it is natively.                                                                                                                                                                                                                                                                                                            | Geotag such videos from a GPX.                                                                                                                           |
+    | Novatek dashcams are read natively; their point times can differ slightly from ExifTool's.                                                                                                                                                                                                                                                                                                           | None.                                                                                                                                                    |
+    | The deprecated MAPMetaTags field was removed from the description schema: upload rejects a description file that has it (exit code 15). The schema now says that the point times in MAPGPSTrack are Unix time, as they were always read (it said GPS epoch).                                                                                                                                         | Remove the field from generated description files, and write Unix times.                                                                                 |
+    | The upload history of older versions is kept, and unchanged files are skipped. But it is keyed by the video file, and by the set of images in each sequence: a video uploaded before with a wrong track is skipped as uploaded, while a sequence that now has other images (because some now fail, for example) counts as new and is uploaded again.                                                 | Upload corrected videos with --reupload. Before uploading folders that an older version uploaded, run check_upload_history, which tells file by file.    |
+    | Error types changed for some failures: e.g. a GPX without readable times fails as MapillaryInvalidGPXError, a video without GPS points as MapillaryVideoGPSNotFoundError (both were "Stationary video"), and a file that a GPX missed as MapillaryOutsideGPXTrackError, rather than with the error of a later source.                                                                                | Update tools that match error types.                                                                                                                     |
+    | --organization no longer abbreviates --organization_key (it is ambiguous with --organization_name).                                                                                                                                                                                                                                                                                                  | Spell out --organization_key.                                                                                                                            |
+    | Programs that read the upload progress events (IPC) get the same events, and can get a new failure type, GPSPointsTooFarApartError, for a video whose points are too far apart in time.                                                                                                                                                                                                              | Handle the new type.                                                                                                                                     |
+
+    Unchanged: exit code values, the config file (profiles written by this version, with saved organization names,
+    still work with v0.14.7), and the names and folders of sampled frames.
+    Known issues
+    - video_process DIR --video_geotag_source gpx (or nmea) does not find the track beside each video by the
+      default pattern, and fails. Give the pattern, --video_geotag_source '{"source": "gpx", "pattern": "%g.gpx"}',
+      or one track with --geotag_source_path. process is not affected.
+    - With ExifTool installed, an image whose EXIF GPS minutes or seconds are over 60, which the built-in reader
+      rejects, is geotagged by the default ExifTool fallback at a wrong position, without a warning.
+    - Uploading a folder of zip files needs a description file: pass the one of the zipped images with --desc_path.
+    - video_process does not read GKU D900 / Abask A8 GPS (only process does, through ExifTool).
+    - With --filetypes, the exiftool_runtime, exiftool_xml and gpx sources still geotag videos of other types.
+    - ExifTool XML tracks of CAMM videos are read 18 s late (GPS time against UTC).
+    - UTF-16 NMEA files (such as those written by Windows PowerShell 5.1) are rejected.
+    Full Changelog: https://github.com/mapillary/mapillary_tools/compare/v0.14.7...v0.15.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/mapillary/mapillary_tools/releases/tag/v0.15.0
+ReleaseTime: 2026-11-04T14:50:50.0000000Z

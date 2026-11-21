@@ -1,0 +1,17 @@
+Version: 1.58.2
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/codedev-david/termpolis/releases/download/v1.58.2/Termpolis.Setup.1.58.2.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The memory pointer in a hand-launched Claude is sent again
+    When you type claude into a Termpolis terminal, Termpolis types a one-line memory pointer into Claude and presses Enter. In two cases the line was left unsent in Claude's input.
+    Fixes
+    - Bypass permissions mode. Claude Code's footer "⏵⏵ bypass permissions on (shift+tab to cycle)" was taken for the Bypass Permissions warning dialog. Termpolis then thought Claude was waiting for an answer and never pressed Enter. The footer no longer counts as a question. The warning dialog itself still does.
+    - Branch names with a slash. In a prompt that shows only the repo and branch, such as my-repo (feature/login) $, the /login) part was read as the terminal's folder. That wrong folder was used in the memory pointer, the git status dot and the Git panel. A folder is now read only where a path starts: at the start of the line, after a space, or after user@host:.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/codedev-david/termpolis/releases/tag/v1.58.2
+ReleaseTime: 2026-11-10T19:02:18.0000000Z

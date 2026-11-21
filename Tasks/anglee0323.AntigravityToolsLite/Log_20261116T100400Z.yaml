@@ -1,0 +1,18 @@
+Version: 4.10.17
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/anglee0323/agy-switch/releases/download/v4.10.17/agy-switch-4.10.17-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 配额查询改用 Antigravity 客户端实际使用的 daily-cloudcode-pa.googleapis.com 优先，沙箱和生产端点作为回退。只返回 Claude/GPT 组的 HTTP 200 响应仅作部分兜底，不再与其它端点环境的数据合并成一份完整观测。
+    - 请求 User-Agent 改为 antigravity/hub/<版本> (os_type=…; arch=…)。服务端不再按旧客户端降级，Gemini 4 Argon、Hydrogen、Carbon 的模型列表和第三个配额组（Gemini 4 Argon 周额度）会正常返回。
+    - 模型目录新增 Gemini 4 Argon（Low/Medium/High），Orchestrator (Argon) 与 Orchestrator (Carbon) 归到对应模型的额度；-disabled 模型显示「—」，不再借用共享池百分比。
+    - 修正 5 小时与周配额的取值：模型上报的 primary_quota 若对应周桶的重置时间，5H 视图不再把它当成 5 小时额度，避免显示错误的百分比和倒计时。5H 视图只显示五小时额度，周配额视图只显示周额度。
+    - 修复「周期变化」弹窗：前端读取的字段与后端返回不一致，弹窗此前一直为空。现在按账号分组显示周期记录、检查点、消耗金额和环比。
+    - 估值校准增加保护：冷启动和离群样本不再写入参考上限，异常环比不再显示。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/anglee0323/agy-switch/releases/tag/v4.10.17
+ReleaseTime: 2026-11-16T09:49:43.0000000Z

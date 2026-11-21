@@ -1,0 +1,27 @@
+Version: 0.8.0
+Installer:
+- InstallerUrl: https://download.kde.org/stable/rkward/0.8.0/rkward-0.8.0-x86_64.exe
+  AppsAndFeaturesEntries:
+  - DisplayVersion: releases/0.8.0
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Fixed: Crash when trying to edit a data.frame containing columns that are not vectors
+    - Fixed: Basic statistics would refuse to "overwrite file", even if saving to file was unchecked
+    - Changed: Status indicator for preview windows (updating/ready) is less obstrusive
+    - Added: Ability to open PDF documents inside the RKWard window, and associated R function rk.show.pdf()
+    - Fixed: Add breeze icons as a fallback on systems that use a different icon theme (fixes missing icons)
+    - Added: Setup dialog includes setting to select a different R installation
+    - Added: Command line option "--setup" to force (re-)initialization as if a new version of RKWard had been installed
+    - Fixed: R functions loadhistory(), savehistory(), and timestamp() broken
+    - Changed: R shared library is now loaded, dynamically, rather than linked at compile time.
+               This allows more flexibility on which R version to use at runtime, esp. in the context of AppImage binaries
+    - Fixed: References to the package cairoDevice (removed on CRAN) have been replaced with Cairo
+    - Fixed: Creating new output window from the UI would sometimes show empty window
+    - Fixed: Better support for running from non-standard paths on Linux (e.g. user-local installation in home dir)
+    - Fixed: Added REUSE license information where missing
+    - Fixed: Handling of carriage returns in R Console window (used in progress bars, importantly)
+    - Fixed: Crash when renaming top level object from context menu
+    - Changed: First version to be based on Qt6/KF6
+ReleaseTime: 2024-07-28
