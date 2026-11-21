@@ -1,0 +1,26 @@
+Version: 0.0.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/mouzhai163/mz-browser/releases/download/v0.0.3/MZ-Browser_0.0.3_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增：批量创建环境
+    - 侧边栏“创建环境”下面新增“批量创建环境”按钮：一次最多 25 个，可以设名称前缀、分组和代理
+    - 每个环境各自从设备样本库抽一台设备：显卡、核心数、内存、屏幕、字体、设备名和 MAC 都不相同，同一批环境不会因为指纹相同被关联
+    - 代理按勾选顺序一个环境一个；代理比环境少时先提示，由你决定多选代理还是仍然创建
+    - 创建后环境列表自动刷新
+    - 新建环境页去掉了原来左侧不好找的数量滑块，那里一次只建一个
+    - HTTP 接口新增 mz_batch_create_environments，和对话框用同一套逻辑；代理不够时需要传 allow_fewer_proxies: true
+    修复
+    - 语言跟随 IP 支持全部国家和地区（#5）：以前只认识 18 个国家，土耳其、荷兰、波兰、越南、泰国、中东、非洲、南美等地的 IP 推断不出语言，环境直接拒绝启动
+    - HTTP 接口：页面里有 about:blank 等空白内嵌框架时（广告、统计、验证码、支付控件常见），整个标签页的页面操作都被拒绝，连导航离开都不行
+    - HTTP 接口：页面或框架不在授权范围时返回 403，不再是 500
+    - 用本地代理（Mihomo 节点）创建环境时，绑定可能失败
+    - 环境列表里代理提示框的国家标签显示成一条白块，看不到内容
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mouzhai163/mz-browser/releases/tag/v0.0.3
+ReleaseTime: 2026-11-21T08:18:26.0000000Z
