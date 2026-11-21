@@ -3,7 +3,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator   = 'LastModified'
-  ReadVersion = { param($Path) (Read-FileVersionFromExe -Path $Path).ToString() -replace '(\.0)+$' }
-})
+    Validator   = 'LastModified'
+    ReadVersion = { param($Path) (Read-FileVersionFromExe -Path $Path).ToString() -replace '(\.0)+$' }
+  })
 $this.CompleteInstallerUpdates($Result)

@@ -3,8 +3,8 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'ETag'
-  LegacyState = @{ ValidatorField = 'ETag' }
-  ReadVersion = { param($Path) Read-ProductVersionFromMsi -Path $Path }
-})
+    Validator   = 'ETag'
+    LegacyState = @{ ValidatorField = 'ETag' }
+    ReadVersion = { param($Path) Read-ProductVersionFromMsi -Path $Path }
+  })
 $this.CompleteInstallerUpdates($Result)

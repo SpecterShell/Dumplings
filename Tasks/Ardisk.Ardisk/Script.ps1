@@ -6,8 +6,8 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'ContentLength'
-  LegacyState = @{ ValidatorField = 'ContentLength' }
-  ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
-})
+    Validator   = 'ContentLength'
+    LegacyState = @{ ValidatorField = 'ContentLength' }
+    ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
+  })
 $this.CompleteInstallerUpdates($Result)

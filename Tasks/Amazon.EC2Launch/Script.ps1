@@ -54,9 +54,9 @@ if ($Global:DumplingsPreference.Contains('Force')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture           = 'x64'
-      InstallerUrl           = $Uri1
-      InstallerSha256        = $this.CurrentState.InstallerSha256
+      Architecture    = 'x64'
+      InstallerUrl    = $Uri1
+      InstallerSha256 = $this.CurrentState.InstallerSha256
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -98,9 +98,9 @@ if ($this.Status.Contains('New')) {
     $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
     # Installer
     $this.CurrentState.Installer += [ordered]@{
-      Architecture           = 'x64'
-      InstallerUrl           = $Uri1
-      InstallerSha256        = $this.CurrentState.InstallerSha256
+      Architecture    = 'x64'
+      InstallerUrl    = $Uri1
+      InstallerSha256 = $this.CurrentState.InstallerSha256
     }
     # Mode
     $this.CurrentState.Mode = $false
@@ -200,9 +200,9 @@ if ($ETag -in $this.LastState.ETag) {
 
         # Installer
         $this.CurrentState.Installer += [ordered]@{
-          Architecture           = 'x64'
-          InstallerUrl           = $Uri1
-          InstallerSha256        = $this.CurrentState.InstallerSha256
+          Architecture    = 'x64'
+          InstallerUrl    = $Uri1
+          InstallerSha256 = $this.CurrentState.InstallerSha256
         }
         # Mode
         $this.CurrentState.Mode = $false
@@ -234,9 +234,9 @@ if ($ETag -in $this.LastState.ETag) {
       $this.Log("${Uri2} doesn't exist, fallback to ${Uri1}", 'Warning')
       # Installer
       $this.CurrentState.Installer += [ordered]@{
-        Architecture           = 'x64'
-        InstallerUrl           = $Uri1
-        InstallerSha256        = $this.CurrentState.InstallerSha256
+        Architecture    = 'x64'
+        InstallerUrl    = $Uri1
+        InstallerSha256 = $this.CurrentState.InstallerSha256
       }
       # Mode
       $this.CurrentState.Mode = $false
