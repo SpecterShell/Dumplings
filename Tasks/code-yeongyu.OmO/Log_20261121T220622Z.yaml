@@ -1,0 +1,780 @@
+Version: 5.1.81
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.81/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.81/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changed
+    - The programming skill's language gate now routes rendered web work (.html, .css, .jsx, .tsx, .vue, .svelte, .astro, or any task that ships a UI) to the frontend skill before the first line of UI code. It tells the agent to take the look from the frontend skill's references when there is no design direction (no named brand, reference, DESIGN.md, or existing styled UI to match), and to finish only after visual-qa passes on the rendered surface. (#14604, fixes #14602)
+    Fixed
+    - Memory sync: a sign-out now retires the trust pin of the account it signs out of, so omo account show --account <id> no longer answers joined once that sign-in's keys are gone. Plain omo account forget (the desktop's sign-out of a CLI-item session) used to retire nothing. It now reads the stored sign-in first to find its account. A stored sign-in that cannot be read is still deleted and its pin is left; one warning line is printed only after the delete succeeds. A forget that fails on a locked store reports only that error (#12308, #12384). (#13642) (#14533)
+    - Memory sync: some sign-ins earned their pin before omo sync recorded their account. On a refused refresh, plain forget, forget --device and adopt --replace, omo now asks the service for that account, as omo logout already did, and retires the pin when the service names it. It asks only while a live pin exists and the access token has not expired; on a refused refresh, the token may still be valid in the 30 s before expiry, when the refresh runs. An expired token is never sent. A pin whose account stays unknown is kept, and omo prints one line naming omo account retire-sync --account <id> to clear it, because omo account show keeps answering joined for it (#12383, #13662). (#13642) (#14533)
+    Added
+    - omo sync status (and --json) shows this device's memory sync state: the signed-in account, whether this device has joined and whether its sync switch is on, the account's devices with their sync membership and last-seen time, pending join requests, and whether an engine is running on this machine. It writes no sync state, prints no key material, and each section reports its own failure instead of failing the command. (#14437, fixes #14435) (#14533)
+    - 097ce1ebed Merge pull request #14604 from code-yeongyu/skill/programming-frontend-pointer
+    - e9aa3b02e7 docs(programming): keep an existing styled UI as design direction; fix the row reference for non-script files
+    - 9e448c6c35 Merge pull request #14576 from code-yeongyu/ci/platform-red-first-red
+    - a4edd85601 docs(changes): fragment for #14604
+    - eaef6a31fd docs(programming): route rendered web work to the frontend and visual-qa skills (#14602)
+    - a321e72973 Merge pull request #14580 from code-yeongyu/train/14555-windows-platform-red
+    - 7fa1efbdc0 Merge pull request #14575 from code-yeongyu/ci/speed-critical-path
+    - 9b5c5ba40a ci(platform-red-tracker): a passing macOS status job stays success when macos-combined ran
+    - 013af34a38 ci(knip): declare jq, which script/platform-jobs.test.ts runs
+    - ea1a2fedff ci(platform-red-tracker): a macOS status job proves only what macos-combined ran
+    - 9312ca70da Merge remote-tracking branch 'origin/fix/14555-sync-status-unreadable-pin' into HEAD
+    - 5d841a24c6 Merge remote-tracking branch 'origin/fix/inactive-backlog-windows-ebusy' into HEAD
+    - 784106c771 Merge remote-tracking branch 'origin/fix/14556-win-service-auth' into HEAD
+    - c2d9e6cce3 ci(platform-red-tracker): read the platform job classification from one jq file
+    - b0a5e836a0 ci(platform-red-tracker): name the merge whose dev run first failed each macOS/Windows job
+    - d50841a3b2 test(memory-sync): run the search-permission case of sync status only where mode bits exist
+    - 01cb170e19 style(service-auth): format the platform-gated tests
+    - 0eaecf33d7 Merge pull request #14533 from code-yeongyu/train/memsync-cli-4
+    - 88b8a40602 fix(thread): finalize seeding statements so gateway tests release the db on Windows (#14555)
+    - 13d18f61d5 chore(train): regenerate bundles after merging dev 09342bcdc5 (v5.1.80 source state)
+    - 9e5b23c93c test(service-auth): run the real Linux state file only on a POSIX host (#14556)
+    - 99bed2ebb8 Merge dev 09342bcdc5 (v5.1.80 source state) into train/memsync-cli-4
+    - 09342bcdc5 Merge pull request #14524 from code-yeongyu/release/v5.1.80-source-state
+    - 10d8c5f2ca chore(train): regenerate bundles after merging dev 8032185db8 (train 11)
+    - eb53e9cbd1 Merge dev 8032185db8 (train 11) into train/memsync-cli-4
+    - 8032185db8 Merge pull request #14537 from code-yeongyu/release-train/omo-20261121-thread-train-11
+    - 8a8311a97e docs(changes): fold the train members' fragments into one train fragment (14533.md)
+    - 60411effb7 docs(changes): one package-log block per log in the train 11 fragment (#14537)
+    - 7e07cbfd5e docs(changes): fold the member fragments into the train 11 fragment (#14537)
+    - ac9ae578f2 Merge PR#14521 @b73da831ba into thread train 11
+    - c63476b07d Merge PR#14482 @dd22c8ef7b into thread train 11
+    - d3520ca33e Merge PR#14487 @00b14e9845 into thread train 11
+    - d1f5139d52 Merge PR#14480 @fba8b162b5 into thread train 11
+    - c06ef71e6b Merge PR#14502 @8790887279 into thread train 11
+    - 961948d55d Merge PR#14514 @0b74338b74 into thread train 11
+    - d604802113 Merge PR#14416 @74b903a2d2 into thread train 11
+    - 29bc0b11e5 Merge PR#14513 @c00e6420f5 into thread train 11
+    - 74dff18c7e Merge PR#13640 @ee29e3c501 into thread train 11
+    - b1391d5936 Merge PR#14518 @0e3d300fdd into thread train 11
+    - f6e252240d Merge PR#14536 @45942f1199 into thread train 11
+    - 04a66b86bd Merge PR#14532 @96d4e9b7f9 into thread train 11
+    - bdb3b0e656 Merge pull request #14517 from code-yeongyu/release-train/omo-20261121-thread-train-10
+    - 45942f1199 test(thread): settle the post-dispose call with settled(), not expect().rejects (gateway matcher ban)
+    - 96d4e9b7f9 chore(knip): drop the removed liveRecordRpcChildPids from the pre-existing unused-export list (#14529)
+    - 268368e4f9 chore(bundles): regenerate omo.js, omo-wake.js and thread-sdk for the store dispose fix (#14535)
+    - 485b5ea8b0 add changelog fragment for #14536
+    - 682d026123 fix(thread): gateway store dispose lets in-flight calls settle before it closes the worker (#14535)
+    - 96d40926b9 docs(changes): #14437 changelog names service-auth/devices.ts listLiveDevices (review LOW L1)
+    - a7645299fa chore(train): regenerate bundles for memsync-cli train v4 (#14437, #13642, #14434)
+    - 7e3e132ec2 train: merge #14434 (81455eaf478ddeaca735cca7f5b162ce4082230b)
+    - 0a10f1a0a2 train: merge #13642 (832512007f3a3d958e4da91e95770de8db10c6e5)
+    - 310e3d24b6 train: merge #14437 (dc833190ecf435c08958da18c9b1c0d6e73e680e)
+    - dd22c8ef7b style(thread): format the rematch regression test
+    - b848160e4c fix(thread): rethrow only model_state_unavailable as the engine's refusal on a failed rematch (review of #14482)
+    - 00b14e9845 fix(thread): keep the #14270 misplaced-file hint when a device answered a silent lookup (review L1 of #14487)
+    - 732f3d36dd Merge remote-tracking branch 'origin/dev' into fix/14477-silent-probe-reason
+    - 65399addb3 fix(thread): keep the engine's set_model refusal on a failed rematch and document both new outcomes (review L1, L2 of #14482)
+    - fba8b162b5 build(service-auth): regenerate bundles for the desktop legacy label rename (#14475)
+    - 0267aa58d0 Merge remote-tracking branch 'origin/dev' into fix/14445-set-model-provider-suffix
+    - 2aa99a81a8 Merge remote-tracking branch 'origin/dev' into fix/14475-desktop-legacy-device-label
+    - dc833190ec Merge origin/dev 4a8c752c into feat/memsync-sync-status-verb
+    - 0e3d300fdd chore(omo-native): regenerate service-auth at the train 9 top (collapse_key from #14431 reaches the service-auth bundle)
+    - b73da831ba changelog: fragment for #14521
+    - c9fe02029d test(thread): type the unnamed-row assertions and format
+    - c00e6420f5 build(omo-sdk): regenerate the omo SDK bundle
+    - a01b6b5bd4 Merge remote-tracking branch 'origin/dev' into fix/14389-reland-ultrawork-arming
+    - a8b7054435 fix(omo-sdk): the sign-in refusal's next action names no command
+    - c7195fff86 fix(thread): name an unnamed row from the folder its path names
+    - 445942cd1c fix(thread): resolve a listing row's device by exact id only (#14305)
+    - 74b903a2d2 Merge remote-tracking branch 'origin/dev' into refactor/fleet-hint-omo-relay
+    - 68f9d13768 test(remote): pin candidateLines' return value; reword a title off the deleted resolver
+    - 92d14db027 docs(changes): fold the #14469 and #14431 fragments into the train 9 fragment (#14518)
+    - 4fd3aa2539 docs(changes): fold the #14440 fragment into the train 10 fragment (#14517)
+    - 593c73e826 chore(bundles): regenerate generated bundles once at the train 9 top
+    - 920dc692d2 Merge remote-tracking branch 'origin/dev' into wt/13640-linux-state-file
+    - db27bacc68 Merge PR#14440 @2e376e8eef into thread train 10
+    - f63b1810e4 Merge remote-tracking branch 'origin/dev' into fix/11632-dag-cases-in-memory-journal
+    - 0498050eaa test(thread): an unnamed row names its path's folder (RED)
+    - 3fc29b2392 test(thread): a listing row's device resolves by exact id only (RED)
+    - b1f1ace736 Merge dev (after #14501) into train 9
+    - 4a8c752c6e Merge pull request #14501 from code-yeongyu/chore/regen-generated-14468
+    - d2f1b014ef docs(changes): fragment for #14514
+    - a3929784df docs(changes): fragment for #14513
+    - 8f064be19e build(omo-sdk): regenerate bundles on dev; drop four unused imports in account-cli
+    - 6c2d88d25f Merge dev @486d98b992 (train 8 #14415) into the review follow-up
+    - be08f4a95d chore(bundles): regenerate on top of dev 486d98b992; changelog fragment (#14468)
+    - 21695b0c99 feat(omo-sdk): the sign-in verb answers a side-effect-free --check probe
+    - f53f3823f1 feat(omo-sdk): the sign-in verb takes its options as one JSON line on stdin
+    - 02ec428161 build(omo-sdk): regenerate service-auth and the omo SDK bundle; docs
+    - 5f2eb92b4b style(omo-sdk): format
+    - b8f814338e feat(omo-sdk): sign in by device code and rename a device
+    - 252aed4681 test(omo-sdk): device-code sign-in verb, SDK signIn and devices.rename (RED)
+    - 6960e48822 Merge remote-tracking branch 'origin/dev' into chore/regen-generated-14468
+    - 4ba1d78b67 Merge dev (after #14415) into train 9
+    - 486d98b992 Merge pull request #14415 from code-yeongyu/release-train/omo-20261119-thread-train-8
+    - bfd9e5c3be Merge pull request #14467 from code-yeongyu/fix/14465-brand-names-plugin
+    - 6e91ae75cf Merge remote-tracking branch 'origin/dev' into wt/13640-linux-state-file
+    - cefb8a80fa Merge #14431 (d36dacd7fa) into train
+    - d4f483c5b0 Merge #14469 (726a3f8e8e) into train
+    - 02bc927f00 chore(bundles): regenerate on top of dev 3fe56c0668 (#14468)
+    - 2be368c404 Merge remote-tracking branch 'origin/dev' into chore/regen-generated-14468
+    - baa0266737 Merge remote-tracking branch 'origin/dev' into fix/11632-dag-cases-in-memory-journal
+    - 3fe56c0668 Merge pull request #14495 from code-yeongyu/fix/11632-scheduler-test-in-memory-journal
+    - 80dd9311cd add changelog fragment for #14502
+    - fa645fb693 chore(bundles): regenerate the stale generated bundles and bundle inputs on dev (#14468)
+    - f949b96fca chore(changes): fold #11624's fragment into #14495 (one fragment per PR)
+    - 52e9574915 test(dag): journal the e2e ordering and missing-skill cases in memory (#11632)
+    - 2e3773179c test(dag): build in-memory store paths with the file store's own builder; refresh the timeout rationale
+    - e91b1516fd style(dag): bun fmt the in-memory store, store contract and store validator exports
+    - 018ec10f56 add changelog fragment for #14495
+    - 916c8b4937 chore(knip): drop the stale dagKeyHash pre-existing row; the in-memory store imports it
+    - 9e1a91a9dc test(dag): journal the scheduler cases in memory (#11632)
+    - 4a50ec3a30 Merge remote-tracking branch 'origin/fix/11621-infra-retry-in-memory-journal' into fix/11632-scheduler-test-in-memory-journal
+    - dc3a1b9aaa Merge pull request #14486 from code-yeongyu/fix/14470-serial-reads-causal
+    - 648b521f0a build: regenerate the generated artifacts after merging dev (bundle inputs, service-auth, extensions, codex install)
+    - 67bbff2b8a Merge origin/dev into fix/14465-brand-names-plugin; regenerate plugin/scripts/install.mjs (Set B)
+    - 806fb95c3a Merge remote-tracking branch 'origin/dev' into wt/13640-linux-state-file
+    - dd7d69f691 Merge dev @0b56df2abb into thread train 8
+    - a31c37df47 test(thread): the unnamed-row fixture names its folder in path (#14415)
+    - d36dacd7fa Merge remote-tracking branch 'origin/fix/14428-inactive-target-backlog' into fix/14428-thread-backlog-drain
+    - 726a3f8e8e test(omo-native): pin the second store-ops isClaimantDead call site (#14466 review)
+    - 0b56df2abb Merge pull request #14448 from code-yeongyu/fix/14430-error-streak-alert
+    - 3207ee96ee Merge remote-tracking branch 'origin/fix/14428-inactive-target-backlog' into fix/14428-thread-backlog-drain
+    - 259725feb8 Merge dev @af161f9a4d (#14458) into thread train 8
+    - 145fe6c74e test(thread): seed the inactive-target backlog in one transaction instead of per-test timeouts (#14466)
+    - af161f9a4d Merge pull request #14458 from code-yeongyu/fix/14429-reopen-unknown-session
+    - a2842eb0e8 docs(changes): add fragment for #14487
+    - 649186c0df fix(thread): preserve silent lookup reasons
+    - 80d5731668 fix(thread): restore model state when the thinking suffix is refused
+    - 1f7936b23f test(thread): serial-reads test asserts the order causally, not by one sample (fixes #14470)
+    - 870abf92c3 test(thread): reproduce partial switch on thinking refusal
+    - 695635b538 test(thread): reproduce dropped silent lookup reasons
+    - 1acefa9a48 docs(changes): fragment for #14482
+    - 6b3405f364 Merge origin/dev into fix/14465-brand-names-plugin
+    - 3d4af11b30 fix(thread): apply model thinking suffixes and identify absent providers
+    - aca7ff7692 docs(changes): #14480
+    - 0d2e6f13c7 fix(service-auth): rename a desktop-generated legacy device label on refresh (#14475)
+    - abf0a19c2d test(service-auth): a desktop-generated legacy label is renamed on refresh (#14475, RED)
+    - 5ac71bd3e3 Merge #14469 (4a60b503bd) into #14431: expired and dead-claim rows leave the per-lane backlog (#14466)
+    - 3663db8533 test(thread): reproduce target model suffix and provider misses
+    - 2c9ce28ff7 fix(thread): listing names an unreadable store in backlog_error; tool-level collapsed test (#14431 review 3)
+    - ba35e2e0b8 Merge remote-tracking branch 'origin/dev' into fix/14428-thread-backlog-drain
+    - f22daf7d4c fix(thread): listing survives an unreadable store, an empty lane fits any accepted delivery, absorbed repeats say collapsed (#14431 review 2)
+    - 81455eaf47 test(memory-sync): drop the repository reference from the pair-shape comment
+    - 00eaeb01bd build: regenerate omo-device-account and omo-feedback after the store helpers went private
+    - c3dcfcb915 fix(thread): collapse key keeps the queued row's marker on rollback and every send's receipt (#14431 review)
+    - 1d91444a42 chore(knip): the state-file fixture is a by-path entry, mkfifo a known test tool, and the store's file helpers stay private
+    - f5bce41c01 Merge dev @6555140b8b (#14447) into thread train 8
+    - e3ccdcc9fe build: regenerate omo-device-account and omo-feedback after merging dev
+    - 3a3814077f Merge remote-tracking branch 'origin/dev' into refactor/fleet-hint-omo-relay
+    - 211fffaee9 chore(bundle): regenerate omo-task.js for #14437's busy-host probe delta on dev 6555140b8b
+    - f8d8e3d59c Merge remote-tracking branch 'origin/dev' into fix/14429-reopen-unknown-session
+    - 7bb318dcd6 Merge remote-tracking branch 'origin/dev' into feat/memsync-sync-status-verb
+    - 6257fa6459 Merge remote-tracking branch 'origin/dev' into d14/win32-pipe-pair-tests
+    - 5649123ec8 Merge remote-tracking branch 'origin/dev' into fix/signout-pin-retire-12308
+    - de4ba9b1ad Merge remote-tracking branch 'origin/dev' into wt/13640-linux-state-file
+    - c6a3eb1582 Merge remote-tracking branch 'origin/dev' into fix/14430-error-streak-alert
+    - 6555140b8b Merge pull request #14447 from code-yeongyu/fix/14427-fmt
+    - 4a60b503bd fix(thread): leave expired intake rows to the target's reconcile (#14466 review)
+    - 3b8289574a test(thread): fill the target cap through store intake, one call per row (#14428)
+    - f3dbf5e785 test(thread): fill the target cap with one drain pass instead of a timeout bound (#14428)
+    - 3df4b16a50 test(thread): bound the full-backlog cases explicitly (#14428)
+    - b662fd293e Merge remote-tracking branch 'origin/dev' into fix/14428-thread-backlog-drain
+    - 22aec0f4b3 test(thread): busy-backlog QA scenario, v16 migration expectations and knip entries (#14428)
+    - a9d9e32d86 docs: record the bundle and category verification refresh (#14447)
+    - f0fdf2e08a Merge remote-tracking branch 'origin/dev' into refactor/fleet-hint-omo-relay
+    - 3e8101ab1b docs(changes): fragment for #14469
+    - acafacd8b9 fix(thread): let an inactive target's backlog expire instead of staying queue_full (#14466)
+    - 26d80411ff chore(knip): drop the stale completionOutcome pre-existing row (#14430)
+    - b4aebabf9b docs(changes): fragment for #14467
+    - 659fa1d783 fix(omo-native): name the injected plugin in the brand profile so an attaching start does not refuse it (#14465)
+    - 849bdb1fc2 test(thread): cover the empty-path fallback too (#14458 delta review LOW)
+    - b274aa2e8e docs(changes): fragment for #14458 (#14429 review M1)
+    - a56afdbbb0 Merge dev @03423f1943 into thread train 8
+    - d37ab58681 Revert "Merge PR#14392 @f4243bd92e into thread train 8": #14392 leaves train 8 (#14415)
+    - f67df1a0cd Merge remote-tracking branch 'origin/dev' into fix/signout-pin-retire-12308
+    - 4c123c6ec1 fix(thread): drop an ended session's streak state; document that operator_alerts is read once (#14430 review r2 LOWs)
+    - 6096ca13b1 chore(bundles): omo.js budget = 1565721 B measured on the dev merge (e1004d4d) + 4 KiB
+    - 03423f1943 Merge pull request #14462 from code-yeongyu/feat/14442-deepseek-gpt-ultrawork
+    - 6bda73c507 docs(changes): fragment for #14462
+    - f87b57c4b3 feat(ultrawork): DeepSeek V4.1 Flash receives the GPT ultrawork prompt (#14442)
+    - b3aeaf0968 fix(thread): thread_handoff's receipt reports the working folder too (#14429 review M1)
+    - ca51612836 Merge remote-tracking branch 'origin/dev' into fix/14430-error-streak-alert
+    - e1004d4d0d Merge pull request #14460 from code-yeongyu/feat/14441-ultrawork-gpt-directive
+    - 8306277f72 docs(changes): fragment for #14460
+    - 28e258db5a chore(bundles): regenerate for the GPT ultrawork directive; omo.js budget = this regen (1559896 B) + 4 KiB
+    - db42f0a6a7 feat(ultrawork): default and GPT directives as two whole prompts
+    - 5cb0adb7ee test(eq): re-record EQ.omo E21-E24 goldens for exact GPT-6.2 category gates
+    - 0098c7729e fix(thread): read operator_alerts from the user layer only; make the alert component test order-independent (#14430)
+    - 76a8ae5404 Merge remote-tracking branch 'origin/dev' into fix/signout-pin-retire-12308
+    - efef34e123 chore(omo-native): regenerate service-auth bundle for sync-creation guidance
+    - 96bd3f498d fix(thread): a thread on another device reports its working folder, not the folder's name (#14429)
+    - 382c7002d3 build: bundle-inputs lists the two new service-auth sources
+    - 1cdd811cf9 test(audit): treat codex-model-catalog.ts as a model-identity file
+    - 74b493d555 fix(service-auth): the account lookup of a discard gets the fix-up budget, not the 30 s request timeout (#13642 review L1)
+    - d151e64c4e fix(memory-sync): sync status tells a refused socket from an unreadable one and names the probe's idle-clock effect
+    - 38c59e49a1 build: regenerate the service-auth bundles from this source
+    - 230b526446 fix(memory-sync): sync status reads engine presence without attaching, shares the device read, and reports each section's own failure
+    - 940885c491 fix(service-auth): report a kept pin only when one is live, and warn that it may belong to another signed-in account (#13642 review L1, L2)
+    - 6822512718 test(memory-sync): cite the desktop pair contract with its repository (review L2)
+    - 416983d446 test(service-auth): the state-file launcher runs are beforeAll setup, not a raised test timeout
+    - 39c4c01c81 build: keep dev's generated bundles; the release train regenerates them
+    - 906da177a1 Merge branch 'dev' into fix/7185b-linux-no-keyring-state-file
+    - 2bb3bfdf4e changes: fragment for #14448
+    - 013cd1556f chore(bundles): omo.js budget = 1556648 B measured with #14430 + 4 KiB
+    - 293610e2a2 feat(thread): alert the operator when a session ends 10 runs in a row with an error (#14430)
+    - 74f9081420 test(memory-sync): the operator socket decides no_engine
+    - 7ca726e3f2 style: format tests merged unformatted by #14427
+    - 2e376e8eef docs(changes): fragment for #14440 (#14305 U7b)
+    - 6de1bf512a Merge dev @8b75b271f2 (#14427) into thread train 8
+    - 689f7c90d4 docs(changes): name the sync status fragment after #14437
+    - c02d7200fa test(thread): RED error-streak detector driven by an injected clock (#14430)
+    - 40e56235df docs(changes): sync status fragment
+    - 4d8ed83a96 feat(memory-sync): omo sync status shows this device, the account's devices, pending joins and the engine
+    - a652bb1779 fix(service-auth): a kept sync pin of an unknown account is reported with the retire-sync command (#13662)
+    - 8b75b271f2 Merge pull request #14427 from code-yeongyu/fix/14155-exact-gpt62-defaults
+    - b9c468be2f fix(routing): use exact GPT-6.2 defaults for deep categories and Codex
+    - 8f8fa82e4d test(memory-sync): run the three channel tests on win32 over the fd 5/6 pipe pair (#12698)
+    - 135b0ac387 Merge remote-tracking branch 'origin/dev' into fix/signout-pin-retire-12308
+    - 6761972319 docs(changes): fragment for #14431
+    - 7baf0c1da4 fix(thread): steer reserve, collapse key and backlog facts for a target that stops taking its queue (#14428)
+    - e1177b6fd6 chore(omo-native): regenerate service-auth at the thread train 8 top after dev @8ed8b4ccdc (#14415)
+    - bc6f016b1a Merge dev @8ed8b4ccdc into thread train 8
+    - 6e175bed10 fix(thread): turn_conflict's details name the row by its key; candidateLines has one doc (#14305 U7b)
+    - 1ab29bed21 test(thread): RED - turn_conflict's details name the keyless row; the keyless tests assert typed fields only (#14305 U7b)
+    - 0031186084 test(config): exercise current Astra IDs in config and rules fixtures
+    - f1f7350c73 Merge remote-tracking branch 'origin/dev' into feat/14305-u7b-relay-transport
+    - 8ed8b4ccdc docs: remove sponsor section from all README translations
+    - 89ff2470c5 Merge pull request #14425 from code-yeongyu/fix/memory-sync-cli-refusal-20261120
+    - bf41a6b2e2 docs(changes): note CLI sync setup guidance
+    - 9041d7518b fix(omo-native): explain first-device sync refusal by reason
+    - 74bb9e00d9 Merge remote-tracking branch 'origin/dev' into refactor/fleet-hint-omo-relay
+    - b036a83c62 Merge pull request #14412 from code-yeongyu/fix/14384-windows-test-paths
+    - 3b89490daa docs(changes): fold the #14406 and #14374 fragments into the train 8 fragment (#14415)
+    - 558c172f45 Merge dev @2818426be3 into thread train 8
+    - cc1815c199 test(eq): the eval tool description carries the shortened fleet hint
+    - 733b502de7 chore(thread): #14406 review nits: the roster read once per restore, sessionOn's doc in place, the silent-service restore leg tested (#14305 U7b)
+    - f41c20d3a7 refactor(thread): the last deviceOnline callers check the device through resolveTypedDevice; deviceOnline and rowThreadId go (#14305 U7b)
+    - 4cfc217485 Merge PR#14374 @8f2c5a60f5 into thread train 8
+    - 59e8630451 fix(thread): answers about a session with no durable id carry its row key (#14305 U7b, review M2 of #14386)
+    - 732cc49bf8 Merge PR#14406 @3e2f5b4dbb into thread train 8
+    - 3cfc5f8e7c test(thread): RED - answers about a session with no durable id name it by its row key (#14305 U7b, review M2 of #14386)
+    - 2818426be3 Merge pull request #14408 from code-yeongyu/test/hero-stable-all-locales
+    - 5d064bd45d Merge pull request #14401 from code-yeongyu/feat/download-to-stable
+    - fe8061bc9c test(remote): give the EACCES endpoint case its secret file on Windows, where the endpoint resolves through it (#14384)
+    - 57931d737d chore(changes): number the fleet hint fragment
+    - 2393d144b6 refactor(skill-pointers): the fleet hint points at the omo-relay skill
+    - 3e2f5b4dbb fix(thread): a restored / monitor watches that session on this device (#14305 U7, review L1 of #14406)
+    - 66ba0b9fe4 test(thread): RED - a restored / monitor watches that session (#14305 U7, review L1 of #14406)
+    - 5af3c05a23 fix(thread): a restored device-wide monitor on an offline or silent device keeps its watch (#14305 U7, review M1 of #14406)
+    - 62d085624f test(skill-pointers): device and fleet wording points at the omo-relay skill
+    - 682f90e1a5 test(thread): RED - a restored device-wide monitor on an offline device keeps following its listing (#14305 U7, review M1 of #14406)
+    - 6636278aa8 Merge remote-tracking branch 'origin/dev' into feat/14305-u7-remove-old-resolvers
+    - a6349823cd docs(changes): fold the #14379, #14392, #14397, #14402 and #14409 fragments into the train 8 fragment (#14415)
+    - 865dd43023 Merge PR#14392 @c492d8666c into thread train 8
+    - 5372c34843 Merge PR#14397 @758c9c0357 into thread train 8
+    - 523725f9b2 Merge PR#14392 @f4243bd92e into thread train 8
+    - b77fd5acae Merge PR#14402 @9e0558d909 into thread train 8
+    - fa2e3b9589 Merge remote-tracking branch 'origin/dev' into feat/14364-omo-sdk-entry
+    - d5e79a7925 Merge PR#14409 @a7e8ca9f99 into thread train 8
+    - 42e6e4e35b Merge PR#14379 @d6d95ec830 into thread train 8
+    - 9dd731a047 Merge origin/dev (thread train 7) into fix/14389-ultrawork-arming-off-switch
+    - c46257dbdd Merge pull request #14404 from code-yeongyu/release-train/omo-20261119-thread-train-7
+    - df9c89675e Merge PR#14387 @ba86a52f7b into thread train 7
+    - 9f4413a69e fix(thread): the restore fallback watches on the resolved device id and sends only an id unlisted (#14305 U7)
+    - 06d32d8dc6 test(thread): RED - the restore fallback resolves the device part and never sends a name unlisted (#14305 U7)
+    - bec529776f Merge remote-tracking branch 'origin/dev' into feat/14364-omo-sdk-entry
+    - c46d8339c1 test(eq-omo): re-record darwin-arm64 E21-E24 goldens for train 7, sandbox outside the home tree (#14404)
+    - 0be4edfab2 test(eq-omo): re-record linux-x64 E21-E24 goldens for train 7 in a clean environment (#14404)
+    - 9cb03cffa1 docs(changes): fold the #14378, #14381 and #14393 fragments into the train 7 fragment (#14404)
+    - ac44a5a096 Merge PR#14393 @d68599991a into thread train 7
+    - 6d1b64679f Merge PR#14386 @9be350a3fd into thread train 7
+    - 758c9c0357 fix(thread): an unreached remote create removes the worktree it made or names it, every create is checked for reach, and a route_unlisted is final only after b is asked again (#14397 review M1 L1 L2 L3)
+    - 51b9dace02 test(thread): an unreached remote create removes its worktree, an alias-only create is checked, a missing routing id is said, and one late route_unlisted ends nothing (red, #14397 review M1 L1 L2 L3)
+    - 5ae86dc267 Merge remote-tracking branch 'origin/dev' into fix/14394-remote-create-unreachable
+    - 412741a93b Merge PR#14381 @8d95580240 into thread train 7
+    - a53b45c153 Merge origin/dev (a9f9939d74) into fix/14389-ultrawork-arming-off-switch
+    - 9e0558d909 docs(changes): fragment for #14402
+    - aff3383d15 fix(thread): a close's settlement drops rows it lost the race for; a nothing_queued wake reports drained marks (#14383)
+    - d6d95ec830 Merge remote-tracking branch 'origin/dev' into fix/14351-settled-hooks-bounded
+    - 4f8b0d5525 Merge PR#14378 @c6acf8bca8 into thread train 7
+    - a7e8ca9f99 chore(changes): fragment for #14409
+    - 67a4f3a199 feat(thread): thread_list rows on this device name the engine version of their host (#14278)
+    - bc7dd9eadc test(web): the flag-off hero test covers all 9 locales and each locale's own label
+    - a9f9939d74 Merge pull request #14407 from code-yeongyu/test/eq-darwin-goldens-host-independent
+    - 54c985392f test(eq-omo): restore darwin-arm64 E21-E24 goldens to the last host-independent recording
+    - 680e976699 chore(thread): lint fix and stale comments after the full gate pass (#14305 U7)
+    - eea1c84bb5 Merge pull request #14356 from code-yeongyu/release-train/omo-20261119-thread-train-6
+    - 2cc4d36c8f Merge pull request #14395 from code-yeongyu/feat/14388-ulw-execute-light-profile
+    - 5353ee1f94 Merge pull request #14400 from code-yeongyu/fix/12022-test-macos-realpath
+    - 5faf6afee6 fix(web): the home page's desktop button opens the stable download page, worded as the desktop app download
+    - 2969af4e16 refactor(thread): relayAddressEntry reads row.durable_id; rowThreadId is left to relay-transport.ts (#14305 U7)
+    - 5ed6ec09b8 refactor(thread): relay-session-host's open checks its device through resolveTypedDevice (#14305 U7)
+    - d30779be0c fix(remote): sessions.resolve ambiguity candidates carry unnamed (#14305 U7)
+    - f222d3ef13 test(remote): RED - sessions.resolve candidates say when a name is a fallback (#14305 U7)
+    - 8d25d051cc refactor(thread): every caller imports the account reads from thread/address; remote/account.ts and the holderTarget re-export go (#14305 U7)
+    - b86820c86e refactor(thread): delete relayAddressBook and its last-listed memory; thread_list feeds the module's one (#14305 U7)
+    - ef0d4af95f docs(changes): fragment for #14401
+    - 632ce3bde7 fix(thread): a restored monitor on a device that is offline or silent watches the stored key (#14305 U7)
+    - 2e3730d332 test(thread): RED - a restored monitor on an offline device keeps watching (#14305 U7)
+    - ebed66d997 fix(thread): rowName names this device's listed threads and every candidate; a keyless row is passed back by rowKey (#14305 U7, review M3 of #14386)
+    - c9a6803c16 test(thread): RED - unnamed threads named by rowName on this device's leg and in candidates (#14305 U7, review M3 of #14386)
+    - 0be2df85d3 fix(web): send /download to the stable desktop download page; ?channel=beta keeps the beta page
+    - c38f309373 refactor(thread): U7's files read row.durable_id instead of rowThreadId (#14305 U7)
+    - 4c008f63e3 refactor(thread): delete resolveAcross and its helpers; remote-ops device helpers go private (#14305 U7)
+    - 896d0d1cd9 refactor(thread): monitor targets resolve through the address module (#14305 U7)
+    - ce6c632fe1 test(thread): RED - monitor targets resolve their thread part and device name through the module (#14305 U7)
+    - bbb12c34f8 docs(thread): name resolveAddress where AGENTS.md still named resolveAcross / resolveStoredSession (#14305 U7)
+    - a920fbf553 refactor(thread): thread_create's offline check goes through the module's device resolution (#14305 U7)
+    - ae485872c8 test(thread): RED - thread_create reopening a thread on an offline device names the device (#14305 U7)
+    - 4eb0f5df8f refactor(thread): drop resolveEntries; its two callers build the book they hand the module (#14305 U7)
+    - 5c910c9010 refactor(thread): move holderTarget into thread/address (#14305 U7)
+    - ab92611e03 test(eq-omo): re-record linux-x64 E21-E24 goldens in a clean environment (#14356)
+    - b8b4e34aef test(update): compare the versioned-install fixture by its real path so macOS /var → /private/var matches (#12022)
+    - 3cf29fa38b Merge remote-tracking branch 'origin/dev' into feat/14364-omo-sdk-entry
+    - 9be350a3fd fix(thread,remote): review M1, L1, L4, L5 of #14386 (#14305 U6)
+    - 8f2ebe0195 test(thread): RED for review M1 and L1 of #14386 (#14305 U6)
+    - e59b6249c2 fix(thread): judge a remote create's reach by the service's route_unlisted only, from the name or a first prompt's state read, so no create costs a round trip it did not (#14394 gate)
+    - f7942f48ef fix(ci): regenerate the Codex installer and bundle inputs for #14392, drop the unused KeywordTypeSchema export
+    - 6e811f166b docs(changes): fragment for #14397
+    - d68599991a docs(changes): fragment for #14393
+    - 61068b5c44 fix(thread): a remote create ends a session the device's route does not reach and refuses host_unavailable, never ok with an orphan thread (#14394)
+    - ca6a781cee test(thread): a remote create whose new session the device's route does not reach is refused, with nothing left (red, #14394)
+    - 1a2d7efd27 test(thread): the reopen frame on b names the folder find_session reports (#14296)
+    - f1991bd724 docs(changes): fragment for #14395
+    - 2a0a93ec82 chore(bundles): set omo.js budget to the #14392 measurement + 4 KiB
+    - 3c1d0f457c Merge remote-tracking branch 'origin/dev' into fix/14389-ultrawork-arming-off-switch
+    - e271f83646 feat(ulw-execute): --light keeps the plan, uses one worktree and verifies once at the end (#14388)
+    - abce6764cd fix(thread): a reopen names the session's recorded folder, so the engine never probes the file's path on a loaded host (#14296)
+    - c33f7e5003 test(thread): a reopen names the folder its session file records (red, #14296)
+    - e9f6a221d3 docs(changes): fragment for #14392
+    - cdd244eb70 Merge dev @bf159fb831 (thread train 5 #14332) into thread train 6
+    - bf159fb831 Merge pull request #14332 from code-yeongyu/release-train/omo-20261119-thread-train-5
+    - ba86a52f7b test(thread): a send to a thread live under another engine's key on its device reaches that holder at once (refs #14298)
+    - 8d95580240 fix(omo-relay): the cell imports the fleet SDK; name thread tools in their eval form
+    - cd24706a70 test(eq-omo): re-record linux-x64 E23 on an idle host: the deterministic 4-step memory status (#14287)
+    - 13b4dd37e7 Merge train5 @c16067f14c into thread train 6
+    - ca5902cfec test(eq-omo): E21-E24 goldens carry the corrected task model descriptions; lease QA names a custom agent
+    - 9669b45f16 Merge PR#14363 @b41242db44 into thread train 6
+    - b41242db44 fix(thread): a create answers a prompt stored for a woken session as queued waiting on the wake, and the wake floor is at least one wake's measured cost (#14363 delta review L1 L2)
+    - abd077fd6a test(thread): a prompt stored for a woken session is accepted, and the wake floor never drops below one wake's cost (red, #14363 delta review L1 L2)
+    - b9e068ebac chore(changes): note the omo-relay skill
+    - 61ad2d6c8c docs(changes): fragment for #14379
+    - e25183815e Merge pull request #14373 from code-yeongyu/docs/14372-features-defaults
+    - 2090ccd3e4 fix(memory): a settle skips the state write only when state.json already holds it (#14351)
+    - 742d62b6a1 refactor(thread): delete accountListing; relayAddressBook reads the round itself (#14305 U6)
+    - b338a7c09f chore(thread,remote): format the list unit's files; accountListing is module-private now (#14305 U6)
+    - 4960cedb07 fix(thread): thread_list on the one row identity, merge, naming and device state (#14305 U6)
+    - dfaf319560 fix(remote): sessions.list on the one row identity, merge, naming and device state (#14305 U6)
+    - e45c73b7bf test(thread,remote): RED for the list unit's row identity, names and --device (#14305 U6)
+    - 8fb9087b26 test(native): the failing-busctl case writes its own stub, as /bin/false is /usr/bin/false on macOS (#14348)
+    - bb6bf97cda test(omo-relay): helpers answer one outcome per target and write nothing
+    - d788e86a33 chore(changes): fragment for #14378
+    - 0f3f7a3c72 chore(knip): list the graceful-close QA scenario run-all.mjs runs by path (#14324)
+    - 581d408947 Merge PR#14363 @0fcdd7cd47 into thread train 6
+    - 0fcdd7cd47 fix(thread): a create answers a first prompt the thread admitted to its queue as queued, and the wake memory floor is a quarter of a limit below 4 GiB (#14363 review M1 L1)
+    - f1ec5e79ae test(thread): a first prompt admitted to a queue is accepted, and a small memory limit still wakes (red, #14363 review M1 L1)
+    - e30420201d Merge pull request #14360 from code-yeongyu/docs/14357-signin-categories
+    - 75bd1b3d2a docs(changes): fold the #14339, #13994 and #13895 fragments into the train 6 fragment (#14356)
+    - 2b2114aed6 docs(changes): keep dev's #14337 and #14346 fragments; the train 6 fold moved them into 14356.md
+    - be47d567ed Merge PR#13940 @8c2bf2e1cc into thread train 6
+    - 72468a770d Merge PR#13895 @14323a6225 into thread train 6
+    - 0f327237b5 style(thread): format the create-live-prompt files (fmt gate)
+    - 640d1bd2ce style(thread): format the thread train 6 merge resolutions (#14355, #14339)
+    - bef42ffaab docs(cli): omo login --api needs --device or --no-browser while accounts are closed (#14357)
+    - fb26510a9f chore(bundles): set omo.js budget to the thread train 6 top measurement + 4 KiB
+    - 929de417e1 fix(thread): a create that opens a thread live already sends its prompt to it, answering the delivery or prompt_not_started (#14335)
+    - 78c5d75f80 Merge PR#14355 @f433feb879 into thread train 6
+    - d5d5bcf7cd fix(memory): settle work coalesces by supersession and journals reconcile incrementally (#14351)
+    - 03ab3ad2e1 Merge PR#14339 @5825d630a4 into thread train 6
+    - d88fdf8057 Merge PR#13994 @c5866d6330 into thread train 6
+    - 14c83104dd Merge PR#14353 @c8dab2918d into thread train 6
+    - 4728f77e3f Merge PR#14299 @377fe50438 into thread train 6
+    - 3291c8c281 Merge PR#14324 @64ac9319f5 into thread train 6
+    - 05d65550b4 Merge PR#14348 @5e3c44437e into thread train 6
+    - c618fc02aa Merge train5 @80b769d056 into thread train 6
+    - f7ba8ec52a Revert the #14321 merge out of thread train 6
+    - 5add9f4ea9 Merge remote-tracking branch 'origin/dev' into docs/14357-signin-categories
+    - 80b769d056 Merge dev 10714ddf (#14361 dev-red fix) into thread train 5
+    - 10714dddfa Merge pull request #14361 from code-yeongyu/fix/dev-red-14345-14337
+    - 4db631f8b7 fix(ci): format doctor.js and regenerate the stale omo-task bundle on dev (#14345, #14337)
+    - 54223d54f7 docs: document terminal sign-in, split category chains by harness, fix shared-skill count (fixes #14357)
+    - 29624a6248 docs(changes): fold member fragments into the train 6 fragment (#14356)
+    - 10fea9c993 docs(changes): name the thread train 6 fragment for its PR (#14356)
+    - c8dab2918d Merge branch 'feat/14313-graceful-close' (with release-train/omo-20261119-thread-train-6) into fix/14352-wait-capped-limit
+    - 377fe50438 Merge remote-tracking branch 'origin/release-train/omo-20261119-thread-train-6' into tsf-close/14299
+    - 64ac9319f5 Merge remote-tracking branch 'origin/release-train/omo-20261119-thread-train-6' into tsf-close/14324
+    - f433feb879 test(thread): the parked-thread wake test passes its send mode as delivery, the field thread_send takes (#14240 caller of an unknown field)
+    - 3a2b2cc50f Merge remote-tracking branch 'origin/dev' into tsf-close/14299
+    - 5825d630a4 fix(thread): the relay leg reports the lane the receiver answered, and a follow_up no longer needs the state probe (#14333)
+    - 5c80bd4657 test(thread): the relay result names the lane the receiver's answer proves; a follow_up survives a lost probe (red)
+    - 6dc0625c15 Merge PR #14299 @030e18d0a8 into thread train 6
+    - 4202694b49 Merge PR #13077 @5d04e8a711 into thread train 6
+    - 5e3c44437e test(omo-native): make the hung-busctl stub record its real pid; document the bus pre-check's limits (#14341)
+    - 50df41e321 Merge pull request #14310 from code-yeongyu/test/14270-desktop-host-leg
+    - 005797e73c Merge remote-tracking branch 'origin/dev' into fix/held-session-wake
+    - 9b6ee2e310 fix(thread): thread tools refuse a field they do not take, naming the field meant; a create states prompt null when given none
+    - 1aef56234a test(thread): unknown or misnamed tool fields are refused, and a create states prompt null when none was given (red)
+    - 7c040a3975 fix(thread): a create whose first prompt does not start a turn fails prompt_not_started, never ok and silent
+    - d35f7bc8da test(thread): a create whose first prompt never starts fails prompt_not_started instead of answering ok (red)
+    - 07bec8317f fix(thread): a stored unattended-only hold blocks no later wake (carrier and waiting_on read one predicate)
+    - b7a993b53e test(thread): a session the carrier woke and handed back wakes again for a later delivery, held unattended or not (red)
+    - f70d96145e test(thread): the pair loop guard tests pin its numbers, not its wording
+    - d54aa61b60 test(thread): a delivery to a session a host restart parked resumes under a dev engine stamp
+    - 01fa0b0220 fix(thread): no fixed woken-session cap; the carrier defers a wake only on measured host memory (host_memory_pressure)
+    - a7ad9d1639 test(thread): parked sessions wake without a count cap, deferred only on measured host memory (red)
+    - 3707d9dcef fix(thread): the pair bucket answers a truthful pair_loop_guard, not overloaded, on both legs
+    - 6912c97fad fix(thread): the queued answer's waiting_on keeps its kind's type (tsgo)
+    - 308a8cf429 test(thread): a 9th burst send to one session is refused pair_loop_guard with the measured burst (red)
+    - 48dd6841e2 fix(thread): no per-turn cap on how many sessions one turn reaches
+    - f015ad1077 fix(thread): an engine 'held' admission answers queued waiting on the hold, on the local and relay legs
+    - 8dfb297ba1 fix(thread): the wake's engine gate reads a dev engine's CalVer prefix
+    - 2e5a0601e2 docs(changes): fold the #14321 fragment into TRAIN6.md
+    - 5d04e8a711 Merge remote-tracking branch 'origin/dev' into fix/13074-kibitzer-hook-never-blocks
+    - 92b134dc5d Merge PR #14321 @ac06c390d1 into thread train 6
+    - da2cdc961f Merge thread train 5 @182e24cd7d into thread train 6
+    - 10530305ba refactor(thread): resolution is module-private once resolveStoredSession is gone (#14322 with #14328)
+    - 9d0a0bd6da chore(knip): list the default-delivery QA scenario run-all.mjs runs by path (#14334)
+    - d84a3ef562 Merge pull request #14337 from code-yeongyu/fix/doctor-engine-commands-14336
+    - 9363c60b8d fix(omo-native): gate the host scope on the user bus busctl uses; drop unused export; cover the timeout path (#14341)
+    - 071e05f081 test(thread): one reopen table proves the holder kind reaches the route (#14270 review)
+    - 182e24cd7d test(audit): categorize the /bin/omo literals in self-update-versioned-install.test.ts (member #14256)
+    - c315cf2b88 fix(thread): a graceful close names the leg's cap only when the cap bounded its drain (#14352)
+    - ac068db85d docs(changes): add the user-facing lines for #14282 and #14276 that the thread train 5 fold left out
+    - db4f43cd30 fix(omo-native): move the host supervisor into its own scope via StartTransientUnit, never failing the launch (#14341)
+    - adacbfff1c Merge remote-tracking branch 'origin/dev' into test/14270-desktop-host-leg
+    - 1416c63836 docs(changes): fold the thread train 6 member fragments into TRAIN6.md
+    - 8b4d72ad92 Merge PR #13975 @b40c5121be into thread train 6
+    - b7ee168110 Merge PR #14334 @fc22f87e44 into thread train 6
+    - b6dbd668ce Merge PR #14309 @fe2c5179cf into thread train 6
+    - ef0a71962a Merge PR #14304 @93d376f3c4 into thread train 6
+    - fabf1ea181 Merge PR #14283 @395b2894ce into thread train 6
+    - 9e0c8ef3f4 Merge PR #14331 @ee9907a57d into thread train 6
+    - 5d00a273ac test(native): drop the reachability pin of the sendAddressBook call in resolveStoredSession, deleted by #14322 (thread train 6 merge of #14328)
+    - 9a6fd5bc0e Merge pull request #14346 from code-yeongyu/fix/14344-installer-real-root
+    - b8656bbc68 Merge PR #14328 @208dbac564 into thread train 6
+    - 43f6e1910c Merge PR #14327 @e632537b62 into thread train 6
+    - c576af8eb6 Merge PR #14322 @8f37ff3fed into thread train 6
+    - 1baf721b91 test(get-worker): format root-guard test
+    - 8c2bf2e1cc Merge rpc-relay-parity-measured (#13895 at 14323a6225) into the branch
+    - 14323a6225 fix(knip): the live parity driver is an exports-unchecked entry (run by path from qa:rpc-relay-parity)
+    - 0dcc384405 Merge PR #14318 @0cabf948e2 into thread train 6
+    - 0786a1e54b fix(omo-native): start Linux engine hosts in their own systemd user scope (#14341)
+    - a937c0d510 docs(changes): fragment for #14346
+    - edd8d0734e fix(get-worker): install for a real root shell; refuse only sudo/doas escalation (#14344)
+    - 8861e9914d Merge remote-tracking branch 'origin/dev' into fix/doctor-engine-commands-14336
+    - 96095efa14 fix(omo-native): doctor keeps only omo's own commands; engine commands come from the shared list (#14337 review LOW-1, LOW-2)
+    - e1bd464629 Merge dev d03b389029 (train 4 #14284 + #14255) into thread train 5
+    - d03b389029 Merge pull request #14284 from code-yeongyu/release-train/omo-20261119-thread-train-4
+    - e4b101f45b Merge rpc-relay-parity-measured (#13895 at 4a2d72a4d1, dev merged) into the branch
+    - 4a2d72a4d1 Merge origin/dev (c9c4cfb4bc) into the branch; parity table regenerated with bun script/rpc-relay-parity.ts
+    - a2ef67b1e3 test(omo-native): drop the copied kill-guard dead code and keep a Windows run's runtime in the fixture home (#14255 review LOW-3, LOW-4)
+    - 19a52acbda qa(thread): default-delivery waits for the steered turn to settle before step 3 (#14333)
+    - c5866d6330 Merge origin/dev (c9c4cfb4bc) into the branch; generated bundles carry dev's copy
+    - b40c5121be Merge origin/dev (c9c4cfb4bc) into the branch; generated bundles carry dev's copy
+    - f932a8c33a Merge pull request #14255 from code-yeongyu/fix/session-of-pid-dispatch-14253
+    - af42d0120b docs(changes): fragment for #14339
+    - d82e7a2436 fix(thread): an idle start reports effective=start, not follow_up (#14333)
+    - f6a7c63d39 docs(changes): fragment for #14337
+    - a6124545b0 fix(omo-native): doctor reads one-shot engine commands from the shared list; session-of-pid test header (#14336)
+    - ce613b134e test(thread): one turn reaches 40 sessions, all delivered (red: the per-turn cap of 16)
+    - ee9907a57d fix(native): a typed listing key is set at the thread, link and details.thread fields, not by rewriting serialized output (#14305 delta review 2 M2 follow-up)
+    - 550ccd5f09 test(native): a typed listing key names the session at the thread and link fields, never inside a reply's text (RED, #14305 delta review 2 M2 follow-up)
+    - 6272d2b84b test(thread): a send to a target its engine holds answers the hold, local and relay legs (red)
+    - fc22f87e44 fix(thread): review r1: keep omo-native's contracts import type-only, assert the literal default, cover create's first prompt (#14333)
+    - 9d4469b155 test(thread): the wake's engine gate reads a dev engine's CalVer prefix (red)
+    - 2e8c52ebfd docs(changes): omo remote attach checks the relay before attaching (#14305 delta review 2, L1)
+    - ba0f9e8795 refactor(native): one name for the relay check: remoteAvailable, re-exported for attach (#14305 delta review 2, L2)
+    - 65468c636f fix(native): a listing key the person typed names the session in every --json answer (#14305 delta review 2, M2)
+    - 0ad0f36907 fix(remote): the this-device holder check answers from the reads the resolution already made (#14305 delta review 2, M1)
+    - 4391a9c419 test(native): second delta review findings (RED, #14305 delta review 2 of #14331)
+    - 83a998a077 qa(thread): live default-delivery scenario: no mode starts an idle TUI and steers a busy one; follow_up waits (#14333)
+    - 9a1a7ff162 Revert "chore(bundle): regenerate this PR's own bundle delta (#14333)"
+    - 31f091de88 chore(train): Set A regen at the thread train 5 top after dev c9c4cfb4bc (#14303)
+    - 7ac6a4a49f docs(changes): fragment for #14334
+    - 1a60e7f739 chore(bundle): regenerate this PR's own bundle delta (#14333)
+    - 484cafd3b2 fix(thread): one shared default delivery, auto, on every send surface (#14333)
+    - 87a05d6327 Merge dev c9c4cfb4bc into thread train 5 (carries #14303)
+    - c5d909fb54 docs(changes): fold the thread train 5 member fragments into 14332.md
+    - 1e41f87365 chore(train): Set A regen at the thread train 5 top
+    - 6c46be6899 fix(native): every omo remote verb checks the relay first again, names a typed key in the answer, and maps thread_list advice in --json (#14305 delta review H1, LOW2, LOW3)
+    - 6d23a6f8f4 fix(remote): resolveTypedAddress refuses a durable id this device lists too, and answers a thread held here from its first resolution (#14305 delta review H2, LOW1)
+    - eb08a1205b test(native): delta review findings for the omo remote address CLI (RED, #14305 delta review of #14331)
+    - 569e20373a Merge PR #14287 @ed9afe1f43 into thread train 5
+    - 32e00c3a08 Merge PR #14326 @cc4edefbe2 into thread train 5
+    - a581a9c045 Merge PR #14256 @b0475d7e49 into thread train 5
+    - cd3c15b0d6 Merge PR #14307 @bd54812e5c into thread train 5
+    - 77f91d06aa Merge PR #14228 @eaf6231620 into thread train 5
+    - dc9ddae518 Merge PR #14276 @fc57619930 into thread train 5
+    - f50f5273c6 Merge PR #14282 @530d5007bd into thread train 5
+    - 9f49b2fea3 Merge PR #14292 @6a73675a8d into thread train 5
+    - 5e9b21bd5d Merge PR #14285 @1274b936b7 into thread train 5
+    - 7439c89aea test(native): the five session-verb sequences read one filtered listing and no account-wide one (#14305)
+    - d1c382cae4 docs(remote): the Addresses section states when a device is asked itself, what here answers, and how candidates print (#14305 review M3, L1, M4)
+    - d857cdd695 fix(native): /session and device/ are usage again, and attach checks its target without throw-then-catch (#14305 review L2, L4, M2, M4, L1)
+    - 1caeb6b02b fix(native): the session verbs read the relay state once, keep the typed listing key as thread, and print candidates (#14305 review L3, L2, M2, M4, L1)
+    - 0aeb7c48f9 fix(remote): resolveTypedAddress refuses a durable id two devices list and answers a thread held here as the module's not_found (#14305 review M2, L2)
+    - bbbbc0bc04 fix(native): revoke lists an ambiguity's candidates one per line and carries their ids in --json (#14305 review M4, L8)
+    - af5fb6d2f4 fix(native): sessions --device prints an ambiguous device's typed failure in --json, with its candidates one per line (#14305 review M1, M4, L7)
+    - 4a7f32ae4c test(native): review findings for the omo remote address CLI (RED, #14305 review of #14331)
+    - d02db7a5b4 docs(changes): fragment for #14331
+    - 05c8bfe8d3 test(native): the session verbs' call sequences record the listing filter and pin the address module's reads (#14305)
+    - 1600733486 docs(remote): one Addresses section for the omo remote grammar (#14305)
+    - 1cb6bae49a feat(native): omo account devices revoke names a device by id, name or prefix and refuses an ambiguity (#14305)
+    - c64f2d1020 feat(native): omo remote verbs resolve one typed address through the address module; remote-session-target goes (#14305)
+    - 5587230fd7 feat(remote): seam 4, resolveTypedAddress, the one resolver for a typed thread address (#14305)
+    - 079480711e test(native): the sessions --device name cases move to the list unit (#14305)
+    - 4e25357f52 test(native): the remote CLI and device revoke take every address form (RED, #14305)
+    - 208dbac564 test(native): the reachability pin lists sendBookFor's call of sendAddressBook, the one site L4 moved there (#14305 review L4 of #14328)
+    - ac06c390d1 fix(build): fold the engine version define into compileDefinesForOmoBinary (#14321 review)
+    - 4e8af35ed7 docs(changes): #14328 fragment names the candidate device id and the offline-device refusal
+    - e632537b62 test(remote): attach runs its open under what is left of the caller's one deadline; the fragment names the shared deadline (#14327 delta review L-d)
+    - f877abc082 test(thread): route parity asserts the listing_incomplete details, not message wording (#14305 review L7 of #14328)
+    - 91c91c9244 test(thread): an unattested reply written / names its device, so unique_holder does not apply (#14305 review L6 of #14328)
+    - 50c5995fac fix(thread): thread_create's existing-thread lookup asks this device's book per address part, so here/ finds a session file (#14305 review L3 of #14328)
+    - 8ba7deead3 fix(remote): attach judges a name miss as the session members do, listing_incomplete while the device missed the round (#14327 delta review L-f)
+    - 64741cd0ba test(thread): thread_create opens here/ of a thread known only by its session file, with no account (RED, #14305 review L3 of #14328)
+    - 8fba59d6c2 test(remote): attach by a name on an online device that missed the round is listing_incomplete (RED, #14327 delta review L-f)
+    - 0557590d8b refactor(thread): one sendBookFor beside sendAddressBook hands the resolver this device's book per address part; tools, create and locate drop their copies (#14305 review L4 of #14328)
+    - 7351e983b6 fix(remote): the roster-miss path reuses the listing it read, so it reads the listing once (#14327 delta review L-a)
+    - 45c25a1d8e test(remote): a listing-named device's address reads the listing once (RED, #14327 delta review L-a)
+    - ae55079bdb fix(thread): a graceful close of another device's thread drains at most 35 s; wait_ms needs graceful (#14324 review)
+    - 8f37ff3fed docs(thread): wrap the address paragraph of omo-thread.md to the file's width (#14322 delta review N2)
+    - 43620d85e2 test(thread): one SDK object wakes a session that started after its earlier send (#14322 delta review N1)
+    - caee0befe5 fix(remote): a listing-named device reads offline in every answer, as sessions.list shows it (#14327 delta review L-b)
+    - 06c3d7c07d test(remote): a listing-named device's surfaced row is offline as sessions.list shows it, while the core resolves it online (RED, #14327 delta review L-b)
+    - 13c6919d9d fix(thread): address module answers device_offline for what an offline device's rows in hand do not resolve, and never probes it; core exports deviceOffline (#14305 review M2 of #14328)
+    - b3079f3359 refactor(remote): the resolved device's row comes from the roster or the listing-named device, no unreachable fallback (#14327 delta review L-c)
+    - 3409b9e3ea Revert "test(thread): a no-remote SDK send to an id the store does not own lists the host once (RED, #14322 review L5)"
+    - ea62ff8e94 Revert "perf(thread): a no-remote SDK send lists the host once: the gateway reads the view the send resolved over (#14322 review L5)"
+    - 98b6a02d82 chore(remote): drop the doc comment Stage left behind in sessions.ts (#14327 delta review L-e)
+    - 003cbb7829 test(thread): / resolves only from rows in hand, else device_offline with nothing sent (RED, #14305 review M2 of #14328)
+    - 105b8b9988 fix(thread): a device-qualified thread id hands the listing and roster already read into the pinned ask; it re-reads only for the #14280 second pass (#14305 review M1 of #14328)
+    - 7e03e4fe6f test(thread): / reads that device's listing once (plus the #14280 re-read on a miss) and the roster once (RED, #14305 review M1 of #14328)
+    - 2365febec8 fix(thread): address module checks a device-qualified hit against this device's book only, and reads the account-wide round only when the device misses a non-id part (#14305 review H1 of #14328)
+    - e675de1e12 test(thread): a device-qualified address that its device answers reads no account-wide listing; a miss reads it once only for a non-id part (RED, #14305 review H1 of #14328)
+    - e729765168 test(thread): graceful-close QA reports a close that answers before it fences (#14313)
+    - f4c416d3a0 docs(changes): #14327 fragment names attach under the id-shape rule
+    - 7ed76e06d4 fix(remote): sessions.resolve, the session members and attach spend one deadline across the roster, listing and member (#14327 review L1)
+    - 10bfaa774e fix(native): restore the comma the usage edit dropped (#14322 review L1)
+    - 1927b513ca docs(changes): #14322 fragment names the scope_denied change and the local-first binding operations
+    - 7a302a832c docs(thread): omo thread's reference matches the code: send to another device, host_unavailable for the binding operations, exit 1 for a gateway unsupported, no self (#14322 review M2, L1)
+    - ae70c6943b fix(native): omo thread's usage no longer offers self, which never resolves for a cli: caller (#14322 review L1)
+    - 7b14152e62 test(thread): the session_on_other_device test asserts details, not message wording (#14322 review L6)
+    - 372ab20d96 style(thread): drop the blank line the resolveStoredSession removal left in internals.ts (#14322 review L3)
+    - 71fd48e112 chore(thread): drop the SDK send's redundant id_prefix: true, the resolver's default (#14322 review L4)
+    - 0a1fb1001d perf(thread): a no-remote SDK send lists the host once: the gateway reads the view the send resolved over (#14322 review L5)
+    - dd8f9503b1 test(thread): live graceful-close QA on a busy daemon session and a busy terminal (#14313)
+    - 9319105c0f test(thread): a no-remote SDK send to an id the store does not own lists the host once (RED, #14322 review L5)
+    - f3714f13a3 test(thread): an SDK send to a name only another workspace holds is scope_denied unless all_scope (#14322 review M1)
+    - 1fd262161a revert(thread): the SDK send's book reads every workspace again, as thread_send and locate do; the resolver judges scope (#14322 review M1)
+    - bff7f45c76 fix(thread): store-only SDK operations resolve on this device first and consult the account only on a local not_found (#14322 review H1)
+    - b5ed975f9b test(thread): a name a local session and another device's thread share binds and reports locally (RED, #14322 review H1)
+    - 702ec1904e docs(changes): fragment for #14328
+    - 3a80e4d5da test(remote): a device-qualified resolve runs the listing under what is left of the caller's one deadline (RED, #14327 review L1)
+    - 01a06814de docs(remote): the id-shape predicate's comment names the core idShaped rule, not on-device.ts (#14327 review L3)
+    - ffa2f7c26b fix(remote): attach sends a session part to its device only when it is id-shaped or a listed key (#14327 review L7)
+    - 7ccf87de88 test(remote): attach refuses a session part that is no id shape and no listed key, with the device never attached (RED, #14327 review L7)
+    - 58d07f29b1 fix(remote): an alias's listing_incomplete names the address asked for, not the bare device id (#14327 review L5)
+    - 03a992b63d refactor(remote): the resolved device always carries its row; the member branch that refused a missing row goes (#14327 review L4)
+    - 961ce324a8 fix(remote): a listing-named device the roster misses resolves by its exact id again (#14327 review M2)
+    - fab4246dea test(remote): a device the roster misses but the listing names resolves by its exact id (RED, #14327 review M2)
+    - 08ff97d2da fix(remote): a device miss keeps details.id, the core's device and candidates added beside it (#14327 review M3)
+    - d342d1a74d test(remote): a device miss keeps details.id beside device and candidates (RED, #14327 review M3)
+    - 59e5a1ba57 fix(remote): a device-qualified address that two rows answer is ambiguous_target again (#14327 review M1)
+    - e905dff2cb test(remote): two rows answering a device-qualified address are ambiguous_target (RED, #14327 review M1)
+    - cc4edefbe2 fix(thread): a held steer whose re-send is refused turn_conflict settles its receipt (#14320 review)
+    - 148818e5c9 fix(thread): address module resolves a device part from the roster and an id-shaped thread part from that one device, on one status round per resolution (#12709, #14305)
+    - 45c304de91 fix(thread): address module resolves a listing row that publishes no thread id by its listing key, on its device and bare (#14305)
+    - e47698a286 test(thread): a device-qualified id reads only that device; a row with no thread id resolves by its listing key (RED, #12709, #14305)
+    - 8b415ce890 refactor(thread): delete replyOnDevice; its last caller now resolves through resolveAddress's pin, whose table (resolve-refusals.test.ts and reply-device.test.ts) holds every case it had; no test called it directly (#14305)
+    - 36e7cdca04 style(thread): bun fmt (#14305)
+    - 987052c416 feat(thread): locate, send and create hand the resolver this device's book per address part instead of stripping here/ (#14305 review M2)
+    - ec0eea8f32 fix(thread): address module asks this device's book for the thread part once the device part names this device (ResolveContext.localFor, #14305 review M2)
+    - cb85246930 test(thread): / asks this device's book for the thread part (RED, #14305 review M2)
+    - 1a14df0d89 test(thread): the two-device fixture gives this device a hex id of its own, so here and the id are tested apart (#14305 review M2)
+    - c6ef0a75d8 fix(thread): address module asks the one device a / names when its listing does not show the id, as a pinned reply does (#14305 review H1)
+    - d354dbea37 test(thread): / on another device asks that device; table through resolveAddress and thread_read (RED, #14305 review H1)
+    - b8ec49c654 feat(thread): address module passes an unlisted id-shaped session part through to its device; core exports idShaped (#13748, #14305)
+    - 97aa60e9e8 test(thread): a miss while b missed the round is host_unavailable naming b, not not_found (#14305, reverses #14172's choice)
+    - 89bd5bc944 test(thread): count every roster read of a send, through the remote client too; a reply now reads the account once (#14305)
+    - 8d2416bdca feat(thread): an unattested reply checks its sender's one holder on the resolution's own account read (#14048, #14305)
+    - dddf25bad1 feat(thread): address module refuses a thread two devices list when the caller asks for a unique holder (#14048, #14305)
+    - 1459a407a6 feat(thread): address module names why a pinned reply could not tell (#14280 vocabulary) and who answered a probe (#14305)
+    - 512f12bbce base only: PR #14285 (#14280 reply reasons) merged locally; dropped by the rebase onto dev
+    - 4996f91a7c feat(thread): thread_send and thread_handoff resolve their target through resolveAddress (#14305)
+    - 4d533dab06 feat(thread): thread_create resolves existing threads and fork sources through resolveAddress (#14305)
+    - da51d9cb01 test(thread): thread_send, thread_handoff and thread_create take / (RED, #14305)
+    - c87fcbc4ed base only: release train 4 (#14284) merged locally so tools.ts carries #14263; dropped by the rebase onto dev
+    - 7b5ea02f79 fix(thread): an SDK send reads the session files of the caller's scope, as the agent's thread_send does (#14322)
+    - e1726af1d8 docs(changes): fragment for #14327
+    - 125cf34ee2 fix(remote): an alias holder's online device that missed the round answers listing_incomplete (#14305)
+    - c1c4ef4ced test(thread): a held steer whose re-send is refused turn_conflict settles its receipt (RED, #14320 review)
+    - 0b63d251fb test(remote): an alias holder on an online device that missed the round is listing_incomplete, not device_offline (RED, #14305)
+    - 7f5431d137 fix(remote): the device refusal fallback names no typed text, so sessions.resolve typechecks (#14305)
+    - 68eff9f87f fix(remote): attach resolves its device part through the core's device resolver (#14305)
+    - c9aa59fd58 test(remote): attach resolves its device part by name in any case, not_found otherwise (RED, #14305)
+    - 72997a9377 refactor(remote): aliases parse a handle once through the shared parser; sessionOf goes (#14305)
+    - 329937eb4b fix(remote): unlisted pass-through only for id-shaped session parts; listing_incomplete from the core's deviceListing (#14305)
+    - e740053e4e test(remote): only an id-shaped session part passes unlisted to its device; an incomplete device's miss is listing_incomplete (RED, #14305)
+    - c5e9006da4 refactor(remote): session members resolve handles through the address module, typed refusal for names (#14305)
+    - af40602ed9 refactor(remote): sessions.resolve parses and resolves devices through the address module (#14305)
+    - 112dd1ae6b test(remote): an unresolvable session part is a typed refusal, never device pass-through (RED, #14305)
+    - f2450b6d11 test(remote): device prefix, NFKC name, here part and listing_incomplete misses (RED, #14305)
+    - 0bb0d1a7c7 fix(thread): an SDK send resolves through the address module with or without a remote surface (#14322)
+    - 3aaef55c13 test(thread): an SDK send with no remote surface resolves here/ and / through the address module (RED, #14322)
+    - 81581c1c69 docs(changes): fragment for #14326
+    - cd352e4584 fix(thread): a cross-device send refused turn_conflict re-sends as a follow-up; a busy target is never 'unsupported' (#14320)
+    - 18c86ed846 test(thread): a refused turn_conflict on a cross-device send (RED, #14320)
+    - 0cabf948e2 test(thread): the last-listed memory names only the remembered device when two devices miss the round (#14318 delta review)
+    - d4a5fe77d1 docs(changes): fragment for #14322
+    - 56829739a7 perf(thread): the last-listed memory is updated in place, not copied per resolution (#14318 review L3)
+    - e50f9a3c5d fix(thread-address-core): here with no device id is a refusal, not a device named here (#14318 review L2)
+    - 2de6296ef5 chore(thread-address-core): Node and Bun globals fail the typecheck of its sources (#14318 review L1)
+    - 4b55029971 test(thread): the two-device fixture names when the offline device was last seen (#14318 review M4)
+    - ba77678d33 fix(remote): a device filter is checked by exact id again, so "here" is not_found (#14318 review M1)
+    - 0922b4d71d fix(remote): omo remote resolves a typed device only when it is online, by every form (#14318 review H2)
+    - 336f5fa4b9 feat(thread): thread_close drains the turn and answers every unread message (#14313)
+    - 39ac84267d refactor(thread): delete resolveStoredSession, its last caller moved to the address module (#14305)
+    - 4b23044c34 feat(thread): the thread SDK resolves every address through the shared module (#14305)
+    - cc41f926b0 test(thread): the SDK resolves every address form through the shared module (RED, #14305)
+    - 40bc9089bb docs(changes): fragment for #14321
+    - 1514f3a7fa docs(changes): fragment for #14318
+    - 77b461a6bf fix(thread): only the caller's online flag decides whether an offline device resolves, by every form (#14305)
+    - ff2d4566e6 style(thread): format the desktop-host leg test
+    - fe2c5179cf Merge remote-tracking branch 'origin/fix/14278-roster-wait-state-truncation' into fix/14308-local-listing-state
+    - 93d376f3c4 fix(thread): a listing of archived threads also reports the files it left unread; the incomplete-device refusal no longer says the device did not answer (review #14304 M1, L1, L3; L2 filed as #14315)
+    - fc57619930 fix(thread): find_session skips the primary by key, passes over a foreign dir's none, and bounds the fallback (#14271 review)
+    - 395b2894ce fix(thread): an errored message with no content never renders the whole message with its uncapped error; carry dev's bundles (review #14283)
+    - 68b2bf955d perf(thread): the omo.js side of locate and the lazy resolver stay within budget (#14305)
+    - a27789e5b2 perf(thread): accountDevices stays as omo.js had it; the last-seen roster is the sidecar's (#14305)
+    - eaf6231620 fix(thread): the create refusal names the binary's schema first, the store's second (#14228 round 4)
+    - a5341fd3fe fix(thread): a device row carries last_seen_ms only when the service names one (#14305)
+    - a9611f9e57 chore(thread): keep only used names on the address barrels (#14305)
+    - 9023c902f3 style(thread): format the address module (#14305)
+    - b09dfed503 feat(thread): callers resolve devices and addresses through the address module (#14305)
+    - a1c7b250ba refactor(remote): seams.ts parses with the core address grammar (#14305)
+    - 4d327a8101 feat(thread): address module API checkpoint (#14305)
+    - dbf33cb555 feat(thread): the thread client sidecar re-exports resolveAddress (#14305)
+    - 51b8873445 test(thread): a desktop-app holder reopens a closed CLI TUI session like a CLI daemon (#14270)
+    - fb70a0a565 chore(changes): fragment for #14309
+    - c6cc5178d8 fix(thread): thread_list says when an engine of this device did not answer, and keeps its threads' note (#14308)
+    - 152e8dd915 fix(thread): one changelog fragment named for the PR; the create refusal says the thread exists (#14228 round 3)
+    - c9c4cfb4bc Merge pull request #14303 from code-yeongyu/fix/14300-windows-taskkill-bound
+    - e942aa16ab test(thread): one address module table and / through the control tools (RED, #14305)
+    - dd779393cc chore(changes): fragment for #14307
+    - 039e8efc29 feat(thread): thread_list rows carry a running thread's provider retry wait as waiting_on (#14278)
+    - d7d356fac6 Merge remote-tracking branch 'origin/dev' into fix/thread-liveness-typed-state
+    - fffcc30b3e chore(changes): fragment for #14304
+    - 86e0d09c28 fix(thread): remove the last remnant of the dropped SDK schema branch (#14228 review round 2)
+    - 1eb9f9b48d fix(thread): thread_list reports partial devices and the inactive threads it left out (#14295)
+    - acc144bc2e fix(thread): review round 2 - drop the dead SDK branch, clean the merge debris, align the changelog (#14228)
+    - 030e18d0a8 fix(thread): name thread_create in its eval form in the target_closed next action (#14273)
+    - a397780f93 fix(thread): a close on request settles the queued intake it superseded (#14273)
+    - 4e214d2bdd Merge remote-tracking branch 'origin/dev' into fix/14271-find-session-route
+    - 45d5ff158c fix(thread): find_session fallback passes over non-answers, asks the primary once, and names why it failed (#14271 review)
+    - d2a4011a9a chore(train): Set A regen at the thread train 4 top after dev 822bd92303 (v5.1.79)
+    - 1a194b3816 Merge dev 822bd92303 (release v5.1.79) into thread train 4
+    - 530d5007bd fix(thread): a reopen on another device checks a given name for conflicts (#14274)
+    - b2d347c310 docs(changes): fragment for #14292
+    - 16442fa1bd style: bun fmt (#14265 lines)
+    - 1427a404d1 chore(train): Set A regen after #14262's fix at the thread train 4 top
+    - 0a1f478a8c docs(changes): #14279's host_unavailable answer in the thread train 4 fragment (review L1)
+    - 80cb5c602f Merge #14262 @03f24e7b95 (route_unlisted keeps its reason when find_session is refused; train 4 review H1) into thread train 4
+    - 661f6142a9 fix(thread): keep the hold wait typed as a DeliveryWait kind
+    - 03f24e7b95 fix(thread): a parked-row re-ask that find_session cannot answer keeps the route_unlisted refusal (#14240, #14237)
+    - 87ca154da0 Merge dev (thread train 4 base abfb5be796) into fix/14240-parked-live-row-wake
+    - 687f713c98 fix(thread): format the merged sources (fmt check)
+    - 1274b936b7 changes(14285): describe the reply refusal reasons
+    - ac5518433b chore(bundles): set omo.js budget to the thread train 4 top measurement + 4 KiB
+    - c3ef1bb639 fix(thread): a reply to a sender on another device names why it cannot resolve; not_found only when the device answered (#14280)
+    - a38e758afe docs(changes): fold the thread train 4 member fragments into 14284.md
+    - a8810d9cd7 chore(train): Set A regen at the thread train 4 top (dev abfb5be796)
+    - d4e215d2b6 Merge origin/dev after train 3 (omo#14248) landed; keep dev's generated files (train-4 member rule)
+    - 370df06ac2 Merge #14279 (host_unavailable names the devices that answered (#14270)) into thread train 4
+    - 441ed2d662 Merge #14265 (ship the thread client typebox in the compiled runtime, Fixes #14204) into thread train 4
+    - 30fef8946f Merge #14264 (older entry cursor answers cursor_stale, Fixes #14180) into thread train 4
+    - 721643b7b4 Merge #14263 (bound thread_send reply-route device read by the call budget, Fixes #14226) into thread train 4
+    - acea172939 Merge #14262 (send to a parked live-listed thread re-asks the holder and wakes it, Fixes #14240) into thread train 4
+    - 0c2b029251 Merge #14261 (refuse thread_create with neither prompt nor thread, Fixes #14050) into thread train 4
+    - aa89df6eef Merge #14254 (attach-pool held-read expiry takes the port clock (#14252)) into thread train 4
+    - 9feaea2164 Merge #14281 (test(remote): neutral fixture device label) into thread train 4
+    - e05caa1402 fix(thread): thread_read shows a provider error's text instead of [] (#14278)
+    - 57e70f712e Merge remote-tracking branch 'origin/dev' into fix/remote-tui-neutral-fixture-label
+    - 1f4aa0783d fix(thread): a reopen keeps the thread's name and applies a name given at reopen (#14274)
+    - df5b237a09 chore(changes): fragment for #14281
+    - 70d3e049d9 test(remote): neutral fixture device label
+    - 1750fac7f0 fix(thread): host_unavailable for an unheld session id names the devices that answered (#14270)
+    - 3ce9c69c30 fix(thread): find a closed thread's file on any engine its device lists when the primary predates find_session (#14271)
+    - 7e8bb66404 fix(thread): a route_unlisted retry announces its delivery once and keeps its stamp hop (#14240 review L)
+    - 11d3aa5e7a docs(changes): fragment for #14265
+    - d788725d2e fix(binary): inline typebox into the thread client sidecar so the CLI can load it (#14204)
+    - 782cddd4fa docs(changes): the change fragment for #14264 (#14180)
+    - bc840d3b8d docs(changes): the change fragment for #14263 (#14226)
+    - ee3e6e6631 docs(changes): the change fragment for #14262 (#14240)
+    - 6b1e23fc08 docs(changes): the change fragment for #14261 (#14050)
+    - 3abe6eef08 fix(thread): an older entry cursor answers cursor_stale; the CLI hint names older messages (#14180)
+    - 2a6081fce4 fix(thread): bound thread_send's reply-route device read by the call budget (#14226)
+    - 7ee82346a0 fix(thread): a send to a live-listed thread its host parked re-asks the holder and wakes it (#14240)
+    - c9d2531d61 fix(thread): refuse a blank thread_create prompt, which opened an unnamed empty thread (#14050)
+    - b0475d7e49 fix(update): adopt finished version dirs, stop on a live installer, prune leftovers, regenerate the wrapper (#12022)
+    - 61fe785b4e test(omo-native): no per-test timeouts in the built-binary test (lint ratchet)
+    - 6a2ac890f6 docs(changes): add the #14256 fragment
+    - 9baf96c592 fix(thread): adopt dev's gateway_schema_too_new refusal; extend it to thread_create's first prompt and the CLI SDK (#13927)
+    - 87f6974991 fix(update): update the omo-versions launcher layout on PATH (#12022)
+    - d88ea391cf test(omo-native): spawn the built binary exactly as g13's session attestation does (#14253)
+    - e7d344cbbe docs(changes): fragment for #14255
+    - 84effb77f9 fix(omo-native): pass session-of-pid to the engine unchanged; built-binary test and an engine-dispatch guard (#14253)
+    - 19c47579ee test(thread): the attach pool's held-read expiry takes the port's clock; the 10-minute bound is tested (#14252)
+    - 461c5eb37b Fold the review LOWs (#14235) into the typed schema refusal branch
+    - ca3f177bf9 Merge origin/dev after the 5.1.78 cut: keep the typed schema refusal through the thread_create refactor
+    - 98e43971ff fix(thread): review LOWs of the typed schema refusal - docs, comments, and a direct SDK row (#14228)
+    - 6f3cc6687d fix(thread): the CLI surface maps a too-new store schema typed too (#13927)
+    - bf7d86b082 fix(thread): a store schema newer than this binary refuses typed, not internal_error (#13927)
+    - 8a33a8cc12 Merge origin/dev (630a673483) into the branch; regenerate bundles once
+    - 50bd9de79a chore(build): regenerate bundles after merging dev
+    - c68a49838b Merge dev into rt/13972-inbound-nextaction
+    - dd39f65d83 chore(build): regenerate bundles after merging dev
+    - cfc010c259 chore(build): regenerate bundles after merging dev
+    - 3923bec08b Merge remote-tracking branch 'origin/dev' into oms/13994
+    - 468731137a Merge remote-tracking branch 'origin/dev' into oms/13975
+    - 705e90609a chore(bundles): regenerate omo.js on #13972 aea22da461 with this PR's inbound next actions
+    - 96908fd5d8 Merge branch 'rt/13942-nextaction' into rt/13972-inbound-nextaction
+    - ff9df399bb docs(changes): name the fragment for #13994, the number GitHub assigned
+    - b4f841607a fix(thread): connector next actions for inbound's binding_inactive and unsupported
+    - 19e4ad0395 Merge origin/dev into rt/local-engine-msg
+    - aa853d5d5e fix(remote): name this device's engine for every local attach failure, not only a missing one
+    - e65136461f fix(remote): name this device's engine, not the device service, when no local engine answers a follow or attach
+    - 9ec48be09a fix(rpc): an extension-cancelled navigate/edit is not applied either (#13940 review L1)
+    - 001ed063d5 fix(rpc): only an outcome "refused" is unapplied; the engine's success outcomes stay served (#13940 review M1)
+    - 7b57b6d4cf fix(rpc): a reply with an unapplied outcome is not served locally (unload_session is differs, #13940 review)
+    - a5ad485347 fix(rpc): the parity table shows a reply's unapplied outcome (unload_session refused, #13895 review)
+    - 9cb68fcc1d docs(changes): #13895 fragment states only numbers the parity table shows (113 of 128, 15 excluded, 36 unsafe-to-probe rows)
+    - 3a0d95b7f3 docs(changes): #13895 fragment gives the measured split of the harmless-form probes (23 refused, 13 no-op)
+    - f2872231ca docs(changes): #13895 fragment states exactly what was measured (113 of 128; 15 connection_local excluded; 36 in a harmless form)
+    - 0e226a1c6b Merge branch 'dev' into rpc-relay-parity-measured
+    - e1786637b5 docs(changes): fragment for #13895
+    - ac13d3cd33 Merge branch 'dev' into rpc-relay-parity-measured
+    - 42aaa91280 test(rpc): measured local-versus-relay parity for every engine RPC method (#13478)
+    - b4fe844da5 fix(service-auth): keep discardedOf module-private (knip: unused export)
+    - 8be0c2da91 docs(changes): #13640 fragment follows the guarded migration
+    - 43ac5e5094 fix(service-auth): never let the Linux state file replace another keyring sign-in (#13640 review)
+    - c2c3c96672 fix(service-auth): fold the #13642 review LOWs
+    - af4c05cb9e chore(changes): fragment for #13642
+    - c95af80b53 fix(service-auth): every sign-out retires the sync pin of the account it signs out of (#12308, #12384, #12383)
+    - ceb42baa9d docs(changes): fragment for #13640
+    - 5e6cf60e49 fix(service-auth): keep the Linux sign-in in a private state file when no Secret Service exists
+    - 94d2eadbcb docs(changelog): record the Kibitzer tool_result hang fix
+    - 4b17f5e408 Merge remote-tracking branch 'origin/dev' into fix/13074-kibitzer-hook-never-blocks
+    - 7c075f26f0 Merge remote-tracking branch 'origin/dev' into fix/13074-kibitzer-hook-never-blocks
+    - a0b8b79abe fix(memory): the Kibitzer tool_result hook starts recall delivery without awaiting it (#13074)
+    - 5f45c8f713 test(memory): a Kibitzer recall delivery that never settles must not hold the PostToolUse hook (#13074)
+    - 4d5d721cd6 add changelog fragment for #11624
+    - 558ba29e11 merge origin/dev into fix/11621-infra-retry-in-memory-journal
+    - 923105d30e test(dag): hold the in-memory store to the file store contract
+    - a335412bb8 test(dag): journal the infra-retry cases in memory
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.81
+ReleaseTime: 2026-11-21T21:53:04.0000000Z
