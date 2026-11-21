@@ -1,0 +1,31 @@
+Version: 1.14.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dreamlonglll/mini-term/releases/download/v1.14.2/Mini-Term_1.14.2_x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    更新内容
+    新功能
+    - 手机端浏览历史会话并继续对话（#104）：手机首页切到「历史」标签，按项目查看本机的历史会话，可按关键词和 Agent 过滤、点开只读预览；点「继续对话」由桌面端在后台新开终端续接（已在运行的会话直接进入实时镜像），续接命令不经过手机和中转
+      - 需要同时重新部署中转服务端（cd relay-server && docker compose up -d --build），手机端页面随中转一起更新
+      - SSH 远程项目与 WSL 根目录项目暂不支持
+    - Antigravity CLI 补齐 SSH 能力：项目「关联 SSH」后 Antigravity CLI 同样能通过内置 Skill 操作服务器；会话面板可以读取 WSL 与 SSH 远程机器上的 Antigravity CLI 历史会话
+    体验
+    - 全面打磨界面动画：所有动画改为方向性推移或从触发位置展开，不再从透明淡入
+      - 弹窗换成自建外壳：遮罩渐暗、面板从顶边展开，关闭时反向收回
+      - 右键菜单从光标处展开，子菜单横向展开；toast、日期选择器、图片放大、标题栏项目下拉、AI 任务标记、悬停预览卡都从触发它的控件长出来，并补上了收起动画
+      - 关掉当前 tab 时邻居从被关那一侧推入，tab 新建 / 关闭 / 拖拽后其余页签滑动补位，关掉分屏后剩下的格子从原位置扩张到位
+      - 设置页切页、会话面板进出详情、抽屉在会话与 Git 之间切换、文件页「预览 / 源码」都是整幅推移；Git 区块折叠、折叠箭头、分段控件、开关都有过渡
+    - 「启用动画」管全部动画：「设置 → 终端 → 启用动画」关掉后，所有动画都瞬间完成（加载中的转圈只放慢不停）；系统关闭窗口动画时这些转场照常保留
+    修复
+    - 移动端：同一项目开多个 Codex 时，点进第二个会显示第一个的对话（#103）
+    - 移动端：桌面端断线重连后镜像页一直加载中或不再更新；手机端页面打开与重连更快，桌面端与中转的长连加了保活
+    - 最大化后还原时终端会多重排一次
+    - Git 面板「更改 / 提交历史」折叠展开没有动画；系统关闭窗口动画时项目行的完成标签不播放动画
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dreamlonglll/mini-term/releases/tag/v1.14.2
+ReleaseTime: 2026-11-21T10:42:03.0000000Z
