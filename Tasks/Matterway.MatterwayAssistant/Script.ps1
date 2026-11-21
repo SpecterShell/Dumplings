@@ -6,7 +6,7 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'ETag'
-  ReadVersion = { param($Path) Read-ProductVersionFromMsi -Path $Path }
-})
+    Validator   = 'ETag'
+    ReadVersion = { param($Path) Read-ProductVersionFromMsi -Path $Path }
+  })
 $this.CompleteInstallerUpdates($Result)

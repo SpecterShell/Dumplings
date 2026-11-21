@@ -3,10 +3,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'ETag'
-  LegacyState = @{ ValidatorField = 'ETag' }
-  Method = 'GET'
-  UserAgent = $WinGetUserAgent
-  ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
-})
+    Validator   = 'ETag'
+    LegacyState = @{ ValidatorField = 'ETag' }
+    Method      = 'GET'
+    UserAgent   = $WinGetUserAgent
+    ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
+  })
 $this.CompleteInstallerUpdates($Result)

@@ -48,9 +48,9 @@ switch -Regex ($this.Check()) {
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
-      InstallerUrl    = $InstallerUrl
+      InstallerUrl   = $InstallerUrl
       # InstallerUrlX64 = $InstallerUrlX64
-      ReleaseNotesCN  = $ReleaseNotesCN
+      ReleaseNotesCN = $ReleaseNotesCN
     }
     if ($Global:DumplingsPreference.Contains('EnableWrite') -and $Global:DumplingsPreference.EnableWrite) {
       $OldReleases | ConvertTo-Yaml -OutFile $OldReleasesPath -Force

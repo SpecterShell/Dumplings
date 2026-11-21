@@ -29,10 +29,10 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'Header'
-  HeaderName = 'Content-MD5'
-  LegacyState = @{ ValidatorField = 'Hash' }
-  ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
-})
+    Validator   = 'Header'
+    HeaderName  = 'Content-MD5'
+    LegacyState = @{ ValidatorField = 'Hash' }
+    ReadVersion = { param($Path) Read-ProductVersionFromExe -Path $Path }
+  })
 if ($Result.NeedsMetadata) { Get-ReleaseNotes }
 $this.CompleteInstallerUpdates($Result)

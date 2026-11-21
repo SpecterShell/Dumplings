@@ -36,16 +36,16 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'LastModified'
-  Installers = @(
-    @{ InstallerIndex = 0; LegacyState = @{ ValidatorField = 'LastModified'; InstallerIndex = 0 } }
-    @{ InstallerIndex = 1; LegacyState = @{ ValidatorField = 'LastModifiedX64'; InstallerIndex = 1 } }
-  )
-  ReadVersion = {
-    param($Path)
-    $Version = (Read-ProductVersionRawFromExe -Path $Path).ToString()
-    @{ Version = $Version; RealVersion = $Version.Split('.')[0] }
-  }
-})
+    Validator   = 'LastModified'
+    Installers  = @(
+      @{ InstallerIndex = 0; LegacyState = @{ ValidatorField = 'LastModified'; InstallerIndex = 0 } }
+      @{ InstallerIndex = 1; LegacyState = @{ ValidatorField = 'LastModifiedX64'; InstallerIndex = 1 } }
+    )
+    ReadVersion = {
+      param($Path)
+      $Version = (Read-ProductVersionRawFromExe -Path $Path).ToString()
+      @{ Version = $Version; RealVersion = $Version.Split('.')[0] }
+    }
+  })
 if ($Result.NeedsMetadata) { Get-ReleaseNotes }
 $this.CompleteInstallerUpdates($Result)

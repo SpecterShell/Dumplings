@@ -24,7 +24,7 @@ $this.CurrentState.Version = $Version2
 # }
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'zh-CN'
-  InstallerUrl    = $Object2.SelectSingleNode('/html/body/div[3]/div/div/div[1]/a[1]').Attributes['href'].Value | ConvertTo-UnescapedUri
+  InstallerUrl = $Object2.SelectSingleNode('/html/body/div[3]/div/div/div[1]/a[1]').Attributes['href'].Value | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

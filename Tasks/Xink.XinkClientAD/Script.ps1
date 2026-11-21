@@ -6,8 +6,8 @@ $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromMsi
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl           = $InstallerUrl
-  InstallerSha256        = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
+  InstallerUrl    = $InstallerUrl
+  InstallerSha256 = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
 Remove-Item -Path $InstallerFile -Recurse -Force -ErrorAction 'Continue' -ProgressAction 'SilentlyContinue'
