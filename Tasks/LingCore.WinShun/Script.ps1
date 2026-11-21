@@ -40,11 +40,10 @@ switch -Regex ($this.Check()) {
         $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      # ReleaseNotesUrl (zh-CN)
+      # ReleaseNotesUrl
       $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = $Object1.html_url
+        Key   = 'ReleaseNotesUrl'
+        Value = $Object1.html_url
       }
     } catch {
       $_ | Out-Host
