@@ -34,9 +34,9 @@ switch -Regex ($this.Check()) {
 
       # ReleaseNotesUrl (zh-CN)
       $this.CurrentState.Locale += [ordered]@{
-          Locale = 'zh-CN'
-        Key   = 'ReleaseNotesUrl'
-        Value = $Object1.html_url
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object1.html_url
       }
     } catch {
       $_ | Out-Host

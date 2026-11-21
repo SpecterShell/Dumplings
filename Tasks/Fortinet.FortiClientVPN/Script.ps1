@@ -81,8 +81,8 @@ function Get-FortiClientServerList {
   if (-not $List) { throw 'The FortiGuard FDNI response did not contain the server list object.' }
 
   return @([Text.Encoding]::ASCII.GetString($List[0].Data).Split("`r`n") | ForEach-Object {
-    ($_ -split '\|' | Where-Object { $_.StartsWith('Address=') }) -replace '^Address=', ''
-  } | ForEach-Object { ($_ -split ':')[0] } | Where-Object { $_ })
+      ($_ -split '\|' | Where-Object { $_.StartsWith('Address=') }) -replace '^Address=', ''
+    } | ForEach-Object { ($_ -split ':')[0] } | Where-Object { $_ })
 }
 
 function Invoke-FcpRequest {
@@ -264,9 +264,9 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator   = 'LastModified'
-  ReadVersion = { param($Path) Read-FileVersionFromExe -Path $Path }
-})
+    Validator   = 'LastModified'
+    ReadVersion = { param($Path) Read-FileVersionFromExe -Path $Path }
+  })
 
 if ($Result.NeedsMetadata) {
   $Image = Get-FortiClientVpnImageInfo -Version $this.CurrentState.Version

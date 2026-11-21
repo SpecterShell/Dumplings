@@ -49,20 +49,20 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'ETag'
-  Installers = @(
-    @{ InstallerIndex = 0; LegacyState = @{ ValidatorField = 'ETag'; InstallerIndex = 0 } }
-    @{ InstallerIndex = 1; LegacyState = @{ ValidatorField = 'ETag'; InstallerIndex = 1 } }
-  )
-  ReadVersion = {
-    param($Path, $Installer)
-    $Extracted = Expand-TempArchive -Path $Path -RelativeFilePath 'AccountResetInstaller.exe' -CollisionAction Rename
-    try {
-      (Get-AdvancedInstallerMsiInfo -Path (Join-Path $Extracted 'AccountResetInstaller.exe') -Architecture $Installer.Architecture).DisplayVersion
-    } finally {
-      Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+    Validator   = 'ETag'
+    Installers  = @(
+      @{ InstallerIndex = 0; LegacyState = @{ ValidatorField = 'ETag'; InstallerIndex = 0 } }
+      @{ InstallerIndex = 1; LegacyState = @{ ValidatorField = 'ETag'; InstallerIndex = 1 } }
+    )
+    ReadVersion = {
+      param($Path, $Installer)
+      $Extracted = Expand-TempArchive -Path $Path -RelativeFilePath 'AccountResetInstaller.exe' -CollisionAction Rename
+      try {
+        (Get-AdvancedInstallerMsiInfo -Path (Join-Path $Extracted 'AccountResetInstaller.exe') -Architecture $Installer.Architecture).DisplayVersion
+      } finally {
+        Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+      }
     }
-  }
-})
+  })
 if ($Result.NeedsMetadata) { Get-ReleaseNotes }
 $this.CompleteInstallerUpdates($Result)

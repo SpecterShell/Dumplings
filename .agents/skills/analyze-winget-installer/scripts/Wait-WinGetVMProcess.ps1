@@ -61,9 +61,9 @@ try {
 
   [pscustomobject][ordered]@{
     ProcessId           = $ProcessId
-    ProcessStartedAtUtc  = $ProcessStartedAtUtc
-    WaitStartedAtUtc     = $WaitStartedAtUtc
-    ElapsedMilliseconds  = $Clock.ElapsedMilliseconds
+    ProcessStartedAtUtc = $ProcessStartedAtUtc
+    WaitStartedAtUtc    = $WaitStartedAtUtc
+    ElapsedMilliseconds = $Clock.ElapsedMilliseconds
     WaitScope           = 'Process'
     Completed           = $Completed
     TimedOut            = -not $Completed

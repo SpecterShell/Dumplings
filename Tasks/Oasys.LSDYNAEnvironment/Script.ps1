@@ -8,11 +8,11 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator   = 'ETag'
-  ReadVersion = {
-    param($Path, $Installer)
-    $Match = [regex]::Match($Installer.InstallerUrl, '/oasys(\d+)_(\d+)_x64_setup\.exe$')
-    return "$($Match.Groups[1].Value).$($Match.Groups[2].Value)"
-  }
-})
+    Validator   = 'ETag'
+    ReadVersion = {
+      param($Path, $Installer)
+      $Match = [regex]::Match($Installer.InstallerUrl, '/oasys(\d+)_(\d+)_x64_setup\.exe$')
+      return "$($Match.Groups[1].Value).$($Match.Groups[2].Value)"
+    }
+  })
 $this.CompleteInstallerUpdates($Result)
