@@ -1,0 +1,25 @@
+Version: 0.107.42
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.42/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.42/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 插件：kn backend 现在会加载插件，新增 /v1/plugins 管理接口（列表与长轮询、重新加载、安装、启用/停用、删除、调用插件工具）。工作区插件只在目录受信任时加载。
+    - 插件界面面板：插件 manifest 可声明 ui.panels；新增沙箱化的静态资源路由 /v1/plugin-assets/...（签名授权、防路径逃逸、严格 CSP）。前端桥接协议见 docs/sandboxed-ui.md。
+    - MCP 应用界面：识别 MCP 工具声明的 ui:// 界面资源，tool.result 附带 ui_resource；新增 /v1/sessions/{id}/mcp-ui 读取接口。
+    - HTML 预览卡片：客户端开启 html_previews 后，识别 html preview 代码块和写入的 .html 文件，发出 preview.created 事件，并提供沙箱化预览接口。
+    - 新增能力声明：plugins、plugin_ui、mcp_apps、html_previews。
+    修复
+    - 插件安装写入了扫描器不读取的目录。
+    - 两个插件管理器会互相覆盖保存状态。
+    其他
+    - 用测试固定 tool.result 中 output（文本）与 content（图片）的分工。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.42
+ReleaseTime: 2026-11-22T14:04:29.0000000Z
