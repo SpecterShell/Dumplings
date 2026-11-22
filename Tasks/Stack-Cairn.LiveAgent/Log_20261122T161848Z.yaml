@@ -1,0 +1,34 @@
+Version: 2.0.31
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.31/LiveAgent-v2.0.31-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.31/LiveAgent-v2.0.31-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Improved
+    - Quieter reply progress (#1365, via #1366)
+      - A running reply now shows one status row, for example "Thinking · 18s", instead of several spinning "thinking" and "waiting" rows.
+      - Short phases such as preparing or saving no longer flash on screen.
+      - Reasoning and tool calls are merged into compact activity rows.
+      - A finished reply folds into one summary row, such as "Processed 30s · 5 tools · thought 10s". Click it to see every step.
+      - Settings → "Show detailed progress" brings back the detailed view.
+    - In-app confirmation dialogs (#1363, via #1364)
+      - Image settings, AI approval and web search now confirm with the app's own dialog instead of the system one.
+      - Keyboard: Esc cancels, Enter confirms.
+    - English interface (#1363, via #1364): text that still showed in Chinese in English mode has been translated. This covers image settings, provider import, and the gateway dashboard and device pages.
+    Quality
+    - Desktop end-to-end tests (#1367, via #1368): the real desktop app is now tested on Linux. The tests cover launch, chat streaming, tool approval, settings, the command palette and session switching. They use a local fake model and isolated temporary data.
+    Backend
+    Bundled K-brain is now v0.107.42 (#1369, via #1370):
+    - Plugin API /v1/plugins: plugins can be listed, reloaded, installed, enabled or disabled, and removed.
+    - New interfaces for upcoming features: sandboxed plugin UI panels, MCP Apps interfaces (ui:// resources) and HTML preview cards. HTML previews are opt-in per run.
+    - Terminal UI improvements from v0.107.41.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.31
+ReleaseTime: 2026-11-22T16:09:37.0000000Z
