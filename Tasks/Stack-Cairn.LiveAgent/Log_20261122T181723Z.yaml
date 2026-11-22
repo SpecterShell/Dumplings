@@ -1,0 +1,52 @@
+Version: 2.0.32
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.32/LiveAgent-v2.0.32-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.32/LiveAgent-v2.0.32-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Command palette (#1371, via #1372)
+      - Type @ to quick-open a file, for example @btngrp finds ButtonGroup.tsx.
+      - Type # to search conversations only.
+      - Individual settings can also be found from the palette.
+    - Settings search (#1371, via #1372): search finds individual settings and jumps to the setting with a highlight.
+    - Back and forward (#1371, via #1372)
+      - Move back and forward between conversations and pages, from the title bar or with mouse back/forward buttons.
+    - More shortcuts (#1371, via #1372). All of these can be rebound; conflicting shortcuts are rejected.
+
+      | Action                | Shortcut              |
+      | --------------------- | --------------------- |
+      | Toggle terminal       | Mod+J                 |
+      | Close current view    | Mod+Alt+W             |
+      | Switch theme          | Mod+Shift+L           |
+      | Cycle thinking level  | Mod+Alt+T             |
+      | Zoom in / out / reset | Mod+= / Mod+- / Mod+0 |
+
+      "Close current view" replaces the old Cmd+W for closing a split pane.
+    - Completion chime (#1371, via #1372): optional and off by default. When it is on, a chime plays if a run finishes while the window is in the background.
+    Faster
+    - Startup (#1373, via #1374)
+      - The desktop app shows its main window in about 360 ms instead of about 890 ms (macOS, measured).
+      - The app now loads about 4 MB of JavaScript at startup instead of 24 MB. Heavy views load when you open them.
+      - K-brain starts earlier, while the app is still setting up.
+      - Pi history is no longer rescanned on launch when nothing changed: about 1 s instead of 11 s for 2000 sessions.
+    - Terminal and file tree (#1373, via #1374)
+      - Large terminal output is decoded about 40× faster.
+      - A 50,000-file tree loads in under 0.1 s instead of 4 s.
+    - WebUI (#1373, via #1374): the startup download is about 30% smaller.
+    - Long conversations and streaming (#1375, via #1376)
+      - Find no longer stutters while a reply is streaming.
+      - Edit diffs longer than 300 lines are collapsed, with an option to expand them. Very long diffs open about twice as fast and stay smooth while they stream.
+      - Off-screen git review diffs no longer stay loaded.
+      - Large backend events are processed far faster.
+      - Each streamed update repaints only the reply being written.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.32
+ReleaseTime: 2026-11-22T18:13:22.0000000Z
