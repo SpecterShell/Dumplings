@@ -1,0 +1,135 @@
+Version: 1.4.6
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/CatVinci-Studio/Textus/releases/download/v1.4.6/Textus_1.4.6_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/CatVinci-Studio/Textus/releases/download/v1.4.6/Textus_1.4.6_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's new
+    Textus 1.4.6 brings a theme workshop for making your own theme without the AI, pinned tabs and picking several files at once, PDF paper size and margins, tidier Settings, steadier scrolling in long documents, and the desktop's tools on the iPad.
+    New
+    - Make your theme, above the themes list in Appearance and in Extensions › Themes, opens a theme workshop that works without Textus AI. Pick a theme you have to start from, then set its text, heading and code fonts (searchable, from the fonts on your computer), text size, heading scale, line height, line width, paragraph spacing and first-line indent in number fields, and pick a page palette and a code palette (each in light and dark). A sample page in your interface language - a passage from the classic the website shows for it, with headings, a list, a quote, code, a table and a formula - shows the result as you go; the workshop scrolls as one page, and in a narrow window the sample page sits under the settings. Make Theme saves it under Installed Themes with your name for it and switches to it, the fonts Textus serves from their files going with it; the window around the document keeps the starting theme's colours, and your own text settings still apply over it.
+    - Every installed theme has Edit in Workshop. A theme made in the workshop reopens as you left it and can be saved over or as a new theme; any other theme (from the store, imported, or written by the AI) is a starting point for a new one. A theme card in Create's conversation has Keep editing in the workshop, and the workshop's Continue with AI takes your theme into the conversation.
+    - An installed theme's ⋯ has Export…, which saves that theme's own files (its dark file beside it as name-dark.css); Import CSS… reads both back, so an exported theme imports as it was, workshop settings included. The old export is now called Export Current Look as CSS…, and Delete moved into the same ⋯.
+    - Settings › Appearance › Window background matches the page paints the title bar, icon rail and sidebar in the document's background, with the theme unchanged. Use the classic look turns it on too.
+    - A tab's menu has Pin Tab: a pinned tab stays first in its row, narrower, with a pin where its × was. ⌘W, a middle click and Close Others leave it open; unpin it to close it. It stays pinned when its file opens again. (#733)
+    - Picks several files and folders in the file tree at once: ⌘-click (Ctrl-click on Windows and Linux) adds or removes one, Shift-click picks a run. Drag them into a folder together, or right-click to open them or move them all to the Trash. ⌘/Ctrl-click no longer opens a file in a new window; drag its tab out of the window instead.
+    - The file tree draws a faint line down from each open folder, so it reads at a glance what sits in which folder. (#733)
+    - PDF export has paper size (A4, Letter, A5), margins (narrow, normal, wide) and text size (85% to 130%) in Settings › Editing › Export, next to page numbers.
+    - Settings › Editing › One newline inside a paragraph chooses whether a single newline joins the lines into one, as CommonMark and Pandoc read it (the default, and how the editor has always shown it), or breaks the line, as GitHub comments and Obsidian do. The editor, the split view, HTML, PDF and Pandoc export all follow it, and a folder's own setting (an Obsidian vault's "Strict line breaks") comes first, so the editor in such a vault now shows the breaks its split view and Pandoc export already did. The file is never changed.
+    - Settings › Editing › One tilde each side, text chooses what one tilde means: a subscript after a letter or digit (H~2~O, the default), a strikethrough as on GitHub, or the tildes as typed. Two tildes, ~~text~~, always strike out; a document that struck text out with one tilde each side shows it as subscript or plain text now, unless you choose strikethrough here. Files are saved as written whichever is chosen; the editor, Textus AI's replies, the split view and Pandoc export all read it the same way.
+    - GitHub's inline math form, $`x^2`$, shows as a formula in the editor, the split view, Textus AI's replies and HTML and PDF export, and goes to Pandoc as $x^2$. The file keeps it as written. A dollar sign beside ordinary inline code, as in costs $`5`, stays as typed.
+    - A message typed while the AI is replying still waits its turn, and now has a Send now button: Textus AI reads it at its next step and goes on with it in mind; an external agent can't be told mid-reply, so it stops there and takes the message next.
+    - Settings › General › The + in the tab row opens can show the start page instead of a blank document; New File there turns it into the document.
+    - On a phone, a document's ⋯ opens its actions: Outline, Find & Replace, Source Mode and Share. Outline brings the sidebar's Outline tab in; Share saves an unsaved document first, as the menu's Share does.
+    - On a phone, a document's ⋯ › Outline opens its headings in a sheet: each level indented under the one above, the section being read ticked, and a tap goes to that heading.
+    - A new official plugin, Logseq Folders, now reads a Logseq graph's settings: links by page name, the journals folder and its date format, and where new pages go. Textus itself still recognises a Logseq graph, so wikilinks are found from it without the plugin, and suggests the plugin once when a graph is opened.
+    - Settings › About › Open-source licenses lists every open-source package Textus is built from, with its license.
+    - For plugin authors: textus.files.registerConventionReader reads the folder settings of an app Textus doesn't read itself. Textus finds the app's marker file and hands it to the plugin; what the plugin reads is used like any other app's settings.
+    - For plugin authors: contributes.folderDocuments opens a folder with a given extension as one document. A new official plugin, TextBundle, uses it: a .textbundle folder (as Bear, Ulysses and iA Writer save them) shows in the sidebar as one document and opens in a tab named after it.
+    - For plugin authors: textus.ai.stream(request, onText): a plugin with ai.model gets the user's writing model's answer as it is written, piece by piece, with the same question and monthly allowance as ai.complete.
+    - For plugin authors: textus.views.registerDatabaseView offers another way to show a database's rows. The Timeline plugin uses it, so a database can now be shown as a timeline.
+    - For plugin authors (preview): textus.files.registerProvider serves a folder under the plugin's own scheme (ssh://host/…). It opens in the sidebar, and its documents open, save, rename and search like any other. textus.files.openFolder opens one as the window's folder.
+    - For plugin authors: textus.git.fetch(), push() and pull() reach the folder's remote with the user's own Git and saved credentials, under a new git.sync permission asked for apart from committing; git.status() also gives the remote branch and how many commits are ahead and behind. A pull that would leave conflicts is undone and says so, so no document is left with conflict markers. (#763)
+    Improved
+    - External agents (Claude Code, Codex and others over ACP) now write their changes straight into your files without "Undo this change" marks. Undo still takes back a change to an open document.
+    - A heading's fold arrow now sits in the margin beside ⋮⋮ instead of inside the heading's text, so it no longer gets in the way of the caret, selection or typing at a heading's start; a folded heading keeps its arrow there.
+    - Mermaid diagrams and charts fold to one line with the same margin arrow as headings, embeds and plugin blocks, and stay folded when the document is opened again.
+    - Switching back to a long document's tab is quicker: its text is matched with the file once the page is drawn, not before, and nothing is worked out for suggestions it doesn't have.
+    - Dragging a block in a long document lifts at once and moves smoothly: only the blocks near the screen are measured and moved.
+    - Typing, Enter and pasting in a long document with folded headings no longer restyle every block in it.
+    - Your notes on a document now live with the folder: in its project's .textus/notes/ (the open folder counts), so they travel with the folder and can be shared through Git or a synced drive. Notes kept the old way are moved there when the document or its folder is opened, and they still follow a file or folder moved in Textus. A file opened on its own, outside any folder, keeps its notes in the app's data as before.
+    - Phones and tablets: a finger dragged along the tab row scrolls it freely to the tab you want, instead of jumping one tab at a time; hold a tab first to move it. The row's + stays at its end however many tabs are open.
+    - Keeps the scroll bar's thumb long enough to grab in a long document, where it used to shrink to a sliver.
+    - Tab works the same everywhere: a list's or to-do's item goes a level in and Shift+Tab brings it back; formulas and the front matter indent as code blocks do; in source mode Tab on a list's line indents the whole line; a waiting completion suggestion takes Tab first, in a table or a code block too. In a quote or a callout Tab does nothing.
+    - Each AI conversation keeps who answers in it. An agent's button in the window bar (Claude Code, Codex…) starts a new conversation with that agent in a tab of its own; the agent picked under the composer switches only the conversation it is in; + starts a new one with the same agent; one reopened from History comes back with the agent it had.
+    - List items pasted into a list take that list's kind: into a to-do list they come in as to-dos (ticked ones stay ticked), into a plain or numbered list without checkboxes. Pasted on a blank line, they stay as they were.
+    - A plugin's block in a document (a database, a plot, a board) is drawn on the page as a table is, without a box around it; its edge shows faintly while the mouse is over it or it is in use.
+    - Shows plugin authors a complete example of streaming and cancelling an AI request. (#726)
+    - Phones: an Android phone opens Settings from ☰ as a sheet, as an iPhone does, instead of also showing it as a sidebar tab; opening ☰ puts the keyboard away on both. Share and Find & Replace are in the document's ⋯ only, no longer in ☰ as well.
+    - Settings are easier to scan:
+      - General: what opens at launch, after the last document closes and from the tab row's + is now its own group, Opening and closing. The proxy moved into Application.
+      - Appearance has a Text group: the document's font and size, text width, first-line indent and smooth caret moved here from Editing. Use the classic look sets the classic layout, hides the activity bar and puts the title bar on its own row; turned off, it puts back what you had. A theme is added from a CSS file in Installed themes › ⋯ › Import CSS…, and your own CSS is written in Installed themes › ⋯ › Custom CSS….
+      - Editing › Text is now Editing › Document (its text settings moved to Appearance › Text): the empty-line hint ("Type / to insert") and the block handles (⋮⋮) are always on, with no switch; the plain-text copy and paste menu items moved to View. Markdown is split into Display and Typing; colour swatches and the ** and ` pairs left Advanced.
+      - Editing › Export is split into PDF and Word and Pandoc. Pandoc arguments take one row: the format, then its arguments.
+      - Textus AI: the pages are now called Chat & writing and Memory & skills. A list's "?" follows its title.
+      - Privacy: the button that deletes recovery drafts says Delete.
+    - A theme that sets its text width (#write { max-width }), a theme from the AI included, now gets exactly that width, as in Typora: the editor's margins go around it instead of coming out of it, so such themes' text is about 40 px wider than before. A text width or first-line indent picked in Settings applies over a theme's.
+    Fixed
+    - Pastes files into the Textus AI box: a screenshot or copied picture, or files copied in Finder or File Explorer (Word, Excel, PowerPoint, PDF, pictures and the rest), attach as the + button's do instead of doing nothing. Text copied from Word or Excel still pastes as text.
+    - Switching between source mode and split view keeps the keyboard in the source, the caret and scroll position where they were.
+    - A key pressed the moment a menu or sheet opens now goes to it instead of being lost.
+    - A document with formulas no longer jiggles up and down by itself once scrolled to certain places, and on a Mac the pointer turns into the text cursor over it again: a formula three screens away was drawn and put away over and over, which on a Mac also held the pointer as an arrow.
+    - Formulas, diagrams and HTML far from the screen are put away exactly where they were drawn, so the lines around them no longer shift by a few pixels while you scroll.
+    - Very long documents scroll much more smoothly, and a document with many formulas or diagrams no longer shows blank stretches while scrolling: text far from the screen is drawn ahead in larger steps, and what you are reading stays still while the rest is drawn around it.
+    - iPad: a floating or split keyboard no longer cuts the window down to a strip at the top of the screen.
+    - On a Mac, jumping from the outline (or the [TOC], a section, a plugin's edit) to a heading far down a long document could leave the page scrolled past it.
+    - A document scrolled and then switched away from at once comes back where it was read, also when it reopens in an island of another width.
+    - Escape pressed the moment a menu or popover opens now closes it.
+    - Textus AI rewriting a long document in one go no longer stops the window with "Something went wrong": an edit whose final version covered less of the original than its draft, arriving while its text was still typing in, read past the end of its sentences.
+    - Linux: middle-clicking a tab to close it no longer pastes your last selection into the document in front. A middle click on text still pastes, as usual on Linux.
+    - Display maths written loosely now reads as a formula: one that starts on the $$ line ($$x = 1) or ends on the closing one (y = 2$$). The formula's first line was dropped, and an unrecognised closing $$ turned the rest of the document into maths.
+    - Windows: Select All highlights the document in the usual selection colour again, not a darker one. On macOS and Linux the highlight takes a theme's selection colour.
+    - The note under Settings › Appearance › Window layout runs the full width of its section instead of wrapping early.
+    - When an external agent such as Codex stops a reply (for example, after reaching its usage limit), Textus shows the agent's own reason instead of "Internal error" followed by its install instructions.
+    - A narrow window's bar no longer lays its status and agent buttons over the tabs under it: plugins' status shrinks to their icons (the words in the tooltip), then the agents' buttons to one menu, before a tab loses its room.
+    - A status a plugin declares in its manifest shows in the window bar before the plugin's code has started, as documented.
+    - Opening a document from the file manager while Textus isn't running (or has no window open) brings back the last session too, the folder open as before, with that document in front in the window whose folder holds it. It used to open the document alone and leave the folder behind.
+    - What you read no longer jumps while you scroll. A picture loading above the screen used to push the page down (a picture on this computer now takes its room as soon as the document opens, before it loads), distant formulas and diagrams being let go could shift it, and paragraphs far away turning back into placeholders briefly shortened the page. A search that lands near the end of a long document now stays on its match.
+    - Reference-link definitions listed on consecutive lines ([ref21]: … then [ref22]: …) stay on consecutive lines when a document is written out whole, instead of getting a blank line between them.
+    - On macOS, pulling a document past its top or bottom (the rubber band) no longer swings back and forth or flickers: the swipe's momentum after the finger lifts no longer pulls the page out again, and formulas and other drawn blocks wait until it springs back instead of being drawn or let go mid-stretch; slowing down without lifting the finger no longer springs the page back under it.
+    - Source mode no longer stretches past its top or bottom: code stops at its ends; the rendered document keeps its give.
+    - With Settings › General › On launch, open set to the start page or a blank document, Textus no longer reopens the document you last had in front after you quit with ⌘Q. That document also showed without its folder in the sidebar.
+    - On Windows 10 the window no longer has a blue edge on three sides: the system's shadow, which drew it in the accent colour, is off there, and Textus draws a thin edge in the theme's colour instead (none while maximized).
+    - Pressing Enter at the end of a code block's last line now shows the caret on the new line. It stayed at the end of the line above, so the second Enter, which leaves the block, looked like the first.
+    - Text that already has one style, such as a highlight, can now be made bold, italic or struck through as well. Before, selecting words inside a highlight and pressing ⌘B did nothing.
+    - A SOCKS5 proxy setting now really connects, and resolves names at the proxy (socks5h): on an intranet, this computer's own DNS cannot look up an address elsewhere, and without this the request failed before it left the computer.
+    - On Windows, "follow the system" now reads a ProxyServer setting in the per-protocol form (http=...;https=...) the way the browser does; that shape was silently dropped before, and requests then went direct, failing with a name error on an intranet. It also follows an automatic-configuration script (PAC) and WPAD discovery, again like the browser.
+    - A proxy address pasted with its scheme (http://host:port) is taken as it is; before, another scheme was prefixed onto it and the request went looking for a host literally named "http".
+    - A catalog or download failure now says which proxy was in effect (its credentials masked), so a wrong proxy address shows itself.
+    - Requests now trust the certificates installed on this computer (the system's certificate store), not only the bundled ones: a proxy that re-signs TLS with its own certificate - common on corporate networks - was refused with "invalid peer certificate: UnknownIssuer".
+    - External agents and MCP servers that run on Node now trust the certificates installed on this computer too, as the app's own requests do: behind a company proxy that re-signs TLS, they were refused. This needs Node 24.6 or later.
+    - A list item whose first line holds something tall, such as a matrix or a picture, now has its number, bullet or checkbox on that line's text, not at the top of the line.
+    - In AI replies, a formula block written right under a line of text (no blank line between) now shows as a formula. Before, the lines above it turned into a large heading, the formula showed as source, and the text after it could come out red.
+    - With a document just wide enough for the margin (often in a split view), its cards no longer flicker in and out and the text no longer jumps; where the margin doesn't fit, the text keeps its own width instead of staying narrowed.
+    - AI change previews: in the result view, a formula in a replaced sentence no longer stays on screen beside the new one; bold or italic right next to Chinese or Japanese punctuation shows as bold in the chat, the change cards and a comment's quoted passage instead of as **; and a run of changes in one chat card no longer overlaps when one of them is a list or several paragraphs. Accepting a change while the caret is in it keeps the caret in the new text instead of moving it to the start of the next paragraph.
+    - Android's Back steps back through the app before leaving it: an open find bar closes, Settings on a phone goes from a page back to its list (and closes from the list), and from an AI tab Back returns to the document the AI was opened over.
+    - Right after launch with no folder open, the Search pane's note no longer shows in large type for a moment.
+    - Backspace on an empty line right under a horizontal rule removes the line at the first press and puts the caret back on the text above; it used to pick the rule silently, and the second press deleted the rule.
+    - Names the permission a plugin leaves out on its install card also when the plugin calls the API through a name it gave a namespace, such as const ed = textus.editor or const { files } = textus. (#728)
+    - Make your theme (and Create for plugins and skills) no longer opens as an empty strip in its tab: its title, box and starting points show again, and with the AI off it says why.
+    - A reference link ([ref21] with [ref21]: https://… elsewhere in the document) now shows its address on hover, as any other link does. (#718)
+    - file:// pictures and links (file:///C:/…, file:/C:/…, file:///Users/…, with percent-encoded spaces) open as the local files they name, as the same paths without the scheme always did; a file:// URL naming another computer is still refused. (#739)
+    - A range written with tildes, such as 40.30~40.45 = **64.0~64.2%** or 5~10 人，20~30 人，no longer turns into a strikethrough that also breaks the bold after it. (#756)
+    - An AI rewrite whose new text is the same as the old is no longer shown as the passage deleted and put back; the AI is told nothing would change.
+    - In a long document with formulas or diagrams, a click right after scrolling places the caret where you clicked, instead of sometimes leaving it where it was on a busy computer.
+    - Powers written with carets, such as x^2+y^2, 2^10,3^5 or 2^10 和 3^5, stay as typed instead of turning part of the line into superscript. Superscripts such as x^2^, 1^st^ place, Na^+^Cl^-^ and m^2^s^-2^ still show as before.
+    - A formula after a price, as in costs $5, a $x$ thing, is shown as a formula in the editor too, as Textus AI's replies already showed it; prices such as $5 to $10 stay text.
+    - An emoji shortcode joined to a letter or digit, such as :100: in 10:100:00 or :b: in a:b:c, stays text instead of showing an emoji.
+    - Keeps the top and bottom margins on every page of a long PDF export on Windows, instead of the pages drifting up partway through the document. (#736)
+    - Ends a PDF export on its last page of text, instead of sometimes adding a blank page after it. (#736)
+    - Picking a problem from the list in a document's bottom-right corner opens its explanation card again when the problem is out of view: the page scrolls to it and the card stays open, instead of not appearing or closing at once.
+    - Settings › Textus AI › Writing assist › Show revisions offers the margin views whenever the document you're working in has room for them, instead of greying them out while an unsaved draft sits behind the Settings tab.
+    - Lists the fonts you installed yourself in Settings' text font list on the Mac, and shows the document in them.
+    - Linux: the text font list now includes fonts in every folder fontconfig names (a distribution's own, Flatpak's, custom ones), not only the four usual folders.
+    Platform notes
+    - Android: plugins now work in a folder opened from the Files app without access to all files. Databases, tasks, backlinks and other plugins read and write its documents, and plugins' folder-wide search covers it.
+    - iPhone and iPad: deleting a document or folder in the file tree moves it to the Files app's Recently Deleted, from where it can be put back, instead of deleting it for good; folders can be deleted too.
+    - iPad: Export as PDF, laid out as on a Mac, then the share sheet to save it to Files or send it; on a missing picture, Choose Image… picks one from Files; drop-down lists, the colour picker and a code block's language menu are the desktop's; the share sheet opens where you tapped; a table's row and column handles lift only once held, so a long press beside the first column gives the paste bar.
+    - iPad: the menu is the desktop's whole menu (File, Edit, Format, View, Plugins, Help) with Documents and Share, not the iPhone's short list; the sidebar has Plugins and the settings gear, Settings has Shortcuts, the Start page shows shortcut keys, and the word count sits in the corner as on a computer.
+    - iPad: drag files in from another app: pictures go into the document where you drop them, documents are copied into Textus's own folder (On My iPad › Textus) and opened; Install from File in Settings › Plugins picks a package in Files.
+    - iPad with a hardware keyboard: a tab brought to the front, or a jump from the outline or search, puts the keys back in the document, as on a computer.
+    - iPad with a keyboard: ⌘N, ⌘T, ⌘O, ⌘⇧T, ⌘, and ⌘P work, as on a Mac.
+    - iPad with a trackpad or mouse: tooltips, the × on unopened tabs, a table's + bars, the fold arrows and every other hover effect show under the pointer, as on a computer.
+    - iPhone on its side: the side away from the camera keeps clear of the screen's rounded corner, so the sidebar and menu buttons there no longer run into it.
+    - iPad, iPhone and touch screens: hold a file or folder in the file tree to lift it and drag it into another folder; let go without moving to get its menu, as with tabs. On an iPad a trackpad's right-click opens the menu too.
+    - The same hold lifts an icon on the left rail, to put it in another place.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/CatVinci-Studio/Textus/releases/tag/v1.4.6
+ReleaseTime: 2026-11-22T08:12:51.0000000Z
