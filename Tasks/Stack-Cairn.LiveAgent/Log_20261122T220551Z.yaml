@@ -1,0 +1,37 @@
+Version: 2.0.34
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.34/LiveAgent-v2.0.34-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.34/LiveAgent-v2.0.34-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Approve tool calls from MCP App views: when a view calls a tool your settings set to "ask", LiveAgent shows the server, tool and arguments before it runs. You can deny, allow once, or allow for the rest of the session. (#1387, via #1388)
+    - MCP Apps come back in older chats: reopened conversations and subagent results render their interactive views again, with the full tool result. (#1387, via #1388)
+    - MCP hub: shows each server's display name, a badge for tools that have a UI, and a count of tools that only views can call. You can set a server's display name in the MCP server dialog. (#1387, via #1388)
+    - Plugin panels that fail to load show an error instead of a blank frame. If the plugin is temporarily unavailable, the panel retries once. (#1387, via #1388)
+    Improved
+    - Visual consistency: desktop and the WebUI now share one set of tokens for:
+      - status colors
+      - overlays
+      - shadows
+      - font sizes
+      - icon buttons, status dots and section headers
+      You'll notice a few small changes: status dots are slightly darker in light mode, the command palette backdrop now matches dialogs, and icon buttons share one corner radius. (#1385, via #1386)
+    - Bundled K-brain is now v0.107.43:
+      - MCP App views get the full raw tool result.
+      - Tools marked as app-only are hidden from the model.
+      - The MCP tool-call endpoint asks before running "ask" tools.
+      - Plugin ids containing _ work.
+      (#1387, via #1388)
+    Quality
+    - New CI check: it blocks new hard-coded colors and arbitrary sizes. There are 58% fewer of them than before; the remaining ones are in a baseline that can only shrink. (#1385, via #1386)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.34
+ReleaseTime: 2026-11-22T22:03:19.0000000Z
