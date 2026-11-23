@@ -1,0 +1,32 @@
+Version: 0.5.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/Victor-Quqi/Axiopera/releases/download/v0.5.3/axiopera-v0.5.3-x86_64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Search model IDs, names and resolved aliases with axiopera models <agent> [query]. Combine the query with --provider, for example axiopera models pi opus --provider anthropic. Both filters ignore case.
+    Improved
+    - Catalogs with more than 50 models show counts by provider when available. Filtered results show up to 50 rows. Use --all to expand the list or --json for every match. Repeated lookups reuse the catalog for 15 seconds.
+    - When a backend rejects a model or reasoning effort, the error shows supported effort levels or a shortlist of matching models from large catalogs. Pi reports model selection errors during startup, and OpenCode identifies disabled models by their full ID.
+    Fixed
+    - Starting the daemon through WMI on Windows no longer opens a visible console window.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    axiopera models 支持按名称或提供方查找模型。后端拒绝所选模型或推理强度时，报错会列出相关选项。
+    新增
+    - axiopera models <agent> [query] 可搜索模型 ID、名称和别名对应的实际 ID，也可用 --provider 限定提供方。例如 axiopera models pi opus --provider anthropic。两种筛选均忽略大小写。
+    改进
+    - 模型超过 50 个且 ID 带有提供方前缀时，先按提供方列出数量。筛选结果默认最多显示 50 行，--all 展开全部，--json 返回所有匹配项。15 秒内重复查询可复用目录。
+    - 后端拒绝模型或推理强度时，若目录较大，错误信息会优先列出所选模型支持的强度或相关候选模型。Pi 启动失败时会显示模型选择错误，OpenCode 会给出已禁用模型的完整 ID。
+    修复
+    - Windows 通过 WMI 启动 daemon 时不再弹出控制台窗口。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Victor-Quqi/Axiopera/releases/tag/v0.5.3
+ReleaseTime: 2026-11-23T06:02:37.0000000Z
