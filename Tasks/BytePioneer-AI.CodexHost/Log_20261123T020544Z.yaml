@@ -1,0 +1,108 @@
+Version: 0.25.1
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.25.1/codexhost-0.25.1-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.25.1/codexhost-0.25.1-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新紧急修复了 v0.25.0 启动选择页误进离线预览模式导致点击无效的问题；同时包含 v0.25.0 / v0.24.0 的全部核心更新——全新原生桌面壳、Android 伴侣应用与两端通用插件平台，适配 Codex Desktop 26.1117，并全面增强了远程项目协作、多 Agent 协作、Antigravity 与 Web / 手机端体验。
+    🖥️ 原生桌面壳、Android 伴侣与更新公告
+    macOS 与 Windows 安装包和 npm 安装均内置独立 CodexHost 桌面壳、系统托盘与每次启动选择页（已修复 v0.25.0 启动选择页点击无效问题），常规启动不再弹出控制台；全新原生 Android APK 支持扫码配对多台电脑、侧栏切换电脑、应用内更新及按需明文 HTTP 连接；升级后 Desktop 与 Web 同步展示应用内更新公告。
+    — @BytePioneer-AI
+    🧩 插件两端通用与 Codex Desktop 26.1117 适配
+    Desktop 和 Web 共用一套插件，挂件与独立页面两端通用，旧插件自动迁移且 Windows 保存设置不再冲突；修好了 26.1117 下 MCP 启动超时、新对话点 Harness 无响应与 Codex 额度用完阻断外部 Harness 等问题，Harness 切换改为自动识别。
+    — @BytePioneer-AI · @mouzhi · @MGHus4473 · @YanYunCY · @lpmasser
+    🌐 远程项目、Web 侧栏与移动端体验
+    Web 端现可在已连接的远程项目中直接创建新对话并对运行中 Thread 排队或中途引导追问，侧栏支持原生 Codex 分组、子会话归档确认、跨工作区委派树、划词批注高亮与原生图片项渲染；iOS PWA 支持下载文件，手机端全面重排，HTTPS 反向代理访问更稳定。
+    — @mouzhi · @ASH521 · @ChaceLyee2101 · @sduhantao-maker · @biground · @hhucz · @xzxxn777 · @koeria · @BytePioneer-AI
+    🤝 多 Agent 协作与模型能力升级
+    新增多 Agent 协作设置页为各 Harness 配置默认委派 Model 与 Thinking，所有 Harness 均支持直接书写 Model ID（含 ~fast）；Cursor 新增原生 Fast 模型，OMP 从首字流即显示账号额度，Claude Code 实时同步计划面板，OpenCode 侧栏直接显示原生标题。
+    — @BytePioneer-AI · @ump45nose · @hhucz · @ChaceLyee2101 · @qbnmmm
+    🌀 Antigravity 与 DeepSeek 更稳
+    Antigravity 后台唤醒单独成轮、请求后刷新用量并显示首字耗时、委派 Codex 遵循速度档位，计划切换保持在同一轮对话，旧 Model 下线、空闲释放与历史回放错位均已修复；DeepSeek 故障后不再拖垮 Host 并可安全恢复会话。
+    — @BytePioneer-AI · @TimYuhong · @ChaceLyee2101 · @ump45nose · @aabiberyi-prog · @bwndlct · @lpmasser
+    🧵 Thread 同步、后台任务与多端兼容
+    后台运行中的工具交互与文件改动摘要在重连后完整保留，支持运行中从更早轮次 Fork，外部 Thread 启动与 Side Chat 识别更准确；Windows Remote SSH、Store 直启与 Linux Web 更新交接均已修复，外部客户端支持细化读取与派发权限。
+    — @bwndlct · @ump45nose · @sduhantao-maker · @koeria · @mouzhi · @MayApril · @hhucz · @BytePioneer-AI
+    🚀 新功能
+    - CodexHost 桌面壳：macOS 与 Windows（含安装包与 npm）内置原生桌面窗口、系统托盘与启动选择页，附带轻量 Web 地址条
+    - Android 客户端：新增独立原生伴侣 APK，支持多电脑扫码配对、侧栏切换、应用内自动更新与自定义 HTTP/HTTPS 地址
+    - 统一插件平台与更新公告：Desktop 和 Web 共用挂件与独立页面插件并自动迁移，升级后两端自动弹出当版更新公告
+    - 多 Agent 协作与 Model ID：新增默认委派设置页，所有 Harness 支持直接书写 Model ID（CLI 委派支持 ~fast）与按需单刷模型列表 (#940, #986)
+    - Web 远程项目与追问：在已连接的远程项目中直接创建并发送新对话，对运行中远程 Thread 支持排队与中途引导 (#990, #1043)
+    - Web 侧栏与交互：展示并移动原生 Codex 分组、归档含子会话前弹窗确认，划词批注精准高亮原文，iOS PWA 支持文件下载 (#959, #1037, #1038)
+    - Cursor / OMP / Claude Code：Cursor 支持原生 Fast 模型，OMP 首字流即显示额度，Claude Code 任务实时同步到计划面板 (#782, #929, #976)
+    - Antigravity：后台唤醒单独成轮、请求后刷新用量并显示首字耗时，委派 Codex 遵循指定速度档位 (#942, #964, #1001)
+    - Fork 与外部客户端：运行中可从更早轮次 Fork；外部客户端支持配置独立的读取与派发权限范围 (#944, #1025)
+    🐛 修复
+    - CodexHost 桌面壳（v0.25.1 热修复）：启动选择页误进离线预览模式导致点击 CodexHost 桌面端、官方 Codex Desktop 或 Web 按钮无响应
+    - Codex Desktop 26.1117：MCP 启动超时、新对话点 Harness 无响应与 Codex 额度用完阻断外部 Harness (#1003, #1010, #1040)
+    - Web：原生图片项未渲染、新建对话等待卡顿、跨工作区委派树缺失及反向代理 / 无认证挂载被拒 (#968, #1005, #1042, #1044)
+    - 手机端：顶栏、弹窗、审批和设置页布局优化，长问题可滚动作答 (#957)
+    - Windows / Linux：Remote SSH 识别失败、Store 版可改用 --windows-direct、WSL 提示改用 SSH 及 Linux Web 更新交接失败 (#978, #999, #1011, #1012)
+    - Desktop：侧栏残留已关闭空 SSH Thread、控制进程无响应无法恢复、后台工具交互与文件摘要重连丢失 (#948, #1006, #1019)
+    - Antigravity：旧 Model 下线无法恢复、空闲释放误取消后台任务、历史缺失工具记录及退出计划模式拆成新轮 (#937, #951, #975)
+    - Claude Code / DeepSeek / OpenCode / ZCode：子代理卡住父 Thread、DeepSeek 故障恢复、OpenCode 原生标题、ZCode 3.18.2 反复弹窗 (#935, #949, #958, #1014, #1035)
+    - Thread 与 Host：删除后残留、首轮回复重复、外部 Thread 启动顺序与 Side Chat 误报 (#963, #1023, #1047, #1052)
+    - 设置与委派：未验证 Harness 更新缺少二次确认，共享委派技能作用域过宽 (#1033, #1036)
+    - 另有 25 余项桌面壳、插件、Thread 列表与 Web 的稳定性修复
+    - ⚠️ 已知问题：在 Codex Desktop 26.1103 及之后的版本里，通过官方 Remote Control 使用 Windows 主机上的外部 Harness 暂时不可用
+
+    This release hotfixes a v0.25.0 startup issue where the launch chooser fell back to offline preview mode, and includes all major updates from v0.25.0 / v0.24.0: the native desktop shell, Android companion app, unified plugin platform, Codex Desktop 26.1117 compatibility, remote project chats, multi-agent settings, Antigravity, Web, and mobile improvements.
+    🖥️ Native desktop shell, Android app, and announcements
+    macOS and Windows installers and npm packages now bundle the standalone CodexHost desktop shell with a system tray, launch chooser (with the v0.25.0 unresponsive-click issue fixed), and silent normal launches; a new native Android APK supports multi-computer QR pairing, sidebar host switching, in-app updates, and optional HTTP origins; both Desktop and Web display in-app release announcements after upgrading.
+    — @BytePioneer-AI
+    🧩 Unified plugins and Codex Desktop 26.1117 support
+    Desktop and Web share one set of plugins across widgets and pages with automatic migration and atomic Windows saves; fixes resolve 26.1117 MCP startup timeouts, unresponsive Harness buttons in new chats, and external Harnesses being blocked when Codex usage runs out, with resilient auto-detected switching.
+    — @BytePioneer-AI · @mouzhi · @MGHus4473 · @YanYunCY · @lpmasser
+    🌐 Remote projects, Web sidebar, and mobile
+    Compose new chats in connected remote projects on Web and queue or steer follow-ups on running remote Threads; the Web sidebar adds native Codex sections, child-archive confirmation, delegated Thread trees per workspace, exact reply annotation highlights, and inline native images, alongside iOS PWA downloads, mobile layout updates, and HTTPS reverse-proxy support.
+    — @mouzhi · @ASH521 · @ChaceLyee2101 · @sduhantao-maker · @biground · @hhucz · @xzxxn777 · @koeria · @BytePioneer-AI
+    🤝 Multi-agent collaboration and models
+    A new Multi-Agent settings page sets default delegation Models and Thinking per Harness, with writable Model IDs across all Harnesses (including ~fast); Cursor adds native Fast models, OMP shows account quota from stream start, Claude Code updates the plan panel live, and OpenCode shows native titles in the sidebar.
+    — @BytePioneer-AI · @ump45nose · @hhucz · @ChaceLyee2101 · @qbnmmm
+    🌀 More reliable Antigravity and DeepSeek
+    Antigravity turns background wakeups into their own Turns, refreshes usage with time to first token, honors Codex speed tiers, keeps plan handoffs in the same Turn, and fixes retired Models, idle releases, and history replay; DeepSeek no longer crashes the Host and recovers sessions cleanly after faults.
+    — @BytePioneer-AI · @TimYuhong · @ChaceLyee2101 · @ump45nose · @aabiberyi-prog · @bwndlct · @lpmasser
+    🧵 Thread sync, detached tasks, and platform fixes
+    Unfinished detached tool interactions and file change summaries survive reconnects, running conversations can be forked from earlier Turns, and external Thread startup and Side Chat reporting are accurate; Windows Remote SSH, Store --windows-direct, Linux Web update handoff, and scoped external client permissions are also included.
+    — @bwndlct · @ump45nose · @sduhantao-maker · @koeria · @mouzhi · @MayApril · @hhucz · @BytePioneer-AI
+    🚀 Features
+    - CodexHost Desktop shell: bundled native window, system tray, launch chooser, and lightweight Web access bar for macOS and Windows installers and npm packages
+    - Android app: standalone native companion APK with multi-computer QR pairing, sidebar host switching, in-app auto-updates, and flexible HTTP/HTTPS origins
+    - Unified plugins and announcements: shared Desktop/Web widgets and pages with automatic migration, plus in-app release announcements on both surfaces
+    - Multi-agent settings and Model IDs: default delegation Model/Thinking per Harness, writable Model IDs (~fast for CLI delegation), and per-Harness model refresh (#940, #986)
+    - Web remote projects and follow-ups: compose new chats in connected remote projects, and queue or steer follow-ups on running remote Threads (#990, #1043)
+    - Web sidebar and UI: native Codex Thread sections, confirmation before archiving visible child sessions, anchored reply annotations, and iOS PWA file downloads (#959, #1037, #1038)
+    - Cursor / OMP / Claude Code: native Cursor Fast models, OMP quota from stream start, and live Claude Code plan panel updates (#782, #929, #976)
+    - Antigravity: autonomous Turns for background wakeups, post-request usage refresh with time to first token, and Codex speed tiers (#942, #964, #1001)
+    - Fork and external clients: fork an earlier Turn while a later one is running, and separate read and dispatch scopes for external clients (#944, #1025)
+    🐛 Fixes
+    - CodexHost Desktop shell (v0.25.1 hotfix): launch chooser fell back to offline preview mode so clicking CodexHost Desktop, Official Codex Desktop, or Web buttons did not launch anything
+    - Codex Desktop 26.1117: MCP startup timeouts, unresponsive Harness switching in new chats, and external Harnesses blocked by Codex usage limits (#1003, #1010, #1040)
+    - Web: native image items failed to render, new sessions waited before opening, delegated trees were missing in child workspaces, and reverse-proxy / auth-free mounts were rejected (#968, #1005, #1042, #1044)
+    - Mobile: header, dialog, approval, and Settings layouts improved, with scrollable long questions (#957)
+    - Windows / Linux: Remote SSH Harness detection, --windows-direct fallback for Store Desktop, WSL Remote SSH guidance, and Linux Web update handoff (#978, #999, #1011, #1012)
+    - Desktop: lingering closed empty SSH Threads, unresponsive controller recovery, and lost detached tool interactions or file summaries on reconnect (#948, #1006, #1019)
+    - Antigravity: retired Model recovery, idle process release cancelling background tasks, missing tool calls in history, and plan handoffs splitting into a new Turn (#937, #951, #975)
+    - Claude Code / DeepSeek / OpenCode / ZCode: stuck subagents leaving parent Threads busy, DeepSeek fault recovery, OpenCode native titles, and repeated ZCode 3.18.2 Keychain prompts (#935, #949, #958, #1014, #1035)
+    - Threads and Host: deleted Threads lingering, duplicate first replies, external Thread startup ordering, and attached Side Chats reported as new Threads (#963, #1023, #1047, #1052)
+    - Settings and delegation: missing confirmation for unverified Harness updates, and overly broad shared delegation skill scope (#1033, #1036)
+    - 25+ more stability fixes across the desktop shell, plugins, Thread lists, and Web
+    - ⚠️ Known issue: external Harnesses on a Windows host used through official Remote Control are unavailable on Codex Desktop 26.1103 and later
+    Install & Upgrade
+    - New install: npm install -g @codexhost/cli, or download the installer for your platform from Assets below.
+    - Upgrade: codexhost update. For npm installs, run codexhost stop before reinstalling.
+    - macOS "cannot verify this app": xattr -dr com.apple.quarantine /Applications/codexhost.app
+    - More: README
+    🙏 致谢 / Thanks
+    @BytePioneer-AI · @ump45nose (#782, #969, #970, #972, #973, #974, #975, #976, #981, #986, #987, #988, #989, #1004, #1025) · @ChaceLyee2101 (#951, #1033, #1035, #1036, #1037, #1038) · @mouzhi (#948, #978, #990, #995, #1009) · @sduhantao-maker (#945, #946, #1023, #1044, #1047) · @hhucz (#929, #954, #955) · @lpmasser (#935, #949, #1040) · @biground (#957, #959) · @bwndlct (#996, #1006) · @koeria (#1042, #1052) · @ASH521 (#1043) · @MayApril (#999) · @xzxxn777 (#1005) · @TimYuhong (#937) · @qbnmmm (#958) · @aabiberyi-prog (#964) · @MGHus4473 (#994) · @YanYunCY (#1003)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.25.1
+ReleaseTime: 2026-11-23T01:36:33.0000000Z
