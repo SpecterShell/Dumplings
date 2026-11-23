@@ -1,0 +1,162 @@
+Version: 0.22.0
+Installer:
+- Query:
+    Architecture: x64
+  InstallerUrl: https://github.com/storytold/pdfcraft/releases/download/v0.22.0/pdfcraft-0.22.0-windows-x64.msi
+- Query:
+    Architecture: arm64
+  InstallerUrl: https://github.com/storytold/pdfcraft/releases/download/v0.22.0/pdfcraft-0.22.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - Print colour management: the app converts printed pictures into a printer profile (#6269) by @KenM76 in https://github.com/storytold/pdfcraft/pull/6853
+    - fix(render): an RGB colour in an isolated DeviceCMYK group blends in CMYK, as its ink by @KenM76 in https://github.com/storytold/pdfcraft/pull/7031
+    - prc: rebuild compressed tessellations whose normals are recalculated (#1297) by @KenM76 in https://github.com/storytold/pdfcraft/pull/7034
+    - Auto-tag Apply tags headings by size and weight (#7062) by @KenM76 in https://github.com/storytold/pdfcraft/pull/7069
+    - feat: LaTeX animate playback — page actions, timers, getOCGs, view-only overrides (port of #4751) by @FredApps in https://github.com/storytold/pdfcraft/pull/6985
+    - Reveal recent files in the system file manager from Home (#5452) by @vangel76 in https://github.com/storytold/pdfcraft/pull/5559
+    - fix(ui): Recognize Text's settings scroll in a short window, its buttons stay in reach (#6599) by @asadosteaksnl in https://github.com/storytold/pdfcraft/pull/6760
+    - fix(js): each unit-test thread counts its own document script workers by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/7051
+    - fix(hayro-syntax): a lone sign in a dictionary or array is unreadable, not a panic by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/7053
+    - M7: a form edit reads the document's fields once (form.fill-text) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/7056
+    - fix(tests): saves compared byte for byte don't fail when the clock crosses a second between them by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/7073
+    - fix(measure): read compound and fractional measurement number formats (ISO 32000-2 12.9.2) by @jonathanwxh-cell in https://github.com/storytold/pdfcraft/pull/7115
+    - fix(optimize): a destination name given by reference is copied once however many dictionaries name it by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7035
+    - fix(sign): every signature's VRI entry shares the store's evidence arrays instead of copying them by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7038
+    - fix(forms): finding the first character a simple font cannot hold encodes the whole string once, then each distinct character once by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7047
+    - CI: use the shared git-sources check by @FredApps in https://github.com/storytold/pdfcraft/pull/7042
+    - fix(ocr): main builds on Windows again (clippy needless_bool in program_is_executable) by @FredApps in https://github.com/storytold/pdfcraft/pull/7222
+    - fix(startup): an OPENSSL_ia32cap naming a missing CPU feature no longer stops PdfCraft (#2916) by @FredApps in https://github.com/storytold/pdfcraft/pull/7141
+    - test(ui): run the Home recent Reveal test inline so its toast check can't race by @Ethunxxx in https://github.com/storytold/pdfcraft/pull/7202
+    - Link JavaScript actions and app.openDoc (port of #2081) by @FredApps in https://github.com/storytold/pdfcraft/pull/7144
+    - export: migrate zip writer to craft-zip (#778) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7260
+    - Move remaining file formats and codecs to craft-libs (#778) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7261
+    - fix(ci): use pinned fonts for Sonar coverage by @FredApps in https://github.com/storytold/pdfcraft/pull/4417
+    - M7: replacing a line keeps the source font for the words it can show (#2378, re-lands #2955) by @FredApps in https://github.com/storytold/pdfcraft/pull/6842
+    - Fix macOS saves for PDFs with extended attributes by @christianlappin in https://github.com/storytold/pdfcraft/pull/7203
+    - Cut over remaining codecs, xfa XML, and export packaging to craft-libs by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7326
+    - Move selected comments together with arrow keys by @FredApps in https://github.com/storytold/pdfcraft/pull/7165
+    - fix(create): export JPEG images behind stream filters by @FredApps in https://github.com/storytold/pdfcraft/pull/7168
+    - fix(ui): distinguish Insert Text annotation icon by @FredApps in https://github.com/storytold/pdfcraft/pull/7170
+    - CI: preserve font notice regressions through shared gate by @FredApps in https://github.com/storytold/pdfcraft/pull/7218
+    - i18n: move the craft-i18n pin to e56d262 by @FredApps in https://github.com/storytold/pdfcraft/pull/7319
+    - fix(xfa): resolve clippy lints on main by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7354
+    - Tests: keep the update download test stable in Linux coverage by @christianlappin in https://github.com/storytold/pdfcraft/pull/7350
+    - Create: decode PCX through craft-image-codecs by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7378
+    - Select a table by rows when a drag crosses its columns by @hectorviov in https://github.com/storytold/pdfcraft/pull/3669
+    - i18n: move the craft-i18n pin to 866aff71 by @FredApps in https://github.com/storytold/pdfcraft/pull/7417
+    - Handle fast optimization completion in picker test by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7422
+    - Export: write RTF through craft-rtf (storytold/craft-libs#793) by @kiwi5boy in https://github.com/storytold/pdfcraft/pull/7374
+    - fix(web): open document links with noopener and send COOP same-origin (#5084) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/5091
+    - fix(render): cap a JPEG 2000 codestream's SIZ size at 2^28 pixels (#5078) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/5086
+    - sign: replace local BER/DER codec with existing craft-pkcs7 by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7447
+    - preflight: use shared ICC v2 sRGB output-intent bytes by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7450
+    - M2: a JPX image on a rotated page draws instead of crashing (#3884) by @jweaver3 in https://github.com/storytold/pdfcraft/pull/5438
+    - M3: select text across pages (view.text-select) by @TheSuperStew in https://github.com/storytold/pdfcraft/pull/5017
+    - sign: replace local signature verification with existing craft-pkcs7 by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7475
+    - export: replace local Base64 encoder with existing craft-mime by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7449
+    - bs: Bosnian language support by @nine-codes in https://github.com/storytold/pdfcraft/pull/5445
+    - Select the current query when refocusing search fields by @urbanij in https://github.com/storytold/pdfcraft/pull/4533
+    - docs: bring ROADMAP.md and parity assessment current through 2026-11-15 by @gmrmad1 in https://github.com/storytold/pdfcraft/pull/7377
+    - Ctrl+M opens the Comments panel (#3741) by @AdrianTM in https://github.com/storytold/pdfcraft/pull/3762
+    - test(create): fail explicitly for invalid one-bit RGB fixtures by @MMexicann in https://github.com/storytold/pdfcraft/pull/7344
+    - refactor(content): re-export craft_pdfcoscontent by @FredApps in https://github.com/storytold/pdfcraft/pull/7529
+    - docs(prc-render): name the current craft-prc parser dependency by @MMexicann in https://github.com/storytold/pdfcraft/pull/7330
+    - sign: use shared CMS SignedData signing writer by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7584
+    - docs: prefer shared craft-libs implementations by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7527
+    - fix(fonts): the licence policy reads name-table records one at a time within a total allowance by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7044
+    - fix(fonts): a CMap's codespace ranges are at most four bytes and listed once by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/6075
+    - fix(platform): confine staging names; private temp dirs for tests and macOS signing by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/5923
+    - fix(test): allow the unused mut on Windows in the private test folders by @FredApps in https://github.com/storytold/pdfcraft/pull/7595
+    - Export: use shared extracted-text Markdown writer with exact output parity by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7591
+    - deny: ignore RUSTSEC-2026-0543, chrono unmaintained (#7647) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/7649
+    - M3: full screen fills the screen or keeps the page display, and Esc closes the find bar before leaving (#576, #4273, #5302) by @mtlcl410 in https://github.com/storytold/pdfcraft/pull/5325
+    - fix(render): resolve TrueType glyphs across Unicode/UCS-4 cmaps, post v2.0 aliases, and truncated FontFlags (#2159) by @jonathanwxh-cell in https://github.com/storytold/pdfcraft/pull/2980
+    - fix(forms): name detected check boxes from the nearer neighbouring label (#2943) by @jonathanwxh-cell in https://github.com/storytold/pdfcraft/pull/2953
+    - Bookmarks from text styles open at the heading top on turned pages by @vangel76 in https://github.com/storytold/pdfcraft/pull/7443
+    - Set Page Boxes crops the margin you type on UserUnit pages by @vangel76 in https://github.com/storytold/pdfcraft/pull/7445
+    - fix(xfdf): bound field text, look up names, guard tab cells, protect fields by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/5937
+    - fix(ui): mirror the macOS title bar when the traffic lights are on the right (RTL system languages) by @Yousef-Dev921 in https://github.com/storytold/pdfcraft/pull/2186
+    - fix(ui): Edit ▸ Copy and Paste are enabled for selected comments (#7123) by @indy2kro in https://github.com/storytold/pdfcraft/pull/7146
+    - Edit text: space between paragraphs by @regendorf-ux in https://github.com/storytold/pdfcraft/pull/1925
+    - M5.1: structural round-trip, property and never-crash tests for crates/annot (tests only) by @amoisttowe1 in https://github.com/storytold/pdfcraft/pull/2523
+    - fix(edit): preserve source fonts in mixed-script paragraphs by @PerchAnton in https://github.com/storytold/pdfcraft/pull/2778
+    - Print: make a long printer list easier to browse and search (#4399) by @PerchAnton in https://github.com/storytold/pdfcraft/pull/4436
+    - fix(xfa): render lines without width as vertical and without height as horizontal by @manurosado in https://github.com/storytold/pdfcraft/pull/4588
+    - Keep the part of an email address before an apostrophe when redacting by @Silvertree2010 in https://github.com/storytold/pdfcraft/pull/4652
+    - M12: forms show and add pages from page templates (#1429) by @Lcoding15 in https://github.com/storytold/pdfcraft/pull/5332
+    - M10: Recognize text finds small print on large pages (tiled detection) by @huppiflupp in https://github.com/storytold/pdfcraft/pull/5401
+    - Tests: frame budgets scale with a calibration workload on slow machines by @dotCooCoo in https://github.com/storytold/pdfcraft/pull/5494
+    - fix(sign): a change to a field a signature locks invalidates it (#6757) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/6763
+    - fix(redact): redact an XObject or font whose /Subtype is a reference (#6750) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/6765
+    - fix(sign): an unlisted body or an entry that leads nowhere is no permitted change (#6754) by @Higgs32584 in https://github.com/storytold/pdfcraft/pull/6768
+    - fix(forms): draw field text the field font cannot hold from the bundled face instead of ? by @chamber074 in https://github.com/storytold/pdfcraft/pull/6841
+    - Double-clicking a one-letter word selects only that word by @vangel76 in https://github.com/storytold/pdfcraft/pull/7425
+    - A hidden layer stays hidden after a full Save As by @vangel76 in https://github.com/storytold/pdfcraft/pull/7426
+    - Form-data import says when the form refused every value by @vangel76 in https://github.com/storytold/pdfcraft/pull/7429
+    - fix(export): package a repeated picture once in PPTX and bound HTML embedded pictures by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/5933
+    - fix(xfdf): retain canonical Cargo lock package order by @FredApps in https://github.com/storytold/pdfcraft/pull/7698
+    - test(annot): verify URL scan work independently of machine speed by @FredApps in https://github.com/storytold/pdfcraft/pull/7695
+    - test(annot): retain current opacity and review-state semantics by @FredApps in https://github.com/storytold/pdfcraft/pull/7721
+    - XFA: cache repeated prototype child counts without relaxing work limits by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7659
+    - Update annotation tests after SaveOptions, Style, LinkAction, and Shape changes by @FredApps in https://github.com/storytold/pdfcraft/pull/7702
+    - Sign: use shared RFC 3161 request reader by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7637
+    - XFA: use shared namespace-aware XML DOM by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7642
+    - Sign: parse crl through shared PKCS7 components by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7654
+    - Sign: parse x509 through shared PKCS7 components by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7655
+    - XFDF: use shared bounded field-value reader by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7646
+    - Sign: parse ocsp through shared PKCS7 components by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7656
+    - Keep the DER tag import where the test oracles use it by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7783
+    - test(sign): keep embedded OCSP certificate oracle independent by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7786
+    - fix(sign): consume standard OCSP certificate wrapper parsing by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7795
+    - Use merged XFA namespace and BOM safety fixes by @FredApps in https://github.com/storytold/pdfcraft/pull/7779
+    - test: avoid racing startup password completion order by @FredApps in https://github.com/storytold/pdfcraft/pull/7811
+    - Export: Word through craft-docx, from the shared word model (rebased #7592) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7814
+    - ci: allow native gate cleanup to finish by @FredApps in https://github.com/storytold/pdfcraft/pull/7805
+    - Cut over pptx export to craft-pptx by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7823
+    - Point hayro-postscript to storytold/craft-libs by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7828
+    - test(ui): await native button-script completion by @FredApps in https://github.com/storytold/pdfcraft/pull/7825
+    - Restore plain PPTX tables and shared-writer regression checks by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7830
+    - Export: bound RTF pictures per placement, bake their rotations, report the pages that lose one by @kiwi5boy in https://github.com/storytold/pdfcraft/pull/7572
+    - Issue #2385: audit finds thick strokes, black highlights and white boxes over text by @wstock in https://github.com/storytold/pdfcraft/pull/2408
+    - export: isolate portable HTML and XFDF/FDF grammar by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7868
+    - create: share JPEG and JP2 embedding probes without re-encoding by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7902
+    - fonts: isolate Type0, CIDFont, ToUnicode, and FontDescriptor wire builders by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7911
+    - mcp: delegate stdio framing and JSON-RPC envelopes to craft-libs by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7910
+    - Fonts: the embedding tests import Stream by @dotCooCoo in https://github.com/storytold/pdfcraft/pull/7916
+    - export, xfdf: cut over portable HTML writer and XFDF/FDF grammar to craft-libs (#778) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7914
+    - Restore JPEG metadata preflight parity by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7930
+    - create: use shared JPEG and JP2 embedding probes from craft-image-codecs (#778) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7939
+    - Route PDF parsing and rendering through shared craft-pdf by @skylartaylor in https://github.com/storytold/pdfcraft/pull/2068
+    - Adopt the shared AGENTS.md (RFC-0072) by @aiongg in https://github.com/storytold/pdfcraft/pull/7937
+    - fonts: cut over encodings, Std14, and font wire builders to craft-pdf (#778) by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7940
+    - create: restore tolerant Extended XMP preflight scanner by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7953
+    - Rename the open file from its tab (Rename… and double-click), with names that work on every system (#2102, #2867) by @regendorf-ux in https://github.com/storytold/pdfcraft/pull/2923
+    - fix(redact): refuse annotations with unreadable bounds by @rezaprama in https://github.com/storytold/pdfcraft/pull/7180
+    - render: enforce max_coverage via craft-libs #2546 by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7961
+    - fix(ui): split view's active-pane line is drawn under open menus (#7010) by @indy2kro in https://github.com/storytold/pdfcraft/pull/7147
+    - mcp: add stdio protocol transcript tests for initialize, cancel, and batch by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7969
+    - tests(fonts,render): add custom CMap wire and shared RasterOptions max_coverage parity tests by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/7968
+    - test(rename): separate filename and full-path boundary fixtures by @FredApps in https://github.com/storytold/pdfcraft/pull/7965
+    - Release 0.22.0: retain the macOS signing keychain between steps by @dylanmtaylor in https://github.com/storytold/pdfcraft/pull/8111
+    New Contributors
+    - @asadosteaksnl made their first contribution in https://github.com/storytold/pdfcraft/pull/6760
+    - @christianlappin made their first contribution in https://github.com/storytold/pdfcraft/pull/7203
+    - @hectorviov made their first contribution in https://github.com/storytold/pdfcraft/pull/3669
+    - @kiwi5boy made their first contribution in https://github.com/storytold/pdfcraft/pull/7374
+    - @jweaver3 made their first contribution in https://github.com/storytold/pdfcraft/pull/5438
+    - @TheSuperStew made their first contribution in https://github.com/storytold/pdfcraft/pull/5017
+    - @nine-codes made their first contribution in https://github.com/storytold/pdfcraft/pull/5445
+    - @urbanij made their first contribution in https://github.com/storytold/pdfcraft/pull/4533
+    - @gmrmad1 made their first contribution in https://github.com/storytold/pdfcraft/pull/7377
+    - @Yousef-Dev921 made their first contribution in https://github.com/storytold/pdfcraft/pull/2186
+    - @indy2kro made their first contribution in https://github.com/storytold/pdfcraft/pull/7146
+    - @manurosado made their first contribution in https://github.com/storytold/pdfcraft/pull/4588
+    - @rezaprama made their first contribution in https://github.com/storytold/pdfcraft/pull/7180
+    Full Changelog: https://github.com/storytold/pdfcraft/compare/v0.21.1...v0.22.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/pdfcraft/releases/tag/v0.22.0
+ReleaseTime: 2026-11-23T03:45:29.0000000Z
