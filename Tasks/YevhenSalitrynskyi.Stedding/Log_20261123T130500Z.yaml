@@ -1,0 +1,73 @@
+Version: 0.7.1
+Installer:
+- Architecture: x64
+  InstallerType: exe
+  InstallerUrl: https://github.com/ysalitrynskyi/stedding-browser/releases/download/v0.7.1/Stedding-0.7.1-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Stedding 0.7.1
+    Switching Spaces now reads as sliding one Space in and the other out, each Space keeps its
+    scroll, ⌃⇥ lists only the tabs you have open, and a review of Stedding's own code fixed about
+    180 smaller faults, each with a test. Still on Chromium 158.0.8127.37.
+    Changed
+    - A Space switch slides the Spaces across. The new Space's list pushes the old one out of
+      the sidebar, the two joined edge to edge like one page dragged across, with each Space's name
+      and icon moving with its rows. Before, the old rows faded away and the new ones popped up.
+    - Each Space keeps its scroll. Coming back to a Space shows its list where you left it, in
+      that window. A Space you have not opened in the window starts at its top.
+    - The other Spaces' icons are easier to see. They stay grey, at half strength instead of the
+      fainter look of 0.7.0, so the Space you are in still stands out.
+    - Collapse All Folders and Expand All Folders in a folder's menu. Right-click a folder to
+      fold or unfold every folder of the Space at once, as the ⇧⌘E (Ctrl+Shift+E) shortcut does.
+      (Discussion 128)
+    - ⌃⇥ lists only tabs that are open. Essentials and pins that are asleep, or were never
+      opened, no longer appear in the list of recent tabs, so stepping through it does not open
+      them. (GitHub issue 126)
+    - Live folders stay out of exports and backups. A Space exported to a file, and the
+      sidebar's backups, leave a live folder's rows out instead of keeping them as ordinary pins.
+    - Translate's language list is never requested. No page is offered for translation in these
+      builds, so the browser keeps the list it was built with and no longer asks Google for it
+      when the Languages settings open. (GitHub issue 133)
+    - On the Mac, the ⌃ shortcuts work under any keyboard layout. With a layout whose ⌃ keys
+      type non-Latin letters, ⌃M and the other ⌃ shortcuts did nothing; they now follow the key.
+    - The sidebar file's join sheet says "1 folder" and "1 Space", and a live folder's tooltip has
+      one sentence a line.
+    Fixed
+    - A launch set to open the New Tab page or specific pages crashed when the window it kept for its
+      pinned rows had a tab group of ordinary tabs, which that launch does not bring back.
+    - Rejoining a shared sidebar file applied the other computers' deleted Spaces and removed pins
+      without asking first. It now asks.
+    - Two crashes in the shared sidebar: leaving a pin while a change from another computer waited
+      for it, and a failed first download from a sync place.
+    - Open in Stedding (⌘O) and Open as Tab, on a link an installed app opens itself, could send
+      the page into the app's window, or crash.
+    - On the Mac, capturing a region of a tab whose page had crashed crashed the browser.
+    - The short tab menu offered New Split View with Current Tab while a split was already on screen,
+      and choosing it crashed.
+    - Dragging a tab that was not on screen out of a window left that window stuck on its old page:
+      a row clicked next was selected but not shown, and ⌘W closed a tab that was not on screen.
+    - Clear Session Data also forgets the sign-ins a site asked for with the browser's own sign-in
+      box.
+    - Many smaller fixes across the sidebar and its sync, import, peek, the command bar, the
+      archive, folders, split view, the settings pages and both updaters.
+    Known limits
+    - The Windows installer is unsigned (S-56).
+    - Netflix, Disney+, Prime Video and Spotify's web player do not play yet (S-270).
+    - Spaces that share a session share their essentials; a Space's own essentials with shared
+      sign-ins are not offered (GitHub issue 87, S-445).
+    - In a window whose pinned run holds a split, that run keeps its order when another window
+      reorders it (S-94).
+    - A second Space made by sync before 0.6.0 stays until you delete it (S-494).
+    - A peek closed from outside, by its pinned tab closing, the pinned page going to another site,
+      the window closing or the browser quitting, does not ask "Leave site?", and what was typed in
+      it is lost.
+    - A pin whose page and site were never opened in Stedding shows the generic globe until chosen.
+    - Finished downloads missing from the Downloads list (GitHub issue 90) are not understood yet; the
+      steps that lead there would help.
+- Locale: en-GB
+  Key: ReleaseNotesUrl
+  Value: https://github.com/ysalitrynskyi/stedding-browser/releases/tag/v0.7.1
+ReleaseTime: 2026-11-23T12:59:22.0000000Z
+RealVersion: 158.7.1.999

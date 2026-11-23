@@ -1,0 +1,522 @@
+Version: 1.4.272
+Installer:
+- InstallerType: nullsoft
+  InstallerUrl: https://github.com/stablyai/orca/releases/download/v1.4.272/orca-windows-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    More reliable bots that pick up where they left off ✨
+    - 🤖 Bots recover more reliably after interruptions. Conversations paused by usage limits can continue automatically after an account switch or restart. Resume works for chats interrupted by a crash or restart, and with Resume work on restart enabled, terminal workers can return to their saved conversations even if their terminals were lost. Usage-limit recovery · Chat recovery · Worker recovery
+    - 🌐 Use the same browser tools across machines. Extensions such as 1Password now work in SSH workspace tabs and paired-server tabs opened on This device. Drop files from your desktop into server-streamed pages, and let agents on SSH hosts or paired servers upload and download files using paths on their own host. Extensions · Drag and drop · SSH files · Paired-server files
+    - 💬 Take a quick detour in chat. On supported agents, type /btw or /side to mark a draft as a side chat. The composer’s worker count now reflects who’s actively working. Side chat · Worker count
+    - 💤 Free up idle resources. Memory Saver now unloads hidden This device browser tabs and restores them when you or an agent needs them. An idle WSL distro can stop while Orca stays open and wake when you need it again. Memory Saver · WSL
+    - 📱 More room to work from your phone. With the matching mobile build, you can post photos in group rooms, handle agent requests across paired computers from Needs you, and delete chats from an agent’s Chats tab. Group photos · Agent requests · Delete chats
+    About Orca Bots (Beta)
+    - Resume a failed turn from Slack. A linked Slack thread can offer Resume so you can retry the failed turn and pick up queued work from the thread. Open this thread in Orca also works for bots on paired servers. Resume · Thread links
+    - Get replies while workers keep going. Replies on GitHub, Linear, and Discord go out when the turn that wrote them finishes, even if its workers are still running. Reply delivery
+    - See what work is waiting on. Items can show Waiting with a reason such as CI, a review, or a deploy. Questions that need your attention still appear in Needs you. Waiting status · Item status display
+    - Easier GitHub and Slack setup. GitHub’s Add org and Refresh let you pick an account and rediscover organizations it can already access. Slack setup lets you choose a workspace when there’s more than one. GitHub setup · Slack setup
+    - Debug webhook automations faster. Copy a webhook URL from setup, the automation menu, or its page. The CLI counts calls that filters ignored and shows the reason when the server supplies it. Copy URL · Webhook inspection
+
+    What's Changed
+    See the full list of pull requests
+    - Agent group rooms: an item answer or comment wakes the member that owns the item by @Jinwoo-H in https://github.com/stablyai/orca/pull/46521
+    - feat(orchestration): tell the coordinator when a worker's model retries or gives no reply for 10 minutes by @Jinwoo-H in https://github.com/stablyai/orca/pull/46628
+    - fix(mobile): fetch a browser tab's favicon on the tab's own route (STA-16824) by @OrcaWin in https://github.com/stablyai/orca/pull/46308
+    - test(acp): pin that a peer bot's mail never cancels a busy ACP member's answer by @AmethystLiang in https://github.com/stablyai/orca/pull/46337
+    - fix(fixtures): replace real-looking bot/task names in BotItemReplyingBox fixture by @AmethystLiang in https://github.com/stablyai/orca/pull/46481
+    - feat(bots): show Slack's try-it as a Slack DM preview by @AmethystLiang in https://github.com/stablyai/orca/pull/45276
+    - Agent-to-agent requests without a chat go to the target's main chat by @Jinwoo-H in https://github.com/stablyai/orca/pull/46648
+    - Idle Claude panes stop checking in with Orca every 5 seconds by @brennanb2025 in https://github.com/stablyai/orca/pull/46501
+    - fix(antigravity): stop in-flight model listings before sign-in so a stale server cannot delete the new token by @nwparker in https://github.com/stablyai/orca/pull/46647
+    - fix(orchestration): keep waiting for a worker agent that isn't ready in time by @Jinwoo-H in https://github.com/stablyai/orca/pull/46497
+    - feat(mobile): drag the computer's agents and groups into a new order from the phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46094
+    - fix(worktrees): keep the supplied note when creating a folder workspace on desktop by @nwparker in https://github.com/stablyai/orca/pull/46679
+    - Even spacing between chat activity rows by @Jinwoo-H in https://github.com/stablyai/orca/pull/46659
+    - fix(browser-extensions): keep reloading remaining profiles when an unpacked reload fails in one by @nwparker in https://github.com/stablyai/orca/pull/46680
+    - fix(source-control): require a fresh review lookup before Create PR by @nwparker in https://github.com/stablyai/orca/pull/46681
+    - feat(mobile): push when an agent asks you on an item, opening its page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46123
+    - fix(markdown-preview): scroll same-page links to sanitizer-prefixed HTML anchors by @bbingz in https://github.com/stablyai/orca/pull/46669
+    - fix(folder-workspaces): merge review notes against the client's base instead of replacing them by @nwparker in https://github.com/stablyai/orca/pull/46682
+    - fix(extensions): accept empty options in action.openPopup by @nwparker in https://github.com/stablyai/orca/pull/46683
+    - fix(git): report operational HEAD read failures as errors in branch compare by @nwparker in https://github.com/stablyai/orca/pull/46686
+    - feat(orchestration): tell an agent question's asker once its taker stopped without answering by @Jinwoo-H in https://github.com/stablyai/orca/pull/46541
+    - fix(browser): expose checkbox/radio roles and checked state in extension toolbar menus by @nwparker in https://github.com/stablyai/orca/pull/46690
+    - Fix free-form replies to multi-question Needs you items by @AmethystLiang in https://github.com/stablyai/orca/pull/46693
+    - fix(right-sidebar): keep terminal focus when clicking a panel tab by @innocarpe in https://github.com/stablyai/orca/pull/46620
+    - Batch linked GitHub review lookups by @nwparker in https://github.com/stablyai/orca/pull/46704
+    - fix(combined-diff): refuse a section save that would rewrite non-UTF-8 bytes without confirmation by @nwparker in https://github.com/stablyai/orca/pull/46692
+    - fix(terminal): let a reattached Windows agent redraw so held mail is delivered by @Jinwoo-H in https://github.com/stablyai/orca/pull/46378
+    - Remove chat choices from the agent Items filter by @AmethystLiang in https://github.com/stablyai/orca/pull/46684
+    - fix(orchestration): tell a worker when its coordinator stops without answering its question by @Jinwoo-H in https://github.com/stablyai/orca/pull/46562
+    - feat(bots): keep lines that read as owner decisions out of the status move by @AmethystLiang in https://github.com/stablyai/orca/pull/46649
+    - Usage-limit continue no longer skips a chat after a refused queued message by @Jinwoo-H in https://github.com/stablyai/orca/pull/46663
+    - feat(emulator): press matching Android pane keys on a hardware keyboard by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46712
+    - fix(agent-hooks): follow /model switches from the Claude statusline so the phone shows the current model by @dbsghdz1 in https://github.com/stablyai/orca/pull/46675
+    - fix(i18n): remove stale Korean stop-agent override by @AmethystLiang in https://github.com/stablyai/orca/pull/46152
+    - fix(orchestration): tell agents when a question to or from a paired computer won't be answered by @Jinwoo-H in https://github.com/stablyai/orca/pull/46571
+    - Prune expensive terminal replay and bot launch tests by @nwparker in https://github.com/stablyai/orca/pull/46722
+    - fix(markdown-preview): scroll the outline to punctuation-only headings again by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46689
+    - fix(test-runtime): resolve the macOS /tmp symlink for the per-run temp root by @dbsghdz1 in https://github.com/stablyai/orca/pull/46695
+    - fix(titlebar): keep terminal focus when toggling a sidebar with the mouse by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46735
+    - fix(computer): read an app's main and focused window before declaring an other-Space window unreadable by @RicardoQS23 in https://github.com/stablyai/orca/pull/46699
+    - fix(test-runtime): compile renderer code in Vitest when the checkout path contains -test- by @dbsghdz1 in https://github.com/stablyai/orca/pull/46711
+    - Show one working spinner per bot sidebar row by @AmethystLiang in https://github.com/stablyai/orca/pull/46717
+    - fix(skills): install Gemini CLI skills only in ~/.agents/skills and remove Orca's old duplicates by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46724
+    - feat(bots): show GitHub's try-it as a GitHub comment preview by @AmethystLiang in https://github.com/stablyai/orca/pull/46223
+    - fix(cli): treat any --dry-run form as a preview in skills install/update by @nwparker in https://github.com/stablyai/orca/pull/46747
+    - fix(serve): run packaged serve from the profile, not the app bundle by @Jinwoo-H in https://github.com/stablyai/orca/pull/46736
+    - fix(plugins): fail plugin update --all when any plugin update fails by @nwparker in https://github.com/stablyai/orca/pull/46749
+    - fix(plugins): keep a replaced command when an older registration is disposed by @bbingz in https://github.com/stablyai/orca/pull/46718
+    - Redesign the chat answer card, step progress and queued messages by @AmethystLiang in https://github.com/stablyai/orca/pull/42515
+    - fix(mobile): show website and GitHub repo icons on the phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46014
+    - fix(mobile): show uploaded bot pictures on Feed, Bots, Agents and rooms by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46697
+    - fix(bots): keep a collapsed bot next to the Bots label by @innocarpe in https://github.com/stablyai/orca/pull/45567
+    - fix(hermes): list Hermes models in the picker and delete the listing session by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46752
+    - A bot's Home panel stays fast with hundreds of items by @brennanb2025 in https://github.com/stablyai/orca/pull/45971
+    - fix(daemon): guard control socket during stream bootstrap so errors don't escape connection handling by @nwparker in https://github.com/stablyai/orca/pull/46745
+    - fix(cli): reject inapplicable or valueless selectors in plugin install by @nwparker in https://github.com/stablyai/orca/pull/46751
+    - fix(skills): keep last-known skills when a skill root becomes unreadable by @nwparker in https://github.com/stablyai/orca/pull/46756
+    - fix(ai-vault): recognize the program in copied env -u resume lines by @hsusul in https://github.com/stablyai/orca/pull/46723
+    - fix(native-chat): open conversations saved in a workspace sub-folder in Chat, running in that folder by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46760
+    - fix(git): follow a changed origin for Bitbucket, Gitea and Azure DevOps repositories by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46763
+    - fix(rename): keep an inline rename whose field unmounts mid-edit by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46766
+    - fix(acp): keep the error message when an OpenCode child session fails by @nwparker in https://github.com/stablyai/orca/pull/46769
+    - fix(browser): import cookies on SSH pages into that host's browser by @AmoabaKelvin in https://github.com/stablyai/orca/pull/45913
+    - fix(settings): keep Windows shell labels on one line in the Default Shell control by @nwparker in https://github.com/stablyai/orca/pull/46778
+    - fix(github): refresh the pull request file list on demand by @nwparker in https://github.com/stablyai/orca/pull/46783
+    - fix(chat): activity-row chips use the row's width before truncating by @Jinwoo-H in https://github.com/stablyai/orca/pull/46777
+    - fix(agent-status): quitting or relaunching an idle agent no longer marks its workspace unread by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46774
+    - test: cut the suite to the tests that guard real invariants by @nwparker in https://github.com/stablyai/orca/pull/46786
+    - Update README downloads badge by @buf0-bot[bot] in https://github.com/stablyai/orca/pull/46790
+    - perf(github): combine exact issue metadata and conversation reads by @nwparker in https://github.com/stablyai/orca/pull/46784
+    - fix(extensions): open action.openPopup in the window its windowId names by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46792
+    - fix(bots): accept PNG-backed .icns files as bot pictures by @tensorcopy in https://github.com/stablyai/orca/pull/46782
+    - fix(github): load all pull request checks and reuse their summary by @nwparker in https://github.com/stablyai/orca/pull/46791
+    - fix(i18n): fill missing Korean settings and component strings by @Dawnilove in https://github.com/stablyai/orca/pull/46392
+    - fix(i18n): fill remaining missing Korean strings outside settings, components and bots by @Dawnilove in https://github.com/stablyai/orca/pull/46408
+    - fix(build): pin protected-copy-keys.json to LF so the Windows protected-copy check passes by @chirag127 in https://github.com/stablyai/orca/pull/46773
+    - fix(chat): reconnect when a subscription ends during opening by @nwparker in https://github.com/stablyai/orca/pull/46802
+    - feat(terminal): polish recent image preview popover and support dragging chips to terminal by @nwparker in https://github.com/stablyai/orca/pull/46805
+    - feat(sidebar): show lineage connectors for nested child workspaces by @AmethystLiang in https://github.com/stablyai/orca/pull/42312
+    - fix(orchestration): finish a worker start that becomes ready late the way an on-time start finishes by @Jinwoo-H in https://github.com/stablyai/orca/pull/46793
+    - feat(mobile): show the unread workspace count on the iOS app icon by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46801
+    - test: restore 63 high-value tests lost in the suite cut by @nwparker in https://github.com/stablyai/orca/pull/46810
+    - fix(i18n): fill new Korean strings and align older Korean wording by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46809
+    - fix(delete-dialog): keep height stable, align warning icon, and remove nested scroll by @nwparker in https://github.com/stablyai/orca/pull/46812
+    - fix(chat): recover OpenCode transcript gaps that outrun the 2,400-row tail window by @chirag127 in https://github.com/stablyai/orca/pull/46771
+    - fix(acp): settle failed OpenCode /compact as failed instead of "Context compacted" by @nwparker in https://github.com/stablyai/orca/pull/46813
+    - fix(chat): every one-line chat row sits 6 px from the next by @Jinwoo-H in https://github.com/stablyai/orca/pull/46806
+    - fix(sidebar): double-click rename opens on new-style and compact cards by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46816
+    - ci: run the full unit suite on 4 shards instead of 24 by @nwparker in https://github.com/stablyai/orca/pull/46799
+    - fix(agent-hooks): show the Claude model /model set on the phone and desktop chat for every login by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46818
+    - Move automation run details into the header by @AmethystLiang in https://github.com/stablyai/orca/pull/46798
+    - perf(native-chat): find the SQLite reader entry and transcript paths with async fs by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46817
+    - feat(bots): let other Slack apps be added to Who can ask by @nwparker in https://github.com/stablyai/orca/pull/46822
+    - fix(agent-status): relaunching a title-only agent on a paired server no longer marks its workspace unread by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46825
+    - fix(bots): keep the focused search result's ring inside the list by @AmethystLiang in https://github.com/stablyai/orca/pull/46830
+    - fix(native-chat): resolve links, images and @-mentions from a sub-folder chat's own folder by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46831
+    - feat(bots): bot reply --choice puts buttons on a Slack reply by @nwparker in https://github.com/stablyai/orca/pull/46827
+    - fix(skills): refuse remote --environment/--pairing-code on skills install and update by @bbingz in https://github.com/stablyai/orca/pull/46742
+    - refactor(sidebar): delete the unused pre-template workspace card components by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46833
+    - fix(bot-groups): keep paired roster, remote answers and images across rollback; read only answered posts by @AmethystLiang in https://github.com/stablyai/orca/pull/46814
+    - fix(orchestration): report worker exits and model waits missed on headless hosts, restarts and moved panes by @Jinwoo-H in https://github.com/stablyai/orca/pull/46815
+    - fix(notifications): index push tokens by prefix so long FCM tokens still register by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46835
+    - fix(git): reread origin for GitHub and GitLab when it changes during forge detection by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46789
+    - fix(bots): say why a bot's chat could not start instead of "Something went wrong" by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46838
+    - fix(source-control): show git's reason in stage/discard failure toasts on Linux and Windows by @audichuang in https://github.com/stablyai/orca/pull/46781
+    - ci: narrow package checks to relevant PR changes by @nwparker in https://github.com/stablyai/orca/pull/46845
+    - fix(i18n): settle Korean wording for window effects, orchestration, Space and Open anyway by @Dawnilove in https://github.com/stablyai/orca/pull/46832
+    - fix(orchestration): tell an agent question's asker when its taker can no longer be reached by @Jinwoo-H in https://github.com/stablyai/orca/pull/46837
+    - fix(opencode): warn once that the SQLite reader bundle is missing, not on every read by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46847
+    - fix(mobile): write @-mentions from a sub-folder chat's own folder by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46848
+    - fix(agent-rooms): a room hand-off of an event's or item update's post keeps its source by @Jinwoo-H in https://github.com/stablyai/orca/pull/46836
+    - fix(orchestration): worker starts and agent rooms follow through after a wait or a Stop by @Jinwoo-H in https://github.com/stablyai/orca/pull/46841
+    - fix(native-chat): show Claude's live effort with its model on the desktop and phone chat chips by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46852
+    - Keep workspace hook checks from freezing Orca by @AmethystLiang in https://github.com/stablyai/orca/pull/46846
+    - Agent message rows: show the first line and an always-visible chevron by @AmethystLiang in https://github.com/stablyai/orca/pull/46739
+    - fix(notifications): make bottom-right toasts and corner cards stand out by @AmethystLiang in https://github.com/stablyai/orca/pull/46854
+    - perf(mobile): shrink the phone page by 94 KiB and lower its size fence by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46860
+    - fix(acp): show an OpenCode child's own reply per run and its provider retries by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46866
+    - fix(mobile): resolve transcript file links from a sub-folder chat's own folder by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46864
+    - fix(mobile): each page of the agent's Settings starts at its top by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46871
+    - ci(mobile): scope the Expo native fingerprint to its inputs by @nwparker in https://github.com/stablyai/orca/pull/46882
+    - ci: reuse event-loop analysis across blocking ratchets by @nwparker in https://github.com/stablyai/orca/pull/46883
+    - fix(agent-cli-update): show the brew or winget command when a CLI's own update can't update the install by @dzkchen in https://github.com/stablyai/orca/pull/46807
+    - refactor(mobile): remove the older agent drawer no released Orca opens by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46890
+    - fix(bots): say why a bot's chat was refused on the phone, the Home tab and run cards by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46892
+    - fix(mobile): keep your picks in an item's answer card when another device answers a question by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46895
+    - fix(native-chat): preview images ACP tools return without a file path by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46901
+    - fix(i18n): translate Korean entries that still copied English and settle Sleep as 절전 by @Dawnilove in https://github.com/stablyai/orca/pull/46840
+    - Settings › Orca account: Team & admin link to the web console by @nwparker in https://github.com/stablyai/orca/pull/46904
+    - feat(kiro): pick reasoning effort for a new Kiro Chat before the first message by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46851
+    - fix(native-chat): show stored chat images over 3 MB on paired desktops and phones by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46930
+    - fix(mobile): refresh the paired devices list when another process revokes or adds a phone by @lexasoft123 in https://github.com/stablyai/orca/pull/46921
+    - fix(i18n): correct mistranslated Korean labels on the Workspace cleanup screen by @dbsghdz1 in https://github.com/stablyai/orca/pull/46929
+    - fix(antigravity): start a worker given a level model id on its listed family so effort stays adjustable by @nwparker in https://github.com/stablyai/orca/pull/46941
+    - fix(automations): stop a dark-wake hold from overriding missed-run grace by @Naor-Yekutiely in https://github.com/stablyai/orca/pull/46933
+    - fix(cli): report runtime access denial instead of "not running" in orca status by @renningg in https://github.com/stablyai/orca/pull/46908
+    - fix(composer): follow a paired server's enabled agents in the new-workspace picker by @otsoa-dubief in https://github.com/stablyai/orca/pull/46906
+    - fix(orchestration): surface the paired server's delivery hold on send --on receipts by @nwparker in https://github.com/stablyai/orca/pull/46955
+    - fix(i18n): correct mistranslated Korean settings search keywords by @dbsghdz1 in https://github.com/stablyai/orca/pull/46947
+    - fix(automations): open a bot's automation on the bot's own host by @nwparker in https://github.com/stablyai/orca/pull/46945
+    - fix(editor): keep Swift highlighting intact after a raw string that contains a quote by @antoine2vey in https://github.com/stablyai/orca/pull/46951
+    - fix(primary-selection): paste middle-click selection into ProseMirror editors like the chat prompt by @nwparker in https://github.com/stablyai/orca/pull/46974
+    - fix(droid): show AskUser questions in chat and fit each question on one card by @renningg in https://github.com/stablyai/orca/pull/46963
+    - test(main): reuse the transient-lock remover for test temp dirs by @Pr1p in https://github.com/stablyai/orca/pull/46981
+    - fix(qwen-code): find the standalone Windows install in LOCALAPPDATA by @gesar93 in https://github.com/stablyai/orca/pull/46973
+    - fix(linux): skip network handles when reading the process report header by @cgaravitoq in https://github.com/stablyai/orca/pull/46979
+    - feat(native-chat): run Cline in Chat and let bots run on it by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46896
+    - feat(native-chat): run Devin in Chat and let bots run on it by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46878
+    - fix(antigravity): show a quota-stopped agy turn as failed with its error by @giorgio-zamparelli in https://github.com/stablyai/orca/pull/46999
+    - feat(native-chat): run CodeBuddy Code in Chat and let bots run on it by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46889
+    - fix(codex): drop ignored root -s/-a from app-server probe args so --yolo Commands list live models by @giorgio-zamparelli in https://github.com/stablyai/orca/pull/46983
+    - fix(claude): settle a prompt dropped on Stop as unrun, not under the result frame's uuid by @specialpointcentral in https://github.com/stablyai/orca/pull/46984
+    - fix(skills): discover Prime Agent skills in /.prime/agent/skills by @aywengo in https://github.com/stablyai/orca/pull/47019
+    - fix(agent-picker): show why Open as chat is unavailable in the hand-off picker by @otsoa-dubief in https://github.com/stablyai/orca/pull/47008
+    - fix(mobile): show and save another Slack app in Who can ask as an app by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46853
+    - fix(mobile): show Couldn’t load on the agent's Tools and Sharing settings when their read fails by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46899
+    - feat(mobile): chat cards open their page on the phone instead of sending you to the computer by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46898
+    - fix(mobile): an agent row's Needs you badge shows the same count as its line by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46863
+    - fix(codex): keep the machine awake and the question current while Codex works behind an async question by @nwparker in https://github.com/stablyai/orca/pull/47033
+    - fix(mobile): keep a new webhook signing secret when you leave while it's being made by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46902
+    - feat(mobile): tapping Replying to on an item scrolls to the question it answers by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46900
+    - feat(mobile): mention an agent or one of its chats with @ in a phone chat by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46911
+    - fix(mobile): lock Permissions to Full access for agents that never ask, as on the desktop by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46858
+    - feat(mobile): show members' waiting asks in a group's Items, with next and previous on its item page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46894
+    - feat(mobile): list the desktop's apps and the Composio key problem under Connectors by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46897
+    - fix(mobile): say why the Home Chat couldn't start after an agent switch by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46862
+    - feat(mobile): offer Update for an agent imported before, opening its Home Chat with a draft by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46879
+    - feat(mobile): show answers from agents on other computers in group rooms by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46916
+    - feat(mobile): show how to ask the agent after setting up Slack, GitHub or Linear by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46926
+    - feat(mobile): edit a tool's address, headers and command from the phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46893
+    - perf(renderer): a one-workspace tab change no longer re-encodes every live chat's pane ID by @brennanb2025 in https://github.com/stablyai/orca/pull/46512
+    - Update README downloads badge by @buf0-bot[bot] in https://github.com/stablyai/orca/pull/47040
+    - fix(renderer): the periodic check's schedule text says its days and hours by @Jinwoo-H in https://github.com/stablyai/orca/pull/47044
+    - fix(cli): a group of only hidden commands answers its help instead of Unknown command by @Jinwoo-H in https://github.com/stablyai/orca/pull/47039
+    - fix(automations): a run answered together with another message no longer reads as failed by @Jinwoo-H in https://github.com/stablyai/orca/pull/47043
+    - fix(mobile): open Edit from a tool's page in Connectors by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47046
+    - feat(mobile): list connectors that need a sign-in or fix in Needs you by @AmoabaKelvin in https://github.com/stablyai/orca/pull/46881
+    - fix(app-shell): give Artifacts and Automations the shared top bar by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47038
+    - fix(connectors): restore legacy Slack DM replies by @AmethystLiang in https://github.com/stablyai/orca/pull/47045
+    - fix(orchestration): open a still-starting worker instead of saying it can't be found by @Jinwoo-H in https://github.com/stablyai/orca/pull/47048
+    - fix(mobile): keep a renamed tool open when a refresh overlaps its save by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47063
+    - Revert "fix(codex): keep the machine awake and the question current while Codex works behind an async question" by @nwparker in https://github.com/stablyai/orca/pull/47061
+    - feat(orchestration): let agents here queue mail for agents on a paired computer (inert) by @Jinwoo-H in https://github.com/stablyai/orca/pull/46757
+    - fix(acp): show only the changed lines in diffs of large edited files by @PzaThief in https://github.com/stablyai/orca/pull/47016
+    - Compact the session search index once replaced rows pile up by @brennanb2025 in https://github.com/stablyai/orca/pull/46549
+    - fix(orchestration): resume terminal workers a reboot or terminal daemon crash took, under Resume work on restart by @Jinwoo-H in https://github.com/stablyai/orca/pull/46643
+    - fix(ai-vault): list Cursor native Chat sessions in Agent Session History by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47071
+    - fix(orchestration): route a settled worker's mail to the connector thread that started it by @Jinwoo-H in https://github.com/stablyai/orca/pull/47072
+    - feat(orchestration): let this computer take mail from agents on a paired server (inert) by @Jinwoo-H in https://github.com/stablyai/orca/pull/46797
+    - fix(plugins): copy real plugin files when installing from a linked source folder by @Pr1p in https://github.com/stablyai/orca/pull/47067
+    - fix(items): the agent's message above an open question is shown whole while it waits by @Jinwoo-H in https://github.com/stablyai/orca/pull/47076
+    - fix(ai-vault): keep title matches when the full-text search finds nothing by @nwparker in https://github.com/stablyai/orca/pull/47080
+    - feat(orchestration): show this computer's people the asks agents on a paired server send (inert) by @Jinwoo-H in https://github.com/stablyai/orca/pull/46826
+    - fix(push): say when a wrong host clock blocks phone push, instead of failing silently by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47057
+    - Show the bot avatar when nothing needs attention by @AmethystLiang in https://github.com/stablyai/orca/pull/46740
+    - feat(orchestration): let agents on a paired server message agents on this computer by @Jinwoo-H in https://github.com/stablyai/orca/pull/46842
+    - fix(bots): keep a tool's sign-in when it is saved from Edit by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47088
+    - fix(browser): agent clicks on This-device pages keep the desktop's keyboard focus by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47094
+    - perf(ai-vault): stat owned Cursor chat sessions directly instead of walking their folders by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47093
+    - Keep the item pill readable in a chat's Started row by @Jinwoo-H in https://github.com/stablyai/orca/pull/47084
+    - fix(memory): nightly memory tidy-up accepts any shrink past the line cap by @Jinwoo-H in https://github.com/stablyai/orca/pull/47073
+    - fix(native-chat): continue a usage-limited chat after an account switch even when the reset is unknown by @Jinwoo-H in https://github.com/stablyai/orca/pull/47079
+    - fix(plugins): align declarative RadioGroup and Checkbox labels with their controls by @nwparker in https://github.com/stablyai/orca/pull/47102
+    - fix(browser): clear default cookies signs out This-device pages of a paired server by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47105
+    - fix(browser): stop opening the desktop's localhost from This device pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47110
+    - fix(browser): give Server (streamed) pages the ⋯ menu, zoom chip and split close by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47108
+    - Update README downloads badge by @buf0-bot[bot] in https://github.com/stablyai/orca/pull/47085
+    - fix(agent-hooks): resolve ps via PATH on Linux in the hook root and tmux attachment probe by @Pr1p in https://github.com/stablyai/orca/pull/47077
+    - fix(native-chat): show a Bash approval's command as text, without repeating its description by @nwparker in https://github.com/stablyai/orca/pull/47117
+    - fix(bots): use the blue Projects unread dot on folded Bots avatars by @nwparker in https://github.com/stablyai/orca/pull/47122
+    - Revert "Calmer queued-message strip: actions on hover, aligned with the activity row" (#46592) by @AmethystLiang in https://github.com/stablyai/orca/pull/47121
+    - fix(terminal): keep the reattach repaint request when no host was asked by @Jinwoo-H in https://github.com/stablyai/orca/pull/46787
+    - fix(browser): hover, drag, modifier clicks, cursor and link bubble on Server pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47119
+    - fix(bots): match bot row times to the Projects time size by @nwparker in https://github.com/stablyai/orca/pull/47125
+    - chore(browser): bring remote browser page pane under the file size limit by @Jinwoo-H in https://github.com/stablyai/orca/pull/47132
+    - feat(browser): Viewport Size presets on Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47126
+    - fix(orchestration): say why a worker's brief went unsubmitted, and never press Enter into a dialog by @Jinwoo-H in https://github.com/stablyai/orca/pull/47087
+    - fix(browser): find in page on pages streamed from a paired server by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47120
+    - Find out why old chat history isn't cleaned up on some machines by @brennanb2025 in https://github.com/stablyai/orca/pull/45419
+    - Idle agents are re-checked without reading every process on the machine by @brennanb2025 in https://github.com/stablyai/orca/pull/46511
+    - perf(terminal): read background terminal screens from the daemon's model instead of re-parsing them on main by @brennanb2025 in https://github.com/stablyai/orca/pull/46516
+    - Stop background saves from resending every workspace after the app keeps its own saved entry by @brennanb2025 in https://github.com/stablyai/orca/pull/46604
+    - feat(cloud): afterCommit per transaction attempt and connector wake wire shapes by @Jinwoo-H in https://github.com/stablyai/orca/pull/47133
+    - fix(orcad): agent browser commands on an Orca server work like on the desktop by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47136
+    - fix(terminal): import the screen projection from its new daemon module by @Jinwoo-H in https://github.com/stablyai/orca/pull/47153
+    - fix(plugins): read Codeberg/Gitea src/tag, src/branch and src/commit links in Git install by @leninworld in https://github.com/stablyai/orca/pull/47107
+    - fix(orchestration): a worker waiting on its own background task shows it, and its coordinator hears once after 60 min by @Jinwoo-H in https://github.com/stablyai/orca/pull/47081
+    - Keep Create available in New bot by @AmethystLiang in https://github.com/stablyai/orca/pull/47144
+    - Log where main's memory went when it suddenly jumps by @brennanb2025 in https://github.com/stablyai/orca/pull/46734
+    - Agent conversations: route by where a request was made, not who asked by @Jinwoo-H in https://github.com/stablyai/orca/pull/46759
+    - test: fix main typecheck, memory spike test used a removed tracer helper by @Jinwoo-H in https://github.com/stablyai/orca/pull/47169
+    - Fix the memory spike test so checks pass on main again by @brennanb2025 in https://github.com/stablyai/orca/pull/47171
+    - fix(browser): show native select dropdown lists on Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47165
+    - fix(browser): show sign-in popups from Server pages as tabs on the desktop and phone by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47172
+    - fix(orchestration): hold a resumed worker's continue prompt behind a dialog and tell its coordinator by @Jinwoo-H in https://github.com/stablyai/orca/pull/47148
+    - fix(browser): Server (streamed) pages ask for permissions, sign-in and opening apps on the desktop by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47150
+    - fix(orchestration): a paired server's follow-up worker report is not refused as unknown task by @Jinwoo-H in https://github.com/stablyai/orca/pull/47163
+    - fix(browser): import cookies on This-device pages, into the page's own login store by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47142
+    - fix(bots): keep a tool's Orca sign-in when a refused save is rolled back by @Pr1p in https://github.com/stablyai/orca/pull/47141
+    - fix(browser): keep server pages with typed form input when Memory Saver frees idle tabs by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47175
+    - feat(browser): switch a This-device page between its server's profiles from the ⋯ menu by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47174
+    - feat(cloud): connector wake Worker and ConnectorHost object (undeployed) by @Jinwoo-H in https://github.com/stablyai/orca/pull/47151
+    - Add to chat on item activity selections by @Jinwoo-H in https://github.com/stablyai/orca/pull/47157
+    - fix(orchestration): tell a worker its question has no reader when its coordinator's terminal has ended by @Jinwoo-H in https://github.com/stablyai/orca/pull/47135
+    - fix(native-chat): send a question card's answers when questions are skipped by @AmethystLiang in https://github.com/stablyai/orca/pull/42789
+    - Split the offscreen browser file so checks pass on main again by @brennanb2025 in https://github.com/stablyai/orca/pull/47188
+    - Fix duplicate Claude identities and visible-host usage by @AmethystLiang in https://github.com/stablyai/orca/pull/42644
+    - feat(connector): desktop wake client behind connector-wake-v1 by @Jinwoo-H in https://github.com/stablyai/orca/pull/47139
+    - fix(codex): keep the computer awake while Codex works behind an async question, and not while it waits on you by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47159
+    - Chat permission card focuses its default answer so Enter picks it by @Jinwoo-H in https://github.com/stablyai/orca/pull/47164
+    - fix(sidebar): keep lineage chip height stable when a child agent status appears by @nwparker in https://github.com/stablyai/orca/pull/47129
+    - fix(ai-vault): show no message count on Cursor native Chat History rows instead of 0 by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47198
+    - fix(browser): switch a Server page's browser profile from an agent without a desktop window by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47182
+    - fix(doc-preview): preview SSH host files only through the host's Orca server by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47204
+    - fix(agent-status): redact credentials in background task commands by @Jinwoo-H in https://github.com/stablyai/orca/pull/47197
+    - fix(i18n): translate Bots into Simplified Chinese and make its copy translatable by @x-Ai in https://github.com/stablyai/orca/pull/46255
+    - fix(browser): switch a Server (streamed) page's profile from its ⋯ menu by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47195
+    - fix(bots): read held answers as "N answers not sent yet, send anyway" by @AmethystLiang in https://github.com/stablyai/orca/pull/47206
+    - fix(settings): keep the complete agent inventory when the disabled agent list changes by @Pr1p in https://github.com/stablyai/orca/pull/47156
+    - fix(codex): keep a background command's network approval on the row when another tool starts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47218
+    - fix(automations): settle a run answered in a shared turn when that turn ends by @Jinwoo-H in https://github.com/stablyai/orca/pull/47152
+    - fix(items): let an agent attach its own work to another agent's item by @Jinwoo-H in https://github.com/stablyai/orca/pull/47191
+    - Remove a leftover Chinese translation that fails the locale check by @brennanb2025 in https://github.com/stablyai/orca/pull/47224
+    - Fix the Simplified Chinese held-answer action and catalog check by @nwparker in https://github.com/stablyai/orca/pull/47225
+    - fix(ai-vault): scan each Claude transcript once when profile homes link to the shared projects folder by @nwparker in https://github.com/stablyai/orca/pull/47209
+    - feat: avatar outfits by @brennanb2025 in https://github.com/stablyai/orca/pull/44473
+    - ci(node-server): speed up persistence lane and narrow PR trigger scope by @nwparker in https://github.com/stablyai/orca/pull/47226
+    - fix(browser): show the speaker icon, mute tab sound and accept file drops on streamed pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47216
+    - Translate main-built status and error text by code by @Jinwoo-H in https://github.com/stablyai/orca/pull/47187
+    - fix(chat): ignore a held Enter or Space on a prompt card's buttons by @Jinwoo-H in https://github.com/stablyai/orca/pull/47222
+    - Reduce background analytics volume by @brennanb2025 in https://github.com/stablyai/orca/pull/47137
+    - Stop listing every worktree when checking local main during workspace creation by @brennanb2025 in https://github.com/stablyai/orca/pull/46177
+    - fix(browser): This-device tabs come back after the desktop window reloads by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47230
+    - fix(browser): refuse a Server page's profile switch when the profile is deleted mid-switch by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47234
+    - Make the CI placeholder phone page script actually write its page by @brennanb2025 in https://github.com/stablyai/orca/pull/47239
+    - Default Google account, and Google's account chooser on every sign-in by @Jinwoo-H in https://github.com/stablyai/orca/pull/47192
+    - Add another Google account from Settings, the connector row and the Connect card by @Jinwoo-H in https://github.com/stablyai/orca/pull/47193
+    - fix(chat): run other agents' queued mail after a failed turn by @Jinwoo-H in https://github.com/stablyai/orca/pull/47220
+    - Bound mobile reconnects and slow retries to offline Tailscale hosts by @nwparker in https://github.com/stablyai/orca/pull/47217
+    - fix(native-chat): move queued messages into the chat that replaces a closed one by @Jinwoo-H in https://github.com/stablyai/orca/pull/47200
+    - feat(browser): put Profile next to Import Cookies at the top of the ⋯ menu by @AmethystLiang in https://github.com/stablyai/orca/pull/47246
+    - fix(codex): show MCP server forms in Codex chat instead of declining them by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47238
+    - Show paired senders by name in bot requests by @AmethystLiang in https://github.com/stablyai/orca/pull/47090
+    - fix(native-chat): resumed-agents report leaves 5 s after the window is visible again by @AmethystLiang in https://github.com/stablyai/orca/pull/47109
+    - fix(browser): open This-device pages again after the desktop fails to tear down its old host by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47255
+    - fix(bots): post the bot's follow-up to the thread that asked an item question by @brennanb2025 in https://github.com/stablyai/orca/pull/45996
+    - fix(tooling): agent TypeScript server stops when idle and restarts on next use by @brennanb2025 in https://github.com/stablyai/orca/pull/45857
+    - ci(package): speed up Linux and Windows package jobs by @nwparker in https://github.com/stablyai/orca/pull/47258
+    - fix(chat): auto-continue usage-limited chats after an account relaunch or restart by @Jinwoo-H in https://github.com/stablyai/orca/pull/47221
+    - ci(unit): bring unit test shards down to ~1m (16 ARM shards + concurrent flock wait tests) by @nwparker in https://github.com/stablyai/orca/pull/47273
+    - fix(i18n): translate English words left in Korean Source Control strings by @dbsghdz1 in https://github.com/stablyai/orca/pull/47244
+    - fix(browser): refuse a tab's profile switch when the profile is deleted mid-switch by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47267
+    - fix(i18n): translate bot template copy into Korean by @ahn0min in https://github.com/stablyai/orca/pull/47241
+    - fix(browser): stop server pages of a deleted profile from reopening in the Default profile by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47280
+    - fix(mobile): stop keeping every uploaded bot picture in memory until the app quits by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47278
+    - fix(orchestration): tell the coordinator when a worker's turn fails while its background task still runs by @Jinwoo-H in https://github.com/stablyai/orca/pull/47260
+    - fix(droid): show Droid's Task subagents as subagents in Chat by @iskic-marko in https://github.com/stablyai/orca/pull/47213
+    - Show a chat's active workers above the composer by @AmethystLiang in https://github.com/stablyai/orca/pull/47149
+    - fix(managed-server): CLI --force no longer ends uncounted in-process terminals without --yes by @nwparker in https://github.com/stablyai/orca/pull/47269
+    - Translate the remaining app list, tool editor and notice text by @Jinwoo-H in https://github.com/stablyai/orca/pull/47250
+    - fix(usage): refresh when switching back to the local host by @AmethystLiang in https://github.com/stablyai/orca/pull/47261
+    - fix(keep-awake): watch WSL hosts only while keep-awake is Auto by @nwparker in https://github.com/stablyai/orca/pull/47266
+    - fix(browser): stop each click on a Server page delaying the next key by a round trip by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47293
+    - ci(pr): cut PR critical path by splitting ratchets & code quality + 24 unit shards by @nwparker in https://github.com/stablyai/orca/pull/47292
+    - A bot's Items list loads fast on big projects, and reopens instantly by @brennanb2025 in https://github.com/stablyai/orca/pull/47162
+    - Fix restart-offer Resume for chats, held-request and offline-reply routing by @Jinwoo-H in https://github.com/stablyai/orca/pull/47284
+    - fix(wsl): don't auto-restart an SSH-started server while a native chat runs on it by @nwparker in https://github.com/stablyai/orca/pull/47268
+    - Open the naming settings from the auto-name failure dialogs by @AmethystLiang in https://github.com/stablyai/orca/pull/47186
+    - fix(browser): refuse to clone a tab into a profile deleted while the clone waited by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47290
+    - Fail instead of using another Google account when the default can't be read by @Jinwoo-H in https://github.com/stablyai/orca/pull/47282
+    - fix(persistence): recover profile writes after disk exhaustion by @brennanb2025 in https://github.com/stablyai/orca/pull/47270
+    - Hide workspace Delete on sidebar agent rows by @AmethystLiang in https://github.com/stablyai/orca/pull/47124
+    - fix(mobile): stop a group room keeping a stale copy of its computer's bots by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47312
+    - feat(connector): resume a failed turn from its thread's status by @Jinwoo-H in https://github.com/stablyai/orca/pull/47233
+    - fix(browser): keep window.opener when an agent clicks window.open(url, '_blank') by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47323
+    - perf(push): stop rescanning every workspace for the phone badge on activity-only saves by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47286
+    - fix(mobile): show the newest phone strings in Simplified Chinese by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47327
+    - Update a worker's strip row once its unverified session comes up by @AmethystLiang in https://github.com/stablyai/orca/pull/47333
+    - fix(browser): close a server's pages in a browser profile when the profile is deleted by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47303
+    - fix(i18n): keep Bots sidebar headings untranslated by @AmethystLiang in https://github.com/stablyai/orca/pull/47334
+    - refactor(mobile): add Settings rows one way and share the schedule lines with the desktop by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47294
+    - feat(automations): one-command pull request watch with a default deadline by @Jinwoo-H in https://github.com/stablyai/orca/pull/47189
+    - fix(browser): refuse an extension's new tab when its profile is deleted while the window readies by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47332
+    - fix(orchestration): wait out a Windows agent's key-by-key read before a notice's Enter by @Jinwoo-H in https://github.com/stablyai/orca/pull/47207
+    - Stop a false "Update failed" and a stale update notice after updating an agent CLI by @brennanb2025 in https://github.com/stablyai/orca/pull/44972
+    - Check agent CLIs for updates at launch even when the status bar is hidden by @brennanb2025 in https://github.com/stablyai/orca/pull/45980
+    - fix(browser): stream a paired desktop's page in an SSH host's workspace instead of a dead pane by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47338
+    - fix(bots): centre the party hat on the turtle and the crab by @brennanb2025 in https://github.com/stablyai/orca/pull/47315
+    - fix(browser): cleared cookies stay cleared if Orca crashes right after the clear by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47326
+    - fix(browser): report every file picker a remote click or phone tap opens on a server page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47304
+    - fix(browser): keys typed right after opening a Server page's select reach that select by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47330
+    - fix(i18n): translate English terms left in Korean copy and fail the catalog check on them by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47335
+    - fix(browser): stop agent commands hanging 30 s when sent just after a page loads by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47351
+    - fix(browser): clearing cookies right after launch no longer gets undone by the cookie restore by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47350
+    - fix(antigravity): keep Claude and GPT-OSS in Google-account chats on server 1.5.2 by @nwparker in https://github.com/stablyai/orca/pull/47329
+    - fix(browser): phone taps hit links on zoomed sites in Mobile View by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47349
+    - fix(plugins): keep a - ref segment in GitHub and Codeberg plugin install URLs by @Pr1p in https://github.com/stablyai/orca/pull/47310
+    - fix(native-chat): keep a moved queued message's mode, model and delivery by @Jinwoo-H in https://github.com/stablyai/orca/pull/47337
+    - fix(native-chat): stop labelling Codex workspace-write with on-request approvals as Ask by @AmethystLiang in https://github.com/stablyai/orca/pull/47362
+    - Keep the analytics opt-out in force for delayed events by @brennanb2025 in https://github.com/stablyai/orca/pull/47316
+    - fix(connectors): name the answering turn on a reply, and settle requests by the turn that answered them by @Jinwoo-H in https://github.com/stablyai/orca/pull/47320
+    - Avoid redundant agent status reads for bot chat trees and workers by @AmethystLiang in https://github.com/stablyai/orca/pull/47328
+    - Reduce renderer store work for workspace activity updates by @AmethystLiang in https://github.com/stablyai/orca/pull/47322
+    - Tell the coordinator about a worker stuck on its background task after 20 min, not 60 by @Jinwoo-H in https://github.com/stablyai/orca/pull/47355
+    - fix(browser): close a server's saved tabs of an already-deleted profile when it starts by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47342
+    - fix(browser): keep an extension's background worker at its own path so Keeper's popup loads by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47369
+    - fix(browser): pick or drag files from the desktop into Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47357
+    - Fix Spanish and Korean merge request status labels by @AmethystLiang in https://github.com/stablyai/orca/pull/47352
+    - Show queued Edit and Delete on hover and keep Steer on every row by @AmethystLiang in https://github.com/stablyai/orca/pull/47346
+    - fix(browser): paste images and formatted text into pages streamed from a host by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47367
+    - feat(antigravity): update Orca's installed ACP server in the background by @nwparker in https://github.com/stablyai/orca/pull/47331
+    - fix(browser): streamed pages get the local right-click menu, or the page's own by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47343
+    - fix(hermes): Hermes chats and bots run orca commands as themselves in the shared gateway by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47179
+    - feat(items): add a Waiting status for work that waits on something outside by @Jinwoo-H in https://github.com/stablyai/orca/pull/47308
+    - feat(cloud): alerts cron Worker for the connector wake Worker (undeployed) by @Jinwoo-H in https://github.com/stablyai/orca/pull/47285
+    - Simplify Remote Orca servers settings by @AmethystLiang in https://github.com/stablyai/orca/pull/47377
+    - fix(native-chat): wrap long background task summaries instead of widening the chat by @A0150315 in https://github.com/stablyai/orca/pull/47359
+    - fix(cursor): list Cursor's chat models in pickers and launch terminals with their effort and Fast by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47314
+    - Fix mobile network follow-up and resume retry budgets by @nwparker in https://github.com/stablyai/orca/pull/47389
+    - feat(items): show Waiting items and what they wait on by @Jinwoo-H in https://github.com/stablyai/orca/pull/47309
+    - fix(browser): show the agent's cursor and tab mark on Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47383
+    - fix(items): a typed answer to one of several questions waits like a quick reply by @Jinwoo-H in https://github.com/stablyai/orca/pull/47372
+    - fix(bots): drop the color and outfit Slack note under an uploaded or generated picture by @brennanb2025 in https://github.com/stablyai/orca/pull/47301
+    - test(items): set the Waiting field in the question-steps test item by @Jinwoo-H in https://github.com/stablyai/orca/pull/47394
+    - Codex chats with the same setup can share one background program (experimental switch) by @brennanb2025 in https://github.com/stablyai/orca/pull/45873
+    - feat(plugins): reorder and hide activity-bar tabs by @AmethystLiang in https://github.com/stablyai/orca/pull/42473
+    - fix(bots): say what went wrong when connecting Slack, with one next step by @brennanb2025 in https://github.com/stablyai/orca/pull/47302
+    - fix(browser): show the phone lock and Take back on Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47384
+    - Fail a worker start whose workspace create timed out, instead of showing it as live forever by @Jinwoo-H in https://github.com/stablyai/orca/pull/47393
+    - feat(orchestration): workers started from a persistent agent home, and their sub-workers, start as chats by @Jinwoo-H in https://github.com/stablyai/orca/pull/47363
+    - feat(orchestration): a paired server continues a chat lineage for the workers it starts by @Jinwoo-H in https://github.com/stablyai/orca/pull/47364
+    - fix(browser): an agent's press lands where it moved, not where someone hovers, on Server pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47422
+    - fix(cli): recover timed-out worker starts from their receipts by @AmethystLiang in https://github.com/stablyai/orca/pull/47424
+    - fix(bots): stop Connect Slack crashing when setup finishes by @brennanb2025 in https://github.com/stablyai/orca/pull/47419
+    - Keep Share this computer above the remote server list by @AmethystLiang in https://github.com/stablyai/orca/pull/47406
+    - fix(items): an earlier question stays answerable, and Replying to needs an open question by @Jinwoo-H in https://github.com/stablyai/orca/pull/47385
+    - fix(updater): guide manual restart for staged updates by @AmethystLiang in https://github.com/stablyai/orca/pull/47379
+    - fix(chat): verify the launch before admitting a usage-limit retry by @AmethystLiang in https://github.com/stablyai/orca/pull/47426
+    - fix(bots): list only enabled agents in a bot's new-chat menu by @AmethystLiang in https://github.com/stablyai/orca/pull/47382
+    - fix(orchestration): close a worker's setup terminal and startup tabs with it by @Jinwoo-H in https://github.com/stablyai/orca/pull/47370
+    - fix(bots): name a template bot's folder from its English name by @ahn0min in https://github.com/stablyai/orca/pull/47421
+    - fix(workspace-hooks): fall back to bash on PATH when /bin/bash is missing by @nwparker in https://github.com/stablyai/orca/pull/47427
+    - fix(items): show Waiting items as Waiting in the desktop window by @Jinwoo-H in https://github.com/stablyai/orca/pull/47429
+    - Update README downloads badge by @buf0-bot[bot] in https://github.com/stablyai/orca/pull/47451
+    - perf(mobile-web): ship one copy of the color parser on the phone page by @nwparker in https://github.com/stablyai/orca/pull/46186
+    - fix(bots): start Codex when a bot tool shares a name with the owner's stdio MCP server by @nwparker in https://github.com/stablyai/orca/pull/47452
+    - feat(terminal): a terminal a worker creates closes with that worker by @Jinwoo-H in https://github.com/stablyai/orca/pull/47371
+    - fix(mobile): draw request and tool-added events as one-line status rows by @Jinwoo-H in https://github.com/stablyai/orca/pull/47443
+    - fix(mobile): answer an item's question inside its comment, as the desktop does by @Jinwoo-H in https://github.com/stablyai/orca/pull/47450
+    - fix(terminal): identify a reattached native Claude by its version-named process by @Jinwoo-H in https://github.com/stablyai/orca/pull/46660
+    - fix(settings): show that agent rows expand, and let the agent list grow with the page by @AmethystLiang in https://github.com/stablyai/orca/pull/47418
+    - fix(bots): the bot row line and sort menu follow a UI language switch by @AmethystLiang in https://github.com/stablyai/orca/pull/46226
+    - fix(items): keep an answered question's comment open until the item is reopened by @Jinwoo-H in https://github.com/stablyai/orca/pull/47461
+    - fix(notebook): create new .ipynb files as valid nbformat 4 notebooks by @zjffdu in https://github.com/stablyai/orca/pull/47431
+    - fix(i18n): correct 113 Korean strings translated with the wrong meaning by @dbsghdz1 in https://github.com/stablyai/orca/pull/47439
+    - fix(kiro): clear stale tool output when a done event has no reply by @bbingz in https://github.com/stablyai/orca/pull/47459
+    - fix(orchestration): deliver a follow-up worker's report to the group request its worker serves by @Jinwoo-H in https://github.com/stablyai/orca/pull/47469
+    - fix(bots): Connect Slack names the machines, offers this computer's sign-in, and opens Slack on the bot's computer by @brennanb2025 in https://github.com/stablyai/orca/pull/47336
+    - fix(cleanup): hold row order while the delete dialog is open by @AmethystLiang in https://github.com/stablyai/orca/pull/42532
+    - fix(agent-status): keep worker nesting under the coordinator on paired desktop clients by @nwparker in https://github.com/stablyai/orca/pull/47468
+    - fix(items): route held and typed answers to the question they answer by @Jinwoo-H in https://github.com/stablyai/orca/pull/47464
+    - fix(mobile): item page opens at the end of its activity and follows new events by @Jinwoo-H in https://github.com/stablyai/orca/pull/47442
+    - Reduce routine analytics events by @brennanb2025 in https://github.com/stablyai/orca/pull/47214
+    - fix(webhooks): say why an ignored call has no body, and count ignored calls in check by @Jinwoo-H in https://github.com/stablyai/orca/pull/47483
+    - Apply team policies in Orca by @nwparker in https://github.com/stablyai/orca/pull/47178
+    - Keep the chat store's background tidy-up helper running, and stop it from holding up saves by @brennanb2025 in https://github.com/stablyai/orca/pull/45918
+    - fix(automations): show a webhook automation's Copy URL on a setup card, the row menu and its page by @Jinwoo-H in https://github.com/stablyai/orca/pull/47479
+    - fix(connectors): a quiet bot turn posts nothing, however many turns it ended by @brennanb2025 in https://github.com/stablyai/orca/pull/47510
+    - feat(antigravity): run Gemini API key chats on agy where it is installed by @nwparker in https://github.com/stablyai/orca/pull/47400
+    - fix(bots): Connect Slack asks which workspace when several are known, and says expired only when a token lapsed by @brennanb2025 in https://github.com/stablyai/orca/pull/47505
+    - fix(onboarding): open the default agent chat when adding a non-git folder project by @nwparker in https://github.com/stablyai/orca/pull/47533
+    - feat(connectors): Add org and a new Refresh on the GitHub row go through GitHub sign-in by @Jinwoo-H in https://github.com/stablyai/orca/pull/47467
+    - fix(automations): show why a run's agent couldn't start instead of a generic failure by @Jinwoo-H in https://github.com/stablyai/orca/pull/47491
+    - fix(connectors): a Slack reply refused as invalid is not resent every 30 seconds by @brennanb2025 in https://github.com/stablyai/orca/pull/47522
+    - fix(terminal): show uploaded paths when the target pane is gone by @xu91102 in https://github.com/stablyai/orca/pull/47496
+    - fix(items): put a reply refused for a replaced question back in the comment box by @Jinwoo-H in https://github.com/stablyai/orca/pull/47485
+    - fix(groups): room worker reports survive Stop and room removal; member chats take the room's name by @Jinwoo-H in https://github.com/stablyai/orca/pull/47503
+    - fix(worktrees): use registered gitdir spelling for new worktree path on case-insensitive volumes by @nwparker in https://github.com/stablyai/orca/pull/47542
+    - fix(terminal): publish renames for terminals the host window does not render by @xu91102 in https://github.com/stablyai/orca/pull/47495
+    - fix(rate-limits): only report OpenCode Go no-subscription for EntitlementError responses by @2SinceJuly in https://github.com/stablyai/orca/pull/47540
+    - Stop rescanning large repos whose worktree list is slower than its freshness window by @brennanb2025 in https://github.com/stablyai/orca/pull/47249
+    - Opening a bot item no longer reads its whole history by @brennanb2025 in https://github.com/stablyai/orca/pull/47478
+    - fix(connectors): a bot turn's words go out when that turn ends, even while its workers run by @brennanb2025 in https://github.com/stablyai/orca/pull/47532
+    - fix(mobile): retry Relay after a bare 4401 close instead of disabling the credential by @clpl in https://github.com/stablyai/orca/pull/47499
+    - fix(i18n): translate English left in 23 Korean UI strings by @dbsghdz1 in https://github.com/stablyai/orca/pull/47521
+    - fix(antigravity): apply the Settings proxy to the agy usage probe by @eltria in https://github.com/stablyai/orca/pull/47525
+    - Treat dangling transcript symlinks as missing and pass the page cursor from web clients by @brennanb2025 in https://github.com/stablyai/orca/pull/45168
+    - fix(bots): reuse each Share dialog's skill listing across picks by @AmethystLiang in https://github.com/stablyai/orca/pull/47154
+    - Offer sign-in for expired Codex accounts from usage by @AmethystLiang in https://github.com/stablyai/orca/pull/47155
+    - Clarify skipped bundled skill updates and Replace backups by @AmethystLiang in https://github.com/stablyai/orca/pull/47158
+    - Remove the redundant Dismiss button from the branch auto-name failure dialog by @AmethystLiang in https://github.com/stablyai/orca/pull/47460
+    - fix(accounts): queue agy account clicks made during a background re-read instead of dropping them by @nwparker in https://github.com/stablyai/orca/pull/47546
+    - feat(browser): add tab create --focus to show the new tab, also from SSH hosts and paired servers by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47321
+    - Idle terminals stop re-checking for agents on a timer; agent exits come from the OS by @brennanb2025 in https://github.com/stablyai/orca/pull/46045
+    - feat(mobile): explain why tapping a file input on a server page opens no picker by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47403
+    - feat(browser): tell the desktop where a Server (streamed) page's download was saved by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47177
+    - fix(bots): open a server bot's thread from its Slack link by @brennanb2025 in https://github.com/stablyai/orca/pull/47486
+    - fix(browser): paste only plain text into pages streamed from a host by @AmethystLiang in https://github.com/stablyai/orca/pull/47558
+    - fix(ui): open hover cards on keyboard focus only by @Jinwoo-H in https://github.com/stablyai/orca/pull/47559
+    - docs(orchestration): document host-aware worker placement and teardown contract by @nwparker in https://github.com/stablyai/orca/pull/47562
+    - fix(browser): keep the host display awake while a phone or paired client streams its page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47374
+    - feat(mobile): Stop, Hard reload, Copy link, Open in browser and Reconnect in the phone browser by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47219
+    - fix(items): show why a worker stopped; report a lost host as host loss by @Jinwoo-H in https://github.com/stablyai/orca/pull/47543
+    - fix(native-chat): light the current turn's rail tick when the view stops between two rows by @dbsghdz1 in https://github.com/stablyai/orca/pull/47553
+    - feat(native-chat): show /btw and /side as a Side chat pill in the composer by @AmethystLiang in https://github.com/stablyai/orca/pull/42129
+    - perf(bots): a groups notice names the room that changed, and only that room re-reads by @brennanb2025 in https://github.com/stablyai/orca/pull/47523
+    - fix(bots): show the all-clear as a plain left-aligned line, without the bot's picture by @AmethystLiang in https://github.com/stablyai/orca/pull/47436
+    - fix(fonts): treat comma-separated font family settings as a font list by @nwparker in https://github.com/stablyai/orca/pull/47561
+    - Fix main CI: record the lowered React compiler bailout counts by @brennanb2025 in https://github.com/stablyai/orca/pull/47556
+    - fix(browser): let server agents upload any file and download --path on This-device pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47264
+    - fix(browser): say when a streamed page stops because the host's screen is locked or asleep by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47411
+    - feat(browser): run extensions on SSH and This-device pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47347
+    - fix(browser): let input methods, dead keys and Option characters type into Server (streamed) pages by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47376
+    - feat(mobile): show automations as grouped rows with a settings-style detail page by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47276
+    - feat(browser): let SSH host agents upload files to and download --path from desktop tabs by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47399
+    - feat(mobile): show who shared a copied agent and open its original from Settings by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47348
+    - feat(mobile): say why Create is greyed with no chat agents, and show when nothing needs you in Items by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47289
+    - fix(mobile): show a shell approval's command as text, without repeating its description by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47277
+    - feat(mobile): show the first line of agent-to-agent messages in chat rows by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47340
+    - feat(mobile): show the question a chat stopped on in Needs you by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47281
+    - feat(mobile): delete a chat from the agent's Chats tab by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47339
+    - feat(mobile): attach photos to posts in a group room by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47361
+    - feat(mobile): show split tabs as one row in the tabs sheet, with a clearer tab menu by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47275
+    - fix(chat): keep the model picker open when its scrollbar is pressed by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47587
+    - fix(antigravity): identify honestly as orca to Google's ACP server and agy by @nwparker in https://github.com/stablyai/orca/pull/47585
+    - feat(mobile): support asks between agents on paired computers by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47344
+    - fix(chat): count only active workers in the composer by @AmethystLiang in https://github.com/stablyai/orca/pull/47432
+    - fix(native-chat): show a pending question as waiting, not blocked by @Andy123qq4 in https://github.com/stablyai/orca/pull/47564
+    - fix(native-chat): hide ~/.agents/skills from Claude's "/" menu and skill coverage by @2SinceJuly in https://github.com/stablyai/orca/pull/47582
+    - fix(browser): free hidden This-device tabs with Memory Saver and bring them back on view by @AmoabaKelvin in https://github.com/stablyai/orca/pull/47291
+    - Revert "fix(antigravity): identify as orca to Google's ACP server and agy (#47585)" by @nwparker in https://github.com/stablyai/orca/pull/47607
+    - fix(wsl): let an idle WSL distro stop while Orca stays open by @nwparker in https://github.com/stablyai/orca/pull/47434
+    New Contributors
+    - @RicardoQS23 made their first contribution in https://github.com/stablyai/orca/pull/46699
+    - @Dawnilove made their first contribution in https://github.com/stablyai/orca/pull/46392
+    - @chirag127 made their first contribution in https://github.com/stablyai/orca/pull/46773
+    - @dzkchen made their first contribution in https://github.com/stablyai/orca/pull/46807
+    - @renningg made their first contribution in https://github.com/stablyai/orca/pull/46908
+    - @otsoa-dubief made their first contribution in https://github.com/stablyai/orca/pull/46906
+    - @antoine2vey made their first contribution in https://github.com/stablyai/orca/pull/46951
+    - @gesar93 made their first contribution in https://github.com/stablyai/orca/pull/46973
+    - @cgaravitoq made their first contribution in https://github.com/stablyai/orca/pull/46979
+    - @specialpointcentral made their first contribution in https://github.com/stablyai/orca/pull/46984
+    - @aywengo made their first contribution in https://github.com/stablyai/orca/pull/47019
+    - @PzaThief made their first contribution in https://github.com/stablyai/orca/pull/47016
+    - @leninworld made their first contribution in https://github.com/stablyai/orca/pull/47107
+    - @ahn0min made their first contribution in https://github.com/stablyai/orca/pull/47241
+    - @A0150315 made their first contribution in https://github.com/stablyai/orca/pull/47359
+    - @zjffdu made their first contribution in https://github.com/stablyai/orca/pull/47431
+    - @xu91102 made their first contribution in https://github.com/stablyai/orca/pull/47496
+    - @2SinceJuly made their first contribution in https://github.com/stablyai/orca/pull/47540
+    - @clpl made their first contribution in https://github.com/stablyai/orca/pull/47499
+    - @eltria made their first contribution in https://github.com/stablyai/orca/pull/47525
+    - @Andy123qq4 made their first contribution in https://github.com/stablyai/orca/pull/47564
+    Full Changelog: https://github.com/stablyai/orca/compare/v1.4.271...v1.4.272
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stablyai/orca/releases/tag/v1.4.272
+ReleaseTime: 2026-11-23T12:35:31.0000000Z
