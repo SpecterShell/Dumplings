@@ -1,0 +1,241 @@
+Version: 0.25.1
+Installer:
+- Query:
+    Architecture: x64
+  InstallerUrl: https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-windows-x64.msi
+- Query:
+    Architecture: arm64
+  InstallerUrl: https://github.com/storytold/effectcraft/releases/download/v0.25.1/effectcraft-0.25.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - After Effects compatibility: .aep import is twice as fast and handles huge or hostile files without stalling, keeps effects it can't map as placeholders, and imports text animator Stroke Opacity and Source Text expressions. Dozens of effect parameters now take After Effects' ranges, and Ball Grid gets every CC Ball Action control.
+    - Media: video and audio decoding moved to the shared Craft media libraries, with many import fixes (ProRes alpha, MOV timecode and audio edits, Matroska aspect and duration, MXF, AVI and FLAC).
+    - Caching rebuilt: footage is decoded once, all caches share one memory budget, and idle caching is on. Closing a project frees its memory.
+    - Editing: the Graph Editor follows the theme and draws curves through every keyframe, number fields accept arithmetic (960/2), Effect Controls can be locked to a layer, the Composition viewer has a 1 | 2 | 4 views switch, and reversed layers play their audio backwards.
+    - Fixes: file dialogs that can't open are errors instead of crashes, Warp Stabilizer and 3D Camera Tracker analyses survive offline footage and older projects, and LUT and OCIO files are re-read when they change on disk.
+    What's Changed
+    - Export, Media: codecs and containers from craft-libs; remove hevcenc, av1enc, vp9enc by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3522
+    - #2796: ScriptUI panel bars hide while the window fits its dock by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/2880
+    - Warp Stabilizer, 3D Camera Tracker: keep analyses saved before 0.23 (#3456) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3530
+    - Apply Color LUT and Lumetri follow a LUT file that changes on disk (#3493) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3533
+    - .aep import: an item made from one Photoshop layer shows that layer (#3087) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3449
+    - Expressions, Scripting: a layer's property numbers and match names follow After Effects (#3528) by @GenuineMoron in https://github.com/storytold/effectcraft/pull/3529
+    - .aep import: keep effects without a counterpart as placeholders (#3087) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3450
+    - Warp Stabilizer, 3D Camera Tracker, Roto Brush: one explicit analysis key; offline footage keeps analyses (#3534, #3536) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3550
+    - Import: a 3D model's left-out textures reach the user as an import warning by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3523
+    - Text layout: a wrapped line finds its glyphs and end caret by bisection by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3506
+    - Timewarp: bound the motion search's total work by coarsening the vector grid by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3505
+    - Export: Skip Existing keeps a frame already in the overflow folder by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3500
+    - Convert Expression to Keyframes: refuse layers of more than 2^18 frames by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2999
+    - Media: check still, EXR channel, GIF and WebP canvas sizes before allocating by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2993
+    - Render: memoized audio detection, bounded stretch, preroll, waveform, cache entries, 3D bounds, solids and selector time by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2988
+    - Automation: refuse Watch Folder and Edit Original while file access is confined by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2983
+    - FBX: records stay within their parent; textures, materials and links are indexed by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2955
+    - Viewers show footage reloaded with unchanged metadata (#3539) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3561
+    - OCIO File Transform and custom OCIO configs follow their files on disk (#3538) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3560
+    - Warp Stabilizer, 3D Camera Tracker: analysis keys cover masks, effects above and precomp contents (#3535) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3564
+    - Effects: 18 parameters take After Effects' valid ranges (Levels IC, 4-Color Gradient, Change Color, Noise HLS, Grid, Venetian Blinds, Radial Wipe, Scatter, Beam, Transform, Turbulent Displace) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3571
+    - 3D models: bound and share decoded textures, share skin matrices, index OBJ materials by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2965
+    - Fix opening and closing manually drawn paths by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/2876
+    - Fix Effect Controls arrow-key collapse and expand (#2869) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/2875
+    - SVG: support static pattern fills and strokes by @slager2 in https://github.com/storytold/effectcraft/pull/2732
+    - .aep import: a test pins the Orientation expression import (#3087) by @vangel76 in https://github.com/storytold/effectcraft/pull/3313
+    - .aep import/export: text animator Stroke Opacity and Source Text expressions (#3170) by @vangel76 in https://github.com/storytold/effectcraft/pull/3305
+    - .aep: import twice as fast, faster export by @vangel76 in https://github.com/storytold/effectcraft/pull/3302
+    - test: resolve xtask from relocated nextest archives by @skylartaylor in https://github.com/storytold/effectcraft/pull/3322
+    - ci: limit concurrent GPU tests in nextest by @skylartaylor in https://github.com/storytold/effectcraft/pull/3323
+    - Scripting: ParagraphJustification has After Effects' numbers (#3608) by @GenuineMoron in https://github.com/storytold/effectcraft/pull/3610
+    - Expressions: a text style's justification and direction use After Effects' names (#3607) by @GenuineMoron in https://github.com/storytold/effectcraft/pull/3609
+    - Import: keep a shape path an expression draws, even with no stored vertices (#3603) by @GenuineMoron in https://github.com/storytold/effectcraft/pull/3606
+    - Animation presets: preserve text animators and selectors when saving and applying by @tylerjenningsw in https://github.com/storytold/effectcraft/pull/3168
+    - Formats: move remaining file formats to craft-libs by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3531
+    - #3593: render_frame and render_preview tile times into one contact sheet by @andreaaazo in https://github.com/storytold/effectcraft/pull/3594
+    - Tests: the nested knockout draw-budget test waits 120 s, not 20 s (main's macOS check is red) by @FredApps in https://github.com/storytold/effectcraft/pull/3650
+    - Handle CRLF Cargo manifests in packaging scripts by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3656
+    - .aep: huge or hostile files no longer import in quadratic time, silent losses now reported by @vangel76 in https://github.com/storytold/effectcraft/pull/3319
+    - Color Stabilizer: Sample Size is a square of that width centred on the pixel, partial pixels weighted, as in After Effects (#3125) by @vangel76 in https://github.com/storytold/effectcraft/pull/3308
+    - Timeline: Add Expression from the stopwatch's right-click menu by @vangel76 in https://github.com/storytold/effectcraft/pull/3249
+    - Cryptomatte: the Selection tool picks IDs while the effect is selected by @vangel76 in https://github.com/storytold/effectcraft/pull/3258
+    - Effects: Grid, Checkerboard and Circle keep the layer's mask with Blending Mode None by @vangel76 in https://github.com/storytold/effectcraft/pull/3210
+    - Vector footage: faster, budget-safe clipping in the SVG/PDF rasteriser (refs #2895) by @vangel76 in https://github.com/storytold/effectcraft/pull/3217
+    - Frame blending averages the source frames a comp frame skips over (fast-conformed footage) by @vangel76 in https://github.com/storytold/effectcraft/pull/3211
+    - Tests: footage reload tests save in one step (main's macOS check is red) by @FredApps in https://github.com/storytold/effectcraft/pull/3689
+    - Timeline: Convert To Bezier Path in the context menu of a parametric shape path by @vangel76 in https://github.com/storytold/effectcraft/pull/3243
+    - Graph Editor: follow the theme (plot, bar buttons, grid, keys, handles, curves) by @vangel76 in https://github.com/storytold/effectcraft/pull/3225
+    - Viewer: a Shift-constrained drag snaps only along its axis by @vangel76 in https://github.com/storytold/effectcraft/pull/3240
+    - Viewer snapping: a point beats a line pair through it unless the pair is clearly nearer by @vangel76 in https://github.com/storytold/effectcraft/pull/3228
+    - Effect Controls: renaming an effect opens with the whole name selected by @vangel76 in https://github.com/storytold/effectcraft/pull/3214
+    - Effect Controls: lock the panel to the layer it shows by @vangel76 in https://github.com/storytold/effectcraft/pull/3235
+    - Audio: a time-reversed layer plays its audio backwards by @vangel76 in https://github.com/storytold/effectcraft/pull/3252
+    - Timeline waveform: read keyframed Audio Levels at layer time by @vangel76 in https://github.com/storytold/effectcraft/pull/3226
+    - Expressions: prop.get and Reveal Expression Errors evaluate with the footage source by @vangel76 in https://github.com/storytold/effectcraft/pull/3242
+    - Expressions: a function declaration ends at its brace, so a next line starting with '-' is a new statement by @vangel76 in https://github.com/storytold/effectcraft/pull/3222
+    - Scripting: expressionError reports evaluation errors, as After Effects by @vangel76 in https://github.com/storytold/effectcraft/pull/3230
+    - Project panel: items dropped on New Folder go into a new folder, as After Effects by @vangel76 in https://github.com/storytold/effectcraft/pull/3232
+    - Number fields: typed arithmetic (960/2, (3+4)*2) and a leading *, / or + applied to the value by @vangel76 in https://github.com/storytold/effectcraft/pull/3236
+    - File dialogs: a dialog that can't be created is an error, not a crash (#3084) by @vangel76 in https://github.com/storytold/effectcraft/pull/3304
+    - Tests: Match System resolves to English in ui-egui test builds by @vangel76 in https://github.com/storytold/effectcraft/pull/3251
+    - Tests: import dialog tests answer with a Result of paths (main does not compile its tests) by @FredApps in https://github.com/storytold/effectcraft/pull/3693
+    - fix(ci): stabilize macOS dialog and EXR cache tests by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3704
+    - Import: VectorCraft documents import through the PDF they carry by @dotCooCoo in https://github.com/storytold/effectcraft/pull/2901
+    - Cineon Converter: Gamma 1 gives linear output and saved projects keep their render by @dotCooCoo in https://github.com/storytold/effectcraft/pull/2312
+    - encoding: replace four local Base64 writers with existing craft-mime by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3742
+    - fix(gpu): serialize readback mapping cleanup by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3709
+    - fix(gpu): sort selective color channels on llvmpipe by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3647
+    - test(ui): serialize GPU picker integration by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3759
+    - Use shared ZIP codec for dotLottie archives by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3643
+    - Serialize EffectCraft GPU coverage across shards by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3654
+    - refactor(exr): decode channels with shared craft-exr by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3646
+    - effects: cut SPI1D parsing over to craft-cms by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3744
+    - export: write animated GIFs with the shared craft-gif writer (#778) by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3671
+    - Use shared EPS font block scanner by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3653
+    - Angles: typing into a negative angle's degrees replaces its minus sign (#3367) by @ZIDAN44 in https://github.com/storytold/effectcraft/pull/3690
+    - Fonts: substitute test checks whether the original family is installed by @dotCooCoo in https://github.com/storytold/effectcraft/pull/3521
+    - Updates: Restart to Update with unsaved changes opens the save prompt by @dotCooCoo in https://github.com/storytold/effectcraft/pull/3344
+    - Updates: the first start after an update shows how it ended by @dotCooCoo in https://github.com/storytold/effectcraft/pull/3343
+    - media: decode animated GIF and WebP through craft-gif and craft-webp (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/3763
+    - Plug-in Library: a package downloads only release assets of its repository by @dotCooCoo in https://github.com/storytold/effectcraft/pull/3148
+    - Plug-in Library: a file URL cannot name a network path by @dotCooCoo in https://github.com/storytold/effectcraft/pull/3147
+    - docs: bring ROADMAP.md and parity assessment current through 2026-11-15 by @gmrmad1 in https://github.com/storytold/effectcraft/pull/3707
+    - Alt-click on a stopwatch in Effect Controls adds or removes an expression, as in After Effects, instead of toggling keyframes by @vangel76 in https://github.com/storytold/effectcraft/pull/3254
+    - Graph Editor curves pass through every keyframe and show Hold steps as vertical jumps by @vangel76 in https://github.com/storytold/effectcraft/pull/3218
+    - The Rotation tool turns a layer by exactly the angle you drag from the press point by @vangel76 in https://github.com/storytold/effectcraft/pull/3221
+    - Export: WebM Opus from craft-audio; remove crates/opusenc by @FredApps in https://github.com/storytold/effectcraft/pull/3735
+    - media, export: drop the filmcraft-mpegts, -vp9, -hevc and -av1 pins for craft-libs (#781) by @FredApps in https://github.com/storytold/effectcraft/pull/3765
+    - Close, New and Open Project free the closed project's memory by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/2042
+    - Fast Previews: Adaptive Resolution applies while dragging in the Timeline by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/2047
+    - effects: cut SPI3D and SPIMTX parsing over to craft-cms by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3745
+    - psd: read the document structure with craft_psd (#786) by @FredApps in https://github.com/storytold/effectcraft/pull/3766
+    - psd: write fixtures with craft_psd by @FredApps in https://github.com/storytold/effectcraft/pull/3767
+    - psd: parse linked files with craft-psd and pin past #1845 by @FredApps in https://github.com/storytold/effectcraft/pull/3776
+    - psd: delegate ZIP prediction reversal with budgeted scratch by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3778
+    - interchange: stage current shared Film format dependency cutover by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3773
+    - interchange: use shared XML and JSON nesting preflight by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3783
+    - OCIO LUT test passes on Windows by @vangel76 in https://github.com/storytold/effectcraft/pull/3794
+    - The Timeline waveform shows what is really heard for reversed layers and the Backwards effect by @vangel76 in https://github.com/storytold/effectcraft/pull/3246
+    - Ball Grid effect has all of After Effects' CC Ball Action controls, including flat balls without shading by @vangel76 in https://github.com/storytold/effectcraft/pull/3215
+    - svg: use shared bounded prefix path parsing by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3800
+    - Shape operators: cap each expanding operator's output by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/2948
+    - svg: move stylesheet parsing and matching to craft-svg by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3797
+    - svg: use shared floating-point colour compatibility parser by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3798
+    - svg: reuse shared permissive transform-list parsing by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3801
+    - CC Power Pin: Expansion takes After Effects' −200 minimum by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3813
+    - Effect Controls: Up and Down select the previous and next effect (#3585) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3818
+    - Fractal Noise: Sub Scaling takes After Effects' 10..10000 (CPU and GPU) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3820
+    - Turbulent Displace: Amount takes After Effects' range and stays finite at the extremes by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3819
+    - Sharpen: Amount takes After Effects' 0..4000 range (#3466) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3810
+    - Gaussian Blur: Blurriness takes After Effects' range 0..30000 (#3460) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3814
+    - fix(effects): parse_cube rejects a hostile LUT_3D_SIZE before cubing it by @jayzed80 in https://github.com/storytold/effectcraft/pull/3153
+    - Radial Blur: Amount takes After Effects' range 0..1000 by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3817
+    - Drop Shadow: Softness takes After Effects' range, and keeps its blur past the padding budget by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3822
+    - Fix #1986 Cmd+A ("select all") doesn't work in "Import multiple files… by @jerome25000 in https://github.com/storytold/effectcraft/pull/2030
+    - Expressions: a layer parameter left at None is the layer it sits on (#3601) by @GenuineMoron in https://github.com/storytold/effectcraft/pull/3604
+    - psd: parse descriptors and placed layers with craft-psd by @FredApps in https://github.com/storytold/effectcraft/pull/3779
+    - OCIO: cap the .3dl mesh and rows before cubing them (#3830) by @arnav-hiwarkar in https://github.com/storytold/effectcraft/pull/3843
+    - psd: share Unicode layer-name record framing by @FredApps in https://github.com/storytold/effectcraft/pull/3895
+    - psd: cut over recovery PackBits decoding to craft-psd by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3774
+    - media: cut WAV cue, adtl, RF64 and XMP markers over to craft-libs by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3743
+    - psd: share fixed-binary adjustment readers by @FredApps in https://github.com/storytold/effectcraft/pull/3898
+    - Drop the now-unused WAV probe re-export by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3903
+    - psd: read vector mask records through craft-psd by @FredApps in https://github.com/storytold/effectcraft/pull/3894
+    - psd: share recovering section-divider framing by @FredApps in https://github.com/storytold/effectcraft/pull/3902
+    - psd: share bounded TySh text-prefix reading by @FredApps in https://github.com/storytold/effectcraft/pull/3907
+    - psd: share scalar layer-block reading by @FredApps in https://github.com/storytold/effectcraft/pull/3916
+    - psd: share recovering descriptor-block headers by @FredApps in https://github.com/storytold/effectcraft/pull/3921
+    - psd: remove unused reader after shared parser integration by @FredApps in https://github.com/storytold/effectcraft/pull/3931
+    - #3391: a Views 1 | 2 | 4 switch in the Composition viewer's control row by @nicolafalcier99 in https://github.com/storytold/effectcraft/pull/3848
+    - psd: delegate raw brightness and exposure writers by @FredApps in https://github.com/storytold/effectcraft/pull/3922
+    - psd: share hue and levels writer framing by @FredApps in https://github.com/storytold/effectcraft/pull/3940
+    - export: cut over exr_out to craft-exr by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3937
+    - Caching rebuilt: footage decoded once, one RAM budget for all caches, eviction by value, idle caching on by @vangel76 in https://github.com/storytold/effectcraft/pull/3301
+    - psd: use shared borrowed descriptor and block writers by @FredApps in https://github.com/storytold/effectcraft/pull/3949
+    - automation: share JSON-RPC envelope framing via craft-jsonrpc by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3967
+    - svg: use craft-svg preflight::parse_text for document setup by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3968
+    - media: route software MP4/H.264 through craft-video and craft-media-source by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3970
+    - svg: use shared craft-svg document/CSS interpretation helpers by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3969
+    - chore: unify craft-time/frame/color/audio pins to craft-libs main by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3972
+    - Adopt the shared AGENTS.md (RFC-0072) by @aiongg in https://github.com/storytold/effectcraft/pull/3973
+    - Keep Essential Graphics instance keyframes in the comp so valueAtTime and numKeys see them (#1682) by @MarekSpodBiedry in https://github.com/storytold/effectcraft/pull/1710
+    - svg: add SVG render and scene-mapping parity regression tests by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3984
+    - mcp: add stdio protocol transcript tests for initialize, cancel, and batch by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3990
+    - media: route ISO-BMFF and Matroska/WebM codecs through craft-video by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/3989
+    - fix(media): preserve coded ProRes alpha on import by @FredApps in https://github.com/storytold/effectcraft/pull/3999
+    - fix(media): honor clean aperture on movie import by @FredApps in https://github.com/storytold/effectcraft/pull/4003
+    - media: route audio-only ISO-BMFF and Matroska/WebM through craft-audio by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4004
+    - fix(media): preserve Matroska audio position on cold seek by @FredApps in https://github.com/storytold/effectcraft/pull/4007
+    - media: preserve contiguous audio packet placement across rounding and gaps by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4008
+    - media: route standalone audio (WAV/AIFF/MP3/AAC/AC-3/Ogg Opus) through craft-audio by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4009
+    - media: preserve durationless laced audio and narrow overlap reads by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4013
+    - Preserve recorded MOV timecode in the shared reader by @FredApps in https://github.com/storytold/effectcraft/pull/4012
+    - media: generate pure-Rust AAC fixtures for gap and seek tests by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4015
+    - media: avoid scanning Opus payloads at open by @FredApps in https://github.com/storytold/effectcraft/pull/4011
+    - media: route MXF video and PCM/AES3 sound through craft-media::mxf by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4006
+    - media: route AVI, MPEG-TS, and MPEG-PS through craft-media by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4010
+    - media: round MXF start timecode to the nearest video frame by @FredApps in https://github.com/storytold/effectcraft/pull/4018
+    - test: report stalls in the ProRes MOV roundtrip by @FredApps in https://github.com/storytold/effectcraft/pull/4019
+    - media: switch non-fallback AUDIO_EXTENSIONS and convert tests to craft-libs by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4020
+    - fix(media): preserve leading MOV audio silence and saturate positions by @Terra854 in https://github.com/storytold/effectcraft/pull/4005
+    - media: preserve standalone audio resampling phase across seeks by @FredApps in https://github.com/storytold/effectcraft/pull/4017
+    - media: clamp MXF picture duration and seeking to indexed frames by @FredApps in https://github.com/storytold/effectcraft/pull/4021
+    - media: preserve MXF descriptor pixel aspect by @FredApps in https://github.com/storytold/effectcraft/pull/4022
+    - fix(media): silence reads past the MOV audio edit end by @Terra854 in https://github.com/storytold/effectcraft/pull/4024
+    - media: honor MXF descriptor color fallback for ProRes (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4023
+    - media: probe AVI ProRes coded alpha parity by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4025
+    - media: enable FFV1 and APV decode in craft-video route by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4027
+    - media: preserve the final picture in regular H.264 transport streams (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4030
+    - media: preserve container audio resampling phase across seeks by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4026
+    - media: preserve shared AVI playback when ProRes alpha cannot be inferred (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4035
+    - media: preserve APV fallback outside the guarded MP4 subset (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4039
+    - media: preserve Matroska FFV1 metadata without CodecPrivate (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4041
+    - media: fence fractional MOV PCM edits on the packet clock (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4031
+    - media: avoid nested ProRes decode work under the MOV reader lock by @FredApps in https://github.com/storytold/effectcraft/pull/4028
+    - media: preserve Matroska display aspect on import by @Terra854 in https://github.com/storytold/effectcraft/pull/4029
+    - media: preserve Matroska presentation duration by @Terra854 in https://github.com/storytold/effectcraft/pull/4032
+    - media: include the final AAC transport packet in duration by @Terra854 in https://github.com/storytold/effectcraft/pull/4033
+    - media: derive AVI video duration from indexed frames by @Terra854 in https://github.com/storytold/effectcraft/pull/4037
+    - media: use the shared reader for uncompressed RGB AVI by @Terra854 in https://github.com/storytold/effectcraft/pull/4050
+    - media: present monochrome frames from the shared decoder by @Terra854 in https://github.com/storytold/effectcraft/pull/4051
+    - media: present full-range 8-bit RGB from the shared decoder by @Terra854 in https://github.com/storytold/effectcraft/pull/4052
+    - media: read AAC configuration through the shared byte source (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4046
+    - media: seek independent ProRes pictures in indexless AVI (#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4047
+    - psd: share legacy Mac Roman layer-name decoding by @Terra854 in https://github.com/storytold/effectcraft/pull/4056
+    - media: derive audio-only AVI PCM duration from indexed blocks by @Terra854 in https://github.com/storytold/effectcraft/pull/4042
+    - media: probe Matroska ProRes coded alpha by @Terra854 in https://github.com/storytold/effectcraft/pull/4034
+    - media: route standalone FLAC through craft-audio by @Terra854 in https://github.com/storytold/effectcraft/pull/4045
+    - media: route MP4 and Matroska FLAC through craft-audio by @Terra854 in https://github.com/storytold/effectcraft/pull/4049
+    - media: use the shared GIF text control fix by @Terra854 in https://github.com/storytold/effectcraft/pull/4040
+    - media: route MXF through the shared header probe by @Terra854 in https://github.com/storytold/effectcraft/pull/4058
+    - media: present full-range high-depth RGB from the shared decoder by @Terra854 in https://github.com/storytold/effectcraft/pull/4063
+    - EPS: enable sampled images, scale step budget, and align CMYK with After Effects by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4057
+    - Use shared cancellation in EffectCraft media reads by @Terra854 in https://github.com/storytold/effectcraft/pull/4044
+    - psd: share plane reading, RLE row counts, and ZIP framing via craft-psd (#786) by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4061
+    - chore: sync effectcraft-psd craft-psd rev in Cargo.lock by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4070
+    - media: cover legacy Motion JPEG MOV import without FFmpeg by @FredApps in https://github.com/storytold/effectcraft/pull/4064
+    - test(ui): pump and wait longer while prefetch setup fills the cache by @FredApps in https://github.com/storytold/effectcraft/pull/4096
+    - Audio Levels in the Audio panel show the value at the current time, with keyframes and expressions by @vangel76 in https://github.com/storytold/effectcraft/pull/3234
+    - Browse… buttons in a script's own dialogs and panels open the file dialog instead of doing nothing by @vangel76 in https://github.com/storytold/effectcraft/pull/3253
+    - Convert To Bezier Path works on a selected shape layer or group, for example right after drawing a rectangle by @vangel76 in https://github.com/storytold/effectcraft/pull/3220
+    - media: honor delayed PCM starts in shared AVI by @Terra854 in https://github.com/storytold/effectcraft/pull/4071
+    - media: cover Motion JPEG AVI seek and PCM without FFmpeg by @Terra854 in https://github.com/storytold/effectcraft/pull/4069
+    - chore(deps): move EffectCraft's media pins to craft-libs 33be3562 and FilmCraft e7345f6e by @FredApps in https://github.com/storytold/effectcraft/pull/4104
+    - export: write Targa sequences through craft-tga (craft-libs#778) by @FredApps in https://github.com/storytold/effectcraft/pull/4105
+    - media: open YUV4MPEG2 through the shared craft-media-source reader by @FredApps in https://github.com/storytold/effectcraft/pull/4109
+    - ci(release): forward ARTCRAFT_SERVICES_DISPATCH_TOKEN to release workflow by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4112
+    - fix(gpu): bring the colour kernel's cold compile time back to release level by @skylartaylor in https://github.com/storytold/effectcraft/pull/4111
+    - fix(media): stop the same-file decode deadlock by @skylartaylor in https://github.com/storytold/effectcraft/pull/4110
+    - ci(release): publish scheduled nightly prereleases by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4128
+    - Release: bump effectcraft to v0.25.1 by @FredApps in https://github.com/storytold/effectcraft/pull/3985
+    - revert: restore scheduled release.yml dry-run on main by @dylanmtaylor in https://github.com/storytold/effectcraft/pull/4131
+    New Contributors
+    - @GenuineMoron made their first contribution in https://github.com/storytold/effectcraft/pull/3529
+    - @andreaaazo made their first contribution in https://github.com/storytold/effectcraft/pull/3594
+    - @nicolafalcier99 made their first contribution in https://github.com/storytold/effectcraft/pull/3848
+    - @Terra854 made their first contribution in https://github.com/storytold/effectcraft/pull/4005
+    Full Changelog: https://github.com/storytold/effectcraft/compare/v0.24.1...v0.25.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/effectcraft/releases/tag/v0.25.1
+ReleaseTime: 2026-11-23T21:25:21.0000000Z
