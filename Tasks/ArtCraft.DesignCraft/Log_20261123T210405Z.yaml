@@ -1,0 +1,189 @@
+Version: 0.21.1
+Installer:
+- Query:
+    Architecture: x64
+  InstallerUrl: https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-windows-x64.msi
+- Query:
+    Architecture: arm64
+  InstallerUrl: https://github.com/storytold/designcraft/releases/download/v0.21.1/designcraft-0.21.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Highlights
+    - Place: place several images at once with a loaded place cursor (with thumbnails and a count), drop images straight in, and make a contact sheet with File › Place Contact Sheet…. Images come in at the resolution stored in the file.
+    - Text and layout: Alpha Channel text wrap follows a transparent image's visible pixels, vertical justification is much more accurate in shaped and grid-aligned frames, and object styles can set paragraph styles and Text Frame General Options.
+    - Tables: diagonal lines in cells (Cell Options › Diagonal Lines) and Table › Go to Row….
+    - Faster editing: opening, preflight and recovery saves run in the background, and edits recompose only what changed, repaint only what moved and stop re-rendering every page thumbnail.
+    - Safer files: Save refuses to write a document that wouldn't reopen, PDF links allow only web and mail addresses, and many importers now refuse oversized or malformed input instead of exhausting memory.
+    - Fixes: Delete Unused Layers and Merge Layers keep grouped and anchored objects, cutting an object no longer pastes old text, whole-page PDF flattening respects non-printing layers, and pasting images from the system clipboard works.
+    What's Changed
+    - Render: clamp the blur size before the filter planner squares it by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2640
+    - Type: type.align without a value is an error by @dotCooCoo in https://github.com/storytold/designcraft/pull/2645
+    - Tests: type.align refusal cases name the check that refuses each by @dotCooCoo in https://github.com/storytold/designcraft/pull/2662
+    - PPTX export: bound the retained glyph-to-character maps by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2643
+    - xtask: refuse an oversized corpus archive before extracting it by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2642
+    - Images: a WebP with an ICC chunk longer than the file is read without its profile by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2638
+    - Data merge: a record range stops expanding once the limit is met by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2636
+    - IDML: story export and object-style overlay in linear time, embedded image budget by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2263
+    - Format: a failed entry read counts against the archive budget by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2253
+    - Fonts: cap decoded names, bound outline flattening, cache fallback coverage by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2252
+    - Engine: bounded DTD validation, compound-path hole orientation by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2249
+    - Exports: leave out text the page doesn't show (inherited conditions, deletions, hidden layers) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2234
+    - Engine: index style, tag, swatch and run lookups; bound polygon sides, Change All and spelling candidates by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2210
+    - Data Merge: a field in a table cell goes into the cell and is filled (#2315) by @Hamza0101 in https://github.com/storytold/designcraft/pull/2341
+    - Automation roots: refuse COM¹ to LPT³ and a device name before a colon by @adikshan11 in https://github.com/storytold/designcraft/pull/2383
+    - Save: a TIFF, BMP or PSD too big for opening to inflate is stored as is, so the document reopens by @jayzed80 in https://github.com/storytold/designcraft/pull/2701
+    - Compose: vertical Center, Bottom and Justify measure to the last baseline by @dotCooCoo in https://github.com/storytold/designcraft/pull/2648
+    - Preflight: check the document on a background worker, not on every edit by @dotCooCoo in https://github.com/storytold/designcraft/pull/2656
+    - Text: paragraph spacing and justification values are checked by @dotCooCoo in https://github.com/storytold/designcraft/pull/2650
+    - Justification: the dialog sets Auto Leading and Single Word Justification by @dotCooCoo in https://github.com/storytold/designcraft/pull/2659
+    - Fix MCP temporary directory build on Windows by @dotCooCoo in https://github.com/storytold/designcraft/pull/2355
+    - CMYK view: convert the blended inks to screen colours on the render threads by @dotCooCoo in https://github.com/storytold/designcraft/pull/2660
+    - Text Frame Options: a non-rectangular frame shows one Inset field by @dotCooCoo in https://github.com/storytold/designcraft/pull/2647
+    - Pages: an edit no longer renders every page thumbnail again by @dotCooCoo in https://github.com/storytold/designcraft/pull/2653
+    - Reject ambiguous table IDs across stories by @dotCooCoo in https://github.com/storytold/designcraft/pull/2354
+    - Anchored text frames: place a frame anchored inside another anchored frame by @dotCooCoo in https://github.com/storytold/designcraft/pull/2589
+    - Paste: images on the system clipboard paste as embedded images by @dotCooCoo in https://github.com/storytold/designcraft/pull/2665
+    - Copy: copied text gets text anchors and tables of its own by @dotCooCoo in https://github.com/storytold/designcraft/pull/1843
+    - Data merge: an image field in text places the image, not its path by @dotCooCoo in https://github.com/storytold/designcraft/pull/2649
+    - Render: keep drop shadow and outer glow images while an object moves by @dotCooCoo in https://github.com/storytold/designcraft/pull/2657
+    - Render: satin and center inner glow on an image follow its painted edge by @dotCooCoo in https://github.com/storytold/designcraft/pull/2671
+    - Canvas: an idle frame paints and looks up only the spreads in view by @dotCooCoo in https://github.com/storytold/designcraft/pull/2696
+    - Text Frame Options: link the insets only when every selected frame has even sides by @dotCooCoo in https://github.com/storytold/designcraft/pull/2703
+    - Tables: Table › Go to Row… selects a row by its number by @dotCooCoo in https://github.com/storytold/designcraft/pull/1845
+    - Type: Justify All Lines ⇧⌘F, Em Space ⇧⌘M, En Space ⇧⌘N and Paragraph Rules ⌥⌘J by @dotCooCoo in https://github.com/storytold/designcraft/pull/2664
+    - InDesign's type shortcuts: Justify All Lines ⇧⌘F, Em Space ⇧⌘M, En Space ⇧⌘N, Paragraph Rules ⌥⌘J by @marcoarnulfo in https://github.com/storytold/designcraft/pull/1138
+    - Text Wrap: Alpha Channel contours follow a transparent image's visible pixels by @dotCooCoo in https://github.com/storytold/designcraft/pull/2663
+    - Text Wrap: Alpha Channel contour traced from the image, holes with Include Inside Edges, open gaps kept by @moppeeer in https://github.com/storytold/designcraft/pull/1084
+    - Render: a feathered object's bevel and inner effects fade with it by @dotCooCoo in https://github.com/storytold/designcraft/pull/2668
+    - Compose: an edit composes only the paragraphs it can change by @dotCooCoo in https://github.com/storytold/designcraft/pull/2699
+    - Place: images come in at the resolution stored in the file by @dotCooCoo in https://github.com/storytold/designcraft/pull/2651
+    - Object styles: a style sets its frames' paragraph styles and Text Frame General Options by @dotCooCoo in https://github.com/storytold/designcraft/pull/2669
+    - Object styles: Paragraph Styles (with Apply Next Style) and Text Frame General Options by @moppeeer in https://github.com/storytold/designcraft/pull/1520
+    - Compose: vertical justification keeps text out of a wrap under it by @dotCooCoo in https://github.com/storytold/designcraft/pull/2667
+    - Canvas: moving an object with a drop shadow repaints only its area by @dotCooCoo in https://github.com/storytold/designcraft/pull/2654
+    - Recovery: the timer writes recovery data on a background thread by @dotCooCoo in https://github.com/storytold/designcraft/pull/2666
+    - fix(engine): write automatic recovery off the interface thread by @hvfrancesco in https://github.com/storytold/designcraft/pull/2275
+    - Text: Text Frame Options open from the Type tool and change the frame holding the caret by @dotCooCoo in https://github.com/storytold/designcraft/pull/2652
+    - Compose: vertical justification keeps grid-aligned lines on the baseline grid by @dotCooCoo in https://github.com/storytold/designcraft/pull/2658
+    - Render: placed images are premultiplied in their decoded buffer by @dotCooCoo in https://github.com/storytold/designcraft/pull/2709
+    - Layers: Duplicate Layer copies a layer's settings and objects above it by @dotCooCoo in https://github.com/storytold/designcraft/pull/1834
+    - Images: decode JPEG screen proxies at a reduced size by @dotCooCoo in https://github.com/storytold/designcraft/pull/2707
+    - Anchored text frames: test nested hosts in groups, footnotes and table cells by @dotCooCoo in https://github.com/storytold/designcraft/pull/2722
+    - Compose: vertical justification in a shaped frame tests lines to their baselines by @dotCooCoo in https://github.com/storytold/designcraft/pull/2708
+    - Compose: vertical justification moves a line down between a contour's arms by @dotCooCoo in https://github.com/storytold/designcraft/pull/2719
+    - Object styles: checks and fixes for corners, strokes and the style dialog by @dotCooCoo in https://github.com/storytold/designcraft/pull/2721
+    - Properties: Text Frame section shows inset spacing and vertical justification by @dotCooCoo in https://github.com/storytold/designcraft/pull/2661
+    - Tables: table commands are disabled with the caret in footnote text by @dotCooCoo in https://github.com/storytold/designcraft/pull/2706
+    - Compose: vertical justification moves an object kept within its column with its line by @dotCooCoo in https://github.com/storytold/designcraft/pull/2720
+    - Compose: count endnote, anchored object and cross-reference marks once per story by @dotCooCoo in https://github.com/storytold/designcraft/pull/2705
+    - Compose: vertical justification in a shaped frame finds a band shorter than one scan step by @dotCooCoo in https://github.com/storytold/designcraft/pull/2732
+    - CI: drop release.yml's copy of the git-sources job by @FredApps in https://github.com/storytold/designcraft/pull/2634
+    - Text Frame Options: every dropdown and field has an accessible name by @dotCooCoo in https://github.com/storytold/designcraft/pull/2733
+    - Tools: snap Gap tool drags to active snapping settings (#2637) by @AlPaka1234 in https://github.com/storytold/designcraft/pull/2749
+    - Window: restore hidden panels when selecting panels, control bar or workspaces (#2742) by @AlPaka1234 in https://github.com/storytold/designcraft/pull/2746
+    - Text Frame Options: insets and gutter in the ruler units (#2739) by @ZIDAN44 in https://github.com/storytold/designcraft/pull/2754
+    - IDML export: keep endnote reference numbers (#2753) by @jayzed80 in https://github.com/storytold/designcraft/pull/2764
+    - Cut over document formats and codecs to craft-libs (#778) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2766
+    - Build: restore designcraft_format::write; render decode without the image crate by @aiongg in https://github.com/storytold/designcraft/pull/2780
+    - Pin craft-psd to storytold/craft-libs by @aiongg in https://github.com/storytold/designcraft/pull/2791
+    - PDF export: attach working CMYK profile as /DefaultCMYK (#2743) by @AlPaka1234 in https://github.com/storytold/designcraft/pull/2751
+    - Images: background decoding, linked images and multi-image place by @aiongg in https://github.com/storytold/designcraft/pull/2765
+    - Place: several images load the place cursor, with a thumbnail, count and grid by @texjer in https://github.com/storytold/designcraft/pull/2302
+    - Place: File › Place Contact Sheet… puts the loaded images on new pages by @texjer in https://github.com/storytold/designcraft/pull/2308
+    - Place: dropped images load the place cursor, in the order they came by @texjer in https://github.com/storytold/designcraft/pull/2309
+    - Linked images: a save waits for link checks; warm accounting from #2717 by @aiongg in https://github.com/storytold/designcraft/pull/2794
+    - ci: provision pinned fonts for Sonar coverage by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2793
+    - Stroke: object.stroke refuses out-of-range numbers and unknown names by @dotCooCoo in https://github.com/storytold/designcraft/pull/2787
+    - Tests: the FIFO read test accepts a would-block error (main's FreeBSD nightly is red) by @FredApps in https://github.com/storytold/designcraft/pull/2797
+    - PDF: allow only web and mail link schemes by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2804
+    - MCP: cap one request line at 4 MiB by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2803
+    - Release: DesignCraft v0.21.0 on main by @FredApps in https://github.com/storytold/designcraft/pull/2807
+    - Refuse non-web URLs in PDF links and buttons by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2809
+    - Compose: drop caps and vertical justification skip a grid the lines can't count by @dotCooCoo in https://github.com/storytold/designcraft/pull/2767
+    - Captions: live captions follow a gesture when it commits by @dotCooCoo in https://github.com/storytold/designcraft/pull/2786
+    - Paste: params text gives the pasted image's size as its stored resolution by @dotCooCoo in https://github.com/storytold/designcraft/pull/2783
+    - Tables: table.setCell records no undo step when the cells already have the values by @dotCooCoo in https://github.com/storytold/designcraft/pull/2778
+    - Recovery: test that a write queued behind a cancelled one keeps its place by @dotCooCoo in https://github.com/storytold/designcraft/pull/2771
+    - Updates: take craft-update from craft-libs main at e98299546 by @dotCooCoo in https://github.com/storytold/designcraft/pull/2608
+    - Stroke: the text Weight field keeps its value between 0 and 800 pt by @dotCooCoo in https://github.com/storytold/designcraft/pull/2808
+    - Captions: a live caption update gives the document a new revision by @dotCooCoo in https://github.com/storytold/designcraft/pull/2773
+    - Pages: a new page takes the parent of the page it follows (#2788) by @jayzed80 in https://github.com/storytold/designcraft/pull/2817
+    - Shortcuts: run Option shortcuts on character keys in the app, not the macOS menu bar (#2710) by @jayzed80 in https://github.com/storytold/designcraft/pull/2818
+    - M0: reject invalid prerelease and overflowing versions by @MMexicann in https://github.com/storytold/designcraft/pull/2834
+    - cli: report failures after keep-going scripts by @MMexicann in https://github.com/storytold/designcraft/pull/2836
+    - cli: report an empty benchmark layout instead of panicking by @MMexicann in https://github.com/storytold/designcraft/pull/2839
+    - fix: preserve book style source across chapter edits by @MMexicann in https://github.com/storytold/designcraft/pull/2841
+    - Frame Fitting Options: crop amounts follow the document's ruler unit (#2812) by @gmrmad1 in https://github.com/storytold/designcraft/pull/2845
+    - Justification: keep the spacing table out of the wide-control grid (#2525) by @gmrmad1 in https://github.com/storytold/designcraft/pull/2848
+    - Reuse shared Base64 encoding for HTML and serialization by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2840
+    - fix: preserve selections when resolving tracked changes by @MMexicann in https://github.com/storytold/designcraft/pull/2851
+    - docs: describe existing pull-request CI quality gate by @MMexicann in https://github.com/storytold/designcraft/pull/2850
+    - Formats: port the craft-libs cutover follow-ups from #2734 to main by @FredApps in https://github.com/storytold/designcraft/pull/2838
+    - Layer Options: Lock Guides, as InDesign's (and IDML's LockGuides) by @moppeeer in https://github.com/storytold/designcraft/pull/1516
+    - Compose: apply 禁則 push-in/push-out priorities (JIS X 4051) by @midasdf in https://github.com/storytold/designcraft/pull/1502
+    - cli: pin the argument surface, and fix the argument bugs pinning it found (photocraft#7071) by @Hamza0101 in https://github.com/storytold/designcraft/pull/1482
+    - fix(ci): initialize guide lock in EPUB layer fixture by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2857
+    - docs: prefer shared Craft libraries for reusable features by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2866
+    - Contributors: add gmrmad1's name for the About window by @gmrmad1 in https://github.com/storytold/designcraft/pull/2876
+    - Pages panel: a right-to-left spread label reads left page first (#2601) by @gmrmad1 in https://github.com/storytold/designcraft/pull/2844
+    - Create Outlines: vertical text keeps its upright glyphs and its columns by @Hamza0101 in https://github.com/storytold/designcraft/pull/2904
+    - fix(fonts): discover named instances before listing paragraph styles by @makesomethingshit in https://github.com/storytold/designcraft/pull/1246
+    - Tables: Cell Options › Diagonal Lines draws diagonal lines across cells by @dotCooCoo in https://github.com/storytold/designcraft/pull/1793
+    - Automation roots: refuse a network, device or non-disk verbatim path before the file system is asked about it by @adikshan11 in https://github.com/storytold/designcraft/pull/2799
+    - Fonts: the PostScript name of a variable font's named instance (#1690) by @Hamza0101 in https://github.com/storytold/designcraft/pull/1864
+    - Scroll overflowing document tabs by @weyert in https://github.com/storytold/designcraft/pull/2357
+    - A cross-reference's PDF link covers the text it generated (#1446) by @Hamza0101 in https://github.com/storytold/designcraft/pull/1495
+    - Hyphenation: a Korean word or an address is not broken by English rules (#1688) by @Hamza0101 in https://github.com/storytold/designcraft/pull/1754
+    - Story Editor: View › Story Editor › Show/Hide Style Name Column, and a draggable column width by @dotCooCoo in https://github.com/storytold/designcraft/pull/1797
+    - Separations: say when the resolution was lowered to fit the plate size by @Hamza0101 in https://github.com/storytold/designcraft/pull/2946
+    - Data Merge: count fields after reopening IDML (#2694) by @makesomethingshit in https://github.com/storytold/designcraft/pull/2954
+    - images: cut over EPS bounding_box and is_eps to craft-ps by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2972
+    - Place: a Photoshop file comes in at its own resolution by @pepen11 in https://github.com/storytold/designcraft/pull/2550
+    - images: cut over reduced JPEG decode to craft_jpeg::decode_reduced by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2991
+    - fix(canvas): restart the text caret blink on typing, caret moves and clicks by @alejo-c in https://github.com/storytold/designcraft/pull/1953
+    - test(images): fit 1-component progressive JPEG test under 512 MiB decoder budget by @dylanmtaylor in https://github.com/storytold/designcraft/pull/2998
+    - Dependencies: unify craft-libs at 30a568b97 for shared cutovers by @dotCooCoo in https://github.com/storytold/designcraft/pull/2889
+    - fix(ui): discover installed Arabic fallback fonts by @FredApps in https://github.com/storytold/designcraft/pull/3019
+    - Images: use the shared BMP density probe by @FredApps in https://github.com/storytold/designcraft/pull/3017
+    - mcp: cut over JSON-RPC/MCP framing to craft-mcp-server by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3042
+    - idml: separate designmap schema emission to craft-idml (#778) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3044
+    - Adopt the shared AGENTS.md (RFC-0072) by @aiongg in https://github.com/storytold/designcraft/pull/3046
+    - images: share resolution and header probes by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3022
+    - idml: delegate remaining IDML part schema emission to craft-idml (#778) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3047
+    - images, render: align JPEG density/orientation and PNG output parity (storytold/craft-libs#778) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3062
+    - mcp: add stdio protocol transcript tests for initialize, cancel, and batch by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3071
+    - render, images: align JPEG export guards and add export/probe parity tests (storytold/craft-libs#778) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3073
+    - Open: read and parse documents off the UI thread by @aiongg in https://github.com/storytold/designcraft/pull/2796
+    - images: replace local JPEG EXIF and PNG pHYs scans with shared readers (craft-libs#785) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3101
+    - images: restore strict JPEG APP1 EXIF scan (craft-libs#785) by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3105
+    - Images: decode TIFF screen and link proxies at a reduced size (#2381) by @thib-cal in https://github.com/storytold/designcraft/pull/3016
+    - test(images): expect upright swapped dimensions for orientation 6 reduced TIFF by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3125
+    - test(images): assert asymmetric pixel placement for orientation 6 reduced TIFF by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3127
+    - fix(links): preserve freshly placed artwork on immediate save by @skylartaylor in https://github.com/storytold/designcraft/pull/3143
+    - build: pin craft-libs to main 33be356 (craft-libs#778) by @FredApps in https://github.com/storytold/designcraft/pull/3148
+    - images: read JPEG EXIF orientation through the shared strict reader (craft-libs#778) by @FredApps in https://github.com/storytold/designcraft/pull/3149
+    - ci(release): forward ARTCRAFT_SERVICES_DISPATCH_TOKEN to release workflow by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3170
+    - Save: refuse a document that would not reopen instead of writing it by @skylartaylor in https://github.com/storytold/designcraft/pull/3155
+    - Layers: Merge Layers moves grouped and anchored objects too by @skylartaylor in https://github.com/storytold/designcraft/pull/3156
+    - PDF: whole-page flattening respects printing and layer export by @skylartaylor in https://github.com/storytold/designcraft/pull/3157
+    - Edit: cutting an object clears an earlier text copy by @skylartaylor in https://github.com/storytold/designcraft/pull/3158
+    - Text: validate explicit targets before reading or editing a story by @skylartaylor in https://github.com/storytold/designcraft/pull/1809
+    - ci(release): publish scheduled nightly prereleases by @dylanmtaylor in https://github.com/storytold/designcraft/pull/3185
+    - Layers: Delete Unused Layers keeps layers used by grouped and anchored objects by @skylartaylor in https://github.com/storytold/designcraft/pull/3184
+    - Release: bump designcraft to v0.21.1 by @FredApps in https://github.com/storytold/designcraft/pull/3064
+    New Contributors
+    - @adikshan11 made their first contribution in https://github.com/storytold/designcraft/pull/2383
+    - @jayzed80 made their first contribution in https://github.com/storytold/designcraft/pull/2701
+    - @hvfrancesco made their first contribution in https://github.com/storytold/designcraft/pull/2275
+    - @AlPaka1234 made their first contribution in https://github.com/storytold/designcraft/pull/2749
+    - @gmrmad1 made their first contribution in https://github.com/storytold/designcraft/pull/2845
+    - @weyert made their first contribution in https://github.com/storytold/designcraft/pull/2357
+    - @alejo-c made their first contribution in https://github.com/storytold/designcraft/pull/1953
+    - @thib-cal made their first contribution in https://github.com/storytold/designcraft/pull/3016
+    Full Changelog: https://github.com/storytold/designcraft/compare/v0.20.1...v0.21.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/storytold/designcraft/releases/tag/v0.21.1
+ReleaseTime: 2026-11-23T20:22:22.0000000Z
