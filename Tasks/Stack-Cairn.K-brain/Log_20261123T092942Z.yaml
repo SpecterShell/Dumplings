@@ -1,0 +1,24 @@
+Version: 0.107.44
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.44/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.44/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 定时任务运行记录顺序：同一毫秒内启动的两次运行，清理旧记录后顺序可能颠倒，较早的那次被当成“最近一次”显示。现在保持启动顺序。
+    - 桌面端退出后的提示：桌面端退出时如果还留着空闲连接，下一次调用会显示一条原始的请求失败信息。现在正确提示“LiveAgent 桌面端未连接”。
+    - TUI 窗口缩放：判断缩放后立即重排还是暂缓时，改用模型时钟，实际行为不变。
+    兼容性
+    - 接口和能力声明都没有变化，可以直接从 v0.107.43 升级。
+    其他
+    - 修复 9 个随机失败或依赖本机环境的测试，涉及后台子代理中断、子代理面板点击、TUI 本地端口泄漏、环境代理变量、沙箱临时目录、测试用 Chrome 访问系统钥匙串、窗口缩放计时，以及宿主桥接超时与取消。
+    - 沙箱策略没有改动。
+    完整变更：#244
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.44
+ReleaseTime: 2026-11-23T08:51:58.0000000Z
