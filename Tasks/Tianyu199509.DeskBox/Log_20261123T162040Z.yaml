@@ -1,0 +1,42 @@
+Version: 1.6.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.6.0/DeskBox_Setup_1.6.0_x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Tianyu199509/DeskBox/releases/download/v1.6.0/DeskBox_Setup_1.6.0_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    The custom widget ecosystem, clipboard workflow, and companion-process architecture release. DeskBox 1.6.0 introduces a zero-WebView native WinUI 3 Custom Widget engine paired with an air-gapped QuickJS script sandbox (logic.js), Widget Studio with three AI/Agent creation channels and 14 localized official templates across 13 languages, a full-featured Clipboard History widget with a global Alt+V Quick Paste popup and offline image OCR, a unified Global Search popup (Alt+D) with calculator/commands/app folders (retiring the standalone Search widget), universal tabbed widget groups with acrylic merge/detach previews, a reworked Desktop Organization workbench, major Todo/QuickCapture/Music/Glance upgrades, and isolated companion host processes (--settings / --studio) that keep the resident desktop host lean.
+    Release date: 2026-11-23.
+    Highlights
+    - Declarative Custom Widgets, QuickJS Sandbox & Widget Studio. Render native WinUI 3 desktop widgets from a declarative manifest.json element graph with zero WebView memory overhead, backed by an air-gapped QuickJS (logic.js) sandbox with strict instruction, wall-clock, and memory quotas plus per-widget capability gates (Internet, LAN/localhost, clipboard/system, local files, command execution). Author or customize widgets via Direct API (BYOK), External Coding Agents (--mcp stdio bridge & CLI skills with mandatory native host approval and stage-and-preview confirmation), or zero-setup Web AI prompt handoff. Ships with 14 official templates localized into all 13 languages — including System Monitor (CPU, RAM, GPU, VRAM, Top Processes, Drives, plus an integrated Recycle Bin drop target and Search launcher), AI Usage Monitor, Pomodoro & Sedentary Posture Guardian, Statutory Holiday & Payday Countdown, World Clock with a 24-hour meeting scrubber, Ambient Focus noise mixer, Dev Toolbox, Quick Actions Hub, Weather Desk, and Todo Agenda — alongside ECDSA P-256 signed remote catalog/prompt updates, .dbxwidget packages, and deskbox:// deep links.
+    - Clipboard History, Global Quick Paste (Alt+V) & Offline Image OCR. Capture text, HTML/RTF, images, files, and color swatches with instant search, a keyboard-first Alt+V Quick Paste popup that pastes straight back into the active window, on-device offline OCR text indexing, built-in text transforms, optional webpage URL title fetching (off by default, skipping one-time auth and internal links), pinning, and per-app exclusions. Uses keyed HMAC-SHA256 deduplication, externalized payloads for large entries, local DPAPI encryption and UI masking for secrets, and optional decrypted portable export for cross-PC migration.
+    - Unified Global Search (Alt+D) & Search Widget Retirement. Adds an instant calculator, quick command palette, one-keystroke web fallback, and Recommendation Edit Mode with custom app folders, multi-select drag-to-reorder, and batch hide/unhide, smoothly retiring the standalone desktop Search widget.
+    - Universal Widget Groups, Desktop Organization Workbench & Window Layering. Any widget types can join tabbed groups with connected Windows 11 tabs or equal-width tabs, overflow scroll arrows, Ctrl+Wheel pan, spring-animated reorder, native acrylic merge/detach placement previews, and reliable inactive-tab detaching and merge-undo. Desktop Organization gains a dedicated preview-and-routing workbench with per-widget rules, background filing, and history review, alongside desktop-pinned bottom layering vs normal window layering.
+    - Todo, QuickCapture, Music & Glance Upgrades. Todo adds natural-language date/time/recurrence input (English & Chinese), full-text search, an overdue reschedule bar with undo, batch checklist paste, bidirectional Todo ↔ QuickCapture conversion, and task export; QuickCapture adds a popout pinned note window, multi-note merge with undo, IME-safe inline shortcuts, Markdown list continuation, and folder mirror sync; Music adds real-time audio spectrum visualization and LRCLIB / local .lrc synced lyrics; Glance adds multiple face styles and holiday/agenda integration.
+    - Unified File Drag-and-Drop, Elevated Outbound Drag & Windows 10 Refinements. Consolidates file drag behavior into a unified setting with a master result-hint switch (covering inbound, outbound, and Explorer optimized moves), a Windows 10 Move-mode Ctrl-to-copy hint, cursor-tracked outbound drag with lexical cycle protection when DeskBox runs elevated, and adaptive controller-acrylic motion simplification for virtual/remote sessions or sustained frame overruns while preserving frosted glass on physical GPUs.
+    - Isolated Companion Processes, Store Persistence & Dual Licensing. Settings and Widget Studio run in short-lived --settings / --studio companion processes over authenticated named-pipe IPC alongside out-of-process DeskBox.ThumbnailProxy.exe thumbnail extraction, zero-dependency Everything IPC, and a native Win32 tray host. Microsoft Store builds persist data under %UserProfile%\DeskBox\.appdata, untrusted foreign backup restores strip machine-bound credentials and high-risk custom widget permissions, diagnostics bundles preserve Studio JSON/JS structure while redacting personal data, and DeskBox adopts GPL-3.0-only + Commercial dual licensing (LICENSING.md) with a .dbxwidget copyleft exemption.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    自定义组件生态、剪贴板工作流与伴侣进程架构大版本。DeskBox 1.6.0 带来零 WebView 开销的原生 WinUI 3 声明式自定义组件引擎与隔离式 QuickJS 脚本沙箱（logic.js）、支持三大 AI/智能体创作通道并内置 13 语种 14 款官方精选模板的组件工坊（Widget Studio）、带 Alt+V 全局快捷粘贴与本机离线图片 OCR 的剪贴板历史组件、集成即时计算器/命令面板/应用文件夹分组的统一全局搜索弹窗（Alt+D，原独立搜索格子平滑退场）、支持任意类型合并与亚克力落点预览的标签分组、全新桌面整理工作台、全面升级的待办/随记/音乐/时光组件，以及按需拉起、关窗即释放界面内存的设置与工坊伴侣宿主进程（--settings / --studio）。
+    发布日期：2026-11-23。
+    主要更新
+    - 声明式自定义组件、QuickJS 沙箱与组件工坊（Widget Studio）。 基于扁平声明式结构（manifest.json）直接渲染原生 WinUI 3 组件（零 WebView 常驻内存），交互逻辑运行于受指令步数、耗时与内存配额硬限保护的隔离式 QuickJS（logic.js）沙箱，并具备按组件独立管控的能力权限门禁（公网、局域网/本机、剪贴板与系统控制、本地文件读写、终端命令执行）。支持自有 API 直连、外部编程智能体接入（--mcp 标准输入输出桥接与 CLI Skill，强制经原生宿主授权与暂存预览确认后落盘）及零配置网页 AI 提示词协同三大通道；内置覆盖全部 13 种语言的 14 款官方模板（系统监控含 CPU/内存/显卡/显存/高占用进程/磁盘及回收站删除投放与快捷搜索入口、AI 用量监控、番茄钟与久坐微动作守护、法定节假日与发薪日倒数、带 24 小时会议推演滑杆的世界时钟、专注白噪音混音台、文本与开发工具箱、快捷动作面板、桌面天气、待办日程等），支持 ECDSA P-256 签名远程目录/提示词热更新、.dbxwidget 组件包导入导出与 deskbox:// 协议深链。
+    - 剪贴板历史、全局快捷粘贴（Alt+V）与离线图片 OCR。 自动采集文本、HTML/RTF 富文本、图片、文件与色值，支持即时检索、Alt+V 全局快捷粘贴回填焦点窗口、本机离线图片 OCR 识图检索、内置文本快捷转换、可选网页链接标题自动抓取（默认关闭，跳过一次性登录鉴权与内网链接）、置顶与来源应用排除；采用带密钥 HMAC-SHA256 去重、大条目外置存储、敏感凭据本机 DPAPI 静态加密与脱敏展示，并支持可选导出解密快照用于跨电脑迁移。
+    - 统一全局搜索（Alt+D）与独立搜索组件退场。 新增即时计算器、命令面板、一键网页搜索兜底及推荐区编辑模式（应用文件夹分组、多选拖拽排序、批量隐藏/恢复），原独立桌面「搜索」格子平滑退场。
+    - 全类型格子分组、桌面整理工作台与窗口层级模式。 任意类型格子均可合并为联通或等宽标签组，支持溢出箭头与 Ctrl+滚轮 平移、弹簧动画拖拽重排、原生亚克力合并/拆出落点预览，以及稳健的非激活标签拆出与合并撤销；桌面整理升级为预览与分流工作台，支持按格子绑定规则、后台自动归档与历史回溯，并提供桌面底层钉住与普通窗口层级模式切换。
+    - 待办、随记、音乐与时光组件升级。 待办新增中英文自然语言日期/时间/重复录入、全文检索、逾期一键顺延与撤销、多行清单批量粘贴拆分、待办与随记双向互转及任务导出；随记支持独立置顶小窗、多条笔记合并与撤销、输入法友好的快捷输入、Markdown 列表自动续行与目录镜像；音乐新增实时音频频谱与 LRCLIB / 本地 .lrc 同步滚动歌词；时光新增多款表盘样式并联动节假日与今日日程。
+    - 文件拖放统一、提权安全拖出与 Windows 10 体验打磨。 统一文件拖放行为设置与「拖放结果提示」总开关（覆盖拖入、拖出与资源管理器同盘移动），提供 Windows 10 移动模式下起拖按 Ctrl 临时复制提示、提权会话下的指针跟踪安全拖出（含目录环路防护），以及针对虚拟化/远程会话与连续慢帧的交互期亚克力平滑简化策略（物理显卡全程保留磨砂质感）。
+    - 伴侣进程隔离、商店持久化目录与双轨授权。 设置中心与组件工坊以短生命周期 --settings / --studio 伴侣进程承载（鉴权命名管道通信），搭配独立 DeskBox.ThumbnailProxy.exe 缩略图隔离提取、零外部依赖 Everything IPC 与自绘 Win32 托盘宿主。微软商店版数据落盘于 %UserProfile%\DeskBox\.appdata 持久化目录，恢复非本机外源备份包时自动剥离绑定凭据与高危权限，诊断包脱敏完整保留工坊 JSON/脚本语法结构，并自 1.6.0 起实行 GPL-3.0-only + 商业双授权（详见 LICENSING.md，独立 .dbxwidget 组件享免传染豁免）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.6.0
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Tianyu199509/DeskBox/releases/tag/v1.6.0
+ReleaseTime: 2026-11-23T15:48:53.0000000Z
