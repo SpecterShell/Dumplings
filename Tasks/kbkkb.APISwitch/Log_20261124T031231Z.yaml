@@ -1,0 +1,35 @@
+Version: 0.3.4
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/kbkkb/APISwitch/releases/download/v0.3.4/APISwitch-Setup-v0.3.4.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    [Improvements · Quota Countdown & Refresh UX]
+    - Accurate "Not started" Timer Detection: Identified that Google's quota API returns a sliding full-cycle placeholder resetTime (e.g., +5h / +7d) for untouched 100% buckets. APISwitch now detects untouched buckets via IsTimerStandby and displays a Not started pill instead of a misleading countdown.
+    - 5-State Status Pills & Local Reset Tooltips: Upgraded quota countdown labels into color-coded status pills (Not started, Counting down, Exhausted, Ready to refresh, Not activated / No 5H limit) with hover tooltips showing the exact expected local reset time (Today HH:mm, Tomorrow HH:mm, or MM-dd HH:mm).
+    - Refresh Button Feedback: Added a spin animation and duplicate-click guard (IsRefreshingQuota) to per-account quota refresh buttons.
+    [Adaptation · Dual-Column Quota Layout]
+    - Adapted the Antigravity account card layout to match upstream removal of the separate Pro Argon quota pool: folded the Argon column by default behind a single frontend toggle (Profile.ShowArgonQuotaColumn), presenting a clean 50/50 dual-column panel (Gemini & Claude & GPT) while keeping backend quota parsing intact for quick re-enablement if needed.
+    [Fixes · Bilingual Update Dialog Release Notes]
+    - Fixed an issue where selecting "中文" in the update dialog still displayed English release notes:
+    - Updated the GitHub Actions release workflow to generate bilingual Release bodies (<!-- lang:zh --> and <!-- lang:en --> blocks).
+    - Hardened ReleaseNotesHelper.ParseBilingual to strip language navigation links before language detection and added remote RELEASE_NOTES_zh.md fallback fetching in UpdateService.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    【优化 · 额度计时状态识别与刷新交互体验】
+    - 精准识别「未开始计时」：针对 Google 接口对 100% 满额且尚未开始计时的配额桶返回动态滑动整周期占位时间（如 +5h / +7d）的问题，新增 IsTimerStandby 判定逻辑，未开始计时时展示 未开始计时，不再显示虚假递减倒计时。
+    - 五态微胶囊与预计重置时间提示：将配额倒计时升级为状态胶囊（未开始计时 / 倒计时中 / 已用尽待重置 / 可刷新 / 无 5H 限制或未激活），鼠标悬停即可查看精确本地预计重置时间（今天 HH:mm / 明天 HH:mm / MM-dd HH:mm）与激活说明。
+    - 刷新按钮加载反馈：为单卡「刷新」按钮增加旋转动画与防重复点击保护（IsRefreshingQuota）。
+    【适配 · 调整为双栏对称配额面板】
+    - 适配 Google 官方移除 Pro 独立 Argon 额度池的变更：通过前端开关 Profile.ShowArgonQuotaColumn 默认收起中间 Argon 栏，恢复为 Gemini 与 Claude & GPT 50%/50% 对称双栏展示，同时保留后端解析与快照能力以便未来随时重新开启。
+    【修复 · 更新弹窗中文更新日志显示】
+    - 修复发现新版本弹窗切换「中文」时仍显示英文更新日志的问题：
+    - 发布工作流自动提取并拼接 <!-- lang:zh --> 与 <!-- lang:en --> 双语 Release 正文。
+    - 优化 ReleaseNotesHelper.ParseBilingual 剔除顶部导航链接干扰，并在 UpdateService 中增加远程 RELEASE_NOTES_zh.md 兜底拉取。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kbkkb/APISwitch/releases/tag/v0.3.4
+ReleaseTime: 2026-11-24T02:17:50.0000000Z

@@ -1,0 +1,49 @@
+Version: 0.12.8-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.12.8-alpha/shapecraft-0.12.8-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.12.8-alpha/shapecraft-0.12.8-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A hovering stylus lights what it's over on Android, and Spanish is complete.
+    New
+    - Plane squares on touch screens (Preferences ▸ Tablet ▸ Show the plane squares when starting a sketch): tap one with
+      the pen to sketch on that plane, upright ones too. Off, the pen's first stroke picks the floor or a face, as before.
+      Thanks @Capdan83 (#95).
+    - The interface is in Spanish throughout: settings, tips and suggestions included. Corrections are very welcome.
+    Changed
+    - A sketch hides once all its curves have been used. Extrude a ring and the circle inside it goes along; extrude every
+      letter of a text and their holes do. Separate profiles still wait their turn, and Preferences ▸ General ▸ Sketches ▸
+      Stay shown until every region is used keeps it until the very last one.
+    - Hints on a touch screen follow your language. Reworded for the pen, they used to fall back to English.
+    Fixed
+    - A stylus hovering over the screen on Android lights corners, middles, centers and faces, before it touches. The view
+      wasn't redrawn until something else moved. A mouse's hover, buttons and wheel answer at once there too.
+      Thanks @Capdan83 (#95).
+    - A ring counted as used once the circle inside it was (they share a center), so the sketch could hide too early.
+    - The Project button said "to project" in languages that tell the two apart.
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    Mac: download the -macos-universal.dmg (Apple silicon and Intel). The two autoupdate-only
+    copies are the same file, there for copies of ShapeCraft up to 0.8.5 to update from.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows on Arm (Surface and other Snapdragon PCs): the -windows-arm64 MSI or portable zip, when present.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    iPhone (test build, iOS 17+, iPhone Duo included): sideload the -ios-arm64.ipa with AltStore,
+    Sideloadly or a similar tool, signed with your own Apple account (a free one re-signs every 7 days).
+    Or build it from source: docs/ios.md.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.12.8-alpha
+ReleaseTime: 2026-11-24T02:56:45.0000000Z
+RealVersion: 0.12.8
