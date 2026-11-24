@@ -1,0 +1,61 @@
+Version: 0.48.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.48.0/codeg_0.48.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.48.0/codeg_0.48.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release lets you install SRN Harness plugins such as superpowers into Claude Code, Codex and OpenCode, gives each conversation its own model and reasoning effort settings, fixes several to-do task issues and a server hang on network-mounted folders, updates Claude Code to 0.110.0, Codex to 2.10.0 and many other agents, and further reduces memory use.
+    New
+    - You can now install SRN Harness plugins such as superpowers from Discover in one step. For each agent, choose to install it as a plugin, as skills only, or not at all. Supported agents are Claude Code, Codex and OpenCode.
+    - Installed plugins have their own section on the Harness Engineering page. There you can see each plugin's version and status for each agent, update, repair or uninstall it, and enable, disable or switch its mode per agent. A plugin that SRN Harness no longer vouches for is disabled automatically, and its files are kept.
+    - Discover can now be filtered to show only plugins, and the Harness Engineering entry in the sidebar shows what it manages.
+    Improved
+    - Each conversation now keeps its own model, reasoning effort and mode, so changing them in one chat no longer changes other chats when they reconnect. To-do tasks keep the agent and settings they were created with, and reruns continue in the same conversation. (#1293; #1179 reported by @bosund)
+    - Updated Claude Code (claude-agent-acp) to 0.110.0, Codex (codex-acp) to 2.10.0, Cline to 3.0.75, Grok to 1.0.92, Hermes to 0.23.3, Kimi Code to 2.7.2, Cursor to 2026.11.22, Antigravity to 1.5.2, ZCode to 0.92.0, Command Code to 1.93.2 and pi to 0.0.35. When an agent's models support different reasoning effort levels, the model list now shows each model's range.
+    - Plugin and skill install dialogs are clearer. They now show requested permissions, everything that runs automatically and the package contents. You can also set the install mode for all agents at once.
+    Fixed
+    - Fixed several to-do task issues. The "Complete task" dialog no longer says nothing changed when the branch has commits. Task folders now match on Windows regardless of drive-letter case. The merge prompt now follows the "Delete worktree after merge" option. Auto-merge no longer waits on a busy task or merges a task someone is still working in. (#1290; #1166, #1167, #1168 reported by @grykom)
+    - codeg-server no longer stops accepting connections when a workspace folder is on a slow network mount such as SSHFS. (#1294; #1292 reported by @Kevinzz224)
+    - Antigravity commands still running in the background are no longer stopped after a turn ends. Their results now come back to the conversation, and they appear in the running-task list. (#1286, @moncha3)
+    - Skipping a question from Antigravity now ends the turn properly instead of leaving it stuck.
+    - Forking a Codex conversation from a reply with memory citations now works and starts from the selected reply. (#1289, @Cuinnchen)
+    - When you type a custom answer to a DeepSeek question, the conversation now shows it instead of "Not selected". (#1285, @ana52070)
+    - Local images in Markdown previews now display when their paths contain non-ASCII characters or are absolute. (#1142, @frankewang)
+    - The desktop pet keeps its size and shape on setups that mix high-resolution and standard displays. It also returns to the right monitor and remembers its position after you quit. (#1211, @Cuinnchen)
+    - pi no longer uses your first message as the conversation's custom title. Renaming with /name still works.
+    - Reduced memory retained by cached skill lists, agent option checks, live logs, account avatars, browser downloads and animations. Hidden tabs also stop tracking text selection in the background. (#1214, #1216, #1217, #1223, #1228, #1230, #1233, #1235, @kogekiplay)
+    Thanks to @kogekiplay, @Cuinnchen, @moncha3, @ana52070 and @frankewang for contributing to this release, and to @bosund, @grykom and @Kevinzz224 for the reports.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版支持把 superpowers 等 SRN Harness 插件装到 Claude Code、Codex 和 OpenCode；每个会话可以单独设置模型和思考强度；修复了多处待办任务问题，以及服务器在网络挂载目录上卡住的问题；Claude Code 更新至 0.110.0，Codex 更新至 2.10.0，并更新了多个其他智能体；同时继续减少内存占用。
+    新增
+    - 可以在「发现」中一键安装 superpowers 等 SRN Harness 插件。 每个智能体可以分别选择作为插件安装、只装技能或不装，支持 Claude Code、Codex 和 OpenCode。
+    - 「驾驭工程」页面新增「已装插件」分区。 可以查看插件版本和各智能体的安装状态，更新、修复或卸载插件，还能按智能体单独启用、停用或切换安装方式。SRN Harness 不再认可的插件会自动停用，但会保留文件。
+    - 「发现」支持只看插件，侧边栏的「驾驭工程」入口也会标明它管理的内容。
+    改进
+    - 每个会话现在单独保存自己的模型、思考强度和模式，在一个会话里修改后，其他会话重新连接时不会再跟着改变。待办任务会沿用创建时的智能体和设置，重新运行时也会继续在原会话中进行。（#1293；#1179 由 @bosund 反馈）
+    - Claude Code（claude-agent-acp）更新至 0.110.0，Codex（codex-acp）更新至 2.10.0，Cline 更新至 3.0.75，Grok 更新至 1.0.92，Hermes 更新至 0.23.3，Kimi Code 更新至 2.7.2，Cursor 更新至 2026.11.22，Antigravity 更新至 1.5.2，ZCode 更新至 0.92.0，Command Code 更新至 1.93.2，pi 更新至 0.0.35。 如果同一智能体的各模型支持的思考强度不同，模型列表会显示每个模型的可选范围。
+    - 插件和技能的安装对话框更清楚了。 现在会列出所需权限、所有自动运行的内容和安装包文件，还可以一次为所有智能体设置安装方式。
+    修复
+    - 修复多处待办任务问题。 分支已有提交时，「完成任务」对话框不再显示没有改动；在 Windows 上，任务文件夹匹配不再受盘符大小写影响；合并提示词现在会遵循「合并后删除工作树」选项；自动合并不会再被忙碌的任务卡住，也不会合并仍有人在处理的任务。（#1290；#1166、#1167、#1168 由 @grykom 反馈）
+    - 修复工作区文件夹位于 SSHFS 等较慢的网络挂载上时，codeg-server 完全不再接受连接的问题。（#1294；#1292 由 @Kevinzz224 反馈）
+    - 修复 Antigravity 在回合结束后停止仍在后台运行的命令的问题。 现在命令结果会回到会话中，运行中的命令也会显示在运行任务列表里。（#1286，@moncha3）
+    - 修复在 Antigravity 中跳过提问后，回合一直卡住的问题。
+    - 修复从带有记忆引用的 Codex 回复分叉会话时失败的问题，现在会从所选回复处正确分叉。（#1289，@Cuinnchen）
+    - 修复在 DeepSeek 提问中手动输入答案后，会话中显示「未选择」的问题。（#1285，@ana52070）
+    - 修复 Markdown 预览中，路径含非 ASCII 字符或使用绝对路径的本地图片无法显示的问题。（#1142，@frankewang）
+    - 修复桌面宠物在高分屏与普通屏混用时尺寸或比例异常的问题。 现在它也能回到正确的显示器，并在退出后记住位置。（#1211，@Cuinnchen）
+    - 修复 pi 把第一条消息当作会话自定义标题的问题，用 /name 重命名仍然有效。
+    - 减少技能列表缓存、智能体选项检测、实时日志、账号头像、浏览器下载和动画残留的内存，隐藏的标签页也不再在后台跟踪文本选区。（#1214、#1216、#1217、#1223、#1228、#1230、#1233、#1235，@kogekiplay）
+    感谢 @kogekiplay、@Cuinnchen、@moncha3、@ana52070 和 @frankewang 为本次发布做出的贡献，也感谢 @bosund、@grykom 和 @Kevinzz224 的反馈。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.48.0
+ReleaseTime: 2026-11-24T01:59:37.0000000Z
