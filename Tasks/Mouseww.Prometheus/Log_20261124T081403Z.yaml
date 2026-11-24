@@ -1,0 +1,28 @@
+Version: 0.32.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.32.0/Prometheus_0.32.0_x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Mouseww/Prometheus/releases/download/v0.32.0/Prometheus_0.32.0_x64_en-US.msi
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    改进
+    - 流程编排执行器重写：
+      - 修复嵌套循环：内层循环现在只重做自己的循环体，不再把外层循环整个重来；内层的循环次数在外层每一轮重新计数
+      - 修复循环体里有并行分支汇合时被误判为回边、导致循环跑不对的问题；回边识别与连线绘制顺序无关
+      - 循环重置时，循环体里仍在运行的步骤会被中止，迟到的结果不会覆盖新一轮
+      - 单次运行最多执行 200 个步骤，防止循环套循环停不下来
+    - 步骤级失败处理（Agent / 子流程 / AI 条件节点的「失败处理」）：
+      - 自动重试（默认 Agent 1 次），重试时接着原会话继续，不会从头重做已完成的修改
+      - 单次超时（分钟）
+      - 失败后停止整个流程，或记下失败继续后面的步骤
+    - AI 条件识别不出明确结论时会追问一次，仍不明确则判为失败，不再默认走「否」
+    - 步骤输出保留上限提高到 2 万字，超出时明确标注已截断
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Mouseww/Prometheus/releases/tag/v0.32.0
+ReleaseTime: 2026-11-24T07:56:55.0000000Z
