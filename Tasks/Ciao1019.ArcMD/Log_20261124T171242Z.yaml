@@ -1,0 +1,31 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ciao1019/ArcMD/releases/download/v0.3.0/arcmd-setup-0.3.0-amd64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    本版本正式推出 纯 Go 原生两栖多维数据库引擎（.db.md）与 9 种高帧交互视图，将 Notion / 飞书多维表格风格的结构化数据管理完整融入本地纯文本 Markdown 工作流——每条记录都是标准 .md 文件（YAML Frontmatter 双向同步属性），数据库文件自带可离线阅读的 GFM Markdown 表格快照；同时引入 统一新建向导弹窗、文档内嵌数据库 Linked View 两栖块、侧边预览 / 居中弹窗 / 整页打开三模式，以及对齐编辑器手感的 120 Hz 弹簧微动效与悬浮拖拽落位引擎。
+    新功能与桌面体验
+    - 两栖多维数据库内核（internal/database）：支持文件夹记录源与内联行记录源，提供 18 种属性类型（标题、文本、数字/进度条/环形图、单选、多选、状态分组、日期与时间范围、复选框、负责人、URL、邮箱、电话、文件、自增编号 UniqueID、跨库双向 Relation、汇总 Rollup、Formula 2.0 表达式引擎与创建/修改时间）；支持多层筛选规则与相对日期过滤、多列排序、按属性分组、列统计聚合、条件行着色、记录模板、完整撤销/重做栈，以及 CSV / Notion ZIP 导出目录一键导入与 CSV / Markdown 导出。
+    - 9 种纯 Go 原生多视图与高帧动效引擎（internal/dbview）：
+      - 表格视图：首列冻结、虚拟滚动、列宽拖拽调节、行列拖拽换位、行内与浮层属性编辑、条件着色与列统计底栏；支持 KeepOffset 保持排序滚动位置与弹簧换位过渡。
+      - 看板视图：泳道与状态/分类分组着色、卡片悬停微抬升、跨列拖拽修改状态、Match / Fly 跨列飞行过渡、列内键盘移动与内联新建卡片。
+      - 日历视图：支持「日 / 周 / 月 / 年（固定周与连续画布）/ 日程」五种模式、迷你月历与分类筛选侧栏、日程拖拽改期与边缘拉伸、单日详情弹窗。
+      - 甘特时间轴视图：支持日 / 周 / 月 / 季缩放、左右边缘拖拽调整起止排期、未排期抽屉与左侧属性表联动。
+      - 列表、画廊、图表、动态流与表单视图：画廊弹性多列封面卡片；原生柱状图 / 条形图 / 折线图 / 环形图；动态流快速发布；可视化表单构建与提交入库。
+      - 120 Hz 物理微交互与无障碍：基于 ui.Overlay 的悬浮拖拽预览卡（随指针速度轻微倾角与松手弹簧落位）、新建记录高亮脉冲、分段滑块 Match 平滑切换、统一玻璃风格弹出浮层，并全面遵守系统 ReduceMotion 偏好设置。
+    - 文档内嵌 Linked View 两栖块与三模式记录预览（internal/editor/db_block.go、internal/app/database.go）：支持在任意 Markdown 文档中通过 / 菜单或命令栏嵌入已有数据库视图并调节高度，实时同步读写且自动写出 GFM 快照并支持矢量 PDF 打印；点击记录支持「侧边预览抽屉（可调宽） / 居中弹窗 / 整页打开」，在侧边栏中可直接展开数据库视图树并折叠同名记录文件夹。
+    - 统一新建向导与空间生态打通（internal/app/newmodal.go、internal/app/search.go、internal/app/qa.go）：侧边栏与命令栏提供全新「新建」面板，一站式创建文档、数据库、白板、文件夹、套用模板或导入 CSV / Notion；数据库 Schema 与记录 Frontmatter 完整接入全局全文检索（⌘K）、空间问答 Agent（⌘J）与侧边栏重命名/移动联动。
+    关键修复与优化
+    - 修复排序后表格自动滚到底部的问题（internal/dbview/table.go、list.go、timeline.go）：为表格、列表与时间轴虚拟列表开启 KeepOffset 与 MoveAnimation，避免因首行 key 移至表尾而带动视口跳转到底部。
+    - 修复整页打开数据库记录时侧边栏伴随文件夹无法收起的问题（internal/app/sidebar.go、internal/app/opendocs.go）：打开数据库下的单条记录时不再强行永久展开已折叠的记录目录，保持「仅露出当前打开项」的 Arc FolderPeek 行为，点击折叠箭头或「关闭并保持置顶」均可正常收起。
+    - 补全中英文界面翻译与第三方归属说明（internal/i18n/en.go、internal/database/query.go、third_party/README.md）：补齐数据库分组、统计标签、公式示例与工具栏缺失英文翻译，并同步更新 third_party/README.md。
+    下载说明
+    提供 macOS（Apple Silicon / Intel）、Windows x64 与 Linux（x64 .deb / .tar.gz / Arch Linux .pkg.tar.zst，ARM64 .deb / .tar.gz）原生安装包，可使用 SHA256SUMS.txt 校验完整性，已安装版本支持应用内签名自动更新。官方插件可在应用「设置 › 插件」按需从 Ciao1019/arcmd-plugins 下载或更新。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ciao1019/ArcMD/releases/tag/v0.3.0
+ReleaseTime: 2026-11-24T14:47:33.0000000Z
