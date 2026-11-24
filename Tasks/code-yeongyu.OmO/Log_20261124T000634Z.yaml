@@ -1,0 +1,427 @@
+Version: 5.1.82
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.82/omo-windows-x64.exe
+- Architecture: arm64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.82/omo-windows-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What senpi 2026.11.23 changes for you.
+    - Images on text-only models: when a tool returns an image and the current model cannot read images, the look_at vision model now describes it and the description takes the image's place, so the model still gets the content.
+    - macOS paths under /home: a tool call naming a path under /home (an automount that may never answer) no longer stalls every file operation in the session; a mount that never answers is refused instead.
+    - Self-hosted Anthropic-compatible proxies: a custom models.json provider using anthropic-messages with an sk-ant-oat... key works again; the key is sent as a plain API key instead of failing before the first request.
+    - Reopening right after an engine handover no longer fails with read ECONNRESET.
+    - Claude, GLM and Kimi models are told to edit files with the session's file-editing tool directly, instead of from code cells. (#14840)
+    The memory footer no longer keeps showing "reflecting" after a reflection finishes. A footer refresh that was still reading when the reflection ended could leave the spinner on screen until the next change; the line now always returns to the memory status once the reflection completes. (#14838) (#14838)
+    The memory status line no longer flickers through repeated identical updates. Footer refreshes from a memory write, a settle and the reflection backlog land in whatever order their async work finishes, and several could publish the same line one after another; the line looked the same, but the number of updates depended on timing. An unchanged line is now published once, while every change and every clear still goes through. (#13046) (#14825)
+    A slow memory status refresh can no longer put an outdated line back on screen. Each refresh now takes its place in line before it reads anything, and a line read earlier never replaces one read later; the uncommitted-changes marker is read only between memory writes, so it no longer flashes while a write is being committed. (#13046) (#14825)
+    omo now runs on senpi 2026.11.23. The pinned engine moves from 2026.11.22 to 2026.11.23, which carries senpi#7392; the bundled plugin, the service-auth table and the EQ.omo goldens are regenerated for it. (#14822) (#14822)
+    Fixed
+    - A task child started as its own process no longer fails with chain_not_held: timeout when its engine takes longer than 10 s to boot, as on a cold Windows runner. The wait for the engine's first answer now ends only when the engine stops making CPU progress for 10 s, uses more than 120 s of CPU, or reaches a 10 minute outer limit; the 10 s limit now covers only the fallback-chain exchange itself. (#14808, fixes #13165)
+    - The Senpi plugin build no longer fails every queued bundle when its shared Node minifier process is killed mid-build: a request the lost process did not answer is sent once to a fresh one, and a second loss still fails with that exit. (#14767)
+    - The browser skill now uses omowright 0.3.2: the BrowserSkill daemon stays on its pinned release and no longer contacts a third-party update mirror or replaces its own binary, a command sent after the browser closed rejects instead of relaunching an unowned browser, the multiple-browsers and extension-outdated errors keep their coded error when the daemon sends unusual field values, and the Windows native-host installer allows a slower PowerShell cold start. (#14760)
+    - omo thread and the thread SDK answer another device's typed refusal of a session control with the same code, details and next action as the thread tools. For example, omo thread read <device>/<thread> whose reply the device service lost (request_gone) now answers host_unavailable naming the device and exits 3. Before, it answered internal_error ("Thread operation failed: ...") and exited 5. (#14758)
+    - A script using the thread SDK (or omo thread send) can now message a session on another of your devices. Another device's engine accepts no command-line delivery from a different machine, so these sends answered unsupported (sender_not_allowed). They now go the way omo remote send does: the text arrives as your own input, and the result names the device that answered. Sends to sessions on the same device are unchanged. (#14668, fixes #14616)
+    - thread_create returns deduplicated: true when the same arguments and idempotency key reuse the original thread. A first create still returns false. (#14665)
+    - A session no longer sticks at "Starting session..." when the OS refuses to start ps (EPERM from posix_spawn, a process limit or a sandbox refusal on macOS). The thread gateway now treats that as an unreadable process start time, which it already counts as a live claimant, instead of failing every gateway read, including the pending completion arms the session waits on at start. (#14639, fixes #12314)
+    - Concurrent thread_read calls of local terminals no longer fail together with thread RPC request timed out, EPIPE or ECONNRESET when another call in the same engine blocks its event loop (a cold remote read, for example). A local socket conversation's deadline now stops while the caller itself cannot run, and a read whose connection the terminal dropped during such a stall, before any response byte arrived, is dialed once more. Other commands are never retried. (#14624, fixes #14444)
+    - Installing a newer omo no longer cuts running sessions off the thread tools. The binary that migrates the gateway store now records the oldest schema whose code can keep using it, and an older omo opens a newer store that meets it instead of answering gateway_schema_too_new on every call. Schemas 15 and 16 record floor 14, so a later omo that reads the floor keeps using them at schema 14. A newer store that an older omo cannot use is still refused with gateway_schema_too_new, also by a session that opened the store before the newer omo migrated it. omo 5.1.81 and older, schema 14 included, do not read the floor and still refuse any newer store once they reopen it, so this protects installs from this release on. (#14622, fixes #14382)
+    - A source build (omob) no longer migrates a gateway store that released sessions may read: the shared agent dir under any of the account's homes (the OS account record included, so an alternate HOME does not hide it), a gateway/ linked into it, or any store when the account's home cannot be read. It answers gateway_migration_failed and names OMO_CODING_AGENT_DIR for an isolated agent dir. (#14622)
+    - A queued workflow node whose child never launched can run again after the workflow resumes. Nodes still queued in the same session retain their place instead of failing as orphans. (#12109) (#14553)
+    - Installing or uninstalling the local launcher leaves compiled binaries, symlinks and foreign wrappers alone. The installer checks the file header rather than searching for a marker and reports each launcher it kept. (#13258) (#14553)
+    - Escape cancels a stalled memory call. Calls that exceed their deadline report which stage stopped responding. (#14546) (#14553)
+    - The shipped thread SDK lists and reads sessions on other account devices by default. An explicit remote still takes precedence. (#14620) (#14553)
+    - Parked sessions can drain cross-device messages as soon as the host consumer is serving, without waiting for the startup sweep that woke them. (#14621) (#14553)
+    - thread_list rows for threads on another device show when the thread was created. They showed the time the holder last synced its listing, the same value as updated_at. (#14479)
+    - Tests: the omo-native daemon real-engine contract tests no longer fail on machines whose umask makes new directories group-writable; the test fixture now keeps its RPC directories private, which the senpi RPC host requires. (#13161)
+    Added
+    - Set OMO_THREAD_READ_TRACE=1 in the caller to diagnose failed local read RPCs. The diagnostic reports the command, last socket phase, elapsed time, error code, how long the caller's own event loop was blocked and how many attempts were made, without printing addresses, credentials or transcript data. It is silent by default. A socket that connects without an auth exchange and fails before its request reports connected, not handshake. (#14624, from #14489 and #14498)
+    - Frontend QA now checks request, failure and re-entry states. visual-qa reports an unobserved changed flow as UNVERIFIED rather than passing it. (#14545) (#14553)
+    Changed
+    - OpenCode's session message-directory lookup accepts an explicit storage root so tests can use isolated fixtures without replacing the shared storage paths. The default OpenCode storage path is unchanged. (#14594)
+    - Remote session listings can display a holder's retry wait and engine version. The client negotiates older row formats with services that do not provide them. (#14511) (#14553)
+    - omo now pins senpi 2026.11.22. (#14270) (#14553)
+    - The remote attach test waits for endpoint closure instead of a filesystem timer. The DAG ordering test uses an in-memory task store with the file store's contract; both DAG stores use the same session-capacity lock path. (#14530, #14503) (#14553)
+    - 9b64409931 Merge pull request #14841 from code-yeongyu/fix/14809-redial-budget-clock
+    - fa97fed6c0 Merge dev 154679e986 into fix/14809-redial-budget-clock
+    - 154679e986 Merge pull request #14479 from code-yeongyu/fix/remote-row-created-at
+    - 553ce84d93 Merge dev dff3edef06c45e63faed50dd36e0f098373969ae into fix/remote-row-created-at (generated files regenerated)
+    - b59e7482b1 Merge pull request #14840 from code-yeongyu/docs/changes-14822-user-terms
+    - dff3edef06 Merge pull request #14838 from code-yeongyu/fix/14825-footer-stale-fingerprint
+    - 9c5e16c63b docs(changes): keep #14822's fragment as merged; add this PR's own user-facing note (#14840)
+    - 91d422993e Merge dev 0a5cfc8472 into fix/14825-footer-stale-fingerprint, regenerating the plugin bundles
+    - 7b50cccd88 fix(memory): a stale footer recompute no longer records its fingerprint (#14837)
+    - 9c6c01aa88 Merge pull request #14833 from code-yeongyu/fix/14831-guard-test-wal-readonly
+    - 27cc5178a3 Merge pull request #14631 from code-yeongyu/bugaudit/13470-deferred-lint
+    - 9c1a1643bf Merge pull request #14817 from code-yeongyu/fix/platform-red-close-per-workflow
+    - 94c544a861 test(thread): read the guard test's user_version read-write, since macOS refuses a read-only open of the refused WAL store (#14831)
+    - 79161e4e19 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 2111354431 Merge dev b742b12f8e into fix/platform-red-close-per-workflow
+    - b742b12f8e Merge pull request #14825 from code-yeongyu/fix/13046-memory-status-settled
+    - 29afef42e8 Merge dev 73c814eaac into fix/13046-memory-status-settled, regenerating the plugin bundles
+    - 73c814eaac Merge pull request #14622 from code-yeongyu/fix/14382-gateway-reader-floor
+    - 0bbb5afc00 fix(memory): a refused or stale status publish changes no state; clears get their own boundary (#14825 review M1, L1)
+    - 40d5fa7f25 Merge origin/dev into fix/13046-memory-status-settled, regenerating the plugin bundles
+    - b6e184d38a test(eq): re-record EQ.omo darwin-arm64 E23 golden with the settled memory footer compare (#14825 review M2)
+    - a07aeb71d2 Merge origin/dev 2c4033078c0befd10bbe0512e2889a45fedf8ed0 into fix/remote-row-created-at (generated files regenerated)
+    - 1ac1959633 fix(memory): a status clear supersedes the refresh already in flight (#14825 review L1)
+    - 07e11abe87 Merge remote-tracking branch 'origin/dev' into rt-14622-refresh
+    - 04ce925e58 fix(memory): the agent_settled footer refresh shares the host's refresh sequence (#14825 review M1)
+    - 542d633b84 docs(changes): key the release-note fragment to this PR (#14825)
+    - 2c4033078c Merge pull request #14639 from code-yeongyu/fix/12314-ps-spawn-failure
+    - 670ee75836 style: format and drop per-test timeouts from the new memory status tests (lint ratchet)
+    - c31db89bb4 test(eq): re-record EQ.omo linux-x64 E23 golden with the settled memory footer compare (#13046)
+    - 9aca04de8c Merge pull request #14808 from code-yeongyu/fix/13165-chain-deadline-after-ready
+    - 08e783472b docs(changes): note the stale memory status fix (#13046)
+    - b7e86df39f fix(memory): never let an older footer read replace a newer line; sample the dirty marker under the writer lock (#13046)
+    - 39a37eb250 Merge dev 011494f970 into bugaudit/13470-deferred-lint
+    - 5e91eb31cc fix(memory): remember a status line only after the host took it (#13050 review LOW)
+    - 41060f084a fix(memory): never re-publish an unchanged memory status line, so the number of footer updates no longer depends on refresh timing (#13046)
+    - 30722eaf15 Merge remote-tracking branch 'origin/dev' into rf/m14479
+    - dd6301035a Merge branch 'dev' (011494f970) into fix/12314-ps-spawn-failure
+    - 04c7fc8b26 Merge remote-tracking branch 'origin/dev' into rt-14622-refresh
+    - 011494f970 Merge pull request #14668 from code-yeongyu/fix/14616-sdk-remote-send
+    - cf03abc7f4 Merge remote-tracking branch 'origin/dev' into fix/13165-chain-deadline-after-ready
+    - 2ea0e55d07 Merge branch 'dev' (f998cac6d1) into fix/12314-ps-spawn-failure
+    - 18d5f79c31 ci(platform-red): judge each tracked job on its own workflow's latest dev push run (#14815)
+    - 22842f070d Merge remote-tracking branch 'origin/dev' into rt-14668-refresh
+    - f998cac6d1 Merge pull request #14758 from code-yeongyu/fix/thread-cli-control-refusal
+    - f2d63d2414 Merge pull request #14760 from code-yeongyu/chore/omowright-0.3.2
+    - 0b53eee947 Merge remote-tracking branch 'origin/dev' into rt-14758-refresh
+    - 0260cdb95e Merge remote-tracking branch 'origin/dev' into rf/m14479
+    - bc32307f55 Merge pull request #14806 from code-yeongyu/test/windows-release-temp-14805
+    - 2e700649be Merge remote-tracking branch 'origin/dev' into chore/omowright-0.3.2
+    - ae19624c74 Merge pull request #14767 from code-yeongyu/fix/build-extension-minifier-cascade
+    - 45fb5e6911 Merge pull request #14798 from code-yeongyu/ci/release-master-ancestry
+    - e01cd8c8b5 test(publish): clean Node-owned step temp in finally
+    - 670da1e7a2 fix(publish): allocate proof files explicitly under runner temp
+    - 621eacf77f test(publish): give Git Bash and Node a case-owned temp directory
+    - 545c032b48 chore(bundle): regenerate bundles after merging dev 01d2b04302
+    - a65ab3090c Merge pull request #14793 from code-yeongyu/test/daemon-runaway-cpu-cap
+    - 83dc30b5e5 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 98657b14a4 fix(gateway): compare the opened database file itself with each shared database (#14622 review M9)
+    - a90a664ac4 chore(bundle): regenerate thread-sdk/sdk.js after merging dev e872095a37
+    - 01d2b04302 Merge pull request #14598 from code-yeongyu/test/14573-scope-shared-logger-mocks
+    - 42fd8698a7 Merge dev e872095a37 into fix/remote-row-created-at; regenerate generated outputs (env -i build-extension, codex-install, service-auth, bundle-inputs)
+    - 59a06d1098 Merge remote-tracking branch 'origin/dev' into fix/14616-sdk-remote-send
+    - f140ac09c6 test(omo-native): a failed ps listing never reads as an empty process group (#14792)
+    - a40bab3531 Merge remote-tracking branch 'origin/dev' into test/daemon-runaway-cpu-cap
+    - c82583ff75 chore(bundle): regenerate omo.js, omo-wake.js and thread-sdk/sdk.js after merging dev e872095a37
+    - 994721b19c build(thread): regenerate the thread SDK bundle after merging dev (#14755)
+    - 123ee73d8d Merge remote-tracking branch 'origin/dev' into fix/build-extension-minifier-cascade
+    - 84c9d362a8 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 8eee493d4c Merge remote-tracking branch 'origin/dev' into fix/thread-cli-control-refusal
+    - 50447f9433 Merge remote-tracking branch 'origin/dev' into chore/omowright-0.3.2
+    - 42f59aee02 Merge post-train dev into release ancestry integration
+    - 0c23c63dbf Merge remote-tracking branch 'origin/dev' into HEAD
+    - e872095a37 Merge pull request #14553 from code-yeongyu/release-train/omo-20261121-train-12b
+    - 321781258d Merge master into dev to preserve release mirror ancestry
+    - dab820bfe0 test(omo-native): fail a bounded run cleanly when ps is unavailable (#14792)
+    - 56b13f4e91 Merge pull request #14615 from code-yeongyu/ci/release-pinned-source-sha
+    - df5e0eac32 test(omo-native): resolve the runner's own process group lazily and refuse every target when it cannot be read (#14792)
+    - fc0e4126c6 fix(publish): bind CI commands and verify every stamped release version
+    - c941d8ea38 test(omo-native): validate every signal target and keep teardown discovery inside the collector (#14792)
+    - 6ac1e8f1f1 fix(publish): report stamp verification and use the workflow needs schema
+    - 7bb4991712 fix(publish): prove the complete CI inventory and reproduce the exact stamp tree
+    - 30b3a2efd6 fix(gateway): the source-build guard checks the database file it opens, not only gateway/ (#14622 review M9)
+    - 1a15b18fe5 test(omo-native): count a zombie as exited and keep the harness teardown going past a failed step (#14792)
+    - c82424f603 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 97d1417458 test(omo-native): wait for a killed group to empty, clean a detached supervisor, budget the outer timeout per job (#14792)
+    - 55f0df8375 Merge pull request #14633 from code-yeongyu/fix/14629-engine-converge-load-timeout
+    - b69ef88cb7 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 6790e5b734 fix(publish): fail closed on skipped steps and verify split prerelease versions
+    - f7bca224a0 test(gateway): pin the account-home public subpath; keep pinned worker bundles out of the test-rule ratchet (#14622)
+    - 34cfa4b991 test(omo-native): keep the runner's internal bounds unexported (#14792)
+    - faa87ae752 test(omo-native): kill a tripped daemon child's whole process group; tie the outer test timeout to the CI job limit (#14792)
+    - c66080fbdf test(omo-native): cap a runaway daemon child in tree CPU seconds, not 120 s of wall clock
+    - f8504202a7 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 93ede127eb fix(publish): require binary parity and a fast-forwardable release pin
+    - 8c96488d92 Merge remote-tracking branch 'origin/dev' into fix/thread-cli-control-refusal
+    - f0d5f0df20 chore(bundles): regenerate train 12 artifacts after merging dev 6597d33578 (env -i)
+    - eeab1b4b72 Merge commit '6597d335782619228f3e3db9a2bdce424330fdce' into bugaudit/13470-deferred-lint
+    - ab7c7a9cf5 Merge commit '6597d335782619228f3e3db9a2bdce424330fdce' into HEAD
+    - c27749d274 Merge remote-tracking branch 'origin/dev' into fix/build-extension-minifier-cascade
+    - 24d62009d7 Merge commit '6597d335782619228f3e3db9a2bdce424330fdce' into fix/14629-engine-converge-load-timeout
+    - e152606188 Merge dev 6597d33578 into train 12
+    - 6597d33578 Merge pull request #14624 from code-yeongyu/fix/thread-read-14444-caller-stall
+    - 4711c4c6b2 fix(publish): require platform compatibility evidence for pinned releases
+    - 6ed4229bf6 Merge remote-tracking branch 'origin/dev' into chore/omowright-0.3.2
+    - e1e9a3f231 fix(publish): require actual validation on pinned push CI
+    - db3c1cc3b2 Merge origin/dev into #14615
+    - 23facc4369 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 74d282f77e Merge commit 'c9178eba145280441a8872d97f41297903c661a0' into fix/14629-engine-converge-load-timeout
+    - cd2bdff41a Merge remote-tracking branch 'origin/dev' into fix/build-extension-minifier-cascade
+    - d83b94a9f3 fix(rpc-host): an overdue probe is never recovery; caller-stall test reaches the handshake on a translated address (#14624 review M5, M4)
+    - c9178eba14 Merge pull request #14581 from code-yeongyu/ci/gate-reuse-platform-proof
+    - 36847f62e1 Merge remote-tracking branch 'origin/dev' into fix/thread-read-14444-caller-stall
+    - e65d576c8d chore(bundles): regenerate train 12 artifacts after merging dev 91f7a9091c (env -i)
+    - 15db60efdb style(publish): format pinned-stamp regression tests
+    - 8a66bebc90 fix(publish): prove pinned release stamps before pushing
+    - 4a48cce130 Merge dev 91f7a9091c into train 12
+    - c460dd28af fix(rpc-host): a drop is the stall's only before the caller wrote or before it ran on time again (#14624 review M5)
+    - c2a17af81a Merge commit '91f7a9091cbcc14befbe46c83614e84e83da2267' into bugaudit/13470-deferred-lint
+    - f9db0918cc Merge commit '91f7a9091cbcc14befbe46c83614e84e83da2267' into HEAD
+    - 91f7a9091c Merge pull request #14777 from code-yeongyu/fix/14775-summary-transport-owner
+    - e0bff218ef Merge remote-tracking branch 'origin/dev' into fix/thread-read-14444-caller-stall
+    - 5fa04bdd38 Merge pull request #14665 from code-yeongyu/fix/14650-create-dedup
+    - a07a71df79 test(publish): reuse immutable release history across legacy CI cases
+    - 5546223cc6 fix(gateway): edge-case pass on the source-build guard and the reader floor (#14622 round 3)
+    - 2bd0f8afc1 Merge commit 'f49fccfe72' into fix/14629-engine-converge-load-timeout
+    - 01856beda7 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 436ff9efe8 Merge commit 'f49fccfe72' into HEAD
+    - b812183af3 test(telemetry): assert actual SDK client constructions
+    - f49fccfe72 Merge pull request #14769 from code-yeongyu/fix/pr-platform-decision-sparse-imports
+    - 5b9d744f37 test(telemetry): isolate native summary transport from the legacy ping
+    - c7fdd322c3 test(ci): resolve sparse imports OS-independently and check invoked entry points
+    - ce10661ecc fix(rpc-host): redial only a drop seen as a stall ends; stop the stall probe while a subscription is passive (#14624 review M5, L2)
+    - 84b9cb7438 Merge pull request #14714 from code-yeongyu/bugaudit/10933-fix
+    - 9c23159a2d Merge pull request #13161 from code-yeongyu/fix/13159-daemon-fixture-umask
+    - 691880665d style(ci): format the sparse-checkout import test
+    - 6e8ae5bcc2 fix(ci): check out the platform classifier's imports in its sparse checkout
+    - bae2a5f73b docs(changelog): note the minifier resend for #14767
+    - 6754a0154b Merge remote-tracking branch 'origin/dev' into fix/thread-read-14444-caller-stall
+    - fb0dc99852 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - ef59fa2a93 test(memory-core): release pending backoffs and clean failed fixture setup
+    - 3d29c8e416 fix(gateway): one snapshot for the schema check and the op's reads; account home under Bun; floor guarantee scoped (#14622 review M4, M6, M7)
+    - 2256160911 Merge pull request #14752 from code-yeongyu/fix/11238-docs-fallback
+    - b6eb41200d fix(rpc-host): ship the budget check in the native service-auth bundle; caller-stall fixture runs on Windows (#14624 review M1, M4)
+    - aa97fe0432 Merge pull request #14726 from code-yeongyu/ci/job-timeouts-2x-p95
+    - 4b3897b801 Merge remote-tracking branch 'origin/dev' into fix/thread-read-14444-caller-stall
+    - a5e074cce9 Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 3840e08286 Merge pull request #14605 from code-yeongyu/test/14573-mcp-loader-independent-fixtures
+    - 749e90fb0b Merge dev into ci/job-timeouts-2x-p95
+    - 6e88e36073 Merge pull request #14582 from code-yeongyu/test/dedupe-omo-native-build
+    - f3dcda426d fix(web): keep docs first-section spacing under the English notice and pin its absence on /docs (#11238)
+    - 01eaaf633b fix(rpc-host): redial a dropped read only while the call has budget left (#14624 review M1)
+    - 27731e71d4 fix(gateway): re-check the reader floor at every store op, and count the passwd home as an account home (#14622 review M4, M5)
+    - 58d8b9b9da fix(publish): prove pinned source before tagging a legacy child
+    - 343d292382 Merge pull request #14612 from code-yeongyu/ci/memory-core-reduced-install
+    - 693221c395 Merge dev into test/14573-scope-shared-logger-mocks
+    - 1b023058e3 fix(publish): require exact stamp push CI for pinned fallback
+    - 70ea704094 Merge pull request #14614 from code-yeongyu/ci/platform-red-auto-close
+    - 0166144e56 Merge pull request #14595 from code-yeongyu/test/14573-scope-agent-loader-mocks
+    - 8ed408cf29 docs(changes): note the omowright 0.3.2 update
+    - 52501829c7 Merge dev into 14582
+    - ddd6cd14c4 Merge dev into 14605
+    - c6d91e1afe Merge dev into 14612
+    - 17827d5bdb Merge pull request #14577 from code-yeongyu/ci/publish-tail-parallel
+    - 994480a9ae Merge pull request #14703 from code-yeongyu/fix/compact-delta-probe-readiness
+    - 9d7fcc374c chore(deps): use omowright 0.3.2
+    - 43704c2d7d Merge pull request #14611 from code-yeongyu/ci/payload-check-reduced-build
+    - 380bf49773 docs(changes): fragment for #14758
+    - 7eda4e2d07 fix(thread): the thread SDK answers a control's typed refusal as itself, as the tools do (#14755)
+    - 2fb531ac57 test(publish): use the ordinary budget for source pin dispatch cases
+    - 7c7610f14b Merge commit '1ac442063b7f40a75ca9edfeec451f084f0a566a' into fix/14629-engine-converge-load-timeout
+    - 3dfa105e00 Merge commit '1ac442063b7f40a75ca9edfeec451f084f0a566a' into HEAD
+    - 1ac442063b Merge pull request #14686 from code-yeongyu/fix/write-guard-existssync-scope
+    - e4eb48a480 Merge dev into fix/compact-delta-probe-readiness
+    - 0c56060059 fix(agent-home): compare agent dirs by filesystem identity, case-folded where volumes ignore case (#14622 review M3)
+    - 0d81147276 Merge remote-tracking branch 'origin/dev' into fix/thread-read-14444-caller-stall
+    - f30d1d422e test(thread): drop the per-test timeout (no-flake-masking); document caller_stall_ms as call-wide (#14624 review M3, L1)
+    - f81ddcd325 Merge commit '0ff2ff8eeb41673374f0b6b24a2943f8ecb29ef0' into HEAD
+    - 58867ebf77 Merge commit '0ff2ff8eeb41673374f0b6b24a2943f8ecb29ef0' into HEAD
+    - 82dcad3f52 Merge commit '0ff2ff8eeb41673374f0b6b24a2943f8ecb29ef0' into HEAD
+    - 0b28e1c70f Merge remote-tracking branch 'origin/dev' into fix/14382-gateway-reader-floor
+    - 0fd06933ad Merge dev into test/14573-scope-shared-logger-mocks
+    - 79477f960c Merge dev into 14582
+    - 3a990404db Merge dev into 14611
+    - 953f82fd3b Merge dev into 14595
+    - 488121af34 Merge dev 0ff2ff8eeb (with #14680) into train 12
+    - 0ff2ff8eeb Merge pull request #14680 from code-yeongyu/fix/daemon-observe-idle-clock
+    - 5ad49782d7 fix(agent-home): a source build refuses every account home's shared agent dir, not only HOME's (#14622 review M2)
+    - 9e435b3ced chore(knip): drop the stale localLauncherCmdPath row (#13258 now uses it)
+    - 6e00d621cd fix(thread): keep the ps spawn inline so the pinned process sites stay unchanged (#12314)
+    - 760089ea54 Merge remote-tracking branch 'origin/dev' into fix/14629-engine-converge-load-timeout
+    - 05dcfc6060 Merge remote-tracking branch 'origin/dev' into fix/daemon-observe-idle-clock
+    - 9599771310 Merge pull request #14579 from code-yeongyu/ci/release-state-linux-on-green-basis
+    - b89f5a2e93 fix(web): label English documentation on localized docs routes (#11238)
+    - 84a952da4a test(thread): model an unreadable newer store by its reader floor; migrate is now a used export (#14382)
+    - ff5b6e8a0f chore(lint): lower the engine-converge no-flake-masking baseline to 1
+    - 74d4ebc707 chore(bundles): regenerate train 12 artifacts once at the top (env -i)
+    - 379b78890a test(write-existing-file-guard): count only the hook own path probes (#14685)
+    - 3fa6ccd889 Merge #14621 into train 12
+    - 3e9c9420b0 Merge #14620 into train 12
+    - bc7cd45fbd Merge #13258 into train 12
+    - 9d1de8bc04 Merge #12109 into train 12
+    - 977a36c611 Merge #14546 into train 12
+    - 20b4f1a2a1 Merge #14503 into train 12
+    - b373266089 Merge #14511 into train 12
+    - 5b3b17aad4 Merge #14545 into train 12
+    - 266d4fe45a Merge #14530 into train 12
+    - a2bbbe3632 Merge pull request #14594 from code-yeongyu/test/14573-keep-paging-fixtures-local
+    - 70af63547b test(omo-native): separate stalled-child grace from the observe-idle contract
+    - 9f81047d13 test(omo-native): type the daemon snapshot stat
+    - 37f8a05071 Merge remote-tracking branch 'origin/dev' into bugaudit/integrate-13161
+    - 487113d911 docs(thread): changelog fragment for #14668
+    - 6b636d0bb9 fix(thread): a script's send reaches a session on another device as the person's own input (#14616)
+    - 78a69ebb85 docs(changelog): record thread create replay fix (#14665)
+    - f9a48441d7 test(thread): preserve receipt shape apart from create replay flag
+    - f820daae67 test(thread): type-check full replay comparisons
+    - d9f50119d7 fix(thread): distinguish same-key create replays from first creates
+    - ac2f5b4d32 chore(thread): list the caller-stall host fixture as a knip entry (spawned by path) (#14444)
+    - 7e0921df8a Merge pull request #14630 from code-yeongyu/docs/11711-9696-browser-dialog-tcc
+    - e9c1551587 test(thread): the claimant identity in the #12314 test carries runtime_instance
+    - 9b80fa098a Merge branch 'ci/release-state-linux-on-green-basis' into ci/release-pinned-source-sha
+    - db1f135e99 Merge remote-tracking branch 'origin/dev' into ci/platform-red-auto-close
+    - feb19e9c3e Merge remote-tracking branch 'origin/dev' into ci/gate-reuse-platform-proof
+    - d303aabf4d Merge remote-tracking branch 'origin/dev' into ci/release-state-linux-on-green-basis
+    - 014153ad19 Merge remote-tracking branch 'origin/dev' into ci/publish-tail-parallel
+    - 7ba479ac1c chore(thread): rebuild the wake bundle and add the changelog fragment (#14335)
+    - 9d13dad6e2 fix(thread): keep the gateway schema out of the main bundle and the commit test off node:sqlite (#14382)
+    - d9a528470b docs(changes): fragment for #14639
+    - 11313553b7 test(memory-core): drain convergence scenarios before teardown
+    - 8cfa8c1215 Merge pull request #14578 from code-yeongyu/test/knip-route-probe-fixture
+    - b92920254f fix(thread): a ps spawn refused with EPERM answers an unreadable start time instead of rejecting (#12314)
+    - e923719ad8 test(thread): a ps the OS refuses to start leaves the start time unreadable (#12314)
+    - fd3497e756 docs(browser,computer-use): pass dialogPolicy at connect time; find the app macOS charges a grant to
+    - a67e4a587b test(memory): type sync coordinator barriers without void
+    - 85033fbe31 docs(changes): the #13258 fragment names the per-file report and the read seam
+    - cff3a5c690 Merge pull request #14601 from code-yeongyu/test/14573-make-lock-teardown-order-independent
+    - 0b1ea11b44 docs(changes): add the fragment for #13258
+    - 84ca91f57f Merge origin/dev into test/dedupe-omo-native-build
+    - e709aefe04 Merge test/mock-lifecycle-restore-resolves-path (#14619) into test/14573-keep-paging-fixtures-local
+    - 6d8acb0347 Merge origin/dev into test/mock-lifecycle-restore-resolves-path
+    - ef6867f715 Merge pull request #14592 from code-yeongyu/test/14573-claude-hook-config-mocks
+    - 913be9ff5b test(thread): drop the per-test timeout from the SDK entry regression (lint ratchet)
+    - 7e666c8c1e fix(thread): commit each step's reader floor with its version bump (#14382 review)
+    - 8ba48997b1 test(thread): question-closed-locally teardown takes its own fixtures before awaiting (#14626)
+    - db59ba3175 Merge remote-tracking branch 'origin/fix/14616-thread-remote-device-service'
+    - d2b5700404 test(thread): the SDK entry regression lists against an empty local host; regenerate bundles; changelog fragment (#14616)
+    - 41eb0eabe2 Merge remote-tracking branch 'origin/dev' into fix/14616-thread-remote-device-service
+    - 198dd683ee fix(thread): the SDK's account surface reaches the remote layer through default-remote.ts; its test gives the SDK a local host (#14616)
+    - af8444bb60 Merge pull request #14551 from code-yeongyu/docs/14466-intake-ttl-wording
+    - 5c4bffb970 Merge remote-tracking branch 'origin/dev' into docs/14466-intake-ttl-wording
+    - 50c3da8323 chore(thread): keep the per-step reader floors module-private (#14382)
+    - 5522bc8634 Merge remote-tracking branch 'origin/dev' into fix/14616-thread-remote-device-service
+    - 63133463e9 chore(thread): format, rebuild bundles and add the changelog fragment for the reader floor (#14382)
+    - 757c8147d8 docs: fold the read-trace changelog fragments into #14624
+    - 1f4085ab06 fix(thread): stop charging a blocked caller to a read RPC's host
+    - 5036654c32 fix(thread): an older binary keeps using a gateway store a newer one migrated by reader-compatible steps (#14382)
+    - c1b1ae31cd fix(thread): correct read diagnostic phases and log only transport failures (#14498)
+    - 0f11242fbd docs: link the read diagnostic changelog to #14489
+    - 1c280530f6 feat(thread): add opt-in diagnostics for failed read RPCs
+    - d005504cdf fix(thread): a serving consumer answers the woken drain's admission at once, not after its own startup sweep (#14335)
+    - 6bc00f474f test(thread): a parked session the host's startup sweep wakes drains its cross-device row without waiting on that sweep (red, #14335)
+    - d19bb963a0 Merge remote-tracking branch 'origin/test/mock-lifecycle-restore-resolves-path' into fix2-14594
+    - 547e00ffdd fix(testing): install module mocks under the resolved module path
+    - 8ce4b99bd1 Merge origin/dev into test/14573-scope-shared-logger-mocks
+    - e53c1dec42 Merge origin/dev into test/14573-scope-agent-loader-mocks
+    - 6dba47cf4f Merge origin/dev into ci/memory-core-reduced-install
+    - 3a1a0edfb7 Merge origin/dev into test/knip-route-probe-fixture
+    - 11eb3af4b4 Merge origin/dev into test/14573-mcp-loader-independent-fixtures
+    - 9494a9f758 Merge origin/dev into ci/payload-check-reduced-build
+    - 8be7fa638e Merge origin/dev into test/14573-make-lock-teardown-order-independent
+    - 53080f866b Merge origin/dev into test/14573-claude-hook-config-mocks
+    - 25a8d7f272 Merge pull request #14607 from code-yeongyu/test/14573-isolate-task-store-fixtures
+    - e2e935a2e7 Merge pull request #14597 from code-yeongyu/test/14573-shard-adoption-preservation
+    - 5bbad547de Merge pull request #14591 from code-yeongyu/test/14573-subagent-cache-mocks
+    - 56004a645c Merge remote-tracking branch 'origin/test/mock-lifecycle-restore-resolves-path' into fix2-14594
+    - 15115eef65 fix(testing): restore module mocks under the resolved module path
+    - ae1ef4cac1 Merge pull request #14596 from code-yeongyu/test/14573-isolate-daemon-spawn-budget
+    - 0b2496b884 Merge pull request #14599 from code-yeongyu/test/14573-shard-item-idempotence
+    - d062e83200 Merge pull request #14590 from code-yeongyu/test/14573-overlap-bun-timeout-probes
+    - 4a79a62edc test(lint): lower no-module-mock baseline for removed logger mocks
+    - 1e0d3a76b6 Merge remote-tracking branch 'origin/dev' into fix2-14598
+    - cbfb9bea82 Merge remote-tracking branch 'origin/dev' into fix2-14594
+    - aeb4a6230e Merge pull request #14588 from code-yeongyu/ci/shard-timings
+    - 32f17cc8de fix(thread): the shipped thread SDK reads the account's other devices by default (#14616)
+    - 6cade80d44 Merge pull request #14593 from code-yeongyu/test/14573-batch-shipped-reference-scan
+    - 6c428e5b32 test(platform-red): format the close-when-green test
+    - 4d2060eade ci(publish): release a pinned green dev SHA with source_sha
+    - 7067327919 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 9a489fcddb Merge remote-tracking branch 'origin/dev' into HEAD
+    - 50b6f33b51 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 13ace47644 ci(platform-red): close the tracking issue when a dev push run proves its jobs green
+    - f9d6072bee Merge remote-tracking branch 'origin/dev' into HEAD
+    - 9997741e34 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 35e2988b8a Merge origin/dev into test/14573-isolate-task-store-fixtures
+    - 7cfed105af Merge remote-tracking branch 'origin/dev' into HEAD
+    - b9b380a24d Merge remote-tracking branch 'origin/dev' into HEAD
+    - 1479487339 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 0920f50d2e Merge remote-tracking branch 'origin/dev' into HEAD
+    - 9c69ba5ae3 docs(changes): add fragment for #14594
+    - 70410df7f7 Merge remote-tracking branch 'origin/dev' into ci/gate-reuse-platform-proof
+    - d362c23aa7 Merge remote-tracking branch 'origin/dev' into ci/release-state-linux-on-green-basis
+    - 25088cb646 Merge remote-tracking branch 'origin/dev' into ci/publish-tail-parallel
+    - e9198c7964 Merge pull request #14610 from code-yeongyu/release/v5.1.81-source-state
+    - 0e9d82ae05 test(opencode): stop remaining shared logger mock leaks
+    - 5c3eedc31c test(session-manager): isolate file storage fixtures
+    - ddd066a6d0 test(hooks): isolate Claude hook config fixtures
+    - 88d94bd0d4 Merge remote-tracking branch 'origin/dev' into test/14573-scope-shared-logger-mocks
+    - 6f80fc381b Merge remote-tracking branch 'origin/dev' into test/14573-keep-paging-fixtures-local
+    - 3c9f354a11 Merge remote-tracking branch 'origin/dev' into test/14573-claude-hook-config-mocks
+    - 041a683066 test(claude-compat): give MCP loader cases independent fixtures
+    - 9184b028c2 test(omo-native): include daemon helpers in Knip export checks
+    - 273eaa634d test(memory-core): ratchet away the removed timeout site
+    - 102f0808ed test(memory-core): make lock teardown coverage independent of test order
+    - eddfcb2823 test(memory-core): shard the item idempotence seed corpus
+    - 6cb47e5848 test(hooks): isolate compaction log spies
+    - 9aa22d5216 test(memory-core): split the adoption preservation seed cohorts
+    - 0af2adc12e test(omo-native): observe shard release with warm status requests
+    - 0a053205e4 test(delegate-task): scope Claude agent loader spies
+    - 2124bfc3ae test(session-manager): keep paging storage fixtures local
+    - 6c32eb8a0f test(opencode): stop logger mocks leaking across test files
+    - 583fc632e5 test(hooks): scope Claude config spies to handler tests
+    - 6b09d50b8c test(delegate-task): restore provider-cache spies after resolver tests
+    - 7c5cc45870 test(ci): batch the shipped model reference scan
+    - 60bb93e873 test(ci): overlap independent Bun timeout probes
+    - 002fb90dd4 Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - 8aaa7b7530 Merge branch 'ci/platform-red-first-red' into ci/release-state-linux-on-green-basis
+    - f7de55c385 Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - 187e26eb02 ci(release-state): keep stampRefusals module-private (knip)
+    - ae8c0a621b ci(publish): the gate proves a stamp by content with --check-stamp
+    - f48499df8d Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - cf69ad22ae ci(release-state): prove a release stamp by content, not by path alone
+    - 164a593b2e Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - ea10036dc4 Merge branch 'ci/platform-red-first-red' into ci/release-state-linux-on-green-basis
+    - b8c5c8c2c7 Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - 11f90a58ed Merge branch 'ci/platform-red-first-red' into ci/release-state-linux-on-green-basis
+    - 54428cde84 test(publish): keep the platform-proof gate cases on the default timeout (lint ratchet)
+    - 7a1bff0c66 Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - d7c4a6db37 ci(ci-mode): admit only generated files a required Linux check rebuilds into RELEASE_STATE_PATHS
+    - ed7d0ceb3b Merge branch 'ci/release-state-linux-on-green-basis' into ci/gate-reuse-platform-proof
+    - cf2508e80b ci(knip): register release-state-paths.mjs as an entry; publish.yml runs it by path
+    - 095d5f9d74 ci(publish): accept a CI run as macOS/Windows proof only when those legs ran, or its base proved them
+    - bd3c55fe31 ci(ci-mode): keep a release-state pull request on Linux when its base already proved macOS/Windows
+    - d8a59b8219 ci(publish): wait for the registry beside the release job and mirror installer assets beside post-publish-verify
+    - e8feee59ae test(knip): scope the Next route export probe to a small fixture
+    - 70397c0846 Merge remote-tracking branch 'origin/dev' into fix/memory-tool-hang-timeout
+    - 3f16b58753 Merge dev @8032185db8 into fix/remote-row-created-at (ports.ts: dev dropped rowThreadId; rowCreatedAt reads row.durable_id; generated files taken from dev, regenerated next)
+    - 87d5738ed2 docs(thread): say how expired intake rows are settled (#14466 review)
+    - 22a635bae1 fix(memory): a stopped memory call never announces its late commit, and post-commit stalls report their own stage (#14543)
+    - f68964d8b4 fix(frontend): name the owning skill for the behaviour-evidence path
+    - f1ceae8317 fix(visual-qa): one rule for injected faults and stubbed success
+    - dd671fb447 docs(changes): note the memory tool call bound (#14546)
+    - 238874cd18 fix(memory): bound the memory tool call and honour abort, naming the stalled stage (#14543)
+    - f464ec1d30 docs(changes): unreleased note for #14545
+    - b346408286 feat(frontend): add the state table and request rules
+    - d5d1255be0 feat(visual-qa): check state truth and flows, and add an UNVERIFIED verdict
+    - 6bb359ee40 test(native): record the closed continuations through a Promise subclass, not a thenable (#14528)
+    - e6a1319bff docs(changes): fragment for #14530
+    - d34d0fbcc7 test(native): await the attach endpoint's own close instead of an fs.watch with a 2 s timer (#14528)
+    - b1d36ac314 Merge dev @4a8c752c6e into fix/listing-rows-7
+    - e4efa10d0f Merge dev @4a8c752c6e into fix/remote-row-created-at (address-book: keep dev's reduced module, re-apply rowCreatedAt)
+    - a3dbf22551 Merge remote-tracking branch 'origin/fix/11632-dag-cases-in-memory-journal' into fix/11632-e2e-task-store-in-memory
+    - 5f3b07e835 Merge remote-tracking branch 'origin/fix/11632-dag-cases-in-memory-journal' into fix/11632-e2e-task-store-in-memory
+    - 43ad7f781d docs(changes): fragment for #14511
+    - 17ad3cb68c fix(device-service-core): read listing rows 6 (waiting) and 7 (engine_version) (#14510)
+    - 0273d6b027 fix(dag): name the session-capacity lock through one path builder for both stores; changelog fragment for #14503
+    - d89ce5944e Merge remote-tracking branch 'origin/fix/11632-dag-cases-in-memory-journal' into fix/11632-e2e-task-store-in-memory
+    - 4f00b2a657 test(task): in-memory TaskRecordStore held to the file store contract; run the e2e ordering case on it (Fixes #11632)
+    - a32955a334 Merge remote-tracking branch 'origin/dev' into fix/remote-row-created-at
+    - a752f4632d docs(changes): fragment for #14479
+    - 3b41b5d6f6 fix(thread): rows from another device take created_at from the UUIDv7 thread id, not the listing's updated_ms (#14474)
+    - 7dde6fdba8 test(omo-native): keep the sandbox mode test POSIX-only (review HIGH)
+    - 5e34f44671 chore(changes): note #13161
+    - d73131bd04 test(omo-native): keep the daemon real-engine fixture private under any umask (#13159)
+    - eb367c261f docs(changes): note the DAG queued-node recovery fix (#12109)
+    - 1b6b9d0d6c test(telemetry): name summary files with "/" on every platform (#11171)
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.82
+ReleaseTime: 2026-11-23T23:09:15.0000000Z
