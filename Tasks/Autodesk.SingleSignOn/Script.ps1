@@ -1,8 +1,8 @@
-$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/A785RG35hP8oUR96WrYkn.html' -Stealth -Headless
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.autodesk.com/support/technical/article/caas/tsarticles/ts/A785RG35hP8oUR96WrYkn.html' -Stealth -Headless | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1 | Get-EmbeddedLinks | Where-Object -FilterScript { try { $_.href.EndsWith('.zip') -and $_.href -match 'installer' -and $_.href -match 'adsso' } catch {} } | Select-Object -ExpandProperty 'href' -First 1
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.zip') -and $_.href -match 'installer' -and $_.href -match 'adsso' } catch {} }, 'First')[0].href
 }
 
 $Result = $this.CheckInstallerUpdates(@{
