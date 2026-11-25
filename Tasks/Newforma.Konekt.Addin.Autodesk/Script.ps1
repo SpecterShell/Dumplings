@@ -6,10 +6,10 @@ function Read-Installer {
   $this.CurrentState.Installer[0]['InstallerSha256'] = (Get-FileHash -Path $InstallerFile -Algorithm SHA256).Hash
 }
 
-$Object1 = Invoke-WebRequest -Uri 'https://www.newforma.com/app_market/autocad-plant-3d/autocad-plant-3d-newforma-konekt/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.newforma.com/app_market/autocad-plant-3d/autocad-plant-3d-newforma-konekt/' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
