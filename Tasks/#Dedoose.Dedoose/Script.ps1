@@ -5,7 +5,11 @@ if (Test-Path -Path $OldReleasesPath) {
   $Global:DumplingsStorage['Dedoose'] = $OldReleases = [ordered]@{}
 }
 
-$Object1 = Invoke-RestMethod -Uri 'https://app.dedoose.com/_assets/xml/ClientVersions.xml'
+# The endpoint is served as text/xml but is not well-formed: release notes contain bare
+# ampersands (for example "Audio & Video Navigation"), which makes both Invoke-RestMethod
+# and an [xml] cast fail. Escape the stray ampersands before parsing.
+$Content = Invoke-WebRequest -Uri 'https://app.dedoose.com/_assets/xml/ClientVersions.xml' | Read-ResponseContent
+$Object1 = ($Content -replace '&(?!amp;|lt;|gt;|quot;|apos;|#)', '&amp;') | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = $Object1.DedooseClientVersions.windows
