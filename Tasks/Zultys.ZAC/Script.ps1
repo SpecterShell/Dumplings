@@ -1,4 +1,4 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.zultys.com/zac-download/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.zultys.com/zac-download/' -Headless -Stealth -SolveCloudflare
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
