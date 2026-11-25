@@ -4,20 +4,12 @@ $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/Termix-SSH/Termix
 $this.CurrentState.Version = $Object1.tag_name -replace '^release-' -replace '-tag$'
 
 # Installer
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'nullsoft'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('ia32') -and $_.name -match 'nsis' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
+# Termix stopped publishing ia32 (x86) Windows artifacts; v26.11.2 and v26.11.3 ship
+# only x64 and arm64, so the former x86 nullsoft and msi entries are gone.
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'nullsoft'
   InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name.Contains('x64') -and $_.name -match 'nsis' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
-}
-$this.CurrentState.Installer += [ordered]@{
-  Architecture  = 'x86'
-  InstallerType = 'msi'
-  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.msi') -and $_.name.Contains('ia32') }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
