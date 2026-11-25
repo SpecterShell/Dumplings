@@ -1,0 +1,19 @@
+Version: 0.6.66
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/chenming0v0/OMPiUI/releases/download/v0.6.66/OMPiUI_0.6.66_x64-setup-lite.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - fix(app): 思维翻译者收到某行首个中文字符后逐行替换原文，保留尚未翻译的英文、空行与分块后缀；同批译文每个渲染帧只显示一行，避免整段原文突然消失。
+    - feat(app/worker): 新增默认关闭的思维翻译者，通过显式配置的模型流式返回中文译文；支持 8k/16k/32k 上下文预算、逐条暂停与原文切换，并复用虚拟列表重挂载前的已完成翻译。
+    - feat(app/worker): Agent 设置新增自动标题提示词编辑、服务端保存与恢复默认；覆盖主标题、回退／重规划和 emoji／英文前缀，运行中的会话下次生成时读取最新配置，不改写已有标题。
+    - fix(worker): 自动标题默认要求简体中文描述与大写英文前缀，纯文本回退路径也使用中文提示词。
+    - fix(worker): 按官方包的 ESM 导出解析思维翻译者依赖，修复首次翻译失败；错误提供固定阶段码用于诊断。
+    - test(app/worker): 增加逐行译文显示和模型角色回归覆盖，并在官方 OMP、npm 与编译版 Bun CI 中验证流式翻译、上下文预算、取消及会话历史保持不变。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/chenming0v0/OMPiUI/releases/tag/v0.6.66
+ReleaseTime: 2026-11-25T00:45:47.0000000Z
