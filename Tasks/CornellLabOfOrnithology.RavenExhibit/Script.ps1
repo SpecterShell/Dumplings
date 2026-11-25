@@ -1,9 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.ravensoundsoftware.com/raven-exhibit-downloads/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.ravensoundsoftware.com/raven-exhibit-downloads/' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   InstallerType = 'exe'
-  InstallerUrl  = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'RavenExhibit' -and $_.href -match 'windows' -and $_.href -match 'installer' } catch {} }, 'First')[0].href
+  InstallerUrl  = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'RavenExhibit' -and $_.href -match 'windows' -and $_.href -match 'installer' } catch {} }, 'First')[0].href
 }
 
 # Version
