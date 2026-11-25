@@ -136,3 +136,14 @@ $Data = $ResponseText | Get-EmbeddedJson -StartsFrom 'callback(' | ConvertFrom-J
 ```
 
 - **Notes:** Use a source-specific, verified prefix. Do not use this as arbitrary script evaluation.
+
+### `Get-EmbeddedLinks`
+
+`Get-EmbeddedLinks [-Content] <string>` accepts HTML by value or through a `Content` property. It returns one `PSCustomObject[]` containing all matched anchors in input and document order, including an empty array when no links match. `.Count`, `.Where()` and indexing work after assignment under strict mode.
+
+```powershell
+$Links = $Response.Content | Get-EmbeddedLinks
+$InstallerUrl = $Links.Where({ $_.href.EndsWith('.exe') }, 'First')[0].href
+```
+
+The output array is not enumerated. Assign it before piping individual links to `Where-Object` or `ForEach-Object`, as in `$Links | Where-Object { $_.href.EndsWith('.exe') }`. A command directly after `Get-EmbeddedLinks` receives the whole array once.
