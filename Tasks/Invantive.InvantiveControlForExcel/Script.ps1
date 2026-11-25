@@ -8,7 +8,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://go.invantive.com/download/invantive-control-for-excel' | ConvertTo-UnescapedUri
+  InstallerUrl = 'https://download.invantive.eu/current/Invantive Control for Excel.msi'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head

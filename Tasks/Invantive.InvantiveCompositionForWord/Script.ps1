@@ -8,7 +8,7 @@ function Read-Installer {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Get-RedirectedUrl -Uri 'https://go.invantive.com/download/invantive-composition-for-word' | ConvertTo-UnescapedUri
+  InstallerUrl = 'https://download.invantive.eu/current/Invantive Composition for Word.msi'
 }
 
 $Object1 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
