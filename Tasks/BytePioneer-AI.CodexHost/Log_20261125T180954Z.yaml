@@ -1,0 +1,106 @@
+Version: 0.27.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.27.0/codexhost-0.27.0-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.27.0/codexhost-0.27.0-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新带来跨 Harness 上下文交接、桌面壳全新引导与双端统一缩放及分段思考摘要预览，全面升级了跨主机远端委派、Web 审批与批注交互和 WorkBuddy Linux 支持，并大幅降低了大量会话场景下的 CPU 与内存占用。
+    🔄 跨 Harness 上下文交接与分段思考摘要
+    在 Web 与 Codex Desktop 中支持将当前会话上下文一键交接至其他 Harness 的新 Thread 继续工作；外部 Harness 的思考预览现按段落拆分为带标题的摘要段实时展示；Claude Code 长计划在审批前先作为独立正文输出，不再撑满审批面板。
+    — @iruriQ · @ump45nose · @AIR-hl
+    🖥️ 桌面壳全新引导、统一缩放与多实例隔离
+    原生桌面壳换上全新海湾水獭主题引导页与加载页并新增 Host 同步中心；macOS 与 Windows 双端新增 50%–200% 11 档统一界面缩放（含快捷键与通用设置项），启用麦克风语音输入并修复网页拖拽；桌面壳改按数据目录隔离单实例锁，多个独立工作环境可同时运行。
+    — @BytePioneer-AI · @omsd512-W · @bwndlct
+    🌐 跨主机远端委派与 Web 工作区升级
+    支持向已配对的远端 Peer 主机跨机委派子任务，Web 工作区与原生 Codex 项目双向同步并支持本机与远端工作区跨主机拖拽排序；收起的项目行可直接显示活动状态，无项目新会话自动复用空白草稿不丢内容，远端冷启动与离线回退更顺畅。
+    — @BytePioneer-AI · @zxd-666 · @sduhantao-maker · @iruriQ · @omsd512-W
+    🎨 Codex 风格审批卡片、批注编辑与移动端体验
+    Web 端换上 Codex Desktop 风格审批卡片与差异预览、拆分子操作多拒绝按钮，并升级嵌入式划线批注托盘与就地编辑（直接发送前自动保存）；同时改进手机端软键盘 Enter 换行、Safari/WebKit 抽屉毛玻璃对齐以及变更卡片打开整文件体验。
+    — @BytePioneer-AI · @hhucz · @koeria · @mythezone · @omsd512-W
+    🤖 Antigravity、OpenCode 与多 Harness 能力增强
+    Antigravity 支持原生同轮插入引导（Steer）、按原生模型上限准确展示上下文占比、保留跨 Turn 后台工具与提问及过滤重复命令 Skill；WorkBuddy 新增 Linux 桌面端支持，OpenCode 适配 @opencode/cli 包迁移并给出大版本升级提示，Claude Code 与 Kimi Code 后台任务与关闭确认更可靠。
+    — @BytePioneer-AI · @omsd512-W · @bwndlct · @icepie · @iruriQ
+    ⚡ 桌面壳与 Web 性能跃升及稳定性修复
+    合并列表刷新并复用侧栏会话树、将运行动画交由 GPU 合成，同时减少 macOS 后台进程监控空闲扫描，显著降低大量会话场景下的 CPU 与内存占用；修复读取异常导致的 Composer 循环重画与额度闪烁、延迟空闲释放后会话恢复及 Windows 进程退出报错。
+    — @iruriQ · @BytePioneer-AI · @sduhantao-maker · @ChaceLyee2101
+    🚀 新功能
+    - 跨 Harness 交接：支持从 Web 与 Codex Desktop 将当前会话上下文交接至其他 Harness 的新 Thread 继续对话 (#1180)
+    - 桌面壳改版与缩放：全新海湾水獭主题引导页、加载页与 Host 同步中心；macOS 与 Windows 原生桌面壳支持 50%–200% 11 档统一界面缩放（含快捷键、顶部气泡与设置项），并启用麦克风语音输入 (#1138)
+    - 跨主机远端委派与排序：支持通过已配对远端 Peer 主机委派子任务，本机与远端工作区支持跨主机拖拽重排，并统一使用主色调地球角标与文件夹分组样式
+    - Web 项目与活动状态：工作区与原生 Codex 项目双向同步，收起的项目行右侧可直接显示运行中、待处理或未读活动 (#1130, #1157)
+    - Web 审批与批注：换上 Codex Desktop 风格审批卡片与差异预览、支持多拒绝拆分选项，并升级 Composer 嵌入式划线批注托盘与就地编辑
+    - 思考摘要预览：外部 Harness 思考过程按段落拆分为带标题的摘要段实时流式展示 (#967)
+    - Antigravity：支持原生同轮插入引导（Steer）、队列追问与开放 Turn 后台进程组
+    - WorkBuddy：新增 Linux 桌面端应用支持 (#1163)
+    🐛 修复
+    - 性能与内存：合并列表更新、复用侧栏树结构并将运行动画卸载至 GPU，减少 macOS 后台进程监控空闲扫描，大幅降低大量会话下的 CPU 与内存占用 (#1103, #1187)
+    - Codex Desktop：修复读取不到所属 Agent 的会话导致 Composer 循环重画与额度闪烁 (#1165)
+    - Claude Code：长计划在审批前先输出为独立正文消息不再撑满审批面板 (#245)；守护待投递后台任务通知与定时任务，准确显示提示词缓存有效期并限定模型探测超时 (#1159, #1170)
+    - Antigravity：按原生模型窗口上限准确投影有效上下文占比 (#1108)，保留跨 Turn 后台工具所有权与未决提问 (#1007, #1095)，并过滤与原生命令重复的 Skill
+    - OpenCode：支持 @opencode/cli 包迁移与带前缀版本号解析，并在从 1.x 升级至 2.x 时提示手动迁移 (#1173)
+    - Kimi Code：关闭会话时确认子进程真实退出后再清理会话 (#1169)
+    - Web 远端体验：冷启动等待远端 Peer 就绪并在离线或失效时平滑回退，正确转发远端问答、审批、搜索、文件差异与跨边界预览，同时支持远端排队引导 (#1161)
+    - Web 会话与模型：已归属项目的会话稳定留在所属项目下 (#1155)，创建外部 Thread 时保留所选项目 (#1178)，同 Harness 切换模型保留思考强度 (#1143)，无项目新会话复用空白草稿 (#1104)，变更卡片与多文件编辑记录支持打开整文件 (#1105)，直接发送前自动保存编辑中的批注 (#1184)
+    - 移动端与 Safari：手机端软键盘按 Enter 改为换行 (#1141)，修复 Safari/WebKit 下手机抽屉毛玻璃背景偏移与透底条带 (#1080)
+    - 桌面壳与插件：按数据目录隔离桌面壳单实例锁 (#1175)，保持窗口内网页拖拽可用，加固插件下载重试并独立每项插件状态
+    - Host 与 Windows：被动查看会话不再误唤醒空闲会话 (#1171)，超时延迟完成的空闲释放后可正常恢复外部会话 (#1182)，Windows 容忍已退出的 Codex 进程句柄避免重启报错 (#1185)
+    - 另有若干启动隔离、标题栏样式与失败更新提示的细节修复 (#1174)
+
+    This release brings cross-Harness context handoff, redesigned desktop shell onboarding with unified native UI zoom, and titled paragraph reasoning previews, alongside cross-host remote delegation, refreshed Web approvals and annotations, WorkBuddy Linux support, and major CPU and memory reductions for large Thread catalogs.
+    🔄 Cross-Harness Context Handoff & Reasoning Summaries
+    Hand off conversation context from Web or Codex Desktop into a new Thread on another Harness to keep working seamlessly; external Harness Reasoning previews now stream as titled summary parts per paragraph, and long Claude Code plans render directly in the conversation before the approval prompt.
+    — @iruriQ · @ump45nose · @AIR-hl
+    🖥️ Redesigned Desktop Shell, Unified Zoom & Instance Isolation
+    The native desktop shell debuts coastal otter onboarding and loading screens with a Host sync hub; macOS and Windows gain unified UI zoom (11 presets from 50% to 200%, shortcuts, top toast, and Settings row), microphone voice input, and working web drag-and-drop; the single-instance lock is now scoped per data directory so separate environments run concurrently.
+    — @BytePioneer-AI · @omsd512-W · @bwndlct
+    🌐 Cross-Host Remote Delegation & Web Workspace Sync
+    Delegate subagent tasks across paired remote Peer hosts, synchronize Web workspaces bidirectionally with native Codex projects, and reorder local and remote workspaces freely via drag-and-drop; folded project rows show Thread activity, projectless new chats reuse existing blank drafts, and cold-start or offline Peers recover smoothly.
+    — @BytePioneer-AI · @zxd-666 · @sduhantao-maker · @iruriQ · @omsd512-W
+    🎨 Codex-Style Approvals, Inline Annotation Editing & Mobile Polish
+    Web UI adopts Codex Desktop-style approval cards with diff previews and split multi-deny actions, plus an embedded Composer annotation tray with inline editing that auto-saves on direct send; mobile soft-keyboard Enter now inserts a newline, Safari/WebKit phone drawer blur aligns cleanly, and turn-change cards open full files.
+    — @BytePioneer-AI · @hhucz · @koeria · @mythezone · @omsd512-W
+    🤖 Antigravity, OpenCode & Multi-Harness Enhancements
+    Antigravity adds native mid-turn Steer, accurate effective context window projection, cross-Turn background tool and Question retention, and skill command deduplication; WorkBuddy adds Linux desktop support, OpenCode migrates to @opencode/cli with 1.x-to-2.x upgrade guidance, and Claude Code and Kimi Code harden background guards and close confirmation.
+    — @BytePioneer-AI · @omsd512-W · @bwndlct · @icepie · @iruriQ
+    ⚡ Desktop Shell & Web Performance and Reliability
+    Coalesces list updates, reuses the sidebar Thread forest, offloads running animations to GPU compositing, and cuts idle macOS supervisor CPU, dramatically lowering CPU and memory usage with hundreds of Threads; also stops unreadable-owner Composer render loops, recovers late idle releases, and tolerates exited Codex handles on Windows.
+    — @iruriQ · @BytePioneer-AI · @sduhantao-maker · @ChaceLyee2101
+    🚀 Features
+    - Cross-Harness handoff: hand off context from Web or Codex Desktop into a new Thread on another Harness (#1180)
+    - Desktop shell redesign & zoom: new coastal otter onboarding, loading screen, and Host sync hub; unified 50%–200% native UI zoom (11 presets, shortcuts, top toast, and Settings) on macOS and Windows, plus microphone voice input (#1138)
+    - Cross-host remote delegation & ordering: delegate tasks across paired remote Peer hosts, drag-and-drop reorder across local and remote workspaces, and unify host-colored globe badges and folder views
+    - Web project sync & activity: sync workspaces bidirectionally with native Codex projects, and show running, pending, or unread Thread activity on folded project rows (#1130, #1157)
+    - Web approvals & annotations: Codex Desktop-style approval cards with diff previews, split multi-deny actions, and an embedded Composer annotation tray with inline editing
+    - Reasoning previews: stream external Harness Reasoning previews as titled summary parts per paragraph (#967)
+    - Antigravity: native mid-turn Steer, queued follow-ups, and open-turn background process groups
+    - WorkBuddy: support the Linux desktop app (#1163)
+    🐛 Fixes
+    - Performance & memory: coalesce list updates, reuse the sidebar Thread forest, offload running animations to GPU, and cut macOS supervisor idle process scans to sharply lower CPU and memory use (#1103, #1187)
+    - Codex Desktop: stop Threads with an unreadable owner from looping Composer renders and flickering usage chips (#1165)
+    - Claude Code: render long plans in the conversation before approval prompts (#245); guard pending background task notifications and session crons, report accurate prompt cache TTLs, and bound model probe timeouts (#1159, #1170)
+    - Antigravity: project effective context windows from native model window budgets (#1108), retain detached tool ownership and Questions across Turns (#1007, #1095), and filter duplicate skill commands
+    - OpenCode: support the @opencode/cli package migration and prefixed versions, with manual guidance for 1.x-to-2.x upgrades (#1173)
+    - Kimi Code: confirm subprocess exit before finalizing session close (#1169)
+    - Web remote experience: wait for cold-start remote Peers with clean offline/missing startup fallback, forward peer questions/approvals/search/diffs/links, allow out-of-workspace peer file previews, and support steering remote queued messages (#1161)
+    - Web sessions & models: keep assigned Threads under their own project (#1155), preserve project selection when creating external Threads (#1178), retain supported Thinking levels when switching models (#1143), reuse projectless blank drafts (#1104), open full files from change cards (#1105), and save edited annotations on direct send (#1184)
+    - Mobile & Safari: soft-keyboard Enter inserts a newline (#1141), and WebKit phone drawer backdrop blur stays aligned (#1080)
+    - Desktop shell & extensions: scope single-instance locks per data directory (#1175), keep web drag-and-drop working in the desktop window, and harden extension update retries with per-extension busy states
+    - Host & Windows: keep passive inspections from waking idle sessions (#1171), recover external sessions after confirmed late idle releases (#1182), and tolerate already-exited Codex process handles on Windows (#1185)
+    - Additional startup isolation, titlebar polish, and update error detail fixes (#1174)
+    Install & Upgrade
+    - New install: npm install -g @codexhost/cli, or download the installer for your platform from Assets below.
+    - Upgrade: codexhost update. For npm installs, run codexhost stop before reinstalling.
+    - macOS "cannot verify this app": xattr -dr com.apple.quarantine /Applications/codexhost.app
+    - More: README
+    🙏 致谢 / Thanks
+    @BytePioneer-AI · @iruriQ (#1159, #1161, #1169, #1170, #1171, #1180, #1187) · @omsd512-W (#1104, #1105, #1108, #1138, #1143) · @bwndlct (#1007, #1095, #1173, #1174, #1175) · @sduhantao-maker (#1155, #1157, #1165) · @ChaceLyee2101 (#1182, #1185, #1186) · @zxd-666 (#1130, #1178) · @ump45nose (#967) · @AIR-hl (#245) · @hhucz (#1184) · @koeria (#1141) · @icepie (#1163) · @mythezone (#1080)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.27.0
+ReleaseTime: 2026-11-25T17:35:52.0000000Z

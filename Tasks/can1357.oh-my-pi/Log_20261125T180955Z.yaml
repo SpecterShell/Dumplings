@@ -1,0 +1,110 @@
+Version: 19.2.1
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/can1357/oh-my-pi/releases/download/v19.2.1/omp-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    @oh-my-pi/pi-agent-core
+    Added
+    - Added Agent.peekDeliveringMessages(queue?) for queued input on its way into the next request that the transcript has not recorded yet; queue listeners hear when it lands.
+    - Added Agent.continue(signal, { queuedOnly: true }) to start an idle turn using queued input without making a separate model call for the current context.
+    Changed
+    - Debug logs now time the wait between dequeuing input and the model request that carries it, by phase.
+    @oh-my-pi/pi-ai
+    Added
+    - Fast-tier requests now prefer eligible credentials, including Codex plans with Ultrafast, Claude accounts with fast mode, and stored or environment API keys. Eligible accounts continue serving on paid overage and within their reserve, while normal load balancing resumes when the requested tier is unavailable or refused.
+    Changed
+    - Embeddings, transcription, and video errors now present upstream error messages clearly when available instead of exposing raw JSON response bodies.
+    Fixed
+    - Fixed Codex requests incorrectly sending a service tier to accounts whose plans do not support it.
+    - Successful OAuth token refreshes now restore normal account selection after a temporary refresh outage.
+    @oh-my-pi/pi-catalog
+    Fixed
+    - Fixed Codex service tiers, such as Ultrafast, being hidden for accounts that support them when the first logged-in account has a plan that does not.
+    @oh-my-pi/pi-coding-agent
+    Breaking Changes
+    - Removed several internal utility exports from the coding-agent package. Import errorMessage from @oh-my-pi/pi-utils/type-guards, flattenLine from @oh-my-pi/pi-tui/text/sanitize, and fuzzyHits from @oh-my-pi/pi-coding-agent/utils/fuzzy; import stripInlineMarkdown from plan-mode/plan-toc.
+    Added
+    - Background processes started by the bash tool are now detected when the agent stops, allowing them to be registered as services or terminated; background jobs using & are cleaned up when the session ends. Configure this behavior with bash.reapBackground (RPC mode does not reap processes).
+    - Added the o2ctl services shell commands for adopting an existing process as a named service, listing services, and stopping services.
+    - Agents can change their own model or a live child agent's model through the agent://<id>/model interface, including permitted user-tagged models, and adjust reasoning effort through agent://<id>/effort or a model suffix.
+    - In Tern, pasted-image attachments can be opened in the image annotator; completing annotation replaces the attachment with the edited image.
+    - Added archive.transcript(id, { detail, budget, turns }) for rendering compacted, budget-limited views of previous evaluation sessions, with controls for transcript detail and turn ranges.
+    Changed
+    - Session identifiers and session-file paths are now available to all commands run within a session, including evaluation shell commands, ! commands, /loop conditions, and autoresearch runs.
+    - Isolated subagent and /wt ovnfs checkouts now record the session that created or moved into them, and ovnfs ls displays that session after the supporting daemon is restarted.
+    - /fast and /fast ultra automatically select an eligible account or stored API key, fall back to other accounts at standard speed when limits are reached, and resume using the fast account when it recovers. Refused fast-mode requests no longer disable /fast when another eligible credential remains available.
+    - history://<id> now uses the enhanced transcript view with numbered turns, grouped consecutive reads and searches, and budget, detail, and turns query parameters.
+    - Tern's agent tray now shows running and queued agents before completed agents, with each group ordered by spawn time.
+    Fixed
+    - A queued or steered message keeps its queue pill until it appears in the transcript, instead of vanishing while its request is still being prepared.
+    - Fixed LSP diagnostics failing to load when imported before the LSP tool.
+    - Model lookups now reflect catalog changes from an extension provider’s OAuth login, including in mirrored registries.
+    - Tern browser actions now report the last observed reason a target was not actionable and discard target coordinates received after the deadline.
+    - Fixed checkout and workspace detection for paths inside directories whose names begin with .., so scoped settings, plugin roots, and folder restrictions apply correctly.
+    - Fixed broadcasts arriving while a subagent is finishing so they no longer replace the subagent's final report.
+    - On Linux, bash time -l and time -v now report the measured program's peak memory usage rather than the agent process's usage.
+    - Fixed zsh scripts rendered in the pseudo shell so shell syntax is displayed correctly instead of replacement characters.
+    - Fixed ACP session loading and resuming for saved Copilot 1M models during background model-catalog refreshes.
+    - Fixed Tern browser actions that ran out of time mid-wait reporting a transport timeout instead of why the element was not actionable (disabled, covered, moving).
+    - Fixed extension OAuth catalog modifiers (oauth.modifyModels) not rerunning on a model-catalog refresh when models.yml is unchanged or missing, so a login no longer leaves other providers' models unmodified until restart.
+    - Fixed tui.colorfulMarkdown: false and tui.renderMermaid: false so they apply consistently to assistant replies, thinking, user prompts, extension messages, summaries, and tool output.
+    - Fixed rules supplied by extensions in configuration overlays from disappearing when the system prompt is rebuilt.
+    - Fixed idle follow-ups becoming stuck after extension messages or compaction summaries.
+    - Fixed resuming goals whose token budget is exhausted so they remain budget-limited, and prevented incomplete-goal reminders from asking the agent to continue while budget-limited.
+    - Assistant replies show SVG fences and HTML image and page embeds inline again on terminals that support graphics (#20508).
+    @oh-my-pi/pi-natives
+    Added
+    - Added Shell.heldProcesses() to inspect all live external processes held by a shell session, including background and nohup jobs, with their nohup status.
+    - Added process utilities for finding processes by inherited environment variables, inspecting process details and output files, and terminating process families while preserving nohup processes when requested.
+    - Added an in-process Perl 5.34 shell builtin with core language and regex support, common command-line options and modules, and shell-integrated file and command I/O, including support for scheme:// paths and other shell builtins.
+    Fixed
+    - Fixed timed-out, cancelled, or terminated shell and PTY commands leaving descendant processes running, including descendants in separate process groups or sessions.
+    - Fixed cancelled filesystem searches continuing in the background and consuming CPU or blocking subsequent filesystem operations when multiple searches ran concurrently.
+    @oh-my-pi/pi-tui
+    Breaking Changes
+    - Removed the public oneLine export from @oh-my-pi/pi-tui/term/painters/picker; use flattenLine from @oh-my-pi/pi-tui/text/sanitize instead.
+    Added
+    - Added the change UI event for annotated images, delivered to the node’s onChange handler without an associated item.
+    Fixed
+    - Panes in a background Tern tab no longer log frame-acknowledgment stall warnings.
+    @oh-my-pi/pi-utils
+    Added
+    - Added path utilities for checking whether a path exists and whether it is lexically contained within another path without resolving symlinks.
+    - Added errorMessage() to @oh-my-pi/pi-utils/type-guards for retrieving message text from thrown values.
+    - Added Laps for timing the phases of a multi-step async path as one log record.
+    Fixed
+    - Fixed path containment checks for files and directories whose names begin with ...
+    @oh-my-pi/pi-wire
+    Added
+    - Added the TSP annotate image action, including its change event for delivering the annotated picture.
+    - Added shared collab link support for generating, formatting, parsing, and normalizing relay-based collaboration links.
+    What's Changed
+    - fix(tui): applied the markdown look setting to every markdown surface by @roboomp in https://github.com/can1357/oh-my-pi/pull/20474
+    - fix(sdk): kept overlay extension rules across prompt rebuilds by @roboomp in https://github.com/can1357/oh-my-pi/pull/20476
+    - fix(goal): kept spent goals budget-limited across resume by @roboomp in https://github.com/can1357/oh-my-pi/pull/20457
+    - refactor(coding-agent): remove ExtensionUiController.initializeHookRunner by @H4vC in https://github.com/can1357/oh-my-pi/pull/20494
+    - refactor(utils): add pathExists and fold three identical copies by @H4vC in https://github.com/can1357/oh-my-pi/pull/20483
+    - refactor(coding-agent): keep one agent-hub formatCost by @H4vC in https://github.com/can1357/oh-my-pi/pull/20487
+    - refactor(coding-agent): share the metacpan resource and dependency sections by @H4vC in https://github.com/can1357/oh-my-pi/pull/20488
+    - refactor(ai): one request skeleton for the embeddings, rerank and transcriptions gateway routes by @H4vC in https://github.com/can1357/oh-my-pi/pull/20492
+    - refactor(tui): share Emitter and MemoryStdin between the testing terminal doubles by @H4vC in https://github.com/can1357/oh-my-pi/pull/20495
+    - refactor(coding-agent): share /todo parsing helpers between the TUI controller and the slash handler by @H4vC in https://github.com/can1357/oh-my-pi/pull/20486
+    - refactor: fold equivalent local record guards into pi-utils isRecord/asRecord by @H4vC in https://github.com/can1357/oh-my-pi/pull/20480
+    - refactor(wire): share the collab link codec between host and web client by @H4vC in https://github.com/can1357/oh-my-pi/pull/20489
+    - refactor(ai): parse endpoint error bodies through OpenAIHttpError.parseEnvelope by @H4vC in https://github.com/can1357/oh-my-pi/pull/20490
+    - refactor(ai): share the bounded request body reader across endpoint servers by @H4vC in https://github.com/can1357/oh-my-pi/pull/20491
+    - refactor(coding-agent): merge discovery load results through one helper by @H4vC in https://github.com/can1357/oh-my-pi/pull/20493
+    - refactor(utils): add pathIsWithinLexical and fold six local copies by @H4vC in https://github.com/can1357/oh-my-pi/pull/20481
+    - fix(utils): treat ..name children as inside the root in path containment by @H4vC in https://github.com/can1357/oh-my-pi/pull/20482
+    - refactor(utils): fold local errorMessage copies into pi-utils by @H4vC in https://github.com/can1357/oh-my-pi/pull/20479
+    - refactor(coding-agent): fold flattenLine and displayLines copies into pi-tui text/sanitize by @H4vC in https://github.com/can1357/oh-my-pi/pull/20484
+    - refactor(coding-agent): remove three duplicated helper bodies by @H4vC in https://github.com/can1357/oh-my-pi/pull/20485
+    Full Changelog: https://github.com/can1357/oh-my-pi/compare/v19.2.0...v19.2.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/can1357/oh-my-pi/releases/tag/v19.2.1
+ReleaseTime: 2026-11-25T17:10:03.0000000Z
