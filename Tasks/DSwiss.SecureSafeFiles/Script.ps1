@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://securesafe.com/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://securesafe.com/' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.Contains('.exe') -and $_.href -match 'SecureSafe-Files' } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
+  InstallerUrl = $Object1.Where({ try { $_.href.Contains('.exe') -and $_.href -match 'SecureSafe-Files' } catch {} }, 'First')[0].href | Split-Uri -LeftPart 'Path'
 }
 
 # Version
