@@ -7,10 +7,10 @@ function Read-Installer {
 }
 
 $Prefix = 'https://www.joinblink.com/download'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-PlaywrightFetch -Uri $Prefix -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'Blink' } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $Prefix $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href -match 'Blink' } catch {} }, 'First')[0].href
 }
 
 $ETag = (Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head).Headers.ETag[0]
