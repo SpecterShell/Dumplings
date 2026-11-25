@@ -1,0 +1,44 @@
+Version: 0.11.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.11.0/ovnfs_0.11.0_windows_amd64.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/stencil-hq/ovnfs/releases/download/v0.11.0/ovnfs_0.11.0_windows_arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Changelog
+    - 95d1c5005e7d1808732e5abf148c46d3f19bfa2a feat(base): served local roots live from the folder by default
+    - e046b7a8a27b410c6b2f0e568c5672f1efcef14a feat(checkout): opened nested revisions from private git
+    - 26c7013850587a95a73d5b34792a80effc6e070d feat(diff): added a name-only output mode
+    - 9884a7652fbc806c1492f01d4c9dd94b5c6d0835 feat(land): refused uncommitted checkout changes, added --skip-dirty
+    - 884fdcdbb473cba65dff1255504cee525ff466b2 feat(ls): recorded the agent session that opened each checkout
+    - 0047efc814d04c31cc3e58e08ca05cb9ab30d11a feat(nfs): stopped storing macos appledouble files by default
+    - 08336ca75c186083798b15a045466fa920b71ccf feat(serve): unmounted and exited daemons idle without checkouts
+    - cb784efac28c9051267a3a4f49994e0fea49f646 fix(base): gave each name of a hard-linked folder file its own identity
+    - af952c54e53f25b989bf24b793c2e09d2543cae2 fix(checkout): kept prepared pools across work-tree edits
+    - f5874c1458bd0cd92da7693007df0e330ed7ac44 fix(checkout): printed source folders unescaped on windows
+    - 9503ef4849194e9786033177f5a18a029898680e fix(git): copied source git files instead of cloning them
+    - 2b6deb0da6463872c163bebade3bfbf30a2cfb78 fix(git): replayed commits under the folder's committer identity
+    - 797eb25f8559d6c853d6756d4358fae815bdfd55 fix(land): merged against current history and replayed safely
+    - 147c7b6c7266603d0def526c4ef042b0c1cbb02f fix(overlay): recovered from vanished upper directories
+    - a3fc055ddced453e04151dcbbe14b01d3a153bb0 fix(rm): explained why rewritten and inherited commits count
+    - a3519f9210801015f3ed0795e2fcfa4ccea5c353 perf(nfs): answered nfsv3 writes before applying them
+    - cb0e4c287f3083ad2472abfa5c6ea3b6e5977d1b perf(nfs): cached v3 readers, bounded size fences and scoped readdir
+    - 1a589ed38ef566885f778f9a99e1ba619d89b464 perf(nfs): described written files from their open descriptor
+    - f399c7f88dc3a091456f7f7b0021df67e66f541e perf(nfs): skipped syncing for stable writes and COMMIT unless fsync is on
+    - a792f427811c7abcca57abfb77474c5de7432d64 perf(nfs): spread file-handle byte sums and enabled nordirplus on macOS
+    - b16a3d3f153b06284b5b58f075c5bb73b9cc0893 perf(overlay): kept actively written files up to half the memory budget
+    - 210803cfb5f6c02e174bdae83bac81a482cf000d refactor: applied go fix modernizations
+    - f78f5c9000837d1d6a80fcc39f9f0fcff6bcd81f test(base): skipped per-name hard-link identities on windows
+    - 053ecb6403c07fbda36d25d7fdc66907ad0cafe9 test(fetch): stopped the git daemon test from leaking git-daemon
+    - c35d4c23e1f3aff2fe972e5a24e63398e2bdc0b7 test(nfs): opened test files with posix semantics on windows
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/stencil-hq/ovnfs/releases/tag/v0.11.0
+ReleaseTime: 2026-11-25T15:17:19.0000000Z
