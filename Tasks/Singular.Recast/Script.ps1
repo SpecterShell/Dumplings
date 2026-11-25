@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.singular.live/recast'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.singular.live/recast' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 # Version
