@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.fundels.com/downloads/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.fundels.com/downloads/' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('fundels') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') -and $_.href.Contains('fundels') } catch {} }, 'First')[0].href
 }
 
 # Version
