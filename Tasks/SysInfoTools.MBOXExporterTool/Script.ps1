@@ -8,8 +8,9 @@ function Read-Installer {
 
 $Object1 = Invoke-WebRequest -Uri 'https://www.sysinfotools.com/mbox-exporter.php' | ConvertFrom-Html
 # Installer
+# The page no longer carries the #download_link input; the download is a plain anchor now
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.SelectSingleNode('//input[@id="download_link"]').Attributes['value'].Value
+  InstallerUrl = $Object1.SelectSingleNode('//a[contains(@href,".exe")]').Attributes['href'].Value
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
