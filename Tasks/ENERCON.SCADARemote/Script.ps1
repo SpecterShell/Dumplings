@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.enercon.de/en/service/scada-remote'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.enercon.de/en/service/scada-remote' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'enercon-scada-remote' } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'enercon-scada-remote' } catch {} }, 'First')[0].href
 }
 
 # Version
