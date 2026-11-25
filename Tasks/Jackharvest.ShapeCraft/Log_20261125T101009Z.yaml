@@ -1,0 +1,71 @@
+Version: 0.12.12-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.12.12-alpha/shapecraft-0.12.12-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.12.12-alpha/shapecraft-0.12.12-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Big models turn smoothly on slow computers, pens and touch screens work on Linux, moved bodies in .shapr files are where they
+    belong, and other languages fit. Much of this comes from BAR × SUK's careful test of the Android app in Russian. Thank you!
+    New
+    - Big models draw coarser while the view moves, and whole again the moment it stops. It only goes as far as your computer
+      needs to keep up, so on a fast one nothing changes: a 1.9-million-triangle model turned at 30 frames a second on a 2016
+      laptop and now turns at 58. Preferences ▸ General ▸ Coarser While Moving: Automatic, Always or Never (#25).
+    - Pens on Linux (Wayland): a pen hovers, picks and draws, its button is a right-click, and it never turns the view.
+      Thanks @johanl19 (#97).
+    - Touch screens on Linux (Wayland): one finger turns the view, two pan and pinch; a tap picks and holding opens the
+      right-click menu until a pen is used, which then does the picking. With no keyboard in use, sizes are tapped in on the
+      numpad. Thanks @johanl19 (#97).
+    - KDE's global menu shows ShapeCraft's menus (Plasma on Wayland), and the window leaves its own row out while it does.
+      Thanks @johanl19 (#97).
+    - A fillet or chamfer can stop at the biggest size the part can take while you pull it, instead of going sharp again:
+      Preferences ▸ General ▸ Fillet and Chamfer. A cylinder's end pulled all the way is then a dome.
+    - Colors change on the model as you drag in Visualization, for bodies, faces and the backdrop. The whole drag is one undo.
+    - Preferences on the projects screen of a tablet, at the bottom of the sidebar.
+    - A pen without a button can open the right-click menu: Preferences ▸ Tablet ▸ Hold still, then lift.
+    Changed
+    - No window buttons on a maximized window where KDE takes the borders off maximized windows. Thanks
+      @johanl19 (#97).
+    - Plugins, Advanced, reports and the update notes follow your language. Their translations were there but weren't used.
+      The last missing texts are in all eleven languages.
+    - Russian: Visualize and Decal have their proper names.
+    Fixed
+    - Insert ▸ File and Insert ▸ Project open their windows. File said 'path' must be a string, and Project "is coming soon".
+      Thanks @Staratel (#98).
+    - Everything command search lists can be run from it: Import, Export, Save, Insert Image, Create Drawing and others
+      complained about a missing value. What only works from its own panel is no longer listed (#98).
+    - Moved bodies in a .shapr file are where they belong. Bodies a Move/Rotate had placed could come in unmoved, at
+      another body's place, or not at all; copies made by one were missing. Moves, rotations, copies and deletions are now read
+      for exactly the bodies they name, and saving keeps them. Thanks @pablohc (#45).
+    - A faded or picked body's nearest surface could show speckles on some graphics cards.
+    - Long words stay in their place: Preferences' tabs, labels, pop-up buttons and Sync's rows; the buttons under the Items
+      list; Visualization's pop-ups and a decal's file name; the Area Selection card.
+    - What's New swipes sideways on a tablet, and the Tutorials page scrolls under the title bar, not over it.
+    - Normal to Sketch no longer covers the project's name or a tutorial's card.
+    - A circle's diameter is easy to read: its dashed line stops for the number.
+    - The Metal graphics choice was translated as the material.
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    Mac: download the -macos-universal.dmg (Apple silicon and Intel). The two autoupdate-only
+    copies are the same file, there for copies of ShapeCraft up to 0.8.5 to update from.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows on Arm (Surface and other Snapdragon PCs): the -windows-arm64 MSI or portable zip, when present.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    iPhone (test build, iOS 17+, iPhone Duo included): sideload the -ios-arm64.ipa with AltStore,
+    Sideloadly or a similar tool, signed with your own Apple account (a free one re-signs every 7 days).
+    Or build it from source: docs/ios.md.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.12.12-alpha
+ReleaseTime: 2026-11-25T09:54:57.0000000Z
+RealVersion: 0.12.12
