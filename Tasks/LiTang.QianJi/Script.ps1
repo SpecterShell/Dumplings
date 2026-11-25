@@ -1,4 +1,4 @@
-$Object1 = Invoke-RestMethod -Uri 'https://upkit.qianji.app/qj.json'
+$Object1 = (Invoke-PlaywrightFetch -Uri 'https://upkit.qianji.app/qj.json' -Headless -Stealth -SolveCloudflare).Content | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.windows.version.versionName
