@@ -1,0 +1,24 @@
+Version: 1.17.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.17.2/vproxy-1.17.2-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.17.2 发布说明 / Release Notes
+    🎉 VProxy v1.17.2 正式发布！本版本重点新增 全内核「历史版本」自由回退/下载替换，并集中修复 Meow 启动 Country.mmdb 误判污染、应用自更新旧缓存覆盖漂移、Sing-box 大体积 Releases 列表拉取截断 与 Windows 安装包轻量无内核分发 等关键问题：
+    🕰️ 内核历史版本自由回退与替换
+    - 「历史版本」弹窗：内核管理抽屉各内核卡片右侧新增 「历史版本」 入口，可实时拉取 Mihomo / Xray / Sing-box / Meow / VP-Core 官方 GitHub Releases 列表，标注「当前」「预发」、发布日期、资产名称/大小及 SHA-256 校验状态，支持选择任意历史版本一键下载替换（运行中内核自动备份旧文件并热重启切换生效）；
+    - Tooltip 弹窗下拉修复 & 大响应 gzip 加速：重构弹窗内下载方式下拉层级（PopupKind::Tooltip + 帧末置顶），避免被模态遮罩拦截点击；为 reqwest 开启 gzip 传输压缩并将历史列表超时放宽至 30 秒，根治 SagerNet/sing-box 多资产大响应体在 8 秒处被截断报 error decoding response body 的问题；实测五大内核历史版本均可通过默认镜像完成拉取、SHA-256 校验与版本探测。
+    🛠️ GeoIP 校验与运行自更新可靠性修复
+    - Meow Country.mmdb 格式守护：在 src/geo.rs 增加 MaxMind MMDB 魔数校验（\xab\xcd\xefMaxMind.com），并停止 sync_geo_to_all_kernels 将 V2Ray GeoIP.dat 错拷为 meow/Country.mmdb 的污染行为；启动探测失败时区分坏库与 WinTun 超时原因并给出明确提示；
+    - 应用自更新缓存防陈旧：下载前校验本地已缓存安装包与远端目标摘要一致性，消除旧版安装包缓存误触发复装的问题。
+    🎨 界面布局精简与轻量打包
+    - 界面交互微调：移除底部状态栏内核下载进度条，内核管理卡片改用 3px 细线条进度显示；网络设置抽屉中「运行内核」与「测速内核」合并为同一行并排展示；
+    - Windows 安装包瘦身：移除 Inno Setup 脚本中对本地 data/kernels/* 的默认打包，安装包体积由约 63 MB 降至约 8.9 MB，内核均在客户端内按需下载与校验管理。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.17.2
+ReleaseTime: 2026-11-25T13:09:34.0000000Z

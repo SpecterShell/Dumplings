@@ -1,0 +1,96 @@
+Version: 0.49.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.1/solidcraft-0.49.1-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.1/solidcraft-0.49.1-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.1/solidcraft-0.49.1-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Simpler, faster graphics start-up. The window starts on one graphics instance and picks a hardware Vulkan GPU first, without the old probes and restarts; a window that can't start falls back to the software renderer. Set SOLIDCRAFT_GPU_STARTUP=legacy to start exactly as 0.49.0 did.
+    - Sketch: the degrees-of-freedom status no longer draws over the 3D view.
+    - Fillets: rounds between flat faces are built in closed form and finish sooner, a variable-radius round of a closed edge such as a cylinder's rim builds, and new fillets use Auto, which sweeps each corner the ball can pass and mitres the rest.
+    - Offset: a rounded offset whose tube folds over itself is refused with a message instead of building a broken body, and a saved offset of a projected major arc on a shelled wall reopens.
+    - Agent chat: a declined call says it did not run, Stop shows only while the agent is working, and a conversation past the model's context window drops its oldest turns and goes on.
+    - Web app: a right-click in the Browser panel opens SolidCraft's menu again.
+    - More fixes: holes picked on curved faces start on the exact surface, emboss text carries onto a tangent flat face, hidden lines draw rounded corners, STEP half-sphere end caps keep their side, and a mesh body in the path no longer fails an Extrude Cut.
+    - Why a patch: 0.49.1 ships the fixes merged since 0.49.0, with the smaller additions that landed alongside them. Designs saved in 0.49.1 use design format 68, so open them in 0.49.1 or later.
+    What's Changed
+    - Booleans: an edge no longer grows by the fit error of a trim built to test a face merge by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21966
+    - Contributing: kernel operations migrate to solidcore, and new features build on its API by @jyviko in https://github.com/tangency-labs/solidcraft/pull/12122
+    - Holes: drill depth, reach and height on a face use exact rays and containment, not the display mesh by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21057
+    - Naming: a point's face name is found on the exact B-rep faces, not the display mesh by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21061
+    - Naming: edge names at a point are found on the exact B-rep, not the display mesh by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21062
+    - solidcore: keep the fillet target's faces by a mark and retire fillet_cleanup_keeps_target_faces (#17169) by @brett19 in https://github.com/tangency-labs/solidcraft/pull/21270
+    - Ruled Surface: a strip along the normal of a lofted edge is smooth at the loft's sections instead of refused by @Ledzz in https://github.com/tangency-labs/solidcraft/pull/21386
+    - Stitch: a cavity sewn from loose faces is a void, so the part closes into a solid (#21540) by @MarkusReichart in https://github.com/tangency-labs/solidcraft/pull/21561
+    - Offset Face: split-in pockets stay recessed regardless of spline outline direction by @ancientastronauttheorist in https://github.com/tangency-labs/solidcraft/pull/21881
+    - smlib: bounds, solid tests, point classes, the edge/face gap and the check run through solidcore-ops by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21963
+    - Settings: zooming with the wheel no longer reads every setting out in each frame by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21978
+    - Commands: looking a command up by id no longer gathers every command first by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21985
+    - solidcore: B-spline and surface evaluation entry points in ops for applications by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22003
+    - Extrude, Revolve and Coil dialogs: step arrows on the angle boxes (#7480) by @Zredy in https://github.com/tangency-labs/solidcraft/pull/17382
+    - 3D sketch: hold points to model edges, planes, faces and the sketch's 2D curves by @Karl-VonRichter in https://github.com/tangency-labs/solidcraft/pull/18383
+    - Windows: a touchpad's two-finger scroll pans the view instead of zooming by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18403
+    - Plugins: shaders@0.2 tints, a plugin colours the ribbon's icons, button blocks and panels with a checked WGSL function by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18979
+    - Windows: the popped-out Browser follows the main window by @dh1011 in https://github.com/tangency-labs/solidcraft/pull/20963
+    - Contributing: name the i18n and kernel-case coverage checks in the gate list by @Johnny-God in https://github.com/tangency-labs/solidcraft/pull/21857
+    - smlib: shells, face offsets and sheet offsets are solidcore-ops', and smlib's copies go by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21964
+    - smlib: mass properties and area are solidcore-ops', and smlib's own integration goes by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21965
+    - smlib: extrusions, revolutions, lofts to a point and sections are solidcore-ops' by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21968
+    - Drawings: start or open a sheet sketch only in the Drawing workspace by @0rdnungsamt in https://github.com/tangency-labs/solidcraft/pull/21503
+    - Kernel: CADIR import and export reach solidcore only through the kernel adapter by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21923
+    - Plugin panel shaders: kind "panel" (shaders@0.2) draws see-through panel backgrounds by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/19096
+    - Weldments: drag a frame member's profile with A/B arrows and turn it in 15° steps in the 3D view (#19438) by @sclMAX in https://github.com/tangency-labs/solidcraft/pull/19441
+    - Extrude Cut: a mesh body in the path no longer fails the cut; a cut of only a mesh names Convert Mesh (#615) by @EldarPolitkin in https://github.com/tangency-labs/solidcraft/pull/21901
+    - Scale: scale about a base point, the bodies' centre by default, and preview only the result (#12399) by @KristijanPruzinac in https://github.com/tangency-labs/solidcraft/pull/12400
+    - solidcore-ops: splits refuse a tool that stops short, decide a plane's reach without refusing, and cut by closed tools by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22000
+    - Command search: an option opens it centred over the view (#18309) by @0rdnungsamt in https://github.com/tangency-labs/solidcraft/pull/18327
+    - Shell: a thin wall builds past a small notch whose flat ceiling's offset vanishes by @theironchef in https://github.com/tangency-labs/solidcraft/pull/21714
+    - solidcore: a drawn curve's accuracy is record data, so applications can hold it without ops by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22010
+    - Kernel: hidden lines, centre marks, record motions and face flux come from the kernel adapter, not geom by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22008
+    - Plugins: an opt-in state grid that shaders keep between frames by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18965
+    - Plugins: a picture the person chooses for a shader texture by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/19142
+    - solidcore: ExtendTrimEdges refuses a UV curve off the extended domain (#21743) by @brett19 in https://github.com/tangency-labs/solidcraft/pull/21744
+    - Fillet: rounds between planes are built in closed form by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/21691
+    - Kernel: the curve-network surface comes from the kernel adapter, and geom's record evaluator has its own error type by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22012
+    - solidcore: the display plan's evaluator (basis, partials, parameters) through solidcore-tess by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22024
+    - solidcore: DXF geometry as general kernel maths, DXF checks in ops dxf::{import, export} (#21398) by @MarkusReichart in https://github.com/tangency-labs/solidcraft/pull/21542
+    - 3MF export: include every selected body or report which one failed by @pjtyt4bg7d-web in https://github.com/tangency-labs/solidcraft/pull/20930
+    - Boolean cut: a box can notch a loft between spline profiles by @Microslon3 in https://github.com/tangency-labs/solidcraft/pull/21590
+    - Links: consolidate duplicate "(linked N)" materials and prune unused copies by @AXKore in https://github.com/tangency-labs/solidcraft/pull/21663
+    - Kernel: geom no longer depends on solidcore-ops by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22026
+    - Parts library: a panel of saved parts to drag into the design by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/8206
+    - Appearance: an accent colour of your own, over any theme that opts in by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/10968
+    - Toolbar drop-downs: a ⋯ menu on each row, with Change Keyboard Shortcut… by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/11853
+    - Plugin cards: a slide switch turns a plugin on and off by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18944
+    - Plugin cards: a plugin's settings sit inside its card by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18956
+    - Plugins: an Update button for plugins that name their GitHub repository by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/18958
+    - Panels: docked sashes grab 8 px wide while drawing at the sash width by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/19054
+    - Plugins: themes@0.1 lets a plugin add colour themes to the theme picker by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/19087
+    - Panels: a floating panel resizes from every edge and corner by @dudedagger42 in https://github.com/tangency-labs/solidcraft/pull/19115
+    - view.pick: cull rays by exact body AABB and skip unpickable bodies with warnings by @AXKore in https://github.com/tangency-labs/solidcraft/pull/21693
+    - Sketch: projections follow the picked copy and can be frozen, hidden or repaired by @Karl-VonRichter in https://github.com/tangency-labs/solidcraft/pull/2523
+    - solidcore: hatching as line-family clipping in the kernel, the pattern model in SolidCraft's drawing code (#21396) by @MarkusReichart in https://github.com/tangency-labs/solidcraft/pull/21591
+    - Kernel: geom no longer depends on the solidcore kernel crate by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22040
+    - solidcore: retire the offset_analytic_mate_edges flag (WR-495) by @brett19 in https://github.com/tangency-labs/solidcraft/pull/21301
+    - fix(doc): compute area-weighted face centroids to preserve extrude cap order (#21686) by @ashxddaga in https://github.com/tangency-labs/solidcraft/pull/21762
+    - Inspect: resolve classify_points boundary normals from the located B-rep entity by @AXKore in https://github.com/tangency-labs/solidcraft/pull/21769
+    - solidcore: a rigid move keeps proved edge tolerances covering their trims by @brett19 in https://github.com/tangency-labs/solidcraft/pull/21780
+    - Plugins: a dialog's fields appear in the order the schema declares them by @raykholo in https://github.com/tangency-labs/solidcraft/pull/20088
+    - Axes navigator: view the model from the opposite side by @Hainlein4711 in https://github.com/tangency-labs/solidcraft/pull/18977
+    - Release 0.49.1: version bump, design format v68 and drawing format v7 by @bherbruck in https://github.com/tangency-labs/solidcraft/pull/22085
+    New Contributors
+    - @Zredy made their first contribution in https://github.com/tangency-labs/solidcraft/pull/17382
+    - @dh1011 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20963
+    Full Changelog: https://github.com/tangency-labs/solidcraft/compare/v0.49.0-nightly.20261125.163.1...v0.49.1
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.49.1
+ReleaseTime: 2026-11-25T12:40:48.0000000Z
