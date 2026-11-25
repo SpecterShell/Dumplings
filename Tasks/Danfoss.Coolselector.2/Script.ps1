@@ -11,7 +11,7 @@ function Read-Installer {
 $Object1 = curl -fSsLA $DumplingsInternetExplorerUserAgent 'https://www.danfoss.com/en-us/service-and-support/downloads/dcs/coolselector-2/' | Join-String -Separator "`n" | Get-EmbeddedLinks
 
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.exe') } catch {} }, 'First')[0].href
 }
 
 $Object2 = Invoke-WebRequest -Uri $this.CurrentState.Installer[0].InstallerUrl -Method Head
