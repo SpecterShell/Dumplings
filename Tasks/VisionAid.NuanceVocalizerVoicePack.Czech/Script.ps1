@@ -1,6 +1,6 @@
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Global:DumplingsStorage.VisionAidDownloadPage.Links.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'Vocalizer' -and $_.outerHTML -match 'Czech' } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = $Global:DumplingsStorage.VisionAidDownloadPage.Where({ try { $_.href.EndsWith('.msi') -and $_.href -match 'Vocalizer' -and $_.outerHTML -match 'Czech' } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 # Version
