@@ -1,0 +1,23 @@
+Version: 1.17.3
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.17.3/vproxy-1.17.3-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.17.3 发布说明 / Release Notes
+    🎉 VProxy v1.17.3 正式发布！本版本集中修复 IP 检测误改/覆盖主界面出口状态、活动节点与内核 PROXY 策略组状态不同步，并同步接入 VP-Core v1.7.10（根治 AnyTLS 回压重传与明文 HTTP 代理 502）：
+    🔍 IP 检测完全隔离（不切节点、不串数据）
+    - 零切换影响主代理：为 BgMsg::IpRisk 补全 node_id 携带字段并在 GUI 独立维护 ip_risk_target / ip_risk_dialog_front / ip_risk_dialog_busy / ip_risk_dialog_error 弹窗状态；对非当前运行中节点发起 IP 风险检测时严格走独立探测链路，绝不调用内核切换当前运行节点；
+    - 首页出口状态隔离：BgMsg::IpRisk 与 BgMsg::IpEgress 仅在目标匹配当前运行节点（且代理处于运行状态）时更新首页出口 IP / 国家代码 / 风控状态，非运行节点的检测失败或重置不再清空首页正在显示的当前节点出口信息（新增回归测试 ip_risk_check_on_non_running_node_never_switches_or_clobbers_active_egress）。
+    🧭 活动节点与内核 PROXY 策略组双向同步
+    - 首页与代理页真源统一：ui_proxy_charts 解析当前活动节点时在运行期优先读取 proxy_status.node_id，手动节点列表同步采用 kernel_egress_name 与 resolve_node_by_name 对齐；ProxyManager 新增 sync_active_node，切换节点或内核状态轮询（BgMsg::KernelGroups）发现内核实际出口变化时自动同步内部活动节点 ID 并刷新出口 IP 展示（带 last_kernel_group_pick_at 1.2s 防抖避免覆盖刚手动点选的新节点，新增回归测试 kernel_groups_egress_change_syncs_proxy_status_node_and_refreshes_egress）；
+    - 防误切与手动切回修复：手动模式策略组抽屉中成员卡片单击仅设置面板聚焦高亮（不再触发内核切换节点，需点击「切换」/「使用」或双击启动）；修正 switch_proxy_node 跳过判断与通过 select_kernel_member("PROXY", ...) 切回时未同步更新本地活动节点的问题。
+    ⚙️ VP-Core v1.7.10 同步与兜底资产对齐
+    - VP-Core v1.7.10 兜底同步：同步 VPCORE_TAG 至 v1.7.10，并对齐 Windows / Linux / macOS 三平台官方发布包的 SHA-256 校验摘要与字节数，继承上游 AnyTLS 背压防重传与 Mixed/HTTP 入站逐跳头改写修复（消除 502 proxy-reset / UND_ERR_SOCKET）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.17.3
+ReleaseTime: 2026-11-25T20:40:34.0000000Z
