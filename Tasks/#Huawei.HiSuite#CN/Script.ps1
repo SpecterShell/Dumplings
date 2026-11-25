@@ -12,12 +12,18 @@ $Object1 = Invoke-RestMethod -Uri 'https://query.hicloud.com:443/sp_dashboard_gl
   <rule name="Region">China</rule>
 </root>
 "@
-$Prefix = $Object1.SelectSingleNode('/root/components/component[last()]').url + 'full/'
+$Component = $Object1.SelectSingleNode('/root/components/component[last()]')
+if (-not $Component -or [string]::IsNullOrWhiteSpace($Component.url)) {
+  # The service replies with only <status>1</status> when the queried version is current
+  $this.Log("The HiSuite China update source reports no release newer than $($this.LastState.Version)", 'Info')
+  return
+}
+$Prefix = $Component.url + 'full/'
 $Object2 = Invoke-WebRequest -Uri "${Prefix}filelist.xml" | Read-ResponseContent | ConvertFrom-Xml
 
 # Version
 $this.CurrentState.Version = [regex]::Match(
-  $Object1.SelectSingleNode('/root/components/component[last()]').version,
+  $Component.version,
   '(\d+(?:\.\d+){3,})'
 ).Groups[1].Value
 
@@ -29,7 +35,7 @@ $this.CurrentState.Installer += [ordered]@{
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     # ReleaseTime
-    $this.CurrentState.ReleaseTime = $Object1.SelectSingleNode('/root/components/component[last()]').createtime | Get-Date -AsUTC
+    $this.CurrentState.ReleaseTime = $Component.createtime | Get-Date -AsUTC
 
     $Object3 = Invoke-WebRequest -Uri "${Prefix}changelog.xml" | Read-ResponseContent | ConvertFrom-Xml
     # ReleaseNotes (en-US)
