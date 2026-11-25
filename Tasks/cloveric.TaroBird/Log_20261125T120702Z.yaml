@@ -1,0 +1,34 @@
+Version: 1.6.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cloveric/tarobird/releases/download/v1.6.0/TaroBird_1.6.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    TaroBird 1.6.0
+    A feature release: two more engines, conversation fork and rewind, remote screen viewing from the phone, quota and context indicators, and a workspace rail.
+    Changes
+    - New engines: Pi, and Antigravity through its ACP runtime.
+    - Conversations can be forked and rewound natively.
+    - Remote screen viewing on phones and on Windows, sharing one relay line.
+    - Model quota and context indicators.
+    - A workspace rail beside the conversation; a turn's changed files are listed with file names and added/removed line counts.
+    - Bot-to-Bot messages are delivered and steered between computers.
+    - A task panel for Kimi.
+    - Share inbox: one unreadable shared item no longer hides the others.
+    - Claude quota: a usage answer that arrives after the App stopped waiting is kept, so the indicator no longer stays empty when the CLI answers slowly.
+    - Widgets stay self-contained with no network access, as in 1.5.1.
+    Compatibility
+    App and standalone Host / CLI use 1.6.0 from the same source revision. Android APK and Play AAB use version code 2026110416; the iOS build number is 1. Platform updater compatibility entries remain available for installed clients.
+    The Host database schema moves from 25 to 26. A Host managed by the desktop App migrates when the new App starts it; tarobot start does the same for a CLI Host, and a Host installed as a background service is upgraded with tarobot update stage and tarobot update apply. Returning to 1.5.1 after the migration was not tested.
+    Electron stays at 45.3.0; the upgrade to the current 45.x line follows as its own release.
+    This version was published directly as stable at the owner's request, without a release-candidate stage. Validation was local and GitHub Actions did not run. The two changes made after the version freeze (widgets, Claude quota) were checked with their own tests only; one browser test of widget layout failed in that run and its cause was not established. Windows native install and upgrade acceptance, physical-phone acceptance of these packages and live FCM/APNs delivery were not established.
+    Known issue, older than this release: clearing a long history on a phone can stop part-way with "清理未完成"; "继续清理" resumes it and no record is lost.
+    On Android, keep Android System WebView updated.
+    Source: 29e277d6bd594ad75dfac842ca240b80200cb907.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cloveric/tarobird/releases/tag/v1.6.0
+ReleaseTime: 2026-11-23T01:34:54.0000000Z
