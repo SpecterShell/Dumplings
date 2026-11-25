@@ -1,16 +1,16 @@
 $Prefix = 'https://www.absolute.com/customers/support/windows-and-macos-client-files'
-$Object1 = Invoke-WebRequest -Uri $Prefix
+$Object1 = Invoke-PlaywrightFetch -Uri $Prefix -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'x64'
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('x64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
+  InstallerUrl  = Join-Uri $Prefix $Object1.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('x64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture  = 'arm64'
   InstallerType = 'wix'
-  InstallerUrl  = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('arm64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
+  InstallerUrl  = Join-Uri $Prefix $Object1.Where({ try { $_.href -match 'SecureAccess_client' -and $_.href.EndsWith('.msi') -and $_.href.Contains('arm64') -and $_.href -notmatch 'RS' } catch {} }, 'First')[0].href
 }
 
 # Version
