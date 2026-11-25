@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://macabacus.com/downloads'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://macabacus.com/downloads' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 
 # Version
@@ -11,7 +11,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://macabacus.com/release-notes' | ConvertFrom-Html
+      $Object2 = (Invoke-PlaywrightFetch -Uri 'https://macabacus.com/release-notes' -Headless -Stealth -SolveCloudflare).Content | ConvertFrom-Html
 
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//h4[contains(text(), 'Version $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
