@@ -1,0 +1,47 @@
+Version: 2.5.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Cookieboty/nomi-ai/releases/download/v2.5.0/Nomi-Setup-2.5.0.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Nomi· 诺米 2.5.0
+    主对话可以直接用本机已安装的官方 CLI：不必先配第三方模型供应商，按会话选好底座就能开聊；登录不在这里验证，由各 CLI 自己负责。
+    - 在主对话按会话选择已安装的官方 CLI 作为底座：Claude Code、Codex 与其它已接入的内置 CLI，不配置第三方模型供应商也能用。
+    - 在同一会话里切换底座，切回时接着该 CLI 自己的原会话继续聊，只补上离开期间的增量；恢复不了才新建会话并做一次有界的全量交接，请你在恢复未知时明确选择。
+    - 随时取消正在跑的一轮、逐项确认或拒绝工具操作；失败或中断的请求可以按原请求重试，不会被自动带进下一条。
+    - 首用引导里可以直接点选已检测到可执行文件的本机 CLI，作为后续对话的默认底座；没有可执行文件的 CLI 只显示状态、不可选。
+    - 托管运行时按能力矩阵说明哪些能力可用，附件、知识库等不支持的能力会在发送前明确拒绝，不会悄悄丢掉。
+    - 在「设置 → 模型与供应商 → 第三方供应商」新增 OpenCode Go 预设，填订阅 Key 即可使用，并支持「获取模型」。
+    细节
+    - 走 API 的托管底座也接上了工具：按会话选择权限档，工具操作经你的确认后执行；切到「自动允许」会先弹确认，确认后才跳过逐项确认。
+    - 在 Antigravity 里可以在应用内完成本机官方登录与退出；登录管理只对声明了这项能力的 CLI 开放，目前只有 Antigravity。其它 CLI 的登录仍在各自 CLI 里完成。
+    - 首用引导不验证官方 CLI 是否登录，只看可执行文件是否可检测到；发送时由各官方 CLI 使用各自在本机的登录，Nomi 不代查、不搬运凭据，CLI 没有登录时会由它自己报告。
+    - 预览：.gitignore 等忽略文件、Dockerfile、Makefile、nginx.conf 等常见配置文件按文件名高亮，YAML 的键与未加引号的值、JSON 键与 CSS 属性名有了颜色；标签栏可以用鼠标滚轮横向滚动；已更改文件气泡的弹层不再被左侧会话栏遮挡。
+    - MiniMax Code 的应用内更新不再卡在旧版本：更新后校验收到的版本，没升上去就继续尝试后续方式，仍失败时会报错并留下日志。
+    - 本轮修掉一处委派在后台任务结束、取消时的并发读写：偶发的数据竞争不再出现，后台名额照常归还，取消照样传到对应标签。
+    - 本轮修正首用引导的仅 CLI 进入：点选本机 CLI 不会结束引导、也不切换会话，只记为后续默认底座。
+    - 边界：本版本完成了 Windows 的耐久写入与进程树管理，代码已通过交叉编译校验，但本发布说明没有在原生 Windows 上实机验收；本机官方 CLI 也没有在真实安装并登录的环境里实机验收，相关路径用协议级替身进程验证。请在你的目标系统上自行确认。
+    English
+    Your main chat can now use an installed official CLI directly: no third-party model provider setup needed — pick a base per conversation and start; sign-in is not checked here and stays with each CLI.
+    - Pick an installed official CLI as the base for each main-chat conversation — Claude Code, Codex and the other built-in CLIs — without configuring a third-party model provider.
+    - Switch bases within the same conversation; switching back resumes that CLI's own session and only sends what happened while you were away, falling back to a new session with a bounded full handoff only when it cannot resume, and asking you to choose when recovery is unknown.
+    - Cancel a running turn, approve or reject tool calls one by one, and retry a failed or interrupted request as the same request without it being merged into the next one.
+    - First-use onboarding lets you pick a local CLI whose executable was detected as your default base for later conversations; CLIs with no executable are shown with their status but cannot be picked.
+    - The managed runtime states which capabilities are available, and unsupported ones such as attachments or knowledge-base questions are refused before sending instead of being dropped silently.
+    - A new OpenCode Go preset under Settings → Models & Providers → Third-party providers, ready to use once you enter your subscription key, with model discovery.
+    Details
+    - API-backed managed conversations now have tools too: choose a permission mode per conversation and tool actions run with your confirmation, and switching to "allow everything" asks for confirmation before it skips per-action prompts.
+    - Antigravity can sign in and out of its local official account inside the app; in-app login management is only offered for CLIs that declare the capability, which today is Antigravity alone. Other CLIs still sign in through their own CLI.
+    - Onboarding does not check whether an official CLI is signed in — only whether its executable can be detected; each official CLI uses its own local login when sending, Nomi neither checks nor moves credentials, and a CLI that is not signed in reports that itself.
+    - Preview: ignore files such as .gitignore, common config files such as Dockerfile, Makefile and nginx.conf are highlighted by file name, YAML keys and unquoted values plus JSON keys and CSS properties now have colours, the tab bar scrolls horizontally with the mouse wheel, and the changed-files popover is no longer covered by the chat sidebar.
+    - MiniMax Code updates in the app no longer stay on the old version: the received version is checked after updating, other methods are tried if it did not move, and a failure is reported with logs kept.
+    - This round fixes a data race in delegation (sub-task delegation) when a background task finishes or is cancelled: the sporadic race is gone, background slots are still returned, and a cancellation still reaches the right tab.
+    - This round fixes CLI-only entry in onboarding: picking a local CLI does not finish onboarding or switch conversations, it only sets the default base for later ones.
+    - Boundary: this release implements Windows durable writes and process-tree management and passes cross-compilation, but this note does not claim a real run on native Windows; the official CLIs were not exercised on a real installed-and-signed-in setup either, and those paths are covered by protocol-level stand-in processes. Please confirm on your own target system.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Cookieboty/nomi-ai/releases/tag/v2.5.0
+ReleaseTime: 2026-11-25T01:36:56.0000000Z

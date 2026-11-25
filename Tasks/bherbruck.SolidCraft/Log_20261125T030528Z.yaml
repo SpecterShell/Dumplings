@@ -1,0 +1,141 @@
+Version: 0.49.0
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.0/solidcraft-0.49.0-windows-x64.msi
+- Architecture: x86
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.0/solidcraft-0.49.0-windows-x86.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/tangency-labs/solidcraft/releases/download/v0.49.0/solidcraft-0.49.0-windows-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Why a minor: new capabilities (weldment trims, gussets and bent tubes, sheet metal beads, the 2D timeline, Remove History, pop-out panels, drawing dimension sets) and design format v67.
+    What's changed
+    Modeling
+    - Join: two solids that only touch now join (@SamD98).
+    - Split Body: pieces that don't touch become separate bodies (@plexi32).
+    - Split Face: a sketch's curves divide a face, picked in the dialog (@vdirienzo).
+    - Construct: a point at the average of two or more points (@0rdnungsamt).
+    - Fillet: a new Fillet starts at the last radius you applied (@macoss); curvature fillets over edges of different wedges build (@dudedagger42); a short rib filleted with the edges that meet it stays measurable (@stabler); G2 setback corners fill more reliably (@ljgabc); a blend that ends on a cylinder builds across its seam (@theironchef).
+    - Chamfer and Fillet: two edges where a cutout meets a post finish (@Guenni1975); a chamfer bevels a rounded bar end cut at an angle (@Microslon3); overlapping chamfers on near-parallel or tapered lands are refused with the size that fits (@ancientastronauttheorist); the Chamfer window's arrow points at the chamfer's edge (@vdirienzo); broken edge picks are reselected on edit (@AXKore).
+    - Shell: a closed shell builds when a ring of holes' offsets encloses an island (@0rdnungsamt), a wall as thick as a round's radius builds where rounds meet (@theironchef), an extrusion joined to a loft shells where their corners meet (@theironchef), and a thin boss touching its face's rim is refused in seconds again (@theironchef).
+    - Extrude: Join To Object can leave the body it runs to apart (@vdirienzo); Thin Extrude To Object also takes a plane (@theironchef); a profile picked by its curves is found when a side lies on a projected outline (@EldarPolitkin); invalid face references are refused instead of using the last sketch (@sylvesterkaczmarek); blind pockets cut in rounded bodies (@pjtyt4bg7d-web).
+    - Booleans: a blind bore opens at a clipped sphere's rim (@shangaslammi), a hole across the line where a flat face runs into a bend cuts (@unusuallyhandsome), and a hole crossing two nearly coaxial holes cuts (@theironchef).
+    - Delete Face: heals ring grooves on shafts and inside bores, trims the ball and plate where a removed bevel joined them, and explains why a cylinder cap can't be healed (@Microslon3).
+    - Offset Face works to the bottom of a countersink (@theironchef) and next to a torus (@0rdnungsamt).
+    - Combine: a join of many tools that fails on one pair is retried one body at a time (@Dylan-ISE).
+    - Mirror: round edges of a mirrored body stay circles, also in STEP export (@yannpom).
+    - Hole: removing a sketch point keeps joints on their original holes (@Microslon3), and drilling stays fast near a reference mesh (@altvnk).
+    - Pattern: body patterns keep their material and appearance when edited (@AXKore), and component copies keep their joints through history changes (@syato).
+    - Drafting: a face that can't be tilted is refused with the reason (@MarkusReichart).
+    - Circular Pattern shows Flip direction and Center for bodies (@cfaulkingham).
+    - Loft: guide anchors on spline profiles are fixed (@mant67).
+    - Welds: spot welds (@AlexanderMech).
+    - Midsurface, part 1: the two faces of a thin wall and the surface halfway between them are found (@thocsmith).
+    Surfaces
+    - Surface Revolve and Surface Loft faces face out of the profile, as Surface Extrude's do (@zorbathut).
+    - A sheet turned over with Reverse Normal can be trimmed and split (@zorbathut).
+    - Surface Offset with validation off offsets a face instead of refusing it (@JulienMorelli).
+    Sketch
+    - Change a parameter's value right in the window of a dimension that uses it (@rugbymauri).
+    - A point can be construction, and a Hole from the whole sketch skips it (@Ehuntabi).
+    - Save a sketch as an SVG at 1:1 scale in millimetres (@Ehuntabi).
+    - Sketch Offset joins picked curves that close a shape into one outline (@N3MI-DG).
+    - Sketch Replace can keep the source sketch's curve and point ids, so features built on them keep working (@shadaytree).
+    - Line tool: the end lands where you click (@vdirienzo), a line starting on geometry or the middle of another line is held there (@vdirienzo), and Horizontal/Vertical takes a line's middle as a point (@vdirienzo).
+    - Trimming two crossing lines to a corner leaves one constraint (@shadaytree); an offset dimension edited negative flips the side (@ancientastronauttheorist); a spline ending tangent to an arc no longer splits the profile (@plexi32).
+    - M opens Move/Copy while editing a sketch (@sylvesterkaczmarek); the sketch status shows in the view (@ablasik); the Text box says Shift+Enter starts a new line (@0rdnungsamt).
+    - Redefining a sketch plane onto a face of the finished design works (@raykholo).
+    Assemblies and joints
+    - Edit Joint shows the saved X, Y and Z offsets when reopened (@sylvesterkaczmarek), and Edit Joint from Drive Joints keeps its two sides (@vdirienzo).
+    - A body built in a component keeps the place its component was moved to (@vdirienzo).
+    - A concentric constraint takes a cylindrical face given as a point (@steffenl1).
+    - Motion studies check collisions in the background (@vdirienzo); the clearance check no longer lists failed pairs as touching (@Yuraraexe).
+    - Paste from another design can place components at the target's origin (@N3MI-DG); Insert Design takes a design open in the session without saving it first (@vdirienzo); drag a design from the document browser into the view to insert it (@N3MI-DG).
+    - Update Links and Relink Source keep a linked body's name (@MarkusReichart); relinking one placement warns about the patterns and mirrors it breaks (@phanoob); linked materials are shared (@dudedagger42).
+    - Move/Copy: a turn about an edge in a turned component is taken (@steffenl1), and a Free Move that turns bodies keeps its pivot (@vdirienzo).
+    - Standard parts get a default Steel material (@ashxddaga).
+    Drawings
+    - Baseline and ordinate dimension sets (@CamWight), sphere and cone sizes read to the exact edge (@CamWight), and a general tolerance gives each dimension without its own a ± (@CamWight).
+    - The title block gains ISO 7200 cells, and the frame prints zone labels and the sheet size (@KazW).
+    - Assemblies with repeated parts export faster, and export errors name the limit a view exceeds (@ConstantijnCrijnen).
+    Import and export
+    - URDF export with what simulators need, without hand-editing (@brukg).
+    - Insert STEP keeps a link to the file (@raykholo); a reused STEP part appears only at its placed positions (@Microslon3); more STEP files import cleanly (@MarkusReichart, @raykholo, @dudedagger42, @acebear17).
+    - GLB export shares meshes of repeated linked parts (@ConstantijnCrijnen).
+    - STL export suggests the design name (@sylvesterkaczmarek); a body that can't be meshed is named and the rest still exports (@raykholo).
+    - KiCad import: copper pours no longer show stray lines between holes (@adnsv).
+    Speed
+    - Large sketches solve in seconds instead of minutes, a parameter change on one takes about a second, and Cancel stops a long solve within milliseconds.
+    - Orbiting and panning keep the display's full frame rate; the GPU picks which parts are in view and their detail, and leaves out hidden parts while the view moves (@oursland).
+    - Mass properties: a cube's are 4.8x faster (@oursland), and a filleted body's take seconds instead of minutes (@theironchef).
+    - Designs with thousands of unplaced components, stored files or extra input names open in seconds; the parameter list stays fast in big designs (@TRget88).
+    - Deleting or adding a body no longer recomputes later features that don't use it (@DAmesberger); an unchanged import is copied rather than re-encoded on save (@oursland); Select All is instant (@oursland).
+    - The window shows a feature's result before its final check ends.
+    Interface
+    - Design tabs: Rename, Save and Save As in a tab's right-click menu (@m4tthewdavis).
+    - File ▸ Revert to saved (@Ehuntabi); History ▸ Clear History (@natelutz); move the history marker with commands and shortcuts (@Johnny-God); a feature dropped on an open one-feature folder joins it (@thocsmith).
+    - Browser: a constraint shows its rule's icon and opens the Constrain dialog (@glitchau); construction planes get a visibility eye and the V toggle (@umutacil); right-click menus work when the Browser is popped out (@steffenl1).
+    - Keys: End zooms to the selection and Home goes to the Home view (@CamWight); mouse buttons 6 to 16 reach the app and can drag the view; a sketch tool's key outside a sketch doesn't start a sketch (@dudedagger42); choose the key that hides the feature preview (@peppelorum).
+    - Preferences: choose the folder Save and Export dialogs open in (@shadaytree), and delete a saved panel layout (@steffenl1).
+    - Materials: a Density property (@khanahmad4527).
+    - Tables such as Parameters read as one card (@Nathan-Dane).
+    - Select edges through faces works in every visual style (@dudedagger42).
+    - The recovery banner can be closed and offers Discard all (@shadaytree).
+    - The update notice leaves room for the title bar buttons (@sylvesterkaczmarek).
+    Assistant, MCP and plugins
+    - A task cut short by the provider can be continued (@vdirienzo); copy complete tool arguments and results (@cfaulkingham); the message box comes back after opening a sample (@fanfanfan1997525).
+    - Attach selection is on by default, and every MCP reply carries the current selection.
+    - A new AI/ML API provider preset; the model picker lists only chat models where an endpoint names them.
+    - Plugins: save and export to a granted folder, read the open design's path and unsaved state (@marcbritten), indented table rows (@ashxddaga), clearer refusals of entry lists (@AlpDmr), a docked-panel worked example (@AlpDmr), and better help for first-time plugin users (@sylvesterkaczmarek).
+    - The control channel tells subscribers when a design is opened, saved and closed (@marcbritten), and serves requests without waiting for a frame (@PapaEcho13).
+    -  --read-only opens designs read-only, also in a running window (@marcbritten).
+    Graphics and platforms
+    - Windows: snap layouts on Maximize and native title-bar drag and resize borders (@FinnDaCaptain); text is no longer blurry when the window isn't maximized (@blai30).
+    - macOS: Finder icons and a 3D Quick Look preview of designs (@Dag0d); tab and app bar drags no longer move the whole window (@Nathan-Dane).
+    - Graphics: restart after a GPU hang (@Karl-VonRichter); ambient occlusion works on OpenGL below 4.0 again (@ChrisNourse); a crash before any driver loads no longer skips a graphics API (@Werner1303).
+    - Web app: right-clicks open SolidCraft's menu on Windows (@wyliebutler).
+    - Georgian text draws with a system font (@devius).
+    - Nix: the flake builds again (@NAXLAB).
+    Files
+    - A sketch saved on a face that moved, or a fillet picked on edges of two bodies, opens with a warning naming them (@phanoob).
+    - Saving keeps only the model cache that fits the opening limit (@cfaulkingham), and a save over the open-size limit keeps its history (@JnRDesign).
+    Translations
+    - Czech: the Drawing workspace, windows, plugins, Preferences and newer dialogs (2076 messages) (@potuzai).
+    - German: 600 missing strings (@Phinix2007). Arabic updates (@A-AL-ANAZI). Ukrainian: 50 new strings (@BrunIF). French improvements (@jiiimi). Lao is a new language (@bounkirdni-2025).
+    Kernel
+    - Many more kernel failures report a named cause, and long-standing workarounds became the default path (@brett19, @MarkusReichart, @AlexanderMech, @acebear17, @oursland, @ashxddaga).
+    New Contributors
+    - @natelutz made their first contribution in https://github.com/tangency-labs/solidcraft/pull/17109
+    - @pjtyt4bg7d-web made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20928
+    - @blai30 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/5059
+    - @mant67 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/19530
+    - @Phinix2007 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21176
+    - @wyliebutler made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21279
+    - @fanfanfan1997525 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21490
+    - @Dag0d made their first contribution in https://github.com/tangency-labs/solidcraft/pull/19327
+    - @syato made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21212
+    - @bounkirdni-2025 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20641
+    - @dakopian made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21332
+    - @EldarPolitkin made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20576
+    - @codyolsen made their first contribution in https://github.com/tangency-labs/solidcraft/pull/5733
+    - @brukg made their first contribution in https://github.com/tangency-labs/solidcraft/pull/9892
+    - @yannpom made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21141
+    - @JulienMorelli made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20339
+    - @patrickiel made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20584
+    - @Johnny-God made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20990
+    - @macoss made their first contribution in https://github.com/tangency-labs/solidcraft/pull/19272
+    - @shangaslammi made their first contribution in https://github.com/tangency-labs/solidcraft/pull/20844
+    - @AlpDmr made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21667
+    - @AXKore made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21440
+    - @Yuraraexe made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21586
+    - @baptisteB00 made their first contribution in https://github.com/tangency-labs/solidcraft/pull/21618
+    Full changelog: https://github.com/tangency-labs/solidcraft/compare/v0.48.1...v0.49.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tangency-labs/solidcraft/releases/tag/v0.49.0
+ReleaseTime: 2026-11-25T02:20:04.0000000Z
