@@ -1,5 +1,6 @@
-$Object1 = Invoke-WebRequest -Uri ($Prefix = 'https://www.exterro.com/ftk-downloads')
-$Object2 = Invoke-WebRequest -Uri ($Prefix = Join-Uri $Prefix $Object1.Links.Where({ try { $_.href.Contains('ftk-downloads/registry-viewer') } catch {} }, 'First')[0].href)
+$Object1 = Invoke-PlaywrightFetch -Uri ($Prefix = 'https://www.exterro.com/ftk-downloads') -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
+
+$Object2 = Invoke-WebRequest -Uri ($Prefix = Join-Uri $Prefix $Object1.Where({ try { $_.href.Contains('ftk-downloads/registry-viewer') } catch {} }, 'First')[0].href)
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
