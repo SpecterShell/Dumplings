@@ -30,10 +30,11 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseNotesUrl (en-US)
+      $ReleaseNotesLinks = ($Object1.result.pageContext.page.spots.Where({ $_.__dataType -eq 'downloadSection' }, 'First')[0].appReleaseNotes | ConvertFrom-Markdown).Html | Get-EmbeddedLinks
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
         Key    = 'ReleaseNotesUrl'
-        Value  = ($Object1.result.pageContext.page.spots.Where({ $_.__dataType -eq 'downloadSection' }, 'First')[0].appReleaseNotes | ConvertFrom-Markdown).Html | Get-EmbeddedLinks | Where-Object -FilterScript { $_.outerHTML.Contains($this.CurrentState.Version) } | Select-Object -First 1 -ExpandProperty href
+        Value  = $ReleaseNotesLinks.Where({ $_.outerHTML.Contains($this.CurrentState.Version) }, 'First')[0].href
       }
     } catch {
       $_ | Out-Host
