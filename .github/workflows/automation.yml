@@ -12,6 +12,9 @@ jobs:
   build:
     name: Build
     runs-on: windows-2025
+    # A worker burst can exhaust the runner, which kills the job before any post
+    # step uploads the status page; the hourly cadence leaves room for a slower run.
+    timeout-minutes: 150
     concurrency:
       group: ${{ github.workflow }}
     steps:
@@ -46,7 +49,7 @@ jobs:
           cache-path: ${{ runner.temp }}\DumplingsPlaywrightRuntime
           cache-key: dumplings-playwright-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('Dumplings/Modules/PackageModule/Assets/PlaywrightRuntime.psd1') }}
       - name: Run tasks
-        run: .\Core\Index.ps1 -ThrottleLimit 3 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
+        run: .\Core\Index.ps1 -ThrottleLimit 2 -EnableWrite -EnableMessage -EnableSubmit ${{ github.event.inputs.params }}
         working-directory: Dumplings
         shell: pwsh
         env:
@@ -92,7 +95,7 @@ jobs:
         with:
           name: status-page
           path: Dumplings/Outputs/Status
-          retention-days: 1
+          retention-days: 7
           if-no-files-found: error
   deploy:
     name: Deploy status page
@@ -106,7 +109,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment-retry.outputs.page_url }}
     steps:
       - name: Download status page
         uses: actions/download-artifact@v4
@@ -121,4 +124,10 @@ jobs:
           path: status-page
       - name: Deploy to GitHub Pages
         id: deployment
+        # Pages intermittently fails to read the freshly uploaded artifact metadata
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+      - name: Retry GitHub Pages deployment
+        if: ${{ steps.deployment.outcome == 'failure' }}
+        id: deployment-retry
         uses: actions/deploy-pages@v4
