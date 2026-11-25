@@ -10,30 +10,44 @@ $Object1 = Invoke-RestMethod -Uri 'https://itunes.apple.com/lookup?id=1575605022
 # China
 $Object2 = Invoke-RestMethod -Uri 'https://itunes.apple.com/lookup?id=1575605022&country=CN&lang=zh_cn'
 
-if ($Object1.results[0].version -ne $Object2.results[0].version) {
-  $this.Log("Inconsistent versions: Global: $($Object1.results[0].version), China: $($Object2.results[0].version)", 'Error')
+$ResultGlobal = @($Object1.results)
+$ResultChina = @($Object2.results)
+if ($ResultGlobal.Count -eq 0) {
+  $this.Log('The Global iTunes lookup returned no result', 'Error')
+  return
+}
+if ($ResultChina.Count -eq 0) {
+  # The app is no longer listed on the China storefront, so only Global is comparable
+  $this.Log('The China iTunes lookup returned no result; using the Global version only', 'Warning')
+} elseif ($ResultGlobal[0].version -ne $ResultChina[0].version) {
+  $this.Log("Inconsistent versions: Global: $($ResultGlobal[0].version), China: $($ResultChina[0].version)", 'Error')
   return
 }
 
 # Version
-$this.CurrentState.Version = $Object1.results[0].version
+$this.CurrentState.Version = $ResultGlobal[0].version
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated|Rollbacked' {
     # ReleaseTime
-    $this.CurrentState.ReleaseTime = $ReleaseTime = $Object1.results[0].currentVersionReleaseDate.ToUniversalTime()
+    $this.CurrentState.ReleaseTime = $ReleaseTime = $ResultGlobal[0].currentVersionReleaseDate.ToUniversalTime()
 
     # ReleaseNotes (en-US)
     $this.CurrentState.Locale += [ordered]@{
       Locale = 'en-US'
       Key    = 'ReleaseNotes'
-      Value  = $ReleaseNotes = $Object1.results[0].releaseNotes | Format-Text
+      Value  = $ReleaseNotes = $ResultGlobal[0].releaseNotes | Format-Text
     }
     # ReleaseNotes (zh-CN)
-    $this.CurrentState.Locale += [ordered]@{
-      Locale = 'zh-CN'
-      Key    = 'ReleaseNotes'
-      Value  = $ReleaseNotesCN = $Object2.results[0].releaseNotes | Format-Text
+    $ReleaseNotesCN = $ResultChina.Count -gt 0 ? ($ResultChina[0].releaseNotes | Format-Text) : ''
+    if ($ReleaseNotesCN) {
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'zh-CN'
+        Key    = 'ReleaseNotes'
+        Value  = $ReleaseNotesCN
+      }
+    } else {
+      $this.Log("No ReleaseNotes (zh-CN) for version $($this.CurrentState.Version)", 'Warning')
     }
 
     $OldReleases[$this.CurrentState.Version] = [ordered]@{
