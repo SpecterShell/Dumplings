@@ -1,6 +1,6 @@
 $Prefix = 'https://cdn.adinstruments.com/'
 
-$Object1 = $Global:DumplingsStorage.ADInstrumentsApps.Where({ $_.ID -eq 'EquivitalLifeMonitor' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.ADInstrumentsApps8.Where({ $_.ID -eq 'EquivitalLifeMonitor' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.Version

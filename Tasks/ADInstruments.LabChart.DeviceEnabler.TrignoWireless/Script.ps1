@@ -1,4 +1,4 @@
-$Object1 = $Global:DumplingsStorage.ADInstrumentsApps.Where({ $_.ID -eq 'TrignoWirelessSystem' }, 'First')[0]
+$Object1 = $Global:DumplingsStorage.ADInstrumentsApps8.Where({ $_.ID -eq 'TrignoWirelessSystem' }, 'First')[0]
 
 # Version
 $this.CurrentState.Version = $Object1.Version
