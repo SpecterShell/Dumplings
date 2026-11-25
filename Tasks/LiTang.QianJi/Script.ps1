@@ -1,4 +1,6 @@
-$Object1 = (Invoke-PlaywrightFetch -Uri 'https://upkit.qianji.app/qj.json' -Headless -Stealth -SolveCloudflare).Content | ConvertFrom-Json
+# The feed is behind Cloudflare; the browser is needed to fetch it, and Chrome renders a
+# JSON document inside HTML, so the detached text (not Content) is parsed
+$Object1 = (Invoke-PlaywrightFetch -Uri 'https://upkit.qianji.app/qj.json' -Headless -Stealth -SolveCloudflare).Text | ConvertFrom-Json
 
 # Version
 $this.CurrentState.Version = $Object1.windows.version.versionName
