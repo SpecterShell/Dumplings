@@ -1,0 +1,291 @@
+Version: 1.1.91
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/binaricat/Netcatty/releases/download/v1.1.91/Netcatty-1.1.91-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ✨ Release Highlights
+    Netcatty v1.1.91 delivers a major performance, responsiveness, and packaging overhaul—cutting idle CPU, memory leaks, startup bundle size, and tab-switch jank—alongside detached tab windows, workspace pane rearrangement, Windows CMD/PowerShell Directory Picker, SFTP default download folder and archive workflows, a durable global AI session manager with bulk execution, and macOS frosted-glass appearance.
+    ⚡ Performance, memory, and smaller builds
+    - Snappier tabs, side panels, and SFTP: narrowed active-tab, side-panel, and SFTP pane subscriptions, removed 60fps HostTreeSidebar resize layout thrashing, gated redundant WebGL atlas wipes on window focus, coalesced aside/vault drag resizes with requestAnimationFrame, and eliminated whole-shell re-renders on clicks, focus, and typing (#4117, #4362, #4364, #4365, #4366, #4367, #4368, #4369, #4371, #4375).
+    - Lower idle CPU and leak fixes: paused hidden/idle stats, port-forwarding, and MCP polling timers, capped live WebGL contexts across split panes, fixed timer/FD/SSH-decoder/listener/Monaco-command leaks on session and editor close, and replaced quadratic hot paths in terminal output history, timestamps, keyword highlighting, and worker output buffering (#4118, #4122, #4239, #4370, #4372, #4373, #4374, #4377, #4379, #4382, #4383, #4397, #4403).
+    - Faster startup and leaner packages: code-split heavy startup modules (re2js, css-tree, Monaco), switched Markdown code highlighting from full @streamdown/code to fine-grained shiki/core, converted Nerd Font symbols to WOFF2 without legacy .woff fallbacks, trimmed unused Monaco locales, and pruned unused app.asar payloads (#4115, #4120, #4385, #4387, #4388, #4390, #4391).
+    🖥️ Terminal, tabs, and workspaces
+    - Move any tab into its own window without reconnecting, reopen recently closed tabs and workspaces (Cmd/Ctrl+Shift+T), and rearrange workspace panes while keeping empty or single-member workspaces intact (#4202, #4325, #4158).
+    - Closing a terminal tab focuses the adjacent terminal tab instead of jumping back to Vaults or SFTP, and closing session panes stays distinct from closing tabs (#4320, #4339).
+    - Directory Picker now supports Windows PowerShell and Windows CMD (plus OSC 7 reconnect fixes and an inline compose-bar picker), and local terminal hosts support optional startup commands (#4113, #4177, #4343, #4356, #4326).
+    - Compose bar, syntax, and autocomplete: reorder pinned snippets, isolated right-click menus, bracketed multiline compose submissions, Nginx syntax highlighting, localized Fig command descriptions per target OS, and faster Enter response with large command history (#4327, #4290, #4163, #4010, #4172, #4180, #4026).
+    - Terminal stability: preserved pane geometry through zoom/restore (without Escape unzooming), capped ligature joiner spans to prevent WebGL 16384px atlas spikes, fixed Ctrl+Insert/Shift+Insert copy-paste and IME voice duplication, preserved timestamps after clear, live jump-host display, and per-host SSH input compatibility (#4337, #4170, #4358, #4357, #4142, #4304, #4056, #4316, #3977).
+    📁 SFTP and file transfers
+    - Configure a default download folder in Settings and choose a custom temp directory for SFTP staging (#4392, #4035).
+    - Stream packed downloads with local folder restoration, create archives and one-click Duplicate files/folders from the context menu, navigate with Back / Forward directory history, and insert paths or cd directly into the paired terminal (#4179, #3936, #4133, #4324, #4323).
+    - Skip auto-opening the SFTP side panel for network devices, use remote cp for fresh same-host copies, map WSL terminal cwd to the local Windows pane, double-click into tree folders, preserve non-ASCII paths in Windows compressed uploads, and keep SSH alive when cancelling mid-transfer (#4321, #4226, #4212, #4166, #4058, #4135, #3944).
+    🤖 AI assistant and External MCP
+    - Global AI session manager with /chats, /rename, and cross-scope /rebind so conversations stay recoverable across workspace changes. Chat sessions now persist per record in IndexedDB (removing the 2 MB localStorage limit) and remember the active chat across restarts (#4159, #4018, #4019, #4125, #4302, #4356).
+    - Run a command across multiple sessions with terminal_execute_bulk, configure the tool-output truncation limit, use the OpenCode Go provider and GPT-5.5 xhigh reasoning effort, and filter vault_hosts_list by query or group (#4342, #4328, #4253, #4111, #4278).
+    - Broader shell prompt readiness: safe OSC 133 readiness, unrecognized prompts surfaced as an actionable unknown state instead of hard blocking, and recognition for Powerline (U+E0B0–U+E0B7), Oh My Zsh (➜, ys), Powerlevel10k (❯), macOS zsh/root, Enter-PSSession, bracketed time prompts, and two-line prompts (#4110, #4198, #4359, #4079, #4076, #4008, #4197, #3980, #4229, #4277, #3961, #3963).
+    - requestAnimationFrame-batched reasoning streams, theme-accented user message bubbles, automatic stale model-catalog refresh, Anthropic Bearer auth and signed-thinking fixes, and automatic socket reconnects for external MCP (#4378, #4317, #4263, #4269, #4074, #4016, #4182).
+    🔐 SSH, port forwarding, and cloud sync
+    - Configurable SSH reconnect interval (5–3600 seconds), capped exponential backoff for port forwarding reconnects, ChaCha20 cipher support in Electron's crypto runtime, saved password prefill on SSH auth retry after MFA failure, and OpenSSH host certificate fingerprinting by underlying key (#4039, #4322, #3992, #4350, #4222, #3974).
+    - Cloud sync and storage: preserved occupied groups during Smart Merge, kept full AI chat history in cloud sync without interrupting active agent turns, skipped unchanged WebDAV vault downloads on auto-sync inspect, and added startup recovery for missing Chromium LevelDB CURRENT files (#4344, #4047, #4045, #4025, #4312, #4315).
+    ✨ Appearance, monitoring, and platform polish
+    - macOS frosted glass window background and tray panel blur, system-locale default language on first launch, and completed zh-TW localization (#4013, #4028, #4318, #4185).
+    - Improved disk I/O and partition alerts in monitoring, full CPU core list in System Manager, unified tooltips, better small-screen and half-screen tiling window fit, Linux Secret Service keyring support on non-GNOME/KDE desktops, Nix/home-manager SSH config workaround, and Windows ssh:// Default Apps registration plus cleaner NSIS upgrades (#4031, #4184, #4360, #4254, #4178, #4190, #4192, #4205, #3962).
+    Code signing policy
+    Netcatty is applying to the SignPath Foundation open-source program. Once
+    approved, covered Windows release artifacts will use Free code signing provided by SignPath.io, certificate by SignPath Foundation.
+    See the
+    Code signing policy
+    and Privacy policy.
+    What's Changed
+    - Update Nix release metadata for v1.1.90 by @netcatty-bot in https://github.com/binaricat/Netcatty/pull/3950
+    - fix(mcp): recognize two-line user@host idle prompts by @binaricat in https://github.com/binaricat/Netcatty/pull/3961
+    - fix(win): kill leftover Netcatty.exe before NSIS install (#3946) by @binaricat in https://github.com/binaricat/Netcatty/pull/3962
+    - fix(mcp): match two-line idle prompts against live PTY CR bytes by @binaricat in https://github.com/binaricat/Netcatty/pull/3963
+    - fix(sftp): 串行化单通道目录上传事务 by @lazzman in https://github.com/binaricat/Netcatty/pull/3944
+    - fix(sftp): preserve ordinary sudo transfer concurrency by @binaricat in https://github.com/binaricat/Netcatty/pull/3968
+    - fix(ssh): treat russh banners as single-channel (skip env) by @binaricat in https://github.com/binaricat/Netcatty/pull/3974
+    - fix: collapse timestamp gutter on alternate screen by @binaricat in https://github.com/binaricat/Netcatty/pull/3975
+    - fix(terminal): bound printable ZMODEM prefix echo delay by @binaricat in https://github.com/binaricat/Netcatty/pull/3966
+    - feat: save SSH input compatibility per host by @binaricat in https://github.com/binaricat/Netcatty/pull/3977
+    - fix(terminal): preserve active SSH input mode in attached popups by @binaricat in https://github.com/binaricat/Netcatty/pull/3991
+    - fix: clear keychain ref when remembering KI password change by @binaricat in https://github.com/binaricat/Netcatty/pull/3983
+    - fix(ssh): support ChaCha20 in Electron crypto runtimes by @binaricat in https://github.com/binaricat/Netcatty/pull/3992
+    - test(transfers): make TERM-SSHD failure release order deterministic by @binaricat in https://github.com/binaricat/Netcatty/pull/3995
+    - fix(ai): keep dissolved workspace chat on its surviving owner by @binaricat in https://github.com/binaricat/Netcatty/pull/4003
+    - fix(mcp): recognize Oh My Zsh ys two-line idle prompts by @binaricat in https://github.com/binaricat/Netcatty/pull/4008
+    - feat(editor): add Nginx syntax highlighting by @binaricat in https://github.com/binaricat/Netcatty/pull/4010
+    - feat(appearance): macOS frosted glass background (continues #4009) by @binaricat in https://github.com/binaricat/Netcatty/pull/4013
+    - fix(mcp): reconnect external calls that race a closed socket by @binaricat in https://github.com/binaricat/Netcatty/pull/4016
+    - Fix Enter delay with large command history by @binaricat in https://github.com/binaricat/Netcatty/pull/4026
+    - fix(sync): block convergent AI session shrink after merge by @binaricat in https://github.com/binaricat/Netcatty/pull/4025
+    - feat(plugins): consolidate foundation and permission settings by @binaricat in https://github.com/binaricat/Netcatty/pull/4011
+    - fix(plugins): disable incompatible plugins before lazy contributions by @binaricat in https://github.com/binaricat/Netcatty/pull/3937
+    - chore(plugins): assemble unified native acceptance candidate by @binaricat in https://github.com/binaricat/Netcatty/pull/3997
+    - feat(plugin-agent): reuse host global Agent runtime with sandbox Chat sample by @binaricat in https://github.com/binaricat/Netcatty/pull/4012
+    - fix(appearance): apply macOS frosted glass to the tray panel by @hexart in https://github.com/binaricat/Netcatty/pull/4028
+    - feat(ai): /rename & /chats slash commands + AI session durability layer by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4018
+    - fix(ai): keep dropped AI chats recoverable with dangling marking + /rebind; reuse workspace id on merge by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4019
+    - fix(ai): stop automatic model discovery retries after failure by @binaricat in https://github.com/binaricat/Netcatty/pull/4002
+    - fix(ai): complete macOS default zsh prompt readiness (#3969 follow-up) by @binaricat in https://github.com/binaricat/Netcatty/pull/3980
+    - Fix Deck parenthesized prompt readiness by @binaricat in https://github.com/binaricat/Netcatty/pull/4029
+    - refactor(settings): simplify AI tool access configuration by @binaricat in https://github.com/binaricat/Netcatty/pull/3957
+    - feat(monitor): 优化磁盘 IO 展示与系统分区告警 [4030] by @Chris-playground in https://github.com/binaricat/Netcatty/pull/4031
+    - fix(ai): submit PowerShell agent wrapper with CR only [4036] by @binaricat in https://github.com/binaricat/Netcatty/pull/4038
+    - Fix select-before-connect for grid and list hosts by @binaricat in https://github.com/binaricat/Netcatty/pull/4042
+    - feat(plugins): polish manager UI, verify README images, and add Vault example by @binaricat in https://github.com/binaricat/Netcatty/pull/4043
+    - feat(settings): custom temp directory for SFTP staging (#4033) by @binaricat in https://github.com/binaricat/Netcatty/pull/4035
+    - fix(sync): do not cancel active Agent when cloud reintroduces trimmed history by @binaricat in https://github.com/binaricat/Netcatty/pull/4045
+    - fix(host-browser): accept invalid TLS certs for page tabs by @binaricat in https://github.com/binaricat/Netcatty/pull/4050
+    - fix(terminal): PTY OSC7 install when exec cannot verify shell (#4052) by @binaricat in https://github.com/binaricat/Netcatty/pull/4054
+    - feat: rebuild plugin UI with host rendering and standard settings by @binaricat in https://github.com/binaricat/Netcatty/pull/4053
+    - fix(sync): keep full AI chat history when cloud sync is enabled by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4047
+    - fix(terminal): preserve output timestamps after clear by @hexart in https://github.com/binaricat/Netcatty/pull/4056
+    - fix(sftp): keep non-ASCII local paths intact in Windows compressed upload (gate for #4057) by @binaricat in https://github.com/binaricat/Netcatty/pull/4058
+    - fix(sftp): keep non-ASCII local paths intact in Windows compressed upload by @claaudy in https://github.com/binaricat/Netcatty/pull/4057
+    - docs: propose Context Chips for the terminal compose bar by @hexart in https://github.com/binaricat/Netcatty/pull/4059
+    - feat: bounded recovery for scoped disconnected sessions by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/3935
+    - fix(terminal): forward xterm onBinary for legacy mouse (#3811) by @binaricat in https://github.com/binaricat/Netcatty/pull/4066
+    - fix(ai): strip Anthropic signed thinking when context prefix mutates (#4073) by @binaricat in https://github.com/binaricat/Netcatty/pull/4074
+    - fix(mcp): recognize Powerlevel10k ❯ idle prompts by @binaricat in https://github.com/binaricat/Netcatty/pull/4076
+    - fix(mcp): recognize Oh My Zsh ➜ idle prompts by @binaricat in https://github.com/binaricat/Netcatty/pull/4079
+    - fix(tray): do not force-show main window when starting port forward by @binaricat in https://github.com/binaricat/Netcatty/pull/4082
+    - fix(terminal): honor Settings custom shell when Terminal button clicked (#4085) by @binaricat in https://github.com/binaricat/Netcatty/pull/4086
+    - chore: update star history charts by @github-actions[bot] in https://github.com/binaricat/Netcatty/pull/4087
+    - fix(vault-backups): clarify folder is not portable alone by @binaricat in https://github.com/binaricat/Netcatty/pull/4097
+    - fix(ai): never pass empty messages to AI SDK standardizePrompt (#4102) by @binaricat in https://github.com/binaricat/Netcatty/pull/4103
+    - feat(autocomplete): add zh-CN descriptions for touch by @ranrany123 in https://github.com/binaricat/Netcatty/pull/4084
+    - fix(terminal): clear sticky broadcast latch on vim ex (#4107) by @binaricat in https://github.com/binaricat/Netcatty/pull/4109
+    - perf(ai): stop freezing the app during agent discovery and chat backups by @binaricat in https://github.com/binaricat/Netcatty/pull/4116
+    - perf(ui): stop whole-shell re-renders on clicks, focus, typing and modifiers by @binaricat in https://github.com/binaricat/Netcatty/pull/4117
+    - perf(terminal): cap live WebGL contexts, release them eagerly, bound note undo history by @binaricat in https://github.com/binaricat/Netcatty/pull/4122
+    - perf(terminal): stop per-second churn while connecting and while idle by @binaricat in https://github.com/binaricat/Netcatty/pull/4118
+    - perf(state): stop handler churn on session updates and repeated JSON work by @binaricat in https://github.com/binaricat/Netcatty/pull/4121
+    - chore: fix outstanding ESLint warnings by @binaricat in https://github.com/binaricat/Netcatty/pull/4112
+    - perf: add opt-in startup timeline and real-app startup harness by @binaricat in https://github.com/binaricat/Netcatty/pull/4114
+    - perf(main): stop blocking the first window on validator compilation by @binaricat in https://github.com/binaricat/Netcatty/pull/4115
+    - fix(ai): keep sessions past 2MB localStorage budget via overflow (#4123) by @binaricat in https://github.com/binaricat/Netcatty/pull/4124
+    - perf(renderer): cut the startup bundle by a third by @binaricat in https://github.com/binaricat/Netcatty/pull/4120
+    - perf(terminal): cache ligature font parses across terminals by @binaricat in https://github.com/binaricat/Netcatty/pull/4126
+    - fix(pty): forward childProcesses queries to terminal worker by @binaricat in https://github.com/binaricat/Netcatty/pull/4127
+    - fix(ui): keep follow-system themeSource from chrome override by @binaricat in https://github.com/binaricat/Netcatty/pull/4131
+    - fix(transfer): keep SSH alive when canceling mid-transfer (#4134) by @binaricat in https://github.com/binaricat/Netcatty/pull/4135
+    - fix(terminal-worker): stop EPIPE ignore path from log-feedback looping by @binaricat in https://github.com/binaricat/Netcatty/pull/4137
+    - fix(terminal): stop Shift+Insert CSI leaking to broadcast peers (#4142) by @binaricat in https://github.com/binaricat/Netcatty/pull/4143
+    - fix(main): stop the process error guards from logging into a dead stdio sink by @expoli in https://github.com/binaricat/Netcatty/pull/4140
+    - fix(ai): persist AI sessions per record in IndexedDB instead of a 2MB localStorage blob by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4125
+    - fix(ai): keep surrogate pairs whole when truncating model context by @DeepFal in https://github.com/binaricat/Netcatty/pull/4088
+    - fix(theme): continue Windows system-theme fix with registrar coverage by @binaricat in https://github.com/binaricat/Netcatty/pull/4108
+    - feat(terminal): continue Directory Picker with OSC 7 and reconnect fixes by @binaricat in https://github.com/binaricat/Netcatty/pull/4113
+    - feat(ai): support extended reasoning effort with GPT-5.5 xhigh by @binaricat in https://github.com/binaricat/Netcatty/pull/4111
+    - feat(ai): add safe OSC 133 shell readiness by @binaricat in https://github.com/binaricat/Netcatty/pull/4110
+    - fix: reduce autocomplete history query cost (#4149) by @binaricat in https://github.com/binaricat/Netcatty/pull/4152
+    - fix: allow resolving convergent field conflicts in migration preview by @binaricat in https://github.com/binaricat/Netcatty/pull/4153
+    - fix: keep AI side panel close button visible when narrowed by @binaricat in https://github.com/binaricat/Netcatty/pull/4162
+    - fix: bracket multiline compose submissions when supported by @binaricat in https://github.com/binaricat/Netcatty/pull/4163
+    - feat(plugins): install published plugin packages from GitHub by @binaricat in https://github.com/binaricat/Netcatty/pull/4164
+    - fix: prevent accidental Quick Connect dismissal by @binaricat in https://github.com/binaricat/Netcatty/pull/4165
+    - fix(sftp): navigate into tree folders on double-click by @binaricat in https://github.com/binaricat/Netcatty/pull/4166
+    - fix(ui): stop Esc from restoring pane magnification by @binaricat in https://github.com/binaricat/Netcatty/pull/4170
+    - fix(ai): keep the chat panel close button visible at narrow widths by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4161
+    - feat(sftp): add a one-click Duplicate action for files and folders by @HOkket in https://github.com/binaricat/Netcatty/pull/4133
+    - fix(ui): accent border for terminal pane magnification by @binaricat in https://github.com/binaricat/Netcatty/pull/4171
+    - fix(ai): place host_open tabs in the invoking chat's bound workspace by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4156
+    - fix(mcp): recognize unbracketed space-separated Bash prompts as idle by @binaricat in https://github.com/binaricat/Netcatty/pull/4176
+    - feat(workspace): rearrange member panes within a workspace by drag by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4158
+    - feat(ai): keep workspaces alive below two members + anchorChatId (phase 2 of #4098) by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4155
+    - feat(autocomplete): localize common commands and polish terminal hints by @ranrany123 in https://github.com/binaricat/Netcatty/pull/4172
+    - feat(sftp): support creating archives from the context menu by @jinshenganyuci in https://github.com/binaricat/Netcatty/pull/3936
+    - fix(system-manager): show all CPU cores in the overview list by @binaricat in https://github.com/binaricat/Netcatty/pull/4184
+    - fix(host-details): show inherited group proxy and jump hosts by @binaricat in https://github.com/binaricat/Netcatty/pull/4188
+    - fix(nix): work around bwrap ssh config owner check for home-manager by @binaricat in https://github.com/binaricat/Netcatty/pull/4192
+    - chore: update star history charts by @github-actions[bot] in https://github.com/binaricat/Netcatty/pull/4193
+    - fix(linux): use Secret Service keyring on non-GNOME/KDE desktops by @binaricat in https://github.com/binaricat/Netcatty/pull/4190
+    - fix(ssh): fingerprint OpenSSH host certs by the underlying key (Fixes #4222) by @binaricat in https://github.com/binaricat/Netcatty/pull/4223
+    - fix(settings): include folder compression in settings search (Fixes #4230) by @binaricat in https://github.com/binaricat/Netcatty/pull/4231
+    - fix(ai): recognize Enter-PSSession remoting prompts as idle (Fixes #4228) by @binaricat in https://github.com/binaricat/Netcatty/pull/4229
+    - fix(sftp): use remote cp for fresh same-host copies (Fixes #4207) by @binaricat in https://github.com/binaricat/Netcatty/pull/4226
+    - fix(x11): hide fd-bearing X11 extensions on byte-only forwards (Fixes #4200) by @binaricat in https://github.com/binaricat/Netcatty/pull/4238
+    - fix(terminal): cap WebGL contexts for visible split panes by @binaricat in https://github.com/binaricat/Netcatty/pull/4239
+    - fix(ci): prevent plugin-contract lint-and-test hang by @binaricat in https://github.com/binaricat/Netcatty/pull/4240
+    - fix(settings): index later-added settings in search catalog (Fixes #4230) by @binaricat in https://github.com/binaricat/Netcatty/pull/4232
+    - fix(logs): finalize session logs on quit and pre-connect close by @binaricat in https://github.com/binaricat/Netcatty/pull/4236
+    - fix(i18n): complete zh-TW strings and unify Taiwan terminology by @ranrany123 in https://github.com/binaricat/Netcatty/pull/4185
+    - feat(ai): make unrecognized shell prompts an actionable unknown state instead of a terminal block by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4198
+    - chore: update star history charts by @github-actions[bot] in https://github.com/binaricat/Netcatty/pull/4247
+    - fix(notes): keep MDX link dialog inside the editor container by @binaricat in https://github.com/binaricat/Netcatty/pull/4258
+    - fix(ai): treat models-list 404 as a warning and send Anthropic Bearer auth by @binaricat in https://github.com/binaricat/Netcatty/pull/4269
+    - fix(ui): snap and thicken magnified pane chrome on low-DPR displays by @binaricat in https://github.com/binaricat/Netcatty/pull/4270
+    - fix(ai): recognize bracket prompts with a time field as idle by @binaricat in https://github.com/binaricat/Netcatty/pull/4277
+    - fix(terminal): keep Shift+Insert as paste when Kitty keyboard is active by @binaricat in https://github.com/binaricat/Netcatty/pull/4280
+    - fix(ai): surface max-iteration stop with a Continue action (Fixes #4224) by @binaricat in https://github.com/binaricat/Netcatty/pull/4225
+    - fix(mcp): advertise sessions reconnect tools to agents by @binaricat in https://github.com/binaricat/Netcatty/pull/4182
+    - fix(release): temporarily hide the plugin platform by @binaricat in https://github.com/binaricat/Netcatty/pull/4288
+    - fix(ai): do not pass empty CodeBuddy tools whitelist that hides MCP tools by @binaricat in https://github.com/binaricat/Netcatty/pull/4216
+    - fix(terminal): render RTL text without destabilizing WebGL (#4261) by @binaricat in https://github.com/binaricat/Netcatty/pull/4289
+    - fix(terminal): draw RTL text in display order with joined letters by @seragAhmed in https://github.com/binaricat/Netcatty/pull/4282
+    - fix(terminal): keep composer right-click out of the live terminal by @binaricat in https://github.com/binaricat/Netcatty/pull/4290
+    - fix(sftp): show folder pause failures without resuming siblings by @binaricat in https://github.com/binaricat/Netcatty/pull/4265
+    - fix(electron): isolate unpackaged app profiles by @binaricat in https://github.com/binaricat/Netcatty/pull/4264
+    - fix(ai): retain the configured default agent when its probe fails by @binaricat in https://github.com/binaricat/Netcatty/pull/4291
+    - fix(ai): preserve saved harness paths on failed probes by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4275
+    - fix(notes): collapse markdown toolbar overflow instead of scrolling by @binaricat in https://github.com/binaricat/Netcatty/pull/4294
+    - fix(ai): reject invalid IPv6 External MCP listen addresses in settings by @binaricat in https://github.com/binaricat/Netcatty/pull/4295
+    - feat(ai): add query and group filters to vault_hosts_list by @RadwanSelo in https://github.com/binaricat/Netcatty/pull/4278
+    - chore: add cloud environment setup config by @binaricat in https://github.com/binaricat/Netcatty/pull/4303
+    - feat(ai): global AI session manager with cross-scope rebind (#4098 phases 4-5) by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4159
+    - fix(plugins): silence disabled-runtime host-ready and terminal-target IPC errors by @binaricat in https://github.com/binaricat/Netcatty/pull/4306
+    - chore: update star history charts by @github-actions[bot] in https://github.com/binaricat/Netcatty/pull/4308
+    - refactor: streamline codebase, unify duplicated modules, and consolidate test suite by @binaricat in https://github.com/binaricat/Netcatty/pull/4307
+    - fix: dev CJS imports, ligatures empty-line cache crash, and AI sidebar UX by @binaricat in https://github.com/binaricat/Netcatty/pull/4310
+    - fix(sync): skip unchanged WebDAV vault downloads on auto-sync inspect by @binaricat in https://github.com/binaricat/Netcatty/pull/4312
+    - fix(sftp): map WSL terminal cwd onto the local Windows file pane by @binaricat in https://github.com/binaricat/Netcatty/pull/4212
+    - fix(win): register Default Apps capabilities for ssh:// links by @binaricat in https://github.com/binaricat/Netcatty/pull/4205
+    - fix: fit main windows and vault editor widths on small displays by @binaricat in https://github.com/binaricat/Netcatty/pull/4178
+    - fix(terminal): prevent mid-composition IME keydowns from duplicating voice input by @duzefu in https://github.com/binaricat/Netcatty/pull/4304
+    - fix(ai): recognize macOS root prompts (host:dir user#) as idle-ready by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4197
+    - fix(ai): persist active chat selection across restarts by @binaricat in https://github.com/binaricat/Netcatty/pull/4302
+    - fix(plugins): preserve plugin tabs on overlay close and harden host surface controls by @binaricat in https://github.com/binaricat/Netcatty/pull/4296
+    - fix(deeplink): report unsupported JumpServer protocol before SSH field validation by @binaricat in https://github.com/binaricat/Netcatty/pull/4313
+    - fix(tabs): stop overflowed top tabs from stealing titlebar drag regions by @binaricat in https://github.com/binaricat/Netcatty/pull/4221
+    - fix(sftp): refresh transfer acquisition after saved host edits by @binaricat in https://github.com/binaricat/Netcatty/pull/3696
+    - fix(ai): retain completed worker job routes for idempotent stop and poll by @binaricat in https://github.com/binaricat/Netcatty/pull/4314
+    - fix(window): fit main window to half-screen tiling cells by @ranrany123 in https://github.com/binaricat/Netcatty/pull/4254
+    - fix(storage): guard and recover missing LevelDB CURRENT before Chromium startup by @binaricat in https://github.com/binaricat/Netcatty/pull/4315
+    - feat(plugins): add bounded SSH host byte streams (network.hostStream) by @binaricat in https://github.com/binaricat/Netcatty/pull/4297
+    - feat(ai): add OpenCode Go provider by @AlexPlum405 in https://github.com/binaricat/Netcatty/pull/4253
+    - feat(autocomplete): localize batch-4 descriptions and select Fig specs per target OS by @ranrany123 in https://github.com/binaricat/Netcatty/pull/4180
+    - fix(hotkeys): let Linux Alt+M pane zoom reach the renderer by @binaricat in https://github.com/binaricat/Netcatty/pull/4331
+    - fix(settings): draw a border on frameless settings windows by @binaricat in https://github.com/binaricat/Netcatty/pull/4333
+    - fix(ai): refresh stale runtime model catalogs on use by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4263
+    - feat(terminal): support Directory Picker in Windows PowerShell by @hexart in https://github.com/binaricat/Netcatty/pull/4177
+    - feat(terminal): show live jump hosts and fix AI prompt readiness by @zjio26 in https://github.com/binaricat/Netcatty/pull/4316
+    - feat(tabs): move a tab to its own window without reconnecting by @ManasDasri in https://github.com/binaricat/Netcatty/pull/4202
+    - feat(terminal): configure SSH reconnect interval from 5 to 3600 seconds by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4039
+    - feat(sftp): stream packed downloads and restore folders locally by @jinshenganyuci in https://github.com/binaricat/Netcatty/pull/4179
+    - fix(terminal): preserve pane geometry through zoom and restore by @binaricat in https://github.com/binaricat/Netcatty/pull/4337
+    - fix(tabs): close-tab should close the whole tab, not one pane by @binaricat in https://github.com/binaricat/Netcatty/pull/4339
+    - fix: preserve occupied groups during Smart Merge (#4344) by @binaricat in https://github.com/binaricat/Netcatty/pull/4349
+    - fix: prefill saved password on SSH auth retry after MFA failure (#4346) by @binaricat in https://github.com/binaricat/Netcatty/pull/4350
+    - feat(i18n): default UI language to system locale on first launch by @binaricat in https://github.com/binaricat/Netcatty/pull/4318
+    - feat(ui): improve selected protocol contrast in new connection form by @binaricat in https://github.com/binaricat/Netcatty/pull/4319
+    - feat(local-terminal): support optional startup command on local terminal hosts by @binaricat in https://github.com/binaricat/Netcatty/pull/4326
+    - feat(ai): tint user message bubbles with theme accent for clearer turn separation by @binaricat in https://github.com/binaricat/Netcatty/pull/4317
+    - feat(sftp): skip auto-opening SFTP side panel for network devices by @binaricat in https://github.com/binaricat/Netcatty/pull/4321
+    - feat(tabs): focus adjacent terminal tab on close instead of jumping to Vaults or SFTP by @binaricat in https://github.com/binaricat/Netcatty/pull/4320
+    - feat(tabs): reopen recently closed terminal tabs and workspaces with Cmd/Ctrl+Shift+T by @binaricat in https://github.com/binaricat/Netcatty/pull/4325
+    - feat(portforward): use capped exponential backoff instead of giving up after 15s by @binaricat in https://github.com/binaricat/Netcatty/pull/4322
+    - feat(terminal): keep compose bar right-click isolated and allow reordering pinned snippets by @binaricat in https://github.com/binaricat/Netcatty/pull/4327
+    - feat(ai): make tool call output truncation limit configurable in AI settings by @binaricat in https://github.com/binaricat/Netcatty/pull/4328
+    - feat(sftp): add back and forward directory history navigation by @binaricat in https://github.com/binaricat/Netcatty/pull/4324
+    - feat(sftp): insert file path or cd into paired terminal from SFTP context menu by @binaricat in https://github.com/binaricat/Netcatty/pull/4323
+    - feat(capabilities): add terminal_execute_bulk to run one command on many sessions by @RadwanSelo in https://github.com/binaricat/Netcatty/pull/4342
+    - feat(terminal): support Directory Picker in Windows CMD by @hexart in https://github.com/binaricat/Netcatty/pull/4343
+    - feat(ui): inline compose directory picker and streamline AI session history UX by @binaricat in https://github.com/binaricat/Netcatty/pull/4356
+    - fix(tabs): honor disabled double-click on workspace tabs by @GOUKI9999 in https://github.com/binaricat/Netcatty/pull/4355
+    - fix(terminal): cap ligature joiner span to avoid WebGL 16384px overflow atlas spike by @binaricat in https://github.com/binaricat/Netcatty/pull/4358
+    - fix(mcp): recognize Powerline U+E0B0-U+E0B7 idle prompt endings by @binaricat in https://github.com/binaricat/Netcatty/pull/4359
+    - fix(terminal): handle Ctrl+Insert copy without clearing selection or leaking Win32 input by @binaricat in https://github.com/binaricat/Netcatty/pull/4357
+    - fix(ui): unify custom tooltips and keep Custom CSS docs in help modal by @binaricat in https://github.com/binaricat/Netcatty/pull/4360
+    - perf(terminal): stabilize theme panel callbacks and memoize SidePanelBrowserSlot by @binaricat in https://github.com/binaricat/Netcatty/pull/4362
+    - perf(terminal): decouple plugin sidebar subscriptions and gate closed side-panel reflows by @binaricat in https://github.com/binaricat/Netcatty/pull/4364
+    - perf(sftp): eliminate inline toggle callback and narrow SFTP pane active/focus subscriptions by @binaricat in https://github.com/binaricat/Netcatty/pull/4365
+    - perf(ui): narrow unscoped useActiveTabId subscriptions on tab switch by @binaricat in https://github.com/binaricat/Netcatty/pull/4367
+    - perf(plugins): prevent plugin contribution reload and DOM observer teardown on tab switch by @binaricat in https://github.com/binaricat/Netcatty/pull/4368
+    - perf(ui): coalesce AsidePanel and VaultViewLayout resize with rAF and avoid split-panel width reflow by @binaricat in https://github.com/binaricat/Netcatty/pull/4369
+    - fix(ai): detach global window listeners and mark completion when aiMarkdownWarmup fires by @binaricat in https://github.com/binaricat/Netcatty/pull/4373
+    - fix(electron): prevent session log stream and SSH decoder leaks on explicit session close by @binaricat in https://github.com/binaricat/Netcatty/pull/4374
+    - perf(ai): defer backup JSON.stringify in writeSessionsForStorage and fix mirror no-op guard by @binaricat in https://github.com/binaricat/Netcatty/pull/4376
+    - perf(ai): bound TraceStore/SessionStateStore with LRU ring buffer and clean consumed TwoPassCompactionCache entries by @binaricat in https://github.com/binaricat/Netcatty/pull/4377
+    - fix(editor): replace leaking Monaco editor.addCommand with disposable editor.addAction by @binaricat in https://github.com/binaricat/Netcatty/pull/4379
+    - perf(plugins): short-circuit PluginTerminalProviderRegistry cloning and IPC when plugin host is disabled by @binaricat in https://github.com/binaricat/Netcatty/pull/4380
+    - test: remove 3 legacy barrel test files duplicating 366 CI test executions by @binaricat in https://github.com/binaricat/Netcatty/pull/4381
+    - test: remove 2 dead test helpers and 3 obsolete/superseded plugin UI PoC tests by @binaricat in https://github.com/binaricat/Netcatty/pull/4384
+    - build(monaco): skip unused Monaco NLS locale bundles in copy-monaco.cjs by @binaricat in https://github.com/binaricat/Netcatty/pull/4385
+    - test: remove 2 verbatim duplicate test cases and rename env-gated SCP real tests to *.live.test.cjs by @binaricat in https://github.com/binaricat/Netcatty/pull/4386
+    - fix(sftp): prevent drag listener/body-style/selection leaks and avoid full transfer list cloning on progress by @binaricat in https://github.com/binaricat/Netcatty/pull/4383
+    - refactor(ui): extract shared VaultHostCard and InlineRenameInput components by @binaricat in https://github.com/binaricat/Netcatty/pull/4393
+    - perf(assets): convert Nerd Font symbols to WOFF2 and drop unused @fontsource .woff fallbacks by @binaricat in https://github.com/binaricat/Netcatty/pull/4387
+    - perf(electron): fix trayPanelRefreshTimer leak and make sessionLogStreamManager flush timer on-demand by @binaricat in https://github.com/binaricat/Netcatty/pull/4370
+    - perf(terminal): gate redundant WebGL atlas wipes and recovery refits on window focus by @binaricat in https://github.com/binaricat/Netcatty/pull/4371
+    - perf(renderer): pause background polling timers when hidden or idle and remove dead CloudSync auto-sync timer by @binaricat in https://github.com/binaricat/Netcatty/pull/4372
+    - perf(ui): eliminate HostTreeSidebar 60fps ResizeObserver layout thrash and stop hidden activeHostId rerenders by @binaricat in https://github.com/binaricat/Netcatty/pull/4375
+    - perf(ai): batch reasoning-delta and raw reasoning stream updates via requestAnimationFrame by @binaricat in https://github.com/binaricat/Netcatty/pull/4378
+    - perf(terminal): eliminate O(N^2) output history shift, idle timestamp sorting, and redundant keyword regex scans by @binaricat in https://github.com/binaricat/Netcatty/pull/4382
+    - perf(bundle): code-split re2js, css-tree/remote-dom, and Monaco out of startup index chunk by @binaricat in https://github.com/binaricat/Netcatty/pull/4391
+    - refactor(electron): unify interactive SSH IPC prompt lifecycle into ipcPromptRegistry by @binaricat in https://github.com/binaricat/Netcatty/pull/4395
+    - refactor(ai): consolidate duplicated subprocess, line-buffer, and stream utilities across AI SDK drivers by @binaricat in https://github.com/binaricat/Netcatty/pull/4396
+    - perf(plugins): arm TerminalSelectionAuthority expiry timer lazily only while handles or dialogs are active by @binaricat in https://github.com/binaricat/Netcatty/pull/4399
+    - refactor(vault): consolidate shared SSH credential picker, algorithm overrides, and serial port discovery by @binaricat in https://github.com/binaricat/Netcatty/pull/4400
+    - refactor(state): compose useAISettingsState in useAIState and extract shared SSH credential/preflight builders by @binaricat in https://github.com/binaricat/Netcatty/pull/4401
+    - perf(plugins): replace 50ms hostDom polling interval with event/property-driven sync and memoize PluginRemoteSurface by @binaricat in https://github.com/binaricat/Netcatty/pull/4402
+    - perf(theme): respect fingerprint short-circuit in useActiveChromeTheme on same-theme tab switches by @binaricat in https://github.com/binaricat/Netcatty/pull/4366
+    - refactor(domain): deduplicate ZIP builder, snippet shortkey recorder, hex-to-HSL math, and shell tokenizer by @binaricat in https://github.com/binaricat/Netcatty/pull/4398
+    - refactor(electron): consolidate duplicated main and terminal-worker CJS helpers by @binaricat in https://github.com/binaricat/Netcatty/pull/4389
+    - fix(electron): clean up OpenCode list servers, file watchers, SOCKS5 listener, worker SFTP encodings, and async MCP discovery heal by @binaricat in https://github.com/binaricat/Netcatty/pull/4403
+    - build(packaging): prune unused node_modules/dev payloads from app.asar and move @remote-dom/core to devDependencies by @binaricat in https://github.com/binaricat/Netcatty/pull/4388
+    - perf(ai): replace full @streamdown/code bundle with fine-grained shiki/core highlighter by @binaricat in https://github.com/binaricat/Netcatty/pull/4390
+    - refactor(domain): unify duplicated renderer TS and Electron CJS modules via domain/*.shared.cjs by @binaricat in https://github.com/binaricat/Netcatty/pull/4394
+    - perf(electron): eliminate O(N^2) shift in SessionOutputBuffer and quadratic slicing in collapseCarriageReturns by @binaricat in https://github.com/binaricat/Netcatty/pull/4397
+    - feat(sftp): add default download folder setting by @binaricat in https://github.com/binaricat/Netcatty/pull/4392
+    New Contributors
+    - @hexart made their first contribution in https://github.com/binaricat/Netcatty/pull/4028
+    - @Chris-playground made their first contribution in https://github.com/binaricat/Netcatty/pull/4031
+    - @claaudy made their first contribution in https://github.com/binaricat/Netcatty/pull/4057
+    - @ranrany123 made their first contribution in https://github.com/binaricat/Netcatty/pull/4084
+    - @expoli made their first contribution in https://github.com/binaricat/Netcatty/pull/4140
+    - @HOkket made their first contribution in https://github.com/binaricat/Netcatty/pull/4133
+    - @jinshenganyuci made their first contribution in https://github.com/binaricat/Netcatty/pull/3936
+    - @seragAhmed made their first contribution in https://github.com/binaricat/Netcatty/pull/4282
+    - @RadwanSelo made their first contribution in https://github.com/binaricat/Netcatty/pull/4278
+    - @AlexPlum405 made their first contribution in https://github.com/binaricat/Netcatty/pull/4253
+    - @zjio26 made their first contribution in https://github.com/binaricat/Netcatty/pull/4316
+    - @ManasDasri made their first contribution in https://github.com/binaricat/Netcatty/pull/4202
+    Full Changelog: https://github.com/binaricat/Netcatty/compare/v1.1.90...v1.1.91
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/binaricat/Netcatty/releases/tag/v1.1.91
+ReleaseTime: 2026-11-25T14:52:10.0000000Z
