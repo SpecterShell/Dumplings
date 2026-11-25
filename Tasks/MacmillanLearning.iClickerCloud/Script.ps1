@@ -1,8 +1,8 @@
-$Object1 = Invoke-WebRequest -Uri 'https://www.iclicker.com/downloads/iclicker-cloud/'
+$Object1 = Invoke-PlaywrightFetch -Uri 'https://www.iclicker.com/downloads/iclicker-cloud/' -Headless -Stealth -SolveCloudflare | Get-EmbeddedLinks
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
+  InstallerUrl = $Object1.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href | ConvertTo-UnescapedUri
 }
 
 # Version
@@ -11,7 +11,7 @@ $this.CurrentState.Version = [regex]::Match($this.CurrentState.Installer[0].Inst
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Object2 = Invoke-WebRequest -Uri 'https://www.iclicker.com/instructor-release-notes/' | ConvertFrom-Html
+      $Object2 = (Invoke-PlaywrightFetch -Uri 'https://www.iclicker.com/instructor-release-notes/' -Headless -Stealth -SolveCloudflare).Content | ConvertFrom-Html
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//p[contains(./b, 'Cloud $($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'p' -and $Node.SelectSingleNode('./b')); $Node = $Node.NextSibling) { $Node }
