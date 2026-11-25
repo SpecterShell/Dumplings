@@ -1,0 +1,27 @@
+Version: 1.5.7
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/Sxuan-Coder/open-apex-drama/releases/download/v1.5.7/ApexDrama-1.5.7-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复：播放取址失效
+    - 平台调整了播放请求的签名校验（要求携带设备签名头），旧包取不到播放地址；已同步并重编原生库，恢复取址
+    其他修复（上一版之后的累积）
+    - 修复 32 位 Android 8.0–10（含部分安卓 9 电视/盒子）打开应用即闪退的问题，v1.5.6 的 armeabi-v7a 包受影响，本版已修复
+    - 部分剧集平台下发无法解码的编码时，不再静默黑屏：自动挑选可播放的清晰度，实在没有时明示原因并引导重试
+    - 播放解析缓存与切集逻辑优化，减少重复解析、加快起播
+    说明
+    - 支持直接覆盖安装，收藏与观看记录不受影响
+    - Android 与 Windows 原生库均已重编；iOS 包仍为未签名测试包，本轮未重建原生库，iOS 上可能仍无法播放，Android / Windows 用户无需理会
+    iOS（未测试）
+    ApexDrama-1.5.7_ios_unsigned.ipa 是未签名包，只能用 AltStore /
+    SideStore / Sideloadly 自签安装。该版本未经测试：iOS 上的渲染
+    （vo=libmpv 纹理管线 + VideoToolbox）与加密流解密链路尚未在真机
+    验证过，可能无法播放。Android 与 Windows 用户请忽略这个文件。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Sxuan-Coder/open-apex-drama/releases/tag/v1.5.7
+ReleaseTime: 2026-11-25T03:24:45.0000000Z
