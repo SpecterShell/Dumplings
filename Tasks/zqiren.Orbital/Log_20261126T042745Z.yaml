@@ -1,0 +1,89 @@
+Version: 0.25.0
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/zqiren/Orbital/releases/download/v0.25.0/Orbital-Setup-0.25.0.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Orbital v0.25.0
+    A new first run, a new look, and a lot more control over the agents you work with. Orbital opens on one Welcome page and lands on the Workbench, its own agent can run on your ChatGPT plan, Antigravity joins as a worker, and undo reaches back to any message.
+    New
+    - One Welcome page. Your agents, your recent sessions from other tools and a place for a model key are on a single page; Start lands on the Workbench. With no key, a signed-in agent does the routing.
+    - Sign in with ChatGPT. Orbital's own agent can run on your ChatGPT plan, through OpenAI's official sign-in. No API key needed.
+    - One connect screen for model providers. Pick a provider from logo tiles, paste the key, and it tests itself; you choose the model after it passes.
+    - Antigravity as a worker. Pin it like any other agent. Sign-in is paste-the-code, and a region that Google does not serve is named as such.
+    - Undo since any message. Undo everything an agent changed since a message you pick, including files it created. The agent is told what was undone.
+    - Dispatch cards. Every task one agent hands to another shows as a card with the brief and the time it took; open it to see the worker's steps. A worker's question arrives as a card with its options.
+    - Queued messages. Type while an agent is working: the message waits in the composer, where you can edit it, delete it, or stop the turn and send it now. Esc stops a turn.
+    - Usage limits. An agent that has hit its plan limit is marked as limited, and switching to another agent is one click.
+    - New look. Tinted window chrome, one inset sheet for the work, a single type scale across the app, and on Windows a title bar that follows light and dark.
+    Improvements
+    - Honest agent status. An agent reads ready only when a message to it would work; otherwise the card and the pin menu name what is wrong (not installed, signed out, region, limit).
+    - Quieter chat. A run of status-only steps folds into one line.
+    - Model picker for workers works before a project has any session, and with two Codex copies installed Orbital drives the newer one, so it lists the models the Codex desktop app lists.
+    - Codex threads Orbital runs carry the session's title in Codex's own history.
+    - Claude Code's background agents run as background jobs: they stay out of the chat and no longer hold up your next message.
+    - The chat stays where you left it. Typing a long message or opening the right panel no longer moves the conversation off its latest message.
+    Fixes
+    - Sessions Orbital itself ran, and other apps' copies of them, are no longer offered as sessions to import.
+    - Windows setup removes agent definitions left by an older version (Gemini CLI no longer appears next to Antigravity).
+    - Undo of the latest turn survives the history size cap.
+    - A decision or lesson in project memory is no longer duplicated.
+    Install
+    - macOS (Apple Silicon, macOS 13+): Orbital-0.25.0-macOS.dmg. It is signed with a Developer ID and notarized, so it opens without a Gatekeeper prompt.
+    - Windows 10/11: Orbital-Setup-0.25.0.exe. The installer is not code-signed yet, so SmartScreen shows Windows protected your PC: click More info → Run anyway.
+    - From v0.24.0 or later, the pill at the bottom left offers the update.
+    - Stable download names for scripts and the README buttons: Orbital-macOS.dmg and Orbital-Setup.exe (attached below).
+    Known issues
+    - A message sent while a pinned worker is running waits for that turn to end; "send now" stops the turn first. Delivering it into the running turn is planned for the next release.
+    - Antigravity needs a network exit in a region Google serves; beyond sign-in it was not run end to end on Windows.
+    - Installing v0.24.1 over v0.25.0 on Windows leaves Antigravity listed in the older app.
+    - The usage-limit state was not exercised against an account at its real limit.
+    - The Workbench is in beta.
+    - Intel Macs are not supported by this build.
+    - The Windows installer is unsigned (SmartScreen warning as above).
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.25.0 中文摘要
+    全新的首次启动、全新的外观，以及对各个 Agent 更多的掌控。Orbital 现在从一个欢迎页开始，直接进入工作台；自带的 Agent 可以用你的 ChatGPT 套餐运行；Antigravity 成为可用的 Agent；撤销可以回到任意一条消息。
+    新功能
+    - 一个欢迎页。 你的 Agent、其他工具里最近的会话、填写模型密钥的位置都在同一页；点 开始 进入工作台。没有密钥时，由已登录的 Agent 负责分派。
+    - 用 ChatGPT 登录。 Orbital 自带的 Agent 可以通过 OpenAI 官方登录，用你的 ChatGPT 套餐运行，不需要 API 密钥。
+    - 统一的模型服务连接页。 从图标中选服务商，粘贴密钥后自动测试，通过后再选模型。
+    - Antigravity 作为 Agent。 和其他 Agent 一样可以固定。登录方式是粘贴验证码；所在地区不受 Google 支持时会明确提示。
+    - 从任意消息撤销。 撤销某条消息之后 Agent 改动的全部内容，包括它新建的文件，并告知 Agent 撤销了什么。
+    - 派发卡片。 Agent 之间交接的每个任务都显示为一张卡片，带任务说明和耗时；展开可以看执行步骤。Agent 的提问以卡片出现，附带选项。
+    - 排队消息。 Agent 工作时可以继续输入：消息在输入框里等待，可以编辑、删除，或停止当前回合并立即发送。按 Esc 停止当前回合。
+    - 用量上限。 达到套餐上限的 Agent 会被标记，一键切换到其他 Agent。
+    - 新外观。 带色调的窗口边框、承载内容的单层面板、全应用统一的字号体系；Windows 标题栏跟随浅色和深色主题。
+    改进
+    - 真实的 Agent 状态。 只有消息确实能送达时才显示就绪；否则卡片和固定菜单会写明原因（未安装、未登录、地区、上限）。
+    - 更安静的对话。 连续的状态步骤折叠成一行。
+    - Agent 的模型选择 在项目还没有会话时也可用；装有两个 Codex 时使用较新的一个，模型列表与 Codex 桌面版一致。
+    - Orbital 运行的 Codex 会话 在 Codex 自己的历史里使用会话标题。
+    - Claude Code 的后台 Agent 作为后台任务运行：不进入对话，也不再阻塞你的下一条消息。
+    - 对话位置保持不动。 输入长消息或展开右侧面板时，对话不再离开最新一条消息。
+    修复
+    - Orbital 自己运行的会话，以及其他应用对它们的副本，不再出现在可导入的会话里。
+    - Windows 安装程序会清除旧版本留下的 Agent 定义（Gemini CLI 不再和 Antigravity 同时出现）。
+    - 撤销最近一个回合不再受历史大小上限影响。
+    - 项目记忆里的决定或经验不再重复。
+    安装
+    - macOS（Apple Silicon，macOS 13+）：Orbital-0.25.0-macOS.dmg。已用 Developer ID 签名并公证，打开时没有 Gatekeeper 提示。
+    - Windows 10/11：Orbital-Setup-0.25.0.exe。安装包尚未代码签名，SmartScreen 会显示「Windows 已保护你的电脑」：点 更多信息 → 仍要运行。
+    - 从 v0.24.0 及以上版本，左下角会提示更新。
+    - 供脚本和 README 按钮使用的固定文件名：Orbital-macOS.dmg 和 Orbital-Setup.exe（见下方附件）。
+    已知问题
+    - Agent 运行中发给它的消息会等到当前回合结束；「立即发送」会先停止当前回合。把消息直接送进运行中的回合计划在下一个版本提供。
+    - Antigravity 需要网络出口位于 Google 支持的地区；在 Windows 上除登录外未做完整测试。
+    - 在 Windows 上把 v0.24.1 装回 v0.25.0 之上，旧版本里仍会列出 Antigravity。
+    - 用量上限状态未在真正达到上限的账号上验证。
+    - 工作台处于测试阶段。
+    - 此版本不支持 Intel Mac。
+    - Windows 安装包未签名（SmartScreen 提示如上）。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zqiren/Orbital/releases/tag/v0.25.0
+ReleaseTime: 2026-11-26T03:43:47.0000000Z

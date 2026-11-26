@@ -1,0 +1,25 @@
+Version: 2.0.39
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.39/LiveAgent-v2.0.39-Windows-x64-Setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/Stack-Cairn/LiveAgent/releases/download/v2.0.39/LiveAgent-v2.0.39-Windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixed
+    - Deny rules for temp images now hold on macOS.
+      - On macOS, /var, /tmp and /etc are links to the same folders under /private.
+      - Before, a permission rule that denied a /var/folders/... path did not stop the Image tool from showing an image there, because the tool checked the /private/var/... spelling of the same file.
+      - Bundled K-brain v0.107.48 now treats both spellings as the same path, for both deny and allow rules.
+      - Only those three system links are followed. Other platforms are unchanged.
+      (#1421, via #1422)
+    Improved
+    - Bundled K-brain is now v0.107.48. (#1421, via #1422)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/LiveAgent/releases/tag/v2.0.39
+ReleaseTime: 2026-11-26T03:24:09.0000000Z
