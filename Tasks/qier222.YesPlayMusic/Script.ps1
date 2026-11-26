@@ -4,8 +4,10 @@ $Object1 = Invoke-GitHubApi -Uri "https://api.github.com/repos/qier222/YesPlayMu
 $this.CurrentState.Version = $Object1.tag_name -replace '^v'
 
 # Installer
+# Version 3.0.0 is a Flutter rewrite and switched from an electron-builder NSIS installer to Inno Setup.
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
+  InstallerType = 'inno'
+  InstallerUrl  = $Object1.assets.Where({ $_.name.EndsWith('.exe') -and $_.name -match 'Setup' }, 'First')[0].browser_download_url | ConvertTo-UnescapedUri
 }
 
 switch -Regex ($this.Check()) {

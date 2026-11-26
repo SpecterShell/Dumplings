@@ -16,8 +16,10 @@ $Object2 = Invoke-RestMethod -Uri "${Prefix}latest.yml" | ConvertFrom-Yaml
 $this.CurrentState.Version = $Object2.version
 
 # Installer
+# 3.3.x ships an Inno Setup installer, unlike the electron-builder NSIS one used by earlier versions.
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = Join-Uri $Prefix $Object2.files[0].url
+  InstallerType = 'inno'
+  InstallerUrl  = Join-Uri $Prefix $Object2.files[0].url
 }
 
 switch -Regex ($this.Check()) {
