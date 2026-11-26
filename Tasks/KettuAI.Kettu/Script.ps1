@@ -22,9 +22,10 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
-      $ReleaseNotesCNTitleNode = $ReleaseNotesObject.SelectNodes('./h2').Where({ $_.InnerText -eq '中文' }, 'First')[0]
-      if ($ReleaseNotesCNTitleNode) {
-        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node -ne $ReleaseNotesCNTitleNode; $Node = $Node.NextSibling) { $Node }
+      # The localized notes are folded into a <details> block that follows the English notes.
+      $ReleaseNotesCNNode = $ReleaseNotesObject.SelectSingleNode('./details[contains(./summary, "中文")]')
+      if ($ReleaseNotesCNNode) {
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and $Node -ne $ReleaseNotesCNNode; $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'en-US'
@@ -33,7 +34,7 @@ switch -Regex ($this.Check()) {
         }
 
         # ReleaseNotes (zh-CN)
-        $ReleaseNotesCNNodes = for ($Node = $ReleaseNotesCNTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) { $Node }
+        $ReleaseNotesCNNodes = $ReleaseNotesCNNode.ChildNodes | Where-Object { $_.Name -notin @('summary', 'h2') }
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
