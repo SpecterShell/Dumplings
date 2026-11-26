@@ -1,0 +1,92 @@
+Version: 1.7.4
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/dividebysandwich/sdroxide/releases/download/v1.7.4/sdroxide-v1.7.4-windows-x86_64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    - The HFDL button on the main UI has been replaced with the ISM button. HFDL is of course still accessible via the modes dialog
+    - ISM decoder state is now restored across frontend-switches and the active button color is now the same as an active SKIM
+    - Hermes Lite 2: the onboard PA switch is remembered per band, with an Onboard PA ON/OFF row in the top bar's RIG box - a transverter band can drive RF1 with the PA off while HF uses it by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/948 (#444)
+    - TX drive and TUNE drive are remembered per band, so a transverter band can sit at a few percent while an HF band runs higher by @K7MDL2 in https://github.com/dividebysandwich/sdroxide/pull/949 (#444)
+    - Tests: the repeater, S-meter, drive-ceiling and RADE tests no longer depend on the station's own region or on timing by @radi8 in https://github.com/dividebysandwich/sdroxide/pull/950
+    - Two-tone test signal on TUNE, and a movable TRANSMIT window by @yankneck696 in https://github.com/dividebysandwich/sdroxide/pull/929
+    - Pictures: choose where received images are saved by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/928
+    - ADS-B header: two aircraft counts, heard in the last 10 s and on the list by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/927
+    - ADS-B range log: range by setup and day in SQLite, versioned per receiver by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/926
+    - ADS-B: Mode-S Beast in and out - serve the decoded frames to readsb/tar1090, or show another receiver's by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/925
+    - ADS-B sighting log: day slider, span, text filter, LIVE and PLOTS by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/924
+    - Waterfall labels: one per name and frequency, so the schedule's twin rows no longer stack by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/923
+    - ADS-B map: ALT - trails and aircraft coloured by altitude, and a stamp for screenshots by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/922
+    - HFDL: several channels at once, auto-follow, ground stations on the map, ACARS messages, an aircraft table, and feeds to Airframes (UDP/TCP), local UDP and SBS by @joscandreu in https://github.com/dividebysandwich/sdroxide/pull/920
+    - ADS-B decoder: a very conservative touch of error correction - only aircraft already heard error-free get better telemetry, none is invented by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/918
+    - Band/Mode menu: DIGITAL sorted into HAM and MONITOR, and a tooltip for each mode by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/917
+    - ADS-B map: weather - precipitation radar (DWD, NEXRAD, ECCC, IMERG), clouds and thunderstorms by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/912
+    - Pimp the ADS-B: features competitive with leading flight-radar software by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/911
+    - ADS-B: route by callsign - ROUTE column, route in the card, dashed great circle on the map by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/908
+    - RTL-SDR: support for the RTL-SDR Blog V4L by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/906 (#602)
+    - TCI server: clients stay connected at high IQ rates on macOS by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/903
+    - SAM: four sidebands (DSB, MRC, USB, LSB) - upper and lower sideband combined per frequency against selective fading by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/900
+    - RX-888: the top bar shows the gain controls of the band the receiver is on, VHF amplifier included by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/899
+    - Waterfall: SimpleSDR palette, a cool ramp on a charcoal floor by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/894
+    - Themes: SimpleSDR, a flat charcoal look with one blue accent by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/892
+    - rigctl: the sampled span as Hamlib's SPECTRUM_SPAN by @AJ6CU in https://github.com/dividebysandwich/sdroxide/pull/888
+    - ELAD TMate 2 USB controller as a control input - LCD, S-meter and power bargraph, REFL/SWR, tuning steps and lock, backlight colours by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/887
+    - Hardrock: the tuner panel is kept after the link reopens by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/883
+    - ADS-B: each transponder's carrier measured - Δf column, callsign on its trace in the waterfall by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/919
+    - TCI server per radio (on/off, own port) and SPOT labels from TCI clients by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/896
+    - TCI client: take the radio's frequency on connect instead of sending ours by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/893
+    - Hardrock: the HR500 tuner panel follows how the ATU-500 really searches - starting SWR, T result, last tunes by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/885
+    - ELAD FDM-DUO: XVTR chip for the 0 dBm RF OUT transverter port by @AJ3G in https://github.com/dividebysandwich/sdroxide/pull/882
+    - Web client: UI settings are no longer reset on every start by @prof7bit in https://github.com/dividebysandwich/sdroxide/pull/943
+    - Settings → UI: suppress inactive radio warnings by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/941
+    - SDRplay: an automatic LNA that follows the overload report and the IF AGC; click the LNA label to switch it by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/938
+    - Readout: right-click a digit to make it the tune step; the step's digit is highlighted by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/937
+    - Wheel: a click is one step on macOS however few points it is; optional side-wheel fine tuning in tenths by @kingsqueak in https://github.com/dividebysandwich/sdroxide/pull/936
+    - ADS-B: RX% column - the share of expected position reports heard, beside SIG by @HDZucht in https://github.com/dividebysandwich/sdroxide/pull/933
+    - PlutoSDR: a decimating FIR is loaded for sample rates under 2.083 Msps by @slomkowski in https://github.com/dividebysandwich/sdroxide/pull/746 (#681)
+    - PlutoSDR (2R2T): RX2 as a second aerial for diversity, or as PureSignal feedback by @yankneck696 in https://github.com/dividebysandwich/sdroxide/pull/743 (#525)
+    Bug Fixes
+    - WSPR: an OSD decode is believed only for a station already heard outright, as wsprd does - no more spurious decodes (#946)
+    - Settings: the drive ceiling ("Limit drive to") and band trims reach the running engine at once (#947)
+    - rigctld: a mode change sends passband -1 (no change), so the rig keeps its RX filter on every mode and band change (#945)
+    - Diversity: adaptation can no longer stall after a loud burst
+    - NAVTEX: the front end decimates to the 8 kHz its loops were tuned at, so real 518 kHz broadcasts decode clean at 48 kHz (#608)
+    - Icom LAN: a radio that restarts its sequence numbers lower down is followed instead of dropped as duplicates (#904), and unkey waits for the radio's TX buffer to play out so a packet's tail is not cut (#907)
+    - Solar: CME/flare data falls back to api.nasa.gov while CCMC is unreachable, and a failing source logs once (#895)
+    - Logging: colours only on a console that draws them; Windows switches them on or prints plain text (#914)
+    - ANC: lengths and adaptation time are kept in seconds, not samples, so it no longer eats speech at 48 kHz (#901)
+    - Satellites: Meteor-M2-4 LRPT is on 137.900 MHz, with 137.100 as the alternate channel (#890)
+    - Multi-radio: panadapter messages name the borrowing radio correctly instead of its number minus one (#913)
+    - Spots: a cluster spot in the mode already set keeps the operator's filter and CW pitch (#916)
+    - MT63: a retune rebuilds the transmitter at the right rate (#884)
+    - Band up/down: from general coverage it now steps to the nearest ham band instead of doing nothing
+    - ELAD FDM-DUO: wide spans read at the same level as the stand-alone rate, and above 192 kHz the S-meter measures the passband being listened to rather than where the DUO's receiver parked
+    - S-meter: rig-like ballistics (50 ms up, 500 ms down), so it no longer pumps on wide IQ rates
+    - TMate 2: a dial taps a button action and never keys PTT, TUNE or CW
+    - ADS-B: online lookups are off until ticked in setup, tracks and the log are flushed on exit, a dead Beast address can no longer stall the engine, and switching weather source no longer waits for the old fetch
+    - HFDL: a taken SBS port is retried on re-apply, and at most 16 SBS clients are served
+    - Pictures: a chosen save folder that cannot be written falls back to the built-in one
+    - TCI server: spot call, mode and text from clients are length-capped, and the server form shows the state of the radio it belongs to
+    - Hardrock: every frame of a chained tuner pass-through is checked, and the tuner history is kept across a reopen
+    - Two-tone: cleared on an audio interface swap
+    - Speech: the Data2G mode is spoken as "data two G"
+    - Hermes Lite 2: the per-band PA switch no longer writes a log line on every engine tick while the board cannot take it
+    Documentation
+    - User manual: Drive and Tune are described as remembered per band, and the Power amplifier setting as the one a band starts with before the top bar's Onboard PA row is used
+    Notes
+    - The side-wheel fine tuning from #936 is off by default.
+    - The network protocol version changed (now 225), so remote clients and servers both need 1.7.4.
+    New Contributors
+    - @yankneck696 made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/929
+    - @prof7bit made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/943
+    - @radi8 made their first contribution in https://github.com/dividebysandwich/sdroxide/pull/950
+    Thank you to all contributors for the excellent work!
+    Full Changelog: https://github.com/dividebysandwich/sdroxide/compare/v1.7.3...v1.7.4
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dividebysandwich/sdroxide/releases/tag/v1.7.4
+ReleaseTime: 2026-11-26T07:44:47.0000000Z
