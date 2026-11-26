@@ -1,0 +1,94 @@
+Version: 4.11.0
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Zettlr/Zettlr/releases/download/v4.11.0/Zettlr-4.11.0-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Security Fixes | Quality of Life Improvements
+    This update is mostly a maintenance update that improves Zettlr's security by addressing two recently mentioned advisories. Specifically, this update fully fixes the previously opened GHSA-qp9r-5xcv-35gx (arbitrary shell execution) and addresses GHSA-4c93-g77j-cx8w (potential for remote code execution). We personally believe that nobody was affected by this. But, in the spirit of "better safe than sorry" we addressed them as best as we could. Some more details below.
+    The only two important additions for this update to mention are, first, that Zettlr is now finally able to retrieve the accent color from supporting Linux desktop environments (such as KDE Plasma). Note that D-Bus access is required for this to work. Where this is not available, the app still falls back to Zettlr green. Second, after discovering some issues with the keyboard shortcuts in the editor, the shortcuts for comments have now been adjusted. Previously, both Cmd/Ctrl-Shift-C and Cmd/Ctrl-/ would allow the user to insert comments with slightly different behavior. The former shortcut was broken for many people, and this update restores it. However, to harmonize the intended use of both comment tools, we have changed the shortcut to Cmd/Ctrl-Alt-M, which is the default across many word processors to add a comment at the cursor position. Cmd/Ctrl-/ now reliably only toggles comments for all lines touched by selections, with no in-situ commenting.
+    Do you enjoy Zettlr? Then consider making a donation to help us pay for the development costs. You can donate monthly on Patreon or once via PayPal. Additionally, you can directly sponsor Hendrik Erz on GitHub or send a tip on Ko-Fi. Thanks for your support!
+    Some Notes on GHSA-qp9r-5xcv-35gx and GHSA-4c93-g77j-cx8w
+    Before the changelog below, some short notes of reassurance on these two security advisories. Strictly speaking they refer to security issues, but we have strong reasons to believe users should have been fine.
+    The fix for GHSA-qp9r-5xcv-35gx is a continuation from an earlier attempt at mitigating arbitrary shell execution. Basically, when you had a custom command configured, and used this to export either a project or a single file, the path to the project folder or file was provided to the command as-is. That means that, if the path contained valid shell commands, they would be executed and could potentially be used maliciously. In a first attempt to fix the issue, we merely quoted the paths, but that measure was easy to circumvent. This time around we implemented proper shell escaping so that regardless of the odd characters that may be in a path, they will not execute any shell commands. We went further: Not all custom commands actually need shell access, so by default, Zettlr 4.11 disables shell access for all commands. Should a command require a shell, you can manually activate it in the preferences, where you will now find an additional toggle next to each custom command.
+    GHSA-4c93-g77j-cx8w seems more benign on the first sight, but can be more dangerous if (ab)used properly. Essentially, Zettlr will, if you Cmd/Ctrl-click on a link, open it. If it references a file, it will just open that file, but if it is any other, valid link, Zettlr will pass this on to the operating system to open it according to defined defaults. We all know about https://-links, which are by default just opened by your browser. However, there are many other protocols. The security advisory explicitly mentions smb://-links, which can cause your computer to provide private data to a malicious server if opened with your file browser. More so, many apps today use "deep links" with custom protocols that allow controlling the application programmatically. For example, this is how Zoom opens the Zoom app with the correct meeting ID if you click on a Zoom link. If used cleverly, this might be used to make you trigger unwanted behavior across apps on your computer and might even allow malicious actors to compromise it. The mitigation is relatively simple: Zettlr now checks the protocol of a link and, if it doesn't recognize it, it will ask you. From this dialog you can still open it, and, if it is a protocol you regularly use, you can mark the protocol as safe so Zettlr doesn't ask you every time. You can manage these trusted protocols in the advanced settings, next to the iframe domain whitelisting.
+    To know if you might have been affected, some simple rules:
+    1. If you have recently exported a project using a custom command, you most likely would have spotted a shell command in its name, since folder names are displayed as they are. To be safe, check all opened folders in your workspaces, for example by filtering for common shell characters such as $.
+    2. If you have recently exported a single file using a custom command, you probably would have spotted a shell command in its name in the export window. However, filenames can be overridden by titles or headings, so it is a bit easier to miss. Again, filtering for common shell characters should also show such files.
+    3. Even if you accidentally exported a malicious file or folder, we do not believe attackers could have made too much use of it given common path-length limits that prevent adding too much sophisticated code in there anyhow.
+    4. If you were the target of a malicious link in a document, you might have spotted it before clicking in the preview window, but if not, you should have seen something odd happening on your computer.
+    If you have any concerns about this, we invite you to share your experiences on the community forum or Discord.
+    Changelog
+    GUI and Functionality
+    - Feature: Zettlr now supports retrieving the accent color from the D-Bus
+      system, meaning that on many Linux desktop environments, it should now pick up
+      your personal accent color.
+    - Security (GHSA-qp9r-5xcv-35gx): Custom export commands now have an
+      additional setting, shell, which, if enabled, runs your commands in a shell.
+      This was the case previously for all commands, but to reduce the attack
+      surface and provide a more complete fix for the existing advisory, this
+      setting has now changed to false by default. If a custom command requires a
+      shell to function, you will need to explicitly allow this with the new
+      parameter in your preferences → Import/Export → Custom Commands.
+    - Security (GHSA-4c93-g77j-cx8w): When opening links, Zettlr now checks the
+      protocol of the link, and asks you to confirm whether it should actually
+      follow the link. This introduces transparency into links coming from external
+      documents and allows you to open only links that you trust. By default, it
+      only trusts http(s) links. This prevents potential data exfiltration (i.e.,
+      via protocols such as SMB) as well as tricking you into accidentally
+      triggering actions in other apps via deep-links. You can permanently trust
+      certain protocols, and remove trusted protocols from the advanced preferences
+      similar to how iframe whitelisting works.
+    - Change: The keyboard shortcuts pertaining to inserting and toggling
+      comments have been partially restored to previous Zettlr behavior, partially
+      harmonized with the behavior in other editors (#6655). Now there are two
+      explicit shortcuts: one inserts a comment at the cursor position, and one
+      toggles commenting of entire lines. The shortcut to toggle commenting of
+      entire lines has been kept at the common shortcut Cmd/Ctrl-/, while the
+      shortcut to insert comments has been moved. It no longer triggers with
+      Cmd/Ctrl-Shift-C, and instead now uses Cmd/Ctrl-Alt-M, which is the
+      default shortcut to insert comments in Google Docs and Word (only online, the
+      Desktop app does not have a shortcut assigned, maybe because someone forgot to
+      include it). The latter shortcut can be customized to either restore the
+      previous shortcut, or maybe move it to how LibreOffice does it, which is
+      Cmd/Ctrl-Alt-C. But that would then conflict with copying the selection as
+      HTML (which has precedence and as such would prevent the shortcut from ever
+      triggering the comment insertion). Keyboards are fun!
+    - Fixed image prerendering within table cells (#6672).
+    - The update dialog now includes explicit reference to Zettlr so that
+      identifying the source of the update notification becomes easier (#6664).
+    - Fixed Mermaid charts defaulting to the light theme until the dark mode setting
+      has been changed after the fact (#5763).
+    - Fixed an issue that prevented search inputs on macOS in the toolbar to not
+      work.
+    - Improved the log window design and layout.
+    Under the Hood
+    - GHSA-qp9r-5xcv-35gx: Completely address security advisory by using shescape
+      to properly quote or escape all arguments passed to custom commands so that
+      attacker-controlled shell injections are caught. Additionally, custom commands
+      now do not run in a shell by default anymore, and the user is advised to only
+      enable shell access for commands that require it.
+    - GHSA-4c93-g77j-cx8w: Zettlr now applies link filtering and only opens such
+      links with shell.openExternal that use known and trusted protocols. For any
+      other links, the user is first prompted to avoid accidental behavior and
+      information leakage.
+    - Update chokidar to v6.0.0.
+    - Moved get-system-colors.ts utility file into the appearance provider.
+    - Replace the md5 package with native node.js functionality (#6658).
+    - Replace the uuid package with native node.js functionality (#6660).
+    - Replace the rimraf package with native node.js functionality (#6665).
+    - Remove the fsevents dependency, as it is no longer used by chokidar (#6661).
+      For packagers, this also removes the BUNDLE_FSEVENTS build-time env-var.
+    - Remove several unused development dependencies (#6659).
+    - Allow the protocol safe-file in DOMPurify runs to facilitate Zettlr-internal
+      image prerendering.
+    - The logger now prints details for any level of event to the console during
+      development.
+    - Replace the Mod key representation in the shortcut controls with Meta, and
+      appropriately expand/contract the Mod key per platform.
+    Full Changelog: https://github.com/Zettlr/Zettlr/compare/v4.10.0...v4.11.0
+- Key: ReleaseNotesUrl
+  Value: https://github.com/Zettlr/Zettlr/releases/tag/v4.11.0
+ReleaseTime: 2026-11-26T18:33:32.0000000Z
