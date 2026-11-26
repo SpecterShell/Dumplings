@@ -5,7 +5,7 @@ $this.CurrentState.Version = $Object1.vendorVersion
 
 # Installer
 $this.CurrentState.Installer += $InstallerX64 = [ordered]@{
-  InstallerUrl = 'https://dl.dell.com/' + $Object1.path
+  InstallerUrl = 'https://downloads.dell.com/' + $Object1.path
 }
 
 switch -Regex ($this.Check()) {

@@ -15,12 +15,12 @@ $this.CurrentState.Version = $Object1.vendorVersion
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'x64'
-  InstallerUrl    = Join-Uri 'https://dl.dell.com/' $Object1.path
+  InstallerUrl    = Join-Uri 'https://downloads.dell.com/' $Object1.path
   InstallerSha256 = $Object1.Cryptography.Hash.Where({ $_.algorithm -eq 'SHA256' }, 'First')[0].'#text'
 }
 $this.CurrentState.Installer += [ordered]@{
   Architecture    = 'arm64'
-  InstallerUrl    = Join-Uri 'https://dl.dell.com/' $Object2.path
+  InstallerUrl    = Join-Uri 'https://downloads.dell.com/' $Object2.path
   InstallerSha256 = $Object2.Cryptography.Hash.Where({ $_.algorithm -eq 'SHA256' }, 'First')[0].'#text'
 }
 

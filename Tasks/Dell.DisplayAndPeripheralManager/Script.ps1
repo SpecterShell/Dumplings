@@ -15,7 +15,7 @@ $Object2 = $Object1.Content.ToCharArray() | ForEach-Object -Process {
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object2.DriverListData[0].FileFrmtInfo.HttpFileLocation
+  InstallerUrl = $Object2.DriverListData[0].FileFrmtInfo.HttpFileLocation -replace '^https://dl\.dell\.com/', 'https://downloads.dell.com/'
 }
 
 # Version
