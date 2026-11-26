@@ -8,7 +8,12 @@ function Read-Installer {
 
 function Get-ReleaseNotes {
   try {
-    $Object2 = Invoke-WebRequest -Uri 'https://www.powerusersoftwares.com/version-history' | ConvertFrom-Html
+    # The site sits behind Cloudflare, which answers the default PowerShell user agent with 403 or a challenge page.
+    $Object2 = Invoke-WebRequest -Uri 'https://www.powerusersoftwares.com/version-history' -Headers @{
+      'User-Agent'      = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36'
+      'Accept'          = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      'Accept-Language' = 'en-US,en;q=0.9'
+    } | ConvertFrom-Html
 
     $ReleaseNotesNode = $Object2.SelectSingleNode("//div[@role='listitem' and contains(., '$($this.CurrentState.Version.Split('.')[0..1] -join '.')')]")
     if ($ReleaseNotesNode) {
