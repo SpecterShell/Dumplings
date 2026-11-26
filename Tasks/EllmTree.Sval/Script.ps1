@@ -3,18 +3,22 @@ $Object1 = Invoke-WebRequest -Uri 'https://sval.app/download/' | Read-ResponseCo
 # Installer
 $InstallerHref = ($Object1.SelectNodes('//a[contains(@href, "sval-")][contains(@href, "-windows-x86_64-setup.exe")]') | Select-Object -First 1).GetAttributeValue('href', '')
 
-# Version
-$this.CurrentState.Version = [regex]::Match($InstallerHref, '/releases/([^/]+)/').Groups[1].Value
+# The download page links to a release tag, which is not the version the product reports for itself
+$ReleaseTag = [regex]::Match($InstallerHref, '/releases/([^/]+)/').Groups[1].Value
 
 $this.CurrentState.Installer += [ordered]@{
   Architecture = 'x64'
-  InstallerUrl = "https://download.sval.app/releases/$($this.CurrentState.Version)/sval-$($this.CurrentState.Version)-windows-x86_64-setup.exe"
+  InstallerUrl = "https://download.sval.app/releases/$ReleaseTag/sval-$ReleaseTag-windows-x86_64-setup.exe"
 }
+
+# Version: taken from the installer itself, because that is what ends up in the installed product
+$this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
+$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
-      $Article = $Object1.SelectSingleNode('//section[@id="release-notes"]//article[.//div[contains(@class,"note-version") and normalize-space(text())="' + $this.CurrentState.Version + '"]]')
+      $Article = $Object1.SelectSingleNode('//section[@id="release-notes"]//article[.//div[contains(@class,"note-version") and normalize-space(text())="' + $ReleaseTag + '"]]')
       if ($Article) {
         # ReleaseTime
         $NoteDate = $Article.SelectSingleNode('.//div[contains(@class,"note-date")]').InnerText.Trim()
