@@ -11,9 +11,11 @@ $this.CurrentState.Installer += [ordered]@{
   InstallerUrl = "https://download.sval.app/releases/$ReleaseTag/sval-$ReleaseTag-windows-x86_64-setup.exe"
 }
 
-# Version: taken from the installer itself, because that is what ends up in the installed product
+# Version: taken from the payload's application.ini, because that is the value the installer writes into ARP.
+# The 7-Zip SFX wrapper reports its own ProductVersion (18.05) and the release tag is a marketing tag, so neither matches.
 $this.InstallerFiles[$this.CurrentState.Installer[0].InstallerUrl] = $InstallerFile = Get-TempFile -Uri $this.CurrentState.Installer[0].InstallerUrl
-$this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
+$ApplicationIni = Expand-SevenZipSfx -Path $InstallerFile -Name 'core/application.ini' -CollisionAction Rename | Select-Object -First 1
+$this.CurrentState.Version = [regex]::Match((Get-Content -LiteralPath $ApplicationIni -Raw), '(?m)^Version=(.+?)\s*$').Groups[1].Value
 
 switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
