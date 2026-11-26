@@ -1,0 +1,34 @@
+Version: 0.1.9
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/sligter/qunica/releases/download/v0.1.9/qunica_0.1.9_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/sligter/qunica/releases/download/v0.1.9/qunica_0.1.9_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Qunica v0.1.9
+    Highlights
+    - Router groups keep one responding agent per thread and coordinate reusable tasks in dedicated task threads. Thread topic subscriptions, ACP plans and per-agent completion handling improve the shared conversation workflow.
+    - Computers can stop after idle periods and wake when execution needs them. Watchdog recall and task lifecycle handling preserve host-owned scheduling and cancellation.
+    - Group Notes publish file changes after database commit. Failed publication and index refresh retain accepted identities and provide actionable results; failed updates/deletes preserve existing file content and metadata.
+    - Unreadable accepted automation budgets stop before agent dispatch. An explicit human Resume of an interrupted reply opens a new Rig budget window while lifetime counters remain cumulative. Approval resumes, retries and restarts retain their existing window. Model-call and token caps are optional; configure rig_limits when a cap is required.
+    - Runtime topology, durable turn records and terminal handling have clearer ownership. Scheduler frontend projection is independently testable, and one shared event fixture protects Rust/TypeScript/Zod compatibility. CI now runs frontend tests and incremental architecture checks.
+    - macOS packages are checked for complete ad-hoc application signatures after packaging. This does not add Apple Developer ID signing or notarization.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - Router 群组保持每个线程一位响应 Agent，并使用独立任务线程协调、复用工作；同时改进线程主题订阅、ACP 计划展示和逐 Agent 完成处理。
+    - Computer 支持空闲停止及执行时唤醒，完善 Watchdog 召回和任务生命周期处理，调度及取消仍由宿主控制。
+    - Notes 在数据库提交成功后发布文件修改；发布或索引刷新失败保留已受理身份，并返回可处理的结果。更新／删除事务失败时保留原文件内容与元数据。
+    - 已受理的自动任务预算不可读取时停止派发。用户显式恢复中断回复会开启新的 Rig 预算窗口，累计计数保留；审批恢复、重试及重启不新开窗口。模型调用次数和 Token 上限为可选配置，可通过 rig_limits 设置。
+    - 拓扑策略、持久化回合记录和终态逻辑职责更清晰；前端 Scheduler 投影可独立测试，共享事件 fixture 保护 Rust／TypeScript／Zod 兼容。CI 增加前端测试与增量架构门禁。
+    - macOS 打包后检查完整的 ad-hoc 应用签名，仍不包含 Apple Developer ID 签名或公证。
+    升级前请备份数据库和工作区并结束／停止运行中的任务，同时升级后端与客户端。相对 v0.1.8，本版新增 0052–0057 数据库迁移，请勿直接降级已迁移的数据。显式 Resume 仅影响 Rig 执行预算窗口，不重置群组 Scheduler 预算；审批、工具身份和结果未知时不自动重放的边界保持不变。自动化验证不代表所有真实厂商／网关及真机验收已完成。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/sligter/qunica/releases/tag/v0.1.9
+ReleaseTime: 2026-11-12T01:59:32.0000000Z
