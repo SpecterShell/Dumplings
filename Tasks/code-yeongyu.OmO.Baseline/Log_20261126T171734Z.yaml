@@ -1,0 +1,598 @@
+Version: 5.1.84
+Installer:
+- Architecture: x64
+  InstallerType: portable
+  InstallerUrl: https://github.com/code-yeongyu/oh-my-openagent/releases/download/v5.1.84/omo-windows-x64-baseline.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    type: fix
+    A run from TypeScript source that no omo launcher started (a bare bun test, bun <script>) no longer migrates the account's shared gateway store past what released omo reads; it may still migrate an isolated agent dir (#14892). (#14894)
+    Fixed
+    - On Windows, a task or team member that runs as its own process is no longer refused at startup for CPU it never used: the startup CPU cap counted an unrelated long-running process whose exited parent had the same process id as the new child (#15098). The cap itself is unchanged. (#15099) (#15111)
+    - Display escaping for thread command output. (#15025) (#15111)
+    - Behaviour change: C1 control characters are refused in a typed thread reference (covered in addressing.test.ts; tab, line feed, vertical tab, form feed and carriage return still fold into a space and the other C0 controls and DEL are still refused, as before). (#15025) (#15111)
+    - Ultrawork: ulw requests broad discovery before planning, a todo for each action, and one local commit per verified increment. (#14871) (#15111)
+    - The attached-engine loop example runs as written on example.com and example.org, whose pages no longer have an h1. (#15083)
+    - The omo SDK parity gate builds its merge-base comparison tree correctly on Windows: installed packages and paths on another drive are recognised with Windows path separators (#15052). No command or tool changes behaviour. (#15055)
+    - The attached-engine loop example sends its first navigate without a sync context, which the untouched Agent Window tab refuses (first reported and fixed in #14385 by @kristianvast). (#15051)
+    - omo thread close no longer fails with a TypeError on every call; it closes the thread and honours --force and --graceful (#14992). (#15009)
+    - The omo-senpi telemetry component check resolves its imports as the bundler does, so loadOmoConfig type-checks again, and the plugin bundles are regenerated from the current sources. (#14940)
+    - knip:check passes on dev again: the unused DEFAULT_OTLP_ENDPOINT re-export and telemetryDestinationHosts() are gone from telemetry-core's destinations module. (#14934, fixes #14933) (#14940)
+    - A task child whose open was still connecting when its parent released it no longer stays attached to the task host: the open is refused and its connection closed. (#15069) (#14936)
+    - A thread message sent with omo thread send (or through the thread SDK) to a session that is not running now wakes it, as a message from another session already did, instead of waiting until someone opens it. (#15024) (#14936)
+    - Several thread messages sent at once to an idle session no longer lose one or split into a second turn when they race the turn starting: each one joins the turn that is running. (#15017) (#14936)
+    - A thread session that is idle or woken with several deliveries queued now takes them all in its first turn, in send order, instead of starting on the first one and running the rest as later turns. (#14980) (#14936)
+    - A same-device thread wake that fails is now logged with the session id and the cause, and retried by the carrier's sweep, instead of leaving queued deliveries waiting with no trace. (#14975) (#14936)
+    - omo remote enable renders the session-host unit for the omo that ran it - the compiled binary or the npm launcher running the verb - instead of an older runtime's OMO_BIN left in the environment, and the launch-time refresh now also upgrades a unit naming an older omo-versions install (#14258). (#14710) (#14936)
+    - omo logout no longer waits on the credential store twice when a stalled or locked keyring fails its read: it makes one store call, clears nothing, and exits 9 as store-unavailable (the same code as omo account). An unreadable stored sign-in is still cleared, as before. (#14711) (#14936)
+    - On Windows, a local monitor or thread path written with mixed separators (C:\\a/b, \\\\server\\share/x) or as a drive-relative path (C:dir) is recognised as local instead of being refused as a remote target. (#14743) (#14936)
+    - A thread tool given the bare id of a closed thread on another device (thread_create({ thread }), thread_send, thread_read, the control tools) reaches it as <device>/<thread> does. When every device is asked at once, a device that answers its own lookup in time could pass the 3.5 s cap and be counted silent, so the call answered host_unavailable. Now, when that first round finds no holder, each device that stayed silent is asked again alone, one at a time, with no other lookup of that device service in flight. A retry is made only when the earlier lookups finish in time and the call has enough of its time budget left, so host_unavailable can still name a device that was not asked again, as well as one that did not answer on its own. (#14754) (#14936)
+    - Closing a remote client now releases the attaches its sessions held, so no idle attach timer outlives the client and fires later against a closed or replaced session (#14812) (#14936)
+    - A thread looked up by name on disk in the caller's workspace no longer matches sessions from a sibling directory whose path extends the workspace's (<root>-tmp) (#14893). (#14898) (#14936)
+    - Threads: the sender device of a delivery taken in from another device is read by one rule everywhere, so the wake carrier and reply pinning name the same device for the same delivery. (#14872)
+    - Memory sync: redacting credentials from URLs no longer slows down quadratically on a very long run of letters next to :// (200k letters took about 5.7 s, now about 10 ms). What gets redacted is unchanged. (#14865)
+    - A task child started through a launcher that runs the engine as its own child process (an npm shim or a wrapper script) no longer fails its start as a stall while the engine boots. The startup bound now follows the CPU of the launcher's whole process tree on Linux, macOS and Windows. (#14827, fixes #14820)
+    - On Linux, a task child's CPU time is read with the system's own clock-tick rate (sysconf(_SC_CLK_TCK)) instead of an assumed 100 ticks per second, so the startup stall window and CPU cap measure real CPU seconds on a kernel built with a different rate. 100 remains the fallback when the rate cannot be read. (#14824, fixes #14821)
+    - thread_read and thread_send of a thread another device parked reopen it there and reach it, instead of answering not_resumable while that device still keeps the session file. (#14807)
+    - thread_create on another device no longer answers idempotency_uncertain (reply_lost) for a session that device did create. The create is opened under the id its idempotency_key derives; when the open's reply is lost (a busy device answering after the call's budget), the session that device lists under that id is answered as the created thread, on the spot or on a retry under the same key, and no second session is opened. An engine that ignores the id still answers uncertain. A retry of an uncertain create now runs the create again instead of replaying the uncertain answer. (#14564, fixes #14560) (#14623)
+    - A session that received a message from a session in another workspace on the same device can now answer it with thread_send without all_scope, as the delivery tells it to; before, the reply was refused scope_denied. A reply by the name the message stated reaches the sender even after it renamed itself or when only its session file lists it. Only the sender of a message this run took in is reachable this way; every other session outside the workspace still needs all_scope. (#14542) (#14623)
+    - thread_list rows for threads on another device show when the thread was created. They showed the time the holder last synced its listing, the same value as updated_at. (#14479) (#14623)
+    - Reading a thread from its session file now returns the latest messages even when bookkeeping follows them. The window and byte budget count message payloads, as on a live read. Re-read without a cursor to restart a page begun on an older version. (#14623)
+    - A short-lived SQLite client that opens, commits to and closes the live gateway store (~/.omo/agent/gateway/gateway.sqlite) no longer deletes its -wal and -shm files under running omo sessions, which left every thread tool failing with disk I/O error until restart and lost later writes. Opening a second store in one process no longer drops the process's SQLite locks. A store whose WAL files were removed or replaced anyway, or that hits an SQLite I/O error, now reopens its connection and retries the call once by itself. (#14566, fixes #14562) (#14623)
+    - The thread SDK refuses an argument key an operation does not read (a misspelt allScope, say) as invalid_arguments naming it, instead of ignoring it (#14316). (#14623)
+    - A local thread reopening after a daemon handoff now lists as opening instead of idle. Closing it before it is ready reports session_opening, not not_live. (#14426) (#14623)
+    - A retained thread delivery can now report its outcome separately from its original admission. Same-key retries reconcile the receiving gateway's application or refusal, and thread_read with delivery_id queries an existing receipt without sending or waking a session. Unreachable or older peers report an unavailable outcome instead of guessing expiry. Refusal notices respect the original sender's current access. (#14449) (#14623)
+    - thread_send and other commands to a session on another device no longer answer "unsupported, update omo and senpi" when that device refuses with engine_capability_missing and a cause that passes on its own. When the device answers attach_required (it lists the session on a route that takes no delegated connections, such as a terminal, and does not count an attach of this device to it), omo drops its attach, attaches again and sends the command once more. That lands an attach-less send. A re-attach can rejoin an attachment the device service still shares but the other device no longer counts; then, as for daemon_unavailable, the result is host_unavailable with the cause in details.cause and a retry hint, and nothing ran. Only an engine that will never take the command stays unsupported. (#14359) (#14623)
+    - A retry of an uncertain thread_create on another device now answers the worktree the first run made there, names the first uncertain answer's cause (first_cause), ends an adopted session the device's route does not reach, and never replays a retry's failure as the final answer. (#14623, fixes #14569)
+    Changed
+    - The browser skill (#15066) teaches the BrowserSkill 0.5 shared-control contract: what the strict and target control policies need per action kind, how to pass observation and expect, how a false expect is refused under each policy, read and extract in place of evaluate when the answer is already in the DOM, and waitForElement. references/commands.md adds three traps seen in Chromium-based browsers (a frame injected by another extension, a control inside another extension's own frame, clipboard writes in an unfocused Agent Window) and error rows for observation_required, observation_changed and control_context_invalid. (#15083)
+    - The browser skill's bundled runtime is omowright 0.3.4 (was 0.3.3): gated actions take { context, observation, expect, dependsOn }, cooperate("sync", { controlPolicy }) returns the observation id, read, extract, waitForElement and drag are typed, BskClient is exported for a caller-supplied transport, and a session's first navigate recovers by itself when the extension refuses it while the new tab is still blank. requestHelp now requires prompt, and only click accepts a { captureId, x, y } target. (#15083)
+    - The programming skill's references gain worked examples for scoped cleanup (await using with AsyncDisposableStack in TypeScript, AsyncExitStack in Python) and compact Python thread and process pool rules (#15061). (#15061)
+    - The browser skill (#15047) now shows the owned-browser loop beside the attached one and adds three rules: wait for a page state instead of a fixed delay, keep one connection per task and hand a wait that can outlast an eval cell to tool.monitor, and read pages within a token budget. The desktop built-in browser step and the doctor state table moved to references/desktop.md and references/install.md. references/commands.md now lists tabCreate / tabSelect as not gated and states which calls reject an unknown option (#12540, #12905). Examples in visual-qa, debugging and ultimate-browsing take the browser path from detectBrowsers() instead of an undefined variable. (#15051)
+    - The browser skill's bundled runtime is omowright 0.3.3 (was 0.3.2): scroll collection ends each round on the next response instead of a fixed 800 ms delay, an emulate() device survives goto(), a failed fill() no longer echoes the entered value, and cooperate("sync") resolves without a context on a BrowserSkill extension that has no shared control. (#15051)
+    - The dag-library skill is folded into mass-ulw. Saving a DAG, running a saved one, re-running a graph by name and scheduling the same graph now load mass-ulw, which routes those requests to its references/library.md (library dirs, placeholders, key rotation, lib.load/lib.start, the Python recipe). dag-library no longer ships as a separate skill. (#15049, refs #15044)
+    - The programming skill loads 6,835 fewer tokens on every activation (9,008 to 2,173, o200k_base): per-language tables and reference lists now live only in each language's README. It gains two design rules, one owner per decision behind a deep module and effects kept at the edge of the domain logic (#15042). (#15043)
+    - omo now pins device service 0.1.45, the current signed release, so remote devices update to it at start-up once it is served. (#14930) (#14936)
+    - Telemetry destinations are disclosed everywhere they must be, and every opt-out now stops every sender: the first-run notice, the installer text, the privacy policy and the telemetry reference name both destinations (the PostHog project at https://us.i.posthog.com and OmO's own OTLP collector at https://t.omo.dev); OTEL_SDK_DISABLED=true now disables the PostHog senders as well, not only the collector; *_SEND_ANONYMOUS_TELEMETRY=yes no longer opts out (0, false and no still do — migration note in the telemetry reference); and the Codex adapter's daily ping (CLI, installer, and plugin session start) now honors telemetry.enabled: false in omo.json like every other sender. (#14920) (#14923)
+    - Remote sessions: sessions.resolve reads the thread part of an address by the same rules as the thread tools and omo remote: a thread id prefix and an account alias now resolve, an exact thread id beats another row's listing key, and a miss on an offline device is device_offline. (#14869)
+    - Listings of another device's sessions now ask its device service for listing rows 7 first and step down one version at a time to rows 2 when it refuses. A service at relayd 0.1.46 or later then sends each row's holder retry wait (waiting, rows 6) and engine version (engine_version, rows 7). An older service answers as before. (#14511) (#14623)
+    - thread_list rows from another device show the holder's retry wait (waiting_on, running rows only) and engine_version once that device's listing carries them (rows 6 / rows 7). A cached row, and a row without the fields, show neither; nothing is inferred. (#14623)
+    - thread_list rows from another device show the holder's retry wait (waiting_on, running rows only) and engine_version once that device's listing carries them (rows 6 / rows 7). A cached row, and a row without the fields, show neither; nothing is inferred. (#14459)
+    Added
+    - The security-sensitive contracts of the omo SDK (#14949): the five principals and the root options that fix one, the typed inputs and closed non-secret answers of the credential-bearing, launch, attach, extension-session, run and loop calls, the security design's principal matrix with one refusal scenario per refused cell, and its approved behaviour changes as data. Types and tables only; no command, tool or SDK call changes behaviour. (#14981)
+    - The typed contract of the omo SDK root (#14948): the root's type computed from one call table, the input schema of every capability that carries no principal, credential, endpoint or launch option, the failure code registry and the conformance scenario table, each checked against the parity registry. Types and tables only; no command, tool or SDK call changes behaviour. (#14977)
+    - A parity check for the omo SDK (#14943): a registry of every capability of both editions' CLIs and the thread tools, checked against their real dispatch, with a baseline of today's gaps and a pull-request gate that refuses a CLI or tool change under an open gap without its SDK call. No command or tool changes behaviour. (#14970)
+    - OmO Native asks a first-run consent question (an interactive ui.confirm dialog naming both destinations and every opt-out); the answer is persisted once in a 0600 marker next to the install id, and telemetry is allowed only when it reads accepted. A run with no dialog (headless, print, RPC, hosted engines) asks nothing, writes nothing, and counts as not consented, so nothing leaves such a run. The consent-gate writer audit registers the new marker site. This is wave B of #14920 and intentionally changes the fresh-install behavior from "on after an informational notice" to "on after an explicit allow"; it is held for the default-change decision. (#14920) (#14924)
+    - thread_create { fork_from } forks a thread, on this device or another, when the engine that holds the source advertises open_session_fork (senpi#7085). The answer is a new thread with the source's history. On an engine without it, fork_from is still refused unsupported (fork_unsupported) before anything opens. A source the engine does not hold answers not_found with details.reason fork_source_not_local or fork_source_not_found, and the next action names the device that holds it. (#14403, fixes #13031) (#14623)
+    Removed
+    - Thread bindings are gone (#14312). omo thread keeps list, send <target> <text>, read and close; bind, unbind, rebind, bindings, report, answer, outbox, ack, send --binding and the --author-* flags are unknown now. The thread SDK (runtime/thread-sdk/sdk.js) loses the same methods, and send takes exactly { thread, text, mode?, expected_turn_id?, all_scope?, idempotency_key?, collapse_key? }. The agent tools thread_report, thread_outbox, thread_outbox_ack and thread_answer are gone, as are the store-extension helpers bind, unbind, rebind, bindingsForSession, enqueue, outboxAck and outboxPending. The gateway keeps the bindings, outbox, outbox_cursors and completion_arms tables, empty and unread, so an omo still running gateway schema 14 keeps working through the upgrade; an extension reads its old routes from bindings through the read-only bindingFor. Dropping the tables is deferred to #14859. A connector keeps its own chat-thread-to-session map and sends by session id. (#14623)
+    - c7b62004ab Merge pull request #15111 from code-yeongyu/train/13
+    - c99358ddc3 Merge dev 6cbb2133f0 into train 13
+    - efb24edc0e Merge #15104 (71010471b2) into train 13
+    - 71010471b2 test(thread): runtime-start disposes the stores it hands to the wake before removing their directory (#15118)
+    - 6cbb2133f0 Merge pull request #15061 from code-yeongyu/docs/skills-scoped-cleanup
+    - fd5d615389 Merge #15025 (24642a0c89) into train 13
+    - 24642a0c89 test(thread): the display-escaping tests run at the default timeout: the /remote fixture loops take 60 ms, and the skip-log test writes its rows in one transaction (300 ms, was 1.1 s)
+    - 0a9081c21a docs(changes): one fragment for train 13 (#15111), its members' entries moved
+    - d0b2a31508 chore(ultrawork): embed the directive for train 13
+    - 3e1d15651b Merge #15104 (50189c7524) into train 13
+    - 50189c7524 test(thread,task): train 12 follow-ons: wake tests remove their temp dirs, replay test waits for applied, short temp root stays short on win32
+    - e4b52202ea Merge #15025 (da611a9473) into train 13
+    - 008802755b Merge #14871 (c632aada9f) into train 13
+    - 9dccc504e8 Merge #15101 (2b1ccaca1f) into train 13
+    - 3786124e50 Merge #15099 (5dae9ba23f) into train 13
+    - 2b1ccaca1f test(omo-native): remote-binary-path expectations use the platform's path shapes (#15100)
+    - c632aada9f Merge commit 'bebc53af3b2d6b988a995f25789f61c92490a36a' into fix/ultrawork-skill-context-14870-l
+    - 8876561197 changes: fragment for #15099
+    - da611a9473 test(thread): dev's exact-ladder case keeps its tab: a typed reference's tab still folds into a space, as the ruling keeps it
+    - a29c2980b8 fix(thread): a typed reference also refuses C1 control characters; format characters stay addressable
+    - adaea6ecf1 Merge dev bebc53af3b into #15025 (generated files take dev's bytes; regen pending)
+    - bebc53af3b Merge pull request #14936 from code-yeongyu/train/thread-12
+    - bdd6cfc66d Merge pull request #15083 from code-yeongyu/docs/15066-browser-bsk-050
+    - 29a7fd3696 Merge pull request #14987 from code-yeongyu/ci/full-matrix-label-actions-read-14976
+    - 86cfb7927a Merge commit 'a110e42a8404fa764549a15e6ad4f404d26959ed' into t12go
+    - 7be9f8b003 docs(changes): fold Windows detach car into thread train
+    - a110e42a84 Merge pull request #15009 from code-yeongyu/fix/omo-thread-close-14992
+    - a99b764c51 chore(build): regenerate train 12 after skills fold
+    - 39b9e1896f docs(changes): changelog for the browser skill BrowserSkill 0.5 contract and omowright 0.3.4
+    - 3dda9ef757 chore(deps): omowright ^0.3.4; docs(browser): measured 0.5 corrections from the real-surface run
+    - 43ee4fc19b Merge commit 'c0a4ae00967674f675a8c21505f37044a4f6ac24' into t12go
+    - 34b0356d4a test(sdk-parity): freeze historical presentation baseline
+    - d7cb59055a chore(build): regenerate train 12 canonical bundles
+    - c0a4ae0096 Merge pull request #15049 from code-yeongyu/skills/fold-dag-library-into-mass-ulw
+    - 9ae70c3e1a docs(browser): state the per-policy reason of a false expect
+    - 3550928e70 Merge commit 'b860a0bf3d00332cda8d7fe3e0223d8cdb78be95' into ttd-15009-refresh
+    - a160f55ea5 docs(browser): teach the BrowserSkill 0.5 shared-control contract
+    - 0f1451f540 Merge commit 'b860a0bf3d00332cda8d7fe3e0223d8cdb78be95' into t12go
+    - df5a63e095 Merge commit 'b860a0bf3d00332cda8d7fe3e0223d8cdb78be95' into prep/14987-merge-069138e415
+    - b860a0bf3d Merge pull request #15055 from code-yeongyu/fix/sdk-parity-base-tree-windows-15052
+    - b997efc49c Merge remote-tracking branch 'origin/dev' into ttd-15009-refresh
+    - 461b514047 fix(ultrawork): make discovery, detailed todos and incremental commits explicit
+    - d812622ef1 Merge commit '069138e415ac13371d383db570ead9291b121d70' into t12go
+    - e795615e39 test(sdk-parity): attribute remote send usage presentation
+    - 069138e415 Merge pull request #15051 from code-yeongyu/docs/browser-skill-wait-on-conditions
+    - 3327922df4 Merge commit 'e687296d368e969380be34d27dc47f4dee9405f2' into t12go
+    - 8b635a8a09 Merge commit '144dc7ee470029fb74c27d8a950735ea36765ee1' into t12go
+    - 144dc7ee47 Merge pull request #15046 from code-yeongyu/fix/sdk-parity-presentation-attribution
+    - 1c15b5e16a Merge pull request #15062 from code-yeongyu/fix/14994-win-passwd-fixture
+    - c636abdae2 Merge remote-tracking branch 'origin/dev' into fix/ultrawork-skill-context-14870-l
+    - ae5b4a9c36 test(eq): re-record goldens with the desktop engine at the in-tree target path
+    - 58d51d326b test(eq): re-record linux-x64 E21-E24 goldens for the mass-ulw catalog entry (isolated HOME, two identical pinned runs)
+    - e687296d36 changes: fragment for #15069
+    - f1124517eb docs(changes): fragment for #15061
+    - 719757d860 docs(skills): compact thread and process pool rules in the Python reference
+    - e63583cf6c fix(sdk-parity): the presentation attribution names the rows that matched a changed line, not every declared row (review 6068002162)
+    - aa657e711a docs(changes): changelog for the browser skill waiting rules and omowright 0.3.3
+    - 90faa2c709 chore(deps): use omowright 0.3.3
+    - 9bdd640262 docs(browser): wait on a page state, hand long waits to the monitor, read within a token budget
+    - baf89a6ae8 docs(skills): show using / await using / AsyncDisposableStack and AsyncExitStack in the programming references
+    - 802ebceef2 test(agent-home): the Linux-facts user record carries a POSIX home on win32 too, so the record resolves (Fixes #14994)
+    - 27f6504d3a fix(sdk-parity): only presentation rows the pull request adds count, and the output names each row used
+    - 99d0a64aae Merge pull request #15043 from code-yeongyu/docs/programming-skill-slim
+    - e2a4560c90 fix(sdk-parity): base-tree path tests take one path dialect; a POSIX backslash is part of a name (review 6067780823)
+    - e489349933 docs(changes): fragment for #15055
+    - ed764ad734 fix(sdk-parity): the base tree reads Windows real paths (both separators, another drive is outside) (#15052)
+    - fae2595826 test(sdk-parity): presentation fixture keeps its helpers private (knip); edit id optional (typecheck)
+    - d515e146dc test(sdk-parity): standalone shape, layout and row-ownership controls for the presentation tier (review 6067542043)
+    - 26169498e6 docs(changes): fragment for #15049
+    - 843e0724fa fix(sdk-parity): presentation path stays module-private (knip); fmt
+    - a1f4bf81e8 docs(programming): Python README bans naive primitives for domain values and requires annotations on every function
+    - d65f099d58 fix(sdk-parity): presentation-only attribution for a usage-text change of an existing CLI verb
+    - 5e422cfc8d Merge remote-tracking branch 'origin/dev' into ci/full-matrix-label-actions-read-14976
+    - 516db60855 Merge pull request #14981 from code-yeongyu/omo-sdk-p1a-s-gated-types
+    - 3cc3a726ad docs(changes): programming skill token cut (#15043)
+    - 90f5745fdb docs(programming): cut SKILL.md from 9,008 to 2173 tokens and add two design axioms
+    - 61ffd67e1b docs(programming): move per-language table content into each language README
+    - 13aa784da0 Merge pull request #14977 from code-yeongyu/omo-sdk-p1a-types-code-registry
+    - b2e5875798 Merge commit '89697da1bec48a76bd1e4467ba606d9cf9db5c2b' into t12go
+    - 5111e84a99 Merge remote-tracking branch 'origin/dev' into fix/thread-remote-display-escaping
+    - 89697da1be Merge pull request #14970 from code-yeongyu/omo-sdk-p0-parity-registry
+    - 7017e674bf Merge pull request #14944 from code-yeongyu/design/omo-sdk-first-party-14943
+    - 9fded163dd test(omo-native): one session verb end to end through the local writers, in JSON and human modes; the streamed reply text takes the display escaping
+    - 9460c0633a fix(omo-native): keep machine-readable remote output unchanged
+    - 5644e60453 docs(changes): fold #15024 into train 12's fragment
+    - c90abb0734 Merge branch 'pr15024' into t12
+    - 1a232eb8c9 fix: apply display escaping to remote output writers and the thread tool result view
+    - c882861039 fix(omo-native): apply display escaping to thread diagnostic lines
+    - 09acd31e7b docs(changes): display escaping for thread command output
+    - 7d00cec4fd changes: fragment for #15024
+    - 223d85cfed fix(thread): a send from the CLI or the SDK wakes a parked session too
+    - 9b24ac43c3 fix(omo-native): apply display escaping to remote output
+    - 64764b116b fix(omo-native): apply display escaping to thread output
+    - 61d0c0283e fix(utils): widen the display escaping set
+    - 547cdbd29e Merge branch 'pr15017c' into t12
+    - c97a535cad fix(thread): only a row the live decision starts joins a held start
+    - cba7662923 Merge branch 'pr15017b' into t12
+    - cb748b5b0e fix(thread): decide a delivery's lane at its admission, in the same step as the engine call
+    - 9d371d0419 docs(changes): fold #15017 into train 12's fragment
+    - 304af4d218 Merge branch 'pr15017' into t12
+    - 7e93c13c50 changes: fragment for #15017
+    - 9e40fa28b4 fix(thread): an auto delivery that races a turn boundary is never dropped or split off
+    - 58199c491d Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - c935385e25 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - 624763d673 docs(changes): omo thread close fragment (#15009)
+    - 5404044639 Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - 949aa8ff54 refactor(sdk-parity): the typed-ahead inputs are one generic list, script/sdk-parity/typed-ahead-inputs.json, checked both ways with a control per case (#14949)
+    - 232964ea3c fix(sdk-parity): base-tree checks in both homes (gate and ordinary tests, skipped with the reason only when the merge base is unreadable); stale imports and lint (#14947)
+    - dc31223f25 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - eb0613c744 fix(sdk-contract): the five security inputs stay a contract fact, not a parity descriptor change, until the slice that serves each call (DESCRIPTOR_AHEAD, retired by A1d and E1c) (#14949)
+    - 454480a0c7 test(agent-home): the Linux-facts user record carries a POSIX home on win32 too, so the record resolves (Fixes #14994)
+    - 6b8c7a23de test(thread-wake): #14975's new runtime-start case uses the short temp root too (#14986)
+    - 77d4bb28a1 fix(omo-native): omo thread close passes its flags to the verb, so it closes instead of throwing (#14992)
+    - f972d6133c fix(sdk-parity): base-tree checks run only in the SDK parity job; command strings of the registry recorded in the audit (#14947)
+    - 57afcba1e5 docs(changes): fold #14980 and #14975 into train 12's fragment
+    - a9fb4c8a87 docs(sdk): categorize the design document's three command-string mentions in the audit allowlist (#14943)
+    - f1f2db11cb Merge branch 'pr14975' into t12
+    - 31938109b9 Merge branch 'pr14980' into t12
+    - 0a2843d8a0 test(sdk-contract): the omittable-input test gives the old form's answer on every shape and every root input (#14948)
+    - ef403ff65f Merge security design #14946 head 15e1751bd3 into the P1a-s branch
+    - 079bac88a4 refactor(sdk-contract): test an all-optional input as Partial extends T, not extends T (#14948)
+    - 57e18e6825 Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - c3199a130f Merge P0 final head f80953a89f into the P1a-s branch
+    - 4286dd40f6 Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - 30c9e09507 fix(sdk-contract): the scenario table finds its own directory, now that P0 keeps PARITY_DIR module-local (#14948)
+    - 8d721fc8e3 feat(sdk-contract): security design revision 21's install.setup cells, the session shape's required set whole, and no export this slice adds goes unused (review 6063520033, #14949)
+    - e5b34d947d Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - f80953a89f fix(sdk-parity): drop 34 exports nothing outside their own module uses (knip:check) (#14947)
+    - b4e8cf496c fix(sdk-contract): no unused exports for knip; sync-inputs and PORT_EFFECTS gain their consumers in the contract test (#14948)
+    - 06dd04a168 test(thread): deliveries to a running turn are steered together in send order, in the same run
+    - 2e311acaf3 Merge security design #14946 revision 21 (f85cd278a7, the documentation of 15e1751bd3 without its dev merge) into the P1a-s branch
+    - f5d5f89b28 test(sdk-contract): the session answer's required set compared whole, accounts included, with a control per side (review 6063520033, #14949)
+    - 8f6459c749 test(thread): one short temp root for socket tests: /tmp on POSIX, the OS temp dir on win32 (no \tmp on the drive root)
+    - dee9b0c345 ci(full-matrix): grant the label caller actions: read that ci.yml's ci-mode requests
+    - ce778244be Merge dev (cab771c006) into the P0 branch
+    - 15e1751bd3 merge: dev into design/omo-sdk-s0-authority-custody
+    - 5c57a36cca merge: dev into design/omo-sdk-first-party-14943
+    - cc29e84b71 docs(changes): drop #14934's entry from train 12's fragment; #14940 carried it
+    - ab30c13adb Merge remote-tracking branch 'origin/dev' into t12
+    - f920eaf3ef Merge remote-tracking branch 'origin/dev' into fix/thread-wake-failures-visible
+    - 1397551610 Merge remote-tracking branch 'origin/dev' into fix/thread-drain-steer-all-on-start
+    - cab771c006 Merge pull request #14940 from code-yeongyu/fix/14920-dev-red
+    - f85cd278a7 docs(sdk): S0 revision 21: install.setup.detect and plan are named in the refused row, as the private record has them (#14945)
+    - d51877c5cc test(sdk-contract): the session canary plants into every string leaf of the person's answer schema, not a handwritten list (review 6062824873 M1, #14949)
+    - 6871a012b9 fix(sdk-parity): scan the native inventory once per registry test file, outside the per-test timeout (#14947)
+    - ca18205e2e Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - ff820a45f3 feat(sdk-contract): option (c): a session's engine.auth.check answer is signed-in state, the provider and closed codes, with the canary test across every provider field (#14949)
+    - e62e82da7b test(sdk-contract): a recovery retry that admits the prompt twice or not at all fails its stated effects (#14948)
+    - 81de546c47 fix(sdk-contract): the recovery retry states the first prompt reaching b's session exactly once (#14948)
+    - c228345d15 Merge security design #14946 revision (137d6b9879) into the P1a-s branch
+    - 528f8beb1e wip(sdk-contract): session email policy before the owner's option (c) (#14949)
+    - 0dcf174ae5 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - 137d6b9879 docs(sdk): S0 revision 20: a session's auth.check answer carries no email and no organisation name (#14945)
+    - ac141e3bdf Merge security design #14946 revision (46e4d1407c) into the P1a-s branch
+    - 46e4d1407c docs(sdk): S0 revision 19: the session answer's bounds are an output contract, not the non-disclosure proof; B7's evidence and its limit stated (#14945)
+    - 528a4d33b2 Merge remote-tracking branch 'origin/omo-sdk-p1a-types-code-registry' into omo-sdk-p1a-s-gated-types
+    - 5cb7bf587f feat(sdk-contract): a session's engine.auth.check carries only the bounded email and organisation name of the provider's strings (#14949)
+    - e94971fdc2 fix(sdk-parity): gate-cli.ts is run by path, so knip leaves its exports unchecked; list it (#14947)
+    - 58034d02cc Merge security design #14946 revision (169406bab8) into the P1a-s branch
+    - 0b12f85780 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - 3d11e47b4c chore(knip): the contract uses eight thread contract exports, so they leave the pre-existing unused list (#14948)
+    - 169406bab8 docs(sdk): S0 revision 18: B7 per stream and not under the hold; the two bounded identity fields of a session's auth.check answer (#14945)
+    - 3525730252 Merge security design #14946 revision (c9b3e68254) into the P1a-s branch
+    - 9cb9810c7c Merge P1a head cfa991b2ed into the P1a-s branch; keep the scenario's principal, root and change beside P1a's new fields, and an effect scenario on each target for threads.attach
+    - 734a32819d Merge design #14944 (f5d28999f6) into the P0 branch
+    - b865b83a47 fix(sdk-parity): the live-schema check is two-way; control runs narrowing and widening (#14947)
+    - c9b3e68254 docs(sdk): S0 revision 17: B7 is recorded as unassigned and held until a slice owns it (#14945)
+    - 73ddcd8602 Merge security design #14946 revision (051c7cdc4d) into the P1a-s branch
+    - 84c39fbb1c feat(sdk-parity): section 6 re-synced to design amendment 4 (two 6.9 Outcome cells; 6.8 and 6.9 text) (#14947)
+    - f5d28999f6 docs(sdk): amendment 5: the live-schema check holds in both directions; accepting a new input is a behaviour change (#14943)
+    - 53a10b5854 Merge design #14944 (04dfa82abf) into the P0 branch
+    - 659707bf81 fix(sdk-parity): review 6062344773: an effect needs the kind ok discriminator; every then step obeys the table's shape rules (#14947)
+    - 9dcc70deae fix(sdk-parity): lost_reply also on the gateway store (a committed reservation whose reply is lost), for P1a's create recovery (#14947)
+    - 9832116380 fix(sdk-contract): recovery-admission-lost injects the lost store reservation reply its cited test injects (#14948)
+    - 86999dccd5 test(sdk-contract): drop the pure-row bridge now that P0 lists the pure rows (#14948)
+    - d2128697ba Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - 9336116985 Merge P1a head 1d4fac55d5 into the P1a-s branch; every enum value in a scenario, the sign-in flow's codes registered, effect classes for the new port operations
+    - e570e968d9 fix(sdk-parity): review 6062172318: every then step runs on the same fixture, answer over the whole ok answer, one well-formed final stream terminal, canonical effect comparison; pure rows (closed list) (#14947)
+    - f33e7d5930 feat(sdk-contract): section-4 inventory read from the document, the session's engine.auth.check answer, B7, changelog fragment (#14949)
+    - cfa991b2ed test(sdk-contract): bridge the two ruled pure rows until P0's schema lists them (#14948)
+    - 83a3058ff1 test(sdk-contract): apply P0's port and table rules to the whole scenario table; flat thread answers and matcher-equal pairs (#14948)
+    - 04dfa82abf docs(sdk): design amendment 7: what a scenario states, three host-local calls, registered codes, result types without credentials (#14943)
+    - 051c7cdc4d docs(sdk): S0 revision 16: 5.5 names the one peer and the terminal check, the launch key's carrier, and the hand-over's named destination (#14945)
+    - 2b234a4fed Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - be207f6ed4 feat(sdk-contract): create's internal_error, the retry's identity answers and the live, ended and offline control matrix (#14948)
+    - 8ba26e4652 fix(sdk-parity): review 6061874518 H1/H2/M3 and the table rulings: complete effect traces, the row's split, answer beside effects, refusal source, stream terminal and abort, table validity apart from built, host-local rows, live-schema mark (#14947)
+    - 7053bf4ec8 feat(sdk-contract): engine.auth.check answers its accounts as the verb prints them, closed (#14949)
+    - d3f01d109f chore(fmt): format the eq compare's diff excerpt (#14969)
+    - baaa314f8d Merge P1a head ce0fa4a1bd into the P1a-s branch; register sender_not_allowed, keep description fields in the row sync, and regenerate the authority scenarios
+    - 1d4fac55d5 feat(sdk-contract): third review's fixes and the design lane's scenario rulings (#14948)
+    - bf30009c93 fix(sdk-parity): explicit parsing contract (presence flags as field=true) checked against each command's parser (review 6061874518 M4) (#14947)
+    - 4db91cd17e feat(sdk-contract): principals, the security-sensitive inputs and answers, the principal matrix and B1-B6 as data (#14949)
+    - c041a33815 test(sdk-contract): failing-first checks for the P1a-s principal matrix, custody answers and the held table (#14949)
+    - 68893315c2 docs(sdk): amendment 5: a complete effect trace, stimulus is not effect, and the reviewer's check of a live nested schema (#14943)
+    - 937b10b279 feat(sdk-parity): TableScenario given, faults, target and then (P1a's fields), port checks over them (#14947)
+    - 2c0d059630 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - f9394c0d97 fix(sdk-parity): base tree links workspace packages by name, including bun store copies of file: dependencies (#14947)
+    - f34696bc4b fix(sdk-parity): expected effects in P1a's shape with computed coverage, descriptor = top-level fields and required (amendment 5), setResource requires resource and source (#14947)
+    - 9efabbbff0 fix(sdk-parity): review 6061624223: descriptor vs contract annotation (amendment 5), expected effects with per-input coverage, full descriptor input check, isolation over every node_modules (#14947)
+    - ce0fa4a1bd feat(sdk-contract): scenario tables for every P1a namespace, the code registry, and the second review's fixes (#14948)
+    - c437f6b493 docs(sdk): design amendment 6: which calls take the wait options; bytes are Uint8Array on the root (#14943)
+    - 661fc61564 Merge security design #14946 (ed3dd1a9e6) into the P1a-s branch
+    - f16f2df9ef docs(sdk): design amendment 5: a row's descriptor and its contract annotation; a run builds a row only against a stated expected effect (#14943)
+    - 170f310008 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - bb8b61313a fix(sdk-contract): wait options only on the calls that can wait (#14948)
+    - cf3bcc58e4 feat(sdk-contract): the threads scenario table (#14948)
+    - 1ec6781df7 fix(sdk-parity): review 6061267823 H2, H4, H5 and M8: base isolation, PR-head binding and verifier conditions, offender monotonicity, descriptor dispatch seam (#14947)
+    - c816a0ff59 docs(sdk): design amendment 4: the launch outcome and process, no principal and no terminal in an exported engine function (#14943)
+    - a5138c95d9 chore(changes): fragment for #14977
+    - 5d2e861f2f feat(sdk-contract): every P1a namespace, row inputs typed from the root's schemas, and the first review's fixes (#14948)
+    - a8410bf89b fix(sdk-parity): typed effect evidence, recurring base-backed baseline check, missing outcomes fail (review H1, H3) (#14947)
+    - 197bc5f5c4 changes: fragment for #14980
+    - ca7e2950fe Merge design #14944 (d2ec022b) into the P0 branch
+    - c01e0f086d fix(sdk-parity): exact route correspondence both ways, published mappings tied to the rows (review H6, M7) (#14947)
+    - d2ec022b75 docs(sdk): design amendment 3: three CLI cells, the alias thread default, the consent values, a row is built by a run record (#14943)
+    - cc9c9a7353 fix(sdk-parity): value tables in the argv scan, setControl/setWake on input, setup.apply plan and consent (#14947)
+    - ed3dd1a9e6 docs(sdk): S0 revision 15: both acceptances recorded; serial console refused; a hold keeps only the existing verbs' print; the narrower hold where a harness is detectable (#14945)
+    - 4958329c8b feat(sdk-contract): root type over a call table, the threads calls and the P1a-s held table (#14948)
+    - c52e9717e9 Merge remote-tracking branch 'origin/omo-sdk-p0-parity-registry' into omo-sdk-p1a-types-code-registry
+    - eeaecfc036 docs(sdk): S0 revision 14: the owner's rollout decision for our own panes; a headless remote login stays held (#14945)
+    - 6672ff7be7 docs(sdk): S0 revision 13: the headless-host gap is accepted for the end state and stays held for rollout; two emulator identities recorded (#14945)
+    - 671a8bb42b fix(thread): one drain pass starts one turn that carries every queued delivery
+    - 3c40f8e156 feat(sdk-parity): candidate digest and review verifier, run-record built rule, typecheck, lint and size fixes (#14947)
+    - 14e6757f2f docs(sdk): S0 revision 12: the end state is not the authorized rollout; held contexts keep today's behaviour until a replacement is shown (#14945)
+    - caff7f572e test(sdk-contract): failing-first checks for the P1a root type, code registry, scenarios and input schemas (#14948)
+    - b02ee8b90c changes: fragment for #14975
+    - 294e52d86d docs(sdk): S0 revision 11: second independent review folded: multiplexers and remote login refused, every visible holder listed, executable identity defined, the desktop phrase route as its own custody row (#14945)
+    - d59c8c2e5b test(eq): re-record the linux-x64 E21-E24 goldens on bun 1.4.4, the CI-pinned child runtime (#14969)
+    - bdfc27cd66 Merge design #14944 (457bd11c) into the P0 branch
+    - bb4b059821 feat(sdk-parity): negative controls, value schemas, amendment 2 cells, CI job (#14947)
+    - 457bd11c3f docs(sdk): amendment 2: a candidate is a merge requirement carried by a reviewer finding at the exact head, with a tested verifier (#14943)
+    - 25d8ea6771 fix(thread-wake): report every failed wake instead of swallowing it
+    - cd873de97e test(eq): re-record the darwin-arm64 E21-E24 goldens on bun 1.4.4, the CI-pinned child runtime (#14969)
+    - 62a4d45c62 Merge design #14944 amendment 2 (75e15060) into the P0 branch
+    - 1b8b9616b8 fix(sdk-parity): review H1 and M1-M4, adapter import family, conformance and goldens (#14947)
+    - 9d4aa5f95b docs(sdk): S0 revision 10: rollout distinguishes unchanged goldens from six approved changes; an alternative route needs availability evidence (#14945)
+    - 75e15060f4 docs(sdk): design amendment 2: the two-tier parity gate and its release record, engine.trust.ensure, internal entries and the loop's flags as slice P0 found them (#14943)
+    - 7e35717d56 docs(sdk): S0 revision 9: the owner's four rulings: a desktop route for the phrase, replace refused from a session, remote login admitted under three conditions, one named peer (#14945)
+    - c707421e60 docs(sdk): S0 revision 8: the independent review folded: a positive terminal check, two stated residuals, connector narrowings, audit before the store is read (#14945)
+    - 155a33d633 feat(sdk-parity): changed-capability gate, scenarios, design rulings D1-D7 (#14947)
+    - 722a8c5f1d test(eq): show where a golden and an actual string part, not their shared 160-char prefix (#14969)
+    - e642f072c0 feat(sdk-parity): tool registry check, baseline and first registry tests (#14947)
+    - 3a9036610e wip(sdk-parity): registry rows, section 6 render, native and Commander inventories (#14947)
+    - 3c0f511262 docs(sdk): S0 revision 7: the approval line names the three checks and the residual (#14945)
+    - dc43556ae6 docs(sdk): S0 revision 7: the owner's intent line names the same boundary (#14945)
+    - 8b25a981dc docs(sdk): S0 revision 7: the terminal guarantee has a stated boundary; the residual is outside I1 and needs two acceptances (#14945)
+    - 745ff7c2ee docs(sdk): S0 revision 6: the terminal classification (default deny, controlling terminal, no agent harness in the ancestry, typed confirmation) (#14945)
+    - 0552537450 docs(sdk): amendment 1 after CLEAR: engine row corrections from slice E1a (discover provider, resource override states, gated inputs phased) (#14943)
+    - 87f6a3c732 test(feedback): hashes need a recorded accepted consent; opt-out cases seed it, unanswered and declined cases send nothing (#14920 wave B)
+    - 1608953d5c docs(sdk): S0 revision 5: the terminal destination is bound by non-disclosure and needs an approved classification; protected delivery is never captured output (#14945)
+    - 07453fa6de docs(sdk): S0 revision 4: the owner's refinement, a person's own interactive terminal keeps today's behaviour, captured output needs a verified peer (#14945)
+    - 3c455caf3f docs(sdk): S0 revision 3: the security owner's ruling on credential return (verified peer, injection by default, audited), audit failure keeps existing lifecycle behaviour, the three approval artifacts (#14945)
+    - 3af8d30c50 docs(sdk): the delegated loop's four brief sources and its one session binding on the root (#14943)
+    - e593eddc2d docs(sdk): fold the S0 security review: custody matrix and one definition of an authorized custody operation, component guarantees, per-lifetime revocation, audit schema, rollback check, evidence checklist (#14945)
+    - 80e682a504 chore(fmt): format the two attach tests the train left unformatted
+    - 6ba2c1cbad docs(sdk): fold the third review: launch inputs per mode, monotonic baseline and base-versus-head outcomes, the resolver's slash and holder rules, native-first milestone, the loop's enumerated leaves (#14943)
+    - f05b04676d test(remote): prove the per-line bound with an injected small bound, not a 64 MiB burst under a raised test timeout (lint ratchet no-flake-masking; from #14698)
+    - a7d9da3500 docs(sdk): security design for omo SDK authority and credential custody (S0 of #14943)
+    - 0feb6f0b96 docs(sdk): fold the delta review: leaf schemas and slices per row, engine launch operations, resolution policy, behaviour-based parity gate for both editions, S0 before sensitive contracts (#14943)
+    - effcbdd43e docs(sdk): scope is both editions as decided on #14943: every OpenCode-edition verb gets an SDK call; zero gaps in both
+    - 811a72e3db docs(sdk): record the OpenCode-edition scope ruling: shared-domain verbs through the same SDK calls, three edition-only adapters (#14943)
+    - 6771031c19 fix(telemetry-core): drop the two unused destinations exports knip flags (from #14934, fixes #14933)
+    - 8d625e4bcf docs(sdk): fold the first design review: leaf-level parity rows, one resolution contract, authority and custody behind a security gate, enforceable CI checks (#14943)
+    - f67e91bd74 docs(changes): fragment for the dev-red fix (#14940)
+    - 39b0272bd9 docs(sdk): parity rows name every daemon, setup and update flag; retired verbs (#14943)
+    - c7fc422d04 chore(fmt): format the three telemetry files dev left unformatted (#14923/#14924)
+    - 6b4908657e docs(sdk): design for the omo SDK as the first-party surface (#14943)
+    - db60f63080 test(feedback): hashes need a recorded accepted consent; opt-out cases seed it, unanswered and declined cases send nothing (#14920 wave B)
+    - 64e1b806a4 test(thread): two concurrent bare-id reads of closed threads each read their own device's transcript (dev now reads closed threads without reopening; #14754 x #14623)
+    - bb2bde3fee fix(remote): close's not-open failure is built in place, so the session verbs take no new thread import (G2; from #14698)
+    - cb743c97ea fix(telemetry): check the Codex bundle with its build resolver
+    - 0a94abfbaa docs(changes): one fragment for train 12 (#14936), its members' entries merged
+    - 1b60cd7b79 chore(device-service): pin device service 0.1.45 (folded from #14930)
+    - 249131aae2 test(thread): the cross-surface table's client core carries onClose, which #14812 made required (train 12)
+    - a862cc5d0d Merge branch 'pr14934' into train12
+    - 09d532d6f7 Merge branch 'pr14812' into train12
+    - 090e01b8fc Merge branch 'pr14667' into train12
+    - 18c1886966 Merge branch 'pr14698' into train12
+    - 07ba5cf8ee Merge branch 'pr14710' into train12
+    - cc1ea40ecb Merge branch 'pr14711' into train12
+    - 76a84bde6f Merge branch 'pr14743' into train12
+    - 7f979d12f7 Merge branch 'pr14754' into train12
+    - ed055e6592 docs(changes): add the #14934 fragment
+    - e666a6028c fix(telemetry-core): drop the two unused destinations exports knip flags on dev (#14933)
+    - df19349652 Merge remote-tracking branch 'origin/dev' into slot
+    - 2e2a815ac8 Merge pull request #14924 from code-yeongyu/wt/14920-consent-b
+    - 4bceec9797 Merge remote-tracking branch 'origin/dev' into slot
+    - ab14e565d7 Merge pull request #14923 from code-yeongyu/wt/14920-telemetry-a
+    - a942df55a3 Merge pull request #14623 from code-yeongyu/train/thread-11
+    - 6c1b583f9e test(eq): refresh the golden baselines at this head (#14623)
+    - 0ff92d7b42 test(eq): re-record the E21-E24 goldens after the dev merge, in a clean env (#14623)
+    - e35a90f54c feat(telemetry): first-run consent question; headless runs are not consented (#14920 wave B)
+    - 305f739577 chore(telemetry): retire knip rows for exports this change now uses (#14920)
+    - d7e870f3a2 chore(telemetry): regenerate the codex installer bundle for the config gate sources (#14920)
+    - 6de9001778 fix(telemetry): disclose both destinations, honor one opt-out per sender (#14920)
+    - 8147cf1bda Merge remote-tracking branch 'origin/dev' into slot
+    - 9b85b90dc4 Merge pull request #14807 from code-yeongyu/fix/14335-handover-parked-record-recovery
+    - e6e1576c58 Merge commit 'c6b8936cf67b0f66e66ab814248db6bb8d1ba19b' into slot
+    - c6b8936cf6 Merge pull request #14824 from code-yeongyu/fix/linux-clk-tck-from-system
+    - 93148f7a5e Merge pull request #14900 from code-yeongyu/fix/store-reader-floor-busy
+    - ab0e878211 Merge commit '8572bc8093d45318beb1d7de4cc10255dd0ef2cd' into fix/linux-clk-tck-from-system
+    - 8572bc8093 Merge pull request #14827 from code-yeongyu/fix/startup-bound-process-tree
+    - acfa18f492 Merge commit '2ef95fda89cd4296263321302ac5f40d02bea37f' into HEAD
+    - 2ef95fda89 Merge pull request #14913 from code-yeongyu/fix/14909-remote-send-isolated-agent-dir
+    - 6511ef02ef test(remote): every send test runs with an agent dir outside HOME, so a source run never meets the shared-store guard (#14909)
+    - 665bbaee7b Merge commit '207c42f960e247b498a0c7c06d7a8787b8543f2e' into HEAD
+    - 207c42f960 Merge pull request #14894 from code-yeongyu/fix/gateway-source-run-guard
+    - e3e7f6a152 Merge commit 'f24c42d1e5605ebc69fb7492223bb991881b6fa3' into HEAD
+    - d8fcc6c445 docs(changes): name the fragment after the PR (#14894)
+    - 69138f8e2d test(eq): re-record the linux-x64 and darwin-arm64 baselines in a clean env at this merge (#14623)
+    - 3e1b538c5f Merge remote-tracking branch 'origin/dev' into fix/14335-handover-parked-record-recovery
+    - df5a3b82f2 fix(thread): a read of a thread this device does not hold asks first, since it may reopen it there (#14807)
+    - 3e4a4ac8ad docs(changes): restore #14459's fragment byte-for-byte from dev (#14623)
+    - da4ff02612 style: fmt (#14623)
+    - f33b19b8e4 Merge remote-tracking branch 'origin/dev' into HEAD
+    - 94b6619514 fix(qa): the EQ case sandbox refuses a location under an instruction file (#14904)
+    - 8f21a68033 Merge remote-tracking branch 'origin/dev' into ttd-14894
+    - 11ce721540 test(thread): store-reader-floor helpers wait for the store lock with its own busy_timeout (#14899)
+    - c0903c6720 docs(changes): name the fragment after the PR (#14898)
+    - 6185e86ebf fix(thread): a scoped disk name lookup counts only sessions whose header cwd is in the workspace (#14893)
+    - f24c42d1e5 Merge pull request #14882 from code-yeongyu/ci/macos-two-parallel-jobs
+    - 24744f1f4e test(remote): the bounded-settle send tests write their receipt to an isolated agent dir, never ~/.omo/agent (#14892)
+    - d2c438f2bf Merge pull request #14869 from code-yeongyu/feat/14305-u8-sessions-resolve
+    - 4d3c3ad5e1 Merge origin/dev 4f576adaae into train/thread-11 (#14623)
+    - f0f97bf723 style(platform-jobs): format the pre-split macos-combined test
+    - d2eb6f1edf fix(thread): a source run no launcher started never migrates the shared gateway store (#14892)
+    - 2e643f0c57 Merge branch 'dev' into feat/14305-u8-sessions-resolve
+    - aa774068a5 Merge remote-tracking branch 'origin/dev' into ci/macos-two-parallel-jobs
+    - 2a410286d4 Merge #14847 (rule A, no review: 3x p7 503)
+    - 7053200ddc Merge remote-tracking branch 'origin/dev' into ttd-14743
+    - 34aeb286f7 Merge remote-tracking branch 'origin/dev' into ttd-14710
+    - c3b69fedc2 Merge remote-tracking branch 'origin/dev' into ttd-14754
+    - 18203ca20a Merge remote-tracking branch 'origin/dev' into ttd-14711
+    - 0b1a6c9c64 Merge remote-tracking branch 'origin/dev' into feat/14305-u8-sessions-resolve
+    - 4f576adaae Merge pull request #14872 from code-yeongyu/fix/14305-delivery-ledger-device
+    - 329cfa80fe Merge pull request #14883 from code-yeongyu/fix/remote-import-guard-tracked-files
+    - 5ebbbfbd9a fix(remote): recognize the npm launcher reached through a global bin symlink (#14258)
+    - 82a0b60a12 Merge remote-tracking branch 'origin/dev' into feat/14305-u8-sessions-resolve
+    - 08a39e052e Merge remote-tracking branch 'origin/dev' into fix/14305-delivery-ledger-device
+    - 340a3b3479 Merge pull request #14865 from code-yeongyu/fix/redact-url-scheme-linear
+    - 674a884fc6 test(remote-import-guard): also scan new files not yet added, skip files missing on disk
+    - 7c26e649f8 ci(platform-jobs): judge runs made before the macOS split by their single macos-combined job
+    - cab535dd71 test(remote-import-guard): scan tracked files only, so gitignored build copies never change G1
+    - 2c774b9fa1 Merge remote-tracking branch 'origin/dev' into feat/14305-u8-sessions-resolve
+    - 70df82096e Merge remote-tracking branch 'origin/dev' into fix/14305-delivery-ledger-device
+    - 4f39941311 Merge commit '082d3045ad9fa85ae7e74af360cf5a578e943bb1' into ci/ci-mode-base-platform-green
+    - 082d3045ad Merge pull request #14857 from code-yeongyu/fix/platform-red-close-concluded-run
+    - 7076dffec8 Merge pull request #14850 from code-yeongyu/fix/changelog-gate-release-landing
+    - cfec0eb987 Merge remote-tracking branch 'origin/dev' into fix/redact-url-scheme-linear
+    - 9c1c247768 Merge commit '7e72c229b9e8e41243a664cd76a3c7a7f0fb2136' into fix/platform-red-close-concluded-run
+    - c9bd1eed03 Merge commit '7e72c229b9e8e41243a664cd76a3c7a7f0fb2136' into fix/changelog-gate-release-landing
+    - 7e72c229b9 Merge pull request #14459 from code-yeongyu/fix/14278-remote-row-fields
+    - 34859de66e Merge remote-tracking branch 'origin/dev' into ci/ci-mode-base-platform-green
+    - 7daf23f282 Merge pull request #14855 from code-yeongyu/ci/macos-shard1-split
+    - d5331c07a9 fix(changelog-gate): take a landing's post-cut fragments from the merge ref's base side (#14818)
+    - 76a3d43f2a fix(ci): a timed-out platform job is red, and a job past the first 100 is not absent (#14857 review)
+    - 5b65c779cb test(memory-core): type the charAt spy's position as the original's default (#14864)
+    - 0acdc0ccb3 test(memory-core): guard redactUrl linearity by characters read, not wall-clock (#14864)
+    - 875483edb6 docs(changes): #14872 entry
+    - fe8d250e97 fix(thread): one reader for a delivery ledger key's sender device (#14305)
+    - 6f0971c90c fix(ultrawork): read every related skill and gather context from every tool before work
+    - 4fda0171b4 chore(thread-address-core): drop the ID_PREFIX_SHAPE export nothing imports now; regenerate bundles (#14305 U8)
+    - ce9cc56916 test(thread): the cross-surface table reads optional fixture ports without non-null assertions (#14305 U8)
+    - b99400a99b docs(changes): #14869 entry
+    - a5f001273f refactor(thread,remote): sessions.resolve on the shared thread-part rules (#14305 U8)
+    - 05817b0a6c Merge dev 06011dfda8733fd50a8032251ef95fb650569f4f into fix/14278-remote-row-fields (generated files regenerated)
+    - 28ed33b04f fix(service-auth): logout still clears an unreadable stored sign-in; only a store-unavailable read skips the teardown (#14711 review M1, L1)
+    - f2e71d69a5 Merge dev 06011dfda8 into ci/macos-shard1-split (#14855)
+    - 06011dfda8 Merge pull request #14861 from code-yeongyu/test/redact-linear-by-work
+    - e6d50c28e0 Merge pull request #14862 from code-yeongyu/release/v5.1.83-source-state
+    - 6f894e5cec fix(memory-core): match the URL scheme backwards from '://' so redactUrl stays linear (#14864)
+    - f01a632aa4 test(memory-core): one timed run for the backtracking guard, no raised timeout (#14860)
+    - 2f1e0003a1 test(memory-core): guard the redaction regexes against catastrophic backtracking (#14860)
+    - 9b0faee574 test(memory-core): fail loudly when the PEM scan stops using indexOf (#14860)
+    - e1fe67a584 test(memory-core): assert redaction linearity by indexOf work, not wall clock (#14860)
+    - 3b90bbb4b3 ci(platform-red-tracker): a failing run-list read stops the closer (#14856)
+    - 01169b4fa5 ci(platform-red-tracker): judge the newest dev run where the tracked job concluded (#14856)
+    - 2e1e9eeb0a Merge dev 95cbf08c0cf7b3dc288a7d1e1b0191d787489c8e into fix/14278-remote-row-fields (generated files regenerated)
+    - 37490d450d fix(changelog-gate): judge a release-state landing as the release PR it lands (#14818)
+    - bb24023063 chore(knip): list release-stamp-strict.mjs as a script entry (#14847)
+    - 46723b28bf Merge remote-tracking branch 'origin/dev' into HEAD
+    - 9fdd43d7ad Merge origin/dev 9aca04de8ce47898a5c1f7ecf51f7a5e2f9c95d0 into fix/14278-remote-row-fields (generated files regenerated)
+    - e720829361 Merge remote-tracking branch 'origin/dev' into rf/m14459
+    - 9929bd089a chore(thread): regenerate bundles with the merged dev 011494f970 (#14623)
+    - 2d02ffea38 Merge origin/dev 011494f970 into train/thread-11 (#14623)
+    - a7bb5d1506 changelog: fragment for #14711
+    - 89b23cdc9f Merge remote-tracking branch 'origin/dev' into fix/11065-logout-single-store-call
+    - d1e7037059 test(audit): categorize the session-host unit fix's /bin/omo path literals (#14258)
+    - 2ab2014603 Merge remote-tracking branch 'origin/dev' into fix/14258-unit-runtime-pinned-to-current
+    - 2deaaf1551 Merge remote-tracking branch 'origin/dev' into bugaudit/14091-attach-pool-timer
+    - b8990103f5 docs(changelog): record #14812
+    - 182c5aa2c4 fix(remote): closing a remote client releases its per-connection sessions ports (Fixes #14091)
+    - 2b51318baa Merge remote-tracking branch 'origin/dev' into rf/m14459
+    - b32ba1fd39 build(thread): regenerate the bundles for the watch recovery retry (#14748)
+    - 25c1a2249e test(thread): inject the SDK runtime's account surface: answered-and-absent is not_found, unanswered is host_unavailable (#14623)
+    - 8567b992b6 docs(changes): fragment for #14807
+    - 283011ad26 fix(thread): thread_read and thread_send reopen a session another device parked instead of answering not_resumable (#14799)
+    - 5c132ac1d8 fix(thread): keep the lookup gate out of the public remote barrel; the fixture takes it from a testing helper (#14748)
+    - 393aadf20e chore(thread): regenerate bundles with the merged dev dependencies (#14623)
+    - 080df0c6eb Merge remote-tracking branch 'origin/dev' into fix/thread-bare-id-probe-alone
+    - e2abf877ad fix(thread): watch recovery retries a lookup-fence refusal instead of ending the watch (#14748 review round 7)
+    - 328f6a85b9 Merge remote-tracking branch 'origin/dev' into train-14623-r3
+    - d0ab94b7e0 style(thread): format the M5 unload rows (#14623 review M5)
+    - 3b6061d97b build(thread): regenerate the bundles after merging dev (#14748)
+    - cbe7fcef43 Merge dev e872095a37 into fix/14278-remote-row-fields; regenerate generated outputs (env -i build-extension, codex-install, service-auth, bundle-inputs)
+    - d8387b08fa Merge remote-tracking branch 'origin/dev' into train-14623-r3
+    - fe96f2a8a0 Merge remote-tracking branch 'origin/dev' into fix/thread-bare-id-probe-alone
+    - e6799eda7f fix(thread): the test fixture takes the lookup gate through the remote barrel (remote import guard S3, #14748)
+    - e264cb42af fix(thread): remove a refused create's far worktree only after its engine confirms the unload (#14623 review M5)
+    - 4f15b62212 test(thread): a refused, timed-out or unknown unload keeps the adopted session's worktree on the far device (#14623 review M5)
+    - 049533bb09 test(thread): each locate caller answers its typed refusal on a fence timeout and sends nothing (#14748 review round 6)
+    - de9066508b fix(thread): gate admission checks the fence and registers the locate in one synchronous step (#14748 review round 6)
+    - ee73f9884d build(thread): regenerate bundles for the admitted locates (#14748)
+    - 3b9e988d21 Merge remote-tracking branch 'origin/dev' into train-14623-fix
+    - a77765fca0 fix(thread): resume a lost recovery reservation as a recovery; adopt a lost open only on an observed route answer (#14623 review round 2 H1, M4)
+    - 2cb91cd067 fix(thread): every locate of the port waits at the lookup fence (#14748 review round 5)
+    - 7097a38b47 Merge remote-tracking branch 'origin/dev' into fix/thread-bare-id-probe-alone
+    - da01296dc5 build(thread): regenerate the plugin bundles and service-auth bundle for the lookup fence (#14748)
+    - 4051b7d173 fix(thread): the lookup fence stays closed until the solo locate itself settles (#14748 review round 4)
+    - 36eb5458bb test(thread): narrow the recovered create before spreading it (#14623 review H1)
+    - d186c007d2 Merge remote-tracking branch 'origin/dev' into fix/thread-bare-id-probe-alone
+    - cf05fcd9cd test(thread): a remote recovery's replay answers deduplicated, as every same-key create replay does (#14623 review H1 on dev's d9f50119d7)
+    - 4f4215f9f4 fix(thread): solo probe lookups exclude every other lookup of the port; edge-case table for the bare-id probe (#14748 review M3, L1)
+    - 30411b35be test(thread): type the M2 receipt service helper's synchronous results (#14623 review)
+    - 118db3dad1 Merge remote-tracking branch 'origin/dev' into train-14623-fix
+    - 351df3416c fix(thread): address #14623 review (H1 receipt reservation, M1 legacy hash, M2 reachability, M3 drain acks, M4 fresh adoption, L1 docs, L2 v6 upgrade coverage)
+    - 6a53283fd9 Merge remote-tracking branch 'origin/dev' into fix/thread-bare-id-probe-alone
+    - bd8df618cb fix(thread): solo probe retries wait for the earlier locates and stay inside the call budget (#14748 review M1, M2)
+    - 135623b7a1 chore(build): regenerate plugin bundles for #11065
+    - 3fe0fa3b93 style: bun fmt the files this branch changed (#11065)
+    - 14aa91a370 docs(changes): fragment for #14754
+    - 915aeab0e1 fix(thread): a bare thread id asks a device that stayed silent in the parallel probe again alone (#14748)
+    - 58b9f85c8b docs(changes): add the #14743 change fragment
+    - d85a4571ef Merge origin/dev into bugaudit/windows-12867
+    - 9df82b93ee fix(thread-address-core): classify mixed-separator and drive-relative Windows paths as local (#12867)
+    - 36203177d4 changelog: fragment for #14710
+    - ac17fd1633 chore(build): regenerate plugin bundles for #11065
+    - a1d9844daf fix(remote): render the session host unit for the omo that ran enable
+    - 499aec3431 build: regenerate the remote CLI bundle for the per-line bound
+    - 75fa73f750 fix(remote): bound the attach endpoint line reader per line
+    - b2dfa1a7dd fix(device-service): bound the attach replay history to its newest events
+    - 30cea69415 build: regenerate remote CLI and extension artifacts
+    - ceb6103c4e Merge remote-tracking branch 'origin/dev' into fix/11065-logout-single-store-call
+    - fbcd085b12 fix(service-auth): logout makes one store call when the keyring fails, and reports device_revoked as success (#11065)
+    - dde26d7b4c fix(thread): send the delivery-outcome notice through device-service-core's consumer client; drop knip rows the store worker entry now uses (#14623 receipt)
+    - 8f70de4861 fix(remote): fail a close that closed nothing and read send text from stdin
+    - 82fca1ea27 Merge remote-tracking branch 'origin/dev' into train/thread-11
+    - 5530921f33 build: regenerate remote send runtime artifacts
+    - d686ddd53c Merge remote-tracking branch 'origin/dev' into fix/13512-buffered-send-answer
+    - 25dc4d8220 fix(remote): retain buffered output from the identified active send
+    - 7ae8e544aa docs(changes): fold the train members' fragments into one train fragment (14623.md)
+    - 4865ab0b33 Merge PR#14403 @07060a225b into thread train 11
+    - 713ebf2ac5 Merge PR#14359 @cc9d8d731f into thread train 11
+    - d073afa1fe Merge PR#14449 @abf5e307ac into thread train 11
+    - 49ce9d0e7d Merge PR#14426 @22249cca5b into thread train 11
+    - 07a35d46b0 Merge PR#14319 @bc803a36ca into thread train 11
+    - 26bbb36765 Merge PR#14566 @ce3479397b into thread train 11
+    - 3a6c97f2de Merge PR#14423 @bc90585bc0 into thread train 11
+    - a7929a90af Merge PR#14479 @6c06d2cf03 into thread train 11
+    - bd2ca01da5 Merge PR#14459 @dc61f78b2b into thread train 11
+    - 9b853fb583 Merge PR#14511 @cae4b79921 into thread train 11
+    - 95361a6196 Merge PR#14542 @4e9d2646d9 into thread train 11
+    - cdc0aa9720 fix(thread): same-key create recovery keeps its worktree and first cause, ends an adopted unrouted session (#14569)
+    - fd2d8c31be Merge PR#14564 @d959ce48e1 into thread train 11
+    - ce3479397b docs(changes): note the gateway foreign-close fix (#14566)
+    - 7f068c4d32 fix(thread): keep the gateway store's SQLite locks so a foreign close cannot delete -wal/-shm
+    - d959ce48e1 changes: #14564 fragment
+    - 877fe926ec fix(thread): a create on another device survives a lost open reply (#14560)
+    - bc803a36ca chore(bundles): regenerate the thread SDK, wake and store-worker bundles after the import cleanup
+    - da19e1d32d style(thread): format the merged tests and drop imports the merge left unused
+    - 2172c87781 chore(bundles): regenerate the generated bundles after merging dev 8032185db8
+    - 0981a13893 test(thread): v16 and v15 stores keep every delivery and collapse key across the v17 binding drop
+    - 4a622822cd fix(thread): export unlinkMarker again for dev's retention sweep
+    - e3b9b8c1cc Merge origin/dev 8032185db8 into fix/remove-thread-bindings
+    - dcc3d4b0ed Merge remote-tracking branch 'origin/dev' into fix/thread-reply-cross-workspace-scope
+    - ca85fc8b51 fix(thread): pin the reply grant's security cases and answer a stale stated name through the sender's recorded id (#14542 review L1, L2)
+    - bf13020b8b docs(changes): #14542 fragment for the cross-workspace reply grant
+    - 8409382654 fix(thread): a reply to a sender in another workspace needs no all_scope (#14541)
+    - d44010f692 Merge fix/listing-rows-7 @cae4b79921 into fix/14278-remote-row-fields (relay-session-host imports: keep both)
+    - 61d21904e1 chore(bundles): regenerate omo.js and service-auth for the thread binding removal
+    - aced16056e Merge origin/dev into fix/remove-thread-bindings
+    - a0d29e5140 Merge fix/listing-rows-7 (#14511) into fix/14278-remote-row-fields: stack #14459 on the rows 6/7 vendor
+    - abf5e307ac fix(thread): keep receipt lookup behind the lazy runtime boundary
+    - 0df7c6c92f chore(changes): fragment for #14459
+    - ad364fb654 feat(thread): another device's thread_list rows show the holder's retry wait and engine version when its listing carries them (#14278)
+    - a0db709c6d test(thread): type receipt notice acknowledgments
+    - 34675153c1 docs(changelog): record queued delivery outcomes (#14449)
+    - 1e5ecd91a9 fix(thread): reconcile queued delivery outcomes without waking sessions
+    - 6eaeb8c6a8 docs(thread): the v16 comment names both conditions that keep bindings, and what the later drop must repeat
+    - 6de23b79b2 test(thread): prove no binding tool or verb is reachable; drop the binding exemptions left in tests
+    - 7a77c35515 Merge remote-tracking branch 'origin/dev' into fix/remove-thread-bindings-ny1
+    - 22249cca5b build(thread): refresh bundle fingerprints after formatting
+    - 5bca169fb5 docs(changes): note the local thread opening state
+    - a130d78c73 fix(thread): distinguish an opening holder from an idle session
+    - bc90585bc0 build(thread): refresh durable reader bundles
+    - fee82864dd docs(changelog): name fragment for PR 14423
+    - 572e5a6a39 fix(thread): page durable reads over visible messages
+    - 0773d8a48d fix(thread): v16 keeps an empty bindings table while a table still references it
+    - 07060a225b test(thread): a fork refused on b reads only b's capabilities (#13031)
+    - c7488410de docs(changes): fragment for #14403
+    - aef88019f8 fix(thread): fork_from forks on an engine that advertises open_session_fork, on both legs; the engine's fork_source refusals answer not_found naming where to fork (#13031)
+    - 90dc3fef61 test(thread): fork_from on an engine that advertises open_session_fork forks on both legs, and a source that engine does not hold is refused typed (red, #13031)
+    - eceb2008a0 test(thread): type the v15 migration table
+    - 6eeb6aaf6d test(thread): a v15 store (train 6's) migrates to v16, keeping bindings only while they have rows
+    - afbf136441 Merge remote-tracking branch 'origin/dev' into fix/remove-thread-bindings
+    - cc9d8d731f docs(changes): #14359 states the stale-shared-attachment limit instead of claiming every send lands (review L1)
+    - 3ab9703aee chore(knip): list train 6's graceful-close QA driver as an entry
+    - ecd6f27afd fix(thread): the attach_required retry goes the attach way only, never a second direct probe; changelog names the current causes (review M2, L1)
+    - 48d0b5e24c Merge remote-tracking branch 'origin/dev' into fix/engine-capability-missing-cause
+    - da5da7ef10 test(thread): the fake attach answers onEvent, as the pool subscribes on every attach
+    - 4281730b5a fix(thread): a command refused attach_required re-attaches and is sent once more; a named transient cause is host_unavailable, never unsupported; revert the stray semicolon formatting (#14358)
+    - 3a609324e9 Merge release-train/omo-20261119-thread-train-6 into fix/remove-thread-bindings
+    - cc7972c701 docs(changes): v15 keeps core bindings until imported
+    - 8bd31904f2 test(thread): reopen the migrated store read-write to inspect it
+    - ad4d72d94d fix(thread): keep core bindings until an extension imports them
+    - 8b96ca71dd fix(thread): an engine_capability_missing that names a transient cause is host_unavailable, not unsupported (#14358)
+    - efc27c6550 Merge remote-tracking branch 'origin/dev' into fix/remove-thread-bindings
+    - 4caaa6d488 fix(thread): run the v15 binding-table drop with foreign keys off; refuse a non-object SDK request as invalid_arguments
+    - 7d36ea09ff test(thread): drop the two spawn-site pins the binding code held and keep knip rows sorted
+    - 3e476277e1 test(thread): probe the built SDK with an offline send, the store-only path left after bindings
+    - bf4633eb06 test(thread): rewind the extension-tools migration fixture past v15
+    - f6e1bb3496 docs(changes): fragment for #14319
+    - 4f6a56bbc0 refactor(thread): remove thread bindings, the relay tools and their store
+    bun add -g omo-ai
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/code-yeongyu/oh-my-openagent/releases/tag/v5.1.84
+ReleaseTime: 2026-11-26T15:59:30.0000000Z

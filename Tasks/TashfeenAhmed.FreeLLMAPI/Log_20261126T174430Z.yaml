@@ -1,0 +1,19 @@
+Version: 0.16.46
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tashfeenahmed/freellmapi/releases/download/v0.16.46/FreeLLMAPI-Setup-0.16.46.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Agents → Connect to FreeLLMAPI (OpenCode): Connect now also removes an old FreeLLMAPI key or address from OpenCode's other config files (opencode.jsonc, config.json, or an opencode.json in the home folder). Before, a key entered there by hand overrode the new one, so Connect showed "Configuration saved" but every message failed with "Invalid API key". (#2119)
+    - Clearer error for a licence key: if a tool sends the licence key (fla_…) instead of the Unified API key, the error now says so and names the right key. (#2119)
+    - Failover after a connection reset: when a provider resets the connection, that key is skipped on all of the provider's models for 90 seconds, so the next requests go straight to a working provider. When failover cannot help, the error says why. (#2080, #2114)
+    - Images without a vision model: a request with an image (in any turn) now gets a clear 422 no_vision_model instead of a misleading 429, on /v1/chat/completions, /v1/messages and /v1/responses. (#2061, #2062, #2115)
+    - Microsoft Store: new releases no longer cancel the version that Microsoft is still certifying, so Store installs get updates again. (#2103, #2113)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.46
+ReleaseTime: 2026-11-26T14:55:23.0000000Z

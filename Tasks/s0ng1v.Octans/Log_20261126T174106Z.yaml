@@ -1,0 +1,26 @@
+Version: 1.2.2
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/s0ng1v/Octans/releases/download/v1.2.2/Octans-Setup-v1.2.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Octans v1.2.2 — 修复应用内自动更新与新增每日轻量级版本提醒
+    修复与改进
+    - 修复 WinHTTP 自动更新失败（3 个核心问题）：
+      - 修复 WINHTTP_OPTION_REDIRECT_POLICY 选项常量（63 误设为禁用重定向，已修正为 88），恢复 AtomGit（302 跳转 CDN）与 GitHub（302 跳转 release-assets.githubusercontent.com）自动重定向下载。
+      - 将会话代理模式从 DEFAULT_PROXY(0) 升级为 AUTOMATIC_PROXY(4)，完整兼容系统代理与 Clash 分流规则。
+      - 国内更新源切换为免登录公开接口 https://atomgit.com/api/v5/repos/gcw_dkdsv0bD/Octans/releases/latest（含多级回退与 .exe 资产 SHA-256 摘要提取）。
+    - 新增轻量级每日只读版本提醒：
+      - 启动后延迟 30 秒后台检查（每 24 小时最多 1 次），按需动态加载并立即卸载 winhttp.dll，绝不静默下载或安装，保持常驻 0% CPU、< 5 MB 内存与零遥测。
+      - 检测到新版时在主面板右上角显示 ↑ 新版 提示胶囊（点击直达更新界面），右键菜单新增 「自动检查更新」 开关可随时关闭。
+    质量与体量验证
+    - 单元测试：661/661 断言全部通过
+    - 主程序体积：Octans.exe 380.5 KB（< 400 KB），零非系统/网络/GPU 静态 DLL 导入
+    - 安装包：Octans-Setup-v1.2.2.exe (2,400,758 bytes)
+    - SHA-256：E5E54B38CD5ECF40A7665080E5C5C94829ECB6173E6D0DAAAC603FD8DDF3BD39
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/s0ng1v/Octans/releases/tag/v1.2.2
+ReleaseTime: 2026-11-26T14:56:32.0000000Z

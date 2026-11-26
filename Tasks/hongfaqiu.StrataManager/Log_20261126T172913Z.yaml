@@ -1,0 +1,16 @@
+Version: 0.2.53
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.53/Strata.Manager_0.2.53_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: '- Fix updating to upstream Strata v0.2.16 and later (#243): starting with v0.2.16, upstream splits its source into terminal/ (setup.py, serve/, requirements.txt, and so on) and engine/ (CMakeLists.txt, src/, and so on). Manager expected those files at the source root, so updating to v0.2.16 or later from the Versions page failed with the error "官方 ZIP 缺少必要程序文件，未修改当前安装" (official ZIP is missing required program files; current installation unchanged), and 0.2.16+ git clones or manually added folders were not recognized as runtimes. Manager now understands the new layout: the official source ZIP is installed from terminal/ and engine/ into the same directory structure as older versions, and a 0.2.16+ checkout runs from its terminal/ folder, matching the upstream launch scripts. The ≤0.2.15 layout is unchanged; a split-layout archive missing required files is still rejected without touching the current installation. The Mac engine pin remains 0.1.47.'
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: '- 修复更新到上游 Strata v0.2.16+ 失败（#243）：上游 v0.2.16 起把源码拆成 terminal/（setup.py、serve/、requirements.txt 等）和 engine/（CMakeLists.txt、src/ 等）两个目录。Manager 原先要求这些文件直接位于源码根目录，因此在「版本控制」页更新到 v0.2.16 及以后时报「官方 ZIP 缺少必要程序文件，未修改当前安装」，0.2.16+ 的 git 克隆或手动添加的目录也不会被识别为运行环境。现在会识别新目录结构：官方源码 ZIP 按 terminal/、engine/ 内容安装到与旧版本相同的目录结构；0.2.16+ 的检出目录使用其中的 terminal/ 作为运行目录，与上游启动脚本一致。≤0.2.15 的旧结构不受影响；新结构缺少必要文件时仍拒绝安装且不修改当前安装。Mac 引擎仍固定 0.1.47。'
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.53
+ReleaseTime: 2026-11-26T15:28:11.0000000Z
