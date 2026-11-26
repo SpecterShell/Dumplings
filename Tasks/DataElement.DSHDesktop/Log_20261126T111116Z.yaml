@@ -1,0 +1,65 @@
+Version: 0.14.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/dataelement/dsh-desktop/releases/download/v0.14.1/dsh-desktop-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    中文 | English
+    0.14.1 汇总了桌面壳与 Harness 升级、工作台和 Office 功能增强，以及多平台稳定性与兼容性修复。
+    新增功能
+    - 桌面产品扩展：新增产品身份、运行时和企业插件接入能力，支持按产品配置工作台集合、默认卡片与筛选控件，并扩展手机桥接接口。
+    - 工作台：支持通过会话引导创建草稿、上传安装包安装，以及自定义市场来源、集合和顶部搜索；恢复可折叠的共享集合展示。
+    - Office 模板：支持导入 Word 和 Excel 个人模板，并扩展 PowerPoint 个人模板管理与模板来源能力。
+    - 桌面语言：支持日常界面八种语言，菜单、关于和更新界面跟随桌面语言。
+    - Linux 桌面：增加 deb 打包及运行时兼容支持，补齐 Office 运行时资源解析。
+    体验优化
+    - 窗口与平台交互：macOS 关闭窗口后应用留在后台，可从 Dock 恢复会话；保存并恢复窗口尺寸、位置、最大化状态和应用页缩放。优化 macOS 侧边栏主题材质与滚动后的标题栏拖拽，调整 Windows 标题栏交互。
+    - Harness 重启与恢复：重启 Host 前处理待应用的插件 generation 投影，并记录投影诊断；完善启动恢复、插件恢复页和故障队列的退出与等待行为。
+    - 插件管理与诊断：工作台安装失败时展示插件管理器诊断；恢复故障上报和 Harness 日志入口，并在用户同意后发送脱敏诊断。
+    - 移动连接：互联网模式在公网链接就绪后再展示地址，并为隧道下载增加总时限；改进手机连接重试与授权撤销处理。
+    - Office 运行时：补齐 Linux 和 ASAR 物理资源解析，优化模板预览字体兼容与表格缓存，并恢复安装包内文档预览和消息模板。
+    - 更新与网络请求：更新版本索引和安装前校验使用 Electron 网络栈，改善系统代理环境下的连接可靠性。
+    问题修复
+    - Windows 子进程：改进隐藏控制台的创建与继承，避免 pnpm、Codex 等进程启动时闪出控制台窗口；修复插件目录链接在 junction、重定向目录和物理路径校验中的异常。
+    - 插件安装与发布：Windows 上 package.json 被短暂占用时重试替换；修复停用插件投影同步和国内镜像对齐问题。
+    - 工作台：修复安装、注册和下载失败后的重试与状态恢复，避免安装输入草稿被覆盖、迁移循环、通知冲突及维修会话状态被覆盖。
+    - Word 与 Excel：修复打包版自定义模板导入、Word 全屏遮挡及模板损坏记录处理问题。
+    - 启动与更新：修复正式包检查更新前策略服务未初始化、开发启动缺少 runtime 环境变量时退出，以及维修会话被恢复状态覆盖的问题。
+    - 链接与文件预览：修复网页数据导入缺少 Profile 时失败、工作目录切换后文件预览路径错误，以及会话链接和侧栏网页新窗口的打开位置问题。
+    - 桌面界面：修复滚动后窗口标题无法拖动、侧栏空白标识与回退图标显示异常，以及关于对话框版本号间距问题。
+    其他变更
+    - Harness 与依赖：升级并适配 Harness 0.2.2-rc.5，重放对应补丁并同步上游基线；保留桌面更新和 Office 定制能力。
+    - 构建与发布：完善 Linux 原生构建、Windows 签名资源校验及多平台验证探针；同步开发、平台构建和产品适配文档。
+
+    0.14.1 brings a refreshed desktop shell and Harness upgrade, expanded Workbench and Office features, and cross-platform reliability fixes.
+    Features
+    - Desktop product extensions: Added product identity, runtime, and enterprise-plugin integration, with configurable Workbench collections, default cards, filters, and mobile-bridge interfaces.
+    - Workbenches: Added guided draft creation, package uploads for installation, configurable marketplace sources and collections, and shared search; restored collapsible shared collections.
+    - Office templates: Added Word and Excel personal-template imports and expanded PowerPoint personal-template management and template sources.
+    - Desktop languages: Added eight languages for everyday desktop UI, with menus, About, and update views following the desktop language.
+    - Linux desktop: Added deb packaging and runtime compatibility support, including Office runtime resource resolution.
+    Improvements
+    - Windows and macOS interaction: Closing a macOS window now keeps the app running in the background for Dock-based session recovery. Window size, position, maximized state, and app-page zoom are restored. Improved macOS sidebar theming and title dragging after scrolling, and refined Windows title-bar behavior.
+    - Harness restart and recovery: Reconciles pending plugin-generation projections before restarting the Host and records projection diagnostics; improved startup recovery, plugin recovery pages, and failure-queue shutdown behavior.
+    - Plugin management and diagnostics: Workbench installation failures now show plugin-manager diagnostics. Restored Harness logs and consent-based crash reporting with diagnostic data redaction.
+    - Mobile connections: Public internet addresses appear only after links are ready; tunnel downloads have an overall timeout, with improved reconnection retries and authorization revocation handling.
+    - Office runtime: Added Linux and ASAR physical-resource resolution, improved preview-font compatibility and spreadsheet caching, and restored packaged document previews and message templates.
+    - Updates and networking: Update indexes and pre-install checks now use Electron’s network stack for more reliable connectivity behind system proxies.
+    Bug Fixes
+    - Windows subprocesses: Improved hidden-console creation and inheritance to prevent console flashes from pnpm, Codex, and other processes; fixed plugin-link validation for junctions, redirected directories, and physical paths.
+    - Plugin installation and publication: Retries package.json replacement when temporarily locked on Windows; fixed disabled-plugin projection synchronization and domestic registry alignment.
+    - Workbenches: Fixed installation, registration, and download retries and state recovery, including overwritten input drafts, migration loops, conflicting notices, and repair-session state being replaced.
+    - Word and Excel: Fixed packaged custom-template imports, Word full-screen obstruction, and handling of corrupted template records.
+    - Startup and updates: Fixed update checks failing before policy-service initialization, development startup exiting without a runtime environment variable, and repair sessions being overridden by recovery state.
+    - Links and file previews: Fixed web-data imports without a Profile, preview paths after switching working directories, and the opening behavior of session links and sidebar web windows.
+    - Desktop UI: Fixed title dragging after scrolling, empty sidebar branding and fallback-icon display, and spacing in the About version string.
+    Chores
+    - Harness and dependencies: Upgraded and adapted Harness to 0.2.2-rc.5, refreshed its patches and upstream baseline, and retained desktop update and Office customizations.
+    - Build and release: Improved Linux native-build support, Windows signing-resource verification, and cross-platform validation probes; updated development, platform-build, and product-adaptation documentation.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/dataelement/dsh-desktop/releases/tag/v0.14.1
+ReleaseTime: 2026-11-26T10:15:05.0000000Z
