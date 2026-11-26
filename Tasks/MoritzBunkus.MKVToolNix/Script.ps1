@@ -31,7 +31,13 @@ switch -Regex ($this.Check()) {
   'New|Changed|Updated' {
     try {
       # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object1.'mkvtoolnix-releases'.release[0].date | Get-Date -Format 'yyyy-MM-dd'
+      # A freshly published release can reach the feed before its date attribute is filled in.
+      $ReleaseDate = $Object1.'mkvtoolnix-releases'.release[0].GetAttribute('date')
+      if ([string]::IsNullOrWhiteSpace($ReleaseDate)) {
+        $this.Log("No release date for version $($this.CurrentState.Version)", 'Warning')
+      } else {
+        $this.CurrentState.ReleaseTime = $ReleaseDate | Get-Date -Format 'yyyy-MM-dd'
+      }
 
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
