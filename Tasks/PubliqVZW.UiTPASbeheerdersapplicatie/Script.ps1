@@ -1,8 +1,9 @@
-$Object1 = Invoke-WebRequest -Uri 'https://files.uitpas.be/uitpas_browser.html'
+$DownloadPage = 'https://files.uitpas.be/uitpas_browser.html'
+$Object1 = Invoke-WebRequest -Uri $DownloadPage
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
+  InstallerUrl = Join-Uri $DownloadPage $Object1.Links.Where({ try { $_.href.EndsWith('.msi') } catch {} }, 'First')[0].href
 }
 
 # Version
