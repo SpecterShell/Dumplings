@@ -1,0 +1,15 @@
+Version: 0.4.1190
+Installer:
+- InstallerUrl: https://updates.alma.now/alma-0.4.1190-win-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    0.4.1190
+    Features
+    - Injecting a test message no longer starts an idle Node process. The Go server now indexes gallery rows, full-text search, and user time clues, then broadcasts message_added directly over /ws/memory. Assistant rows with images are still handled by Node. A kill switch is available: ALMA_NODE_GEN_LAZY_INJECT=1.
+    Bug Fixes
+    - Fixed a race condition where Node could send message_added before the /ws/memory connection was fully ready, causing flaky behavior (about 1 in 4 runs). Rows indexed by Node now wait for WebSocket handovers first.
+    Improvements
+    - The server no longer freezes for seconds at a time while Codex is running. Process checks (pgrep, lsof, ps -E) were blocking the event loop for every request; they now run once inline and then continue in the background, shared.
+ReleaseTime: 2026-11-26T12:32:40.7240000Z
