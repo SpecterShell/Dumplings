@@ -1,0 +1,31 @@
+Version: 2.5.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Cookieboty/nomi-ai/releases/download/v2.5.2/Nomi-Setup-2.5.2.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    Nomi· 诺米 2.5.2
+    修复托管对话长时间执行误判超时、Antigravity 工具卡片展示异常以及长上下文切换失效的问题。
+    - 托管主对话改为按运行时进度持续续期并在空闲时探测真实状态，工具持续执行或模型长耗时推理超过 2 分钟不再中断并误报「运行时观察超时」。
+    - 修复 Antigravity（ACP）工具调用展示：补全 run_shell_command 命令分类与摘要、兼容首字母大写的工具参数字段、补回 rawOutput 输出与 write_file / 整文件编辑 Diff 展示。
+    - 修复托管会话的长上下文与思考深度切换：Nomi 底座及托管 CLI 下的第三方模型均可正常开关长上下文并同步到运行时。
+    细节
+    - Nomi 托管运行时的工具轨迹改为累积原始工具参数并按 UTF-8 字符边界安全截断，避免长输出出现乱码或覆盖参数详情。
+    - 将托管运行时每轮活动工具轨迹上限与 ACP / dsh 事件队列缓冲分别提升至 512，减少长任务或高并发工具调用时的丢帧与截断。
+    - 托管会话下跳过旧的会话元数据写入路径，并锁定项目选择器，避免覆盖内核维护的运行时状态。
+    English
+    Fixes false timeouts during long managed runs, broken Antigravity tool card rendering, and non-working long-context toggles.
+    - Renew the managed main-chat observation deadline on runtime progress and probe live runtime state when idle, so multi-step tool runs or long reasoning turns over 2 minutes no longer abort with an observation timeout.
+    - Fix Antigravity (ACP) tool display: classify run_shell_command with summaries, parse PascalCase tool arguments, fall back to rawOutput, and preserve write_file / whole-file edit diffs.
+    - Restore long-context and reasoning-effort toggles in managed conversations for both the Nomi runtime and third-party models on managed CLI runtimes.
+    Details
+    - Managed Nomi agent traces now accumulate raw tool arguments in Detail and truncate outputs along valid UTF-8 boundaries instead of slicing mid-character.
+    - Raised the per-turn active trace cap and ACP / dsh runtime event channel buffers to 512 to prevent drops during tool-heavy turns.
+    - Managed conversations now skip legacy store.updateMeta writes for queued sends and lock the project picker to avoid conflicting metadata updates.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Cookieboty/nomi-ai/releases/tag/v2.5.2
+ReleaseTime: 2026-11-26T07:45:39.0000000Z
