@@ -1,0 +1,294 @@
+Version: 1.1.28
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: moli-v1.1.28-x86_64-pc-windows-msvc/moli.exe
+  InstallerUrl: https://github.com/lexmount/moli/releases/download/v1.1.28/moli-x86_64-pc-windows-msvc.zip
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  NestedInstallerFiles:
+  - RelativeFilePath: moli-v1.1.28-aarch64-pc-windows-msvc/moli.exe
+  InstallerUrl: https://github.com/lexmount/moli/releases/download/v1.1.28/moli-aarch64-pc-windows-msvc.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    Realtime Layout & Incremental Rendering
+    - feat(layout): add realtime layout with complete layout passes #3351
+    - refactor(renderer): consolidate realtime layout boundaries #3373
+    - bench(layout): add realtime layout and lifetime probes #3374
+    - test(realtime): cover Playwright screenshot after a blocked iframe #3377
+    - chore(layout): trace pass-local numeric cache allocations #3380
+    - test(renderer): cover native state and Realm behavior in Realtime #3383
+    - test(renderer): cover realtime lifecycle without capture #3384
+    - perf(layout): streamline table construction and preparation #3382
+    - test(renderer): cover Realtime reads from shared adopted stylesheets #3386
+    - fix(layout): project ResizeObserver padding and device pixels #3376
+    - perf(layout): allocate inline formatting state only for owners #3453
+    - perf(layout): reduce frozen projection allocation and ordering work #3381
+    - perf(layout): reuse realtime screen layout during scrolling #3491
+    - perf(layout): avoid unused work in geometry and scroll projection #3493
+    - perf(layout): reuse inherited legacy clip chains #3548
+    - perf(layout): sample content size directly for container queries #3549
+    - fix(layout): avoid realtime relayout for detached DOM edits #3606
+    - perf(viewport): rasterize damaged bands #3612
+    - perf(layout): reuse screen geometry after style-neutral data attributes #3608
+    - perf(layout): compare affected styles with the published screen #3615
+    - fix(paint): gate viewport damage rasterization behind Molio #3682
+    - refactor(layout): carry Stylo damage through screen publication #3690
+    - perf(layout): release superseded screen styles before full layout #3693
+    - perf(layout): preserve precise screen style invalidation #3697
+    - perf(layout): retain and incrementally update Realtime layout worlds #3725
+    - refactor(layout): keep pending screen damage in Stylo element data #3728
+    - refactor(layout): share retained layout and paint #3734
+    - perf(layout): retain validated Realtime inline formatting work #3738
+    - refactor(layout): consume Stylo damage on main #3745
+    - perf(layout): skip clean branches when refreshing the box tree #3746
+    - perf(layout): retain prepared numeric tree relationships #3750
+    - perf(layout): repaint native color damage with published geometry #3757
+    - perf(layout): project visual style damage over measured geometry #3758
+    - perf(paint): sample live resource pixels with retained geometry #3770
+    - perf(layout): retain paragraph shaping across width changes #3772
+    - perf(layout): refresh retained overflow across numeric passes #3774
+    - perf(layout): retain stable grid and table box branches #3775
+    - perf(layout): retain embedded Realtime layout worlds #3776
+    - fix(layout): reuse boxes when observed styles revert #3779
+    - perf(layout): reproject only affected local scroll coordinates #3771
+    - perf(renderer): reuse layout for paint-only hover changes #3781
+    - fix(layout): preserve replaced sizes in cross-axis probes #3785
+    - perf(layout): retain paragraph shaping after box compaction #3786
+    - perf(layout): share local scroll translations #3788
+    - perf(svg): defer inline SVG geometry for Realtime box reads #3784
+    - perf(svg): prepare inline SVG scenes on demand after CSS layout #3794
+    Stylo, CSSOM & Style Invalidation
+    - fix(layout): reuse loaded CSS-connected font sources across declarations #3385
+    - fix(css): invalidate cached styles that depend on mutated attributes #3436
+    - fix(fonts): validate WOFF1 table lengths before decoding #3454
+    - fix(style): resolve Stylo ToCss derive result type inference #3462
+    - fix(cssom): publish parser style imports before scripts #3513
+    - fix(style): resolve rem against the computed root font size #3598
+    - refactor(style): publish root font state before eager pseudos #3602
+    - refactor(cssom): unify parser stylesheet admission and publication #3603
+    - perf(style): reuse pending invalidation target indices #3605
+    - refactor(style): delegate root font publication to Stylo #3607
+    - perf(cssom): reuse parsed declarations for inline style writes #3618
+    - perf(cssom): reuse attribute text for inline style resolution #3624
+    - fix(media): share MediaQueryList lifecycle across layout policies #3610
+    - fix(cssom): publish inline styles before custom element reactions #3626
+    - perf(cssom): apply parsed properties directly to inline declarations #3634
+    - fix(cssom): preserve inline declaration order and skip stable writes #3646
+    - refactor(dom): unify attribute lookup for CSSOM consumers #3653
+    - perf(cssom): reuse retained inline style declarations #3657
+    - perf(cssom): publish typed inline declarations to Stylo #3662
+    - perf(cssom): serialize inline style attributes on demand #3663
+    - refactor(cssom): share parsed property mutations #3684
+    - fix(css): add missing common HTML user-agent defaults #3689
+    - perf(cssom): reuse scanned and parsed inline declarations #3685
+    - refactor(cssom): keep inline declarations with their DOM attribute #3691
+    - refactor(cssom): unify inline style attribute commits #3692
+    - refactor(cssom): compact inline compatibility storage #3694
+    - refactor(cssom): use a concrete DOM inline style source #3695
+    - refactor(cssom): use Stylo parsed declarations throughout CSSOM #3696
+    - perf(style): unify CSSOM and Realtime invalidation #3698
+    - perf(style): bound descendant restyle history #3699
+    - refactor(style): use Stylo child restyle hints #3702
+    - perf(style): use Stylo for demand-driven incremental restyling #3726
+    - refactor(style): separate style paths from pending screen updates #3727
+    - refactor(style): read canonical eager pseudos from Stylo #3730
+    - refactor(style): preserve native stylesheet and viewport hints #3731
+    - refactor(style): use native Stylo snapshots for ordinary DOM invalidation #3737
+    - refactor(style): retire the legacy selector invalidation planner #3740
+    - refactor(style): store path observations with element data #3733
+    - refactor(style): remove legacy stylesheet lifecycle and unify style invalidation #3749
+    - fix(css): preserve media playback selector invalidation #3761
+    Molio Desktop & HarmonyOS
+    - feat(molio): add a GPUI-CE desktop browser #3469
+    - fix(molio): show page favicons in tabs #3474
+    - feat(molio): add file downloads and a downloads page #3480
+    - fix(molio): preserve history across page-initiated navigation #3475
+    - refactor(molio): decouple navigation state from viewport frames #3495
+    - fix(renderer): inherit layout configuration for initial popups #3472
+    - fix(molio): open renderer popups in tabs #3476
+    - feat(molio): use native cursors for page content #3497
+    - fix(molio): handle viewport input and macOS titlebar dragging #3500
+    - fix(molio): release each admitted mouse press on viewport cancel #3550
+    - perf(molio): reuse unchanged viewport textures #3613
+    - feat(molio): configure frame pacing and follow the display clock #3614
+    - build: support Moli CLI on HarmonyOS ARM64 #3736
+    - feat(molio): add a browser engine adapter for HarmonyOS #3739
+    Media, H.264, Images & Canvas
+    - fix(media): queue windowless media events in the owning Window #3324
+    - perf(image): enable JPEG encoder SIMD dispatch #3552
+    - perf(image): unify JPEG encoding and decoding #3576
+    - perf(image): pin the optimized libjpeg-turbo-rs fork #3597
+    - fix(canvas): restore TestUFO animation strips #3604
+    - perf(canvas): draw directly into the backing store #3611
+    - feat(media): add Linux H.264 software video playback #3625
+    - feat(media): enable bundled H.264 video playback on macOS #3635
+    - fix(media): reject unsupported MSE codec combinations #3641
+    - feat(media): play H.264 and AAC Media Source streams on macOS #3644
+    - fix(media): stop playback when a page closes #3678
+    - fix(media): preserve video aspect ratio by default #3681
+    - fix(media): create TimeRanges snapshots in the receiver realm #3763
+    CDP, DevTools, Emulation & Screencasts
+    - fix(network): report wire headers in cookie-bearing subresource ExtraInfo by @lanyue-llk in #2811
+    - fix(cdp): report committed Document MIME types in frame snapshots #3433
+    - fix(cdp): update pipe registration for Tokio 1.53.3 #3463
+    - test(cdp): align action-window smoke with wheel coalescing #3489
+    - feat(cdp): expose page domains through Schema.getDomains #3481
+    - feat(cdp): expose the browser command line in automation mode #3482
+    - feat(cdp): render DevTools node and rectangle highlights #3485
+    - feat(emulation): render CDP vision deficiency simulation #3484
+    - feat(emulation): honor CDP operating system text scale #3488
+    - perf(cdp): pace screencasts from capture start #3555
+    - perf(devtools): reuse realtime screen layout for screencast #3496
+    - perf(layout): reuse published paint metadata in screencasts #3498
+    - fix(cdp): accept touchEnd for individual contacts #3554
+    - perf(cdp): preserve screencast cadence across timer jitter #3556
+    - perf(renderer): rasterize realtime screencasts off the page thread #3546
+    - feat(emulation): honor mobile device metrics and viewport directives #3487
+    - feat(input): synthesize CDP mouse scroll gestures #3486
+    - fix(emulation): preserve the active viewport on partial updates #3714
+    SVG, Paint & Layout Compatibility
+    - fix(svg): access SVGRect values through native receiver identity #3361
+    - fix(svg): reflect SVGMarkerElement.orient as a native DOMString #3416
+    - fix(print): skip background-only image requests when backgrounds are disabled #3456
+    - fix(layout): render password inputs as bullets #3460
+    - fix(layout): honor HTML text alignment attributes #3468
+    - fix(layout): respect CSS appearance on checkboxes and radios #3473
+    - fix(renderer): render default textarea values #3478
+    - fix(layout): respect float min-width during text alignment #3494
+    - fix(layout): apply legacy CSS clip rectangles #3477
+    - fix(layout): resolve container queries from layout sizes #3479
+    - fix(svg): reflect filter enumerations with native receiver validation #3509
+    - fix(svg): preserve animated-number identity and float reflection #3562
+    - fix(geometry): expose legacy window aliases #3629
+    - fix(svg): refresh animated strings from their native attributes #3660
+    - fix(svg): accept DOMMatrix2DInit in transform operations #3665
+    - fix(paint): render CSS border images #3687
+    - fix(layout): clamp inline text in legacy WebKit boxes #3748
+    - fix(style): blockify children of legacy WebKit boxes #3782
+    - perf(paint): skip identity CSS color filters #3780
+    - fix(layout): align block absolute static positions with line edges #3787
+    - fix(layout): correct scroll overflow for empty and positioned boxes #3790
+    Input, Scrolling & Hit Testing
+    - fix(forms): correct native input events across document trees #3300
+    - fix(focus): check author focus when the autofocus rendering task runs #3329
+    - fix(events): brand WheelEvent delta accessors #3355
+    - fix(events): brand MouseEvent coordinate and button accessors #3354
+    - fix(events): brand PointerEvent input field accessors #3353
+    - feat(input): complete Realtime wheel events without batching #3379
+    - test(input): cover realtime pointer capture during relayout #3451
+    - fix(input): project captured pointer coordinates through frame ancestry #1601
+    - fix(input): pass click_count to mousedown and mouseup detail by @wasabihu in #3470
+    - fix(inert): exclude inert subtrees from hit testing #3121
+    - refactor(hit-test): separate CSS, inert, and viewport policies #3492
+    - fix(wpt): retain held mouse button during native drag actions #3504
+    - fix(wpt): support native touch pointer actions #3505
+    - refactor(textarea): share value newline normalization #3553
+    - refactor(input): extract shared input types and the wheel controller #3609
+    - fix(css): accept extended pointer-events keywords in HTML hit testing #3683
+    DOM, HTML, Forms & Navigation
+    - fix(document): initialize child navigation documents in the loading state #3310
+    - fix(html): keep non-fetchable embedded resources out of frame navigation #3316
+    - fix(dom): unload child documents in their registered execution realm #3327
+    - fix(xml): reserve prefixes named by ordinary xmlns attributes #3319
+    - fix(window): create lightweight blank popup documents without a doctype #3371
+    - fix(navigation): use the native URL throughout precommit redirects #3420
+    - fix(history): restore same-document scroll after popstate #3365
+    - fix(forms): isolate native input pattern matching #3422
+    - perf(dom): skip registry preservation scans for ordinary removals #3440
+    - fix(selector,html2md): resolve WHATWG dir="auto"/<bdi> directionality and preserve BiDi isolates in Markdown by @mlubbad in #3407
+    - fix(dom): restore frame candidates when shadow subtrees reconnect #3389
+    - fix(navigation): restore the saved entry offset for explicit traversal scroll #3368
+    - fix(forms): preserve textarea dirty state when setting defaultValue #3483
+    - fix(dom): expose Document.onvisibilitychange #3518
+    - fix(navigation): derive cookie site from the committed document #3599
+    - fix(runtime): finish iframe load callbacks before late descendants #2373
+    - fix(navigation): dispatch native BeforeUnloadEvent during unload #3658
+    - fix(dom): validate processing instruction targets before UTF-16 normalization #3655
+    - refactor(dom): share legacy body color attribute reflection #3706
+    - perf(dom): avoid cloning shadow binding metadata during parsing #3719
+    - fix(dom): reflect Document direction and legacy body colors #3703
+    - perf(dom): skip default registry lookups during light subtree removal #3720
+    - fix(dom): keep the registry when reusing a declarative shadow root #3723
+    - fix(window): preserve requested positions of lightweight popups #3721
+    - fix(dom): use typed Attr arguments for element mutations #3766
+    - fix(location): forward Window assignments through Location.href #3752
+    - fix(dom): preserve UTF-16 in insertAdjacentText #3765
+    - fix(window): reject indexed writes and definitions #3751
+    - fix(dom): resolve currentScript by document identity #3789
+    Fetch, Preload, XHR & Cache
+    - fix(fetch): reuse direct raw memory cache entries across URL fragments #3366
+    - fix(preload): validate integrity before reporting successful link loads #3401
+    - fix(preload): honor crossorigin across ordinary preload destinations #3404
+    - refactor(preload): centralize CORS checks in the resource client #3429
+    - fix(performance): normalize common Resource Timing content types #3427
+    - fix(performance): count dropped resource timings at enqueue #3520
+    - fix(scripts): release stylesheet blockers after link events #2739
+    - fix(images): keep lazy requests from delaying document load #3596
+    - fix(file-api): resolve object URL storage from the executing Window #3652
+    - fix(cache): freeze matchAll and keys result arrays #3661
+    - refactor(preload): share main document scanner initialization #3716
+    - fix(timing): publish parser stylesheet entries in their child document #3718
+    - refactor(parser): use the document loader for blocking scripts #3710
+    Security, CSP & Trusted Types
+    - fix(worker): enforce CSP during WebAssembly compilation #3320
+    - fix(trusted-types): apply TrustedHTML conversion to the iframe srcdoc setter #3412
+    - fix(trusted-types): check TrustedHTML before document.write and writeln #3393
+    - fix(csp): use the script element directive for classic worker imports #3417
+    - fix(csp): report each violated policy during Worker module loads #3437
+    - fix(csp): validate nonce-source syntax before matching #3424
+    - fix(trusted-types): honor Function constructor brands #3590
+    - fix(html): enforce showPicker origin policy #3564
+    - fix(xhr): require CORS preflight for upload listeners #3632
+    - fix(csp): reuse script nonce admission for child inline scripts #3659
+    - fix(csp): inherit policies in local child realms #3595
+    JavaScript, Workers, Events & Web APIs
+    - fix(indexeddb): align schema methods with WebIDL #3290
+    - fix(workers): suppress exception reports after termination #3291
+    - fix(events): compile popup content handlers in their owner scope #3296
+    - fix(events): clear child Window event dispatch state after delivery #3312
+    - refactor(events): share Window event dispatch state #3334
+    - fix(events): keep the typed Window messageerror handler accessor #3348
+    - fix(clipboard): keep in-memory Blob reads on clipboard delivery #3340
+    - fix(events): share native cancellation for child Window handler returns #3338
+    - fix(events): apply the native Window receiver policy to popup handlers #3346
+    - fix(modules): report synchronous evaluation errors in the child Window #3449
+    - fix(webidl): implement WindowProperties exotic methods #3583
+    - refactor(script): share script event lifecycle queueing #3713
+    - fix(modules): preserve ready runtime failures in scheduler order #3717
+    - refactor(forms): use FileList's native brand for input.files #3708
+    WPT, Testing, CI, Documentation & CLI
+    - test(webdriver): match preload messages by context #3288
+    - test(webdriver): keep dialogs open in Selenium smoke #3289
+    - test(fetch): stabilize CLI readiness deadlines under load #3352
+    - test(service-worker): await replacement installation before sampling #3375
+    - test: stabilize main Nextest preload and CLI checks #3408
+    - docs: restore release-compatible layout instructions #3430
+    - test(print): cover font reuse and nested frame limits #3452
+    - test(serve): preserve the full browser runtime configuration #3457
+    - test(core): stabilize shared readiness deadline coverage #3467
+    - test(wpt): refresh full Realtime release results #3521
+    - fix(wpt): resolve CDP fixture hosts locally #3522
+    - ci(release): verify headless Moli packaging #3543
+    - fix(wpt-cross): expand bare UUID templates #3502
+    - fix(wpt-cross): serve ordinary files over HTTP/1.1 #3622
+    - fix(wpt-cross): bound fixture browser DNS waits on Linux #3623
+    - fix(wpt-cross): serve mixed-content cases on ordinary fixture origins #3742
+    - fix(wpt-cross): serve the Service Worker access control fixture #3743
+    - fix(wpt-cross): serve the Clear-Site-Data cookie fixture #3747
+    - fix(wpt-cross): serve Clear-Site-Data fixture endpoints #3741
+    - fix(cli): remove implicit CSS image waits for visual exports #3783
+    New Contributors
+    - @mlubbad made their first contribution in #3407
+    - @wasabihu made their first contribution in #3470
+    Full Changelog: https://github.com/lexmount/moli/compare/v1.1.27...v1.1.28
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/lexmount/moli/releases/tag/v1.1.28
+ReleaseTime: 2026-11-26T17:38:53.0000000Z
