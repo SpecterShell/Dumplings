@@ -14,12 +14,28 @@ function Get-ReleaseNotes {
       $null = Open-PlaywrightPage -Page $Page -Uri 'https://community.lumivero.com/s/article/citavi-7-release-notes'
       Read-PlaywrightLocator -Page $Page -Selector "xpath=//div[contains(@class, 'OutlineElement')]"
     } | ConvertFrom-Html
-    $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./p[contains(., 'Citavi $($this.CurrentState.Version.Split('.')[0..2] -join '.')')]")
+    # The article names each release by the marketing version: 7.5 for 7.5.0.x, 7.4.1 for 7.4.1.x.
+    $VersionParts = $this.CurrentState.Version.Split('.')
+    $VersionCandidates = [System.Collections.Generic.List[string]]::new()
+    if ($VersionParts.Count -ge 3) { $VersionCandidates.Add(($VersionParts[0..2] -join '.')) }
+    if ($VersionParts.Count -ge 2) { $VersionCandidates.Add(($VersionParts[0..1] -join '.')) }
+    $ReleaseNotesTitleNode = $null
+    foreach ($VersionCandidate in $VersionCandidates) {
+      $ReleaseNotesTitleNode = $ReleaseNotesObject.SelectSingleNode("./p[not(contains(@class, 'article-summary')) and contains(., 'Citavi ${VersionCandidate}:')]")
+      if ($ReleaseNotesTitleNode) { break }
+    }
     if ($ReleaseNotesTitleNode) {
       # ReleaseTime
       $this.CurrentState.ReleaseTime = [regex]::Match($ReleaseNotesTitleNode.InnerText, '([a-zA-Z]+\W+\d{1,2}\W+20\d{2})').Groups[1].Value | Get-Date -Format 'yyyy-MM-dd'
 
-      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not ($Node.Name -eq 'p' -and $Node.Attributes['style']?.Value -match '#0f4761'); $Node = $Node.NextSibling) { $Node }
+      $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node; $Node = $Node.NextSibling) {
+        if ($Node.Name -eq 'p') {
+          # The next release starts with the same "Citavi <version>:" heading pattern.
+          if ($Node.InnerText.Trim() -match '^Citavi \d+(?:\.\d+){1,3}:') { break }
+          if ($Node.Attributes['style']?.Value -match '#0f4761') { break }
+        }
+        $Node
+      }
       # ReleaseNotes (en-US)
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'en-US'
