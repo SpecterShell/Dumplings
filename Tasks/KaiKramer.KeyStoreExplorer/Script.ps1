@@ -29,6 +29,15 @@ switch -Regex ($this.Check()) {
     try {
       $Object2 = Invoke-WebRequest -Uri 'https://keystore-explorer.org/releases.html' | ConvertFrom-Html
 
+      # The index page now only forwards to the release page for the current major version with a meta refresh.
+      $RefreshNode = $Object2.SelectSingleNode('//meta[translate(@http-equiv, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz") = "refresh"]')
+      if ($RefreshNode) {
+        $RefreshTarget = [regex]::Match($RefreshNode.GetAttributeValue('content', ''), 'url=(.+)$', 'IgnoreCase').Groups[1].Value.Trim()
+        if (-not [string]::IsNullOrWhiteSpace($RefreshTarget)) {
+          $Object2 = Invoke-WebRequest -Uri (Join-Uri 'https://keystore-explorer.org/' $RefreshTarget) | ConvertFrom-Html
+        }
+      }
+
       $ReleaseNotesTitleNode = $Object2.SelectSingleNode("//div[@class='page-header' and contains(., '$($this.CurrentState.Version)')]")
       if ($ReleaseNotesTitleNode) {
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesTitleNode.NextSibling; $Node -and -not $Node.HasClass('page-header'); $Node = $Node.NextSibling) { $Node }
