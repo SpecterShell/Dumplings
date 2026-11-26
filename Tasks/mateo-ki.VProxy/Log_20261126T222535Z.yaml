@@ -1,0 +1,26 @@
+Version: 1.17.4
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/mateo-ki/vproxy/releases/download/v1.17.4/vproxy-1.17.4-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    🚀 VProxy v1.17.4 发布说明 / Release Notes
+    🎉 VProxy v1.17.4 正式发布！本版本重点新增 当前使用节点完整快照持久化与防误删保护、外部代理软件共存与防打断守护，并对 「系统设置」、「关于」页面及全界面文案/布局 进行了统一极简重构：
+    📌 当前使用节点持久化与防误删保护
+    - 完整快照兜底：在 MihomoConfigOptions 中持久化 selected_node_snapshot，Database 新增 persist_selected_node / clear_selected_node_if / resolve_selected_node（按 ID → 跨分片指纹 → 已保存快照顺序恢复），应用重启、开机自启与切换回连不再因节点库变化而退回误选其它节点；
+    - 订阅刷新与清理保护：write_source_nodes（覆盖与累计写入）按节点指纹继承既有节点 ID，并在上游刷新批次回传暂缺时保留当前激活节点；delete_dead_nodes、prune_stale_dead_nodes、delete_invalid_hosts、dedupe_nodes 与 deduplicate_physical 均自动跳过 pinned_selection 保护中的当前使用节点（仅在用户主动删除节点/所属订阅源或清空节点库时清除）；新增回归测试 pinned_active_node_survives_source_refresh_speedtest_failure_and_cleanup。
+    🛡️ 外部代理防打断守护与端口碰撞自愈
+    - 系统代理防篡改守护：auto_rearm_system_proxy 默认开启并将 maybe_check_proxy_drift 巡检周期缩短至 5 秒，降低其他代理工具启停改写系统代理对当前连接的影响；
+    - 内部直连/本地请求隔离：无代理订阅拉取、Geo 规则库下载、本地控制端口检查与 API 推送等内部请求统一启用 .no_proxy()，不随系统代理变更受阻；
+    - 控制器端口自动避让：默认控制器端口被外部进程占用时通过 allocate_fallback_controller_port 自动改绑空闲回环端口并同步运行时状态。
+    🎨 系统设置、关于页面与全局 UI 极简重构
+    - 共享极简列表组件体系：抽离 settings_list（settings_group / settings_divider / settings_row / pill_toggle / segmented_pills / stepper_u32），修复 segmented_pills 在右对齐行中的选项顺序与紧凑尺寸计算；
+    - 系统设置重构：六分页（常规 / 外观 / 订阅测速 / 代理守护 / 接口 / 清理）清晰重组与去重，精简冗余提示与对比文案；
+    - 关于页面重构：品牌卡新增点击版本胶囊复制与一键 复制环境信息；主更新流与历史版本切换状态解耦（切换/下载历史版本不再覆盖顶部更新检测结果），支持 稳定版 | 预发版 胶囊切换、展开历史版本列表自动加载与行内原位操作；独立出默认折叠的「本机目录」卡片（含 复制/打开）并修复垂直滚动裁剪穿透底部状态栏的问题；精简免责声明与更新日志弹窗。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/mateo-ki/vproxy/releases/tag/v1.17.4
+ReleaseTime: 2026-11-26T21:17:13.0000000Z
