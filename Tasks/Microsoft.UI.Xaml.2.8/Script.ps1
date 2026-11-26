@@ -12,7 +12,7 @@ if ([string]::IsNullOrWhiteSpace($NuGetVersion)) {
 }
 $this.CurrentState.Version = $NuGetVersion
 
-$InstallerUrl = "https://api.nuget.org/v3-flatcontainer/microsoft.ui.xaml/${NuGetVersion}/microsoft.ui.xaml.${NuGetVersion}.nupkg"
+$InstallerUrl = "https://globalcdn.nuget.org/packages/microsoft.ui.xaml.${NuGetVersion}.nupkg"
 
 # Installer
 # One entry per architecture; each selects a different nested AppX inside the same .nupkg archive.
