@@ -4,8 +4,10 @@ $Object1 = Invoke-RestMethod -Uri 'https://api.ishell.cc/versions/0'
 $this.CurrentState.Version = $Object1.data.vers
 
 # Installer
+# The API hands out a signed OSS URL whose Expires and Signature change on every request. Keep only the
+# object path so an unchanged installer is not reported as a URL change on every check.
 $this.CurrentState.Installer += [ordered]@{
-  InstallerUrl = $Object1.data.downUrl
+  InstallerUrl = $Object1.data.downUrl.Split('?')[0]
 }
 
 switch -Regex ($this.Check()) {
