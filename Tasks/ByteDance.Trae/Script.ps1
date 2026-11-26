@@ -23,18 +23,25 @@ switch -Regex ($this.Check()) {
     $this.CurrentState.RealVersion = $InstallerFile | Read-ProductVersionFromExe
 
     try {
-      $ReleaseNotesNode = Use-PlaywrightPage -Stealth -Headless {
+      $ReleaseNotesHtml = Use-PlaywrightPage -Stealth -Headless {
         param($Page)
 
         $null = Open-PlaywrightPage -Page $Page -Uri 'https://www.trae.ai/changelog'
-        Read-PlaywrightLocator -Page $Page -Selector "xpath=//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)')]"
-      } | ConvertFrom-Html
+        # The published changelog lags behind the shipped build, so an absent entry is normal.
+        Read-PlaywrightLocator -Page $Page -Selector "xpath=//section[contains(@class, 'versionEntry') and contains(.//div[contains(@class, 'metadataColumn')], '$($this.CurrentState.RealVersion)')]" -Optional
+      }
 
-      # ReleaseNotes (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotes'
-        Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
+      if ([string]::IsNullOrWhiteSpace($ReleaseNotesHtml)) {
+        $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.RealVersion)", 'Warning')
+      } else {
+        $ReleaseNotesNode = $ReleaseNotesHtml | ConvertFrom-Html
+
+        # ReleaseNotes (en-US)
+        $this.CurrentState.Locale += [ordered]@{
+          Locale = 'en-US'
+          Key    = 'ReleaseNotes'
+          Value  = $ReleaseNotesNode.SelectSingleNode('.//div[contains(@class, "contentColumn")]') | Get-TextContent | Format-Text
+        }
       }
     } catch {
       $_ | Out-Host
