@@ -1,0 +1,41 @@
+Version: 0.107.47
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.47/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.47/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - 旧版对话导入被中断后，可以原地补齐。
+      - **之前：**导入时源文件还在追加，副本会少最后几条消息。之后每次重新导入都返回 409，没有办法修复。
+      - **现在：**同时满足下面三个条件时，会原地更新已有会话，返回 status:"imported" 和 updated:true：
+        - 已有会话来自同一来源；
+        - 它是新内容的严格前缀；
+        - 导入后没有在 K-brain 里改过。
+      - **更新时保留：**置顶、归档、分享、标签、目标、模型、工作目录、用量和文件检查点。用户改过的标题也保留。
+      - **不会被覆盖的会话：**导入后在 K-brain 里继续对话、回退、编辑或压缩过的会话。（#251，via #252；对应 Stack-Cairn/LiveAgent#1417）
+    新增
+    - 导入冲突带上原因。
+      - 409 响应新增 errorCode:"import_conflict" 和 reason。reason 的取值：
+        - different_source
+        - diverged
+        - modified_after_import
+        - no_new_messages
+        - fingerprint_unchanged
+      - 会话正在运行时返回 errorCode:"session_busy"，这是暂时状态，稍后重试即可。（#252）
+    - 新增能力标识 history_import_prefix_update，在 /v1/health 中声明。（#252）
+    兼容性
+    - 请求格式不变。
+    - 已有字段和原错误文本不变。
+    - 旧客户端会把前缀更新当作普通导入处理。
+    - 本版之前导入的会话没有记录导入时的修订号，改为按导入后的会话结构判断是否改过。有一个已知缺口：这类会话如果只回退了最新几条消息，判断不出来。
+    其他
+    - docs/liveagent-backend.md 补充了导入协议的说明。
+    - 新增存储层和 HTTP 层测试，覆盖前缀更新的各个分支。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.47
+ReleaseTime: 2026-11-25T23:23:53.0000000Z
