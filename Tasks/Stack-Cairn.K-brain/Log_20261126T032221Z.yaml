@@ -1,0 +1,26 @@
+Version: 0.107.48
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.48/k-brain-windows-x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/Stack-Cairn/K-brain/releases/download/v0.107.48/k-brain-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    修复
+    - macOS 上 /var 写法的 deny 规则可能不生效。
+      - macOS 的 /var、/tmp、/etc 是指向 /private 下对应目录的系统符号链接。Image 会把临时目录里的路径解析成 /private/var/... 再做权限判断，所以按系统报告的 /var/folders/... 写的 deny 规则匹配不上，图片照样会显示。
+      - 现在路径规则在 macOS 上把这两种写法当作同一路径，deny 和 allow 规则都按同一个文件判断。
+      - 只跟随这三个系统固定的符号链接，用户自己的符号链接不受影响。
+      （#253，#254）
+    兼容性
+    - 其他平台行为不变。
+    - 已有规则不需要修改。
+    其他
+    - internal/tools 的 TestLiveAgentImageDenyRuleCoversOtherSpellings 在 macOS 上一直失败，就是这个问题，现在已通过。
+    - 新增路径别名的单元测试，以及只在 macOS 上运行的规则匹配测试。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Stack-Cairn/K-brain/releases/tag/v0.107.48
+ReleaseTime: 2026-11-26T02:49:41.0000000Z
