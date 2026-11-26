@@ -20,16 +20,15 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl (zh-CN)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'zh-CN'
-        Key    = 'ReleaseNotesUrl'
-        Value  = 'https://github.com/proma-ai/Proma/releases'
+      # Upstream stopped tagging releases after 0.19.x, so the version tag is optional.
+      $Object2 = $null
+      try {
+        $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/proma-ai/Proma/releases/tags/v$($this.CurrentState.Version)"
+      } catch {
+        $this.Log("No GitHub release for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/proma-ai/Proma/releases/tags/v$($this.CurrentState.Version)"
-
-      if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
+      if ($Object2 -and -not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText.Contains('下载')); $Node = $Node.NextSibling) { $Node }
         if ($ReleaseNotesNodes) {
@@ -50,7 +49,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.Locale += [ordered]@{
         Locale = 'zh-CN'
         Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/proma-ai/Proma/releases/tag/v$($this.CurrentState.Version)"
+        Value  = $Object2 ? $Object2.html_url : 'https://github.com/proma-ai/Proma/releases'
       }
     } catch {
       $_ | Out-Host

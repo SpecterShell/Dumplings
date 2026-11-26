@@ -20,19 +20,20 @@ switch -Regex ($this.Check()) {
     }
 
     try {
-      # ReleaseNotesUrl (en-US)
-      $this.CurrentState.Locale += [ordered]@{
-        Locale = 'en-US'
-        Key    = 'ReleaseNotesUrl'
-        Value  = "https://github.com/Comfy-Org/Comfy-Desktop/releases"
+      # Not every Todesktop build gets a matching v<version> tag upstream, so treat it as optional.
+      $Object2 = $null
+      try {
+        $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Comfy-Org/Comfy-Desktop/releases/tags/v$($this.CurrentState.Version)"
+      } catch {
+        $this.Log("No GitHub release for version $($this.CurrentState.Version)", 'Warning')
       }
 
-      $Object2 = Invoke-GitHubApi -Uri "https://api.github.com/repos/Comfy-Org/Comfy-Desktop/releases/tags/v$($this.CurrentState.Version)"
+      if ($Object2) {
+        # ReleaseTime
+        $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
+      }
 
-      # ReleaseTime
-      $this.CurrentState.ReleaseTime = $Object2.published_at.ToUniversalTime()
-
-      if (-not [string]::IsNullOrWhiteSpace($Object2.body)) {
+      if ($Object2 -and -not [string]::IsNullOrWhiteSpace($Object2.body)) {
         $ReleaseNotesObject = $Object2.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
         $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.ChildNodes[0]; $Node -and -not ($Node.Name -eq 'h2' -and $Node.InnerText -match 'Download Latest|Install'); $Node = $Node.NextSibling) { $Node }
         # ReleaseNotes (en-US)
@@ -41,15 +42,15 @@ switch -Regex ($this.Check()) {
           Key    = 'ReleaseNotes'
           Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
-
-        # ReleaseNotesUrl (en-US)
-        $this.CurrentState.Locale += [ordered]@{
-          Locale = 'en-US'
-          Key    = 'ReleaseNotesUrl'
-          Value  = $Object2.html_url
-        }
       } else {
         $this.Log("No ReleaseNotes (en-US) for version $($this.CurrentState.Version)", 'Warning')
+      }
+
+      # ReleaseNotesUrl (en-US)
+      $this.CurrentState.Locale += [ordered]@{
+        Locale = 'en-US'
+        Key    = 'ReleaseNotesUrl'
+        Value  = $Object2 ? $Object2.html_url : 'https://github.com/Comfy-Org/Comfy-Desktop/releases'
       }
     } catch {
       $_ | Out-Host
