@@ -1,0 +1,23 @@
+Version: 0.21.3
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.21.3/magic-context-dashboard-windows-x64.msi
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/cortexkit/magic-context/releases/download/dashboard-v0.21.3/magic-context-dashboard-windows-x64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - A copy of your settings is kept before every save. When you save in the Config editor, the dashboard first copies the file it replaces to config-backups in the Magic Context data folder. It keeps the newest 5 copies of each config. To go back, copy one over the config file. If the copy cannot be made, the save is refused. On macOS and Linux the copies are readable only by you; on Windows they inherit the permissions of the Magic Context data folder. Thanks to the contributor of pull request 959 (issue 956).
+    Fixed
+    - Large sessions open faster. On a session with thousands of summaries and tens of thousands of messages, the Messages view received about 400 MB of data and built every summary's text at once. It now receives only the fields it shows (about 97% less in our test session), looks up summary times in batches, and builds a summary's text only when you expand it. In our test session the first frame of the Summaries view came in about half the time, and a filtered Messages view in about a fifth (issue 991).
+    - Leaving the session list no longer keeps loading it. A page of sessions that was still loading when you moved to another view could go on loading further pages in the background.
+    - Model discovery no longer starts OpenCode from a temporary folder. In two rare cases (a blank or relative data folder setting, and a home folder of /), the dashboard could still run its OpenCode checks from a temporary folder or from the AppImage mount. It now skips the check when it has no safe folder. Thanks to the contributor of pull request 986 (issue 985).
+    No settings change. The update arrives through the in-app updater.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/cortexkit/magic-context/releases/tag/dashboard-v0.21.3
+ReleaseTime: 2026-11-26T23:27:23.0000000Z
