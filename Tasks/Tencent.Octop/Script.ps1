@@ -1,8 +1,8 @@
 $Object1 = Invoke-GitHubApi -Uri 'https://api.github.com/repos/TencentCloud/Octop/releases/latest'
 
 # Version
-# The installer writes "1.0.3-beta.8" into ARP for the tag v1.0.3b8, but that spelling sorts below the published 1.0.3b4, so the catalog version follows the tag.
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+# The installer writes "1.0.3-beta.8" into ARP for the tag v1.0.3b8, and the published 1.0.3b4 entry is removed with this version, so the package version follows ARP.
+$this.CurrentState.Version = $Object1.tag_name -replace '^v' -replace '^(\d+\.\d+\.\d+)b(\d+)$', '$1-beta.$2'
 
 # Installer
 $this.CurrentState.Installer += [ordered]@{
