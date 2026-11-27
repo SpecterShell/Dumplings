@@ -27,7 +27,7 @@ switch -Regex ($this.Check()) {
           "d'rd' MMM yyyy", "d'rd' MMMM yyyy",
           "d'th' MMM yyyy", "d'th' MMMM yyyy"
         ),
-  (Get-Culture -Name 'en-US'),
+        (Get-Culture -Name 'en-US'),
         [System.Globalization.DateTimeStyles]::None
       ).ToString('yyyy-MM-dd')
 

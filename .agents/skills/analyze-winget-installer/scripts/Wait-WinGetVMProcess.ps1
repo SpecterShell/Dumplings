@@ -48,22 +48,21 @@ try {
   $ProcessStartedAtUtc = $Process.StartTime.ToUniversalTime().ToString('o')
   $WaitStartedAtUtc = [DateTime]::UtcNow.ToString('o')
   $Clock = [Diagnostics.Stopwatch]::StartNew()
-  $MaximumMilliseconds = [long]$TimeoutSeconds * 1000
   $Completed = $false
 
   # WaitForExit(timeout) observes only this handle. Never call the unbounded
   # overload or Start-Process -Wait, which would change the wait contract.
   do {
-    $RemainingMilliseconds = $MaximumMilliseconds - $Clock.ElapsedMilliseconds
+    $RemainingMilliseconds = ([long]$TimeoutSeconds * 1000) - $Clock.ElapsedMilliseconds
     if ($RemainingMilliseconds -le 0) { break }
     $Completed = $Process.WaitForExit([int][Math]::Min(250, $RemainingMilliseconds))
   } while (-not $Completed)
 
   [pscustomobject][ordered]@{
     ProcessId           = $ProcessId
-    ProcessStartedAtUtc  = $ProcessStartedAtUtc
-    WaitStartedAtUtc     = $WaitStartedAtUtc
-    ElapsedMilliseconds  = $Clock.ElapsedMilliseconds
+    ProcessStartedAtUtc = $ProcessStartedAtUtc
+    WaitStartedAtUtc    = $WaitStartedAtUtc
+    ElapsedMilliseconds = $Clock.ElapsedMilliseconds
     WaitScope           = 'Process'
     Completed           = $Completed
     TimedOut            = -not $Completed

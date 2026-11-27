@@ -84,13 +84,13 @@ function Invoke-WinGetJsonRequest {
   )
 
   $Parameters = @{
-    Method = $Method
-    Uri = $Uri
-    Headers = $Headers
-    ErrorAction = 'Stop'
+    Method                   = $Method
+    Uri                      = $Uri
+    Headers                  = $Headers
+    ErrorAction              = 'Stop'
     ConnectionTimeoutSeconds = 15
-    OperationTimeoutSeconds = 60
-    MaximumRetryCount = 0
+    OperationTimeoutSeconds  = 60
+    MaximumRetryCount        = 0
   }
   if ($PSBoundParameters.ContainsKey('Body')) {
     $Parameters.Body = $Body | ConvertTo-Json -Depth 12
@@ -132,9 +132,9 @@ function Get-WinGetGitHubHeader {
   param ([AllowNull()][string]$Token)
 
   $Headers = @{
-    Accept = 'application/vnd.github+json'
+    Accept                 = 'application/vnd.github+json'
     'X-GitHub-Api-Version' = '2022-11-28'
-    'User-Agent' = $UserAgent
+    'User-Agent'           = $UserAgent
   }
   if (-not [string]::IsNullOrWhiteSpace($Token)) {
     $Headers.Authorization = "Bearer $Token"
@@ -252,9 +252,9 @@ function Get-WinGetPipelineComment {
     $Match = [regex]::Match([string]$Comment.body, $PipelineCommentPattern, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
     if (-not $Match.Success) { continue }
     [pscustomobject][ordered]@{
-      CommentId = [int64]$Comment.id
-      CreatedAt = [datetimeoffset]$Comment.created_at
-      BuildId = [int]$Match.Groups['BuildId'].Value
+      CommentId   = [int64]$Comment.id
+      CreatedAt   = [datetimeoffset]$Comment.created_at
+      BuildId     = [int]$Match.Groups['BuildId'].Value
       PipelineUrl = [uri]$Match.Groups['Url'].Value
     }
   }
@@ -339,29 +339,29 @@ function Get-WinGetArtifactDownloadUri {
 
   $ContributionUri = "https://dev.azure.com/$AzureOrganization/_apis/Contribution/HierarchyQuery/project/$AzureProjectId"
   $Payload = [ordered]@{
-    contributionIds = @($AzureContribution)
+    contributionIds     = @($AzureContribution)
     dataProviderContext = [ordered]@{
       properties = [ordered]@{
-        artifactId = [int]$Artifact.ArtifactId
-        buildId = $ResolvedBuildId
+        artifactId       = [int]$Artifact.ArtifactId
+        buildId          = $ResolvedBuildId
         compressDownload = $true
-        path = ''
+        path             = ''
         saveAbsolutePath = $true
-        sourcePage = [ordered]@{
-          url = [string](Get-WinGetArtifactPageUri -ResolvedBuildId $ResolvedBuildId)
-          routeId = 'ms.vss-build-web.ci-results-hub-route'
+        sourcePage       = [ordered]@{
+          url         = [string](Get-WinGetArtifactPageUri -ResolvedBuildId $ResolvedBuildId)
+          routeId     = 'ms.vss-build-web.ci-results-hub-route'
           routeValues = [ordered]@{
-            project = $AzureProject
-            viewname = 'build-results'
+            project    = $AzureProject
+            viewname   = 'build-results'
             controller = 'ContributedPage'
-            action = 'Execute'
+            action     = 'Execute'
           }
         }
       }
     }
   }
   $Headers = @{
-    Accept = 'application/json;api-version=5.0-preview.1;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true;noArrayWrap=true'
+    Accept       = 'application/json;api-version=5.0-preview.1;excludeUrls=true;enumsAsNumbers=true;msDateFormat=true;noArrayWrap=true'
     'User-Agent' = $UserAgent
   }
   $Result = Invoke-WinGetJsonRequest -Method Post -Uri $ContributionUri -Headers $Headers -Body $Payload
@@ -493,13 +493,13 @@ $Results = foreach ($Artifact in Get-WinGetBuildArtifact -ResolvedBuildId $Resol
   if ($null -eq $DownloadUri) {
     Write-Warning "Build $ResolvedBuildId did not expose artifact $($Artifact.Name)."
     [pscustomobject][ordered]@{
-      Source = 'AzureDevOps'
-      PullRequest = $ResolvedPullRequest
-      BuildId = $ResolvedBuildId
-      PipelineUrl = $ResolvedPipelineUrl
-      ArtifactName = $Artifact.Name
-      Status = 'Missing'
-      ArchivePath = $null
+      Source        = 'AzureDevOps'
+      PullRequest   = $ResolvedPullRequest
+      BuildId       = $ResolvedBuildId
+      PipelineUrl   = $ResolvedPipelineUrl
+      ArtifactName  = $Artifact.Name
+      Status        = 'Missing'
+      ArchivePath   = $null
       ExtractedPath = $null
     }
     continue
@@ -520,13 +520,13 @@ $Results = foreach ($Artifact in Get-WinGetBuildArtifact -ResolvedBuildId $Resol
   }
 
   [pscustomobject][ordered]@{
-    Source = 'AzureDevOps'
-    PullRequest = $ResolvedPullRequest
-    BuildId = $ResolvedBuildId
-    PipelineUrl = $ResolvedPipelineUrl
-    ArtifactName = $Artifact.Name
-    Status = if ($WhatIfPreference) { 'WhatIf' } else { 'Downloaded' }
-    ArchivePath = $ArchivePath
+    Source        = 'AzureDevOps'
+    PullRequest   = $ResolvedPullRequest
+    BuildId       = $ResolvedBuildId
+    PipelineUrl   = $ResolvedPipelineUrl
+    ArtifactName  = $Artifact.Name
+    Status        = if ($WhatIfPreference) { 'WhatIf' } else { 'Downloaded' }
+    ArchivePath   = $ArchivePath
     ExtractedPath = if ($NoExpand) { $null } else { $ExtractedPath }
   }
 }

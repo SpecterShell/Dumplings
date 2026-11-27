@@ -57,20 +57,20 @@ $this.CurrentState.Installer += [ordered]@{
 }
 
 $Result = $this.CheckInstallerUpdates(@{
-  Validator = 'Header'
-  HeaderName = 'x-goog-hash'
-  SelectValue = { param($Values) @($Values) -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_.StartsWith('md5=') } | ForEach-Object { $_.Substring(4) } }
-  LegacyState = @{ ValidatorField = 'Hash' }
-  ReadVersion = {
-    param($Path)
-    $Extracted = New-TempFolder
-    try {
-      7z.exe e -aoa -ba -bd -y -o"$Extracted" $Path 'FolderSizeExplorer.msi' | Out-Host
-      Read-ProductVersionFromMsi -Path (Join-Path $Extracted 'FolderSizeExplorer.msi')
-    } finally {
-      Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+    Validator   = 'Header'
+    HeaderName  = 'x-goog-hash'
+    SelectValue = { param($Values) @($Values) -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_.StartsWith('md5=') } | ForEach-Object { $_.Substring(4) } }
+    LegacyState = @{ ValidatorField = 'Hash' }
+    ReadVersion = {
+      param($Path)
+      $Extracted = New-TempFolder
+      try {
+        7z.exe e -aoa -ba -bd -y -o"$Extracted" $Path 'FolderSizeExplorer.msi' | Out-Host
+        Read-ProductVersionFromMsi -Path (Join-Path $Extracted 'FolderSizeExplorer.msi')
+      } finally {
+        Remove-Item -LiteralPath $Extracted -Recurse -Force -ErrorAction Continue -ProgressAction SilentlyContinue
+      }
     }
-  }
-})
+  })
 if ($Result.NeedsMetadata -and $Result.Artifacts[0].Path) { Get-ReleaseNotes -InstallerFile $Result.Artifacts[0].Path }
 $this.CompleteInstallerUpdates($Result)

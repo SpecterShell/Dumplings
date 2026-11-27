@@ -15,7 +15,7 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = [datetime]::ParseExact(
         $Object1.releaseData,
         "ddd MMM dd HH:mm:ss 'CST' yyyy",
-  (Get-Culture -Name 'en-US')
+        (Get-Culture -Name 'en-US')
       ).ToUniversalTime()
 
       # ReleaseNotes (zh-CN)

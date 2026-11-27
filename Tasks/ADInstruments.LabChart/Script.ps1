@@ -10,7 +10,7 @@ $Object1 = $Global:DumplingsStorage.ADInstrumentsApps.Where({ $_.ID -eq 'LabChar
 # Installer
 $this.CurrentState.Installer += [ordered]@{
   # InstallerLocale = 'en'
-  InstallerUrl    = Join-Uri $Prefix $Object1.DownloadURL
+  InstallerUrl = Join-Uri $Prefix $Object1.DownloadURL
 }
 $VersionEN = $Object1.Version
 
