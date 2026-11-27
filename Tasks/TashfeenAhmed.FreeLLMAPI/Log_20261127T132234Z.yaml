@@ -1,0 +1,19 @@
+Version: 0.16.48
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/tashfeenahmed/freellmapi/releases/download/v0.16.48/FreeLLMAPI-Setup-0.16.48.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Claude Code said "done" but did nothing: some models write a tool call as plain text. On streamed /v1/messages requests the gateway now turns more of these shapes into real tool calls (bare JSON, fenced JSON, text followed by a tool call, <function_calls> blocks), so Claude Code runs the tool. Also fixes a doubled tool name and merged parallel tool calls from some relays. (#2117, #2134)
+    - Claude Code context window: setup-claude and launch take --context-window max (or a number such as 200k) to use the largest window your tool-capable models can serve. The setup output shows the window it wrote. The docs explain where the default of about 105k comes from. (#2122, #2087, #2133)
+    - Puter: a stream frame over the 2 MB limit is now rejected even when it ends with a newline. Thanks @FNICKE. (#2129, #2130)
+    Maintenance
+    - Router bandit tests get more time on slow Windows machines. Thanks @FNICKE. (#2131, #2132)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.48
+ReleaseTime: 2026-11-27T13:15:52.0000000Z
