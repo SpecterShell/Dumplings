@@ -8,9 +8,11 @@ if (-not $Object1) {
 }
 
 # Version
-$this.CurrentState.Version = $Object1.tag_name -replace '^v'
+# The tag carries the prerelease suffix that the installer itself does not report, and the package
+# version follows the installed version, so the suffix is dropped.
+$this.CurrentState.Version = $Object1.tag_name -replace '^v' -replace '-.+$', ''
 
-if ($this.CurrentState.Version -notmatch '^[0-9]+(\.[0-9]+)*(-[0-9A-Za-z.-]+)?$') {
+if ($this.CurrentState.Version -notmatch '^[0-9]+(\.[0-9]+)*$') {
   throw 'The highest release tag does not provide a usable version.'
 }
 
