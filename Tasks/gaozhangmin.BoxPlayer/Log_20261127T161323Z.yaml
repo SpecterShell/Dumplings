@@ -1,0 +1,47 @@
+Version: 5.0.51
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/gaozhangmin/boxplayer/releases/download/v5.0.51/boxplayer-5.0.51-win-x64.exe
+Locale:
+- Key: ReleaseNotesUrl
+  Value: 
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    New
+    - Local & NAS .nfo and Artwork Sidecars: Automatically read sibling .nfo metadata (movie.nfo, <title>.nfo, tvshow.nfo with Season folder inheritance, and episode .nfo) plus local posters, backdrops, and episode thumbs across local folders, SMB, NFS, FTP, WebDAV, and AList, falling back cleanly to local NFO metadata and cached artwork when TMDB misses or offline.
+    - Guangya Non-VIP VOD Fallback: Automatically fall back to VOD streaming URLs when non-VIP web download size limits (code 254) are hit on Guangya Drive.
+    - Complete Cloud Source Labels: Display source labels for Guangya, Google Drive, China Mobile Cloud, Tianyi Cloud, SMB, NFS, and FTP on media detail views.
+    - MD5 Fingerprint Parity: Populate content_hash_name: 'md5' for Google Drive and WebDAV items to align cross-platform fingerprint scraping.
+    Improvements
+    - Faster TMDB & Music Metadata Scanning: Deduplicate and cache concurrent TV show and certification lookups during scans, and streamline AI scraping and music enrichment.
+    - Refine the Playback Settings default-player hint clarity.
+    Fixes
+    - Aligned "Unwatched" Aggregation: Exclude unmatched items from Unwatched views and filter watched/in-progress movies at the member level before collapsing collections so counts match All Movies.
+    - Emby & Jellyfin Collections Restored: Restore Emby and Jellyfin Playlists and BoxSets collections in media server views, paged browsing, and search.
+    - Web Player Origin-to-HLS Fallback: Automatically fall back once from a failed Origin stream to available transcoded HLS playback in the built-in web player without stale reconnect state.
+    - 115 Sign-In QR Rendering: Generate and size the 115 Drive login QR code locally without clipping so it displays reliably.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增
+    - 支持本地与 NAS .nfo 及本地海报读取：扫描本地文件夹、SMB、NFS、FTP、WebDAV 与 AList 时，自动读取同目录 .nfo（支持 movie.nfo / <片名>.nfo / tvshow.nfo 及季度子目录继承 / 单集 .nfo）与本地海报、背景图及单集缩略图；当 TMDB 未收录或离线且 .nfo 包含片名时，直接回退使用本地 .nfo 元数据与缓存图片入库。
+    - 光鸭云盘大文件播放回退：非会员触发网页端文件大小限制（code 254）时，自动回退获取 VOD 流媒体直链播放。
+    - 详情页网盘来源标签补全：媒体详情页新增光鸭云盘、Google Drive、中国移动云盘、天翼云盘及 SMB / NFS / FTP 等来源标签显示。
+    - 内容指纹字段补齐：Google Drive 与 WebDAV 目录项统一补充 content_hash_name: 'md5'，对齐跨端指纹刮削识别。
+    优化
+    - TMDB 与音乐元数据扫描加速：扫描阶段启用剧集与分级查询并发去重缓存，优化 AI 刮削与音乐元数据/封面富化处理性能。
+    - 网页播放器默认提示文案同步更新为清晰指引（「设置 → 播放」）。
+    修复
+    - 统一「未观看」聚合口径：从「未观看」视图剔除未匹配项目，并在按合集折叠电影前先按成员电影过滤已观看与正在播放记录，与「所有电影」口径保持一致。
+    - 媒体服务器分类恢复：恢复 Emby 与 Jellyfin 媒体服务器「播放列表（Playlists）」与「合集（BoxSets）」分类在首页视图、分页浏览及搜索中的显示与进入浏览。
+    - 网页播放器回退修复：网页播放器以原画质播放网盘视频失败时，若存在转码 HLS 流则自动回退播放一次，修复切清晰度异常与错误状态滞留。
+    - 115 登录二维码修复：115 网盘扫码登录二维码改为本地生成渲染与布局裁剪优化，避免二维码不显示。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gaozhangmin/boxplayer/releases/tag/v5.0.51
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/gaozhangmin/boxplayer/releases/tag/v5.0.51
+ReleaseTime: 2026-11-27T15:43:06.0000000Z
