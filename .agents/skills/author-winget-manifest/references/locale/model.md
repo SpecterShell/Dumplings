@@ -138,6 +138,7 @@ For an additional locale, perform the same applicability review but include only
 - Tags follow the lower-case, hyphen-separated convention and describe user-facing discovery terms rather than implementation technology or generic application form.
 - Tags are sorted and deduplicated with the `en-US` culture in every locale manifest.
 - Additional-locale tags are translated when useful, or omitted when no tag is translatable.
+- A translated compound tag is one term, `SSH配置` rather than `ssh-配置` or `SSH 配置`.
 - GitHub Wiki availability was checked for repository-hosted packages, and additional-locale documentation is present only when its labels are translated.
 - `Agreements` appears only when explicit unattended acceptance is required.
 - `Icons` is omitted.

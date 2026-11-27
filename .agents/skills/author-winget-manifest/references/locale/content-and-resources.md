@@ -67,6 +67,7 @@ Do not add `Moniker` automatically for a new package, even when the product name
 - In an additional locale manifest, translate tags that have natural, useful localized search terms.
 - If no tags are translatable, omit `Tags` from the additional locale to inherit the default array.
 - If only some tags are translatable, supply the complete intended localized array because `Tags` arrays do not merge. Keep invariant technical terms and replace only the terms that have useful translations.
+- Translate a compound tag as one localized term. Do not carry the English hyphen into the translation and do not insert a space: write `SSH配置`, not `ssh-配置` or `SSH 配置`.
 - Sort and deduplicate `Tags` deterministically with the `en-US` culture in every default and additional locale manifest.
 
 Sort with PowerShell 7.4 or later.
