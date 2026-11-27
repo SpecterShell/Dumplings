@@ -1,0 +1,38 @@
+Version: 4.1.3
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.3/Rayburst_4.1.3_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/AnInsomniacy/rayburst/releases/download/v4.1.3/Rayburst_4.1.3_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This release collects the 4.1.3 betas. It bundles Aria2 Next 3.1.2, so deleting or pausing a download the engine is still stopping no longer fails, and adding a link again continues its unfinished file. Cmd+Q no longer crashes Rayburst on macOS, windows no longer reopen off screen, and the extension API stays responsive while the engine is busy. New are a collapsible sidebar, paused adding, custom BitTorrent peer rules and the native edit menu in text fields. Use it with Rayburst Connect 2.2.2.
+    ✨ New Features
+    - Collapsible sidebar — a button at the bottom of the sidebar collapses it to icons; the choice is remembered (#839)
+    - Start immediately — the add-task dialog has a checkbox to add tasks paused; the choice is remembered (#809)
+    - Custom peer rules — Settings → BitTorrent takes your own IP and CIDR rules, checked before saving and merged with the downloaded block list (#816)
+    - Edit menu in text fields — right-clicking an input or text area opens the system menu with cut, copy, paste and select all (#837)
+    - Windows installer artwork — the installer's welcome and finish pages show Rayburst artwork, and the uninstaller uses the app icon (#836)
+    - Brand mark — the Rayburst mark and name head the sidebar (#812)
+    🛠 Improvements
+    - Resuming — adding a link again after its unfinished download was removed continues the file instead of saving a new copy, when the server shows the same file (#842)
+    - Extension API — /stat waits at most two seconds for the engine and answers with the last statistics, download support is read from the engine state, and requests slower than a second are logged (#828)
+    - Remote access — without an API secret, requests from other machines are refused; /ping and /version stay open
+    - Dialogs — the extension dialog shows the current Rayburst Connect artwork, and its content comes in item by item, as in About
+    - Aria2 Next 3.1.2 — moving paused torrents no longer crashes the engine, shutdown requests are answered, stops that could hang after a failed disk write are fixed, large Linux preallocations stop promptly, path options expand ${HOME}, and media downloads with the same name run side by side (#819)
+    🐛 Bug Fixes
+    - Fixed Cmd+Q crashing Rayburst on macOS. Quit now goes through the same path as the tray's Quit (#822)
+    - Fixed a window reopening off screen. If its title bar is outside every display's work area, it is fitted to the primary display and centered (#826)
+    - Fixed deleting a download that the engine was still stopping, for example while it retried after HTTP 429. The task leaves the list at once and its files are removed when the engine lets go of them, instead of failing with a timeout and coming back (#832)
+    - Fixed Pause All reporting an error when the engine took longer than its wait to pause everything (#832)
+    - Fixed the Linux tray failing to register inside Flatpak and Snap (#825)
+    - Fixed download progress bars flickering on Linux (#813)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/AnInsomniacy/rayburst/releases/tag/v4.1.3
+ReleaseTime: 2026-11-27T12:55:53.0000000Z
