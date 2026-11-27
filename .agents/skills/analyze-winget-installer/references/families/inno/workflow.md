@@ -9,8 +9,6 @@ Route here when `Get-InnoInfo` succeeds, a validated legacy Inno loader table or
 
 Use `Get-InnoFormatInfo -Path $InstallerFile` when classification or an unsupported-edition diagnosis is sufficient. It reports Official Inno Setup, My Inno Setup Extensions, ResTools, or `with ISX`, together with the catalog and route evidence. For ordinary authoring, call `Get-InnoInfo` once instead. Its `ParserVersionInfo` contains the same selected routes and avoids parsing the file twice. `with ISX` is identified but remains unsupported because no trustworthy record schema is available.
 
-Third-party unpackers are not a fallback for diagnosis. innoextract 1.9 warns on the offset table revision 2 introduced in 6.5 and then reads the old field widths, so its setup-data offsets and checksum position are wrong; innounp 0.50 stops at 6.1.2. Their failures say nothing about the installer or about `Get-InnoInfo`. The maintained innounp fork (2.71.4, announced through Inno Setup 7.1.1) is the current external cross-check, and Dumplings does not depend on it.
-
 `Get-InnoInfo.WritesAppsAndFeaturesEntry` resolves literal `CreateUninstallRegKey` and `Uninstallable` values. It is `$null` when either directive requires compiled-code evaluation, because the runtime result cannot be inferred safely. Do not trust outer Inno ARP metadata when it is false or unresolved; route the package through wrapper/no-ARP analysis instead.
 
 ## Static analysis
