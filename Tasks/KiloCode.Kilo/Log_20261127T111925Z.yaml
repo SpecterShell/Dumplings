@@ -1,0 +1,97 @@
+Version: 7.8.40
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.8.40/kilo-windows-x64.zip
+- Architecture: arm64
+  InstallerUrl: https://github.com/Kilo-Org/kilocode/releases/download/v7.8.40/kilo-windows-arm64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    VS Code
+    7.8.36
+    Patch Changes
+    - #16484 8345515 - Show the permission card's description, paths, commands and diff file names in an escaped display form.
+      Characters that render without width now appear as literal escapes. That covers control characters, the
+      bidi marks and overrides, and the invisible format characters. It also covers two kinds of character that
+      ordinary text uses on purpose: an emoji presentation selector such as the one in ⚠️, and the joiners that
+      combine emoji sequences or join the letters of Persian and Indic words. Those now show as \ufe0f and
+      \u200d in the card, so the displayed text names every character the request carries.
+    - #16414 f891ace - Stop an automatic permission approval that is still being retried when auto-approve is turned off.
+    - #16453 a353089 - Make auto-approve a user-level setting: it reads and writes your user settings only.
+    - #16417 06ad704 - Report each configuration value that is skipped while loading, with its file and its field path, and keep the settings that validate in the same file.
+    - #16485 158fe65 - Only attach mentioned files that live inside the current workspace, and skip creating attachments when the workspace folder is not known.
+    - #16488 a062619 - Switch accounts in one correlated attempt: a failed confirmation keeps the last-known account and offers a retry instead of showing you as signed out, and the notice clears once the applied account moves on.
+    - #16475 0a41b57 - Honor the configured working directory of a local MCP server, and keep a provider allow or deny list in effect after a configuration document is converted to the newer format.
+    - #16479 83a0856 - Switching off a saved auto-approve or auto-deny rule in the permission prompt now removes that rule.
+    - #16451 5fb4429 - Improve the Brazilian Portuguese wording of the MCP OAuth settings and sign-in labels.
+    - #16564 e645f7c - Tell an expired or revoked Kilo login apart from a temporary outage. The profile now asks you to sign in again only when Kilo rejects the login, and keeps your account with a retry when Kilo is unreachable.
+    - #16480 39f83cf - Report a clear configuration error when an Azure resource name or a Google Vertex location is not a plain resource name or region, send the AI Gateway credential from the environment only to a Cloudflare AI Gateway endpoint, and send the Google Cloud access token of the OpenAI-compatible Vertex path only to a Vertex API host, including the Vertex mTLS hosts. A Vertex location is validated only when the request endpoint is derived from it, so a provider configured with its own endpoint keeps working. An endpoint option that is blank or only whitespace counts as unset, so the Vertex endpoint derives from the region and the Azure endpoint derives from the resource name instead of being sent as given. When no location option is set, the location falls back to the Google Cloud region that the environment names before the provider default, and it is validated there too. For the Vertex Anthropic provider, a configured project or region now decides the request endpoint ahead of the environment, so the two cannot disagree.
+    - #16452 5ee5096 - Reload the provider and authentication state when the panel switches to another project, so the view always describes the project shown.
+      When the provider list cannot be read for the project shown, the panel states the failure.
+      Close an open provider dialog when the panel switches to another project, so its edits apply to the project it was opened for.
+    - #16491 40dbdbb - Ask before a shell command prints an environment file, matching the existing read-tool prompt. A stream filter that reads a redirected environment file asks as well.
+    - #16556 05c9710 - Show a clear "signed out" message with a sign-in action when Kilo rejects your login, instead of a generic error. The CLI points to /connect and kilo auth login. In VS Code, the Sign in button starts login in the Kilo Profile tab. JetBrains opens User Profile and resends your message once you are signed in again.
+    - #16516 df8e639 - Apply a configured file-write permission from an older configuration document to file writes when the document is converted to the newer format, so the permission a user authored takes effect. When such a document also sets the deprecated tool toggle for the same capability, the toggle keeps the effect it has today.
+    - #16486 bf85d41 - Carry configured provider headers and bearer tokens as request headers when a configuration document is converted to the newer format, so a configured headers entry and an authToken apply to the provider request.
+    - #16518 bd87e56 - Save the auto-approve setting before auto-approval starts, report a save that fails, and tell you when an automatic approval was not accepted so the prompt still reaches you.
+    - #16455 919043d - Keep sub-agent tab state consistent when tabs close and reopen, and route prompt answers to the session that asked the question.
+    - #16515 28504eb - Session actions keep to one project: revert, unrevert, message delete, session delete, session rename, compact, stop, and permission and question replies act on the directory that owns the session, and report the action when that directory cannot be determined.
+    - #16519 18c803f - Settings keeps your unsaved changes and the save bar in place until the extension host confirms the save, and reports a save the host never confirms so you can retry it.
+    - #16487 3d2eb1d - Report a settings change that the extension host did not apply with a dismissible error that names the control, keep the previous value in force, and keep a rejected unsaved edit available so it can be saved again.
+    - #16474 e05e37f - The write tool now refuses to write when the target changed before the write verifies it, and names that reason in its answer. It also names a target that is not a regular file, or whose filesystem reports no usable identity.
+    - Updated dependencies [b0717b9]:
+      - @kilocode/sdk@7.9.0
+      - @kilocode/kilo-ui@7.8.33
+      - @kilocode/plugin@7.8.33
+      - @opencode-ai/ui@7.8.33
+      - @opencode-ai/core@7.8.33
+      - @kilocode/kilo-gateway@7.8.33
+      - @kilocode/kilo-indexing@7.8.33
+    CLI
+    7.8.36
+    Minor Changes
+    - #16465 b0717b9 - List authorized additional GitHub repositories and include them when creating an organization Cloud workspace through Session Host.
+    Patch Changes
+    - #16473 ab930b2 - Keep one stored account selected after another stored account is removed, including when the remaining accounts belong to no organization.
+    - #16498 b4b3335 - Require approval for the destination path when a patch moves a file, and refuse a move onto Agent Manager state.
+    - #16523 f89d52f - Keep a ChatGPT OAuth connection signed in across token refreshes.
+    - #16511 b7d5271 - Report a missing Cloudflare AI Gateway credential as a missing credential that names the environment variable to set, and report a gateway token given as a configuration value that cannot be loaded as a configuration error.
+    - #16417 06ad704 - Report each configuration value that is skipped while loading, with its file and its field path, and keep the settings that validate in the same file.
+    - #16477 02379af - Keep each Console account tied to the server that issued it, so signing in to another Console deployment keeps both accounts and their tokens.
+    - #16517 c331258 - Show every permission rule an agent stores in the agent builder's permissions card. A tool's default
+      action and its pattern rules now appear together, in the order the agent stores them.
+    - #16476 078811f - The explore subagent now asks for approval before it reads secret environment files, as the other built-in agents do. Example environment files stay readable without approval.
+      On macOS, permission rules for file paths match names the way the volume resolves them, so the same approval applies to a file the volume treats as the same file. Rules for every other resource keep exact matching.
+    - #16540 77f0743 Thanks @romulorosa! - Fix Gemini rejecting MCP tool schemas that combine an array type with anyOf or oneOf
+    - #16483 3a1dad3 - Report a conflict error when completing an integration OAuth attempt that is still in flight.
+    - #16470 4ed6ec5 - Report the state of an integration OAuth attempt for as long as its handle is retained, including after it is cancelled or withdrawn, and report a not-found error when completing a handle that no longer has a pending attempt.
+    - #16416 f708f7b - Legacy custom modes now migrate to the same permission keys the CLI reads: only a command group grants shell commands, a browser group grants the Integrated Browser tool of the VS Code client, an MCP group grants the tools of each migrated server, and a file restriction becomes a wildcard glob that keeps the files it allowed. A migrated mode's MCP grant and the CLI's own MCP tool ids come from one definition, so the grant always names the tools the CLI registers and a server name outside the Basic Multilingual Plane yields the same key in the CLI and the plugin, and the grant covers every server the loader that ran the migration converted rather than only the ones a project file declared. A file restriction that alternates at the top level keeps the files of every alternative. A file restriction made only of digits is reported and asks instead of denying the allowed files, one whose translated arm resolves against the home directory is reported and asks, one that escapes a character the glob cannot carry literally, including backslash, * and ?, is reported and asks, so the migrated rule always means what the legacy pattern meant, a migrated mode in the CLI keeps the default skill permission because no legacy group governs it, the JetBrains migration denies skill and states that in its report, and an MCP group is reported when a skipped store declared a server the migration can grant and that no converted server's permission key covers, even when other servers were migrated, while a disabled entry, a local entry with no command and a remote entry with no url are not reported. An empty alternative matches the empty string. A pattern whose empty alternative is its whole body matches every path; when the alternative sits inside a longer pattern, it matches that pattern's surrounding characters instead. With both anchors the empty alternative is dropped so the alternatives that name a path survive, and a pattern whose every alternative is empty is reported and asks. A mode that lists the same group more than once keeps the narrower rule and reports the repeat in the migration warnings when the rule differs. With auto-approval on and no command lists, the migration grants shell commands and leaves other tools at their defaults. A mode that writes a group with its options in flow style keeps the file restriction that group names, and a group whose options arrive as their own entry asks instead of widening to every file. A single-quoted scalar decodes a doubled quote to one quote, and a # after it stays part of the value instead of starting a comment.
+    - #16513 0401574 - Keep the organization you selected when you sign in again to the same Console account.
+    - #16475 0a41b57 - Honor the configured working directory of a local MCP server, and keep a provider allow or deny list in effect after a configuration document is converted to the newer format.
+    - #16564 e645f7c - Tell an expired or revoked Kilo login apart from a temporary outage. The profile now asks you to sign in again only when Kilo rejects the login, and keeps your account with a retry when Kilo is unreachable.
+    - #16505 626e551 - Kilo keeps a reply that another Kilo process on the same data directory is still producing, so a session shared between processes stays complete while both work in it.
+    - #16506 3c674d7 - Pause session-export uploads when the ingest endpoint rejects the credential, keep the captured batches pending, and report the rejection and its release through telemetry.
+    - #16491 40dbdbb - Ask before a shell command prints an environment file, matching the existing read-tool prompt. A stream filter that reads a redirected environment file asks as well.
+    - #16449 b2947d7 - Finish shell tool calls when the foreground command exits on macOS and Linux, even if descendants keep stdout or stderr open.
+    - #16556 05c9710 - Show a clear "signed out" message with a sign-in action when Kilo rejects your login, instead of a generic error. The CLI points to /connect and kilo auth login. In VS Code, the Sign in button starts login in the Kilo Profile tab. JetBrains opens User Profile and resends your message once you are signed in again.
+    - #16507 824e32d - Move the redo boundary one user message forward in conversation order, and leave the session unchanged when the boundary message is not loaded.
+    - #16516 df8e639 - Apply a configured file-write permission from an older configuration document to file writes when the document is converted to the newer format, so the permission a user authored takes effect. When such a document also sets the deprecated tool toggle for the same capability, the toggle keeps the effect it has today.
+    - #16486 bf85d41 - Carry configured provider headers and bearer tokens as request headers when a configuration document is converted to the newer format, so a configured headers entry and an authToken apply to the provider request.
+    - #16499 8045e72 - Refuse a workflow tool call that a permission rule denies, and honor a permission rule for any subagent type the user did not name in their message.
+    - #16512 b417966 - Keep each workspace's configuration in the TUI when a config change notification arrives, discard responses that a previous workspace selection started, and answer pending permission prompts for the workspace they belong to.
+    - #16474 e05e37f - The write tool now refuses to write when the target changed before the write verifies it, and names that reason in its answer. It also names a target that is not a regular file, or whose filesystem reports no usable identity.
+    - Updated dependencies [b0717b9]:
+      - @kilocode/sdk@7.9.0
+      - @kilocode/plugin@7.8.33
+      - @opencode-ai/tui@7.8.33
+      - @opencode-ai/ui@7.8.33
+      - @kilocode/kilo-gateway@7.8.33
+      - @kilocode/kilo-indexing@7.8.33
+      - @kilocode/plugin-atomic-chat@7.8.33
+      - @opencode-ai/server@7.8.33
+      - @kilocode/kilo-telemetry@7.8.33
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Kilo-Org/kilocode/releases/tag/v7.8.40
+ReleaseTime: 2026-11-27T09:22:50.0000000Z

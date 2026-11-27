@@ -1,0 +1,51 @@
+Version: 0.3.7
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/kbkkb/APISwitch/releases/download/v0.3.7/APISwitch-Setup-v0.3.7.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    [New · Equivalent USD Cost Engine & Pricing Center]
+    - 4-Dimension Token Costing: Added UsagePricingService to calculate real-time equivalent USD value across all 10 supported clients using per-million rates for Input, Output, Cache Read, and Cache Write tokens.
+    - Cloud Catalog Sync + Local Ledger Fusion: Supports one-click and automatic cloud catalog synchronization from models.dev and OpenRouter, seamlessly combined with local Antigravity pricing_ledger_v1.json measured rates.
+    - Visual Pricing Center: Configure per-provider discount multipliers (e.g., 0.2x relay channels) and custom per-model or wildcard rate overrides directly from the UI.
+    [New · Antigravity Quota Insights & 5H/Weekly USD Pool Calibration]
+    - Live USD Pool Pills on Account Cards: Dynamically calibrates and displays remaining USD / 100% pool cap USD (e.g., ≈ $3.32 / $9.04) right next to Gemini and Claude & GPT 5H/Weekly quota bars on MainWindow cards, paired with a quick Insights button.
+    - Quota Deep Insights Window: Supports per-account monthly billing anchor day configuration to track monthly actual spend, estimated monthly supply, expired unused quota, and unactivated idle loss; automatically detects Official Early / Mass Reset clusters alongside full historical cycle settlement records while hiding deprecated Argon buckets.
+    [New · Per-Account Antigravity Attribution & Lightweight Stop Hook]
+    - Per-Account Antigravity Breakdown Tab: Added a dedicated Antigravity tab in Usage Monitor displaying independent token totals, request counts, cache hit rates, subscription badges, and USD spend per Google account.
+    - Zero-Overhead Native Stop Hook & Hub Watcher: Added a fast --ag-hook CLI entry (<30ms, headless, no WPF load, zero network calls) plus live app_storage.json watching so manual in-IDE account switches are tracked accurately (configurable in General Settings).
+    - Mid-Conversation Switch Fix & Self-Healing: Added account_sessions switch barriers, forward-bounded hook matching, and acctAttrVer=3 automatic self-healing for mid-conversation account switches.
+    [UI Overhaul · Modern SaaS Analytics UI & Rich Model Hover Cards]
+    - Refreshed Usage Monitor & Insights Design: Redesigned both analytics windows with crisp SaaS-style hierarchy—5 navigation pill tabs, 6 KPI summary cards (including Equivalent USD Value), collapsible trend/heatmap panels, and clean tabular alignment.
+    - Rich Model Hover Card (Zero Flicker): Eliminated two-stage tooltip flicker on model rows and introduced ModelHoverTipStyle across all 5 model display locations—showing full model name + raw ID, pricing source & multiplier badge, provider & client, 2×2 unit pricing matrix (USD / 1M Tokens), and per-row token/cost breakdown.
+    [Performance & Reliability · SQLite WAL Fluency & Non-Modal Floating Widget Fix]
+    - Zero-Freeze UI Architecture: Enabled SQLite WAL mode (synchronous=NORMAL, busy_timeout=5000), removed synchronous UI-thread cache warming, and moved view-model aggregation to Task.Run with lock-free thread-safe I18nService lookups.
+    - Floating Widget Clickability Fix: Converted Usage Monitor and Quota Insights from modal ShowDialog() calls to singleton modeless ShowOrActivate() windows and added a Win32 WM_ENABLE guard on FloatingWidgetWindow, fixing the bug where opening analytics windows blocked clicks on the desktop floating widget.
+    - Unified Build Output: Consolidated build and publish paths into a single bin\APISwitch.exe binary directory and Release_Package\ artifact folder.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    【重磅新增 · 全端等比美元计费引擎与可视化定价中心】
+    - 四维精确计费折算：新增 UsagePricingService，按 输入 / 输出 / 缓存读取 / 缓存写入 四维单价（USD / 1M Tokens）实时核算全部 10 款客户端的 API 等比美元消耗。
+    - 云端实时目录 + 官方账本融合：支持自动/手动同步 models.dev 与 OpenRouter 最新模型单价目录，并自动结合本地 Antigravity pricing_ledger_v1.json 实测账本单价。
+    - 可视化定价中心：支持为任意中转站配置供应商折扣倍率（如 0.2x 渠道倍率），并支持按供应商或全局通配符设置单模型自定义单价覆盖。
+    【重磅新增 · Antigravity 配额深度透视与 5H/周限美元反推】
+    - 主窗口卡片美元限额直显：结合历史配额快照与分账号真实消耗，在主界面 Antigravity 账号卡片的 Gemini 与 Claude & GPT 进度条旁实时反推并展示 剩余美元 / 100% 满额上限（如 ≈ $3.32 / $9.04），右上角新增一键 透视 入口。
+    - 配额深度透视弹窗：支持按账号独立配置每月订阅刷新锚点日，精准核算月度实际消耗、月度估算总供给、到期未用完作废额度与满额未激活空转损耗；自动去抖识别并聚合展示「⚡ 官方提前/集体重置雷达」与历史周期结算明细，自动隐藏已废弃的 Argon 空转桶。
+    【新增 · Antigravity 分账号精准统计、离线切号钩子与归属自愈】
+    - 反重力分账号明细视图：用量监控新增专属 反重力明细 标签页，按每个 Google 账号独立展示订阅等级、Token 消耗、请求数、缓存命中率与等比美元价值。
+    - 零感知原生 Stop 钩子与实时监听：新增 --ag-hook 极速命令行入口（不加载 WPF、零网络请求、<30ms 无窗落盘）及 app_storage.json 文件监听，即使在 IDE 内手动切号也能精准记录每轮对话所属账号（可在常规设置随时开关）。
+    - 中途切号归属修复与历史自愈：引入 account_sessions 切号时间屏障与单向钩子时间窗匹配，升级 acctAttrVer=3 自动校正同一对话中途切换账号后的历史归属。
+    【UI 重构 · 现代 SaaS 级统计界面与模型详情富悬浮卡片】
+    - 用量监控与透视界面全面焕新：升级为清爽高对比现代 SaaS 视觉体系，包含 5 大视图胶囊导航、6 维核心 KPI 卡片（新增醒目等比价值卡）、可折叠趋势/热力图面板与紧凑对齐表格。
+    - 模型名称富悬浮卡片（消除闪烁）：移除模型列表行外层冲突提示框，彻底解决悬停模型名二次闪烁退化问题；鼠标悬停任意模型名即可查看模型全称 + 原始 ID、计费来源与倍率徽章、归属供应商与客户端、四维单价矩阵及本行消耗拆解。
+    【性能与稳定性 · SQLite WAL 并发提速、零卡顿切页与悬浮窗防锁死】
+    - 根治打开与切页卡顿：usage.db 开启 WAL 模式与 synchronous=NORMAL，移除 UI 线程同步阻塞预热，全面改为内存变更版本号检测 + Task.Run 异步聚合 + 无锁线程安全多语言字典，标签页切换耗时降至毫秒级，空闲 CPU 占用降至 0%。
+    - 修复悬浮窗不可点击问题：将「用量监控」与「配额透视」由模态对话框改为单例非模态窗口（ShowOrActivate），并为桌面悬浮窗加入 Win32 WM_ENABLE 守护钩子，彻底解决打开统计窗口时悬浮窗无法点击的 Bug。
+    - 统一编译产物目录：收敛构建与打包输出路径，确保工程仅保留唯一运行目录 bin\APISwitch.exe 与安装包目录 Release_Package\。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/kbkkb/APISwitch/releases/tag/v0.3.7
+ReleaseTime: 2026-11-27T10:28:21.0000000Z
