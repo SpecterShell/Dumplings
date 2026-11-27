@@ -1,0 +1,21 @@
+Version: 0.73.1
+Installer:
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/zhitongblog/unterm/releases/download/v0.73.1/Unterm-0.73.1-x64.msi
+- Architecture: arm64
+  InstallerType: wix
+  InstallerUrl: https://github.com/zhitongblog/unterm/releases/download/v0.73.1/Unterm-0.73.1-arm64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Direct Selection Delete & Cut Inside Active Input Lines (unterm-app/src/select.rs, window.rs).
+      - Drag-selecting text inside the active shell or AI Coding CLI input line (Claude Code, Codex, Agy) and pressing Backspace or Delete now deletes only the selected span directly (computing exact cursor moves and backspaces, handling CJK wide-character cells and soft-wrapped multi-line inputs cleanly).
+      - Added Cmd+X (macOS) / Ctrl+Shift+X (Windows & Linux) to cut the selected input span to the clipboard and delete it in one step.
+      - Automatically ignores selections in historical scrollback output or alternate-screen apps (vim, less, htop, tmux) so prompts are never accidentally edited.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/zhitongblog/unterm/blob/HEAD/CHANGELOG.md#v0731--2026-11-27
+ReleaseTime: 2026-11-27T14:23:00.0000000Z

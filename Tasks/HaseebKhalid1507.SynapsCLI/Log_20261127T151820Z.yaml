@@ -1,0 +1,62 @@
+Version: 0.12.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/HaseebKhalid1507/SynapsCLI/releases/download/v0.12.0/synaps-x86_64-pc-windows-msvc.zip
+  InstallerSha256: E30089CF736A3EC6B5C4E7E72FD5DB942C18C084A93EF08631692C4CF56585C8
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Memory in core is plain files only, and Axel is an extension. The Axel
+    memory backend, its helper process, the built-in project forum and built-in
+    automatic memory are gone from core; Axel 0.1.0, released with this
+    version, brings recall, capture, search and the forum back as an extension,
+    through new hooks (on_context_archived, on_memory_forgotten) and the
+    cwd and caller every hook and tool call now carries. The plugin sidecar
+    system, synaps agent, synaps watcher and synaps server are removed.
+    grep and find run in-process on ripgrep's engine, so a|b works and
+    .gitignore is respected on every platform. Daemon sessions can be owned
+    by the client that created them, keep-warm covers a response that streams
+    past the cache TTL, and Windows, subagent, MCP and image fixes round it out.
+    Read the Upgrade notes first, above all if your config has
+    memory.backend = axel: archives and notes in the Axel brain are not read
+    any more until you move them with Axel 0.1.0. Full notes:
+    docs/upgrading/0.12.0.md.
+    Upgrade notes
+    - Reload the daemon after installing: synaps daemon reload, then
+      restart attached TUIs. A reload stops running subagents (they can be
+      resumed), so let them finish first. Daemon protocol (v3) and extension
+      protocol (1) are unchanged.
+    - memory.backend = axel: move your memory first. 0.12.0 keeps notes
+      and context archives in plain files only and no longer reads the Axel
+      brain. Export with axel synaps-export (Axel 0.1.0), import with
+      synaps memory import-archives / import-notes, then install the Axel
+      extension for recall, capture and the forum. Nothing is deleted, and
+      0.11.1 reads the brain again. Step by step:
+      docs/upgrading/0.12.0.md.
+    - Removed commands and tools: synaps agent, synaps watcher and
+      synaps server print one line and exit 2; /memory, /sidecar, the
+      memory_context and forum_* tools and synaps retention memory-scope,
+      upgrade-memory and migrate-memory are gone. The guide has a
+      replacement for each.
+    - Removed config keys load with a warning and do nothing: the
+      memory.* backend and automatic-memory keys, sidecar_toggle_key, the
+      eight shell.* keys, turn_budget.autonomous.*, bridge.*,
+      server.token, server.allowed_origins and server.max_message_size.
+    - Plugin sidecars are gone. A plugin.json with provides.sidecar
+      still loads with the block ignored; local-voice dictation stops working
+      until it is rebuilt on extensions.
+    - grep patterns are Rust regex (escape (, [, { to match them),
+      and grep and find respect .gitignore (no_ignore: true for
+      everything). Their schemas changed, so the first request after upgrading
+      rewrites the prompt cache once.
+    - synaps retention sweep keeps saved notes unless --include-notes
+      is given.
+    - Going back to 0.11.1: a chat that rolled over on 0.12.0 counts its
+      windows from 1 again there (and is refused on memory.backend = axel).
+      Nothing is lost; see the guide.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/HaseebKhalid1507/SynapsCLI/releases/tag/v0.12.0
+ReleaseTime: 2026-11-14T18:34:59.0000000Z
