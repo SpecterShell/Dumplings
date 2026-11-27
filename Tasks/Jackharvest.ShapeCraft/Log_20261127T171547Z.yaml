@@ -1,0 +1,47 @@
+Version: 0.13.4-alpha
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.13.4-alpha/shapecraft-0.13.4-windows-x64-setup.exe
+- Architecture: x64
+  InstallerType: wix
+  InstallerUrl: https://github.com/jackharvest/shapecraft/releases/download/v0.13.4-alpha/shapecraft-0.13.4-windows-x64.msi
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    ShapeCraft gets past a graphics driver that crashes it, iPads on iOS 15 and 16 can run it, and Windows updates stay in the
+    folder you chose.
+    Changed
+    - The iOS app runs on iOS and iPadOS 15.0 or newer, down from 17.0, so older iPads that can't update any further still
+      open it instead of closing at once (#100).
+    Fixed
+    - Windows updates install where ShapeCraft already is, instead of moving it to the default folder under AppData every
+      time. A copy installed for everyone stays installed for everyone, instead of gaining a second copy for just you. Running
+      a newer .msi by hand also goes into the folder of the copy it replaces (#101).
+    - A graphics driver that crashes ShapeCraft while it starts no longer stops it for good. If the app closes on its own
+      while starting on one way of drawing (Vulkan, say), the next start skips it and uses the next one (DirectX 12, OpenGL or
+      the processor), says so, and Preferences ▸ ShapeCraft lets you try it again. Seen in Windows Sandbox with Intel's Vulkan
+      driver; thanks DavidB63 for the reports.
+    - The log says which graphics path and driver ShapeCraft started on, and an unknown --graphics value is noted
+      instead of passing silently.
+
+    Alpha: keep copies of anything important. ShapeCraft updates itself from here on: it downloads new
+    versions in the background and installs them when you close it.
+    Mac: download the -macos-universal.dmg (Apple silicon and Intel). The two autoupdate-only
+    copies are the same file, there for copies of ShapeCraft up to 0.8.5 to update from.
+    First launch: macOS asks once: System Settings ▸ Privacy & Security ▸ Open Anyway.
+    Windows on Arm (Surface and other Snapdragon PCs): the -windows-arm64 MSI or portable zip, when present.
+    Windows SmartScreen: More info ▸ Run anyway. Linux: make the AppImage executable, then double-click it,
+    or install the .deb (Debian, Ubuntu) or .rpm (Fedora, openSUSE) package.
+    Android (test build, arm64, Android 8.0+): open the APK on the device and allow installs from that app.
+    A copy installed from an earlier test build (debug-signed) has to be uninstalled once first.
+    iPhone (test build, iOS 17+, iPhone Duo included): sideload the -ios-arm64.ipa with AltStore,
+    Sideloadly or a similar tool, signed with your own Apple account (a free one re-signs every 7 days).
+    Or build it from source: docs/ios.md.
+    Check a download against SHA256SUMS.txt: shasum -a 256 FILE (macOS, Linux) or Get-FileHash FILE (Windows).
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/jackharvest/shapecraft/releases/tag/v0.13.4-alpha
+ReleaseTime: 2026-11-27T16:41:53.0000000Z
+RealVersion: 0.13.4
