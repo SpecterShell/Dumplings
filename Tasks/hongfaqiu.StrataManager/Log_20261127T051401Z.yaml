@@ -1,0 +1,16 @@
+Version: 0.2.54
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/hongfaqiu/strata-manager/releases/download/v0.2.54/Strata.Manager_0.2.54_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: '- Fix the engine version showing as unknown for Strata desktop runtimes (#241, from PR #248): the Strata desktop app (0.2.x) installs a Control runtime folder that contains no engine; the engine lives in %LOCALAPPDATA%\Strata\components\engine\<version>-<platform>-<backend>\. Manager only looked for engine*/BUILD.json inside the runtime folder and treated the engine version as unknown when none was found, so NVFP4 models were blocked with "This model needs engine 0.1.44 or newer" even with engine 0.1.60 installed, and image support showed as unavailable. When the runtime folder has no engine, Manager now reads the version from the component engine folder using the upstream rules (the engine Manager installed beside it first, then the rollback pin, otherwise the newest package for this platform), and finds the image reader in the same place. An engine inside the runtime folder still takes precedence; without a component engine the version stays unknown. The Mac engine pin remains 0.1.47.'
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: '- 修复 Strata 桌面版运行环境的引擎版本显示为未知（#241，来自 PR #248）：Strata 桌面版（0.2.x）的 Control 运行目录里不含引擎，引擎装在 %LOCALAPPDATA%\Strata\components\engine\<版本>-<平台>-<后端>\ 下。Manager 原先只在运行目录里查找 engine*/BUILD.json，找不到就把引擎版本当成未知，因此即使本机引擎已是 0.1.60，NVFP4 模型也会被「此模型需要引擎 0.1.44 或更新」拦住，图像支持也显示不可用。现在运行目录里找不到引擎时，会按上游规则从组件引擎目录取版本（优先使用 Manager 装在旁边的引擎，其次是回滚固定的版本，否则取本平台最新的包），读图组件也从同一位置识别。运行目录里自带的引擎仍然优先；没有组件引擎时版本仍显示未知。Mac 引擎仍固定 0.1.47。'
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/hongfaqiu/strata-manager/releases/tag/v0.2.54
+ReleaseTime: 2026-11-27T04:23:33.0000000Z

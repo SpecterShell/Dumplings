@@ -1,0 +1,31 @@
+Version: 0.2.2
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Aenvo/MuseLink/releases/download/v0.2.2/MuseLink-0.2.2-windows-x64-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Aenvo/MuseLink/releases/tag/v0.2.2
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Aenvo/MuseLink/releases/tag/v0.2.2
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    - 大幅提升 /agent/v1/read 读取上限并支持分片读取与原始二进制直传（解决 #4）：
+      - 整文件 JSON 读取上限提升至 10 MiB：原 2 MiB 上限提升至 10 MiB（与写入上限对齐），老连接器无需修改配置即可直接读取常见高分辨率原图；超限返回 HTTP 413 并附带 size、max_bytes、chunked_supported、recommended_limit、raw_supported 与 recommended_raw_limit 字段引导分片重试；旧版 /api/read 仍保持 2 MiB 兼容。
+      - 支持 offset / limit 分片读取（对文件总大小无硬上限）：在同一已校验操作系统句柄上按字节偏移分段读取，JSON 分片默认 2 MiB、单片上限 4 MiB，返回 offset、bytes_read、total_size、next_offset、has_more 与 etag；支持 if_match 查询参数或 If-Match 请求头（兼容带引号的 ETag），若读取中途文件发生变更返回 HTTP 409。
+      - 支持 raw=1 原始二进制直传：直接返回对应 Content-Type 的原始字节流（无 Base64 33% 膨胀，实测经公网隧道提速约 40%，单次上限 32 MiB，支持与 offset/limit 组合分片），通过 ETag 与 X-File-* 响应头提供完整分片元信息。
+      - 更新 Muse 接入说明（Prompt）：同步更新中英文接入说明，指导 Muse 读取图片/二进制文件时优先使用 raw=1、大文件按 4 MiB 分片（或 JSON 2 MiB 分片）读取并按片重试（已有连接器可在「连接」页重新复制新版接入说明发送给 Muse）。
+    两个版本都需要 Windows WebView2。MuseLink 主程序和安装包尚未进行代码签名，Windows 可能显示未知发布者提示。完整变更见 CHANGELOG.md，完整使用说明见 中文使用指南。
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    - Higher /agent/v1/read limit, chunked reading, and raw binary streaming (fixes #4):
+      - Raised whole-file JSON read limit to 10 MiB: Increased from 2 MiB to 10 MiB (matching the write limit) so existing connectors can read high-resolution photos without prompt updates; oversized requests return HTTP 413 with structured size, max_bytes, chunked_supported, recommended_limit, raw_supported, and recommended_raw_limit fields. Legacy /api/read remains at 2 MiB for v0.3 compatibility.
+      - Added offset / limit chunked reads (no hard total file size limit): Seeks and reads directly from the verified OS file handle; JSON chunks default to 2 MiB (max 4 MiB) and return offset, bytes_read, total_size, next_offset, has_more, and etag. Supports if_match query param or If-Match header (accepting both quoted and unquoted ETag values) and returns HTTP 409 if the file changes mid-read.
+      - Added raw=1 raw binary streaming: Streams raw bytes with detected Content-Type and no 33% Base64 overhead (~40% faster over tunnels, up to 32 MiB per request, combinable with offset/limit), exposing ETag and X-File-* metadata headers.
+      - Updated Muse connection instructions (Prompt): Updated bilingual setup instructions so Muse prefers raw=1 for binary/image files, uses 4 MiB raw chunks (or 2 MiB JSON chunks) for large files, passes if_match, and retries individual chunks on transient drops (existing users can re-copy the updated instructions under Connection).
+    See CHANGELOG.en.md and the English quick start.
+ReleaseTime: 2026-11-26T17:42:54.0000000Z
