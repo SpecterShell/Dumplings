@@ -1,0 +1,35 @@
+Version: 0.1.29
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/KettuAI/Kettu/releases/download/v0.1.29/Kettu-0.1.29-x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/KettuAI/Kettu/releases/download/v0.1.29/Kettu-0.1.29-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Restores the bottom-left usage limits popover, adds native right-click paste and edit menus in desktop composers, fixes Antigravity sessions staying stuck in Writing and blank flashes when switching long threads, adds one-click account computer pairing on app.kettu.sh, introduces managed local MCP library routing, and fixes workflow editing, Qoder plan limits, and Codex speed commands.
+    What changed
+    - Usage limits popover and profile submenu clipping fixed: skips display: contents wrappers when measuring popover anchors and clipping bounds so clicking the bottom-left plan ring shows the usage popover again, and keeps profile submenus unclipped and scrollable in short windows. (#2828, #2823, thanks @songxff)
+    - Native right-click paste and edit menu on desktop: adds localized context menus for editable inputs (Undo, Redo, Cut, Copy, Paste, Paste and Match Style, Delete, Select All, plus spelling suggestions) and Copy for selected text, keeps Paste enabled for copied images and files, and makes right-clicking empty composer placeholders focus and target the editor. (#2829, #2826)
+    - Antigravity stuck Writing state fixed: resets per-step tool tracking when new reply chunks begin and retries reading delayed transcript flushes so sessions waiting on background work leave Writing instead of queueing follow-up messages. (#2809, #2804)
+    - No more blank flash when switching long sessions: removes the opacity-hiding wait on thread switches and caches session outlines in memory so returning to long conversations renders right away. (#2815, #2805)
+    - One-click account computer pairing on app.kettu.sh: signed-in web clients automatically list online unpaired computers from your Kettu account and start 6-digit pairing in one click during onboarding and Settings › Add a computer, while keeping manual pairing links available. (#2816, #2800)
+    - Managed local MCP library routing: runs and forwards library MCP servers on Kettu's loopback service with per-session, per-folder, shared, or agent-managed scopes so credentials stay out of agent configs and environments, ships a native bridge for stdio-only agents, and offers one-click reload when the library changes. (#2818, #2780)
+    - Workflow suggestion editing and remote web cards: clicking Edit on a workflow suggestion card now focuses the target composer with an active edit bar and Escape cancel, and workflow suggestion cards stay intact on remote web clients. (#2821, #2778, #2798, #2777, thanks @kinhangliew)
+    - Qoder plan limits, Codex speed commands, session titles, and UI polish: adds NDJSON control-frame support for Qoder / Qoder CN plan limits, aligns Codex /fast and /ultrafast slash commands with the active model's advertised speed tiers, preserves manually or programmatically set session titles, displays localized relay region names by UI language, and keeps Overview host pills and agent names visible alongside long project names. (#2819, #2790, #2822, #2799, #2820, #2817, #2801, #2796, thanks @liuchaowei666)
+    中文
+    - 修复左下角用量弹窗不显示与矮窗口子菜单裁切：测量弹窗锚点与裁切区域时跳过 display: contents 包装层，修复点击左下角套餐限额图标不展示用量弹窗的问题，并避免矮窗口下个人菜单侧边子菜单被裁切。(#2828, #2823，感谢 @songxff)
+    - 桌面端新增原生右键粘贴与编辑菜单：为桌面端可编辑输入框提供本地化右键菜单（撤销、重做、剪切、复制、粘贴、粘贴并匹配样式、删除、全选及拼写建议）与选中文本复制，兼容仅复制图片或文件时的粘贴状态，并修复右键点击空输入框占位提示时无法聚焦编辑区的问题。(#2829, #2826)
+    - 修复 Antigravity 回复完成后仍卡在「正在输入」：新回复分片开始时清理上一步工具状态，并在高负载写盘延迟时有界重试读取记录，避免等待后台任务期间会话卡死并默认把新消息送入队列。(#2809, #2804)
+    - 消除切换长会话时的白屏闪烁：移除切换会话时同步隐藏内容等待高度稳定的阻塞逻辑，并为会话大纲增加内存缓存，切回历史长对话不再白屏等待。(#2815, #2805)
+    - 网页版登录后支持一键配对账号下电脑：在 app.kettu.sh 登录后，首次配对与 设置 › 添加电脑 会自动列出账号下在线且未配对的电脑，点击即可发起 6 位码配对，同时保留手动粘贴链接入口。(#2816, #2800)
+    - MCP 库本地托管路由：通过本地回环服务统一运行并转发 MCP 库服务器（密钥与令牌不再写入智能体配置或环境），支持按会话、文件夹、共享或交由智能体管理运行，为仅支持 stdio 的智能体提供原生桥接，并可在库变更后一键立即应用。(#2818, #2780)
+    - 修复工作流建议卡片「编辑」与远程网页展示：点击工作流建议卡片上的「编辑」现在会聚焦对应分屏输入框并展示编辑状态条（支持 Esc 退出），同时修复远程网页端工作流建议卡片丢失的问题。(#2821, #2778, #2798, #2777，感谢 @kinhangliew)
+    - Qoder 套餐限额、Codex 速度命令、会话标题与界面细节修复：适配新版 Qoder / Qoder CN 的 NDJSON 套餐限额读取，使 Codex /fast 与 /ultrafast 斜杠命令随当前模型支持的速度档位动态显示，防止指定会话标题被自动覆盖，按界面语言展示中继区域名称，并修复总览页长项目名挤压设备标签和智能体名称的问题。(#2819, #2790, #2822, #2799, #2820, #2817, #2801, #2796，感谢 @liuchaowei666)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/KettuAI/Kettu/releases/tag/v0.1.29
+ReleaseTime: 2026-11-27T03:36:38.0000000Z

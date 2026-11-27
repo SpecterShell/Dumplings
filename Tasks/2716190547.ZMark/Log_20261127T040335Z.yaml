@@ -1,0 +1,21 @@
+Version: 0.2.14
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/2716190547/zmark/releases/download/v0.2.14/ZMark-0.2.14-setup.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/2716190547/zmark/releases/tag/v0.2.14
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    2026-11-25
+    本版聚焦大文件编辑流畅度、中文 Mermaid 流程图兼容与侧边栏文件定位体验优化，并在发布后通过工作流自动同步至 Gitee 国内镜像。
+    变更
+    - Mermaid 中文节点支持：放宽 vendored rusty-mermaid-diagrams 中 node_id 与 identifier 的字符判定，修复流程图使用中文等 Unicode 节点名时触发 UnexpectedToken 报错的问题。
+    - 大代码文件与超长单行流畅打开：在 DocumentLayoutCache 中引入等宽字符快速测宽折行路径（单行超过 2048 字节或大文件源码行超过 250 行时跳过逐字 CoreText shape_line），并在可视区渲染循环中按物理行缓存分词结果，解决拖入数百 KB 含超长单行代码文件时的窗口卡顿。
+    - 侧边栏「在 Finder 中显示」：在侧边栏文件与文件夹右键菜单（「从侧边栏移除」之后、「移至废纸篓」之前）新增「在 Finder 中显示 / Show in Finder」入口，支持快速打开所在位置。
+    - 本机安装脚本清理：scripts/bundle_macos.sh --install 在安装与签名校验通过后自动清理临时 .previous.* 备份目录，保留失败回滚能力的同时避免 /Applications 堆积历史备份。
+    - 宣传片工程更新：更新 promo/zmark-v4 视觉排版、8 套亮暗配色轮播与渲染管线。
+ReleaseTime: 2026-11-26T01:25:38.0000000Z
