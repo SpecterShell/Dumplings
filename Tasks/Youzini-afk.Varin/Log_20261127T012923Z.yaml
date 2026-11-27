@@ -1,0 +1,43 @@
+Version: 0.9.54
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.54/Varin-0.9.54-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Astrmira/Varin/releases/download/v0.9.54/Varin-0.9.54-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Mobile conversations and pairing
+    - Bot chats and the workbench now share the same navigation on phones. Open the conversation list or details, then return to the same chat. Tablets with enough room can show the list and conversation side by side.
+    - Model and reasoning controls sit at the bottom right of the mobile composer. The desktop turn ruler is hidden on phones, giving messages more room. Conversation menus support touch, and the session drawer opens above the composer.
+    - The pairing QR code uses a reachable LAN address, which you can also copy from the dialog. Fixed an Android connection-time crash on builds without Firebase push configuration.
+    Bot execution and deployment
+    - Ordinary Bot chat prepares built-in tools together and opens a work location when a tool needs it. File reads, terminal input and code search can use that location on demand. Local speech workers can be used again after an idle shutdown.
+    - Desktop model discovery shows whether it found new models, found none, or found only models already in your list. Also fixed Bot model updates, attachment reads through a workspace, and external agents missing environment settings from their Host.
+    - Browser and Computer services can run separately from the application Host. In the application Docker images, file tools can now use any mounted path accessible to the container user. Set VARIN_WORKSPACE_LOCKDOWN=true to restrict access to the workspace root.
+    Knowledge stores
+    - Varin now bundles TriviumDB 0.9.3 and its migration tool. Back up the data directory before upgrading. On first writable access, Varin converts older checkpoints alongside the originals and uses the converted store for subsequent writes.
+    - If a TriviumDB 0.8 store has only its write-ahead log (WAL), Varin shows the affected path. Stop Varin, open that store on a writable backup copy with Varin 0.9.53, close it normally, then reopen the copy in 0.9.54. A 0.8 store with an existing checkpoint migrates directly. Backup and recovery
+    Full changelog
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    移动端对话与配对
+    - 手机上的 Bot 和工作台共用一套导航。查看会话列表或详情后，返回即可接着聊；平板宽度足够时，列表和对话可以并排显示。
+    - 模型和思考强度选择移到输入框右下角。手机上隐藏轮次刻度，给正文留出更多空间。会话菜单支持触控，打开侧栏时输入框也不会再挡住列表。
+    - 同一 Wi-Fi 下配对时，二维码会使用局域网可达地址，扫码框下方也可以直接复制地址。修复了未配置 Firebase 推送时，Android 在连接设备阶段闪退的问题。
+    Bot 执行与部署
+    - 普通聊天会合并准备内置工具，等到有工具需要时才打开工作位置。读取文件、向终端输入和检索代码都能按需使用该位置。本地语音工作进程空闲退出后，也可以再次唤起。
+    - 获取模型时会分别提示发现新模型、服务返回空列表或模型已全部添加。另修复了 Bot 模型设置更新、通过工作区读取附件，以及外部 Agent 缺少 Host 环境变量的问题。
+    - 浏览器和电脑操作服务可以独立于应用 Host 部署。Docker 应用镜像中的文件工具默认能访问容器用户有权读取的挂载路径。如需限制在工作区根目录，可设置 VARIN_WORKSPACE_LOCKDOWN=true。
+    知识库升级
+    - 内置 TriviumDB 升至 0.9.3，并随包提供迁移器。升级前请备份完整数据目录。第一次以可写方式打开旧知识库时，Varin 会在原库旁生成新库，后续写入使用新库，原有检查点文件保留。
+    - 如果 0.8 旧库只剩写入日志（WAL），Varin 会提示具体路径。请先停止 Varin，用 0.9.53 在可写备份副本上打开对应知识库并正常关闭，再用 0.9.54 打开该副本。有检查点的 0.8 旧库可直接自动迁移。备份与恢复说明
+    完整更新记录
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Astrmira/Varin/releases/tag/v0.9.54
+ReleaseTime: 2026-11-27T01:01:24.0000000Z
