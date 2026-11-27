@@ -10,6 +10,7 @@ Use these top-level fields:
 - `Locale`: locale field mutations consumed by manifest updating.
 - `ReleaseTime`: converted to installer `ReleaseDate` unless an installer entry supplies its own date.
 - `InstallerTracking`: versioned per-artifact validators, SHA256, request-identity digests, and resolved versions managed by `CheckInstallerUpdates`. These are state evidence, not manifest fields. Legacy `ETag`, `Hash`, `LastModified`, and `ContentLength` keys require explicit mappings in the [versionless workflow](../sources/versionless.md).
+- `InstallerSignatures`: framework-owned Authenticode observations and the last comparable baseline, keyed by installer selectors and download or nested role. Signer changes, signature loss and verification failures warn without blocking. Extraction failures stay unknown and retain the baseline. `EnableWrite` gates persistence, including evidence added to a release log after submission downloads. Leave this field outside installer entries and manifests.
 
 Validate that every selected asset exists and that all architecture variants report a consistent release version. Do not silently publish only whichever asset happened to be first in an API response.
 
@@ -50,6 +51,8 @@ $this.CurrentState.Version = $InstallerFile | Read-ProductVersionFromExe
 ```
 
 Do not remove the cached file yourself. `PackageTask.Dispose()` owns cleanup. Submission reuses it for SHA256 and static parser metadata. If a task supplies `InstallerSha256` without a cached file, manifest updating can accept the hash without downloading the installer, so parser-managed fields may not be refreshed.
+
+The framework also observes signatures on registered files during `Write()` and after the task. Manifest downloads and versionless tracking observe files as they become available. First observations initialize history explicitly. URLs and installer ordering do not define a variant, while locale, architecture, type, nested type, scope and download or nested role do. Broad task selectors have a separate history from concrete manifest variants. Different URLs with identical selectors in one invocation are ambiguous and cannot safely replace a signer baseline. Signature comparison does not prove installer safety and does not enumerate every signature or archive member.
 
 Prefer one aggregate `Get-<Family>Info` call when family-specific inspection is unavoidable. Do not call several `Read-*` helpers against the same installer.
 

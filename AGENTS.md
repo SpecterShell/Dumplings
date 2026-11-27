@@ -19,6 +19,7 @@ Use the matching project skill before doing domain work:
 | WinGet manifest research, authoring, localization, validation, or submission | `.agents/skills/author-winget-manifest/SKILL.md` |
 | Dumplings task creation, review, debugging, source selection, or dry runs | `.agents/skills/author-dumplings-task/SKILL.md` |
 | Shared networking, file, archive, text, feed, browser, HTML, or YAML APIs | `.agents/skills/use-dumplings-functions/SKILL.md` |
+| WinGet PR error triage (URL-Validation-Error, hash mismatch, installer availability, etc.), notification review, or manifest cleanup PRs | `.agents/skills/analyze-winget-installer/SKILL.md` and `.agents/skills/author-winget-manifest/SKILL.md` |
 
 When a new finding changes a domain workflow, update the focused skill reference. Do not copy the same rule into this file.
 
@@ -29,6 +30,7 @@ When a new finding changes a domain workflow, update the focused skill reference
 - Do not invent metadata, registry values, switches, binary-field meanings, or runtime behavior. Preserve unresolved evidence explicitly and validate only the affected decision.
 - Keep secrets and transient state out of Git. `.env`, `Secret.yaml`, `Sandbox`, and `Outputs` are local working data, not durable fixtures or source evidence.
 - Preserve unrelated user and automation changes. Do not reset, revert, delete, or broadly reformat files outside the requested work.
+- Do not speculate versions from binaries or installer metadata when registry evidence is reachable: ARP (installed registry version) is the authority for package version.
 
 ## Repository Boundaries
 
@@ -63,6 +65,7 @@ Respect licensing boundaries. Compatible shared infrastructure may live in Packa
 Core owns runner infrastructure. Put PackageModule lifecycle behavior in `Modules/PackageModule/Hooks`. Cleanup hooks must be idempotent and release resources after success, failure, timeout, or forced worker termination.
 
 Use `Use-Mutex`, `Use-Semaphore`, or `Use-Monitor` from `Core/Libraries/Synchronization.psm1`. Task scripts must not construct raw synchronization primitives. Native `winget` calls remain serialized.
+Before using a VM for validation, ask in the group chat whether another agent is using it and wait for their notice if so. When doing VM validation, use WinGet's default command-line arguments and the manifest: `winget install -m <path/to/url>`. Report the install result, new ARP entries, and a window screenshot of the app (not the whole VM screen).
 
 `$Global:DumplingsStorage` is synchronized process-wide storage shared by thread-job runspaces. `$Global:DumplingsSessionStorage` is runspace-local. Shared storage does not create task ordering: declare producer dependencies with `DependsOn` in `Config.yaml`.
 

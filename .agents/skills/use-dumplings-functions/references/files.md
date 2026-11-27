@@ -16,6 +16,7 @@ $this.InstallerFiles[$InstallerUrl] = $InstallerFile = Get-TempFile -Uri $Instal
 ```
 
 - **Notes:** In a PackageTask, register installer downloads in `$this.InstallerFiles` so manifest updating can reuse them and PackageTask can dispose them. Independent callers retain responsibility for the returned temporary path. The helper sets `-OutFile`. Callers must not pass it.
+- **Signature observations:** PackageTask checks registered installers during `Write()` and after task execution. Manifest updating also checks downloaded and reused files, including when `SkipInstallerAnalysis` skips parsing. It checks the first nested ZIP payload only when the existing metadata path extracts it. Signer history follows `EnableWrite`, stays outside manifest fields, and warns without blocking. Unknown extraction results preserve the last comparable baseline.
 
 ### `New-TempFile`
 
