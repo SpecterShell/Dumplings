@@ -192,6 +192,8 @@ $this.CurrentState.Locale += [ordered]@{
 
 Before applying locale entries, the updater removes old `ReleaseNotes`. A task must provide notes for the new release or leave them absent. It updates an existing copyright year, normalizes tags, and keeps `Moniker` only in the default locale. Installer parser names and publishers never overwrite locale `PackageName` or `Publisher`.
 
+An entry whose value fails the field schema is discarded with a warning instead of failing the task. `ReleaseNotes` beyond the manifest schema limit of 10000 characters is therefore dropped for that release on its own, so pass the converted text as it is rather than truncating it in the script; `ReleaseNotesUrl` still links to the full notes.
+
 ## Post-Processing
 
 After installer and locale updates, `Optimize-WinGetManifest` removes redundant common `InstallerLocale`, ProductCode, InstallerType, normalized name, and publisher values where allowed. Serialization then moves common installer values to manifest level, preserves installer-level overrides, sorts fields, and emits the fixed current headers. Offline validation runs before dry output or submission.
