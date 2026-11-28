@@ -1,0 +1,38 @@
+Version: 0.2.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/routeflags/ai-citation-monitor/releases/download/v0.2.0/ai-citation-monitor_0.2.0_windows_amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Perplexity Agent API provider (perplexity, agent/v1+web_search). It
+      sends POST {base_url}/agent with the server-side web_search tool and
+      records the search_results entries together with any url_citation
+      annotations, counting each URL once. The published web-search documentation
+      names search_results as the source of truth for citations, so an answer with
+      an empty annotations array still records the sources it used.
+    - xAI Grok Responses API provider (grok, responses/v1+web_search+xai).
+      It sends POST {base_url}/responses with web_search and records only
+      url_citation annotations that carry a non-empty span in the answer. The
+      top-level citations list (and an annotation with a 0..0 span) is the set of
+      sources the search saw, not an attribution, and is not counted.
+    - [providers.perplexity] and [providers.grok] configuration blocks,
+      PERPLEXITY_API_KEY / XAI_API_KEY defaults, aicm init output and
+      --provider perplexity|grok support.
+    - Adapter fixtures and httptest tests for cited / not cited / error / empty /
+      no-metadata / unpositioned shapes, plus one CLI end-to-end test per provider.
+    - One live single-question observation per new provider, recorded in
+      providers.LiveObservation: Perplexity openai/gpt-5.6-sol and Grok
+      grok-4.7, both on 2026-11-28.
+    Changed
+    - Provider docs, architecture, CLI reference, README (English and Japanese) and
+      the example configuration list the two new surfaces.
+    - aicm version reports the live observation for every supported provider.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/routeflags/ai-citation-monitor/blob/HEAD/CHANGELOG.md#020---2026-11-28
+ReleaseTime: 2026-11-27T15:58:18.0000000Z
