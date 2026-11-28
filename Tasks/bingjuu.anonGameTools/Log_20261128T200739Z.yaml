@@ -1,0 +1,31 @@
+Version: 1.0.3
+Installer:
+- InstallerType: inno
+  InstallerUrl: https://github.com/bingjuu/anonGameTools/releases/download/v1.0.3/anonGameTools-Setup-1.0.3.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    新增与改进
+    - 注入兼容性大幅增强：
+      - IL2CPP unity-libs 镜像回退：当 BepInEx 官方库缺少某个 Unity 版本的依赖包时，自动回退到 MelonLoader.UnityDependencies 镜像与同次版本补丁包，减少首次启动 404 失败
+      - Mono 裁剪运行库自动补齐：检测到游戏 mscorlib.dll 被裁剪时，自动下载并配置 unstripped_corlib；Mono 侧升级至 BepInEx 5.4.23.6，并对 Unity 6000.6+ 自动适配 [Preloader.Entrypoint] 与 HideManagerGameObject
+      - 更稳的加载与实时诊断：补全 Doorstop 完整性检查（游戏自带非 Doorstop winhttp.dll 时自动改用 version.dll）、确定性长路径/非 ASCII 路径映射、代理环境变量透传，以及启动期实时失败提示（如暂不支持的 IL2CPP Metadata 版本）
+    - 通用 TextMeshPro 中文字体回退：
+      - 内置 Mono / IL2CPP 通用字体回退模块（自动挂载内嵌的 Maple Mono NF CN 字体，并支持 Unity 2019–2022 及 Unity 6000+），显著减少翻译后出现的「口」字方块；且脱机直接启动已注入游戏时同样生效
+    - Unity Agent 组合工具与多模态截图：
+      - 修复基类私有字段读取、静态单例与方法检索盲区，并统一帧预算调度
+      - 新增 8 个组合工具（保留全部原有细粒度工具）：活体去马赛克排查/应用与撤销、隐藏数值查找（支持 ReactiveProperty / ACTk Obscured* / PlayerPrefs）、玩家与世界状态排查及常用作弊（批量改值、锁定数值、方法 Hook、穿墙、传送）、剧情/触发条件与代码逻辑剖析（Mono IL 反汇编与 IL2CPP 元数据常量扫描）
+      - 设置页新增可选的「Agent 多模态截图」开关（默认关闭），开启后 Agent 可截取游戏画面辅助定位问题（支持 4 种接口格式并在模型不支持图片时自动降级重试）
+    升级
+    - 已经装了 1.0.2 / 1.0.1 / 1.0.0：打开「设置 → 通用 → 关于 → 检测更新」直接在线升级；或者下载新版 Setup 覆盖安装
+
+    What's new in v1.0.3:
+    - Injection reliability: IL2CPP unity-libs mirror fallback (MelonLoader.UnityDependencies + same-minor patch fallback), automatic Mono unstripped corlibs download for stripped mscorlib.dll, BepInEx 5 bumped to 5.4.23.6, Unity 6000.6+ Mono entrypoint compatibility, Doorstop integrity & version.dll fallback, deterministic non-ASCII/long-path junctions, proxy env forwarding, and live launch failure diagnostics.
+    - Universal TextMeshPro CJK font fallback: Built-in reflection-based TMP fallback for both Mono and IL2CPP (Unity 2019–2022 and Unity 6000+) to eliminate missing-glyph tofu boxes (口), even when launching an already-injected game directly.
+    - Unity Agent upgrades: Fixed inherited private field / singleton lookup gaps and added 8 compound tools (live demosaic inspection/apply/revert, hidden stat finder with ReactiveProperty/Obscured*/PlayerPrefs, player/world cheats with value freeze/hooks/noclip/teleport, progression & Mono/IL2CPP code inspection), plus an optional Agent/vision game screenshot tool (off by default) with 4-protocol support and HTTP 400 fallback.
+    Update in-app from Settings → General → About → Check for updates, or install the new Setup over the old one.
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/bingjuu/anonGameTools/releases/tag/v1.0.3
+ReleaseTime: 2026-11-28T19:20:22.0000000Z
