@@ -1,0 +1,45 @@
+Version: 0.3.0
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/routeflags/ai-citation-monitor/releases/download/v0.3.0/ai-citation-monitor_0.3.0_windows_amd64.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Added
+    - Styled human-readable terminal output with --no-color, NO_COLOR, and
+      TERM=dumb support. JSON and stderr remain unstyled.
+    - aicm trends --json now includes each bucket's distinct identities and
+      mixed_conditions; aicm competitors list --json adds invalid without
+      changing the existing competitors object.
+    - Permanent exhaustive rounding coverage for all 4,504,500 (n, d) pairs with
+      n ≤ d ≤ 3000, checked against an independent integer oracle.
+    Changed
+    - Competitor citation rates are attributed per site, not per cited host. A
+      registered domain now includes its subdomains when configured; citation share
+      remains host-based. This changes the values in
+      aicm report --json competitor_rate[].domain (for example,
+      www.rival.example may now be attributed to rival.example).
+    - Reports expose mixed_conditions when a group contains different measurement
+      identities rather than presenting the average as one measurement.
+    - A public suffix in competitors is a configuration error (exit 2). Existing
+      database rows are preserved; competitors list marks invalid values and
+      read-only commands remain usable.
+    - aicm trends suppresses deltas across adjacent buckets when
+      api_endpoint_version, question_set_sha256, or tool_version differs,
+      using reason = conditions_differ. n_differs is unchanged when conditions
+      match.
+    - Error status and citation observability are explicitly separate dimensions;
+      failed and unobserved runs may appear in both counts.
+    Fixed
+    - Detect provider response bodies exceeding the 16 MiB limit instead of passing
+      truncated JSON to adapters.
+    - Correct trend denominators when failed and citation-unknown runs share a bucket.
+    - Use int64 for rate-rounding arithmetic to match the proof model's integer
+      range.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/routeflags/ai-citation-monitor/blob/HEAD/CHANGELOG.md#030---2026-11-28
+ReleaseTime: 2026-11-28T04:52:15.0000000Z
