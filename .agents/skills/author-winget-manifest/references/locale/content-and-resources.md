@@ -62,8 +62,10 @@ Do not add `Moniker` automatically for a new package, even when the product name
 - Do not hyphenate a term merely to combine unrelated keywords.
 - Use existing winget-pkgs manifests as style examples, but verify that every retained tag describes the current package.
 - Avoid publisher names, generic terms such as `software`, and speculative capabilities that do not improve discovery.
-- Describe user-facing purpose, workflows, formats, or capabilities. Add language or framework tags such as `electron`, `tauri`, or `rust` only when the package develops for them.
+- Describe user-facing purpose, workflows, formats, or capabilities. Add language or framework tags such as `electron`, `tauri`, or `rust` only when the package itself contributes to that framework. The toolkit an application is built with is not something users search for, so a Tauri or Electron application gets no `tauri` or `electron` tag.
 - Omit generic application-form tags such as `desktop`, `cli`, and `command-line`.
+- Use `ai` for AI software in the default locale and `人工智能` in zh-CN. Do not reach for `generative-ai` or `生成式AI`.
+- Translate `llm` as two zh-CN tags, `大模型` and `大语言模型`; the default locale keeps `llm`.
 - In an additional locale manifest, translate tags that have natural, useful localized search terms.
 - If no tags are translatable, omit `Tags` from the additional locale to inherit the default array.
 - If only some tags are translatable, supply the complete intended localized array because `Tags` arrays do not merge. Keep invariant technical terms and replace only the terms that have useful translations.
