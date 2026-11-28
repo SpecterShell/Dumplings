@@ -1,0 +1,84 @@
+Version: 0.7.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/Ray-lea/Argus/releases/download/v0.7.0/Argus_0.7.0_x64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Argus v0.7.0 introduces Windows ARM64 installer and portable builds, with the app, the privileged service and Task Manager replacement running natively on ARM64. Processes adds 27 optional columns and two actions, “Create memory dump file” and “Debug”. A new byte units setting arrives, the taskbar monitor supports vertical taskbars, and Argus can send a Windows notification when a new version is available. This release also reduces redrawing while the interface is idle and fixes issues including Ryzen 9000 sensors, the taskbar monitor covering the Start button and a privileged service that could not be reinstalled after its registration was deleted.
+    This release completely rewrites the documentation site; visit the documentation site (in Chinese) for detailed usage of each feature.
+    Breaking changes
+    - Column menu: The column header context menu on Processes no longer shows or hides columns by category. Click “Select columns…” in the menu and choose the columns to show in the dialog.
+    Features
+    - Windows ARM64: ARM64 installer and portable builds are available, with the app, the privileged service, administrator mode and Task Manager replacement running natively and in-app updates staying on the ARM64 build. Performance shows the vendor, model, instruction sets and virtualization status of ARM64 processors, and CPU power comes from Windows energy meters; kernel sensors are not available on ARM64 yet. (#172)
+    - Process columns: The “Select columns” dialog adds 27 optional columns, including running time, kernel and user CPU, context switches, shared working set, paged and non-paged pool, hard faults, and disk and I/O operation counts and totals. Sampling cost is unchanged while none of these columns is selected.
+    - Details pane: Lists the readings of every optional process column. The Resources and Totals sections add context switches, hard faults and requests per second, and readings such as working set and commit size show their peaks. “Copy details” includes these items as well.
+    - Memory dumps and debugging: The context menu of a single process adds “Create memory dump file” and “Debug”. Dump files are written to the temporary folder, and a notification shows the path when done; when a just-in-time debugger is registered, “Debug” starts it and attaches it to the process. (#169, #197)
+    - Byte units: “Settings → Data and history” adds “Byte units”, with Traditional (default), Binary IEC or Decimal SI. Memory, storage capacity, transfer rates, chart scales and monitor readings switch accordingly. (#156)
+    - Vertical taskbar: When the taskbar is on the left or right of the screen, the taskbar monitor stacks its readings along the taskbar. All four styles have a vertical layout and show only the readings that fit. (#177)
+    - New version notifications: When the window is hidden in the tray or not in the foreground, the installed version sends a Windows notification once a new version is downloaded and verified, and the portable version once a new version is found; clicking it opens the update dialog. With “Notify me when an update is available” turned off under “Settings → Updates”, the notice appears at the bottom right of the window when it is shown.
+    - Switching pages: Ctrl+Tab and Ctrl+Shift+Tab switch to the next or previous page, wrapping around at either end. (#185)
+    - Top navigation: When the page bar runs out of space, the top navigation tabs collapse to icons first, and hovering shows the page name and shortcut; only if space is still short do the page controls move to the next line. (#87)
+    - Documentation site: All documentation is rewritten. A new “Getting started” section covers Quick start, What is Argus, Installation and updates, and a comparison with Windows Task Manager; the user guide is split by app page into Processes, Performance, Services and startup apps, Connections, History and more, with descriptions checked and completed against the code.
+    Performance
+    - Redrawing: Visible windows whose content is unchanged no longer redraw on every screen refresh. On a 160 Hz display, CPU cycles per second with Settings idle drop by about half; the presented frame rates of animation and scrolling are unchanged.
+    Fixes
+    - Tray icon: The default style is now “App icon”, as “Trend” was hard to make out on dark taskbars; Components now selects the tray icon style from a drop-down list. (#178)
+    - Taskbar monitor: With centered taskbar buttons, readings no longer cover the Start button and app buttons; only the readings that fit are shown. When Group Policy disables widgets, the monitor no longer leaves a gap for the Widgets button.
+    - Desktop monitor: After Windows starts or Argus restarts, an enabled desktop monitor appears right away without being turned off and on again.
+    - Ryzen 9000: Models with disabled cores in a CCD (such as the Ryzen 9 9900X3D) no longer show “Unrecognized sensor table” and read the current values and limits of PPT and TDC. Once the core mapping is verified, per-core temperatures, voltages and C0/C1/CC6 residency also appear. (#203)
+    - GPU and CPU readings: While a discrete GPU sleeps, the GPU page keeps the last “Max core clock” it read. With kernel sensors on and a 30-second background refresh interval, CPU power and effective clock speed no longer come and go, and history recorded in the background no longer misses them.
+    - Privileged service and kernel sensors: When security software or a cleanup tool deletes the service's registration, the service can be reinstalled from Argus right away without restarting Windows first. After PawnIO is uninstalled or its device is removed, turning kernel sensors back on reinstalls the driver automatically if the installed driver is version 2.2.0 or earlier.
+    - Administrator mode: Administrator mode can be turned on even when Task Scheduler keeps a leftover registration with the same name; if registration is refused, the message points to possible blocking by security software such as 360. Error messages show each error code once, with HRESULTs in hexadecimal.
+    - Task Manager replacement: With replacement turned on, clicking “Open Windows Task Manager once” from an administrator account no longer does nothing. When Argus does not respond, Task Manager entry points fall back to Windows Task Manager without waiting through an extra timeout.
+    - Right-to-left text: Arabic, Hebrew and other right-to-left text in process names, descriptions and the search box no longer appears reversed. (#155)
+    - Menus and panes: Long submenus opened near the bottom of the window no longer have their last item cut off by the window edge. The details pane sizes its label column to the longest label, so labels such as “Dedicated GPU memory” no longer wrap. Dialog cards no longer flash white when closing in Mica windows.
+    - Icons after updating: After installing or updating, desktop shortcuts and Argus pinned to the taskbar show the new icon immediately, without restarting the PC.
+    Upgrading
+    - Privileged service: The communication protocol remains version 12. Ryzen 9000 readings, kernel sensor power in the background, the Task Manager replacement fixes and, on Windows versions before Windows 11 24H2 with standard permissions, disk operation counts take effect once the service is updated. Upgrading the installed version updates an installed service; with the portable version, click “Update service” under “Settings → Permissions → Privileged service”.
+    - Installed version on ARM64 PCs: On ARM64 PCs, version 0.6.0 still downloads the x64 installer, which asks for the ARM64 version and exits. Download Argus_0.7.0_arm64-setup.exe from the website and install it over the existing location; settings and history are kept, and later in-app updates use the ARM64 build.
+    - Portable version on ARM64 PCs: Exit Argus and replace the program with Argus_0.7.0_arm64.exe. If “Allow running as administrator” is on, turn it off first and turn it on again from the new version after replacing the file.
+    - Tray icon: A tray icon whose style was never changed shows the app icon after upgrading. To show live CPU usage, choose “Trend”, “Share” or “Number” under “Tray icon” on Components.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    v0.7.0 开始提供 Windows ARM64 安装版与免安装版，主程序、特权服务与任务管理器替换均在 ARM64 上原生运行。进程页新增 27 个可选列与“创建内存转储文件”“调试”两项操作；新增字节单位设置，任务栏监控支持垂直任务栏，有新版本时可发送 Windows 通知。本版还减少了界面静止时的重绘，并修复 Ryzen 9000 传感器、任务栏监控遮挡开始按钮、特权服务注册被删除后无法重新安装等问题。
+    本版完整重写了文档站，各项功能的详细用法可前往文档站查看。
+    破坏性变更
+    - 列菜单：进程列表的表头右键菜单不再按分类显示或隐藏列。单击菜单中的“选择列…”，在对话框中选择要显示的列。
+    新功能
+    - Windows ARM64：提供 ARM64 安装版与免安装版，主程序、特权服务、管理员运行与任务管理器替换均原生运行，应用内更新按 ARM64 版进行。性能页显示 ARM64 处理器的厂商、型号、指令集与虚拟化状态，CPU 功耗取自 Windows 能量计量；暂不提供内核传感器。（#172）
+    - 进程列：“选择列”对话框新增 27 个可选列，包括运行时长、内核与用户 CPU、上下文切换、共享工作集、分页池与非分页池、硬缺页，以及磁盘与 I/O 的读写次数和累计值。未选中这些列时，采样开销不变。
+    - 详细信息面板：列出进程列表全部可选列的读数，资源与累计两节增加上下文切换、硬缺页与每秒请求次数，工作集、提交大小等读数后附峰值。“复制详细信息”同样包含这些项。
+    - 内存转储与调试：单个进程的右键菜单新增“创建内存转储文件”与“调试”。转储文件写入临时文件夹，完成后通知给出路径；系统登记了即时调试器时，“调试”启动该调试器并附加到进程。（#169、#197）
+    - 字节单位：“设置 → 数据与历史”新增“字节单位”，可选传统风格（默认）、二进制 IEC 或十进制 SI。内存、存储容量、传输速率、图表刻度与各监控的读数随之切换。（#156）
+    - 垂直任务栏：任务栏位于屏幕左侧或右侧时，任务栏监控沿任务栏竖排读数，四种样式均有竖排布局，只显示放得下的几项。（#177）
+    - 新版本通知：窗口隐藏在托盘或未处于前台时，安装版在新版本下载并通过校验后、免安装版在发现新版本时发送 Windows 通知，单击通知即打开更新对话框。在“设置 → 更新”中关闭“有新版本时发送通知”后，改为在窗口显示时于右下角提示。
+    - 切换页面：Ctrl+Tab 与 Ctrl+Shift+Tab 切换到下一个或上一个页面，到末尾后从另一端继续。（#185）
+    - 顶部导航：页面栏空间不足时，顶部导航的标签先收为图标，指针悬停显示页面名称与快捷键；仍放不下时，页面控件才移到下一行。（#87）
+    - 文档站：完整重写全部文档。新增“入门”一节，包括快速入门、什么是 Argus、安装与更新，以及与系统任务管理器的对比；使用指南按界面拆分为进程、性能、服务与启动项、连接、历史等页面，并按代码核对、补全了说明。
+    性能
+    - 界面重绘：内容不变的可见窗口不再随每次屏幕刷新重绘。在 160 Hz 显示器上，Argus 设置页静止时每秒的 CPU 周期约减半；动画与滚动的呈现帧率不变。
+    修复
+    - 托盘图标：默认样式改为“应用图标”，避免“走势”在深色任务栏上难以辨认；“组件”页改用下拉框选择托盘图标的样式。（#178）
+    - 任务栏监控：任务栏按钮居中时，读数不再遮住开始按钮与任务按钮，只显示放得下的几项。组策略禁用小组件时，不再为小组件按钮留出空白。
+    - 桌面监控：开机或重新启动 Argus 后，已开启的桌面监控直接显示，无需重新开关。
+    - Ryzen 9000：CCD 内有禁用核心的型号（如 Ryzen 9 9900X3D）不再显示“未识别的传感器表”，可读取 PPT、TDC 的当前值与上限。核心映射校验通过后，还显示每核温度、电压与 C0／C1／CC6 驻留比例。（#203）
+    - GPU 与 CPU 读数：独立显卡休眠时，GPU 页保留最近读到的“最高核心频率”。开启内核传感器、后台刷新间隔为 30 秒时，CPU 功耗与有效频率不再时有时无，后台期间的历史记录也不再缺少这几项。
+    - 特权服务与内核传感器：服务的注册被安全软件或清理工具删除后，可在 Argus 中直接重新安装，无需先重新启动 Windows。PawnIO 被卸载或设备被删除后，已安装的驱动不高于 2.2.0 时，重新开启内核传感器即可自动重装驱动。
+    - 管理员运行：任务计划程序残留同名注册时，仍可开启管理员运行；注册被拒绝时，提示可能受到 360 等安全软件的拦截。错误提示中的错误码只显示一次，HRESULT 以十六进制显示。
+    - 任务管理器替换：开启替换后，管理员账户单击“临时打开系统任务管理器”不再没有反应。Argus 无响应时，任务管理器入口改开系统任务管理器，不再多等一轮超时。
+    - 从右向左的文字：进程名称、描述与搜索框中的阿拉伯文、希伯来文等从右向左书写的文字不再倒序显示。（#155）
+    - 菜单与面板：靠近窗口底部展开的长子菜单，末项不再被窗口底边截去。详细信息面板按最长的名称调整名称栏宽度，“专用 GPU 内存”等名称不再折成两行。Mica 窗口关闭对话框时，卡片不再闪白。
+    - 更新后的图标：安装或更新后，桌面快捷方式与固定到任务栏的 Argus 立即显示新图标，无需重新启动电脑。
+    升级提示
+    - 特权服务：通信协议仍为第 12 版。Ryzen 9000 读数、后台的内核传感器功耗、任务管理器替换的修复，以及 Windows 11 24H2 之前以标准权限运行时的磁盘读写次数，均在服务更新后生效。安装版升级时会更新已安装的服务；免安装版须在“设置 → 权限 → 特权服务”中单击“更新服务”。
+    - ARM64 电脑上的安装版：0.6.0 在 ARM64 电脑上仍下载 x64 安装包，x64 安装程序会提示改用 ARM64 版并退出。须从官网下载 Argus_0.7.0_arm64-setup.exe，覆盖安装到原位置，设置与历史数据保留；此后可在应用内更新 ARM64 版。
+    - ARM64 电脑上的免安装版：退出 Argus，改用 Argus_0.7.0_arm64.exe 替换原程序。已开启“允许以管理员身份运行”时，先关闭该选项，替换后从新版重新开启。
+    - 托盘图标：此前未改过样式的托盘图标，升级后显示应用图标。需要实时显示 CPU 占用时，在“组件”页的“托盘图标”中选择“走势”“占比”或“数字”。
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/Ray-lea/Argus/releases/tag/v0.7.0
+ReleaseTime: 2026-11-28T02:35:11.0000000Z
