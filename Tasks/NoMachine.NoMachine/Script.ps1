@@ -13,14 +13,21 @@ $this.CurrentState.Installer += [ordered]@{
 }
 $VersionX64 = [regex]::Match($InstallerUrlX64, '(\d+(\.\d+)+_\d+)').Groups[1].Value
 
-if ($VersionX86 -ne $VersionX64) {
+# The build suffix can differ when the vendor republishes only one architecture
+# for the same product version. Compare the product version and keep the highest
+# build suffix so the republished installer is still submitted.
+if (($VersionX86 -split '_')[0] -ne ($VersionX64 -split '_')[0]) {
   $this.Log("x86 version: ${VersionX86}")
   $this.Log("x64 version: ${VersionX64}")
   throw 'Inconsistent versions detected'
 }
+if ($VersionX86 -ne $VersionX64) {
+  $this.Log("x86 version: ${VersionX86}", 'Warning')
+  $this.Log("x64 version: ${VersionX64}", 'Warning')
+}
 
 # Version
-$this.CurrentState.Version = $VersionX64
+$this.CurrentState.Version = [int](($VersionX86 -split '_')[-1]) -ge [int](($VersionX64 -split '_')[-1]) ? $VersionX86 : $VersionX64
 
 # RealVersion
 $this.CurrentState.RealVersion = $this.CurrentState.Version.Split('_')[0]
