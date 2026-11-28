@@ -21,7 +21,7 @@ MSI can perform per-user or per-machine installation, but even per-user MSI prod
 Apply the project convention:
 
 - `$Info.AllUsers` is `1`: `Scope: machine` is safe.
-- `$Info.AllUsers` is absent, empty, `2`, or another value: omit `Scope`. Do not infer `user` from the property alone.
+- `$Info.AllUsers` is absent, empty, `2`, or another value: omit `Scope`. Do not infer `user` from the property alone. Never author `Scope: user` on an MSI entry, not even from an `InstallScope="perUser"` template: an administrator install of such an MSI registered under HKLM in VM testing, so a user-scope claim in the manifest contradicts the ARP hive that users actually get.
 - Custom Registry-table ARP entries under HKCU or conditional scope actions: record the evidence, but validate actual Windows Installer product registration before asserting scope.
 
 For dynamic validation, inspect the corresponding product registration under `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products` for machine context and under a user SID for user context. This supplements ARP location, which is not reliable enough for MSI scope by itself.
