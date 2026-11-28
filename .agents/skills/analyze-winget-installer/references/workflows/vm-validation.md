@@ -80,7 +80,9 @@ $ActualSha256 = (Get-FileHash -LiteralPath $InstallerPath -Algorithm SHA256).Has
 if ($ActualSha256 -cne $ExpectedSha256) { throw "Installer SHA256 mismatch: expected $ExpectedSha256, received $ActualSha256" }
 ```
 
-If the official source requires headers, cookies, or a transport unavailable inside the guest, transfer a previously hash-verified host file through an explicitly tested channel and verify the hash again in the guest. Never rely on the filename or transfer success alone.
+If the official source requires headers, cookies, or a transport unavailable inside the guest, transfer a previously hash-verified host file through an explicitly tested channel and verify the hash again in the guest.
+
+Run `winget install --manifest <directory>` from a session with the target scope token, not from the elevated PowerShell Direct session: the client rejects a user-scope or portable install launched from an administrator context with `0x8A15007D`. Stage the manifest files in their own directory, because directory mode parses every file it finds there as a manifest and fails on an adjacent `.cmd` or `.log` file, and keep the launcher and its logs outside it. Register an interactive scheduled task as the signed-in user to get a non-elevated install and write the exit code to a file for the host to poll. Never rely on the filename or transfer success alone.
 
 Before launching, verify the file's architecture. Use `Get-PEArchitectureInfo` for PE launchers and `Get-MsiInstallerInfo` or the MSI package template for MSI payloads. A page marked x64 can still serve an x86 launcher, and `win32` does not prove x86 installed binaries.
 
