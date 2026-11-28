@@ -44,11 +44,13 @@ For English, this project's authoring convention uses only `en-US` and `en-GB` i
 
 Use the strongest available evidence in this order:
 
-1. An explicit locale or market declaration in the product page, HTML language metadata, locale selector, installer metadata, application settings, store listing, feed, or API.
+1. An explicit locale or market declaration in the product page, HTML language metadata, locale selector, application settings, store listing, feed, or API.
 2. The product's stated target market, regional site, supported-country list, currency, legal terms, spelling, and other regionalized content.
 3. The publisher's official contact page, legal address, company location, imprint or `Impressum`, privacy policy, terms, repository profile, or official store profile. Use publisher location as the fallback when the source establishes the language but does not declare a region.
 
 A country-code domain or translated navigation label is supporting evidence, not a decision by itself. A multinational publisher may serve a regional product that differs from its headquarters, and a site can use another regional variety. Prefer product-specific evidence when it conflicts with company location. If the evidence remains ambiguous, record the uncertainty.
+
+The installer is not the product. An NSIS language table, an MSI `ProductLanguage`, or the strings in the installer's own UI say nothing reliable about the language the application itself presents, the same way a 32-bit installer says nothing about whether the application is 32-bit. Treat installer metadata as evidence only when it declares a choice for the product itself, such as a language selector that changes what gets installed. When the vendor already ships their own WinGet manifest for the package, their `PackageLocale` outweighs the installer's resource language.
 
 Examples:
 
@@ -56,6 +58,8 @@ Examples:
 |---|---|
 | A British publisher serves its primary product metadata in English and the legal/contact evidence places the product in the United Kingdom. | Use `en-GB`, not an automatic `en-US`. |
 | A Singaporean publisher serves English product metadata with British spelling. | Use `en-GB`. |
+| The vendor already has their own open WinGet manifest for the product and declares `PackageLocale: en-US`. | Follow the vendor's choice unless the product page contradicts it. |
+| An installer's NSIS language table or MSI `ProductLanguage` is `1033` while the product page uses British spelling. | Use `en-GB`; the installer's own resource language is not evidence. |
 | A Belgian publisher or individual serves the product in French. | Use `fr-BE`, not `fr-FR`. |
 | A Swiss company serves a French product page for the Swiss market. | Use `fr-CH`, not `fr-FR`. |
 | A Swiss company serves German metadata for a Swiss product. | Use `de-CH`, not `de-DE`. |
