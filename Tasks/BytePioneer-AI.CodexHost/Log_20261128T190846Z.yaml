@@ -1,0 +1,127 @@
+Version: 0.29.2
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.29.2/codexhost-0.29.2-windows-x64.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/BytePioneer-AI/codex-host/releases/download/v0.29.2/codexhost-0.29.2-windows-arm64.exe
+Locale:
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    本次更新带来全新插件中心与更新日志、桌面原生通知与后台静默预下载更新、Web 端会话子树删除、侧边栏活动视图与工作区置顶，并大幅降低长会话与桌面端内存占用，全面改进回复批注、侧栏排序分页、SSH 共享宿主、自动更新与多 Harness 稳定性。
+    💡 升级提示：当前版本自动更新时如遇异常，请手动更新一次；相关问题已在本版本修复，升级后即可恢复正常。
+    🧩 全新插件中心与扩展宿主能力
+    Desktop 与 Web 端插件中心全面重设计并统一卡片视觉，详情弹窗新增概览与更新日志标签页，首次启动桌面端自动预装并升级侧边栏会话树扩展；插件宿主新增任务活动摘要、独立桌面端托管浮窗、跨端会话树交接与 Web 导航、Web 标签页图标、只读活动会话与输入框下方挂载槽位，侧边栏浏览器空闲时自动降频减负。
+    — @iruriQ · @ABC-xiaoxuan · @koeria
+    ⚡ 长会话性能、桌面壳体验与活动视图
+    大幅优化桌面端与 Web 端长会话内存飙升与卡顿（图片按需解码回收、流式刷新合批、离屏卸载毛玻璃与后台交互解耦），修复 macOS 通知轮询卡顿与白屏恢复并同步原生窗口主题；独立桌面端支持原生系统通知、全窗口引导与托盘快捷入口；侧边栏新增活动视图（macOS ⌥⌘U / Windows 与 Linux Ctrl+Alt+U）、全部标为已读、手动未读与 Web 端删除会话及其子会话树。
+    — @iruriQ · @hhucz
+    📌 侧边栏整理、精准排序分页与全新图标
+    支持置顶工作区、跨分组移动项目、折叠次级导航与鼠标中键关闭标签页，工作区行内新建会话固定靠右，远端节点列表与拓扑展示系统图标并现代化原生下拉框；会话列表按真实对话活动时间排序展示日期，各本地项目独立分页互不牵连，远端兜底工作区标为“未分类”且 Recents 完整恢复；全新应用图标与全部 20 个 Harness 图标锐化统一，修复 iPhone 侧栏标题自动放大。
+    — @iruriQ · @zxd-666 · @MayApril · @sduhantao-maker · @TimYuhong
+    ✍️ 更顺手的回复批注与媒体文件体验
+    回答批注支持二次编辑与排队编辑后无损还原，新消息到达不再打断批注提交；拖动选择文字经过输入框不再中断，编辑已发消息时光标停在末尾，回复中的文件引用与目录链接可直接打开，侧边栏支持视频预览并修复 macOS 拖拽视频与图片预览，Composer #/@ 提及告别卡顿。
+    — @lpmasser · @iruriQ · @koeria · @zxd-666 · @hhucz · @sduhantao-maker
+    🤖 多 Harness 启动、历史保真与稳定性
+    macOS 桌面启动自动解析登录环境命令路径并优先选用 Pi 同级 Node，Claude Code 同步补齐启动路径；Antigravity 大幅减少配额查询启动与冗余读取，并在原生历史、冷读与 Fork/Rollback 中保留提问期间唤醒归属；Cursor CLI、OpenCode、Devin、Oh My Pi 与委派排队全面加固。
+    — @iruriQ · @bwndlct · @lpmasser · @ChaceLyee2101 · @ABC-xiaoxuan · @koeria
+    🛡️ 静默预下载更新、SSH 共享宿主与 Windows 可靠性
+    新增后台静默预下载更新与失败自动回退，Windows 更新支持可恢复重试与重启校验并修复受限环境权限报错；SSH 远程接入支持共享原生 Codex 宿主消除写入抢占，委派子会话继承父项目归属；新增桌面快捷方式引导、免密 macOS 一键安装与可选本机代码签名，自动更新后可保留系统权限。
+    — @iruriQ · @mouzhi · @koeria · @NikeAdmin
+    📋 完整更新清单
+    展开查看全部新功能（11 项）与修复（16 项）
+    🚀 新功能
+    - 插件中心与扩展：Desktop 与 Web 插件中心重设计并新增详情概览/更新日志页，桌面端默认预装侧边栏会话树并开放活动摘要、托管浮窗、跨端会话树交接与 Web 导航、Web 标签页图标、只读活动会话和输入框下方挂载槽位 (#1334, #1333, #1332, #1302, #1360, #1361)
+    - 后台更新与快捷安装：支持后台静默预下载更新与失败回退；npm 首次交互启动自动询问创建桌面/应用图标（codexhost shortcut），新增免密 macOS 一键安装与可选本机代码签名以在更新后保留系统权限 (#1348)
+    - 桌面通知与引导：独立桌面端新增原生系统通知、Web Push 改进，以及全窗口引导、记住启动界面与托盘快捷入口 (#1315)
+    - Web 会话管理：Web 端支持删除会话及其委派子会话树 (#1362)
+    - 侧边栏活动视图与未读：新增活动视图（macOS ⌥⌘U / Windows 与 Linux Ctrl+Alt+U）、全部标为已读、手动标未读与父会话批量标已读 (#1326, #1148)
+    - 工作区与标签页：支持置顶工作区、跨分组移动项目、折叠次级导航与鼠标中键关闭标签页 (#1245, #1283, #1313, #1339)
+    - 远端 Peer 与 SSH：远端节点与拓扑展示系统图标、置顶双向同步、支持远端 Thread 直接执行命令、远端兜底工作区标为“未分类”；SSH 支持共享原生 Codex 宿主并保留委派项目归属 (#1311, #1305, #1341, #1243)
+    - 回复批注：支持二次编辑已有批注，编辑排队消息时完整保留并还原批注 (#1319)
+    - 媒体与文件预览：文件侧边栏新增视频预览，点击回复中的目录链接可直接定位到文件侧边栏 (#1292, #1232)
+    - 全新视觉与图标：应用图标升级为全新海浪/铂金徽标，全部 20 个 Harness 图标锐化统一，现代化原生下拉框，独立桌面端展示 CH Desktop 标识 (#1250, #1331, #1323)
+    - 兼容性统计：新增不含任何用户或设备标识的匿名环境分布统计，用于优先保障常用系统与版本兼容，可随时通过 CODEXHOST_TELEMETRY=0 或 DO_NOT_TRACK=1 关闭 (#1345)
+    🐛 修复
+    - 内存与流畅度：显著缓解 WebKit 桌面端与 Web 端长会话内存飙升与卡顿，空闲时降低侧边栏浏览器刷新频次 (#1370, #1381, #1309)
+    - 桌面壳稳定性：修复 macOS 通知轮询卡顿与白屏恢复，原生窗口主题同步跟随 Web 主题 (#1365)
+    - 侧栏排序与分页：会话列表按真实对话活动时间排序并展示日期；各本地项目独立分页加载历史；工作区行内新建会话固定靠右 (#1297, #1146)
+    - Recents 与显示：完整恢复各作用域与远端 Recents 会话，远端在线状态需连接握手确认并区分加载失败，隐藏未修改官方导入重复会话，修复 iPhone 侧栏标题自动放大与模型选择器宽度 (#1342, #1357, #1280, #1290, #1217, #1346)
+    - Composer 与选区编辑：拖动选择文字经过输入框不再中断，消除 # / @ 提及输入卡顿，编辑已发消息时光标默认停在末尾，双击/三击末条消息不再抢焦点 (#1366, #1307, #1340, #1324)
+    - 回复批注与文件引用：修复新消息到达时批注提交失败，文件引用标记可直接点击打开对应文件 (#1319, #1299)
+    - 媒体拖拽与预览：修复 macOS 拖拽视频、上传图片与查看图片预览异常 (#1287)
+    - macOS 启动路径：桌面启动自动解析登录环境命令路径，Pi 优先使用同级 Node，Claude Code 补齐登录环境路径 (#1329, #1317)
+    - Antigravity：在原生历史、冷读与 Fork/Rollback 中保留提问期间唤醒，大幅减少配额 CLI 拉起与冗余读取，缺少用量数据的外部 Thread 不再高频刷新 (#1166, #1330, #1320)
+    - Cursor CLI：不再将会话级配置混入模型引用，并兼容历史引用格式 (#1327)
+    - OpenCode 与 Devin：OpenCode 支持恢复未完成轮次并跳过无意义基准差异；Devin 修复中途上下文压缩后丢失轮次追踪 (#1226, #1041)
+    - Oh My Pi：正确将 19.2.1 缺少默认模型的启动报错识别为需配置状态 (#1336)
+    - 委派与会话启动：有排队追问时不再被委派发送抢占，避免打开会话时缓存陈旧状态事件 (#1241, #1234)
+    - 更新器与 Windows 可靠性：Windows 更新支持恢复、重启校验并锁定全局 npm 配置；更新后自动重启独立桌面端并保留预检错误，修复 npm 兜底查询、SSH 双包预拉取与外部安装误拦 (#1358, #1344, #1343, #1328, #1314)
+    - Windows 与全局状态：修复受限环境启动进程权限拒绝并加固安装包元数据与截图工具；全局状态文件含大量空闲空间时不再误触容量上限 (#1325, #1306, #1301)
+    - 另有 4 项交互焦点、启动诊断与 CLI 帮助文本修复 (#1322, #1337, #1338, #1352)
+
+    This release introduces a redesigned Plugin Center with extension changelogs, native desktop shell notifications, silent background update staging, Web session subtree deletion, a sidebar Activity View, and pinned workspaces, while cutting long-session memory spikes and improving response annotations, sidebar recency and paging, shared SSH hosting, auto-updates, and multi-Harness stability.
+    💡 Upgrade note: If auto-update runs into an issue from your current version, please update manually once; this is fixed in v0.29.2 and future updates will work smoothly.
+    🧩 Redesigned Plugin Center & Extension Host Capabilities
+    The Plugin Center is redesigned and visually aligned across Desktop and Web with Overview/Changelog tabs and cached icon proxying, and first Desktop launches seed an updated sidebar thread-tree extension; the extension host adds activity summaries, managed floating windows in the desktop shell, cross-surface thread-tree handoffs and Web navigation APIs, Web tab icons, read-only active session context, and a composer-dock mount slot, while the sidebar browser cuts idle frame overhead.
+    — @iruriQ · @ABC-xiaoxuan · @koeria
+    ⚡ Long-Session Performance, Desktop Shell & Activity View
+    Long-session memory spikes and rendering jank in WebKit Desktop and Web are mitigated through decoded-image budgeting, coalesced streaming updates, offscreen blur gating, and decoupled background interactions, alongside fixed macOS notification polling lag, white-screen recovery, and native window theme syncing; the standalone desktop shell adds native OS notifications, full-window onboarding, and tray shortcuts, while the sidebar adds an Activity View (⌥⌘U on macOS / Ctrl+Alt+U on Windows & Linux), mark-all-read, manual unread markers, and Web session subtree deletion.
+    — @iruriQ · @hhucz
+    📌 Sidebar Organization, Accurate Recency & Paging, and Refreshed Icons
+    Pin workspaces, move projects across sections, collapse secondary navigation, middle-click to close tabs, keep the new-session action rightmost on workspace rows, view OS platform icons on remote peers and topology, and enjoy modernized native select controls; session lists sort and date by real conversation recency, each local project pages its own history independently, remote fallback workspaces are labeled "Uncategorized", and Recents restores all scoped sessions; app icons adopt the refreshed badge, all 20 Harness icons are sharpened and aligned, and iPhone sidebar title autosizing is fixed.
+    — @iruriQ · @zxd-666 · @MayApril · @sduhantao-maker · @TimYuhong
+    ✍️ Smoother Response Annotations & Media Previews
+    Response annotations support re-editing and lossless restoration when editing queued messages without failing as new messages arrive; dragging text selection across the composer no longer breaks, editing a sent message places the caret at the end, file citations and directory links open directly, the Files sidebar previews videos with fixed macOS drag-and-drop media handling, and Composer #/@ mention typing lag is gone.
+    — @lpmasser · @iruriQ · @koeria · @zxd-666 · @hhucz · @sduhantao-maker
+    🤖 Multi-Harness Launch Paths, History Fidelity & Stability
+    macOS desktop launches resolve login-shell command paths with sibling Node preference for Pi and extended paths for Claude Code; Antigravity cuts redundant quota CLI spawns and reads while keeping in-prompt wakes attached across cold reads, Fork, and Rollback; Cursor CLI, OpenCode, Devin, Oh My Pi, and delegation queuing are hardened.
+    — @iruriQ · @bwndlct · @lpmasser · @ChaceLyee2101 · @ABC-xiaoxuan · @koeria
+    🛡️ Silent Update Staging, Shared SSH Host & Windows Reliability
+    Background update staging pre-downloads releases with automatic fallback on failure, Windows updates gain recovery, shell relaunch verification, and locked global npm config, and restricted Windows environments avoid process-launch access-denied errors; SSH remotes can share a single native Codex owner to avoid active-writer conflicts while preserving delegated project membership; first interactive npm launches offer desktop shortcut setup alongside a passwordless macOS one-line installer and optional local code signing to preserve macOS permissions across updates.
+    — @iruriQ · @mouzhi · @koeria · @NikeAdmin
+    📋 Full Changelog
+    Show all features (11) and fixes (16)
+    🚀 Features
+    - Plugin Center & Extensions: redesigned Plugin Center across Desktop & Web with Overview/Changelog tabs, automatic first-launch seeding of sidebar-thread-tree on Desktop, and new host activity, managed window, cross-surface thread-tree handoff/Web navigation, Web tab icon, read-only active session, and composer-dock capabilities (#1334, #1333, #1332, #1302, #1360, #1361)
+    - Background Updates & Local Setup: silent background update staging with failure fallback; first interactive npm launch shortcut prompt (codexhost shortcut), passwordless macOS one-line installer, and optional per-machine macOS local signing with automatic re-signing on in-app updates (#1348)
+    - Desktop Notifications & Onboarding: native OS notifications in the standalone desktop shell, Web Push improvements, and full-window onboarding with remembered launch choice and tray shortcuts (#1315)
+    - Web Session Management: delete sessions and delegated child subtrees directly from Web (#1362)
+    - Sidebar Activity View & Unread: Activity View (⌥⌘U on macOS / Ctrl+Alt+U on Windows & Linux) with mark-all-read, manual unread markers, and batch mark-read from parent Threads (#1326, #1148)
+    - Workspaces & Tabs: pin workspaces, move projects across sections, collapse secondary navigation, and middle-click to close right-sidebar and session tabs (#1245, #1283, #1313, #1339)
+    - Remote Peers & SSH: OS platform icons on remote peers and topology, bidirectional remote Peer pin sync, direct commands in remote Peer Threads, "Uncategorized" remote fallback workspaces, shared native Codex owner over SSH, and preserved delegated project membership (#1311, #1305, #1341, #1243)
+    - Response Annotations: re-edit existing annotations and restore them losslessly when editing queued messages (#1319)
+    - Media & File Previews: video previews in the Files sidebar and clickable directory links that open in the Files sidebar (#1292, #1232)
+    - Visuals & Icons: refreshed app icons, sharpened and optically aligned icons across all 20 Harnesses, modernized native select controls, and a CH Desktop hero badge in the desktop shell (#1250, #1331, #1323)
+    - Compatibility Stats: official builds collect aggregate OS and version counts with no user or device IDs to prioritize platform support, and can be turned off anytime via CODEXHOST_TELEMETRY=0 or DO_NOT_TRACK=1 (#1345)
+    🐛 Fixes
+    - Memory & Performance: mitigated WebKit and Web long-session memory spikes and rendering jank, and slowed idle sidebar-browser frame updates (#1370, #1381, #1309)
+    - Desktop Shell Stability: fixed macOS notification polling lag and WKWebView white-screen recovery, and synced native window theme with the Web theme (#1365)
+    - Sidebar Recency & Paging: sorted and dated session lists by real conversation recency, isolated history paging per local project, and kept the new-session button rightmost on workspace rows (#1297, #1146)
+    - Recents & Display: restored all scoped and remote sessions in Recents, required event-stream handshake for peer online status with clearer load errors, hid untouched official import duplicates, and fixed iPhone title autosizing and model picker width (#1342, #1357, #1280, #1290, #1217, #1346)
+    - Composer & Selection: kept drag selection going smoothly past the composer, eliminated # / @ mention typing lag, placed the sent-message edit caret at the end, and prevented multi-click selection on the last message from leaking focus (#1366, #1307, #1340, #1324)
+    - Annotations & Citations: fixed annotation submission failures when new messages arrive and made file-citation markers open directly (#1319, #1299)
+    - Media Drops & Previews: restored macOS video drops, image uploads, and viewed-image previews (#1287)
+    - macOS Launch Paths: resolved login-shell PATH in Launcher with sibling Node preference for Pi, and extended macOS launch PATH for Claude Code (#1329, #1317)
+    - Antigravity: kept in-prompt wakes attached across native history replay, cold reads, Fork, and Rollback; reduced quota CLI spawns and redundant reads; bounded retries for external Threads without usage data (#1166, #1330, #1320)
+    - Cursor CLI: kept session-scoped configuration out of model references and normalized legacy references (#1327)
+    - OpenCode & Devin: allowed OpenCode to resume incomplete turns without unnecessary baseline diffs; kept Devin turn tracking intact after mid-turn compaction (#1226, #1041)
+    - Oh My Pi: classified 19.2.1 missing-default-model startup errors as configuration required (#1336)
+    - Delegation & Session Open: let queued follow-ups start before delegated sends and avoided buffering stale state events during open (#1241, #1234)
+    - Updater & Windows Reliability: made Windows updates recoverable with Shell relaunch verification and locked global npm config; relaunched desktop shell after updates while preserving preflight errors, fixed npm fallback and SSH dual-package prefetch, and stopped foreign Desktop installs from blocking updates (#1358, #1344, #1343, #1328, #1314)
+    - Windows & Global State: fixed process-launch access-denied errors in restricted environments, hardened installer metadata and screenshot helpers, and ignored free space in desktop global state size checks (#1325, #1306, #1301)
+    - 4 more focus-handling, launch diagnostic, and CLI usage help fixes (#1322, #1337, #1338, #1352)
+    Install & Upgrade
+    - macOS one-line install (no xattr prompt): curl -fsSL https://chost.dev/install.sh | bash
+    - New install: npm install -g @codexhost/cli, or download the installer for your platform from Assets below.
+    - Upgrade: codexhost update. For npm installs, run codexhost stop before reinstalling.
+    - macOS manual DMG "cannot verify this app": xattr -dr com.apple.quarantine /Applications/codexhost.app
+    - More: README
+    🙏 致谢 / Thanks
+    @iruriQ (#1250, #1305, #1306, #1307, #1311, #1313, #1314, #1315, #1322, #1323, #1324, #1326, #1327, #1328, #1329, #1330, #1331, #1332, #1333, #1334, #1337, #1338, #1339, #1341, #1342, #1343, #1344, #1345, #1348, #1357, #1358, #1360, #1361, #1362, #1365, #1370, #1381) · @zxd-666 (#1146, #1217, #1290, #1292, #1297) · @lpmasser (#1041, #1234, #1241, #1319) · @koeria (#1299, #1309, #1325, #1336, #1350, #1352) · @sduhantao-maker (#1283, #1287, #1346, #1347, #1366) · @hhucz (#1148, #1232, #1340) · @ChaceLyee2101 (#1317, #1320) · @ABC-xiaoxuan (#1226, #1302) · @MayApril (#1245) · @TimYuhong (#1280) · @NikeAdmin (#1301) · @mouzhi (#1243) · @bwndlct (#1166)
+- Locale: zh-CN
+  Key: ReleaseNotesUrl
+  Value: https://github.com/BytePioneer-AI/codex-host/releases/tag/v0.29.2
+ReleaseTime: 2026-11-28T18:10:52.0000000Z

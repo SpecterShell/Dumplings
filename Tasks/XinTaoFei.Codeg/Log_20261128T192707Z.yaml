@@ -1,0 +1,77 @@
+Version: 0.50.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.50.0/codeg_0.50.0_x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/spacering-net/codeg/releases/download/v0.50.0/codeg_0.50.0_arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    This release switches Antigravity to the native Antigravity CLI with a Turbo mode, lets you open file references with their default app, reworks the personal assistant's activity panel around who needs to act next, makes token stats count sub-agent and fork spend correctly, and updates OpenCode, Cline, Kimi Code, Qoder, ZCode and Command Code.
+    New
+    - Antigravity now runs on the Antigravity CLI you install (agy acp). You can sign in to Google with no browser by pasting a code, turn on Turbo mode to skip permission prompts, and switch the terminal sandbox and telemetry on or off. Your earlier Antigravity sessions still open. (#1335, @maoxian-1)
+    - File references in a conversation can now be opened in their default app (desktop only). Programs and scripts are refused, so a link cannot run code with one click. (#1345, @zxbdzh)
+    - The assistant's activity panel is now grouped by who acts next: "Needs you", "Running", "Watching", "Routines & reminders" and "Done today". You can retry failed work, merge a PR, or answer a permission, question or plan right on the row.
+    - You can ignore rows waiting on you. An ignored row comes back only when what it waits on changes, for example when a PR with slow checks can no longer be read.
+    - PR watches now show their health: an account that can't be read, checks running too long, or a review waiting over a day. You can set both time limits.
+    - The assistant's input box now keeps your draft, along with pasted images and attachments, when you leave the page or switch assistants.
+    Improved
+    - Token stats now include spend that used to be missed: sub-agents, workflow agents, compactions and summaries for Claude Code, Codex, CodeBuddy, Kimi, Hermes, Pi, OpenCode, Gemini, DeepSeek, Cline and more. Forked conversations are no longer billed again for the history they copied. Existing history is recounted on the next sync, and a recount cut short picks up where it stopped.
+    - Interrupting a turn no longer stops the sub-agents it delegated work to, and the agent picks up their results later. Pressing Stop still stops them. (#1330, @asteroida123)
+    - After a reload, each Codex reply now shows its own token usage. Before, some replies showed none and others showed two rounds' worth.
+    - By default, assistants now ask you before they merge, close, comment on or fix a PR they are watching. Settings you already saved stay as they are.
+    - When one scan finds many suggestions, they now come as one card with a "Show all" option instead of flooding the conversation.
+    - The assistant's Workspace tab now shows just the work cards, each with a "View session" button.
+    - With a workspace background image set, conversation cards are now see-through. Card buttons use neutral colors, so the "Assistant accent colour" setting has been removed.
+    - The assistant's side panel remembers the width you dragged it to.
+    - Clicking a Markdown image now opens it at full size, in conversations, Markdown file previews and issue/PR descriptions.
+    - Wide tables in cards now scroll sideways inside the card instead of stretching past it.
+    - Updated OpenCode to 2.4.2, Cline to 3.0.76, Kimi Code to 2.8.1, Qoder to 1.1.100, ZCode to 0.96.4 and Command Code to 1.93.5.
+    - The end of OpenCode Code Mode image and video jobs now shows on their card.
+    - When ZCode fails during a turn, the turn no longer looks like it finished normally. ZCode installed from Arch's zcode-bin package is now found too.
+    Fixed
+    - Fixed the personal assistant getting stuck at "waking up" on its first message after a fresh install. (#1329, @Sube-py)
+    - Fixed the newest Codex reply losing its completion time, tokens and model after a /compact. (#1312, @ker2xu)
+    - Fixed local images not showing in assistant conversations. (#1347 reported by @zxbdzh)
+    - Antigravity replies now show their model again.
+    - Fixed lost focus, cut-off typing and flickering hover in the "New assistant" dialog while an assistant is working.
+    Thanks to @maoxian-1, @zxbdzh, @ker2xu, @asteroida123 and @Sube-py for contributing to this release.
+- Locale: zh-CN
+  Key: ReleaseNotes
+  Value: |-
+    这一版 Antigravity 改用原生 Antigravity CLI，并新增 Turbo 模式；会话中的文件引用可以用默认应用打开；个人助手的动态面板按「轮到谁处理」重新编排；Token 统计能正确计入子智能体和分叉会话的消耗；OpenCode、Cline、Kimi Code、Qoder、ZCode 和 Command Code 也有更新。
+    新增
+    - Antigravity 改为通过你自己安装的 Antigravity CLI（agy acp）运行。 登录 Google 账号不用打开浏览器，粘贴验证码即可；可以开启 Turbo 模式跳过权限确认，也可以开关终端沙箱和遥测。之前的 Antigravity 会话仍然可以打开。（#1335，@maoxian-1）
+    - 会话中的文件引用可以用系统默认应用打开（仅桌面版）。程序和脚本会被拒绝打开，链接无法一键运行代码。（#1345，@zxbdzh）
+    - 助手的动态面板改为按「轮到谁处理」分组：「等你处理」「进行中」「跟进中」「例程与提醒」「今日已完成」。重试失败的工作、合并拉取请求、回答授权、问题或计划，都能直接在这一行完成。
+    - 等你处理的条目可以忽略。 被忽略的条目只有在它等待的事情发生变化时才会重新出现，比如检查运行过久的拉取请求变得无法读取时。
+    - 拉取请求跟进会显示健康状态：账号无法读取、检查运行过久、评审等待超过一天时都会标出，两个时长都可以在设置里调整。
+    - 助手输入框会保留草稿，离开页面或切换助手后，已粘贴的图片和附件也会保留。
+    改进
+    - Token 统计补上了之前漏算的消耗：Claude Code、Codex、CodeBuddy、Kimi、Hermes、Pi、OpenCode、Gemini、DeepSeek、Cline 等的子智能体、工作流智能体、上下文压缩和摘要的消耗都会计入。分叉会话不再重复计算复制过来的历史。下次同步时会重新统计已有历史，中途中断的话，下次会接着上次的进度继续。
+    - 打断一个回合不会再停掉它委托出去的子智能体，智能体之后会继续收取它们的结果；点「停止」仍会一起停止。（#1330，@asteroida123）
+    - 重新加载后，Codex 每条回复都会显示自己的 Token 用量。之前有的回复没有用量，有的回复显示了两轮的用量。
+    - 助手默认会先征求你的同意，再合并、关闭、评论或修复它跟进的拉取请求，你已经保存的设置保持不变。
+    - 一次扫描发现多条建议时，会合并成一张卡片，可以点「显示全部」查看，不会再刷满整个会话。
+    - 助手的「工作区」标签页只显示工作卡片，每张卡片都可以点「查看会话」。
+    - 设置了工作区背景图时，会话卡片改为半透明。 卡片按钮改用中性色，因此移除了「助手强调色」设置。
+    - 助手侧边栏会记住你拖动调整后的宽度。
+    - 点击 Markdown 图片会打开原尺寸预览，会话、Markdown 文件预览以及议题和拉取请求的描述中都适用。
+    - 卡片中的宽表格改为在卡片内横向滚动，不再撑出卡片。
+    - OpenCode 更新至 2.4.2，Cline 更新至 3.0.76，Kimi Code 更新至 2.8.1，Qoder 更新至 1.1.100，ZCode 更新至 0.96.4，Command Code 更新至 1.93.5。
+    - OpenCode Code Mode 的图片和视频任务结束时，结果会显示在卡片上。
+    - ZCode 在回合中出错时，不会再显示为正常完成；通过 Arch 的 zcode-bin 包安装的 ZCode 现在也能被识别。
+    修复
+    - 修复全新安装后，向个人助手发送第一条消息时一直停在「正在唤醒」的问题。（#1329，@Sube-py）
+    - 修复执行 /compact 后，Codex 最新一条回复丢失完成时间、Token 用量和模型信息的问题。（#1312，@ker2xu）
+    - 修复助手会话中本地图片无法显示的问题。（#1347 由 @zxbdzh 反馈）
+    - 修复 Antigravity 回复下方不显示模型的问题。
+    - 修复助手工作时，「新建助手」对话框中输入框失去焦点、正在输入的内容被打断以及悬停效果反复闪烁的问题。
+    感谢 @maoxian-1、@zxbdzh、@ker2xu、@asteroida123 和 @Sube-py 为本次发布做出的贡献。
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/spacering-net/codeg/releases/tag/v0.50.0
+ReleaseTime: 2026-11-28T18:55:51.0000000Z
