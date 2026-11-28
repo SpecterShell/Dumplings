@@ -1,0 +1,41 @@
+Version: 1.2.3
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/veeso/termscp/releases/download/v1.2.3/termscp-v1.2.3-x86_64-pc-windows-msvc.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: termscp.exe
+    PortableCommandAlias: termscp
+- Architecture: arm64
+  InstallerType: zip
+  NestedInstallerType: portable
+  InstallerUrl: https://github.com/veeso/termscp/releases/download/v1.2.3/termscp-v1.2.3-aarch64-pc-windows-msvc.zip
+  NestedInstallerFiles:
+  - RelativeFilePath: termscp.exe
+    PortableCommandAlias: termscp
+Locale:
+- Locale: en-GB
+  Key: ReleaseNotes
+  Value: |-
+    1.2.3
+    Released on 2026-11-28
+    CI
+    - release: install just libsmbclient to release on crates.io
+    Fixed
+    - filetransfer: avoid panic when sync browsing to root directory (#470)
+      Going up a directory with sync browsing enabled could move the opposite
+      pane to /, which has no file name, so unwrapping it panicked. Fall back
+      to the whole path for the directory name shown to the user.
+    - filetransfer: use forward slash for remote paths on Windows (#472)
+      Remote destination paths were built with the host path separator, so on
+      Windows a Unix server received names like tmp\file.txt as a single file
+      name. Join and absolutize remote paths with / regardless of the host OS.
+    Build
+    - deps: migrate from chrono to jiff (#469)
+      - build(deps): migrate from chrono to jiff
+      chrono is deprecated, so dates and times are now handled with jiff 1.x. File times in the explorer and the file info popup, and log timestamps, render exactly as before, including in user supplied time formats. An invalid user supplied time format no longer crashes termscp; the time is left empty and a warning is logged. Also bumps the toolchain and MSRV to 1.100.0 and updates dependencies. Local file times are now set with the standard library, replacing the filetime crate whose functions became deprecated.
+      The cargo deny configuration now ignores the chrono advisory, since chrono only comes in through russh-util for WebAssembly targets, drops two exceptions that no longer match, and allows the license of ar_archive_writer.
+- Key: ReleaseNotesUrl
+  Value: https://github.com/veeso/termscp/releases/tag/v1.2.3
+ReleaseTime: 2026-11-28T15:16:47.0000000Z
