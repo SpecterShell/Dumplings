@@ -17,11 +17,27 @@ switch -Regex ($this.Check()) {
       $this.CurrentState.ReleaseTime = $Object1.published_at.ToUniversalTime()
 
       if (-not [string]::IsNullOrWhiteSpace($Object1.body)) {
+        $ReleaseNotesObject = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak'
+
+        # Drop the trailing sections that only point at the compare page, which ReleaseNotesUrl already covers
+        $Skip = $false
+        $SkippedHeadingLevel = 0
+        $ReleaseNotesNodes = for ($Node = $ReleaseNotesObject.FirstChild; $Node; $Node = $Node.NextSibling) {
+          if ($Node.Name -match '^h([1-6])$') {
+            $HeadingLevel = [int]$Matches[1]
+            if (-not $Skip -or $HeadingLevel -le $SkippedHeadingLevel) {
+              $Skip = $Node.InnerText -match '升级说明|完整变更'
+              if ($Skip) { $SkippedHeadingLevel = $HeadingLevel }
+            }
+          }
+          if (-not $Skip) { $Node }
+        }
+
         # ReleaseNotes (zh-CN)
         $this.CurrentState.Locale += [ordered]@{
           Locale = 'zh-CN'
           Key    = 'ReleaseNotes'
-          Value  = $Object1.body | Convert-MarkdownToHtml -Extensions 'advanced', 'emojis', 'hardlinebreak' | Get-TextContent | Format-Text
+          Value  = $ReleaseNotesNodes | Get-TextContent | Format-Text
         }
       } else {
         $this.Log("No ReleaseNotes for version $($this.CurrentState.Version)", 'Warning')
