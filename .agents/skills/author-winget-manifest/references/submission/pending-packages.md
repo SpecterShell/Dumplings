@@ -74,12 +74,6 @@ Run the task's ordinary read-only check, then generate the dry manifests:
 
 Review `Outputs/WinGet`, the selected reference, installer and locale mappings, and all warnings before enabling real submission. Dry runs perform discovery, generation, and local validation but never update a PR, create a branch, or close a PR.
 
-## Review latency and push churn
-
-A pending new-package PR is reviewed by hand, and the queue behind it is long. Every push to that PR, including an automation version bump, removes `Validation-Completed`, reruns the whole pipeline, and returns the PR to the back of the moderator queue. A submitter in [discussion #333858](https://github.com/microsoft/winget-pkgs/discussions/333858) pushed eight versions into one new-package PR over 36 days and it was still never reviewed; freezing the automation while the label was present was the fix.
-
-Batch manifest fixes into one push instead of iterating on the branch, and do not bump a pending new-package PR for routine upstream releases while its current assets stay downloadable. Check the PR labels before any write: an update is only worth its cost when the submitted version stops installing or becomes invalid.
-
 ## Existing-package PR references
 
 Use [existing-package PR updates](existing-packages.md) for packages already present in the reference repository. Their separate action and trusted-user list support one added version and an optional complete older-version removal. PRs modifying published files remain ineligible. The missing-package fallback stays addition-only.
