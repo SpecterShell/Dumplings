@@ -1,0 +1,51 @@
+Version: 1.35.0
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.35.0-win-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://downloads.reliantlabs.io/Reliant-1.35.0-win-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    2 new features, 4 fixes and 3 other changes
+    Every pull request merged since v1.34.1, grouped by its conventional-commit type.
+    Added
+    - diskwatch: trim every Go build cache by forge/pkg/gocache's policy; pin forge@eaf3a164 (supersedes #3869) #3909
+    - mergequeue: run candidate builds, changed paths and pipeline.yaml reads as gate pool daemon jobs #3924
+    Changed
+    - db: call trigger event store within delivery transaction #3895
+    - perf(web): typecheck with tsgo, TypeScript's native compiler (#3881) #3885
+    - refactor(db): delete the six deprecated trigger-event and run-list forwards from the facade (#3630) #3788
+    Fixed
+    - mergequeue: no code operations on the server roles; guard the api, worker and gateway closure #3898
+    - architecture: deps guard skips when git history is unavailable #3897
+    - web: size an attachment upload's client budget by its bytes, not a fixed 60s #3899
+    - coverage: restore the coverage-source blob read on the API server, bounded in memory #3904
+    What's Changed
+    📦 Other Changes
+    - fix(mergequeue): no code operations on the server roles; guard the api, worker and gateway closure by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3898
+    - reland: perf(web): typecheck with tsgo, TypeScript's native compiler (#3881) by @reliant-labs[bot] in https://github.com/reliant-labs/reliant/pull/3885
+    - refactor(db): use trigger event stores in delivery transaction by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3895
+    - fix(architecture): deps guard skips when git history is unavailable by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3897
+    - reland: refactor(db): delete the six deprecated trigger-event and run-list forwards from the facade (#3630) by @reliant-labs[bot] in https://github.com/reliant-labs/reliant/pull/3788
+    - fix(web): size an attachment upload's client budget by its bytes, not a fixed 60s by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3899
+    - fix(coverage): restore the coverage-source blob read on the API server, bounded in memory by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3904
+    - feat(diskwatch): trim every Go build cache by forge/pkg/gocache's policy; pin forge@eaf3a164 (supersedes #3869) by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3909
+    - feat(mergequeue): run candidate builds, changed paths and pipeline.yaml reads as gate pool daemon jobs by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3924
+    - feat(pipeline): capability grants per activation and pool; pr.verdict approves only with the approve grant by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3926
+    - chore: release v1.35.0 by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3927
+    - feat(gate): share the machine's trusted Go build cache with gates, read-only by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3919
+    - feat(mergequeue): wire the daemon-side merge queue into the worker behind pipeline.enabled by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3928
+    - feat(daemon): prune the merge queue's job caches on an age and size budget by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3929
+    - feat(pipeline): pr.next reads a PR's changed files from a gate pool daemon, never the diff on the worker by @reliant-01 in https://github.com/reliant-labs/reliant/pull/3930
+    Full Changelog: https://github.com/reliant-labs/reliant/compare/v1.34.1...v1.35.0
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/reliant-labs/reliant/releases/tag/v1.35.0
+ReleaseTime: 2026-11-28T13:32:14.0000000Z
