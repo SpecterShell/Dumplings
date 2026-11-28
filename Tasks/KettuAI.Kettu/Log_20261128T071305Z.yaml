@@ -1,0 +1,29 @@
+Version: 0.1.33
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/KettuAI/Kettu/releases/download/v0.1.33/Kettu-0.1.33-x64-setup.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://github.com/KettuAI/Kettu/releases/download/v0.1.33/Kettu-0.1.33-arm64-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Adds manual cross-host task delegation to paired computers, quick queued-message steering with Cmd/Ctrl+Enter, stale-replay fixes and richer running details for Live Activity pushes, lower sustained CPU usage, remote sync flow control and incremental delta protocols, and Pi tool permission enforcement for workflows and routines.
+    What changed
+    - Cross-host task delegation and quick queued-message steering: pick Delegate to another computer… from the composer + menu to start a visible session on an online paired computer under the same Kettu account and report results back, and press Cmd/Ctrl+Enter when the composer is empty to immediately steer the first queued message. (#3003, #2581, thanks @Ne1ther; #3013, #3005, thanks @Ariember)
+    - Live Activity stale-replay fixes, auto-expiry, and richer running status: cancels in-flight/retrying pushes superseded by newer state, re-validates alerts and activities before sending, tracks pending dismissal when a request finishes before the update token returns, honors Only while I'm away on Live Activity updates while the user is at the computer, guards push-to-start with automatic expiry cleanup, and carries running phase, tool activity kind, running count, and last completed plan step. (#3016, #3008, #3004, #3010)
+    - Remote sync flow control, incremental tool output, and session list deltas: adds byte-budget flow control with priority overtaking to Outbox and Channel, negotiates tool-output-append 64 KiB tail-window incremental patches with transparent fallback for older clients, and adds revision-based incremental sessions.list sync with delete tombstones. (#2956, #2953, #2958, #2954, #2960, #2955)
+    - Lower sustained CPU usage and host power telemetry: reduces sustained CPU usage in agent-host and renderer helpers, and includes unprivileged host power telemetry in load snapshots. (#3018, #3007, #3001)
+    - Pi tool permission enforcement in workflows and routines: enforces Pi tool permission checks consistently when running workflows and routines. (#3009, #2074)
+    中文
+    - 跨电脑派发任务与空输入框快捷插队发送：可从输入框 + 菜单点击 派发到其他电脑…，将任务派发到同账号下在线的已配对电脑执行并回传结果；输入框为空且存在排队消息时，按 Cmd/Ctrl+Enter 可直接将第一条排队消息插队发送。(#3003, #2581，感谢 @Ne1ther；#3013, #3005，感谢 @Ariember)
+    - 灵动岛推送防延迟回弹、自动收尾与运行态信息增强：新状态到达时立即中止正在重试或排队的旧推送并在发送前二次校验，修复未收到 updateToken 前请求结束漏发关闭导致的孤儿灵动岛；开启 只在我离开时 且人在电脑前时停止向后台手机推送远程灵动岛更新（关闭开关即可随时实时推送）；为已结束、报错与限额态自动定时结束，并在运行中推送中补充阶段、工具类型、并行会话数及最近完成的计划步骤。(#3016, #3008, #3004, #3010)
+    - 远程同步流控、工具输出增量补丁与会话列表增量同步：为 Outbox 和 Channel 加入按字节预算流控与高优插队机制；支持 tool-output-append 64 KiB 尾窗增量追加补丁（向旧客户端自动降级）；支持基于修订号与删除墓碑的 sessions.list 增量同步。(#2956, #2953, #2958, #2954, #2960, #2955)
+    - 降低持续 CPU 占用与主机能耗遥测：优化 agent-host 与渲染辅助进程的持续 CPU 占用，并在主机负载快照中加入免特权能耗遥测指标。(#3018, #3007, #3001)
+    - 工作流与定时任务强制执行 Pi 工具权限：在工作流与定时任务执行期间统一落实 Pi 工具权限校验。(#3009, #2074)
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/KettuAI/Kettu/releases/tag/v0.1.33
+ReleaseTime: 2026-11-28T07:06:13.0000000Z
