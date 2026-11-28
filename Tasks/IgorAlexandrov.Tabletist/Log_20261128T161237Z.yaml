@@ -1,0 +1,52 @@
+Version: 0.8.0
+Installer:
+- Architecture: x64
+  InstallerType: inno
+  InstallerUrl: https://github.com/igor-alexandrov/tabletist/releases/download/v0.8.0/tabletist-v0.8.0-x86_64-pc-windows-msvc-setup.exe
+- Architecture: arm64
+  InstallerType: inno
+  InstallerUrl: https://github.com/igor-alexandrov/tabletist/releases/download/v0.8.0/tabletist-v0.8.0-aarch64-pc-windows-msvc-setup.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/igor-alexandrov/tabletist/releases/tag/v0.8.0
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    A release about files and languages: open a folder of data files as a database, join it with your saved connections and edit it, and use Tabletist in Russian or Brazilian Portuguese. Connections can now go in groups you name, and one connection can have two databases open at once.
+    Files connections
+    A new connection type, Files, opens a folder of data files, or a list of them, as tables. It reads CSV, TSV, Parquet, JSON, NDJSON, Excel and .duckdb files through DuckDB, inside the app. The sidebar, Structure, the DDL view, the SQL editor, History, Quick open, Export, Copy as and agents work on them as on any other connection. (#247)
+    - Reading CSV: choose the header row (Detect, Yes, No), the delimiter and how column types are guessed (the first 20,000 rows, all rows, or all text), for every CSV and TSV file of the connection. (#353)
+    - A file that doesn't read no longer hides the rest. The Test opens every file it can and says which it can't and why: "Read 3 of 4 files · returns.csv failed", with the row, the column and the value. For a value its column's type can't take there are three fixes: read the column as text, read the value as empty, or skip the file. Each is kept as an override under Reading CSV, with Reset to take it off. (#356)
+    - The same banner on the table when a file fails while you browse it, with the same three fixes. A fix is saved at once and the table reads again. On Omarchy, t, e and x run them. (#382)
+    - macOS: when the system's privacy settings haven't let Tabletist open the folder, the Test and the connect card say so, with Open Privacy & Security. (#385)
+    - Omarchy: typing a path in Source lists the folders and files it could be, as Export's save line does. ctrl+n and ctrl+p move, Enter takes one. (#386)
+    - Join with saved connections: attach saved PostgreSQL, MySQL and SQLite connections, read-only, and join a file to their live tables in one query (JOIN bookshop_development.publishers p ON ...). Each attached connection is a schema in the sidebar, with its environment badge. The connections list says what a Files connection joins. (#387, #388)
+    - Agents reach the connections a Files connection attaches only where that connection's own Agents setting is Read, with no hidden tables and no masked columns. The Files form names each one left out and why. No password goes to the agent. (#388)
+    - Edit the files: turn off Open read-only and a CSV, TSV, Parquet, JSON or NDJSON file's table is edited like any other: change values, add rows, delete rows, then save. A save rewrites the whole file, and the note says which file is largest. A file that changed on disk since you opened it isn't overwritten: your changes stay pending until you reload. Excel files and attached connections stay read-only, and the SQL editor only reads. (#389)
+    - .duckdb files are edited in place, in one transaction: a change that fails undoes the others. Tabletist holds the file read-only while it is open, so another program can read it but not write it. (#392)
+    Russian and Brazilian Portuguese
+    - Settings › General › Language chooses English, Português (Brasil) or Русский, or follows the system's first language. The window, the menu bar and the keymap's commands change at once. Also [interface] language in settings.toml: system, "en", "pt-BR" or "ru". (#352, #361)
+    - Russian: every message, with numbers, sizes, times and dates written the Russian way. (#352, #357, #358, #360)
+    - Brazilian Portuguese: all 2,379 messages, with Portuguese numbers («1.240,50») and dates. Every Portuguese system language chooses it, pt-PT included. The translation hasn't had a native speaker's review yet, so corrections are welcome. (#361, #362, #363, #364)
+    - The translating guide says how to add another language. (#365)
+    Connections
+    - Groups you name: a connection's form has a Group, with New group… to make one, and the Connections list shows each connection under its group. Search finds it by group. A connection with no group of its own is grouped as before. (#373)
+    - Two databases of one connection at once: in the database menu, ⌘-click or ⌘↩ opens a database in a new window (Ctrl on Windows and Linux, ctrl+enter on Omarchy). The new window connects without asking for the password again. In the connection picker, an open connection's row menu now says Open another, with ⇧↩ named on the row and in the footer. (#374, #380)
+    - At launch each window opens again on the database it was on, with its own tables and row panel. (#376)
+    - Close, not Disconnect: while a connection is lost or cancelled, the bar's button says Close, since there's no session left to end. (#372)
+    - The Type row of the connection dialog is a grid of choices, so all the types fit. (#351)
+    TLS and read-only
+    - MySQL and MariaDB verify-full with no CA file now trusts the system's certificates (the Keychain on macOS, the system store on Windows, the CA bundle on Linux), as PostgreSQL already did. A company CA trusted in the Keychain now works. (#384)
+    - PostgreSQL takes a CA file in binary DER (most .cer files), not only PEM. (#383)
+    - Amazon Aurora MySQL readers without write forwarding keep the session read-write. Read-only runs in the SQL editor and agents' reads failed there. They now run, checked against the reader's own innodb_read_only. (#391)
+    Smaller changes
+    - Exports are much faster far from the server: they now wait on it a few times in all, not once for every 5,000 rows on PostgreSQL. Through a 200 ms round trip, 200,000 rows to CSV took 10.6 s and now take 1.8 s. The SSH tunnel's window is wider too, so a far tunnel keeps the link full. (#375)
+    - A settings change that would make settings.toml too long to be read (over 1,000 lines or 64 KB) is no longer written. Before, the next start ignored the whole file. (#355)
+    - url is 2.5.9, for RUSTSEC-2026-0592. (#381)
+    - Once it holds a Files connection or a group, connections.toml is written as version 7 to 10 of the file, which Tabletist 0.7.0 can't read. Before going back to 0.7.0, remove the Files connections and the groups.
+    On the site
+    - A new Guide page, Speed and security, says how Tabletist stays fast far from the server and how it keeps connections, passwords and production safe. The home page and What is Tabletist? say the same in short, and name MariaDB. (#349)
+    - The guide and reference cover Files connections, the languages, groups and opening another database.
+    Full Changelog: https://github.com/igor-alexandrov/tabletist/compare/v0.7.0...v0.8.0
+ReleaseTime: 2026-11-28T15:46:07.0000000Z

@@ -1,0 +1,23 @@
+Version: 0.142.1
+Installer:
+- Architecture: x64
+  InstallerType: nullsoft
+  InstallerUrl: https://nuphos-releases.s3.amazonaws.com/desktop/Nuphos-0.142.1-x64.exe
+- Architecture: arm64
+  InstallerType: nullsoft
+  InstallerUrl: https://nuphos-releases.s3.amazonaws.com/desktop/Nuphos-0.142.1-arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Fixes
+    - Any Linux computer can host desktops for agents. The local runtime used to start a helper that ships only in the Nuphos Box image, so on other Linux computers the agent's desktop tools failed on their first call and a computer card could not be offered. It now runs open-computer-use mcp from PATH and looks for Xvnc, xfce4-session and open-computer-use on PATH. When one is missing, the log says what to install. Input tools (click, type, scroll, drag, key presses) are refused while a person holds the desktop; looking still works. (#5328)
+    - A Linux computer used at its own X11 screen can hand that screen over. When no desktop pool runs and TigerVNC's x0vncserver is on PATH, the computer shares its own screen the way a Mac does, so a person away from it can finish a sign-in from a computer card, including on a phone. The screen is served on a local unix socket only, and the stream still refuses any viewer who is not the signed-in account. (#5331)
+    - Text about a shared screen now says "this computer" instead of "this Mac", in every language. (#5331)
+    Known limits
+    - Wayland sessions are not supported yet (tracked in #5321).
+    - The first-run macOS permission prompt with the bundled Cua Driver is still not tested on a clean Mac. macOS and Windows behave as in v0.142.0 apart from the wording change.
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/nuphos/nuphos/releases/tag/v0.142.1
+ReleaseTime: 2026-11-28T15:43:15.0000000Z

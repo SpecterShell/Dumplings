@@ -1,0 +1,92 @@
+Version: 0.1.0-alpha.30
+Installer:
+- Architecture: x64
+  InstallerType: zip
+  InstallerUrl: https://github.com/arcships/dim/releases/download/v0.1.0-alpha.30/dimcode-windows-x64-0.1.0-alpha.30.zip
+- Architecture: arm64
+  InstallerType: zip
+  InstallerUrl: https://github.com/arcships/dim/releases/download/v0.1.0-alpha.30/dimcode-windows-arm64-0.1.0-alpha.30.zip
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    Upgrade notes
+    TypeScript plugins: BranchLifecycle.registerOpening was removed
+    BranchLifecycle.registerOpening is removed from the generated dimcode/plugin declarations and the runtime dispatch surface, with no cross-language replacement. A TypeScript plugin that registered an opening receipt fails with TS2339 and must remove the call. activated() is not a replacement: it resolves after the branch is published, too late to delay or refuse an opening. Pre-publication opening receipts are Rust-only through the branch-private BranchOpening key. The client protocol, events and persistence format are unchanged. See Branch opening hook compatibility.
+    What's Changed
+    - Fix TUI queue strip flashing for steer messages by @zjywill in https://github.com/arcships/dim/pull/2167
+    - fix(goal): settle a pause only at the fold that decided it by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2149
+    - test(scenario-eval): pre-register the line-opening probes and their gate by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2144
+    - Add manual dispatch for curl nightly builds by @zjywill in https://github.com/arcships/dim/pull/2168
+    - fix(aimux): retry a stream event that reports a 5xx status code by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2170
+    - docs: add product architect guidance by @eric8810 in https://github.com/arcships/dim/pull/2142
+    - fix(goal): state the decision a change settles over by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2173
+    - Generate architecture graphs and the service catalog only on demand by @eric8810 in https://github.com/arcships/dim/pull/2177
+    - test(integration): wait for a burst by growth without a per-poll state machine by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2188
+    - fix(scenario-eval): skip a switch note whose line ended before answering by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2175
+    - test: drop the ignored measurement cases by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2190
+    - docs: design the normal, codemode and shell tool modes by @eric8810 in https://github.com/arcships/dim/pull/2141
+    - test(modality): drop the socket-limit test and its tungstenite dependency by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2186
+    - refactor(tui): derive Update now's switch gate from pending switches by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2187
+    - Run the non-Unix worktree removal refusal on Windows CI by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2192
+    - test(capabilities): let the Windows helper test tolerate a held cleanup directory by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2195
+    - test(app-server): give the slow restore progress test room for a runner stall by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2196
+    - fix(goal): commit the evaluation request under its head condition by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2191
+    - docs(adr): let the holder of an instance choose it by id in ADR 027 by @eric8810 in https://github.com/arcships/dim/pull/2200
+    - Serve hostPlatform's data methods; withdraw the execHost face by @eric8810 in https://github.com/arcships/dim/pull/2002
+    - fix(xtask): stop overriding the provided HostPlatform by @eric8810 in https://github.com/arcships/dim/pull/2205
+    - fix(host-platform): compare the exec root in its canonical form by @eric8810 in https://github.com/arcships/dim/pull/2207
+    - test(goal): wait for the failed state to publish before reading it by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2201
+    - fix(app-server): open a branch with its environment snapshots inside the opening by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2171
+    - test(host-platform): give the macOS burst flow its full window by @eric8810 in https://github.com/arcships/dim/pull/2209
+    - test(cli): replace the task-history unit tests with flow cases by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2198
+    - Provide dimn in the curl nightly installer by @zjywill in https://github.com/arcships/dim/pull/2178
+    - fix(cli): position the fullscreen composer cursor on click by @zerob13 in https://github.com/arcships/dim/pull/2210
+    - Keep only the latest complete Nightly build by @zjywill in https://github.com/arcships/dim/pull/2212
+    - test(hooks): wait for async hook markers instead of sleeping by @eric8810 in https://github.com/arcships/dim/pull/2224
+    - Place the scrollback draft cursor on mouse clicks by @zjywill in https://github.com/arcships/dim/pull/2211
+    - test(ci): isolate debug-only CLI acceptances by @eric8810 in https://github.com/arcships/dim/pull/2223
+    - feat(collaboration): clarify agent profile fields and request/message semantics by @eric8810 in https://github.com/arcships/dim/pull/2214
+    - test(app-server): widen the default test startup budget by @eric8810 in https://github.com/arcships/dim/pull/2231
+    - refactor(runtime): name a prepared creation's Session once by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2202
+    - test(branch-flow): stop racing the wait timeout by @eric8810 in https://github.com/arcships/dim/pull/2229
+    - test(managed-oauth): give device login completion a load-tolerant budget by @eric8810 in https://github.com/arcships/dim/pull/2233
+    - feat(runtime): route calls by id to a live Session or line by @eric8810 in https://github.com/arcships/dim/pull/2174
+    - feat: add the Session tool mode and its registry projection by @eric8810 in https://github.com/arcships/dim/pull/2197
+    - test(goal): skip Goal's append inputs in the scripted model tail selection by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2208
+    - refactor(exec): one stop entry and one terminal source for shell tasks by @eric8810 in https://github.com/arcships/dim/pull/2206
+    - fix(fs): register an authorized root by the directory its path names by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2148
+    - fix(exec): restore the repository checks after #2206 by @eric8810 in https://github.com/arcships/dim/pull/2240
+    - fix: key the usage cache by the request and keep warm reads cheap by @eric8810 in https://github.com/arcships/dim/pull/2239
+    - fix(app-server): project ChatGPT plan reasoning levels and vision by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2220
+    - test(branch-flow): wait for committed events in until_events by @eric8810 in https://github.com/arcships/dim/pull/2244
+    - test(cli): wait for child exit without polling by @eric8810 in https://github.com/arcships/dim/pull/2251
+    - feat(collaboration): read a member's line through the narrative projection by @eric8810 in https://github.com/arcships/dim/pull/2234
+    - fix(route): answer an uninstalled service as NoService by @eric8810 in https://github.com/arcships/dim/pull/2238
+    - test(xtask): judge the eval flows with a window that holds their view by @eric8810 in https://github.com/arcships/dim/pull/2260
+    - feat(narrative): tell readers every line opens by its id by @eric8810 in https://github.com/arcships/dim/pull/2259
+    - feat(xtask): record each run's judge view against the judge's budget by @eric8810 in https://github.com/arcships/dim/pull/2261
+    - ci: move the inline job checks into scripts/ and record measured budgets by @eric8810 in https://github.com/arcships/dim/pull/2262
+    - fix(narrative): tell a block's body without its closing tag, title turns by it by @eric8810 in https://github.com/arcships/dim/pull/2263
+    - test(app-server,runtime): retry an interrupted read and name a closed session's fault by @eric8810 in https://github.com/arcships/dim/pull/2267
+    - docs(agents): never run cargo under a temporary HOME by @eric8810 in https://github.com/arcships/dim/pull/2268
+    - docs: propose remote App Server targets for the native terminal by @eric8810 in https://github.com/arcships/dim/pull/2278
+    - feat(narrative): read a block's body as one line by @eric8810 in https://github.com/arcships/dim/pull/2280
+    - test(cli): poll the replacement daemon socket by @eric8810 in https://github.com/arcships/dim/pull/2255
+    - Share native App Server connections between computers by @eric8810 in https://github.com/arcships/dim/pull/2281
+    - docs: define issue maintenance rules by @eric8810 in https://github.com/arcships/dim/pull/2273
+    - feat: select a computer and session from the native TUI by @eric8810 in https://github.com/arcships/dim/pull/2284
+    - test(hooks): wait for blocks and events through publication by @eric8810 in https://github.com/arcships/dim/pull/2288
+    - fix(tui): redraw native scrollback one earlier page at a time by @zjywill in https://github.com/arcships/dim/pull/2249
+    - fix(compaction): shape automatic compaction by the startup window by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2264
+    - fix(history): replay compaction cuts omitted by context filters by @eric8810 in https://github.com/arcships/dim/pull/2292
+    - ci: gate pull requests on a linked accepted issue by @eric8810 in https://github.com/arcships/dim/pull/2274
+    - Route native terminal attachments and file completion to the selected computer by @eric8810 in https://github.com/arcships/dim/pull/2289
+    - refactor(runtime): move branch opening to the branch-private BranchOpening key by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2226
+    - Resolve /resume Git worktrees on the selected App Server by @eric8810 in https://github.com/arcships/dim/pull/2295
+    - chore: prepare v0.1.0-alpha.30 by @yyhhyyyyyy in https://github.com/arcships/dim/pull/2298
+    Full Changelog: https://github.com/arcships/dim/compare/v0.1.0-alpha.29...v0.1.0-alpha.30
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/arcships/dim/releases/tag/v0.1.0-alpha.30
+ReleaseTime: 2026-11-28T15:08:28.0000000Z
