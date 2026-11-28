@@ -60,7 +60,11 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           MT_BOT_TOKEN: ${{ secrets.MT_BOT_TOKEN }}
           MT_ROOM_ID: ${{ secrets.MT_ROOM_ID }}
+      # A failed task run must still record what it already submitted: without
+      # this, the next run sees the old state and submits the same versions
+      # again, and the duplicate pull request no longer changes any manifest.
       - name: Commit and push local changes to the remote repository
+        if: ${{ !cancelled() }}
         run: |-
           $Path = Join-Path $PWD 'Tasks'
           if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {

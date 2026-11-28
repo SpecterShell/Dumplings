@@ -55,7 +55,10 @@ jobs:
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           MT_BOT_TOKEN: ${{ secrets.MT_BOT_TOKEN }}
           MT_ROOM_ID: ${{ secrets.MT_ROOM_ID }}
+      # Keep recorded states even when the task run failed, so the next run
+      # does not offer the same versions again.
       - name: Commit and push local changes to the remote repository
+        if: ${{ !cancelled() }}
         run: |-
           $Path = Join-Path $PWD 'Tasks'
           if (-not [string]::IsNullOrWhiteSpace((git ls-files --other --modified --exclude-standard $Path))) {
