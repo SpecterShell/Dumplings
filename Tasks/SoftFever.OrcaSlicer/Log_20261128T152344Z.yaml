@@ -1,0 +1,164 @@
+Version: 2.5.3
+Installer:
+- Architecture: x64
+  InstallerUrl: https://github.com/OrcaSlicer/OrcaSlicer/releases/download/v2.5.3/OrcaSlicer_Windows_Installer_V2.5.3_x64.exe
+- Architecture: arm64
+  InstallerUrl: https://github.com/OrcaSlicer/OrcaSlicer/releases/download/v2.5.3/OrcaSlicer_Windows_Installer_V2.5.3_arm64.exe
+Locale:
+- Locale: en-US
+  Key: ReleaseNotes
+  Value: |-
+    What's Changed
+    This is the OrcaSlicer V2.5.3 release, a maintenance update on top of 2.5.2. Thank you to everyone who reported problems with 2.5.2!
+    It fixes crashes on the Calibration tab, in the Move gizmo and when slicing after a printer switch, and a G-code export that could hang with Staggered inner seams. Assemblies with one large flat part among many small ones slice quickly again instead of taking half an hour or more, and Bambu Lab print time estimates with Arc fitting on are accurate again.
+    Viewing a G-code file no longer sets the flush multiplier to 1, which made every later multicolor print purge several times as much. The Prusa MK4S MMU3 and the Anycubic Kobra 3 Max V2 have profiles, and the Flashforge Creator 5 and 5 Pro can run their firmware's flow calibration before a print.
+    If you print on an IDEX or IQEX printer, tools are now numbered from T1, like the filaments in the sidebar, and Tool 0 Position is renamed Tool 1 Position. See Interface Fixes below.
+    🌊 New Features & Improvements
+    - Flow calibration for the Flashforge Creator 5 and 5 Pro by @ghzserg in 17237
+      The send dialog has a Flow calibration checkbox for those two printers, which support it in firmware. It is off by default, so a print behaves exactly as before unless you tick it.
+    🛠️ Bug Fixes
+    Crashes & Hangs
+    - No crash on the Calibration tab with a multi-nozzle printer by @raistlin7447 in 17817
+      With printer agents on and a printer such as the Snapmaker U1 connected, opening the Calibration tab crashed OrcaSlicer within seconds on Linux and the Flatpak. Fixes #17802.
+    - No crash selecting several instances of one object with the Move gizmo by @kisslorand in 17642
+      With the Move gizmo in Object coordinates, selecting several instances of the same object, by clicking them or with Ctrl+A, crashed OrcaSlicer. The gizmo now uses the first instance's orientation, as it already did when no single object was selected.
+    - No crash slicing after a printer switch leaves fewer filaments by @raistlin7447 in 17774
+      With Remember printer configuration on, opening a six-filament project and switching to a printer set up for four crashed the slice on the Flatpak and the AppImage. Fixes #17562.
+    - No hang exporting G-code with Staggered inner seams on a sharp corner by @HanifKoh in 17731
+      With Staggered inner seams on, a model with a hairpin corner, where a wall doubles back on itself, could leave G-code export running forever on one layer and the interface unresponsive. Fixes #17707.
+    - No crash slicing some projects with adaptive layer height by @thelegendtubaguy in 17592
+      Slicing could run out of stack and crash on a project using unsmoothed adaptive layer heights. Models that did not hit this slice exactly as before. Fixes #17584.
+    Slicing & Print Quality
+    - Viewing a G-code file keeps the flush multiplier by @SoftFever in 97d9881
+      Since 2.5.0, opening a .gcode file to view it set the flush multiplier to 1, whatever the file was sliced with. The 1 stayed through a new project, a preset switch and a restart, so every later multicolor slice purged several times as much. The project now keeps the file's own multiplier, and the preview still shows the purge volumes the file was sliced with.
+    - Assemblies with one large part slice quickly again by @hammams in 17967
+      Since 2.5.0, slicing an assembly with one large flat part among many small ones, such as a sheet with thousands of holes, took 30 minutes or more. It is quick again, and the G-code is unchanged. Fixes #17966.
+    - A lift on top surfaces only ignores the first travel by @HanifKoh in 17949
+      With On surfaces set to Top Only or Top and Bottom, the travels before the first top surface lifted or stayed flat depending on what was left in memory, so one project could slice differently from one run to the next. Those travels no longer lift. A printer left at the default, All Surfaces, is unchanged.
+    - Embossed text stays on every copy in Bambu Studio projects by @KuzuriAo in 17942 — text shared by rotated or scaled copies of an object in a Bambu Studio project loads on the model instead of floating off it.
+    - Multicolor copies slice in Print by object by @Noisyfox in 17918
+      With Print sequence set to By object, slicing two printable copies of one multicolor object stopped with a wipe tower generation error, because the slicer kept the shared prime tower enabled after Prepare had already hidden it. The copies now slice without a tower, and a plate with a single copy is unchanged.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    - Travel back to the wipe tower starts from where the head is by @HanifKoh in 17930
+      After a filament change on a Bambu Lab or Qidi printer, the route back around the tower could start from a leftover position, so it cut across the tower or took the long way, and the same project could give different G-code each time you sliced it. Prints on other printers, and with Skip points off, are unchanged.
+    - Bambu Lab print time estimates are accurate again with Arc fitting on by @thelegendtubaguy in 17591
+      On a Bambu Lab printer with Arc fitting on, the estimate ran hours over, worst with gyroid infill. A 15% gyroid cube on an X1C was estimated at 8h41m and printed in about 6h21m; it now estimates 6h30m. The estimate has been wrong since 2.3.2. Your G-code and your prints are unchanged. Fixes #17564.
+    - Spiral vase works on a model painted with one filament by @gazi-faysal-jubayer in 17073 — on a multi-nozzle printer, a model painted all over with one filament other than the first was refused with a spiral vase error. Fixes #17072.
+    - A single-extruder multi-material print keeps the slicer's nozzle temperature by @oliverzein in 14763
+      On a printer that changes filament through one nozzle, such as a Creality K2 with CFS, the firmware's own temperature won over the one in your filament preset. The tool change now comes before the filament's start G-code, the way it already did on multi-nozzle printers. Fixes #14753.
+    - Custom G-codes and the wipe tower follow a plate that is moved by @yw4z in 17569
+      After Move plate to the front the moved plate lost its color and filament changes, pauses and custom G-code, and the other plates picked them up. Undo and redo had the same problem. Fixes #11287.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    - Overhang speeds are measured against the layer below by @valerii-bokhan in 16861
+      With a height range modifier that turns Slow down for overhangs on, every wall of that range's first layer printed at bridge speed, vertical walls included. On a multi-nozzle printer with the setting off for one nozzle, overhang speed alternated from layer to layer. G-code changes only on the layers that were measured wrong.
+    - A 0.2 mm nozzle at 0.2 mm layers slices again by @thelegendtubaguy in 17643
+      Slicing failed with "Line width too small" on the stock 0.20mm Standard presets for 0.2 mm nozzles on several Creality and LONGER printers. Bridges, overhang walls and support bottom interfaces printed without thick bridges now also get the flow their flow ratio asks for. Fixes #13685 and #11513.
+    - Arrange keeps objects clear of a compacted prime tower by @Art-Porto in 17304
+      With No sparse layers on, Arrange and Fill bed placed objects hard against the prime tower and slicing then refused the plate, because the toolhead needs room beside the tower. Both now leave that room. Fixes #17566.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    Command Line
+    - The command line keeps every object when the bed size changes by @raistlin7447 in 17897
+      Slicing one plate of a project for a printer with a different bed matched objects to plates on the old bed's layout, so an object near a plate edge joined the plate beside it and was left out of the G-code. Slicing for the printer the project was saved with is unchanged. Fixes #17741.
+    Interface Fixes
+    - Ctrl and the wheel resize the Texture displacement brush by @yw4z in 17926 — in Texture displacement, Ctrl and the mouse wheel change the brush size instead of zooming, and Cmd works on macOS as the tooltips say.
+    - Plate Settings follows the plate picked in the 3D view by @anselor in 17838 — clicking a plate in the 3D view left Plate Settings on the previous plate until you clicked it in the object list too.
+    - IDEX and IQEX tools are numbered from 1 like the filaments by @thelegendtubaguy in 16959
+      Tool buttons, the filament picker and the messages that name a tool all counted from T0 while the sidebar numbered filaments from 1, so the same tool had two numbers. Tool 0 Position is now Tool 1 Position. Fixes #16832.
+    - A part's own feature filament counts on the plate by @raistlin7447 in 17778
+      On a dual-nozzle printer, giving a part's outer wall or infill its own filament left that filament out of the Filament grouping list and hid the prime tower in Prepare, while the same setting on the whole object worked. Fixes #17728.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    - The first right-click after a Shift pan works in Touchpad camera mode by @Noisyfox in 17846 — with Camera style set to Touchpad, the first right-click after a Shift pan did nothing. Fixes #17844.
+    - A right-button pan or rotation keeps your selection by @yw4z in 17432 — ending a right-button pan or rotation over an object no longer selects it and drops what you had picked.
+    - Shift-drag no longer starts a rectangle selection in Measure and Assemble by @Noisyfox in 17533 — Shift-dragging in either gizmo started a selection box that could interrupt a measurement, while Shift still picks a point.
+    - A Thai interface shows Thai text by @yw4z in 17818
+      With the interface language set to Thai, labels throughout OrcaSlicer drew as empty boxes on Linux unless the system had a Thai font installed, and a new text object in Text Emboss on Windows fell back to the English default text. The bundled Sarabun font now reaches both.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    - Slice all no longer lists a mixed filament as its own spool by @raistlin7447 in 17767 — on a dual-nozzle printer with custom filament grouping, the Slice all grouping dialog shows only physical filaments, as Slice plate does. Fixes #17712.
+    - The IP and access code dialog stays on screen at high display scaling by @raistlin7447 in 17763 — at scaling around 300% the dialog opened with its title bar above the top of the screen and could not be dragged back. Fixes #17749.
+    - The G-code preview no longer shows a stray Pressure Advance value by @yw4z in 17746 — G-code that sets no pressure advance showed an arbitrary number in the Pressure Advance view, which reads zero now.
+    - The cloud login dialog stays on screen and can be resized by @rblumen in 17721
+      At 150% scaling on a 1080p screen the Orca Cloud and Bambu Cloud login dialog was taller than the work area with its title bar off screen, so it could be neither moved nor closed. It now fits the work area and can be resized. Fixes #14567.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    Presets & Projects
+    - Projects keep your presets' compatible printers by @raistlin7447 in 17770 and 17833
+      Saving a project with unsaved filament edits and opening it again reset that filament's Compatible printers to all printers, and saving the preset afterwards lost the list for good. Opening a project saved with no compatible printer list for its process did the same to your own copy of the process preset. Both lists are left alone, unless a process list does not cover the project's own printer, and a project that stores a list still applies it. Fixes #17674.
+    - A sliced 3MF of all plates records every plate's filaments by @raistlin7447 in 17815 — exporting all sliced plates wrote filament ids and colors for the selected plate only. Fixes #17794.
+    - Every printer in Export Preset Bundle can be ticked by @thelegendtubaguy in 17830 — with many printers installed, a scrollbar covered the bottom row of checkboxes. Fixes #17824.
+    Plugins
+    - No crash at startup with a plugin that reads your presets by @raistlin7447 in 17873
+      With a plugin such as U1 Sync & Send installed, OrcaSlicer crashed right after the splash screen on every start, and the only way back in was deleting the plugin folder. Startup plugin loads now wait until the presets are loaded. Fixes #17792.
+    - No crash on exit after a plugin's threads were slow to finish by @HanifKoh in 17437 — closing OrcaSlicer could crash when an earlier attempt to end a plugin's Python threads had timed out.
+    - The plugin permission prompt names the process on Windows by @peachismomo in 17697 — the prompt named no process when a plugin started one, and the permission it granted did not cover the call it asked about.
+    Linux & macOS
+    - The AppImage starts without an English locale installed by @raistlin7447 in 17816
+      On a system with no English locale, such as a Ubuntu install set up in another language, the AppImage quit before the window appeared. It now falls back to the system's own locale. Interface text from wxWidgets, such as standard dialog buttons, also follows your chosen language more closely on every platform. Fixes #17809.
+    - No frozen copy of Prepare after switching to Preview by @Surfoo in 17739 — on GNOME Wayland, switching tabs left a frozen image of the Prepare view in the corner of the window. Fixes #17189.
+    - The main window opens maximized rather than fullscreen on X11 by @lamweilun in 17585 — on Linux X11 under Cinnamon a window closed while maximized came back fullscreen, out of reach of an auto-hide panel. Fixes #17191.
+    - The color picker fits its contents with text scaling on by @yw4z in 17781
+      On Linux with a text scaling factor other than 1.0, the color picker opened cut off on the right and bottom, hiding part of the H/S/L fields and the favorites row, with no scrollbar to reach them. Windows and macOS are unchanged. Fixes #17736.
+
+      | Before | After |
+      | ------ | ----- |
+      |        |       |
+    - OBJ import works on macOS with a comma decimal separator by @stachon in 17851 — on macOS 13.3 to 14.0 with a language that writes decimals with a comma, such as German, an imported OBJ came in broken or empty.
+    Printer Connectivity & Cloud
+    - Printer error dialog buttons send the error you see by @HanifKoh in 17937
+      When a print error came up on the Device tab, Resume, Stop and Clear sent whatever value was left in memory instead of the error on screen, so the printer could reject the request or act on a different error. The buttons now send the code the dialog shows.
+    - Binding a printer by address connects to the printer you typed by @peachismomo in 17857 and 17876
+      Adding a Moonraker printer by its address while another was connected could bind the connected printer's cached id instead, so OrcaSlicer reselected and reconnected the first one. Binding a printer by address alone after one bound with a port, such as 127.0.0.1:2080, also kept that port and added a second device entry with it. A Moonraker printer that reports no model keeps its own model instead of Bambu's C11.
+    - Filament sync reads the gates on a Happy Hare printer by @WeLizard in 14798 — Synchronize filament list from AMS reported no filament on a Moonraker printer running Happy Hare even with spools in the gates.
+    - Non-ASCII filenames survive an upload to a Flashforge printer by @ghzserg in 17254 — a name such as Тест.gcode reached the printer as ________.gcode over the local API.
+    - The Send dialog accepts a printer whose name differs from its model id by @astechevolves in 17519
+      Sending to a Moonraker printer could fail with "The selected printer (Unknown) is incompatible with the print file configuration ()" even though the printer matched its preset, and it stayed wrong across restarts. Such a printer is corrected the next time it is selected. Bambu printers were never affected.
+    - Elegoo Link reaches a Centauri Carbon on a custom preset by @thelegendtubaguy in 17587
+      Since 2.4.0, Test and upload failed with a 404 for an Elegoo printer whose preset name does not start with "Elegoo Centauri". Those presets fall back to the Centauri Carbon check again, as they did in 2.3.2. Centauri Carbon and Centauri Carbon 2 presets are unchanged. Fixes #17570.
+    - Print plate works on every plate of a Snapmaker U1 by @HanifKoh in 17664
+      Print plate failed for any plate that used filament 2 or later, and the Flatpak crashed. The printer sync in the sidebar and three of the calibrations had the same fault. Printers that already worked are unaffected and their G-code is unchanged. Fixes #17646.
+    - Upload and Print starts the print on a Creality Nebula Pad by @Art-Porto in 17633
+      The file uploaded but the print never started, because OrcaSlicer guessed the folder from the printer model the pad reports, such as "Ender-3 V2 Neo", and a Nebula Pad keeps G-code elsewhere. OrcaSlicer now asks the printer where the file landed, the way Creality Print does. Fixes #17563.
+    - A LAN Bambu printer keeps its connection when the cloud server connects by @avanderkelen1 in 17769
+      After a restart with a LAN printer selected and a cloud account signed in, the printer showed as connected but the print failed with print_job: failed, result = -4030, and every later command failed until the printer was picked again in the Device tab. This started in 2.5.0, when OrcaSlicer began remembering the last printer. Fixes #17766.
+    - A Bambu Lab A2L can be added by IP and access code by @raistlin7447 in 17902 — the manual LAN setup only accepted 15-character serial numbers, and the A2L's has 18. Fixes #17899.
+    🖨️ Printer & Filament Profiles
+    New Printer Profiles
+    - Prusa MK4S MMU3 by @thelegendtubaguy in 17426
+      Profiles for the MK4S MMU3 and the MK4S MMU3 HF, with their 0.4 and 0.6 mm nozzles. Fixes #8876, #10894, #11686, #12430, #13455 and #17414.
+    - Anycubic Kobra 3 Max V2 by @thelegendtubaguy in 17661
+      Profiles for the printer and its 0.2, 0.4, 0.6 and 0.8 mm nozzles, with Anycubic's own filaments. Fixes #11769, #15281 and #17638.
+    Profile Updates & Fixes
+    - The Elegoo Centauri Carbon 2 can pick its build plate by @dessite in 17916 — the profile offers plate selection and defaults to Textured PEI Plate instead of a plate the printer does not have, and a plate you already saved is kept.
+    - QIDI Q2 and Q2C stop their fans after printing by @thelegendtubaguy in 17663
+      On firmware 01.01.02 and later the exhaust fan and Polar Cooler kept running at full speed after a print and the X and Y motors stayed locked. The end G-code now matches QIDI Studio's. On firmware 1.1.1 and older, delete the PRINT_END line from the end G-code, since that firmware runs it itself. The X-Max 4 also finishes its end G-code on prints close to maximum height. Fixes #17649.
+    - Three Creality CFS-C profiles park the filament change on the bed by @Art-Porto in 17765
+      The Creality K1_CFS-C, K1C_CFS-C and K1 SE_CFS-C 0.4 nozzle profiles moved the nozzle to X0 Y245 at every filament change, 25 mm past their 220 by 220 bed. They now use the park position the other 220 mm K1 profiles use. K1 Max profiles are unchanged. Fixes #17677.
+    🗪 Localization
+    - All 22 languages translate every new string in 2.5.3, by @HanifKoh in c5ff773
+
+    ❤️ Support OrcaSlicer
+    OrcaSlicer is — and will remain — free and open source.
+    Every release represents countless hours of behind-the-scenes work: building features, fixing bugs, validating profiles, and testing across real machines.
+    If OrcaSlicer helps you bring ideas to life, please consider supporting the project. Donations are used to support the open-source contributors who help build and maintain OrcaSlicer, and to cover project costs such as servers, development tools, test machines, filament, printer parts, and other infrastructure.
+    Your support helps us keep improving OrcaSlicer for everyone — while keeping the project free, open, and community-driven.
+    Thank you for being part of the OrcaSlicer journey. 🙏
+- Locale: en-US
+  Key: ReleaseNotesUrl
+  Value: https://github.com/OrcaSlicer/OrcaSlicer/releases/tag/v2.5.3
+ReleaseTime: 2026-11-28T14:41:42.0000000Z
